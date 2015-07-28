@@ -41,6 +41,7 @@
     <listitem><emphasis>jms:</emphasis> Creates a JMS endpoint for sending and receiving message to a queue or topic</listitem>
     <listitem><emphasis>channel:</emphasis> Creates a channel endpoint for sending and receiving messages using an in memory Spring Integration message channel</listitem>
     <listitem><emphasis>http:</emphasis> Creates a HTTP client for sending a request to some server URL synchronously waiting for the response message</listitem>
+    <listitem><emphasis>ws:</emphasis> Creates a Web Socket client for sending messages to or receiving messages from a Web Socket server</listitem>
     <listitem><emphasis>soap:</emphasis> Creates a SOAP WebService client that send a proper SOAP message to the server URL and waits for the synchronous response to arrive</listitem>
     <listitem><emphasis>ssh:</emphasis> Creates a new ssh client for publishing a command to the server</listitem>
     <listitem><emphasis>mail: or smtp:</emphasis> Creates a new mail client for sending a mail mime message to a SMTP server</listitem>
@@ -64,6 +65,9 @@
     http://localhost:8088/test
     http:localhost:8088?requestMethod=GET&amp;timeout=10000&amp;errorHandlingStrategy=throwsException&amp;requestFactory=myRequestFactory
     http://localhost:8088/test?requestMethod=DELETE&amp;customParam=foo
+
+    ws:localhost:8088/test
+    ws://localhost:8088/test
 
     soap:localhost:8088/test
     soap:localhost:8088?timeout=10000&amp;errorHandlingStrategy=propagateError&amp;messageFactory=myMessageFactory

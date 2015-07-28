@@ -17,23 +17,34 @@
 package com.consol.citrus.http.servlet;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping;
+import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
+import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
+import com.consol.citrus.http.socket.interceptor.SessionEnricherHandshakeInterceptor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.MappedInterceptor;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
+import org.springframework.web.socket.server.HandshakeHandler;
+import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
+import org.springframework.web.socket.server.support.WebSocketHttpRequestHandler;
 import org.springframework.web.util.UrlPathHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Citrus dispatcher servlet extends Spring's message dispatcher servlet and just
@@ -51,6 +62,10 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     private static final String HANDLER_INTERCEPTOR_BEAN_NAME = "citrusHandlerInterceptor";
     private static final String MESSAGE_CONTROLLER_BEAN_NAME = "citrusHttpMessageController";
 
+    /** Default bean names used in default configuration for supporting WebSocket endpoints */
+    private static final String URL_HANDLER_MAPPING_BEAN_NAME = "citrusUrlHandlerMapping";
+    private static final String HANDSHAKE_HANDLER_BEAN_NAME = "citrusHandshakeHandler";
+
     /**
      * Default constructor using http server instance that
      * holds this servlet.
@@ -66,6 +81,39 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
 
         configureHandlerInterceptor(context);
         configureMessageController(context);
+        configureWebSockerHandler(context);
+    }
+
+    private void configureWebSockerHandler(ApplicationContext context) {
+        List<WebSocketEndpoint> webSocketEndpoints = httpServer.getWebSockets();
+        if(CollectionUtils.isEmpty(webSocketEndpoints)) {
+            return;
+        }
+
+        if (context.containsBean(URL_HANDLER_MAPPING_BEAN_NAME)) {
+            WebSocketUrlHandlerMapping urlHandlerMapping = context.getBean(URL_HANDLER_MAPPING_BEAN_NAME, WebSocketUrlHandlerMapping.class);
+
+            HandshakeHandler handshakeHandler = new DefaultHandshakeHandler();
+            if (context.containsBean(HANDSHAKE_HANDLER_BEAN_NAME)) {
+                handshakeHandler = context.getBean(HANDSHAKE_HANDLER_BEAN_NAME, HandshakeHandler.class);
+            }
+
+            Map<String, Object> wsHandlers = new HashMap<>();
+            for (WebSocketEndpoint webSocketEndpoint : webSocketEndpoints) {
+                String wsPath = webSocketEndpoint.getEndpointConfiguration().getEndpointUri();
+                String wsId = webSocketEndpoint.getName();
+                CitrusWebSocketHandler handler = new CitrusWebSocketHandler();
+                webSocketEndpoint.setWebSocketHandler(handler);
+                WebSocketHttpRequestHandler wsRequestHandler = new WebSocketHttpRequestHandler(handler, handshakeHandler);
+                SessionEnricherHandshakeInterceptor handshakeInterceptor = new SessionEnricherHandshakeInterceptor(wsId, wsPath);
+                wsRequestHandler.getHandshakeInterceptors().add(handshakeInterceptor);
+                wsHandlers.put(wsPath, wsRequestHandler);
+            }
+            urlHandlerMapping.setUrlMap(wsHandlers);
+            urlHandlerMapping.postRegisterUrlHandlers(wsHandlers);
+        } else {
+            throw new CitrusRuntimeException(String.format("Invalid Websocket configuration - missing bean. Expected to find bean with name '%s' in citrus-context", URL_HANDLER_MAPPING_BEAN_NAME));
+        }
     }
 
     /**

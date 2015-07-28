@@ -23,16 +23,22 @@ import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
+import com.consol.citrus.http.socket.endpoint.WebSocketEndpointConfiguration;
+import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
+import com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.web.socket.server.support.WebSocketHttpRequestHandler;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -51,6 +57,9 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     @Autowired
     private DelegatingHandlerInterceptor handlerInterceptor;
 
+    @Autowired
+    private WebSocketUrlHandlerMapping urlHandlerMapping;
+
     @BeforeClass
     public void setUp() {
         servlet = new CitrusDispatcherServlet(httpServer);
@@ -59,6 +68,9 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     @Test
     public void testNoBeansInContext() throws Exception {
         reset(httpServer);
+
+        expect(httpServer.getWebSockets()).andReturn(new ArrayList<WebSocketEndpoint>()).once();
+
         replay(httpServer);
 
         GenericApplicationContext applicationContext = new GenericApplicationContext();
@@ -79,6 +91,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
         expect(httpServer.getInterceptors()).andReturn(interceptors).once();
         expect(httpServer.getEndpointAdapter()).andReturn(null).once();
         expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
+        expect(httpServer.getWebSockets()).andReturn(new ArrayList<WebSocketEndpoint>()).once();
 
         replay(httpServer);
 
@@ -100,6 +113,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
         expect(httpServer.getInterceptors()).andReturn(null).once();
         expect(httpServer.getEndpointAdapter()).andReturn(new TimeoutProducingEndpointAdapter()).once();
         expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
+        expect(httpServer.getWebSockets()).andReturn(new ArrayList<WebSocketEndpoint>()).once();
 
         replay(httpServer);
 
@@ -111,5 +125,44 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
 
         verify(httpServer);
+    }
+
+    @Test
+    public void testConfigureWebSockerHandler() throws Exception {
+        WebSocketEndpoint wsEndpoint = EasyMock.createMock(WebSocketEndpoint.class);
+        WebSocketEndpointConfiguration wsEndpointConfig = EasyMock.createMock(WebSocketEndpointConfiguration.class);
+        String wsId = "wsId";
+        String endpointUri = "someEndpointUri";
+
+        List<WebSocketEndpoint> webSockets = new ArrayList<>();
+        webSockets.add(wsEndpoint);
+
+        reset(httpServer);
+
+        expect(httpServer.getInterceptors()).andReturn(null).once();
+        expect(httpServer.getEndpointAdapter()).andReturn(null).once();
+        expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
+        expect(httpServer.getWebSockets()).andReturn(webSockets).once();
+
+        expect(wsEndpoint.getEndpointConfiguration()).andReturn(wsEndpointConfig).once();
+        expect(wsEndpoint.getName()).andReturn(wsId).once();
+        wsEndpoint.setWebSocketHandler(isA(CitrusWebSocketHandler.class));
+
+        expect(wsEndpointConfig.getEndpointUri()).andReturn(endpointUri).once();
+
+        replay(httpServer);
+        replay(wsEndpoint);
+        replay(wsEndpointConfig);
+
+        servlet.initStrategies(applicationContext);
+
+        Map<String, ?> urlMap = urlHandlerMapping.getUrlMap();
+        Assert.assertEquals(urlMap.size(), 1);
+        Assert.assertTrue(urlMap.containsKey(endpointUri));
+        Assert.assertNotNull(urlMap.get(endpointUri));
+
+        verify(httpServer);
+        verify(wsEndpoint);
+        verify(wsEndpointConfig);
     }
 }

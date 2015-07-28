@@ -10,3 +10,4 @@ ssh=com.consol.citrus.ssh.client.SshEndpointComponent
 vertx=com.consol.citrus.vertx.endpoint.VertxEndpointComponent
 eventbus=com.consol.citrus.vertx.endpoint.VertxEndpointComponent
 camel=com.consol.citrus.camel.endpoint.CamelEndpointComponent
+ws=com.consol.citrus.http.socket.endpoint.WebSocketEndpointComponent

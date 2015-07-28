@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -93,6 +94,11 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Message converter */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
+
+    /**
+     * Captures all WebSocket endpoints
+     */
+    private List<WebSocketEndpoint> webSockets = new ArrayList<>();
 
     @Override
     protected void shutdown() {
@@ -537,5 +543,20 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setMessageConverter(HttpMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the WebSocket endpoints (id, uri)
+     */
+    public List<WebSocketEndpoint> getWebSockets() {
+        return webSockets;
+    }
+
+    /**
+     * Sets the WebSocket endpoints (id, uri)
+     * @param webSockets
+     */
+    public void setWebSockets(List<WebSocketEndpoint> webSockets) {
+        this.webSockets = webSockets;
     }
 }

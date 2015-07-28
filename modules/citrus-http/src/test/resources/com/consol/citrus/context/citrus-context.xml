@@ -9,7 +9,11 @@
     
     <bean id="citrusHandlerInterceptor" class="com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor"/>
     <bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController"/>
-    
+
+    <bean id="citrusUrlHandlerMapping" class="com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping">
+      <property name="order" value="1" />
+    </bean>
+
     <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
       <property name="params">
         <map>
