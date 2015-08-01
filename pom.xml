@@ -158,16 +158,17 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>4.0.7.RELEASE</spring.version>
-    <spring.ws.version>2.2.0.RELEASE</spring.ws.version>
-    <spring.integration.version>4.0.4.RELEASE</spring.integration.version>
-    <apache.camel.version>2.14.0</apache.camel.version>
-    <activemq.version>5.10.0</activemq.version>
+    <spring.version>4.1.7.RELEASE</spring.version>
+    <spring.ws.version>2.2.1.RELEASE</spring.ws.version>
+    <spring.integration.version>4.1.6.RELEASE</spring.integration.version>
+    <apache.camel.version>2.15.2</apache.camel.version>
+    <activemq.version>5.11.1</activemq.version>
     <vertx.version>2.1.2</vertx.version>
     <groovy.version>2.1.0</groovy.version>
     <jetty.version>9.2.11.v20150529</jetty.version>
-    <testng.version>6.8.8</testng.version>
-    <slf4j.version>1.7.7</slf4j.version>
+    <testng.version>6.8.21</testng.version>
+    <slf4j.version>1.7.12</slf4j.version>
+    <jaxb.version>2.2.11</jaxb.version>
     <arquillian.version>1.1.8.Final</arquillian.version>
     <sonar.host.url>http://labs.consol.de/sonar</sonar.host.url>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -205,7 +206,7 @@
       <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>
         <artifactId>saaj-impl</artifactId>
-        <version>1.3.23</version>
+        <version>1.3.25</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
@@ -235,7 +236,7 @@
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
-        <version>1.9</version>
+        <version>1.10</version>
       </dependency>
       <dependency>
         <groupId>commons-lang</groupId>
@@ -284,6 +285,16 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>
@@ -381,7 +392,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.11</version>
+        <version>4.12</version>
       </dependency>
 
       <dependency>
@@ -423,7 +434,7 @@
       <dependency>
         <groupId>org.apache.ant</groupId>
         <artifactId>ant</artifactId>
-        <version>1.9.4</version>
+        <version>1.9.6</version>
         <scope>provided</scope>
       </dependency>
 
@@ -508,12 +519,17 @@
       <dependency>
         <groupId>javax.xml.bind</groupId>
         <artifactId>jaxb-api</artifactId>
-        <version>2.2.7</version>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-core</artifactId>
+        <version>${jaxb.version}</version>
       </dependency>
       <dependency>
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
-        <version>2.2.7</version>
+        <version>${jaxb.version}</version>
       </dependency>
 
       <!-- Logging -->
@@ -558,17 +574,17 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.3</version>
+        <version>1.4.8</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
-        <version>3.18</version>
+        <version>4.3</version>
       </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
-        <version>2.3.2</version>
+        <version>2.3.3</version>
       </dependency>
       <dependency>
         <groupId>commons-dbcp</groupId>

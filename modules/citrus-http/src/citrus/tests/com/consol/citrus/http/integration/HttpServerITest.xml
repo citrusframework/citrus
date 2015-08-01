@@ -46,7 +46,7 @@
         </header>
       </send>
 
-      <receive endpoint="echoHttpServer" timeout="3000">
+      <receive endpoint="echoHttpServer">
         <message>
           <data>
             <![CDATA[
@@ -89,7 +89,7 @@
         </header>
       </send>
 
-      <receive endpoint="echoHttpClient" timeout="3000">
+      <receive endpoint="echoHttpClient">
         <message>
           <data>
             <![CDATA[
@@ -124,7 +124,7 @@
         </message>
       </send>
 
-      <receive endpoint="wsEndpoint1" timeout="3000">
+      <receive endpoint="wsEndpoint1">
         <message type="json">
           <data>
             <![CDATA[
@@ -150,7 +150,7 @@
         </message>
       </send>
 
-      <receive endpoint="wsClient1" timeout="3000">
+      <receive endpoint="wsClient1">
         <message type="json">
           <data>
             <![CDATA[
@@ -176,7 +176,7 @@
         </message>
       </send>
 
-      <receive endpoint="wsEndpoint2" timeout="3000">
+      <receive endpoint="wsEndpoint2">
         <message type="json">
           <data>
             <![CDATA[
@@ -202,7 +202,7 @@
         </message>
       </send>
 
-      <receive endpoint="wsClient2" timeout="3000">
+      <receive endpoint="wsClient2">
         <message type="json">
           <data>
             <![CDATA[

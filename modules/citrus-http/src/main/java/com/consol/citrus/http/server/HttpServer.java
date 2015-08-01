@@ -334,6 +334,9 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 throws BeansException {
             return applicationContext.getBean(name, args);
         }
+        public <T> T getBean(Class<T> requiredType, Object... args) throws BeansException {
+            return applicationContext.getBean(requiredType, args);
+        }
         public boolean isTypeMatch(String name, Class<?> targetType)
                 throws NoSuchBeanDefinitionException {
             return false;
