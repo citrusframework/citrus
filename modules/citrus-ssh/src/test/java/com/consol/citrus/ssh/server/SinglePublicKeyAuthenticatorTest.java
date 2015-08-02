@@ -16,15 +16,18 @@
 
 package com.consol.citrus.ssh.server;
 
-import java.io.*;
-import java.security.PublicKey;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ssh.server.SinglePublicKeyAuthenticator;
+import org.apache.sshd.common.util.IoUtils;
 import org.apache.sshd.common.util.SecurityUtils;
-import org.bouncycastle.openssl.PEMReader;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
 import org.springframework.util.FileCopyUtils;
 import org.testng.annotations.Test;
+
+import java.io.*;
+import java.security.PublicKey;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -47,9 +50,13 @@ public class SinglePublicKeyAuthenticatorTest {
         SinglePublicKeyAuthenticator auth = new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/allowed_test_key.pem");
         PublicKey pKey = getPublicKey("/com/consol/citrus/ssh/allowed_test_key.pem");
         assertTrue(auth.authenticate("roland", pKey, null));
-        assertFalse(auth.authenticate("guenther",pKey,null));
+        assertFalse(auth.authenticate("guenther", pKey, null));
+
         pKey = getPublicKey("/com/consol/citrus/ssh/forbidden_test_key.pem");
-        assertFalse(auth.authenticate("roland",pKey,null));
+        assertFalse(auth.authenticate("roland", pKey, null));
+
+        pKey = getPublicKey("/com/consol/citrus/ssh/citrus.pem");
+        assertFalse(auth.authenticate("citrus", pKey, null));
     }
 
     @Test
@@ -62,17 +69,17 @@ public class SinglePublicKeyAuthenticatorTest {
 
         temp = copyToTempFile("/com/consol/citrus/ssh/forbidden_test_key.pem");
         pKey = getPublicKeyFromStream(new FileInputStream(temp));
-        assertFalse(auth.authenticate("roland",pKey,null));
+        assertFalse(auth.authenticate("roland", pKey, null));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*com/consol/citrus/ssh/citrus.pem.*")
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*com/consol/citrus/ssh/private.key.*")
     public void invalidKeyFormat() {
-        new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/citrus.pem");
+        new SinglePublicKeyAuthenticator("roland", "classpath:com/consol/citrus/ssh/private.key");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*blubber\\.bla.*")
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*blubber\\.bla.*")
     public void notInClasspath() {
-        new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/blubber.bla");
+        new SinglePublicKeyAuthenticator("roland", "classpath:com/consol/citrus/ssh/blubber.bla");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/valid/path.*")
@@ -111,6 +118,19 @@ public class SinglePublicKeyAuthenticatorTest {
      */
     private PublicKey getPublicKeyFromStream(InputStream is) throws IOException {
         Reader reader = new InputStreamReader(is);
-        return (PublicKey) new PEMReader(reader).readObject();
+        try {
+            Object o = new PEMParser(reader).readObject();
+            if (o instanceof PEMKeyPair) {
+                return new BouncyCastleProvider().getPublicKey(((PEMKeyPair) o).getPublicKeyInfo());
+            } else if (o instanceof SubjectPublicKeyInfo) {
+                return new BouncyCastleProvider().getPublicKey((SubjectPublicKeyInfo) o);
+            } else {
+                throw new CitrusRuntimeException("Unable to read public key");
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read public key", e);
+        } finally {
+            IoUtils.closeQuietly(is, reader);
+        }
     }
 }

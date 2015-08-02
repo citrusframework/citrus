@@ -20,7 +20,12 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.sshd.common.util.IoUtils;
 import org.apache.sshd.server.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
-import org.bouncycastle.openssl.PEMReader;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.security.PublicKey;
@@ -34,9 +39,14 @@ import java.security.PublicKey;
  */
 class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SinglePublicKeyAuthenticator.class);
+
     public static final String CLASSPATH_PREFIX = "classpath:";
     private PublicKey allowedKey;
     private String user;
+
+    private BouncyCastleProvider provider = new BouncyCastleProvider();
 
     /**
      * Constructor
@@ -84,17 +94,25 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
      */
     private PublicKey readKey(InputStream is) {
         InputStreamReader isr = new InputStreamReader(is);
-        PEMReader r = new PEMReader(isr);
+        PEMParser r = new PEMParser(isr);
         try {
             Object o = r.readObject();
-            if (o instanceof PublicKey) {
-                return (PublicKey) o;
+            if (o instanceof PEMKeyPair) {
+                PEMKeyPair keyPair = (PEMKeyPair) o;
+                if (keyPair.getPublicKeyInfo() != null &&
+                        keyPair.getPublicKeyInfo().getEncoded().length > 0) {
+                    return provider.getPublicKey(keyPair.getPublicKeyInfo());
+                }
+            } else if (o instanceof SubjectPublicKeyInfo) {
+                return provider.getPublicKey((SubjectPublicKeyInfo) o);
             }
         } catch (IOException e) {
             // Ignoring, returning null
+            log.warn("Failed to get key from PEM file", e);
         } finally {
             IoUtils.closeQuietly(isr,r);
         }
+
         return null;
     }
 
