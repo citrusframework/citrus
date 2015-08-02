@@ -18,6 +18,8 @@
     <jasmine.serverPort>8234</jasmine.serverPort>
     <citrus.serverPort>19080</citrus.serverPort>
     <citrus.stopPort>19080</citrus.stopPort>
+    <jackson.version>1.9.13</jackson.version>
+    <handlebars.version>2.2.3</handlebars.version>
   </properties>
 
   <dependencyManagement>
@@ -86,29 +88,29 @@
         <dependency>
             <groupId>org.springframework.webflow</groupId>
             <artifactId>spring-js</artifactId>
-            <version>2.4.0.RELEASE</version>
+            <version>2.4.1.RELEASE</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-jaxrs</artifactId>
-            <version>1.9.13</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-xc</artifactId>
-            <version>1.9.13</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
           <groupId>com.github.jknack</groupId>
           <artifactId>handlebars</artifactId>
-          <version>1.0.0</version>
+          <version>${handlebars.version}</version>
         </dependency>
         <dependency>
           <groupId>com.github.jknack</groupId>
           <artifactId>handlebars-springmvc</artifactId>
-          <version>1.0.0</version>
+          <version>${handlebars.version}</version>
         </dependency>
     </dependencies>
   </dependencyManagement>
