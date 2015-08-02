@@ -124,7 +124,7 @@
   </developers>
 
   <prerequisites>
-    <maven>3.0.3</maven>
+    <maven>3.1.0</maven>
   </prerequisites>
 
   <scm>
@@ -669,7 +669,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.5.2</version>
           <configuration>
             <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
             <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -678,12 +678,16 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
+          <version>3.3</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
             <source>1.7</source>
             <target>1.7</target>
           </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.7</version>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -692,7 +696,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.17</version>
+          <version>2.18.1</version>
           <configuration>
             <systemProperties>
               <property>
@@ -734,7 +738,7 @@
 
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.6</version>
           <configuration>
             <archive>
               <addMavenDescriptor>true</addMavenDescriptor>
@@ -743,15 +747,15 @@
         </plugin>
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.6</version>
         </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.7</version>
+          <version>1.8</version>
         </plugin>
         <plugin>
           <artifactId>maven-ear-plugin</artifactId>
-          <version>2.9.1</version>
+          <version>2.10.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-help-plugin</artifactId>
@@ -759,7 +763,11 @@
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.6.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.10</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -783,14 +791,14 @@
         </plugin>
         <plugin>
           <artifactId>maven-eclipse-plugin</artifactId>
-          <version>2.9</version>
+          <version>2.10</version>
           <configuration>
             <downloadSources>true</downloadSources>
           </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.4</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -803,7 +811,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9</version>
+          <version>2.10.3</version>
           <configuration>
             <additionalparam>${javadoc.options}</additionalparam>
           </configuration>
@@ -839,7 +847,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.4.1</version>
+          <version>2.5.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
@@ -867,7 +875,7 @@
         <plugin>
           <groupId>com.agilejava.docbkx</groupId>
           <artifactId>docbkx-maven-plugin</artifactId>
-          <version>2.0.7</version>
+          <version>2.0.16</version>
           <dependencies>
             <dependency>
               <groupId>org.docbook</groupId>
@@ -909,7 +917,7 @@
         <plugin>
           <groupId>org.codehaus.sonar</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>4.4</version>
+          <version>5.1</version>
         </plugin>
 
       </plugins>
@@ -1118,7 +1126,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>2.6</version>
             <inherited>false</inherited>
             <!-- TODO CD the artifact, rather than the path, should be used here -->
             <executions>
@@ -1402,7 +1409,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
-            <version>2.10</version>
+            <version>2.11</version>
             <reportSets>
               <reportSet>
                 <reports>
@@ -1427,12 +1434,12 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9</version>
+            <version>2.10.3</version>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.7</version>
+            <version>2.8</version>
             <configuration>
               <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
               <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
@@ -1450,7 +1457,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-plugin-plugin</artifactId>
-            <version>3.3</version>
+            <version>3.4</version>
           </plugin>
         </plugins>
       </reporting>
@@ -1556,7 +1563,7 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.1.201405082137</version>
+            <version>0.7.5.201505241946</version>
             <executions>
               <execution>
                 <id>jacoco-initialize</id>
