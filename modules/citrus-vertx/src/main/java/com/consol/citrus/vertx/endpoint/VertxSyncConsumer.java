@@ -25,7 +25,7 @@ import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-import org.vertx.java.core.Vertx;
+import io.vertx.core.Vertx;
 
 /**
  * @author Christoph Deppisch

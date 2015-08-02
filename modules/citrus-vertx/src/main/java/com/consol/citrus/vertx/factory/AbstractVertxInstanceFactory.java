@@ -17,10 +17,12 @@
 package com.consol.citrus.vertx.factory;
 
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
+import io.vertx.core.*;
+import io.vertx.core.impl.FutureFactoryImpl;
+import io.vertx.core.impl.VertxFactoryImpl;
+import io.vertx.core.spi.VertxFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.*;
-import org.vertx.java.core.impl.DefaultFutureResult;
 
 /**
  * Abstract Vertx instance factory provides basic method for creating a new Vertx instance. By default waits for
@@ -34,6 +36,9 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractVertxInstanceFactory.class);
 
+    /** Vertx factory */
+    private VertxFactory vertxFactory = new VertxFactoryImpl();
+
     /**
      * Creates new Vert.x instance with default factory. Subclasses may overwrite this
      * method in order to provide special Vert.x instance.
@@ -41,13 +46,13 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
      */
     protected Vertx createVertx(VertxEndpointConfiguration endpointConfiguration) {
         final Vertx[] vertx = new Vertx[1];
-        final Future loading = new DefaultFutureResult();
+        final Future loading = new FutureFactoryImpl().future();
 
         Handler<AsyncResult<Vertx>> asyncLoadingHandler = new Handler<AsyncResult<Vertx>>() {
             @Override
             public void handle(AsyncResult<Vertx> event) {
                 vertx[0] = event.result();
-                loading.setResult(Boolean.TRUE);
+                loading.complete();
                 log.info("Vert.x instance started");
             }
         };
@@ -56,16 +61,22 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), endpointConfiguration.getPort()));
             }
-            VertxFactory.newVertx(endpointConfiguration.getPort(), endpointConfiguration.getHost(), asyncLoadingHandler);
+            VertxOptions vertxOptions = new VertxOptions();
+            vertxOptions.setClusterPort(endpointConfiguration.getPort());
+            vertxOptions.setClusterHost(endpointConfiguration.getHost());
+            vertxFactory.clusteredVertx(vertxOptions, asyncLoadingHandler);
         } else {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), 0L));
             }
-            VertxFactory.newVertx(0, endpointConfiguration.getHost(), asyncLoadingHandler);
+            VertxOptions vertxOptions = new VertxOptions();
+            vertxOptions.setClusterPort(0);
+            vertxOptions.setClusterHost(endpointConfiguration.getHost());
+            vertxFactory.clusteredVertx(vertxOptions, asyncLoadingHandler);
         }
 
         // Wait for full loading
-        while (!loading.complete()) {
+        while (!loading.isComplete()) {
             try {
                 log.debug("Waiting for Vert.x instance to startup");
                 Thread.sleep(250L);

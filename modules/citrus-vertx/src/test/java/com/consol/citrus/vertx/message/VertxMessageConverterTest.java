@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
  */
 public class VertxMessageConverterTest {
 
-    private org.vertx.java.core.eventbus.Message vertxMessage = Mockito.mock(org.vertx.java.core.eventbus.Message.class);
+    private io.vertx.core.eventbus.Message vertxMessage = Mockito.mock(io.vertx.core.eventbus.Message.class);
 
     private VertxMessageConverter messageConverter = new VertxMessageConverter();
 

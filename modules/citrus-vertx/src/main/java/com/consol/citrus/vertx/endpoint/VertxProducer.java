@@ -21,7 +21,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Vertx;
+import io.vertx.core.Vertx;
 
 /**
  * @author Christoph Deppisch

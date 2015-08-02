@@ -19,7 +19,7 @@ package com.consol.citrus.vertx.factory;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Vertx;
+import io.vertx.core.Vertx;
 
 /**
  * Vertx instance factory creates a new instance only once and holds reuses this single instance all the time.
