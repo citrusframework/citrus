@@ -26,17 +26,18 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 /**
+ * Web socket endpoint configuration for client side web socket communication.
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketClientEndpointConfiguration extends WebSocketEndpointConfiguration {
-    /**
-     * Logger
-     */
+public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {
+    /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketClientEndpointConfiguration.class);
 
+    /** Web socket handler */
     private CitrusWebSocketHandler handler;
 
+    @Override
     public CitrusWebSocketHandler getHandler() {
         if (handler == null) {
             handler = getWebSocketClientHandler(getEndpointUri());
@@ -46,9 +47,14 @@ public class WebSocketClientEndpointConfiguration extends WebSocketEndpointConfi
 
     @Override
     public void setHandler(CitrusWebSocketHandler handler) {
-        throw new CitrusRuntimeException("Not supported");
+        throw new UnsupportedOperationException("Not allowed to set web socket handler directly!");
     }
 
+    /**
+     * Creates new client web socket handler by opening a new socket connection to server.
+     * @param url
+     * @return
+     */
     private CitrusWebSocketHandler getWebSocketClientHandler(String url) {
         WebSocketClient client = new StandardWebSocketClient();
         CitrusWebSocketHandler handler = new CitrusWebSocketHandler();
@@ -56,7 +62,7 @@ public class WebSocketClientEndpointConfiguration extends WebSocketEndpointConfi
         try {
             future.get();
         } catch (Exception e) {
-            String errMsg = String.format("Error connecting to Web Socket server - '%s", url);
+            String errMsg = String.format("Failed to connect to Web Socket server - '%s'", url);
             LOG.error(errMsg);
             throw new CitrusRuntimeException(errMsg);
         }

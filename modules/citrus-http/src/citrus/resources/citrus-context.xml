@@ -55,7 +55,7 @@
                       root-parent-context="true"
                       resource-base="src/citrus/resources">
     <citrus-http:websockets>
-      <citrus-http:ref websocket="wsEndpoint1" />
+      <citrus-http:ref websocket="webSocketEndpoint1" />
     </citrus-http:websockets>
   </citrus-http:server>
   
@@ -65,14 +65,14 @@
                       root-parent-context="true"
                       resource-base="src/citrus/resources">
     <citrus-http:websockets>
-      <citrus-http:ref websocket="wsEndpoint2" />
+      <citrus-http:ref websocket="webSocketEndpoint2" />
     </citrus-http:websockets>
   </citrus-http:server>
 
-  <citrus-http:websocket id="wsEndpoint1" path="/ws1" />
-  <citrus-http:websocket id="wsEndpoint2" path="/ws2" />
+  <citrus-http:websocket id="webSocketEndpoint1" path="/websocket1" />
+  <citrus-http:websocket id="webSocketEndpoint2" path="/websocket2" />
 
-  <citrus-http:websocket-client id="wsClient1" url="ws://localhost:12080/ws1" />
-  <citrus-http:websocket-client id="wsClient2" url="ws://localhost:13080/ws2" />
+  <citrus-http:websocket-client id="webSocketClient1" url="ws://localhost:12080/websocket1" />
+  <citrus-http:websocket-client id="webSocketClient2" url="ws://localhost:13080/websocket2" />
 
 </beans>

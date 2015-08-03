@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.socket.message;
+package com.consol.citrus.http.integration;
 
-import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
- * Message representing web socket message data.
- *
  * @author Martin Maher
- * @since 2.3
  */
-public class WebSocketMessage extends DefaultMessage {
+@Test
+public class HttpWebSocketITest extends AbstractTestNGCitrusTest {
 
-    public WebSocketMessage(org.springframework.web.socket.WebSocketMessage externalMessage) {
-        super(externalMessage.getPayload());
-    }
+    @CitrusXmlTest(name = "HttpWebSocketITest")
+    public void testHttpWebSocket() {}
 }

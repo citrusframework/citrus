@@ -34,67 +34,76 @@ import java.util.Queue;
  * @since 2.3
  */
 public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
-    /**
-     * Logger
-     */
+    /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(CitrusWebSocketHandler.class);
 
-    private final Queue<AbstractWebSocketMessage<?>> inboundMessages = new LinkedList<>();
+    /** Inbound message cache */
+    private final Queue<WebSocketMessage<?>> inboundMessages = new LinkedList<>();
 
+    /** Web socket sessions */
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        LOG.debug(String.format("(%s) connection established", session.getId()));
+        LOG.debug(String.format("WebSocket connection established (%s)", session.getId()));
         sessions.put(session.getId(), session);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        LOG.debug(String.format("(%s) received text message", session.getId()));
+        LOG.debug(String.format("WebSocket endpoint (%s) received text message", session.getId()));
         inboundMessages.add(message);
     }
 
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
-        LOG.debug(String.format("(%s) received binary message", session.getId()));
+        LOG.debug(String.format("WebSocket endpoint (%s) received binary message", session.getId()));
         inboundMessages.add(message);
     }
 
     @Override
     protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
-        LOG.debug(String.format("(%s) received pong message", session.getId()));
+        LOG.debug(String.format("WebSocket endpoint (%s) received pong message", session.getId()));
         inboundMessages.add(message);
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        LOG.error(String.format("(%s) WebSocket transport error", session.getId()), exception);
+        LOG.error(String.format("WebSocket transport error (%s)", session.getId()), exception);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        LOG.debug(String.format("(%s) session closed - status : %s", session.getId(), status));
+        LOG.debug(String.format("WebSocket session (%s) closed - status : %s", session.getId(), status));
         sessions.remove(session.getId());
     }
 
-    public AbstractWebSocketMessage<?> getMessage() {
+    /**
+     * Polls message from internal cache.
+     * @return
+     */
+    public WebSocketMessage<?> getMessage() {
         return inboundMessages.poll();
     }
 
-    public boolean sendMessage(AbstractWebSocketMessage<?> message) {
+    /**
+     * Publish message to all sessions known to this handler.
+     * @param message
+     * @return
+     */
+    public boolean sendMessage(WebSocketMessage<?> message) {
         boolean sentSuccessfully = false;
         if (sessions.isEmpty()) {
             LOG.warn("No Web Socket session exists - message cannot be sent");
-        } else {
-            for (WebSocketSession session : sessions.values()) {
-                if (session != null && session.isOpen()) {
-                    try {
-                        session.sendMessage(message);
-                        sentSuccessfully = true;
-                    } catch (IOException e) {
-                        LOG.error(String.format("(%s) error sending message", session.getId()), e);
-                    }
+        }
+
+        for (WebSocketSession session : sessions.values()) {
+            if (session != null && session.isOpen()) {
+                try {
+                    session.sendMessage(message);
+                    sentSuccessfully = true;
+                } catch (IOException e) {
+                    LOG.error(String.format("(%s) error sending message", session.getId()), e);
                 }
             }
         }

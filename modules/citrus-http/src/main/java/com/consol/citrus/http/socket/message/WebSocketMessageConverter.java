@@ -17,37 +17,52 @@
 package com.consol.citrus.http.socket.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.socket.endpoint.WebSocketEndpointConfiguration;
+import com.consol.citrus.http.socket.endpoint.AbstractWebSocketEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
-import org.springframework.web.socket.AbstractWebSocketMessage;
-import org.springframework.web.socket.BinaryMessage;
-import org.springframework.web.socket.TextMessage;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.*;
 
 /**
+ * Message converter able to convert internal and external message representations for web socket messages. Converter
+ * converts inbound and outbound messages.
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketMessageConverter implements MessageConverter<AbstractWebSocketMessage, WebSocketEndpointConfiguration> {
+public class WebSocketMessageConverter implements MessageConverter<WebSocketMessage, AbstractWebSocketEndpointConfiguration> {
     @Override
-    public AbstractWebSocketMessage convertOutbound(Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketMessage convertOutbound(Message internalMessage, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+        WebSocketMessage webSocketMessage;
         Object payload = internalMessage.getPayload();
-        if (payload instanceof String) {
-            return new TextMessage(payload.toString());
-        } else if (payload instanceof byte[]) {
-            return new BinaryMessage((byte[]) payload);
-        } else {
-            throw new CitrusRuntimeException(String.format("Invalid payload - unsupported type: '%s'", payload.getClass().getCanonicalName()));
+        boolean isLast = true;
+
+        if (internalMessage.getHeader(WebSocketMessageHeaders.WEB_SOCKET_IS_LAST) != null) {
+            isLast = Boolean.valueOf(internalMessage.getHeader(WebSocketMessageHeaders.WEB_SOCKET_IS_LAST).toString());
         }
+
+        if (payload instanceof String) {
+            webSocketMessage = new TextMessage(payload.toString(), isLast);
+        } else if (payload instanceof byte[]) {
+            webSocketMessage = new BinaryMessage((byte[]) payload, isLast);
+        } else {
+            try {
+                webSocketMessage = new TextMessage(internalMessage.getPayload(String.class), isLast);
+            } catch (ConversionNotSupportedException e) {
+                throw new CitrusRuntimeException(String.format("Found unsupported payload type: '%s'", payload.getClass().getCanonicalName()), e);
+            }
+        }
+
+        convertOutbound(webSocketMessage, internalMessage, endpointConfiguration);
+        return webSocketMessage;
     }
 
     @Override
-    public void convertOutbound(AbstractWebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
-        throw new CitrusRuntimeException("Not supported");
+    public void convertOutbound(WebSocketMessage externalMessage, Message internalMessage, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
     }
 
     @Override
-    public Message convertInbound(AbstractWebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
-        return new WebSocketMessage(externalMessage);
+    public Message convertInbound(WebSocketMessage externalMessage, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+        return new com.consol.citrus.http.socket.message.WebSocketMessage(externalMessage);
     }
 }

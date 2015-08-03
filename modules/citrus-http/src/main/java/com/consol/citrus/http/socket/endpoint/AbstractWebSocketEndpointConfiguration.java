@@ -24,17 +24,15 @@ import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
  * @author Martin Maher
  * @since 2.3
  */
-public abstract class WebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
+public abstract class AbstractWebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
+    /** Web socket server endpoint uri */
     private String endpointUri;
 
-    /**
-     * The message converter
-     */
+    /** The message converter */
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
 
     /**
      * Gets the message converter.
-     *
      * @return
      */
     public WebSocketMessageConverter getMessageConverter() {
@@ -50,14 +48,30 @@ public abstract class WebSocketEndpointConfiguration extends AbstractEndpointCon
         this.messageConverter = messageConverter;
     }
 
+    /**
+     * Gets or constructs new web socket handler.
+     * @return
+     */
     public abstract CitrusWebSocketHandler getHandler();
 
+    /**
+     * Sets web socket handler.
+     * @return
+     */
     public abstract void setHandler(CitrusWebSocketHandler handler);
 
+    /**
+     * Gets the web socket endpoint uri.
+     * @return
+     */
     public String getEndpointUri() {
         return endpointUri;
     }
 
+    /**
+     * Sets the web socket endpoint uri.
+     * @param endpointUri
+     */
     public void setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
     }

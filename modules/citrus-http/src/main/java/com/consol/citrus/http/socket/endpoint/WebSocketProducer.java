@@ -22,9 +22,10 @@ import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-import org.springframework.web.socket.AbstractWebSocketMessage;
+import org.springframework.web.socket.WebSocketMessage;
 
 /**
+ * Producer sends web socket messages to all open sessions known to the web socket handler.
  * @author Martin Maher
  * @since 2.3
  */
@@ -35,7 +36,7 @@ public class WebSocketProducer implements Producer {
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketProducer.class);
 
     private final String name;
-    private final WebSocketEndpointConfiguration endpointConfiguration;
+    private final AbstractWebSocketEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint configuration.
@@ -43,7 +44,7 @@ public class WebSocketProducer implements Producer {
      * @param name
      * @param endpointConfiguration
      */
-    public WebSocketProducer(String name, WebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketProducer(String name, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
         this.name = name;
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -56,7 +57,7 @@ public class WebSocketProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        AbstractWebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
+        WebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
         if(endpointConfiguration.getHandler().sendMessage(wsMessage)) {
             LOG.info("WebSocket Message was successfully sent");
         }

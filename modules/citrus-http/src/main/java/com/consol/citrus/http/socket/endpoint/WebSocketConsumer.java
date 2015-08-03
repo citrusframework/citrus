@@ -22,17 +22,16 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.socket.AbstractWebSocketMessage;
+import org.springframework.web.socket.WebSocketMessage;
 
 /**
+ * Consumer polls for incoming messages on web socket handler.
  * @author Martin Maher
  * @since 2.3
  */
 public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketConsumer.class);
 
     private static final long POLL_INTERVAL = 500L;
@@ -40,7 +39,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Endpoint configuration
      */
-    private final WebSocketEndpointConfiguration endpointConfiguration;
+    private final AbstractWebSocketEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using receive timeout setting.
@@ -48,16 +47,16 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
      * @param name
      * @param endpointConfiguration
      */
-    public WebSocketConsumer(String name, WebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketConsumer(String name, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        LOG.info(String.format("Waiting %s for Web Socket message ...", timeout));
+        LOG.info(String.format("Waiting %s ms for Web Socket message ...", timeout));
 
-        AbstractWebSocketMessage<?> message = receive(endpointConfiguration, timeout);
+        WebSocketMessage<?> message = receive(endpointConfiguration, timeout);
         Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration);
 
         LOG.info("Received Web Socket message");
@@ -66,10 +65,16 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         return receivedMessage;
     }
 
-    private AbstractWebSocketMessage<?> receive(WebSocketEndpointConfiguration config, long timeout) {
+    /**
+     * Receive web socket message by polling on web socket handler for incoming message.
+     * @param config
+     * @param timeout
+     * @return
+     */
+    private WebSocketMessage<?> receive(AbstractWebSocketEndpointConfiguration config, long timeout) {
         long timeLeft = timeout;
 
-        AbstractWebSocketMessage<?> message = config.getHandler().getMessage();
+        WebSocketMessage<?> message = config.getHandler().getMessage();
         String path = endpointConfiguration.getEndpointUri();
         while (message == null && timeLeft > 0) {
             timeLeft -= POLL_INTERVAL;

@@ -21,21 +21,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Web socket endpoint configuration for server side web socket communication.
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketServerEndpointConfiguration extends WebSocketEndpointConfiguration {
-    /**
-     * Logger
-     */
+public class WebSocketServerEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {
+    /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketServerEndpointConfiguration.class);
 
+    /** Web socket handler */
     private CitrusWebSocketHandler handler;
 
+    @Override
     public CitrusWebSocketHandler getHandler() {
         return handler;
     }
 
+    @Override
     public void setHandler(CitrusWebSocketHandler handler) {
         if (this.handler != null) {
             LOG.warn(String.format("Handler already set for Web Socket endpoint (path='%s'). Check configuration to ensure that the Web Socket endpoint is not being used by multiple http-servers", getEndpointUri()));

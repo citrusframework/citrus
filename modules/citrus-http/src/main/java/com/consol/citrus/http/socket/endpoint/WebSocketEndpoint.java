@@ -22,6 +22,7 @@ import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 
 /**
+ * Endpoint constructs web socket consumer and producer with given endpoint configuration.
  * @author Martin Maher
  * @since 2.3
  */
@@ -37,7 +38,7 @@ public class WebSocketEndpoint extends AbstractEndpoint {
      *
      * @param endpointConfiguration
      */
-    public WebSocketEndpoint(WebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketEndpoint(AbstractWebSocketEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
     }
 
@@ -60,10 +61,14 @@ public class WebSocketEndpoint extends AbstractEndpoint {
     }
 
     @Override
-    public WebSocketEndpointConfiguration getEndpointConfiguration() {
-        return (WebSocketEndpointConfiguration) super.getEndpointConfiguration();
+    public AbstractWebSocketEndpointConfiguration getEndpointConfiguration() {
+        return (AbstractWebSocketEndpointConfiguration) super.getEndpointConfiguration();
     }
 
+    /**
+     * Sets the web socket handler.
+     * @param handler
+     */
     public void setWebSocketHandler(CitrusWebSocketHandler handler) {
         getEndpointConfiguration().setHandler(handler);
     }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.socket.interceptor;
 
+import com.consol.citrus.http.socket.message.WebSocketMessageHeaders;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -32,11 +33,15 @@ import java.util.Map;
  * @since 2.3
  */
 public class SessionEnricherHandshakeInterceptor implements HandshakeInterceptor {
-    public static final String ID = "citrus_ws_id";
-    public static final String PATH = "citrus_ws_path";
+    /** Id and path of web socket */
     private String wsId;
     private String wsPath;
 
+    /**
+     * Default constructor initializing fields.
+     * @param wsId
+     * @param wsPath
+     */
     public SessionEnricherHandshakeInterceptor(String wsId, String wsPath) {
         this.wsId = wsId;
         this.wsPath = wsPath;
@@ -45,14 +50,13 @@ public class SessionEnricherHandshakeInterceptor implements HandshakeInterceptor
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if (request instanceof ServletServerHttpRequest) {
-            attributes.put(ID, wsId);
-            attributes.put(PATH, wsPath);
+            attributes.put(WebSocketMessageHeaders.WEB_SOCKET_ID, wsId);
+            attributes.put(WebSocketMessageHeaders.WEB_SOCKET_PATH, wsPath);
         }
         return true;
     }
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
-
     }
 }

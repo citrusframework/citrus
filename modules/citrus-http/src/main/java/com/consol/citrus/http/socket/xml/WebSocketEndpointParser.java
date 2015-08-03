@@ -27,7 +27,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * Used for parsing Server WebSocket configurations
+ * Used for parsing Server WebSocket endpoints and respective configurations.
  *
  * @author Martin Maher
  * @since 2.3
