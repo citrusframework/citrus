@@ -36,7 +36,7 @@ public class WebSocketProducer implements Producer {
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketProducer.class);
 
     private final String name;
-    private final AbstractWebSocketEndpointConfiguration endpointConfiguration;
+    private final WebSocketEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint configuration.
@@ -44,7 +44,7 @@ public class WebSocketProducer implements Producer {
      * @param name
      * @param endpointConfiguration
      */
-    public WebSocketProducer(String name, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketProducer(String name, WebSocketEndpointConfiguration endpointConfiguration) {
         this.name = name;
         this.endpointConfiguration = endpointConfiguration;
     }

@@ -17,61 +17,36 @@
 package com.consol.citrus.http.socket.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
-import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
 
 /**
+ * Abstract endpoint configuration implementation provides basic endpoint properties for web socket endpoints.
  * @author Martin Maher
  * @since 2.3
  */
-public abstract class AbstractWebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
+public abstract class AbstractWebSocketEndpointConfiguration extends AbstractEndpointConfiguration implements WebSocketEndpointConfiguration {
     /** Web socket server endpoint uri */
     private String endpointUri;
 
     /** The message converter */
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
 
-    /**
-     * Gets the message converter.
-     * @return
-     */
+    @Override
     public WebSocketMessageConverter getMessageConverter() {
         return messageConverter;
     }
 
-    /**
-     * Sets the message converter.
-     *
-     * @param messageConverter
-     */
+    @Override
     public void setMessageConverter(WebSocketMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
     }
 
-    /**
-     * Gets or constructs new web socket handler.
-     * @return
-     */
-    public abstract CitrusWebSocketHandler getHandler();
-
-    /**
-     * Sets web socket handler.
-     * @return
-     */
-    public abstract void setHandler(CitrusWebSocketHandler handler);
-
-    /**
-     * Gets the web socket endpoint uri.
-     * @return
-     */
+    @Override
     public String getEndpointUri() {
         return endpointUri;
     }
 
-    /**
-     * Sets the web socket endpoint uri.
-     * @param endpointUri
-     */
+    @Override
     public void setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
     }

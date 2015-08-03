@@ -17,12 +17,12 @@
 package com.consol.citrus.http.socket.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.socket.endpoint.AbstractWebSocketEndpointConfiguration;
+import com.consol.citrus.http.socket.endpoint.WebSocketEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
 import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.*;
+import org.springframework.web.socket.WebSocketMessage;
 
 /**
  * Message converter able to convert internal and external message representations for web socket messages. Converter
@@ -30,9 +30,9 @@ import org.springframework.web.socket.*;
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketMessageConverter implements MessageConverter<WebSocketMessage, AbstractWebSocketEndpointConfiguration> {
+public class WebSocketMessageConverter implements MessageConverter<WebSocketMessage, WebSocketEndpointConfiguration> {
     @Override
-    public WebSocketMessage convertOutbound(Message internalMessage, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketMessage convertOutbound(Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
         WebSocketMessage webSocketMessage;
         Object payload = internalMessage.getPayload();
         boolean isLast = true;
@@ -58,11 +58,11 @@ public class WebSocketMessageConverter implements MessageConverter<WebSocketMess
     }
 
     @Override
-    public void convertOutbound(WebSocketMessage externalMessage, Message internalMessage, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(WebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
     }
 
     @Override
-    public Message convertInbound(WebSocketMessage externalMessage, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(WebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
         return new com.consol.citrus.http.socket.message.WebSocketMessage(externalMessage);
     }
 }

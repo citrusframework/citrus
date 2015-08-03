@@ -23,8 +23,7 @@ import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
-import com.consol.citrus.http.socket.endpoint.AbstractWebSocketEndpointConfiguration;
+import com.consol.citrus.http.socket.endpoint.*;
 import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -35,9 +34,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.easymock.EasyMock.*;
 
@@ -129,7 +126,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     @Test
     public void testConfigureWebSockerHandler() throws Exception {
         WebSocketEndpoint wsEndpoint = EasyMock.createMock(WebSocketEndpoint.class);
-        AbstractWebSocketEndpointConfiguration wsEndpointConfig = EasyMock.createMock(AbstractWebSocketEndpointConfiguration.class);
+        WebSocketEndpointConfiguration wsEndpointConfig = EasyMock.createMock(WebSocketEndpointConfiguration.class);
         String wsId = "wsId";
         String endpointUri = "someEndpointUri";
 

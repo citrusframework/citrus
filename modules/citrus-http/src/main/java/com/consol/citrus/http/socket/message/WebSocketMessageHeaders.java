@@ -19,6 +19,7 @@ package com.consol.citrus.http.socket.message;
 import com.consol.citrus.message.MessageHeaders;
 
 /**
+ * Special set of web socket related message headers.
  * @author Christoph Deppisch
  * @since 2.2.1
  */
@@ -31,7 +32,7 @@ public class WebSocketMessageHeaders {
     }
 
     /** Special header prefix for http transport headers in SOAP message sender */
-    public static final String WEB_SOCKET_PREFIX = MessageHeaders.PREFIX + "ws_";
+    public static final String WEB_SOCKET_PREFIX = MessageHeaders.PREFIX + "websocket_";
 
     public static final String WEB_SOCKET_ID = WEB_SOCKET_PREFIX + "id";
     public static final String WEB_SOCKET_PATH = WEB_SOCKET_PREFIX + "path";

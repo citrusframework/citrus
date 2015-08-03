@@ -39,7 +39,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Endpoint configuration
      */
-    private final AbstractWebSocketEndpointConfiguration endpointConfiguration;
+    private final WebSocketEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using receive timeout setting.
@@ -47,7 +47,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
      * @param name
      * @param endpointConfiguration
      */
-    public WebSocketConsumer(String name, AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketConsumer(String name, WebSocketEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -71,7 +71,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
      * @param timeout
      * @return
      */
-    private WebSocketMessage<?> receive(AbstractWebSocketEndpointConfiguration config, long timeout) {
+    private WebSocketMessage<?> receive(WebSocketEndpointConfiguration config, long timeout) {
         long timeLeft = timeout;
 
         WebSocketMessage<?> message = config.getHandler().getMessage();

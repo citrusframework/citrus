@@ -38,7 +38,7 @@ public class WebSocketEndpoint extends AbstractEndpoint {
      *
      * @param endpointConfiguration
      */
-    public WebSocketEndpoint(AbstractWebSocketEndpointConfiguration endpointConfiguration) {
+    public WebSocketEndpoint(WebSocketEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
     }
 
@@ -61,8 +61,8 @@ public class WebSocketEndpoint extends AbstractEndpoint {
     }
 
     @Override
-    public AbstractWebSocketEndpointConfiguration getEndpointConfiguration() {
-        return (AbstractWebSocketEndpointConfiguration) super.getEndpointConfiguration();
+    public WebSocketEndpointConfiguration getEndpointConfiguration() {
+        return (WebSocketEndpointConfiguration) super.getEndpointConfiguration();
     }
 
     /**
