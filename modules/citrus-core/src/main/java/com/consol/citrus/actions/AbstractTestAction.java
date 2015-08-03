@@ -72,8 +72,9 @@ public abstract class AbstractTestAction implements TestAction {
     /**
      * @param description the description to set
      */
-    public void setDescription(String description) {
+    public AbstractTestAction setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     /**
@@ -87,8 +88,9 @@ public abstract class AbstractTestAction implements TestAction {
      * (non-Javadoc)
      * @see com.consol.citrus.TestAction#setName(java.lang.String)
      */
-    public void setName(String name) {
+    public AbstractTestAction setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -103,7 +105,8 @@ public abstract class AbstractTestAction implements TestAction {
      * Sets the actor.
      * @param actor the actor to set
      */
-    public void setActor(TestActor actor) {
+    public AbstractTestAction setActor(TestActor actor) {
         this.actor = actor;
+        return this;
     }
 }

@@ -81,8 +81,9 @@ public class LoadPropertiesAction extends AbstractTestAction {
      * File path setter.
      * @param file the file to set
      */
-    public void setFilePath(String file) {
+    public LoadPropertiesAction setFilePath(String file) {
         this.filePath = file;
+        return this;
     }
 
     /**

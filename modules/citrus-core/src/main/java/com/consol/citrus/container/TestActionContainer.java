@@ -32,7 +32,7 @@ public interface TestActionContainer extends TestAction {
      * Sets the embedded test actions to execute within this container.
      * @param actions
      */
-    void setActions(List<TestAction> actions);
+    TestActionContainer setActions(List<TestAction> actions);
     
     /**
      * Get the embedded test actions within this container.
@@ -49,7 +49,7 @@ public interface TestActionContainer extends TestAction {
      * Adds a test action to the nested action list.
      * @param action
      */
-    void addTestAction(TestAction action);
+    TestActionContainer addTestAction(TestAction action);
     
     /**
      * Returns the index in the action chain for provided action instance.

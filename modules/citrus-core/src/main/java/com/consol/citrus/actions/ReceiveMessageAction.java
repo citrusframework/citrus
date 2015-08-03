@@ -213,24 +213,27 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Setter for messageSelector.
      * @param messageSelector
      */
-    public void setMessageSelector(Map<String, Object> messageSelector) {
+    public ReceiveMessageAction setMessageSelector(Map<String, Object> messageSelector) {
         this.messageSelector = messageSelector;
+        return this;
     }
 
     /**
      * Set message selector string.
      * @param messageSelectorString
      */
-    public void setMessageSelectorString(String messageSelectorString) {
+    public ReceiveMessageAction setMessageSelectorString(String messageSelectorString) {
         this.messageSelectorString = messageSelectorString;
+        return this;
     }
 
     /**
      * Set single message validator.
      * @param validator the message validator to set
      */
-    public void setValidator(MessageValidator<? extends ValidationContext> validator) {
+    public ReceiveMessageAction setValidator(MessageValidator<? extends ValidationContext> validator) {
         this.validator = validator;
+        return this;
     }
 
     /**
@@ -252,8 +255,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Set message endpoint instance.
      * @param endpoint the message endpoint
      */
-    public void setEndpoint(Endpoint endpoint) {
+    public ReceiveMessageAction setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
+        return this;
     }
 
     /**
@@ -276,41 +280,46 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Sets the endpoint uri.
      * @param endpointUri
      */
-    public void setEndpointUri(String endpointUri) {
+    public ReceiveMessageAction setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
+        return this;
     }
 
     /**
      * Set the receive timeout.
      * @param receiveTimeout the receiveTimeout to set
      */
-    public void setReceiveTimeout(long receiveTimeout) {
+    public ReceiveMessageAction setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
+        return this;
     }
     
     /**
      * Adds a new variable extractor.
      * @param variableExtractor the variableExtractor to set
      */
-    public void addVariableExtractors(VariableExtractor variableExtractor) {
+    public ReceiveMessageAction addVariableExtractors(VariableExtractor variableExtractor) {
         this.variableExtractors.add(variableExtractor);
+        return this;
     }
 
     /**
      * Set the list of variable extractors.
      * @param variableExtractors the variableExtractors to set
      */
-    public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
+    public ReceiveMessageAction setVariableExtractors(List<VariableExtractor> variableExtractors) {
         this.variableExtractors = variableExtractors;
+        return this;
     }
 
     /**
      * Sets the list of available validation contexts for this action.
      * @param validationContexts the validationContexts to set
      */
-    public void setValidationContexts(
+    public ReceiveMessageAction setValidationContexts(
             List<ValidationContext> validationContexts) {
         this.validationContexts = validationContexts;
+        return this;
     }
 
     /**
@@ -325,8 +334,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Sets the expected message type for this receive action.
      * @param messageType the messageType to set
      */
-    public void setMessageType(String messageType) {
+    public ReceiveMessageAction setMessageType(String messageType) {
         this.messageType = messageType;
+        return this;
     }
 
     /**
@@ -389,8 +399,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Sets the validationCallback.
      * @param validationCallback the validationCallback to set
      */
-    public void setValidationCallback(ValidationCallback validationCallback) {
+    public ReceiveMessageAction setValidationCallback(ValidationCallback validationCallback) {
         this.validationCallback = validationCallback;
+        return this;
     }
 
     /**
@@ -405,8 +416,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Sets the data dictionary.
      * @param dataDictionary
      */
-    public void setDataDictionary(DataDictionary dataDictionary) {
+    public ReceiveMessageAction setDataDictionary(DataDictionary dataDictionary) {
         this.dataDictionary = dataDictionary;
+        return this;
     }
 
     @Override

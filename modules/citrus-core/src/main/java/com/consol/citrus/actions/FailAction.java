@@ -44,8 +44,9 @@ public class FailAction extends AbstractTestAction {
      * Setter for user defined cause message.
      * @param message
      */
-    public void setMessage(String message) {
+    public FailAction setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     /**

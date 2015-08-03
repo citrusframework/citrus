@@ -65,15 +65,17 @@ public class StopServerAction extends AbstractTestAction {
     /**
      * @param server the server to set
      */
-    public void setServer(Server server) {
+    public StopServerAction setServer(Server server) {
         this.server = server;
+        return this;
     }
 
     /**
      * @param serverList the servers to set
      */
-    public void setServerList(List<Server> serverList) {
+    public StopServerAction setServerList(List<Server> serverList) {
         this.serverList = serverList;
+        return this;
     }
 
     /**

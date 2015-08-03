@@ -72,8 +72,9 @@ public class CreateVariablesAction extends AbstractTestAction {
      * Setter for variables
      * @param variables
      */
-    public void setVariables(Map<String, String> variables) {
+    public CreateVariablesAction setVariables(Map<String, String> variables) {
         this.variables = variables;
+        return this;
     }
 
     /**

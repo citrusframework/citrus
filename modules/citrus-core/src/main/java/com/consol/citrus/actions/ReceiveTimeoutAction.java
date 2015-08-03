@@ -102,24 +102,27 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
      * Setter for receive timeout.
      * @param timeout
      */
-    public void setTimeout(long timeout) {
+    public ReceiveTimeoutAction setTimeout(long timeout) {
         this.timeout = timeout;
+        return this;
     }
 
     /**
      * Set message selector string.
      * @param messageSelector
      */
-    public void setMessageSelector(String messageSelector) {
+    public ReceiveTimeoutAction setMessageSelector(String messageSelector) {
         this.messageSelector = messageSelector;
+        return this;
     }
 
     /**
      * Set message endpoint instance.
      * @param endpoint the message endpoint
      */
-    public void setEndpoint(Endpoint endpoint) {
+    public ReceiveTimeoutAction setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
+        return this;
     }
 
     /**
@@ -158,7 +161,8 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
      * Sets the endpoint uri.
      * @param endpointUri
      */
-    public void setEndpointUri(String endpointUri) {
+    public ReceiveTimeoutAction setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
+        return this;
     }
 }

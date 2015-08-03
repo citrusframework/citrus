@@ -69,8 +69,9 @@ public class TraceVariablesAction extends AbstractTestAction {
      * Setter for info values list
      * @param variableNames
      */
-    public void setVariableNames(List<String> variableNames) {
+    public TraceVariablesAction setVariableNames(List<String> variableNames) {
         this.variableNames = variableNames;
+        return this;
     }
 
     /**

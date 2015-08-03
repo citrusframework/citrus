@@ -192,8 +192,9 @@ public class AntRunAction extends AbstractTestAction {
      * Sets the target.
      * @param target the target to set
      */
-    public void setTarget(String target) {
+    public AntRunAction setTarget(String target) {
         this.target = target;
+        return this;
     }
 
     /**
@@ -208,8 +209,9 @@ public class AntRunAction extends AbstractTestAction {
      * Sets the targets.
      * @param targets the targets to set
      */
-    public void setTargets(String targets) {
+    public AntRunAction setTargets(String targets) {
         this.targets = targets;
+        return this;
     }
 
     /**
@@ -224,8 +226,9 @@ public class AntRunAction extends AbstractTestAction {
      * Sets the properties.
      * @param properties the properties to set
      */
-    public void setProperties(Properties properties) {
+    public AntRunAction setProperties(Properties properties) {
         this.properties = properties;
+        return this;
     }
 
     /**
@@ -240,8 +243,9 @@ public class AntRunAction extends AbstractTestAction {
      * Sets the propertyFilePath.
      * @param propertyFilePath the propertyFilePath to set
      */
-    public void setPropertyFilePath(String propertyFilePath) {
+    public AntRunAction setPropertyFilePath(String propertyFilePath) {
         this.propertyFilePath = propertyFilePath;
+        return this;
     }
 
     /**
@@ -256,8 +260,9 @@ public class AntRunAction extends AbstractTestAction {
      * Sets the buildListener.
      * @param buildListener the buildListener to set
      */
-    public void setBuildListener(BuildListener buildListener) {
+    public AntRunAction setBuildListener(BuildListener buildListener) {
         this.buildListener = buildListener;
+        return this;
     }
 
 }

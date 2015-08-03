@@ -72,8 +72,9 @@ public class SleepAction extends AbstractTestAction {
      * Setter for milliseconds
      * @param milliseconds
      */
-    public void setMilliseconds(String milliseconds) {
+    public SleepAction setMilliseconds(String milliseconds) {
         this.milliseconds = milliseconds;
+        return this;
     }
 
     /**
@@ -88,8 +89,9 @@ public class SleepAction extends AbstractTestAction {
      * Setter for seconds
      * @param seconds
      */
-    public void setSeconds(String seconds) {
+    public SleepAction setSeconds(String seconds) {
         this.seconds = seconds;
+        return this;
     }
 
     /**

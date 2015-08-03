@@ -77,8 +77,9 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     /**
      * {@inheritDoc}
      */
-    public final void setName(String name) {
+    public final AbstractActionDefinition setName(String name) {
         action.setName(name);
+        return this;
     }
 
     /**
@@ -91,8 +92,9 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     /**
      * {@inheritDoc}
      */
-    public final void setDescription(String description) {
+    public final AbstractActionDefinition setDescription(String description) {
         action.setDescription(description);
+        return this;
     }
 
 }

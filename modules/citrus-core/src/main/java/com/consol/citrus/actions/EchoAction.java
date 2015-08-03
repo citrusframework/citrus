@@ -57,8 +57,9 @@ public class EchoAction extends AbstractTestAction {
      * Setter for message
      * @param message
      */
-    public void setMessage(String message) {
+    public EchoAction setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     /**

@@ -123,24 +123,27 @@ public class InputAction extends AbstractTestAction {
      * Sets the message.
      * @param message the message to set
      */
-    public void setMessage(String message) {
+    public InputAction setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     /**
      * Sets the variable.
      * @param variable the variable to set
      */
-    public void setVariable(String variable) {
+    public InputAction setVariable(String variable) {
         this.variable = variable;
+        return this;
     }
 
     /**
      * Sets the valid answers.
      * @param validAnswers the validAnswers to set
      */
-    public void setValidAnswers(String validAnswers) {
+    public InputAction setValidAnswers(String validAnswers) {
         this.validAnswers = validAnswers;
+        return this;
     }
 
     /**
