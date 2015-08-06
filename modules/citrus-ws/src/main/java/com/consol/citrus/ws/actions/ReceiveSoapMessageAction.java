@@ -20,15 +20,14 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Message receiver for SOAP messaging.
@@ -86,16 +85,18 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      * Sets the control attachments.
      * @param attachments the control attachments
      */
-    public void setAttachments(List<SoapAttachment> attachments) {
+    public ReceiveSoapMessageAction setAttachments(List<SoapAttachment> attachments) {
         this.attachments = attachments;
+        return this;
     }
 
     /**
      * Set the attachment validator.
      * @param attachmentValidator the attachmentValidator to set
      */
-    public void setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {
+    public ReceiveSoapMessageAction setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {
         this.attachmentValidator = attachmentValidator;
+        return this;
     }
 
     /**

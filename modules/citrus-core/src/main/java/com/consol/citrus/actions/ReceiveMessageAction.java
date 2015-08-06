@@ -316,8 +316,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Sets the list of available validation contexts for this action.
      * @param validationContexts the validationContexts to set
      */
-    public ReceiveMessageAction setValidationContexts(
-            List<ValidationContext> validationContexts) {
+    public ReceiveMessageAction setValidationContexts(List<ValidationContext> validationContexts) {
         this.validationContexts = validationContexts;
         return this;
     }

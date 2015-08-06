@@ -106,16 +106,18 @@ public class SendSoapMessageAction extends SendMessageAction {
      * Sets the control attachments.
      * @param attachments the control attachments
      */
-    public void setAttachments(List<SoapAttachment> attachments) {
+    public SendSoapMessageAction setAttachments(List<SoapAttachment> attachments) {
         this.attachments = attachments;
+        return this;
     }
     
     /**
      * Enable or disable mtom attachments
      * @param mtomEnabled
      */
-    public void setMtomEnabled(boolean mtomEnabled) {
+    public SendSoapMessageAction setMtomEnabled(boolean mtomEnabled) {
         this.mtomEnabled = mtomEnabled;
+        return this;
     }
 
     /**

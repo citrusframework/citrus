@@ -176,8 +176,9 @@ public class AntRunAction extends AbstractTestAction {
      * Sets the buildFilePath.
      * @param buildFilePath the buildFilePath to set
      */
-    public void setBuildFilePath(String buildFilePath) {
+    public AntRunAction setBuildFilePath(String buildFilePath) {
         this.buildFilePath = buildFilePath;
+        return this;
     }
 
     /**

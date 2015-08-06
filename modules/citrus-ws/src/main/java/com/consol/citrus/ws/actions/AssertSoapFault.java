@@ -143,31 +143,35 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Set the nested test action.
      * @param action the action to set
      */
-    public void setAction(TestAction action) {
+    public AssertSoapFault setAction(TestAction action) {
         addTestAction(action);
+        return this;
     }
 
 	/**
 	 * Set the fault code.
 	 * @param faultCode the faultCode to set
 	 */
-	public void setFaultCode(String faultCode) {
+	public AssertSoapFault setFaultCode(String faultCode) {
 		this.faultCode = faultCode;
+        return this;
 	}
 
 	/**
 	 * Set the fault string.
 	 * @param faultString the faultString to set
 	 */
-	public void setFaultString(String faultString) {
+	public AssertSoapFault setFaultString(String faultString) {
 		this.faultString = faultString;
+        return this;
 	}
 
     /**
      * @param validator the validator to set
      */
-    public void setValidator(SoapFaultValidator validator) {
+    public AssertSoapFault setValidator(SoapFaultValidator validator) {
         this.validator = validator;
+        return this;
     }
 
     @Override
@@ -233,8 +237,9 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Sets the faultDetails.
      * @param faultDetails the faultDetails to set
      */
-    public void setFaultDetails(List<String> faultDetails) {
+    public AssertSoapFault setFaultDetails(List<String> faultDetails) {
         this.faultDetails = faultDetails;
+        return this;
     }
 
     /**
@@ -249,8 +254,9 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Sets the fault detail resource paths.
      * @param faultDetailResourcePaths
      */
-    public void setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
+    public AssertSoapFault setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
         this.faultDetailResourcePaths = faultDetailResourcePaths;
+        return this;
     }
 
     /**
@@ -273,8 +279,9 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Sets the faultActor.
      * @param faultActor the faultActor to set
      */
-    public void setFaultActor(String faultActor) {
+    public AssertSoapFault setFaultActor(String faultActor) {
         this.faultActor = faultActor;
+        return this;
     }
 
     /**
@@ -289,8 +296,9 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Sets the validationContext.
      * @param validationContext the validationContext to set
      */
-    public void setValidationContext(ValidationContext validationContext) {
+    public AssertSoapFault setValidationContext(ValidationContext validationContext) {
         this.validationContext = validationContext;
+        return this;
     }
     
 }

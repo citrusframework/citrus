@@ -105,24 +105,27 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
      *
      * @param faultCode the faultCode to set
      */
-    public void setFaultCode(String faultCode) {
+    public SendSoapFaultAction setFaultCode(String faultCode) {
         this.faultCode = faultCode;
+        return this;
     }
 
     /**
      * Set the fault reason string describing the fault.
      * @param faultString the faultString to set
      */
-    public void setFaultString(String faultString) {
+    public SendSoapFaultAction setFaultString(String faultString) {
         this.faultString = faultString;
+        return this;
     }
 
     /**
      * Sets the faultActor.
      * @param faultActor the faultActor to set
      */
-    public void setFaultActor(String faultActor) {
+    public SendSoapFaultAction setFaultActor(String faultActor) {
         this.faultActor = faultActor;
+        return this;
     }
 
     /**
@@ -161,8 +164,9 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
      * Sets the faultDetails.
      * @param faultDetails the faultDetails to set
      */
-    public void setFaultDetails(List<String> faultDetails) {
+    public SendSoapFaultAction setFaultDetails(List<String> faultDetails) {
         this.faultDetails = faultDetails;
+        return this;
     }
 
     /**
@@ -177,7 +181,8 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
      * Sets the fault detail resource paths.
      * @param faultDetailResourcePaths
      */
-    public void setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
+    public SendSoapFaultAction setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
         this.faultDetailResourcePaths = faultDetailResourcePaths;
+        return this;
     }
 }
