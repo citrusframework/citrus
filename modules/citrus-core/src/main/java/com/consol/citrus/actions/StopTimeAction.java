@@ -71,8 +71,9 @@ public class StopTimeAction extends AbstractTestAction {
      * Setter for timeline id.
      * @param period
      */
-    public void setId(String period) {
+    public StopTimeAction setId(String period) {
         this.id = period;
+        return this;
     }
 
     /**

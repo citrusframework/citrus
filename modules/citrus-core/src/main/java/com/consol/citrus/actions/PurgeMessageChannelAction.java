@@ -152,8 +152,9 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Sets the channelNames.
      * @param channelNames the channelNames to set
      */
-    public void setChannelNames(List<String> channelNames) {
+    public PurgeMessageChannelAction setChannelNames(List<String> channelNames) {
         this.channelNames = channelNames;
+        return this;
     }
 
     /**
@@ -168,8 +169,9 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Sets the channels.
      * @param channels the channels to set
      */
-    public void setChannels(List<MessageChannel> channels) {
+    public PurgeMessageChannelAction setChannels(List<MessageChannel> channels) {
         this.channels = channels;
+        return this;
     }
 
     /**
@@ -184,8 +186,9 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Sets the messageSelector.
      * @param messageSelector the messageSelector to set
      */
-    public void setMessageSelector(MessageSelector messageSelector) {
+    public PurgeMessageChannelAction setMessageSelector(MessageSelector messageSelector) {
         this.messageSelector = messageSelector;
+        return this;
     }
 
     /**
@@ -200,8 +203,9 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Sets the channelResolver.
      * @param channelResolver the channelResolver to set
      */
-    public void setChannelResolver(DestinationResolver<MessageChannel> channelResolver) {
+    public PurgeMessageChannelAction setChannelResolver(DestinationResolver<MessageChannel> channelResolver) {
         this.channelResolver = channelResolver;
+        return this;
     }
 
 }

@@ -41,7 +41,7 @@ public interface TestAction {
      * Name of test action injected as Spring bean name
      * @return name as String
      */
-    void setName(String name);
+    TestAction setName(String name);
 
     /**
      * Description of this test action
@@ -53,7 +53,7 @@ public interface TestAction {
      * Description setter.
      * @param description
      */
-    void setDescription(String description);
+    TestAction setDescription(String description);
     
     /**
      * Checks if this action is disabled.

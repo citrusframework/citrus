@@ -35,8 +35,9 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     private TestAction lastExecutedAction;
     
     @Override
-    public void setActions(List<TestAction> actions) {
+    public AbstractActionContainer setActions(List<TestAction> actions) {
         this. actions = actions;
+        return this;
     }
 
     @Override
@@ -50,8 +51,9 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     }
 
     @Override
-    public void addTestAction(TestAction action) {
+    public AbstractActionContainer addTestAction(TestAction action) {
         actions.add(action);
+        return this;
     }
 
     @Override

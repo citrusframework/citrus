@@ -113,16 +113,18 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
      * Setter for inline script.
      * @param script
      */
-    public void setScript(String script) {
+    public ExecutePLSQLAction setScript(String script) {
         this.script = script;
+        return this;
     }
 
     /**
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
      */
-    public void setIgnoreErrors(boolean ignoreErrors) {
+    public ExecutePLSQLAction setIgnoreErrors(boolean ignoreErrors) {
         this.ignoreErrors = ignoreErrors;
+        return this;
     }
 
     /**

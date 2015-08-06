@@ -157,24 +157,27 @@ public class SendMessageAction extends AbstractTestAction {
      * Sets the message endpoint.
      * @param endpoint
      */
-    public void setEndpoint(Endpoint endpoint) {
+    public SendMessageAction setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
+        return this;
     }
 
     /**
      * Sets the message builder implementation.
      * @param messageBuilder the messageBuilder to set
      */
-    public void setMessageBuilder(MessageContentBuilder messageBuilder) {
+    public SendMessageAction setMessageBuilder(MessageContentBuilder messageBuilder) {
         this.messageBuilder = messageBuilder;
+        return this;
     }
 
     /**
      * The variable extractors for this message sending action.
      * @param variableExtractors the variableExtractors to set
      */
-    public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
+    public SendMessageAction setVariableExtractors(List<VariableExtractor> variableExtractors) {
         this.variableExtractors = variableExtractors;
+        return this;
     }
 
     /**
@@ -197,8 +200,9 @@ public class SendMessageAction extends AbstractTestAction {
      * Enables fork mode for this message sender.
      * @param fork the fork to set.
      */
-    public void setForkMode(boolean fork) {
+    public SendMessageAction setForkMode(boolean fork) {
         this.forkMode = fork;
+        return this;
     }
 
     /**
@@ -213,8 +217,9 @@ public class SendMessageAction extends AbstractTestAction {
      * Sets the expected message type for this receive action.
      * @param messageType the messageType to set
      */
-    public void setMessageType(String messageType) {
+    public SendMessageAction setMessageType(String messageType) {
         this.messageType = messageType;
+        return this;
     }
 
     /**
@@ -237,8 +242,9 @@ public class SendMessageAction extends AbstractTestAction {
      * Sets the data dictionary.
      * @param dataDictionary
      */
-    public void setDataDictionary(DataDictionary dataDictionary) {
+    public SendMessageAction setDataDictionary(DataDictionary dataDictionary) {
         this.dataDictionary = dataDictionary;
+        return this;
     }
 
     /**
@@ -253,7 +259,8 @@ public class SendMessageAction extends AbstractTestAction {
      * Sets the endpoint uri.
      * @param endpointUri
      */
-    public void setEndpointUri(String endpointUri) {
+    public SendMessageAction setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
+        return this;
     }
 }

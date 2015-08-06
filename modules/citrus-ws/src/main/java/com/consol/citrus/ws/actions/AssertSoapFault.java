@@ -171,9 +171,10 @@ public class AssertSoapFault extends AbstractActionContainer {
     }
 
     @Override
-    public void addTestAction(TestAction action) {
+    public AssertSoapFault addTestAction(TestAction action) {
         this.action = action;
         super.addTestAction(action);
+        return this;
     }
 
     @Override
@@ -186,13 +187,14 @@ public class AssertSoapFault extends AbstractActionContainer {
     }
 
     @Override
-    public void setActions(List<TestAction> actions) {
+    public AssertSoapFault setActions(List<TestAction> actions) {
         if (actions.size() > 1) {
             throw new CitrusRuntimeException("Invalid number of nested test actions - only one single nested action is allowed");
         }
 
         action = actions.get(0);
         super.setActions(actions);
+        return this;
     }
 
     /**

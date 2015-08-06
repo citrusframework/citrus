@@ -174,8 +174,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Sets this test action's description.
      * @param description the description to set
      */
-    public void setDescription(String description) {
+    public AbstractDatabaseConnectingTestAction setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     /**
@@ -189,24 +190,27 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     /**
      * Sets this test action's name.
      */
-    public void setName(String name) {
+    public AbstractDatabaseConnectingTestAction setName(String name) {
         this.name = name;
+        return this;
     }
     
     /**
      * List of statements to execute. Declared inline in the test case. 
      * @param statements
      */
-    public void setStatements(List<String> statements) {
+    public AbstractDatabaseConnectingTestAction setStatements(List<String> statements) {
         this.statements = statements;
+        return this;
     }
     
     /**
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
      */
-    public void setSqlResourcePath(String sqlResource) {
+    public AbstractDatabaseConnectingTestAction setSqlResourcePath(String sqlResource) {
         this.sqlResourcePath = sqlResource;
+        return this;
     }
 
     /**
@@ -237,7 +241,8 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Sets the actor.
      * @param actor the actor to set
      */
-    public void setActor(TestActor actor) {
+    public AbstractDatabaseConnectingTestAction setActor(TestActor actor) {
         this.actor = actor;
+        return this;
     }
 }

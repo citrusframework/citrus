@@ -315,8 +315,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      *
      * @param controlResultSet
      */
-    public void setControlResultSet(Map<String, List<String>> controlResultSet) {
+    public ExecuteSQLQueryAction setControlResultSet(Map<String, List<String>> controlResultSet) {
         this.controlResultSet = controlResultSet;
+        return this;
     }
 
     /**
@@ -325,17 +326,19 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      *
      * @param variablesMap the variables to be created out of database values
      */
-    public void setExtractVariables(Map<String, String> variablesMap) {
+    public ExecuteSQLQueryAction setExtractVariables(Map<String, String> variablesMap) {
         this.extractVariables = variablesMap;
+        return this;
     }
 
     /**
      * Sets the script validation context.
      * @param scriptValidationContext the scriptValidationContext to set
      */
-    public void setScriptValidationContext(
+    public ExecuteSQLQueryAction setScriptValidationContext(
             ScriptValidationContext scriptValidationContext) {
         this.scriptValidationContext = scriptValidationContext;
+        return this;
     }
 
     /**
@@ -350,8 +353,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Sets the validator.
      * @param validator the validator to set
      */
-    public void setValidator(SqlResultSetScriptValidator validator) {
+    public ExecuteSQLQueryAction setValidator(SqlResultSetScriptValidator validator) {
         this.validator = validator;
+        return this;
     }
 
     /**

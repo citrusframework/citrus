@@ -117,40 +117,45 @@ public class TransformAction extends AbstractTestAction {
 	 * Set the XML document
 	 * @param xmlData the xmlData to set
 	 */
-	public void setXmlData(String xmlData) {
+	public TransformAction setXmlData(String xmlData) {
 		this.xmlData = xmlData;
+		return this;
 	}
 
 	/**
 	 * Set the XML document as resource
 	 * @param xmlResource the xmlResource to set
 	 */
-	public void setXmlResourcePath(String xmlResource) {
+	public TransformAction setXmlResourcePath(String xmlResource) {
 		this.xmlResourcePath = xmlResource;
+		return this;
 	}
 
 	/**
 	 * Set the XSLT document
 	 * @param xsltData the xsltData to set
 	 */
-	public void setXsltData(String xsltData) {
+	public TransformAction setXsltData(String xsltData) {
 		this.xsltData = xsltData;
+		return this;
 	}
 
 	/**
 	 * Set the XSLT document as resource
 	 * @param xsltResource the xsltResource to set
 	 */
-	public void setXsltResourcePath(String xsltResource) {
+	public TransformAction setXsltResourcePath(String xsltResource) {
 		this.xsltResourcePath = xsltResource;
+		return this;
 	}
 
 	/**
 	 * Set the target variable for the result
 	 * @param targetVariable the targetVariable to set
 	 */
-	public void setTargetVariable(String targetVariable) {
+	public TransformAction setTargetVariable(String targetVariable) {
 		this.targetVariable = targetVariable;
+		return this;
 	}
 
     /**

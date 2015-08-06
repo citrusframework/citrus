@@ -79,8 +79,9 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
      */
-    public void setIgnoreErrors(boolean ignoreErrors) {
+    public ExecuteSQLAction setIgnoreErrors(boolean ignoreErrors) {
         this.ignoreErrors = ignoreErrors;
+        return this;
     }
 
     /**
