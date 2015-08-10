@@ -139,7 +139,7 @@ public class MyFirstTest extends AbstractTestNGCitrusTest {
       <para>The first way of defining a Citrus test in Java is the <emphasis>test-designer</emphasis>. The Java DSL for a test designer works similar to the XML approach. The whole test case is built with all test actions first.
       Then the whole test case is executed as a whole Citrus test. This is how to define a Citrus test with designer Java DSL methods:</para>
 
-      <para><emphasis>Java DSL</emphasis></para>
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
@@ -175,6 +175,7 @@ public class MyFirstTestDesigner extends TestNGCitrusTestDesigner {
       before execution of the whole test case takes place at runtime of the test. This approach has the advantage that Citrus knows all test actions in a test before execution. On the other hand you are limited in mixing Java DSL method calls and
       normal Java code. The following example should clarify things a little bit.</para>
 
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
@@ -215,6 +216,7 @@ INFO            Citrus| TEST SUCCESS LoggingTest</programlisting>
 
       <para>We can fix this with the following <emphasis>test-designer</emphasis> code:</para>
 
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
@@ -248,6 +250,7 @@ public class LoggingTestDesigner extends TestNGCitrusTestDesigner {
 
       <para>Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called <emphasis>test-runner</emphasis>. Have a look at this example:</para>
 
+      <para><emphasis>Java DSL runner</emphasis></para>
       <programlisting language="java">import org.testng.annotations.Test;
   import com.consol.citrus.annotations.CitrusTest;
   import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
@@ -366,14 +369,25 @@ public void behaviorTest() {
     &lt;/echo&gt;
 &lt;/finally&gt;</programlisting>
 
-      <para><emphasis>Java DSL</emphasis></para>
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">@CitrusTest
 public void sampleTest() {
     echo("Hello Test Framework");
 
     doFinally(
-        echo("Do finally - regardless of any error before");
+        echo("Do finally - regardless of any error before")
     );
+}</programlisting>
+
+      <para><emphasis>Java DSL runner</emphasis></para>
+      <programlisting language="java">@CitrusTest
+public void sampleTest() {
+    echo("Hello Test Framework");
+
+    doFinally()
+        .actions(
+            echo("Do finally - regardless of any error before")
+        );
 }</programlisting>
   </section>
 
@@ -400,7 +414,7 @@ public void sampleTest() {
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void sampleTest() {
     description("This is a Test");

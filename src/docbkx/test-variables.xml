@@ -12,7 +12,7 @@
     &lt;variable name=&quot;customerId&quot; value=&quot;123456789&quot;/&gt;
 &lt;/variables&gt;</programlisting>
 
-  <para><emphasis>Java DSL</emphasis></para>
+  <para><emphasis>Java DSL designer and runner</emphasis></para>
   <programlisting>variable(&quot;text&quot;, &quot;Hello Test Framework&quot;);
 variable(&quot;customerId&quot;, &quot;123456789&quot;);</programlisting>
         
@@ -32,9 +32,48 @@ variable(&quot;customerId&quot;, &quot;123456789&quot;);</programlisting>
   the test. This makes it very easy to vary different test cases by adjusting the variables for different means (e.g. use different
   error codes in test cases).</para>
 
-  <para>You can also use a script to create variable values. This is extremely handy when you have very complex variable values.
-  Just code a small Groovy script for instance in order to define the variable value. A small sample should give you the idea how that
-  works:</para>
+  <section id="testcase-variables-global">
+    <title>Global variables</title>
+
+    <para>The last section told us to use variables as they are very useful and extend the maintainability of test cases. Now that every
+    test case defines local variables you can also define global variables. The global variables are valid in all tests by default.
+    This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those to the
+    basic Spring application context file. The following example demonstrates how to add global variables in Citrus:</para>
+
+    <programlisting>&lt;citrus:global-variables&gt;
+    &lt;citrus:variable name=&quot;projectName&quot; value=&quot;Citrus Integration Testing&quot;/&gt;
+    &lt;citrus:variable name=&quot;userName&quot; value=&quot;TestUser&quot;/&gt;
+&lt;/citrus:global-variables&gt;</programlisting>
+
+    <para>We add the Spring bean component to the <emphasis>'citrus-context.xml'</emphasis> application context file. The component
+    receives a list of name-value variable elements. You can reference the global variables in your test cases as usual.</para>
+
+    <para>Another possibility to set global variables is to load those from external property files. This may give you more powerful
+    global variables with user specific properties for instance. See how to load property files as global variables in this example:</para>
+
+    <programlisting>&lt;citrus:global-variables&gt;
+    &lt;citrus:file path=&quot;classpath:global-variable.properties&quot;/&gt;
+&lt;/citrus:global-variables&gt;</programlisting>
+
+    <para>We have just added a file path reference to the global variables component. Citrus loads the property file content as global
+    test variables. You can mix property file and name-value pair variable definitions in the global variables component.</para>
+
+    <note>
+      <para>The global variables can have variable expressions and Citrus functions. It is possible to use previously defined global
+      variables as values of new variables, like in this example:</para>
+    </note>
+
+    <programlisting>user=Citrus
+greeting=Hello ${user}!
+date=citrus:currentDate('yyyy-MM-dd')</programlisting>
+  </section>
+
+  <section id="testcase-variables-groovy">
+    <title>Create variables with Groovy</title>
+
+    <para>You can also use a script to create variable values. This is extremely handy when you have very complex variable values.
+    Just code a small Groovy script for instance in order to define the variable value. A small sample should give you the idea how that
+    works:</para>
 
   <programlisting>&lt;variables&gt;
     &lt;variable name=&quot;avg&quot;&gt;
@@ -58,46 +97,11 @@ variable(&quot;customerId&quot;, &quot;123456789&quot;);</programlisting>
         &lt;/value&gt;
     &lt;/variable&gt;
 &lt;/variables&gt;</programlisting>
-        
-  <para>We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed
-  within the script. For longer script code the use of <literal>&lt;![CDATA[ ]]&gt;</literal> sections is recommended.</para>
 
-  <para>Citrus uses the javax ScriptEngine mechanism in order to evaluate the script code. By default Groovy is supported in any Citrus project.
-  So you can add additional ScriptEngine implementations to your project and support other script types, too.</para>
+    <para>We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed
+    within the script. For longer script code the use of <literal>&lt;![CDATA[ ]]&gt;</literal> sections is recommended.</para>
 
-  <section id="testcase-variables-global">
-    <title>Global variables</title>
-
-    <para>The last section told us to use variables as they are very useful and extend the maintainability of test cases. Now that every
-    test case defines local variables you can also define global variables. The global variables are valid in all tests by default.
-    This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those to the
-    basic Spring application context file. The following example demonstrates how to add global variables in Citrus:</para>
-
-    <programlisting>&lt;citrus:global-variables&gt;
-    &lt;citrus:variable name=&quot;projectName&quot; value=&quot;Citrus Integration Testing&quot;/&gt;
-    &lt;citrus:variable name=&quot;userName&quot; value=&quot;TestUser&quot;/&gt;
-&lt;/citrus:global-variables&gt;</programlisting>
-        
-    <para>We add the Spring bean component to the <emphasis>'citrus-context.xml'</emphasis> application context file. The component
-    receives a list of name-value variable elements. You can reference the global variables in your test cases as usual.</para>
-
-    <para>Another possibility to set global variables is to load those from external property files. This may give you more powerful
-    global variables with user specific properties for instance. See how to load property files as global variables in this example:</para>
-
-    <programlisting>&lt;citrus:global-variables&gt;
-    &lt;citrus:file path=&quot;classpath:global-variable.properties&quot;/&gt;
-&lt;/citrus:global-variables&gt;</programlisting>
-        
-    <para>We have just added a file path reference to the global variables component. Citrus loads the property file content as global
-    test variables. You can mix property file and name-value pair variable definitions in the global variables component.</para>
-
-    <note>
-      <para>The global variables can have variable expressions and Citrus functions. It is possible to use previously defined global
-      variables as values of new variables, like in this example:</para>
-    </note>
-
-    <programlisting>user=Citrus
-greeting=Hello ${user}!
-date=citrus:currentDate('yyyy-MM-dd')</programlisting>
+    <para>Citrus uses the javax ScriptEngine mechanism in order to evaluate the script code. By default Groovy is supported in any Citrus project.
+    So you can add additional ScriptEngine implementations to your project and support other script types, too.</para>
   </section>
 </chapter>

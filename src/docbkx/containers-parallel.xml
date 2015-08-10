@@ -37,7 +37,7 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void paralletTest() {
     parallel(
@@ -51,6 +51,24 @@ public void paralletTest() {
         iterate(
             echo("10")
         ).condition("i lt= 5").index("i")
+    );
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void paralletTest() {
+    parallel().actions(
+        sleep(),
+        sequential().actions(
+            sleep(),
+            echo("1")
+        ),
+        echo("2"),
+        echo("3"),
+        iterate(container -> container.condition("i lt= 5").index("i"))
+            .actions(
+                echo("10")
+            )
     );
 }</programlisting>
 

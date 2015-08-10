@@ -65,7 +65,7 @@
     
     <para>The Java DSL alternative for transforming data via XSTL in Citrus looks like follows:</para>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void transformTest() {
     transform()
@@ -91,6 +91,35 @@ public void transformTest() {
         .xslt(new ClassPathResource("com/consol/citrus/actions/transform.xslt"))
         .result("result");
     
+    echo("${result}");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void transformTest() {
+    transform(action ->
+        action.source("&lt;TestRequest&gt;" +
+                        "&lt;Message&gt;Hello World!&lt;/Message&gt;" +
+                    "&lt;/TestRequest&gt;")
+        .xslt("&lt;xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"&gt;\n" +
+                "&lt;xsl:template match=\"/\"&gt;\n" +
+                "&lt;html&gt;\n" +
+                    "&lt;body&gt;\n" +
+                        "&lt;h2&gt;Test Request&lt;/h2&gt;\n" +
+                        "&lt;p&gt;Message: &lt;xsl:value-of select=\"TestRequest/Message\"/&gt;&lt;/p&gt;\n" +
+                    "&lt;/body&gt;\n" +
+                "&lt;/html&gt;\n" +
+                "&lt;/xsl:template&gt;\n" +
+            "&lt;/xsl:stylesheet&gt;")
+        .result("result"));
+
+    echo("${result}");
+
+    transform(action ->
+        action.source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))
+              .xslt(new ClassPathResource("com/consol/citrus/actions/transform.xslt"))
+              .result("result"));
+
     echo("${result}");
 }</programlisting>
 

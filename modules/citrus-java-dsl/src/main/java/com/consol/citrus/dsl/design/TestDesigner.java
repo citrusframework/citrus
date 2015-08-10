@@ -171,25 +171,6 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param messageEndpoint
      * @return
-     * @deprecated since 2.2.1 use {@link #receiveTimeout(com.consol.citrus.endpoint.Endpoint)}
-     */
-    ReceiveTimeoutBuilder expectTimeout(Endpoint messageEndpoint);
-
-    /**
-     * Creates a new receive timeout action definition from message endpoint name as String.
-     *
-     * @param messageEndpointName
-     * @return
-     * @deprecated since 2.2.1 use {@link #receiveTimeout(String)}
-     */
-    ReceiveTimeoutBuilder expectTimeout(String messageEndpointName);
-
-    /**
-     * Creates a new receive timeout action definition
-     * for further configuration.
-     *
-     * @param messageEndpoint
-     * @return
      */
     ReceiveTimeoutBuilder receiveTimeout(Endpoint messageEndpoint);
 
@@ -526,15 +507,6 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      */
     Sequence sequential(TestAction... actions);
-
-    /**
-     * Adds template container with nested test actions.
-     *
-     * @param name
-     * @return
-     * @deprecated since 2.2.1 use {@link #applyTemplate(String)}
-     */
-    TemplateBuilder template(String name);
 
     /**
      * Adds template container with nested test actions.

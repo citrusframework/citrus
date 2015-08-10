@@ -54,7 +54,7 @@
     
     <para>The same action in Java DSL now looks quite familiar to us although attribute naming is slightly different:</para>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void inputActionTest() {
     variable("userinput", "");
@@ -73,6 +73,27 @@ public void inputActionTest() {
     echo("user input was: ${userinput3}");
     input().result("userinput4");
     echo("user input was: ${userinput4}"); 
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void inputActionTest() {
+    variable("userinput", "");
+    variable("userinput1", "");
+    variable("userinput2", "y");
+    variable("userinput3", "yes");
+    variable("userinput4", "");
+
+    input(action -> {});
+    echo("user input was: ${userinput}");
+    input(action -> action.message("Now press enter:").result("userinput1"));
+    echo("user input was: ${userinput1}");
+    input(action -> action.message("Do you want to continue?").answers("y", "n").result("userinput2"));
+    echo("user input was: ${userinput2}");
+    input(action -> action.message("Do you want to continue?").answers("yes", "no").result("userinput3"));
+    echo("user input was: ${userinput3}");
+    input(action -> action.result("userinput4"));
+    echo("user input was: ${userinput4}");
 }</programlisting>
     
     <para>When the user input is restricted to a set of valid answers the input validation of course can fail due to mismatch. This is the case when the user

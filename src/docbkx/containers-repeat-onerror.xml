@@ -20,13 +20,23 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void repeatOnErrorTest() {
     repeatOnError(
         echo("index is: ${i}"),
         fail("Force loop to fail!")
     ).until("i = 5").index("i");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void repeatOnErrorTest() {
+    repeatOnError(container -> container.until("i = 5").index("i"))
+        .actions(
+            echo("index is: ${i}"),
+            fail("Force loop to fail!")
+        );
 }</programlisting>
     
     <para>In the code example the error-loop continues four times as the &lt;fail&gt; action definitely fails the test.
@@ -62,7 +72,7 @@ public void repeatOnErrorTest() {
     &lt;/echo&gt;
 &lt;/repeat-onerror-until-true&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void repeatOnErrorTest() {
     repeatOnError(
@@ -70,6 +80,17 @@ public void repeatOnErrorTest() {
             .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")
             .validate("CNT_ORDERS", "1")
     ).until("i = 5").index("i").autoSleep(1000);
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void repeatOnErrorTest() {
+    repeatOnError(container -> container.until("i = 5").index("i").autoSleep(1000))
+        .actions(
+            query(action -> action.dataSource(testDataSource)
+                .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")
+                .validate("CNT_ORDERS", "1"))
+        );
 }</programlisting>
     
     <para>We surrounded the database check with a repeat-onerror container having the auto-sleep property set to 1000 milliseconds. The repeat container

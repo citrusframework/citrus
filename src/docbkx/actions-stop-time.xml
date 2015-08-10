@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="actions-measure-time">
-    <title>Time measurement</title>
+<section id="actions-stop-time">
+    <title>Stop time</title>
 
     <para>Time measurement during a test can be very helpful. The &lt;trace-time&gt; action creates and monitors 
     multiple timelines. The action offers the attribute &quot;id&quot; to identify a time line. The tester can of course 
@@ -27,7 +27,7 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void stopTimeTest() {
     stopTime();

@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.dsl.builder.*;
@@ -25,6 +26,8 @@ import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.springframework.context.ApplicationContextAware;
+
+import java.util.Date;
 
 /**
  * @author Christoph Deppisch
@@ -39,10 +42,38 @@ public interface TestRunner extends ApplicationContextAware {
     void name(String name);
 
     /**
+     * Adds description to the test case.
+     *
+     * @param description
+     */
+    void description(String description);
+
+    /**
+     * Adds author to the test case.
+     *
+     * @param author
+     */
+    void author(String author);
+
+    /**
      * Sets custom package name for this test case.
      * @param packageName
      */
     void packageName(String packageName);
+
+    /**
+     * Sets test case status.
+     *
+     * @param status
+     */
+    void status(TestCaseMetaInfo.Status status);
+
+    /**
+     * Sets the creation date.
+     *
+     * @param date
+     */
+    void creationDate(Date date);
 
     /**
      * Starts the test case execution.

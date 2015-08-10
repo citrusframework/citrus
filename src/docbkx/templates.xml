@@ -48,15 +48,26 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void templateTest() {
     variable("myTime", "citrus:currentDate()");
     
-    template("doCreateVariables");
+    applyTemplate("doCreateVariables");
     
-    template("doTraceVariables")
+    applyTemplate("doTraceVariables")
         .parameter("time", "${myTime}");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void templateTest() {
+    variable("myTime", "citrus:currentDate()");
+
+    applyTemplate(template -> template.name("doCreateVariables"));
+
+    applyTemplate(template -> template.name("doTraceVariables")
+                    .parameter("time", "${myTime}"));
 }</programlisting>
     
     <para>There is an open question when dealing with templates that are defined somewhere else outside the test case.

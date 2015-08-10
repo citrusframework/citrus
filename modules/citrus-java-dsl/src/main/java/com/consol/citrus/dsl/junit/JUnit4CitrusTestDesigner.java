@@ -181,16 +181,6 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public ReceiveTimeoutBuilder expectTimeout(Endpoint messageEndpoint) {
-        return testDesigner.expectTimeout(messageEndpoint);
-    }
-
-    @Override
-    public ReceiveTimeoutBuilder expectTimeout(String messageEndpointName) {
-        return testDesigner.expectTimeout(messageEndpointName);
-    }
-
-    @Override
     public ReceiveTimeoutBuilder receiveTimeout(Endpoint messageEndpoint) {
         return testDesigner.receiveTimeout(messageEndpoint);
     }
@@ -398,11 +388,6 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     @Override
     public Sequence sequential(TestAction ... actions) {
         return testDesigner.sequential(actions);
-    }
-
-    @Override
-    public TemplateBuilder template(String name) {
-        return testDesigner.template(name);
     }
 
     @Override

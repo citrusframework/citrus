@@ -49,7 +49,7 @@
             and line breaks must be explicitly added. All these impediments let me suggest to use external file resources in Java DSL when dealing with large complex message payload data.
             Here is an example:</para>
 
-        <para><emphasis>Java DSL</emphasis></para>
+        <para><emphasis>Java DSL designer</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceServer")
@@ -71,7 +71,7 @@ public void receiveMessageTest() {
     &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
 &lt;/header&gt;</programlisting>
 
-        <para><emphasis>Java DSL</emphasis></para>
+        <para><emphasis>Java DSL designer</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceServer")
@@ -113,7 +113,7 @@ public void receiveMessageTest() {
 
         <para>When using the Java DSL the <emphasis>@ignore@</emphasis> placeholder as well as XPath expressions can be used seamlessly. Here is an example of that:</para>
 
-        <para><emphasis>Java DSL</emphasis></para>
+        <para><emphasis>Java DSL designer</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceServer")
@@ -152,7 +152,7 @@ public void receiveMessageTest() {
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
 
-        <para><emphasis>Java DSL</emphasis></para>
+        <para><emphasis>Java DSL designer</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceClient")
@@ -186,7 +186,7 @@ public void receiveMessageTest() {
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
 
-        <para><emphasis>Java DSL</emphasis></para>
+        <para><emphasis>Java DSL designer</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceClient")

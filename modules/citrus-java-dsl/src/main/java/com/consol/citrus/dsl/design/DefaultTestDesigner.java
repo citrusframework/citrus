@@ -217,16 +217,6 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public ReceiveTimeoutBuilder expectTimeout(Endpoint messageEndpoint) {
-        return receiveTimeout(messageEndpoint);
-    }
-
-    @Override
-    public ReceiveTimeoutBuilder expectTimeout(String messageEndpointUri) {
-        return receiveTimeout(messageEndpointUri);
-    }
-
-    @Override
     public ReceiveTimeoutBuilder receiveTimeout(Endpoint messageEndpoint) {
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
         action.setEndpoint(messageEndpoint);
@@ -666,11 +656,6 @@ public class DefaultTestDesigner implements TestDesigner {
         }
         action(container);
         return container;
-    }
-
-    @Override
-    public TemplateBuilder template(String name) {
-        return applyTemplate(name);
     }
 
     @Override

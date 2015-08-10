@@ -90,7 +90,7 @@
   &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
 
-      <para><emphasis>Java DSL</emphasis></para>
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceServer")
@@ -137,7 +137,7 @@ public void receiveMessageTest() {
   &lt;message path=&quot;/TestRequest/VersionId&quot; variable=&quot;versionId&quot;/&gt;
 &lt;/extract&gt;</programlisting>
 
-      <para><emphasis>Java DSL</emphasis></para>
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceServer")

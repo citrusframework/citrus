@@ -17,11 +17,9 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void sleepTest() {
-    sleep(3.5); // sleep 3.5 seconds
-
     sleep(500); // sleep 500 milliseconds
 
     sleep(); // sleep default time

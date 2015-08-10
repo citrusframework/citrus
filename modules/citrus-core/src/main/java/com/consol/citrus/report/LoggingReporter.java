@@ -177,7 +177,11 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
         newLine();
-        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+        if (testCase.isTestRunner()) {
+            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+        } else {
+            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+        }
 
         if (testAction instanceof TestActionContainer) {
             log.info("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
@@ -193,13 +197,21 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         newLine();
-        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
+        if (testCase.isTestRunner()) {
+            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + " SUCCESS");
+        } else {
+            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
+        }
     }
 
     @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         newLine();
-        log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+        if (testCase.isTestRunner()) {
+            log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1));
+        } else {
+            log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+        }
         log.info("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
     }
 

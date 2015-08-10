@@ -13,7 +13,7 @@
   <xi:include href='actions-java.xml'/>
   <xi:include href='actions-timeout.xml'/>
   <xi:include href='actions-echo.xml'/>
-  <xi:include href='actions-measure-time.xml'/>
+  <xi:include href='actions-stop-time.xml'/>
   <xi:include href='actions-create-variables.xml'/>
   <xi:include href='actions-trace.xml'/>
   <xi:include href='actions-transform.xml'/>

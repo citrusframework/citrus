@@ -17,12 +17,21 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void iterateTest() {
     iterate(
         echo("index is: ${i}")
     ).condition("i lt 5").index("i");
+}</programlisting>
+
+    <para><emphasis>Java DSL designer</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void iterateTest() {
+    iterate(container -> container.condition("i lt 5").index("i"))
+        .actions(
+            echo("index is: ${i}")
+        );
 }</programlisting>
     
     <para>The attribute &quot;index&quot; automatically defines a new variable that holds the actual loop index 

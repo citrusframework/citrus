@@ -20,7 +20,7 @@
     <para>The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation
       callback functionality. With this feature you can marshal/unmarshal message payloads and code validation steps on Java objects.</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive(bookResponseEndpoint)
@@ -35,7 +35,7 @@ public void receiveMessageTest() {
     <para>By default the validation callback needs some XML unmarshaller implementation for transforming the XML payload to a Java object. Citrus will automatically search for the unmarshaller bean
       in your Spring application context if nothing specific is set. Of course you can also set the unmarshaller instance explicitly.</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@Autowired
 private Unmarshaller unmarshaller;
 
@@ -53,7 +53,7 @@ public void receiveMessageTest() {
     <para>Obviously working on Java objects is much more comfortable than using the XML String concatenation. This is why you can also use this feature
       when sending messages.</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@Autowired
 private Marshaller marshaller;
 

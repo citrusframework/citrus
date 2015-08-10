@@ -26,7 +26,7 @@
 
     <para>The Spring application context holds your custom bean implementations. You can set properties and use the full Spring power while implementing your
     custom test action in Java. Let us have a look on how such a Java class may look like.</para>
-    
+
     <programlisting language="java">import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 
@@ -49,7 +49,8 @@ public class SpecialDatabaseCleanupAction extends AbstractTestAction {
     method implementations so you just have to implement the <literal>doExecute()</literal> method.</para>
     
     <para>When using the Java test case DSL you are also quite comfortable with including your custom test actions.</para>
-    
+
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@Autowired
 private SpecialDatabaseCleanupAction cleanUpDatabaseAction;
 
@@ -63,7 +64,8 @@ public void genericActionTest() {
 }</programlisting>
 
     <para>Using anonymous class implementations is also possible.</para>
-    
+
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void genericActionTest() {
     echo("Now let's call our special test action anonymously");

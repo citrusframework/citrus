@@ -34,7 +34,7 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void createVariableTest() {
     variable("myVariable", "12345");
@@ -42,8 +42,8 @@ public void createVariableTest() {
     
     echo("Current variable value: ${myVariable}");
 
-    setVariable("myVariable", "${id}");
-    setVariable("newVariable", "this is a test");
+    createVariable("myVariable", "${id}");
+    createVariable("newVariable", "this is a test");
     
     echo("Current variable value: ${myVariable}");
     
@@ -51,8 +51,8 @@ public void createVariableTest() {
 }</programlisting>
 
     <note>
-      <para>Please note the difference between the <emphasis>variable()</emphasis> method and the <emphasis>setVariable()</emphasis> method. The first initializes the test case with the test variables. So all
-        variables defined with this method are valid from the very beginning of the test. In contrary to that the <emphasis>setVariable()</emphasis> is executed within the test action chain. The newly created
+      <para>Please note the difference between the <emphasis>variable()</emphasis> method and the <emphasis>createVariable()</emphasis> method. The first initializes the test case with the test variables. So all
+        variables defined with this method are valid from the very beginning of the test. In contrary to that the <emphasis>createVariable()</emphasis> is executed within the test action chain. The newly created
         variables are then valid for the rest of the test. Trailing actions can reference the variables as usual with the variable expression.</para>
     </note>
 

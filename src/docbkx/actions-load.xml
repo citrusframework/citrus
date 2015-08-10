@@ -22,7 +22,7 @@ greeting.text=Hello Test Framework</programlisting>
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void loadPropertiesTest() {
     load("file:tests/resources/load.properties");

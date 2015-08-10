@@ -73,7 +73,7 @@
     <para>If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint
     definition and reference this instance. The same test as shown above in Java DSL looks like this:</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
@@ -95,6 +95,29 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
                     "&lt;/TestMessage&gt;")
                 .header("Operation", "sayHello")
                 .header("RequestTag", "${messageId}");
+    }
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">import org.testng.ITestContext;
+import org.testng.annotations.Test;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+
+@Test
+public class SendMessageTestRunner extends TestNGCitrusTestRunner {
+
+    @CitrusTest(name = "SendMessageTest")
+    public void sendMessageTest() {
+        variable("text", "Hello Citrus!");
+        variable("messageId", "Mx1x123456789");
+
+        send(action -> action.endpoint("helloServiceEndpoint")
+                .payload("&lt;TestMessage&gt;" +
+                        "&lt;Text&gt;${text}&lt;/Text&gt;" +
+                    "&lt;/TestMessage&gt;")
+                .header("Operation", "sayHello")
+                .header("RequestTag", "${messageId}"));
     }
 }</programlisting>
 
@@ -178,7 +201,7 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
 
     <para>The The same possibilities apply to the Citrus Java DSL.</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
     send("helloServiceEndpoint")
@@ -189,19 +212,19 @@ public void messagingTest() {
 
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
-        send("helloServiceEndpoint")
+    send("helloServiceEndpoint")
         .payload(new ClasspathResource("com/consol/citrus/messages/TestRequest.xml"));
 }</programlisting>
 
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
-        send("helloServiceEndpoint")
+    send("helloServiceEndpoint")
         .payloadModel(new TestRequest("Hello Citrus!"));
 }</programlisting>
 
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
-        send("helloServiceEndpoint")
+    send("helloServiceEndpoint")
         .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")));
 }</programlisting>
 
@@ -246,7 +269,7 @@ public void messagingTest() {
 
     <para>The message headers to send are defined by a simple name and value pair. Of course you can use test variables in header values as well. Let's see how this looks like in Java DSL:</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
@@ -254,6 +277,16 @@ public void messagingTest() {
                 "&lt;Text&gt;Hello!&lt;/Text&gt;" +
             "&lt;/TestMessage&gt;")
         .header("Operation", "sayHello");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void messagingTest() {
+    receive(action -> action.endpoint("helloServiceEndpoint")
+        .payload("&lt;TestMessage&gt;" +
+                "&lt;Text&gt;Hello!&lt;/Text&gt;" +
+            "&lt;/TestMessage&gt;")
+        .header("Operation", "sayHello"));
 }</programlisting>
 
     <para>This is basically how to send messages in Citrus. The test case is responsible for constructing the message content while the predefined message endpoint holds transport specific

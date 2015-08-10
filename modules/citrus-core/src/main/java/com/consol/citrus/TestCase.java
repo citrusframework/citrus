@@ -64,6 +64,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** The result of this test case */
     private TestResult testResult;
+
+    /** Marks this test case as test runner instance that grows in size step by step as test actions are executed */
+    private boolean testRunner = false;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
@@ -396,5 +399,21 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public void setAfterTest(List<SequenceAfterTest> afterTest) {
         this.afterTest = afterTest;
+    }
+
+    /**
+     * Sets the test runner flag.
+     * @param testRunner
+     */
+    public void setTestRunner(boolean testRunner) {
+        this.testRunner = testRunner;
+    }
+
+    /**
+     * Gets the test runner flag.
+     * @return
+     */
+    public boolean isTestRunner() {
+        return testRunner;
     }
 }

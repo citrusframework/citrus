@@ -27,7 +27,7 @@
     <para>Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload
     and header values. We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
@@ -36,6 +36,17 @@ public void messagingTest() {
                 "&lt;/TestMessage&gt;")
         .header("Operation", "sayHello")
         .header("MessageId", "${messageId}");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void messagingTest() {
+    receive(action -> action.endpoint("helloServiceEndpoint")
+                .payload("&lt;TestMessage&gt;" +
+                      "&lt;Text&gt;${text}&lt;/Text&gt;" +
+                    "&lt;/TestMessage&gt;")
+                .header("Operation", "sayHello")
+                .header("MessageId", "${messageId}"));
 }</programlisting>
 
     <para>The receive action waits for a message to arrive. The whole test execution is stopped while waiting for the message. This is
@@ -116,7 +127,7 @@ public void messagingTest() {
 
       <para>In Java DSL we also have multiple options for specifying the message payloads:</para>
 
-      <para><emphasis>Java DSL</emphasis></para>
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">@CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
@@ -189,7 +200,7 @@ public void messagingTest() {
 
       <para>Let's see how this looks like in Java DSL:</para>
 
-      <para><emphasis>Java DSL</emphasis></para>
+      <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">@CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
@@ -197,6 +208,16 @@ public void messagingTest() {
                 "&lt;Text&gt;Hello!&lt;/Text&gt;" +
             "&lt;/TestMessage&gt;")
         .header("Operation", "sayHello");
+}</programlisting>
+
+      <para><emphasis>Java DSL runner</emphasis></para>
+      <programlisting language="java">@CitrusTest
+public void messagingTest() {
+    receive(action -> action.endpoint("helloServiceEndpoint")
+                .payload("&lt;TestMessage&gt;" +
+                      "&lt;Text&gt;Hello!&lt;/Text&gt;" +
+                    "&lt;/TestMessage&gt;")
+                .header("Operation", "sayHello"));
 }</programlisting>
 
       <para>Header definition in Java DSL is straight forward as we just define name and value as usual. This completes the message validation when receiving a message in Citrus. The message validator implementations may add additional validation capabilities such as XML
@@ -230,11 +251,18 @@ public void messagingTest() {
     &lt;element&gt; name="operation" value="getOrders"&lt;/element&gt;
 &lt;/selector&gt;</programlisting>
 
-        <para><emphasis>Java DSL</emphasis></para>
+        <para><emphasis>Java DSL designer</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("testServiceEndpoint")
         .selector("correlationId='Cx1x123456789' AND operation='getOrders'");
+}</programlisting>
+
+        <para><emphasis>Java DSL runner</emphasis></para>
+        <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
+    receive(action -> action.endpoint("testServiceEndpoint")
+                .selector("correlationId='Cx1x123456789' AND operation='getOrders'"));
 }</programlisting>
 
         <para>This example shows how message selectors work. The selector will only accept messages that meet the correlation id and the operation

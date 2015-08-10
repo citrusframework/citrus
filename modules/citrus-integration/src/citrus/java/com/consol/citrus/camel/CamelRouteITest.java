@@ -48,7 +48,7 @@ public class CamelRouteITest extends TestNGCitrusTestDesigner {
                 .messageType(MessageType.PLAINTEXT)
                 .payload("<News><Message>Citrus rocks!</Message></News>");
 
-        expectTimeout("outRouteEndpoint").timeout(500);
+        receiveTimeout("outRouteEndpoint").timeout(500);
 
         receive("defaultRouteEndpoint")
                 .messageType(MessageType.PLAINTEXT)

@@ -30,13 +30,22 @@
   &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void groovyTest() {
     groovy("println 'Hello Citrus'");
     groovy("println 'The variable is: ${time}'");
     
     groovy(new ClassPathResource("com/consol/citrus/script/example.groovy"));
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void groovyTest() {
+    groovy(action -> action.script("println 'Hello Citrus'"));
+    groovy(action -> action.script("println 'The variable is: ${time}'"));
+
+    groovy(action -> action.script(new ClassPathResource("com/consol/citrus/script/example.groovy")));
 }</programlisting>
     
     <para>As you can see it is possible to write Groovy code directly into the test case. 

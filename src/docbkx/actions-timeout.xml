@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="actions-timeout">
-    <title>Expect timeouts on a destination</title>
+    <title>Receive timeout</title>
 
     <para>In some cases it might be necessary to validate that a message is <emphasis>not</emphasis> present on a destination. 
     This means that this action expects a timeout when receiving a message from an endpoint destination. For instance the tester 
@@ -18,15 +18,26 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@Autowired
 @Qualifier("myEndpoint")
 private Endpoint myEndpoint;
 
 @CitrusTest
-public void expectTimeoutTest() {
-    expectTimeout(myEndpoint)
+public void receiveTimeoutTest() {
+    receiveTimeout(myEndpoint)
         .timeout(500);
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@Autowired
+@Qualifier("myEndpoint")
+private Endpoint myEndpoint;
+
+@CitrusTest
+public void receiveTimeoutTest() {
+    receiveTimeout(action -> action.endpoint(myEndpoint)
+                    .timeout(500));
 }</programlisting>
     
     <para>The action offers two attributes:</para>
@@ -48,11 +59,19 @@ public void expectTimeoutTest() {
   &lt;select&gt;MessageId='123456789'&lt;select/&gt;
 &lt;expect-timeout/&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
-public void expectTimeoutTest() {
-    expectTimeout(myEndpoint)
+public void receiveTimeoutTest() {
+    receiveTimeout(myEndpoint)
         .selector("MessageId = '123456789'")
         .timeout(500);
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void receiveTimeoutTest() {
+    receiveTimeout(action -> action.endpoint(myEndpoint)
+                    .selector("MessageId = '123456789'")
+                    .timeout(500));
 }</programlisting>
 </section>

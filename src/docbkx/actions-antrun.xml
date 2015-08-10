@@ -24,7 +24,7 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void antRunTest() {
     variable("today", "citrus:currentDate()");
@@ -33,6 +33,17 @@ public void antRunTest() {
         .target("sayHello")
         .property("date", "${today}")
         .property("welcomeText", "$Hello!");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+
+    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello")
+                .property("date", "${today}")
+                .property("welcomeText", "$Hello!"));
 }</programlisting>
     
     <para>The respective build.xml Ant file must provide the target to call. For example:</para>
@@ -69,7 +80,7 @@ public void antRunTest() {
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void antRunTest() {
     variable("today", "citrus:currentDate()");
@@ -77,6 +88,16 @@ public void antRunTest() {
     antrun("classpath:com/consol/citrus/actions/build.xml")
         .targets("sayHello", "sayGoodbye")
         .property("date", "${today}");
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+
+    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .targets("sayHello", "sayGoodbye")
+                .property("date", "${today}"));
 }</programlisting>
 
     <para>The build properties can live in external file resource as an alternative to the inline property definitions. You just have to use the
@@ -98,7 +119,7 @@ public void antRunTest() {
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@Autowired
 private BuildListener customBuildListener;
 
@@ -108,6 +129,18 @@ public void antRunTest() {
         .target("sayHello")
         .propertyFile("classpath:com/consol/citrus/actions/build.properties")
         .listener(customBuildListener);
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@Autowired
+private BuildListener customBuildListener;
+
+@CitrusTest
+public void antRunTest() {
+    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+            .target("sayHello")
+            .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+            .listener(customBuildListener));
 }</programlisting>
 
     <para>The <emphasis>customBuildListener</emphasis> used in the example above should reference a Spring bean in the Citrus application context. The bean implements

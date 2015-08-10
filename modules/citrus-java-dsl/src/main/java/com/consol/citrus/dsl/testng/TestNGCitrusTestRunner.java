@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.testng;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.Template;
@@ -37,6 +38,7 @@ import org.testng.*;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -129,6 +131,36 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
+    public void name(String name) {
+        testRunner.name(name);
+    }
+
+    @Override
+    public void description(String description) {
+        testRunner.description(description);
+    }
+
+    @Override
+    public void author(String author) {
+        testRunner.author(author);
+    }
+
+    @Override
+    public void packageName(String packageName) {
+        testRunner.packageName(packageName);
+    }
+
+    @Override
+    public void status(TestCaseMetaInfo.Status status) {
+        testRunner.status(status);
+    }
+
+    @Override
+    public void creationDate(Date date) {
+        testRunner.creationDate(date);
+    }
+
+    @Override
     public void start() {
         testRunner.start();
     }
@@ -136,16 +168,6 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     @Override
     public void stop() {
         testRunner.stop();
-    }
-
-    @Override
-    public void name(String name) {
-        testRunner.name(name);
-    }
-
-    @Override
-    public void packageName(String packageName) {
-        testRunner.packageName(packageName);
     }
 
     @Override

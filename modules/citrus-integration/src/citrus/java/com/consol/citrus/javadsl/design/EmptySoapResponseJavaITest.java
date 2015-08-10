@@ -33,6 +33,6 @@ public class EmptySoapResponseJavaITest extends TestNGCitrusTestDesigner {
                                 "<ns0:Timestamp>citrus:currentDate(\"yyyy-MM-dd'T'hh:mm:ss\")</ns0:Timestamp>" +
                             "</ns0:SoapProbingRequest>");
         
-        expectTimeout("webServiceHelloClient").timeout(1000L);
+        receiveTimeout("webServiceHelloClient").timeout(1000L);
     }
 }

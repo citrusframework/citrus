@@ -111,7 +111,7 @@
     <para>If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint
     definition and reference this instance. The same test as shown above in Java DSL looks like this:</para>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
@@ -174,7 +174,7 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
     <para>Before we go into detail on validating the received message we have a quick look at the Java DSL variation for the
     receive action. The same receive action as above looks like this in Java DSL.</para>
 
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")

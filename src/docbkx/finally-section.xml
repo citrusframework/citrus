@@ -53,7 +53,7 @@
     
     <para>Of course you can also use the finally block in the Java test case DSL. Find following example to see how it works:</para>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void finallySectionTest() {
     variable("orderId", "citrus:randomNumber(5)");
@@ -67,6 +67,23 @@ public void finallySectionTest() {
     doFinally(
         sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'")
     );
+}</programlisting>
+
+    <para><emphasis>Java DSL runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void finallySectionTest() {
+    variable("orderId", "citrus:randomNumber(5)");
+    variable("date", "citrus:currentDate('dd.MM.yyyy')");
+
+    sql(action -> action.dataSource(dataSource)
+            .statement("INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')"));
+
+    echo("ORDER creation time: citrus:currentDate('dd.MM.yyyy')");
+
+    doFinally()
+        .actions(
+            sql(action -> action.dataSource(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"))
+        );
 }</programlisting>
 
     <note>Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The <emphasis>@CitrusTest</emphasis>

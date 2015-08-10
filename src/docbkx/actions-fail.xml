@@ -39,7 +39,7 @@ Tests successfully:  0 (0.0%) </programlisting>
     exception statement in the configuration method this will not be done at runtime but at design time. This is why you have to use the special fail test action
     which raises a Java exception during the runtime of the test. The next example will not work as expected:</para>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void wrongUsageSample() {
     // some test actions
@@ -50,7 +50,7 @@ public void wrongUsageSample() {
     <para>The validation exception above is directly raised before the test is able to start as the <emphasis>@CitrusTest</emphasis> annotated method does
     not represent the test runtime. Instead of this we have to use the fail action as follows:</para>
     
-    <para><emphasis>Java DSL</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void failTest() {
     // some test actions

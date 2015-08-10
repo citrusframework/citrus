@@ -16,8 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
@@ -35,8 +34,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import javax.jms.ConnectionFactory;
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Default test runner implementation. Provides Java DSL methods for test actions. Immediately executes test actions as
@@ -88,6 +86,7 @@ public class DefaultTestRunner implements TestRunner {
     protected void initialize() {
         createTestContext();
 
+        testCase.setTestRunner(true);
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 
         if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
@@ -106,8 +105,28 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public void description(String description) {
+        getTestCase().setDescription(description);
+    }
+
+    @Override
+    public void author(String author) {
+        getTestCase().getMetaInfo().setAuthor(author);
+    }
+
+    @Override
     public void packageName(String packageName) {
-        testCase.setPackageName(packageName);
+        getTestCase().setPackageName(packageName);
+    }
+
+    @Override
+    public void status(TestCaseMetaInfo.Status status) {
+        getTestCase().getMetaInfo().setStatus(status);
+    }
+
+    @Override
+    public void creationDate(Date date) {
+        getTestCase().getMetaInfo().setCreationDate(date);
     }
 
     @Override
