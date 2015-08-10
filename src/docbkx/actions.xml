@@ -6,6 +6,8 @@
   Besides sending and receiving messages the tester may access these actions in order to build a more complex test scenario
   that fits the desired use case.</para>
 
+  <xi:include href='actions-send.xml'/>
+  <xi:include href='actions-receive.xml'/>
   <xi:include href='actions-database.xml'/>
   <xi:include href='actions-sleep.xml'/>
   <xi:include href='actions-java.xml'/>

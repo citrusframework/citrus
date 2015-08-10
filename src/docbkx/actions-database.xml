@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="actions-database">
-    <title>Connecting to the database</title>
+    <title>Database actions</title>
   
     <para>In many cases it is necessary to access the database during a test. This enables a tester to also validate 
     the persistent data in a database. It might also be helpful to prepare the database with some test data before running a test. 
     You can do this using the two database actions that are described in the following sections.</para>
     
     <section id="actions-database-update">
-      <title>Updating the database</title>
+      <title>SQL update, insert, delete</title>
   
       <para>The &lt;sql&gt; action simply executes a group of SQL statements in order to change data in a database.
       Typically the action is used to prepare the database at the beginning of a test or to clean up the
@@ -74,7 +74,7 @@ public void sqlTest() {
     </section>
     
     <section id="actions-database-query">
-      <title>Verifying data from the database</title>
+      <title>SQL query</title>
       
       <para>The &lt;sql&gt; query action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to read data from a database. 
       The query results are validated against expected data as shown in the next example.</para>
@@ -234,7 +234,7 @@ public void databaseQueryTest() {
     </section>
     
     <section id="actions-database-read-values">
-      <title>Read data from database</title>
+      <title>Save result set values</title>
         
       <para>Now the validation of database entries is a very powerful feature but sometimes we simply do not know the
       persisted content values. The test may want to read database entries into test variables without validation. Citrus

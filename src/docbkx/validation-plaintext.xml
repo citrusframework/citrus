@@ -5,9 +5,11 @@
     <para>Plain text message validation is the easiest validation in Citrus that you can think of. This validation just performs an exact Java String match
     of received and expected message payloads.</para>
     
-    <para>First thing to do is to add a plain text message validator implementation to the citrus-context.xml</para>
+    <para>As usual a default message validator for plaintext messages is active by default. Citrus will pick this message validator for all messages of
+    <emphasis>type=&quot;plaintext&quot;</emphasis>. The default message validator implementation can be overwritten by placing a Spring bean with id
+    <emphasis>defaultPlaintextMessageValidator</emphasis> to the Spring application context.</para>
     
-    <programlisting>&lt;bean id=&quot;plainTextMessageValidator&quot; class=&quot;com.consol.citrus.validation.text.PlainTextMessageValidator&quot;/&gt;</programlisting>
+    <programlisting>&lt;bean id=&quot;defaultPlaintextMessageValidator&quot; class=&quot;com.consol.citrus.validation.text.PlainTextMessageValidator&quot;/&gt;</programlisting>
     
     <para>In the test case receiving action we tell Citrus to use plain text message validation.</para>
     

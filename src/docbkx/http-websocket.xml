@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="http-websocket">
+    <title>HTTP WebSocket support</title>
+
+    <para>The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. With this release Citrus users are able to send and receive messages with WebSocket connections. The Http server
+      implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish messages to the server via bidirectional WebSocket protocol.</para>
+
+</chapter>

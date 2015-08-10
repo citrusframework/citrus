@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="actions-groovy">
-    <title>Groovy support</title>
+    <title>Groovy script execution</title>
 
     <para>Groovy is an agile dynamic language for the Java Platform. Groovy ships with a lot of 
     very powerful features and fits perfectly with Java as it is based on Java and runs
