@@ -93,13 +93,22 @@ h1, h2, h3, h4, h6 {
     margin-bottom: 0;
 }
 
-h2.title {
+.chapter h2.title {
+    border-bottom: 1px solid #000;
+    font-size: 250%;
     font-weight: 800;
     margin-bottom: 8px;
 }
 
+.section h2.title {
+    border-bottom: 1px solid #ccc;
+    font-size: 195%;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
 h2.subtitle {
-    font-weight: 800;
+    font-weight: 500;
     margin-bottom: 20px;
 }
 
@@ -162,35 +171,35 @@ div.warning TD {
 }
 
 h1.title { 
-    font-size: 170%; 
+    font-size: 270%;
 }
 
 .authorgroup h2 { 
-    font-size: 120%; 
+    font-size: 150%;
 }
 
 h1 { 
-    font-size: 150%; 
+    font-size: 250%;
 }
 
 h2 { 
-    font-size: 145%; 
+    font-size: 200%;
 }
 
 h3 {
-    font-size: 100%; font-weight: bold; 
+    font-size: 150%;
 }
 
 h4 { 
-    font-size: 90%; font-weight: bold;
+    font-size: 110%;
 }
 
 h5 {
-    font-size: 90%; font-style: italic; 
+    font-size: 100%; font-style: italic;
 }
 
 h6 { 
-    font-size: 100%; font-style: italic; 
+    font-size: 90%; font-style: italic;
 }
 
 tt {

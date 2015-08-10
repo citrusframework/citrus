@@ -3,8 +3,13 @@
     <title>Xml message validation</title>
 
     <para>XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message validator implementations that
-        are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema
-        validation.</para>
+    are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema
+    validation. The default XML message validator implementation is active by default and can be overwritten with a custom implementation using the bean id <emphasis>defaultXmlMessageValidator</emphasis>.</para>
+
+    <programlisting>&lt;bean id=&quot;defaultXmlMessageValidator&quot; class=&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;/&gt;</programlisting>
+
+    <para>The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces with different prefixes and attributes als well as namespace qualified attributes.
+    See the following sections for a detailed description of all capabilities.</para>
 
     <section id="validation-xml-payload">
         <title>XML payload validation</title>

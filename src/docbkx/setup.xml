@@ -39,6 +39,11 @@ Define value for groupId: com.consol.citrus.samples
 Define value for artifactId: citrus-sample
 Define value for version: 1.0-SNAPSHOT
 Define value for package: com.consol.citrus.samples</programlisting>
+
+        <para>In the sample above we used the Citrus archetype catalog located on the Citrus homepage. Citrus archetypes
+        are also available in Maven central repository. So can also just use <emphasis>&quot;mvn archetype:generate&quot;</emphasis>. As the list of default
+        archetypes available in Maven central is very long you might want to filter the list with <emphasis>&quot;citrus&quot;</emphasis> and you will get just a few
+        possibilities to choose from.</para>
         
         <para>We load the archetype information from "http://citrusframework.org" and choose the Citrus basic archetype. Now you have 
         to define several values for your project: the groupId, the artifactId, the package and the project version. After that we are done! Maven created a Citrus project structure

@@ -9,6 +9,7 @@
     like JSON and plaintext.</para>
   
   <xi:include href='validation-xml.xml'/>
+  <xi:include href='validation-schema.xml'/>
   <xi:include href='validation-json.xml'/>
   <xi:include href='validation-xhtml.xml'/>
   <xi:include href='validation-plaintext.xml'/>

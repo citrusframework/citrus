@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="schema-validation">
+<section id="validation-schema">
     <title>XML schema validation</title>
     
     <para>There are several possibilities to describe the structure of XML documents. The two most popular ways are DTD 
@@ -8,7 +8,7 @@
     are valid only in case they meet all these structure rules defined in the schema definition. Currently Citrus can validate XML
     documents using the schema languages DTD and XSD.</para>
 
-    <section id="xsd-validation">
+    <section id="validation-schema-xsd">
         <title>XSD schema repositories</title>
         
         <para>Citrus tries to validate all incoming XML messages against a schema definition in order to ensure that all rules are fulfilled.
@@ -70,7 +70,7 @@
         </important>
     </section>
 
-    <section id="wsdl-validation">
+    <section id="validation-schema-wsdl">
       <title>WSDL schemas</title>
 
       <para>In SOAP WebServices world the WSDL (WebService Schema Definition Language) defines the structure an nature of the XML messages exchanged across the interface.
@@ -83,7 +83,7 @@
       that refer to the WSDL file can be validated for syntax rules.</para>
     </section>
 
-    <section id="schema-location-pattern">
+    <section id="validation-schema-location-pattern">
       <title>Schema location patterns</title>
 
       <para>Setting all schemas one by one in a schema repository can be verbose and uncomfortable, especially when dealing with lots of xsd and wsdl files. The schema repository
@@ -100,7 +100,7 @@
       WSDL files.</para>
     </section>
 
-    <section id="schema-collections">
+    <section id="validation-schema-collections">
       <title>Schema collections</title>
 
       <para>Sometimes multiple a schema definition is separated into multiple files. This is a problem for the Citrus schema repository as the schema mapping strategy
@@ -124,7 +124,7 @@
 &lt;/citrus:schema-repository&gt;</programlisting>
     </section>
     
-    <section id="schema-mapping-strategy">
+    <section id="validation-schema-mapping-strategy">
         <title>Schema mapping strategy</title>
         
         <para>The schema repository in Citrus holds one to many schema definition files and dynamically picks up the right one according to the validated message payload.
@@ -205,7 +205,7 @@
             a XML request, regardless of target namespace definitions.</para>
         </section>
         
-        <section id="schema-mapping-chain">
+        <section id="validation-schema-mapping-chain">
             <title>Schema mapping strategy chain</title>
             
             <para>Let's discuss the possibility to combine several schema mapping strategies in a logical chain. You can define more than one mapping strategy that are
@@ -240,7 +240,7 @@
         </section>
     </section>
     
-    <section id="schema-definition-overrule">
+    <section id="validation-schema-definition-overrule">
         <title>Schema definition overruling</title>
         
         <para>Now it is time to talk about schema definition settings on test action level. We have learned before that Citrus tries to automatically find a matching schema definition
@@ -289,7 +289,7 @@
         </important>
     </section>
     
-    <section id="dtd-validation">
+    <section id="validation-dtd-validation">
         <title>DTD validation</title>
         
         <para>XML DTD (Document type definition) is another way to validate the structure of a XML document. Many people say that DTD is
@@ -339,4 +339,4 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
     </section>
-</chapter>
+</section>

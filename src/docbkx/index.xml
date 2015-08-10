@@ -31,7 +31,6 @@
     <xi:include href='run.xml'/>
     <xi:include href='endpoints.xml'/>
     <xi:include href='validation.xml'/>
-    <xi:include href='schema-validation.xml'/>
     <xi:include href='xpath.xml'/>
     <xi:include href='json-path.xml'/>
     <xi:include href='actions.xml'/>
