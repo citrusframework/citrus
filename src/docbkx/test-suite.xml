@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="testsuite">
-    <title>Actions before/after the test run</title>
+    <title>Test suite actions</title>
 
     <para>A test framework should also provide the functionality to do some work before and after the test run. You could think of 
     preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit 

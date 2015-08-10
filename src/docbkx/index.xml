@@ -26,8 +26,8 @@
     <xi:include href='introduction.xml'/>
     <xi:include href='setup.xml'/>
     
-    <xi:include href='testcase.xml'/>
-    <xi:include href='test-actors.xml'/>
+    <xi:include href='test-case.xml'/>
+    <xi:include href='test-variables.xml'/>
     <xi:include href='run.xml'/>
     <xi:include href='endpoints.xml'/>
     <xi:include href='validation.xml'/>
@@ -54,7 +54,8 @@
     <xi:include href='functions.xml'/>
     <xi:include href='validation-matchers.xml'/>
     <xi:include href='data-dictionary.xml'/>
-    <xi:include href='testsuite.xml'/>
+    <xi:include href='test-actors.xml'/>
+    <xi:include href='test-suite.xml'/>
     <xi:include href='meta-info.xml'/>
     <xi:include href='message-tracing.xml'/>
     <xi:include href='reporting.xml'/>
