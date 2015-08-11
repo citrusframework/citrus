@@ -42,7 +42,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
         
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload().toString())
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .endsWith("<TestMessage><Text>Hello!</Text></TestMessage>"));
     }
     
@@ -57,7 +57,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
         
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload().toString())
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<Text>Hello!</Text>"));
     }
     
@@ -72,7 +72,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
         
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload().toString())
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
     
@@ -87,7 +87,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
         
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload().toString())
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusConstants.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns1:Textxmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 

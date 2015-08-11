@@ -48,7 +48,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
     public void validateMessage(Message receivedMessage, TestContext context, JsonPathMessageValidationContext validationContext) throws ValidationException {
         if (CollectionUtils.isEmpty(validationContext.getJsonPathExpressions())) { return; }
 
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
 

@@ -164,7 +164,7 @@ public class DefaultMessage implements Message {
 
         if (type.isAssignableFrom(Source.class)) {
             if (getPayload().getClass().isAssignableFrom(String.class)) {
-                return (T) new StringSource(getPayload().toString());
+                return (T) new StringSource(getPayload(String.class));
             } else if (getPayload().getClass().isAssignableFrom(Node.class)) {
                 return (T) new DOMSource((Node) getPayload());
             } else if (getPayload().getClass().isAssignableFrom(InputStreamSource.class)) {

@@ -63,7 +63,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
     public com.consol.citrus.message.Message convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration) {
         try {
             com.consol.citrus.message.Message message = super.convertInbound(jmsMessage, endpointConfiguration);
-            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload().toString().getBytes(getDefaultCharset()));
+            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(getDefaultCharset()));
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage(in);
 
             StringResult payload = new StringResult();
@@ -82,7 +82,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
 
     @Override
     public Message createJmsMessage(com.consol.citrus.message.Message message, Session session, JmsEndpointConfiguration endpointConfiguration) {
-        String payload = message.getPayload().toString();
+        String payload = message.getPayload(String.class);
 
         log.debug("Creating SOAP message from payload: " + payload);
 

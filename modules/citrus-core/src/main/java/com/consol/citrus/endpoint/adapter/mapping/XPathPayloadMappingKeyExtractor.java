@@ -38,7 +38,7 @@ public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor
     @Override
     public String getMappingKey(Message request) {
         return XPathUtils.evaluateAsString(
-                XMLUtils.parseMessagePayload(request.getPayload().toString()),
+                XMLUtils.parseMessagePayload(request.getPayload(String.class)),
                 xpathExpression,
                 namespaceContextBuilder.buildContext(request, null));
     }

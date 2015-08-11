@@ -7,7 +7,7 @@ import com.consol.citrus.message.Message
 
 public class ValidationScript implements GroovyScriptExecutor{
     public void validate(Message receivedMessage, TestContext context){
-        def json = new JsonSlurper().parseText(receivedMessage.getPayload().toString())
+        def json = new JsonSlurper().parseText(receivedMessage.getPayload(String.class))
         @SCRIPTBODY@
     }
 }

@@ -175,7 +175,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     private void addSoapBody(SoapMessage response, Message replyMessage) throws TransformerException {
         if (!(replyMessage.getPayload() instanceof String) || 
-                StringUtils.hasText(replyMessage.getPayload().toString())) {
+                StringUtils.hasText(replyMessage.getPayload(String.class))) {
             Source responseSource = getPayloadAsSource(replyMessage.getPayload());
             
             TransformerFactory transformerFactory = TransformerFactory.newInstance();

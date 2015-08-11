@@ -92,7 +92,7 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
 
         Message response = endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>"));
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload().toString(), "<TestResponse>Hello World!</TestResponse>");
+        Assert.assertEquals(response.getPayload(String.class), "<TestResponse>Hello World!</TestResponse>");
 
         verify(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
     }

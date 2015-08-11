@@ -57,7 +57,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
             TestContext context, XmlMessageValidationContext validationContext)
             throws ValidationException {
         
-        String messagePayload = receivedMessage.getPayload().toString();
+        String messagePayload = receivedMessage.getPayload(String.class);
         String xhtmlPayload;
         
         // check if we already have XHTML message content

@@ -115,10 +115,10 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
         } catch (LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
-            log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
             throw new ValidationException("Validation failed:", e);
         } catch (ValidationException ex) {
-            log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
             throw ex;
         }
     }
@@ -140,12 +140,12 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
      * @param validationContext
      */
     protected void validateXMLSchema(Message receivedMessage, XmlMessageValidationContext validationContext) {
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             return;
         }
 
         try {
-            Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+            Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
 
             if (!StringUtils.hasText(doc.getFirstChild().getNamespaceURI())) {
                 return;
@@ -217,7 +217,7 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
                 log.info("Schema of received XML validated OK");
             } else {
                 log.error("Schema validation failed for message:\n" +
-                        XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+                        XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
                 
                 // Report all parsing errors
                 log.debug("Found " + results.length + " schema validation errors");
@@ -248,15 +248,15 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
     protected void validateNamespaces(Map<String, String> expectedNamespaces, Message receivedMessage) {
         if (CollectionUtils.isEmpty(expectedNamespaces)) { return; }
 
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message namespaces - receive message payload was empty");
         }
 
         log.info("Start XML namespace validation");
 
-        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
 
-        Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
+        Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(receivedMessage.getPayload(String.class));
 
         if (foundNamespaces.size() != expectedNamespaces.size()) {
             throw new ValidationException("Number of namespace declarations not equal for node " +
@@ -337,9 +337,9 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
                     "but was " + controlMessage.getPayload().getClass());
         }
 
-        String controlMessagePayload = controlMessage.getPayload().toString();
+        String controlMessagePayload = controlMessage.getPayload(String.class);
 
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             Assert.isTrue(!StringUtils.hasText(controlMessagePayload),
                     "Unable to validate message payload - received message payload was empty, control message payload is not");
             return;
@@ -349,7 +349,7 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
 
         log.info("Start XML tree validation ...");
 
-        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
         Document source = XMLUtils.parseMessagePayload(controlMessagePayload);
 
         XMLUtils.stripWhitespaceNodes(received);

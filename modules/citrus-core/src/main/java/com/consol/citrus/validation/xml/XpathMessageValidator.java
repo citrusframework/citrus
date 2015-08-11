@@ -57,13 +57,13 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     public void validateMessage(Message receivedMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
         if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
 
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
 
         log.info("Start XPath element validation");
 
-        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
         NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(
                 receivedMessage, validationContext.getNamespaces());
 

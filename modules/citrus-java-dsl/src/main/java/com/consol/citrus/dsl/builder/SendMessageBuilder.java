@@ -134,7 +134,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     public T message(Message message) {
         if (message.getPayload() != null && message.getPayload() instanceof String) {
             PayloadTemplateMessageBuilder messageBuilder = getPayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadData(message.getPayload().toString());
+            messageBuilder.setPayloadData(message.getPayload(String.class));
 
             Map<String, Object> headers = new HashMap<String, Object>();
             for (String headerName : message.copyHeaders().keySet()) {

@@ -57,7 +57,7 @@ public class NamespaceContextBuilder {
             simpleNamespaceContext.setBindings(namespaceMappings);
         }
         
-        Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
+        Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload(String.class));
         if (!CollectionUtils.isEmpty(namespaces)) {
             //dynamic binding of namespaces declarations in root element of received message
             for (Entry<String, String> binding : dynamicBindings.entrySet()) {

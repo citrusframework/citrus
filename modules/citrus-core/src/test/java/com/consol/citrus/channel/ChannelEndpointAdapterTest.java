@@ -76,7 +76,7 @@ public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
 
         Message response = endpointAdapter.handleMessage(request);
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload().toString(), "OK");
+        Assert.assertEquals(response.getPayload(String.class), "OK");
     }
 
     @Test

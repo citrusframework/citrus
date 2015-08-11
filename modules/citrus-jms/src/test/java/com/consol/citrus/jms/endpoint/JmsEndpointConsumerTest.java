@@ -61,7 +61,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
         
-        expect(jmsTemplate.receive()).andReturn(new TextMessageImpl(controlMessage.getPayload().toString(), controlHeaders));
+        expect(jmsTemplate.receive()).andReturn(new TextMessageImpl(controlMessage.getPayload(String.class), controlHeaders));
 
         replay(jmsTemplate, connectionFactory, destination);
         

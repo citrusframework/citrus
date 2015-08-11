@@ -72,7 +72,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                 log.debug("Evaluating XPath expression: " + pathExpression);
             }
             
-            Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
+            Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
             
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);

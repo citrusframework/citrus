@@ -43,8 +43,8 @@ public class PlainTextMessageValidator extends ControlMessageValidator {
         }
         
         try {
-            validateText(receivedMessage.getPayload().toString().trim(), 
-                    context.replaceDynamicContentInString(controlMessage.getPayload().toString().trim()));
+            validateText(receivedMessage.getPayload(String.class).trim(),
+                    context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate plain text", e);
         }

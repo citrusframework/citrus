@@ -49,7 +49,7 @@ public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<
         JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
 
         try {
-            Object json = parser.parse(message.getPayload().toString());
+            Object json = parser.parse(message.getPayload(String.class));
 
             if (json instanceof JSONObject) {
                 traverseJsonData((JSONObject) json, "", context);

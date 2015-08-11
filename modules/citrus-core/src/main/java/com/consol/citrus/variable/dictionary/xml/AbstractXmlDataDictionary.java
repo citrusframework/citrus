@@ -40,11 +40,11 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
 
     @Override
     protected Message interceptMessage(Message message, String messageType, TestContext context) {
-        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
+        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
 
-        Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
+        Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
 
         LSSerializer serializer = XMLUtils.createLSSerializer();
 

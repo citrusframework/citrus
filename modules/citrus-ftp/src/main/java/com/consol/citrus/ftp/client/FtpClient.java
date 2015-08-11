@@ -90,7 +90,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:\n" + ftpMessage.getPayload().toString());
+            log.debug("Message to be sent:\n" + ftpMessage.getPayload(String.class));
         }
 
         try {

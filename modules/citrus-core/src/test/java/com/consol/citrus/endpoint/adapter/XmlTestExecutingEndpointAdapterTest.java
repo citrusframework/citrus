@@ -52,12 +52,12 @@ public class XmlTestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest 
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<Test name=\"FooTest\"></Test>"));
 
-        Assert.assertEquals(response.getPayload().toString().trim(), "<Test name=\"FooTest\">OK</Test>");
+        Assert.assertEquals(response.getPayload(String.class).trim(), "<Test name=\"FooTest\">OK</Test>");
 
         response = endpointAdapter.handleMessage(
                 new DefaultMessage("<Test name=\"BarTest\"></Test>"));
 
-        Assert.assertEquals(response.getPayload().toString().trim(), "<Test name=\"BarTest\">OK</Test>");
+        Assert.assertEquals(response.getPayload(String.class).trim(), "<Test name=\"BarTest\">OK</Test>");
     }
 
     /**
@@ -72,7 +72,7 @@ public class XmlTestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest 
                 new DefaultMessage(
                         "<FooBarTest></FooBarTest>"));
 
-        Assert.assertEquals(response.getPayload().toString().trim(), "<FooBarTest>OK</FooBarTest>");
+        Assert.assertEquals(response.getPayload(String.class).trim(), "<FooBarTest>OK</FooBarTest>");
     }
 
     /**

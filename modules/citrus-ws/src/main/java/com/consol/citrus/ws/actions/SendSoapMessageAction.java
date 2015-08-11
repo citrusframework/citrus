@@ -62,7 +62,7 @@ public class SendSoapMessageAction extends SendMessageAction {
                 attachment.resolveDynamicContent(context);
 
                 if (mtomEnabled) {
-                    String messagePayload = soapMessage.getPayload().toString();
+                    String messagePayload = soapMessage.getPayload(String.class);
                     String cid = CID_MARKER + attachment.getContentId();
 
                     if (attachment.isMtomInline() && messagePayload.contains(cid)) {

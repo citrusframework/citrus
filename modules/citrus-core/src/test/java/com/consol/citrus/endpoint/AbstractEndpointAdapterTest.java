@@ -82,7 +82,7 @@ public class AbstractEndpointAdapterTest {
         Message response = abstractEndpointAdapter.handleMessage(request);
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload().toString(), "OK");
+        Assert.assertEquals(response.getPayload(String.class), "OK");
 
         verify(endpointAdapter);
     }

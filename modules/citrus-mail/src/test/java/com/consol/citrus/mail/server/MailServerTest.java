@@ -67,7 +67,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -112,7 +112,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -157,7 +157,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -193,7 +193,7 @@ public class MailServerTest {
                 Assert.assertNotNull(message.getPayload());
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-request.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -281,7 +281,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -327,7 +327,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -356,7 +356,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -402,7 +402,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -431,7 +431,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {
@@ -476,7 +476,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
                             StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
                                     MailServer.class).getInputStream()))));
                 } catch (IOException e) {

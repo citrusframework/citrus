@@ -104,7 +104,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         log.info("Sending HTTP message to: '" + endpointUri + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:\n" + httpMessage.getPayload().toString());
+            log.debug("Message to be sent:\n" + httpMessage.getPayload(String.class));
         }
 
         HttpMethod method = getEndpointConfiguration().getRequestMethod();
