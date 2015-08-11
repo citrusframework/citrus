@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.socket.xml;
+package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.http.socket.endpoint.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
+import com.consol.citrus.http.socket.endpoint.WebSocketServerEndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * Used for parsing Client WebSocket configurations
+ * Used for parsing server WebSocket endpoints and respective configurations.
  *
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketClientEndpointParser extends AbstractEndpointParser {
+public class WebSocketEndpointParser extends AbstractEndpointParser {
 
     @Override
-    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfigurationBuilder, Element element, ParserContext parserContext) {
-        super.parseEndpointConfiguration(endpointConfigurationBuilder, element, parserContext);
-        String url = element.getAttribute("url");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, url, "endpointUri");
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("path"), "endpointUri");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
     }
 
     @Override
@@ -48,7 +49,7 @@ public class WebSocketClientEndpointParser extends AbstractEndpointParser {
 
     @Override
     protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
-        return WebSocketClientEndpointConfiguration.class;
+        return WebSocketServerEndpointConfiguration.class;
     }
 
 }

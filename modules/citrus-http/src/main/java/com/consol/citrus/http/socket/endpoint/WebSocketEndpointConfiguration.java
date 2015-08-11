@@ -16,7 +16,8 @@
 
 package com.consol.citrus.http.socket.endpoint;
 
-import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.endpoint.PollableEndpointConfiguration;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
 
@@ -25,7 +26,7 @@ import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public interface WebSocketEndpointConfiguration extends EndpointConfiguration {
+public interface WebSocketEndpointConfiguration extends PollableEndpointConfiguration {
 
     /**
      * Gets or constructs new web socket handler.
@@ -63,4 +64,16 @@ public interface WebSocketEndpointConfiguration extends EndpointConfiguration {
      * @param messageConverter
      */
     void setMessageConverter(WebSocketMessageConverter messageConverter);
+
+    /**
+     * Gets the endpointUriResolver.
+     * @return the endpointUriResolver
+     */
+    EndpointUriResolver getEndpointUriResolver();
+
+    /**
+     * Sets the endpoint uri resolver.
+     * @param endpointUriResolver the endpointUriResolver to set
+     */
+    void setEndpointUriResolver(EndpointUriResolver endpointUriResolver);
 }

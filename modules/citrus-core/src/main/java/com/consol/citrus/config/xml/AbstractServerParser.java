@@ -47,6 +47,7 @@ public abstract class AbstractServerParser extends AbstractBeanDefinitionParser 
         }
 
         BeanDefinitionParserUtils.setPropertyReference(serverBuilder, element.getAttribute("interceptors"), "interceptors");
+        BeanDefinitionParserUtils.setPropertyReference(serverBuilder, element.getAttribute("actor"), "actor");
 
         parseServer(serverBuilder, element, parserContext);
 

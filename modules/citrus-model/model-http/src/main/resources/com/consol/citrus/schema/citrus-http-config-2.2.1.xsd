@@ -55,30 +55,36 @@
         <xs:attribute name="security-handler" type="xs:string"/>
         <xs:attribute name="endpoint-adapter" type="xs:string"/>
         <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="actor" type="xs:string"/>
       </xs:complexType>
     </xs:element>
 
-  <xs:element name="websocket" type="WebSocketType">
+  <xs:element name="websocket">
     <xs:annotation>
       <xs:documentation>WebSocket server component for sending and receiving asynchronous requests to and from WebSocket client</xs:documentation>
     </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="path" type="xs:string" use="required"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+    </xs:complexType>
   </xs:element>
 
-  <xs:complexType name="WebSocketType">
-    <xs:attribute name="id" type="xs:ID" use="required"/>
-    <xs:attribute name="path" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:element name="websocket-client" type="WebSocketClientType">
+  <xs:element name="websocket-client">
     <xs:annotation>
       <xs:documentation>WebSocket client component for sending and receiving asynchronous requests to and from WebSocket server</xs:documentation>
     </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="url" type="xs:string"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="endpoint-resolver" type="xs:string"/>
+      <xs:attribute name="actor" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+      <xs:attribute name="polling-interval" type="xs:string"/>
+    </xs:complexType>
   </xs:element>
-
-  <xs:complexType name="WebSocketClientType">
-    <xs:attribute name="id" type="xs:ID" use="required"/>
-    <xs:attribute name="url" type="xs:string" use="required"/>
-  </xs:complexType>
 
   <xs:element name="client">
       <xs:annotation>

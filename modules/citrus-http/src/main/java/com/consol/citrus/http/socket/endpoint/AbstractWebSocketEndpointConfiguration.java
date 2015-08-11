@@ -16,7 +16,9 @@
 
 package com.consol.citrus.http.socket.endpoint;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
 
 /**
@@ -24,9 +26,12 @@ import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
  * @author Martin Maher
  * @since 2.3
  */
-public abstract class AbstractWebSocketEndpointConfiguration extends AbstractEndpointConfiguration implements WebSocketEndpointConfiguration {
+public abstract class AbstractWebSocketEndpointConfiguration extends AbstractPollableEndpointConfiguration implements WebSocketEndpointConfiguration {
     /** Web socket server endpoint uri */
     private String endpointUri;
+
+    /** Resolves dynamic endpoint uri */
+    private EndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
     /** The message converter */
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
@@ -49,5 +54,15 @@ public abstract class AbstractWebSocketEndpointConfiguration extends AbstractEnd
     @Override
     public void setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
+    }
+
+    @Override
+    public EndpointUriResolver getEndpointUriResolver() {
+        return endpointUriResolver;
+    }
+
+    @Override
+    public void setEndpointUriResolver(EndpointUriResolver endpointUriResolver) {
+        this.endpointUriResolver = endpointUriResolver;
     }
 }

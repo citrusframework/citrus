@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
+    
+    <citrus-http:server id="httpServer1"
+                        auto-start="false"
+                        port="8080"
+                        timeout="3000"
+                        actor="testActor">
+        <citrus-http:websockets>
+          <citrus-http:ref websocket="websocket1"/>
+          <citrus-http:ref websocket="websocket2"/>
+          <citrus-http:ref websocket="websocket3"/>
+        </citrus-http:websockets>
+    </citrus-http:server>
+
+    <citrus-http:websocket id="websocket1" path="/test1"/>
+    <citrus-http:websocket id="websocket2" path="/test2" message-converter="messageConverter"/>
+    <citrus-http:websocket id="websocket3" path="/test3" timeout="10000"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="com.consol.citrus.http.socket.message.WebSocketMessageConverter"/>
+    </bean>
+</beans>

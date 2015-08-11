@@ -170,6 +170,15 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         }
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+
+        for (WebSocketEndpoint webSocket : webSockets) {
+            webSocket.setActor(getActor());
+        }
+    }
+
     /**
      * Adds default Spring dispatcher servlet with servlet mapping.
      */

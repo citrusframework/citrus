@@ -14,31 +14,38 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.socket.xml;
+package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.http.socket.endpoint.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
-import com.consol.citrus.http.socket.endpoint.WebSocketServerEndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * Used for parsing Server WebSocket endpoints and respective configurations.
+ * Used for parsing client WebSocket configurations
  *
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketEndpointParser extends AbstractEndpointParser {
+public class WebSocketClientParser extends AbstractEndpointParser {
 
     @Override
-    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfigurationBuilder, Element element, ParserContext parserContext) {
-        super.parseEndpointConfiguration(endpointConfigurationBuilder, element, parserContext);
-        String path = element.getAttribute("path");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, path, "endpointUri");
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+
+        if (!element.hasAttribute("url") && !element.hasAttribute("endpoint-resolver")) {
+            parserContext.getReaderContext().error("One of the properties 'url' or 'endpoint-resolver' is required!", element);
+        }
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("url"), "endpointUri");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("endpoint-resolver"), "endpointUriResolver");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
     }
 
     @Override
@@ -48,7 +55,7 @@ public class WebSocketEndpointParser extends AbstractEndpointParser {
 
     @Override
     protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
-        return WebSocketServerEndpointConfiguration.class;
+        return WebSocketClientEndpointConfiguration.class;
     }
 
 }

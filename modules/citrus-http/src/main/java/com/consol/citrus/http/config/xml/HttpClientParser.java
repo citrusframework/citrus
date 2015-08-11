@@ -66,15 +66,10 @@ public class HttpClientParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
-
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), "correlator");
-
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("endpoint-resolver"), "endpointUriResolver");
-
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("charset"), "charset");
-
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("content-type"), "contentType");
-
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
 
         if (element.hasAttribute("error-strategy")) {

@@ -34,8 +34,6 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketConsumer.class);
 
-    private static final long POLL_INTERVAL = 500L;
-
     /**
      * Endpoint configuration
      */
@@ -77,8 +75,8 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         WebSocketMessage<?> message = config.getHandler().getMessage();
         String path = endpointConfiguration.getEndpointUri();
         while (message == null && timeLeft > 0) {
-            timeLeft -= POLL_INTERVAL;
-            long sleep = timeLeft > 0 ? POLL_INTERVAL : POLL_INTERVAL + timeLeft;
+            timeLeft -= endpointConfiguration.getPollingInterval();
+            long sleep = timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft;
             if (LOG.isDebugEnabled()) {
                 String msg = "Waiting for message on '%s' - retrying in %s ms";
                 LOG.debug(String.format(msg, path, (sleep)));
