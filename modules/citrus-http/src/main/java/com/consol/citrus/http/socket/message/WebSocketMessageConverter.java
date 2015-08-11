@@ -21,8 +21,10 @@ import com.consol.citrus.http.socket.endpoint.WebSocketEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
 import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.web.socket.*;
-import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.BinaryMessage;
+import org.springframework.web.socket.TextMessage;
+
+import java.nio.ByteBuffer;
 
 /**
  * Message converter able to convert internal and external message representations for web socket messages. Converter
@@ -30,24 +32,27 @@ import org.springframework.web.socket.WebSocketMessage;
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketMessageConverter implements MessageConverter<WebSocketMessage, WebSocketEndpointConfiguration> {
+public class WebSocketMessageConverter implements MessageConverter<org.springframework.web.socket.WebSocketMessage, WebSocketEndpointConfiguration> {
     @Override
-    public WebSocketMessage convertOutbound(Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
-        WebSocketMessage webSocketMessage;
-        Object payload = internalMessage.getPayload();
-        boolean isLast = true;
-
-        if (internalMessage.getHeader(WebSocketMessageHeaders.WEB_SOCKET_IS_LAST) != null) {
-            isLast = Boolean.valueOf(internalMessage.getHeader(WebSocketMessageHeaders.WEB_SOCKET_IS_LAST).toString());
+    public org.springframework.web.socket.WebSocketMessage convertOutbound(Message message, WebSocketEndpointConfiguration endpointConfiguration) {
+        WebSocketMessage internalMessage;
+        if (message instanceof WebSocketMessage) {
+            internalMessage = (WebSocketMessage) message;
+        } else {
+            internalMessage = new WebSocketMessage(message);
         }
 
+        org.springframework.web.socket.WebSocketMessage webSocketMessage;
+        Object payload = internalMessage.getPayload();
         if (payload instanceof String) {
-            webSocketMessage = new TextMessage(payload.toString(), isLast);
+            webSocketMessage = new TextMessage(payload.toString(), internalMessage.isLast());
+        } else if (payload instanceof ByteBuffer) {
+            webSocketMessage = new BinaryMessage((ByteBuffer) payload, internalMessage.isLast());
         } else if (payload instanceof byte[]) {
-            webSocketMessage = new BinaryMessage((byte[]) payload, isLast);
+            webSocketMessage = new BinaryMessage((byte[]) payload, internalMessage.isLast());
         } else {
             try {
-                webSocketMessage = new TextMessage(internalMessage.getPayload(String.class), isLast);
+                webSocketMessage = new TextMessage(internalMessage.getPayload(String.class), internalMessage.isLast());
             } catch (ConversionNotSupportedException e) {
                 throw new CitrusRuntimeException(String.format("Found unsupported payload type: '%s'", payload.getClass().getCanonicalName()), e);
             }
@@ -58,11 +63,12 @@ public class WebSocketMessageConverter implements MessageConverter<WebSocketMess
     }
 
     @Override
-    public void convertOutbound(WebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(org.springframework.web.socket.WebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
     }
 
     @Override
-    public Message convertInbound(WebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
-        return new com.consol.citrus.http.socket.message.WebSocketMessage(externalMessage);
+    public Message convertInbound(org.springframework.web.socket.WebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+        return new WebSocketMessage(externalMessage.getPayload())
+                        .last(externalMessage.isLast());
     }
 }

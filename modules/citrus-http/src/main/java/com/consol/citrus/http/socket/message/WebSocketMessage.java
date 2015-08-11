@@ -17,6 +17,9 @@
 package com.consol.citrus.http.socket.message;
 
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+
+import java.util.Map;
 
 /**
  * Message representing web socket message data.
@@ -26,7 +29,64 @@ import com.consol.citrus.message.DefaultMessage;
  */
 public class WebSocketMessage extends DefaultMessage {
 
-    public WebSocketMessage(org.springframework.web.socket.WebSocketMessage externalMessage) {
-        super(externalMessage.getPayload());
+    /**
+     * Empty constructor initializing with empty message payload.
+     */
+    public WebSocketMessage() {
+        super();
     }
+
+    /**
+     * Constructs copy of given message.
+     * @param message
+     */
+    public WebSocketMessage(Message message) {
+        super(message);
+    }
+
+    /**
+     * Default message using message payload.
+     * @param payload
+     */
+    public WebSocketMessage(Object payload) {
+        super(payload);
+    }
+
+    /**
+     * Default message using message payload and headers.
+     * @param payload
+     * @param headers
+     */
+    public WebSocketMessage(Object payload, Map<String, Object> headers) {
+        super(payload, headers);
+    }
+
+    /**
+     * Adds isLast message header.
+     * @param last
+     * @return
+     */
+    public WebSocketMessage last(boolean last) {
+        setHeader(WebSocketMessageHeaders.WEB_SOCKET_IS_LAST, last);
+        return this;
+    }
+
+    /**
+     * Gets the isLast flag from message headers.
+     * @return
+     */
+    public boolean isLast() {
+        Object isLast = getHeader(WebSocketMessageHeaders.WEB_SOCKET_IS_LAST);
+
+        if (isLast != null) {
+            if (isLast instanceof String) {
+                return Boolean.valueOf(isLast.toString());
+            } else {
+                return (Boolean) isLast;
+            }
+        }
+
+        return true;
+    }
+
 }

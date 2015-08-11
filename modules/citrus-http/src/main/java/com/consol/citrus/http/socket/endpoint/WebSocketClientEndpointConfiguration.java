@@ -37,6 +37,9 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
     /** Web socket handler */
     private CitrusWebSocketHandler handler;
 
+    /** Web socket client implementation */
+    private WebSocketClient client = new StandardWebSocketClient();
+
     @Override
     public CitrusWebSocketHandler getHandler() {
         if (handler == null) {
@@ -56,7 +59,6 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
      * @return
      */
     private CitrusWebSocketHandler getWebSocketClientHandler(String url) {
-        WebSocketClient client = new StandardWebSocketClient();
         CitrusWebSocketHandler handler = new CitrusWebSocketHandler();
         ListenableFuture<WebSocketSession> future = client.doHandshake(handler, url);
         try {
@@ -67,5 +69,13 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
             throw new CitrusRuntimeException(errMsg);
         }
         return handler;
+    }
+
+    /**
+     * Sets the web socket client.
+     * @param client
+     */
+    public void setClient(WebSocketClient client) {
+        this.client = client;
     }
 }
