@@ -164,14 +164,38 @@ public void receiveMessageTest() {
 }</programlisting>
 
         <para>The Groovy XmlSlurper validation script goes right into the message-tag instead of a XML control template or XPath validation. The Groovy script
-            supports Java <literal>assert</literal> statements for message element validation. The element navigation starts with the root element
-            reffered to as <literal>root</literal>. Based on this root element you can also access child elements and attributes. Just use the element names seperated
-            by a simple dot. Very easy! If you need the list of child elements use the <literal>children()</literal> function on any element. With the
+            supports Java <literal>assert</literal> statements for message element validation. Citrus automatically injects the root element <literal>root</literal> to the validation script.
+            This is the Groovy XmlSlurper object and the start of element navigation. Based on this root element you can access child elements and attributes with a dot notated syntax.
+            Just use the element names separated by a simple dot. Very easy! If you need the list of child elements use the <literal>children()</literal> function on any element. With the
             <literal>text()</literal> function you get access to the element's text-value. The <literal>size()</literal> is very useful for validating the number of child
             elements which completes the basic validation statements.</para>
 
-        <para>As you can see from the example, we may use test variables within the validation script, too. Also not very surprising you may use external file resources
-            as validaton scripts. The syntax looks like follows:</para>
+        <para>As you can see from the example, we may use test variables within the validation script, too. Citrus has also injected the actual test context to the validation script. The test context
+            object holds all test variables. So you can also access variables with <literal>context.getVariable("user")</literal> for instance. On the test context you can also set new variable values with
+            <literal>context.setVariable("user", "newUserName")</literal>.</para>
+
+        <para>There is even more object injection for the validation script. With the automatically added object <literal>receivedMessage</literal> You have access to the Citrus message object for this receive action.
+        This enables you to do whatever you want with the message payload or header.</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
+        <programlisting>&lt;receive endpoint=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
+    &lt;message&gt;
+        &lt;validate&gt;
+            &lt;script type=&quot;groovy&quot;&gt;
+                assert receivedMessage.getPayload(String.class).contains("Hello Citrus!")
+                assert receivedMessage.getHeader("Operation") == 'sayHello'
+
+                context.setVariable("request_payload", receivedMessage.getPayload(String.class))
+            &lt;/script&gt;
+        &lt;/validate&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
+        <para>The listing above shows some power of the validation script. We can access the message payload, we can access the message header. With test context access we can also save the whole message payload
+        as a new test variable for later usage in the test.</para>
+
+        <para>In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also
+        use external file resources for the validation scripts. The syntax looks like follows:</para>
 
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;receive endpoint=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
@@ -195,6 +219,9 @@ public void receiveMessageTest() {
         .header("CorrelationId", "${correlationId}")
         .timeout(5000L);
 }</programlisting>
+
+        <para>We referenced some external file resource <literal>validationScript.groovy</literal>. This file content is loaded at runtime and is used as script body. Now that we have a normal groovy file we can use the code completion and
+        syntax highlighting of our favorite Groovy editor.</para>
 
         <note>You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath validation.</note>
 

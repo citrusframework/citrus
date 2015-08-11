@@ -84,11 +84,52 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
-
     <para>Again we tell Citrus that we expect a message of <emphasis>type=&quot;json&quot;</emphasis>. Now we used a validation script that is written in Groovy. Citrus will automatically activate
     the special message validator that executes our Groovy script. The script validation is more powerful as we can use the full power of the Groovy language. The validation script automatically has access
     to the incoming JSON message object <emphasis>json</emphasis>. We can use the Groovy JSON dot notated syntax in order to navigate through the JSON structure. The Groovy JSON slurper object <emphasis>json</emphasis>
     is automatically passed to the validation script. This way you can access the JSON object elements in your code doing some assertions.</para>
+
+    <para>There is even more object injection for the validation script. With the automatically added object <literal>receivedMessage</literal> You have access to the Citrus message object for this receive action.
+    This enables you to do whatever you want with the message payload or header.</para>
+
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
+    &lt;message type=&quot;json&quot;&gt;
+        &lt;validate&gt;
+            &lt;script type=&quot;groovy&quot;&gt;
+                assert receivedMessage.getPayload(String.class).contains("Hello Citrus!")
+                assert receivedMessage.getHeader("Operation") == 'sayHello'
+
+                context.setVariable("request_payload", receivedMessage.getPayload(String.class))
+            &lt;/script&gt;
+        &lt;/validate&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
+    <para>The listing above shows some power of the validation script. We can access the message payload, we can access the message header. With test context access we can also save the whole message payload
+    as a new test variable for later usage in the test.</para>
+
+    <para>In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also
+    use external file resources for the validation scripts. The syntax looks like follows:</para>
+
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;receive endpoint=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
+    &lt;message&gt;
+        &lt;validate&gt;
+            &lt;script type=&quot;groovy&quot; file=&quot;classpath:validationScript.groovy&quot;/&gt;
+        &lt;/validate&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
+    <para><emphasis>Java DSL designer</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
+    receive("helloServiceClient")
+        .validateScript(new FileSystemResource("validationScript.groovy"));
+}</programlisting>
+
+    <para>We referenced some external file resource <literal>validationScript.groovy</literal>. This file content is loaded at runtime and is used as script body. Now that we have a normal groovy file we can use the code completion and
+    syntax highlighting of our favorite Groovy editor.</para>
 
     <important>
       <para>Using several message validator implementations at the same time in the citrus-context.xml is also no problem. Citrus automatically searches for all available
