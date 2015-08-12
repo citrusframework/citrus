@@ -31,6 +31,12 @@
 
   <bean id="citrusUrlHandlerMapping" class="com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping">
     <property name="order" value="1" />
+    <property name="interceptors">
+      <list>
+        <ref bean="loggingInterceptor"/>
+        <ref bean="citrusHandlerInterceptor"/>
+      </list>
+    </property>
   </bean>
 
   <bean id="citrusHandshakeHandler" class="org.springframework.web.socket.server.support.DefaultHandshakeHandler">

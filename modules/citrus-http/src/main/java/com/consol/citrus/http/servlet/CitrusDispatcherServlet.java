@@ -101,11 +101,11 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             Map<String, Object> wsHandlers = new HashMap<>();
             for (WebSocketEndpoint webSocketEndpoint : webSocketEndpoints) {
                 String wsPath = webSocketEndpoint.getEndpointConfiguration().getEndpointUri();
-                String wsId = webSocketEndpoint.getName();
+
                 CitrusWebSocketHandler handler = new CitrusWebSocketHandler();
                 webSocketEndpoint.setWebSocketHandler(handler);
                 WebSocketHttpRequestHandler wsRequestHandler = new WebSocketHttpRequestHandler(handler, handshakeHandler);
-                SessionEnricherHandshakeInterceptor handshakeInterceptor = new SessionEnricherHandshakeInterceptor(wsId, wsPath);
+                SessionEnricherHandshakeInterceptor handshakeInterceptor = new SessionEnricherHandshakeInterceptor(webSocketEndpoint.getName(), wsPath);
                 wsRequestHandler.getHandshakeInterceptors().add(handshakeInterceptor);
                 wsHandlers.put(wsPath, wsRequestHandler);
             }

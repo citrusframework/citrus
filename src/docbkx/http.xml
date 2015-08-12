@@ -110,8 +110,8 @@
         </programlisting>
         </tip>
         
-        <tip><para>And another tip for you regarding dynamic endpoint URI in HTTP client usage. Similar to the endpoint resolving mechanism in SOAP sending action you can dynamically set
-        the called endpoint URI on HTTP the client endpoint. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action
+        <tip><para>Here is another tip for you regarding dynamic endpoint URIs in HTTP clients. Similar to the endpoint resolving mechanism in SOAP you can dynamically set
+        the called endpoint URI at test runtime by using special message header values. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action
         inside the test.</para>
 
         <para>The <emphasis>dynamicEndpointResolver</emphasis> bean must implement the EndpointUriResolver interface in order to resolve
