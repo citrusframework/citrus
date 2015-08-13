@@ -1,7 +1,6 @@
 channel=com.consol.citrus.channel.ChannelEndpointComponent
 jms=com.consol.citrus.jms.endpoint.JmsEndpointComponent
 http=com.consol.citrus.http.client.HttpEndpointComponent
-ws=com.consol.citrus.ws.client.WebServiceEndpointComponent
 soap=com.consol.citrus.ws.client.WebServiceEndpointComponent
 ftp=com.consol.citrus.ftp.client.FtpEndpointComponent
 mail=com.consol.citrus.mail.client.MailEndpointComponent
@@ -10,4 +9,5 @@ ssh=com.consol.citrus.ssh.client.SshEndpointComponent
 vertx=com.consol.citrus.vertx.endpoint.VertxEndpointComponent
 eventbus=com.consol.citrus.vertx.endpoint.VertxEndpointComponent
 camel=com.consol.citrus.camel.endpoint.CamelEndpointComponent
-ws=com.consol.citrus.http.socket.endpoint.WebSocketEndpointComponent
+ws=com.consol.citrus.websocket.endpoint.WebSocketEndpointComponent
+websocket=com.consol.citrus.websocket.endpoint.WebSocketEndpointComponent

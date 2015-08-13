@@ -20,7 +20,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
-import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -36,6 +35,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -94,11 +94,6 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Message converter */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
-
-    /**
-     * Captures all WebSocket endpoints
-     */
-    private List<WebSocketEndpoint> webSockets = new ArrayList<>();
 
     @Override
     protected void shutdown() {
@@ -170,20 +165,11 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         }
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
-
-        for (WebSocketEndpoint webSocket : webSockets) {
-            webSocket.setActor(getActor());
-        }
-    }
-
     /**
      * Adds default Spring dispatcher servlet with servlet mapping.
      */
     private void addDispatcherServlet() {
-        ServletHolder servletHolder = new ServletHolder(new CitrusDispatcherServlet(this));
+        ServletHolder servletHolder = new ServletHolder(getDispatherServlet());
         servletHolder.setName(getServletName());
         servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
 
@@ -194,6 +180,14 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         servletMapping.setPathSpec(servletMappingPath);
 
         servletHandler.addServletMapping(servletMapping);
+    }
+
+    /**
+     * Gets the Citrus dispatcher servlet.
+     * @return
+     */
+    protected DispatcherServlet getDispatherServlet() {
+        return new CitrusDispatcherServlet(this);
     }
 
     /**
@@ -555,20 +549,5 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setMessageConverter(HttpMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
-    }
-
-    /**
-     * Gets the WebSocket endpoints (id, uri)
-     */
-    public List<WebSocketEndpoint> getWebSockets() {
-        return webSockets;
-    }
-
-    /**
-     * Sets the WebSocket endpoints (id, uri)
-     * @param webSockets
-     */
-    public void setWebSockets(List<WebSocketEndpoint> webSockets) {
-        this.webSockets = webSockets;
     }
 }

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="http-websocket">
-    <title>HTTP WebSocket support</title>
+    <title>WebSocket support</title>
 
     <para>The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. Citrus is able to send and receive messages with WebSocket connections as client and server. The Http server
       implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish and consumer messages via bidirectional WebSocket protocol.</para>
 
-    <para>The new WebSocket support was built into the <emphasis>citrus-http</emphasis> module. There fore we need to add this module to our project as dependency when we are about to use the WebSocket features in Citrus.</para>
+    <para>The new WebSocket support is located in the module <emphasis>citrus-websocket</emphasis>. Therefore we need to add this module to our project as dependency when we are about to use the WebSocket features in Citrus.</para>
 
     <programlisting>&lt;dependency&gt;
     &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
-    &lt;artifactId&gt;citrus-http&lt;/artifactId&gt;
+    &lt;artifactId&gt;citrus-websocket&lt;/artifactId&gt;
     &lt;version&gt;2.3-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
-    <para>As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level
-      <emphasis>beans</emphasis> element. Simply include the http-config namespace in the configuration XML files as follows.</para>
+    <para>As Citrus provides a customized WebSocket configuration schema for the Spring application context configuration files we have to add name to the top level
+      <emphasis>beans</emphasis> element. Simply include the websocket-config namespace in the configuration XML files as follows.</para>
 
     <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
       xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-      xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
+      xmlns:citrus-websocket=&quot;http://www.citrusframework.org/schema/websocket/config&quot;
       xsi:schemaLocation=&quot;
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.citrusframework.org/schema/config
             http://www.citrusframework.org/schema/config/citrus-config.xsd
-            http://www.citrusframework.org/schema/http/config
-            http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;&gt;
+            http://www.citrusframework.org/schema/websocket/config
+            http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd&quot;&gt;
 
     [...]
 
@@ -39,7 +39,7 @@
 
       <para>On the client side Citrus offers a client component that goes directly to the Spring bean application context. The client needs a server endpoint uri. This is a WebSocket protocol endpoint uri.</para>
 
-      <programlisting>&lt;citrus-http:websocket-client id=&quot;helloWebSocketClient&quot;
+      <programlisting>&lt;citrus-websocket:client id=&quot;helloWebSocketClient&quot;
     url=&quot;http://localhost:8080/hello&quot;
     timeout=&quot;5000&quot;/&gt;</programlisting>
 
@@ -100,20 +100,20 @@
       can ask for a upgrade to the WebSocket standard. In this handshake the server will upgrade the connection to WebSocket and afterwards client and server can exchange messages over this connection. This means the connection is kept alive
       and multiple messages can be exchanged. Lets see how WebSocket endpoints are added to a Http server component in Citrus.</para>
 
-      <programlisting>&lt;citrus-http:server id=&quot;helloHttpServer&quot;
+      <programlisting>&lt;citrus-websocket:server id=&quot;helloHttpServer&quot;
         port=&quot;8080&quot;
         auto-start=&quot;true&quot;
         resource-base=&quot;src/citrus/resources&quot;&gt;
-    &lt;citrus-http:websockets&gt;
-        &lt;citrus-http:ref websocket=&quot;websocket1&quot;/&gt;
-        &lt;citrus-http:ref websocket=&quot;websocket2&quot;/&gt;
-    &lt;/citrus-http:websockets&gt;
-&lt;/citrus-http:server&gt;
+    &lt;citrus-websocket:endpoints&gt;
+        &lt;citrus-websocket:endpoint ref=&quot;websocket1&quot;/&gt;
+        &lt;citrus-websocket:endpoint ref=&quot;websocket2&quot;/&gt;
+    &lt;/citrus-websocket:endpoints&gt;
+&lt;/citrus-websocket:server&gt;
 
-&lt;citrus-http:websocket id=&quot;websocket1&quot; path=&quot;/test1&quot;/&gt;
-&lt;citrus-http:websocket id=&quot;websocket2&quot; path=&quot;/test2&quot; timeout=&quot;10000&quot;/&gt;</programlisting>
+&lt;citrus-websocket:endpoint id=&quot;websocket1&quot; path=&quot;/test1&quot;/&gt;
+&lt;citrus-websocket:endpoint id=&quot;websocket2&quot; path=&quot;/test2&quot; timeout=&quot;10000&quot;/&gt;</programlisting>
 
-      <para>The embedded Jetty Http server component in Citrus now is able to define multiple WebSocket endpoints. The WebSocket endpoints match to a request path on the server and are referenced by a unique id. Each WebSocket endpoint
+      <para>The embedded Jetty WebSocket server component in Citrus now is able to define multiple WebSocket endpoints. The WebSocket endpoints match to a request path on the server and are referenced by a unique id. Each WebSocket endpoint
       can follow individual timeout settings. In a test we can use these endpoints directly to receive messages.</para>
 
       <programlisting>&lt;testcase name=&quot;httpWebSocketServerTest&quot;&gt;

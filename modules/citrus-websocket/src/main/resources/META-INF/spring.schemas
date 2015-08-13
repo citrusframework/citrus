@@ -1,0 +1,2 @@
+http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config-2.3.xsd=com/consol/citrus/schema/citrus-websocket-config-2.3.xsd
+http\://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd=com/consol/citrus/schema/citrus-websocket-config.xsd

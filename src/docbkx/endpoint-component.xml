@@ -66,6 +66,8 @@
     http:localhost:8088?requestMethod=GET&amp;timeout=10000&amp;errorHandlingStrategy=throwsException&amp;requestFactory=myRequestFactory
     http://localhost:8088/test?requestMethod=DELETE&amp;customParam=foo
 
+    websocket:localhost:8088/test
+    websocket://localhost:8088/test
     ws:localhost:8088/test
     ws://localhost:8088/test
 
