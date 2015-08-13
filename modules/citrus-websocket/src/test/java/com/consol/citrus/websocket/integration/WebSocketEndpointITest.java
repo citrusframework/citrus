@@ -24,11 +24,11 @@ import org.testng.annotations.Test;
  * @author Martin Maher
  */
 @Test
-public class HttpWebSocketITest extends AbstractTestNGCitrusTest {
+public class WebSocketEndpointITest extends AbstractTestNGCitrusTest {
 
-    @CitrusXmlTest(name = "HttpWebSocket_1_ITest")
-    public void testHttpWebSocket1() {}
+    @CitrusXmlTest(name = "WebSocketEndpoint_1_ITest")
+    public void testWebSocketEndpoint1() {}
 
-    @CitrusXmlTest(name = "HttpWebSocket_2_ITest")
-    public void testHttpWebSocket2() {}
+    @CitrusXmlTest(name = "WebSocketEndpoint_2_ITest")
+    public void testWebSocketEndpoint2() {}
 }

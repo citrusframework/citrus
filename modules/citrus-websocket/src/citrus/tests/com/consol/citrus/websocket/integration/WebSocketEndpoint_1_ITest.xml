@@ -5,7 +5,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="HttpWebSocket_1_ITest">
+  <testcase name="WebSocketEndpoint_1_ITest">
     <meta-info>
       <author>Martin Maher</author>
       <creationdate>2015-07-22</creationdate>
