@@ -55,10 +55,19 @@ public class CitrusRemoteConfigurationProducer {
      * @param event
      */
     public void configure(@Observes(precedence = CitrusExtensionConstants.REMOTE_CONFIG_PRECEDENCE) BeforeSuite event) {
-        log.info("Producing Citrus remote configuration");
-        configurationInstance.set(CitrusConfiguration.from(getRemoteConfigurationProperties()));
+        try {
+            log.info("Producing Citrus remote configuration");
+            configurationInstance.set(CitrusConfiguration.from(getRemoteConfigurationProperties()));
+        } catch (Exception e) {
+            log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
+            throw e;
+        }
     }
 
+    /**
+     * Reads configuration properties from remote property file that has been added to the auxiliary archive.
+     * @return
+     */
     private Properties getRemoteConfigurationProperties() {
         ClassLoader ctcl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
             public ClassLoader run() {

@@ -16,9 +16,9 @@
 
 package com.consol.citrus.arquillian.container;
 
-import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
+import com.consol.citrus.arquillian.enricher.CitrusRemoteInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
-import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
+import com.consol.citrus.arquillian.lifecycle.CitrusRemoteLifecycleHandler;
 import org.easymock.EasyMock;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
@@ -36,8 +36,8 @@ public class CitrusRemoteExtensionTest {
 
         expect(extensionBuilder.service(TestEnricher.class, CitrusTestEnricher.class)).andReturn(extensionBuilder).once();
         expect(extensionBuilder.observer(CitrusRemoteConfigurationProducer.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusInstanceProducer.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusLifecycleHandler.class)).andReturn(extensionBuilder).once();
+        expect(extensionBuilder.observer(CitrusRemoteInstanceProducer.class)).andReturn(extensionBuilder).once();
+        expect(extensionBuilder.observer(CitrusRemoteLifecycleHandler.class)).andReturn(extensionBuilder).once();
 
         replay(extensionBuilder);
 

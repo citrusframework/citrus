@@ -31,10 +31,13 @@ public final class CitrusExtensionConstants {
     /** Remote configuration properties dynamically added to auxiliary archive */
     public static final String CITRUS_REMOTE_PROPERTIES = "citrus.arquillian.remote.properties";
 
+    /** Citrus extension error message */
+    public static final String CITRUS_EXTENSION_ERROR = "Citrus extension error";
+
     /** Observers of same observable event must be ordered (highest first) */
-    public static final int REMOTE_CONFIG_PRECEDENCE = 2;
-    public static final int INSTANCE_PRECEDENCE = 1;
-    public static final int LIFECYCLE_PRECEDENCE = 0;
+    public static final int REMOTE_CONFIG_PRECEDENCE = 200;
+    public static final int INSTANCE_PRECEDENCE = 100;
+    public static final int INSTANCE_REMOTE_PRECEDENCE = 100;
 
     /**
      * Prevent instantiation.

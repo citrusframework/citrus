@@ -17,9 +17,9 @@
 package com.consol.citrus.arquillian.container;
 
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
-import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
+import com.consol.citrus.arquillian.enricher.CitrusRemoteInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
-import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
+import com.consol.citrus.arquillian.lifecycle.CitrusRemoteLifecycleHandler;
 import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
 import org.slf4j.Logger;
@@ -43,8 +43,8 @@ public class CitrusRemoteExtension implements RemoteLoadableExtension {
             builder.service(TestEnricher.class, CitrusTestEnricher.class);
 
             builder.observer(CitrusRemoteConfigurationProducer.class);
-            builder.observer(CitrusInstanceProducer.class);
-            builder.observer(CitrusLifecycleHandler.class);
+            builder.observer(CitrusRemoteInstanceProducer.class);
+            builder.observer(CitrusRemoteLifecycleHandler.class);
         }
     }
 }

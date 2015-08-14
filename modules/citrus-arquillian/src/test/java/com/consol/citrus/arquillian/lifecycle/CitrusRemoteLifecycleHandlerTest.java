@@ -21,20 +21,18 @@ import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import com.consol.citrus.config.CitrusBaseConfig;
 import org.easymock.EasyMock;
-import org.jboss.arquillian.container.spi.client.container.DeployableContainer;
-import org.jboss.arquillian.container.spi.client.deployment.DeploymentDescription;
-import org.jboss.arquillian.container.spi.event.container.AfterUnDeploy;
-import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
 import org.jboss.arquillian.core.api.Instance;
+import org.jboss.arquillian.test.spi.event.suite.AfterSuite;
+import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
 
-public class CitrusLifecycleHandlerTest {
+public class CitrusRemoteLifecycleHandlerTest {
 
-    private CitrusLifecycleHandler lifecycleHandler = new CitrusLifecycleHandler();
+    private CitrusRemoteLifecycleHandler lifecycleHandler = new CitrusRemoteLifecycleHandler();
 
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
@@ -42,26 +40,21 @@ public class CitrusLifecycleHandlerTest {
     private Instance<Citrus> citrusInstance = EasyMock.createMock(Instance.class);
     private Instance<CitrusConfiguration> configurationInstance = EasyMock.createMock(Instance.class);
 
-    private DeployableContainer container = EasyMock.createMock(DeployableContainer.class);
-    private DeploymentDescription deployment = EasyMock.createMock(DeploymentDescription.class);
-
     @Test
     public void testLifecycle() throws Exception {
-        reset(citrusInstance, configurationInstance, container, deployment);
+        reset(citrusInstance, configurationInstance);
 
         expect(citrusInstance.get()).andReturn(citrusFramework).atLeastOnce();
         expect(configurationInstance.get()).andReturn(configuration).atLeastOnce();
 
-        expect(deployment.testable()).andReturn(false).times(2);
-
-        replay(citrusInstance, configurationInstance, container, deployment);
+        replay(citrusInstance, configurationInstance);
 
         InjectionHelper.inject(lifecycleHandler, "citrusInstance", citrusInstance);
         InjectionHelper.inject(lifecycleHandler, "configurationInstance", configurationInstance);
 
-        lifecycleHandler.beforeDeploy(new BeforeDeploy(container, deployment));
-        lifecycleHandler.afterDeploy(new AfterUnDeploy(container, deployment));
+        lifecycleHandler.beforeSuite(new BeforeSuite());
+        lifecycleHandler.afterSuite(new AfterSuite());
 
-        verify(citrusInstance, configurationInstance, container, deployment);
+        verify(citrusInstance, configurationInstance);
     }
 }

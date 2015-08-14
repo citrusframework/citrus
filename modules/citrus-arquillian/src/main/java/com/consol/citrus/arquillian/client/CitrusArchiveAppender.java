@@ -20,9 +20,9 @@ import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.container.CitrusRemoteConfigurationProducer;
 import com.consol.citrus.arquillian.container.CitrusRemoteExtension;
-import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
+import com.consol.citrus.arquillian.enricher.CitrusRemoteInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
-import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
+import com.consol.citrus.arquillian.lifecycle.CitrusRemoteLifecycleHandler;
 import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.container.test.spi.client.deployment.CachedAuxilliaryArchiveAppender;
 import org.jboss.arquillian.core.api.Instance;
@@ -50,9 +50,9 @@ public class CitrusArchiveAppender extends CachedAuxilliaryArchiveAppender {
         return ShrinkWrap.create(JavaArchive.class)
             .addClass(CitrusExtensionConstants.class)
             .addClass(CitrusConfiguration.class)
-            .addClass(CitrusInstanceProducer.class)
-            .addClass(CitrusLifecycleHandler.class)
             .addClass(CitrusTestEnricher.class)
+            .addClass(CitrusRemoteInstanceProducer.class)
+            .addClass(CitrusRemoteLifecycleHandler.class)
             .addClass(CitrusRemoteConfigurationProducer.class)
             .addClass(CitrusRemoteExtension.class)
             .addPackage(ReflectionUtils.class.getPackage())

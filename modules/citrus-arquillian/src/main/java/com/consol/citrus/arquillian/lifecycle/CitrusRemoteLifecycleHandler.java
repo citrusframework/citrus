@@ -19,11 +19,11 @@ package com.consol.citrus.arquillian.lifecycle;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
-import org.jboss.arquillian.container.spi.event.container.AfterUnDeploy;
-import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
+import org.jboss.arquillian.test.spi.event.suite.AfterSuite;
+import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -34,10 +34,10 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class CitrusLifecycleHandler {
+public class CitrusRemoteLifecycleHandler {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusLifecycleHandler.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusRemoteLifecycleHandler.class);
 
     @Inject
     private Instance<CitrusConfiguration> configurationInstance;
@@ -49,12 +49,10 @@ public class CitrusLifecycleHandler {
      * Calls before suite actions in Citrus.
      * @param event
      */
-    public void beforeDeploy(@Observes BeforeDeploy event) {
+    public void beforeSuite(@Observes BeforeSuite event) {
         try {
-            if (!event.getDeployment().testable()) {
-                log.debug("Starting Citrus before suite lifecycle");
-                citrusInstance.get().beforeSuite(configurationInstance.get().getSuiteName());
-            }
+            log.debug("Starting Citrus before suite lifecycle");
+            citrusInstance.get().beforeSuite(configurationInstance.get().getSuiteName());
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;
@@ -65,14 +63,12 @@ public class CitrusLifecycleHandler {
      * Calls after suite actions in Citrus.
      * @param event
      */
-    public void afterDeploy(@Observes AfterUnDeploy event) {
+    public void afterSuite(@Observes AfterSuite event) {
         try {
-            if (!event.getDeployment().testable()) {
-                log.debug("Starting Citrus after suite lifecycle");
-                citrusInstance.get().afterSuite(configurationInstance.get().getSuiteName());
+            log.debug("Starting Citrus after suite lifecycle");
+            citrusInstance.get().afterSuite(configurationInstance.get().getSuiteName());
 
-                closeApplicationContext();
-            }
+            closeApplicationContext();
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;

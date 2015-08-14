@@ -20,10 +20,10 @@ import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.container.CitrusRemoteConfigurationProducer;
 import com.consol.citrus.arquillian.container.CitrusRemoteExtension;
-import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
+import com.consol.citrus.arquillian.enricher.CitrusRemoteInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
+import com.consol.citrus.arquillian.lifecycle.CitrusRemoteLifecycleHandler;
 import org.easymock.EasyMock;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.shrinkwrap.api.*;
@@ -42,8 +42,8 @@ public class CitrusArchiveAppenderTest {
 
     /** Required extension classes */
     private final static List<Class<?>> REQUIRED_CLASSES = Arrays.asList(
-            CitrusExtensionConstants.class, CitrusConfiguration.class, CitrusInstanceProducer.class,
-            CitrusLifecycleHandler.class, CitrusTestEnricher.class,
+            CitrusExtensionConstants.class, CitrusConfiguration.class, CitrusRemoteInstanceProducer.class,
+            CitrusRemoteLifecycleHandler.class, CitrusTestEnricher.class,
             CitrusRemoteConfigurationProducer.class, CitrusRemoteExtension.class,
             ReflectionUtils.class);
 

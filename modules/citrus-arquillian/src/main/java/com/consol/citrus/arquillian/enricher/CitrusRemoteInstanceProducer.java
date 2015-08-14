@@ -14,34 +14,41 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.arquillian.configuration;
+package com.consol.citrus.arquillian.enricher;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
-import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
+import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
+import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.*;
+import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Reads Citrus extension properties from Arquillian descriptor and constructs proper configuration instance.
+ * Creates a new Citrus instance with basic configuration and sets result as application scoped
+ * Arquillian resource.
  *
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class CitrusConfigurationProducer {
+public class CitrusRemoteInstanceProducer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusConfigurationProducer.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusRemoteInstanceProducer.class);
+
+    @Inject
+    private Instance<CitrusConfiguration> configurationInstance;
 
     @Inject
     @ApplicationScoped
-    private InstanceProducer<CitrusConfiguration> configurationInstance;
+    private InstanceProducer<Citrus> citrusInstance;
 
-    public void configure(@Observes ArquillianDescriptor descriptor) {
+    public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.INSTANCE_REMOTE_PRECEDENCE) BeforeSuite event) {
         try {
-            log.info("Producing Citrus configuration");
-            configurationInstance.set(CitrusConfiguration.from(descriptor));
+            log.info("Producing Citrus framework instance");
+            citrusInstance.set(Citrus.newInstance(configurationInstance.get().getConfigurationClass()));
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;
