@@ -16,8 +16,7 @@
 
 package com.consol.citrus.server;
 
-import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
-import com.consol.citrus.channel.ChannelEndpointAdapter;
+import com.consol.citrus.channel.*;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.*;
 import com.consol.citrus.messaging.Consumer;
@@ -66,6 +65,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
 
     @Autowired
     private TestContextFactory testContextFactory;
+
+    /** The server inbound channel */
+    private MessageSelectingQueueChannel inboundChannel;
     
     /** Logger */
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -133,8 +135,15 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      */
     public void afterPropertiesSet() throws Exception {
         if (endpointAdapter == null) {
+            if (beanFactory != null && beanFactory.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
+                inboundChannel = beanFactory.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageSelectingQueueChannel.class);
+            } else {
+                inboundChannel = new MessageSelectingQueueChannel();
+                inboundChannel.setBeanName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
+            }
+
             ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
-            channelEndpointConfiguration.setChannelName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
+            channelEndpointConfiguration.setChannel(inboundChannel);
             channelEndpointConfiguration.setBeanFactory(getBeanFactory());
             channelEndpointConfiguration.setTimeout(defaultTimeout);
             channelEndpointConfiguration.setUseObjectMessages(true);
