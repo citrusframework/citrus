@@ -23,6 +23,8 @@ import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.*;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Creates a new Citrus instance with basic configuration and sets result as application scoped
@@ -33,6 +35,9 @@ import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
  */
 public class CitrusInstanceProducer {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusInstanceProducer.class);
+
     @Inject
     private Instance<CitrusConfiguration> configurationInstance;
 
@@ -41,6 +46,7 @@ public class CitrusInstanceProducer {
     private InstanceProducer<Citrus> citrusInstance;
 
     public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.INSTANCE_PRECEDENCE) BeforeSuite event) {
+        log.info("Producing Citrus framework instance");
         citrusInstance.set(Citrus.newInstance(configurationInstance.get().getConfigurationClass()));
     }
 }

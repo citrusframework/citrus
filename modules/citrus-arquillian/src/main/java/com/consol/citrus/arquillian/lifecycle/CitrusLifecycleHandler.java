@@ -24,6 +24,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.test.spi.event.suite.AfterSuite;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Observes Arquillian before and after suite events in order to execute corresponding lifecycle phases in Citrus.
@@ -33,6 +36,9 @@ import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
  */
 public class CitrusLifecycleHandler {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusLifecycleHandler.class);
+
     @Inject
     private Instance<CitrusConfiguration> configurationInstance;
 
@@ -40,10 +46,15 @@ public class CitrusLifecycleHandler {
     private Instance<Citrus> citrusInstance;
 
     public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.LIFECYCLE_PRECEDENCE) BeforeSuite event) {
+        log.debug("Starting Citrus before suite lifecycle");
         citrusInstance.get().beforeSuite(configurationInstance.get().getSuiteName());
     }
 
     public void afterSuite(@Observes AfterSuite event) {
+        log.debug("Starting Citrus after suite lifecycle");
         citrusInstance.get().afterSuite(configurationInstance.get().getSuiteName());
+
+        log.debug("Closing Citrus Spring application context");
+        ((ConfigurableApplicationContext)citrusInstance.get().getApplicationContext()).close();
     }
 }

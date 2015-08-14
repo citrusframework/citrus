@@ -19,6 +19,8 @@ package com.consol.citrus.arquillian.configuration;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reads Citrus extension properties from Arquillian descriptor and constructs proper configuration instance.
@@ -28,11 +30,15 @@ import org.jboss.arquillian.core.api.annotation.*;
  */
 public class CitrusConfigurationProducer {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusConfigurationProducer.class);
+
     @Inject
     @ApplicationScoped
     private InstanceProducer<CitrusConfiguration> configurationInstance;
 
     public void configure(@Observes ArquillianDescriptor descriptor) {
+        log.info("Producing Citrus configuration");
         configurationInstance.set(CitrusConfiguration.from(descriptor));
     }
 }

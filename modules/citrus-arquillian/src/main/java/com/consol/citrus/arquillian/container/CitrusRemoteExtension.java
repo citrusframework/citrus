@@ -22,6 +22,8 @@ import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
 import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
 import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Arquillian remote extension loads enricher and observables for Citrus remote extension.
@@ -31,9 +33,13 @@ import org.jboss.arquillian.test.spi.TestEnricher;
  */
 public class CitrusRemoteExtension implements RemoteLoadableExtension {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusRemoteExtension.class);
+
     @Override
     public void register(ExtensionBuilder builder) {
         if (Validate.classExists(CitrusExtensionConstants.CITRUS)) {
+            log.info("Citrus remote extension is active");
             builder.service(TestEnricher.class, CitrusTestEnricher.class);
 
             builder.observer(CitrusRemoteConfigurationProducer.class);

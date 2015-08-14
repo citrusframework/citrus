@@ -55,6 +55,7 @@ public class CitrusRemoteConfigurationProducer {
      * @param event
      */
     public void configure(@Observes(precedence = CitrusExtensionConstants.REMOTE_CONFIG_PRECEDENCE) BeforeSuite event) {
+        log.info("Producing Citrus remote configuration");
         configurationInstance.set(CitrusConfiguration.from(getRemoteConfigurationProperties()));
     }
 

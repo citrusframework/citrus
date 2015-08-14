@@ -27,6 +27,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -42,14 +44,19 @@ import java.lang.reflect.Method;
  */
 public class CitrusTestEnricher implements TestEnricher {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusTestEnricher.class);
+
     @Inject
     private Instance<Citrus> citrusInstance;
 
     @Override
     public void enrich(final Object testCase) {
+        log.debug("Starting test class field injection for Citrus resources");
         ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+                log.debug(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, testCase, citrusInstance.get());
             }
         }, new ReflectionUtils.FieldFilter() {
@@ -67,10 +74,13 @@ public class CitrusTestEnricher implements TestEnricher {
                 return false;
             }
         });
+        log.info("Successfully enriched test class with Citrus field resource injection");
     }
 
     @Override
     public Object[] resolve(Method method) {
+        log.debug("Starting method parameter injection for Citrus resources");
+
         Object[] values = new Object[method.getParameterTypes().length];
         Class<?>[] parameterTypes = method.getParameterTypes();
 
@@ -83,11 +93,13 @@ public class CitrusTestEnricher implements TestEnricher {
                         TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().getApplicationContext());
                         testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
+                        log.debug("Injecting Citrus test designer on method parameter");
                         values[i] = testDesigner;
                     } else if (TestRunner.class.isAssignableFrom(type)) {
                         TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().getApplicationContext());
                         testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
+                        log.debug("Injecting Citrus test runner on method parameter");
                         values[i] = testRunner;
                     } else {
                         throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -96,6 +108,7 @@ public class CitrusTestEnricher implements TestEnricher {
             }
         }
 
+        log.info("Successfully enriched method parameters with Citrus method resource injection");
         return values;
     }
 }

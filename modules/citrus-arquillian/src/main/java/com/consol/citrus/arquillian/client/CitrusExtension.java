@@ -21,9 +21,12 @@ import com.consol.citrus.arquillian.configuration.CitrusConfigurationProducer;
 import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
 import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
-import org.jboss.arquillian.container.test.spi.client.deployment.*;
+import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
+import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveAppender;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Arquillian extension registers archive appenders, processors and observers for Citrus extension.
@@ -33,9 +36,13 @@ import org.jboss.arquillian.test.spi.TestEnricher;
  */
 public class CitrusExtension implements LoadableExtension {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusExtension.class);
+
     @Override
     public void register(ExtensionBuilder builder) {
         if (Validate.classExists(CitrusExtensionConstants.CITRUS)) {
+            log.info("Citrus extension is active");
             builder.service(AuxiliaryArchiveAppender.class, CitrusArchiveAppender.class);
             builder.service(ApplicationArchiveProcessor.class, CitrusArchiveProcessor.class);
 
