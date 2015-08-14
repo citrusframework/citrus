@@ -20,6 +20,9 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.*;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.jms.endpoint.JmsEndpoint;
+import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
 import org.jboss.arquillian.test.api.ArquillianResource;
 
 import java.net.URL;
@@ -32,6 +35,15 @@ public class ArquillianTest {
 
     @CitrusFramework
     private Citrus citrus;
+
+    @CitrusEndpoint(name = "someEndpoint")
+    private Endpoint someEndpoint;
+
+    @CitrusEndpoint(name = "jmsEndpoint")
+    private JmsEndpoint jmsEndpoint;
+
+    @CitrusEndpoint
+    private JmsSyncEndpoint jmsSyncEndpoint;
 
     @CitrusTest
     public void testMethod(@CitrusResource TestDesigner designer) {
@@ -66,5 +78,17 @@ public class ArquillianTest {
 
     public Citrus getCitrus() {
         return citrus;
+    }
+
+    public Endpoint getSomeEndpoint() {
+        return someEndpoint;
+    }
+
+    public JmsEndpoint getJmsEndpoint() {
+        return jmsEndpoint;
+    }
+
+    public JmsSyncEndpoint getJmsSyncEndpoint() {
+        return jmsSyncEndpoint;
     }
 }

@@ -22,7 +22,10 @@ import com.consol.citrus.container.SequenceAfterSuite;
 import com.consol.citrus.container.SequenceBeforeSuite;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListeners;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -150,6 +153,42 @@ public final class Citrus {
         } else {
             testSuiteListener.onFinish();
             testSuiteListener.onFinishSuccess();
+        }
+    }
+
+    /**
+     * Gets the endpoint from Spring application context.
+     * @param name
+     * @return
+     */
+    public Endpoint getEndpoint(String name) {
+        return getEndpoint(name, Endpoint.class);
+    }
+
+    /**
+     * Gets the endpoint from Spring application context with given type.
+     * @param requiredType
+     * @return
+     */
+    public <T extends Endpoint> T getEndpoint(Class<T> requiredType) {
+        try {
+            return getApplicationContext().getBean(requiredType);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new CitrusRuntimeException(String.format("Unable to find endpoint for type '%s'", requiredType));
+        }
+    }
+
+    /**
+     * Gets the endpoint from Spring application context with given type.
+     * @param name
+     * @param requiredType
+     * @return
+     */
+    public <T extends Endpoint> T getEndpoint(String name, Class<T> requiredType) {
+        try {
+            return getApplicationContext().getBean(name, requiredType);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new CitrusRuntimeException(String.format("Unable to find endpoint for name '%s'", name));
         }
     }
 

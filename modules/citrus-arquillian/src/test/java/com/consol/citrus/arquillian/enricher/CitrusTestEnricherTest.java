@@ -18,7 +18,6 @@ package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import com.consol.citrus.config.CitrusBaseConfig;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
@@ -37,7 +36,7 @@ public class CitrusTestEnricherTest {
 
     private CitrusTestEnricher testEnricher = new CitrusTestEnricher();
 
-    private Citrus citrusFramework = Citrus.newInstance(CitrusBaseConfig.class);
+    private Citrus citrusFramework = Citrus.newInstance(ArquillianTestConfig.class);
     private Instance<Citrus> citrusInstance = EasyMock.createMock(Instance.class);
 
     @Test
@@ -45,7 +44,7 @@ public class CitrusTestEnricherTest {
         ArquillianTest testInstance = new ArquillianTest();
 
         reset(citrusInstance);
-        expect(citrusInstance.get()).andReturn(citrusFramework).anyTimes();
+        expect(citrusInstance.get()).andReturn(citrusFramework).atLeastOnce();
         replay(citrusInstance);
 
         Assert.assertNull(testInstance.getCitrus());
@@ -54,6 +53,12 @@ public class CitrusTestEnricherTest {
         testEnricher.enrich(testInstance);
 
         Assert.assertNotNull(testInstance.getCitrus());
+        Assert.assertNotNull(testInstance.getJmsEndpoint());
+        Assert.assertEquals(testInstance.getJmsEndpoint().getName(), "jmsEndpoint");
+        Assert.assertNotNull(testInstance.getSomeEndpoint());
+        Assert.assertEquals(testInstance.getSomeEndpoint().getName(), "someEndpoint");
+        Assert.assertNotNull(testInstance.getJmsSyncEndpoint());
+        Assert.assertEquals(testInstance.getJmsSyncEndpoint().getName(), "jmsSyncEndpoint");
 
         verify(citrusInstance);
     }
@@ -61,7 +66,7 @@ public class CitrusTestEnricherTest {
     @Test
     public void testResolveTestMethod() throws Exception {
         reset(citrusInstance);
-        expect(citrusInstance.get()).andReturn(citrusFramework).anyTimes();
+        expect(citrusInstance.get()).andReturn(citrusFramework).atLeastOnce();
         replay(citrusInstance);
 
         InjectionHelper.inject(testEnricher, "citrusInstance", citrusInstance);
