@@ -39,7 +39,7 @@ import java.util.Arrays;
 /**
  * @author Christoph Deppisch
  * @since 2.0
- * @deprecated since 2.2.1
+ * @deprecated since 2.3
  */
 public final class TestActions {
 

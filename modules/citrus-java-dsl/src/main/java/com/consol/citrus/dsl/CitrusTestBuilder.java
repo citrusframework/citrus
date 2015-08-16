@@ -47,7 +47,7 @@ import java.util.*;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
- * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.DefaultTestDesigner}
+ * @deprecated since 2.3 in favour of using {@link com.consol.citrus.dsl.design.DefaultTestDesigner}
  */
 public class CitrusTestBuilder implements TestBuilder, InitializingBean, Executable {
 

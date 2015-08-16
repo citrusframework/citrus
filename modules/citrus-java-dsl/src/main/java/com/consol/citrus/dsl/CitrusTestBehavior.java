@@ -25,7 +25,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
- * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.AbstractTestBehavior}
+ * @deprecated since 2.3 in favour of using {@link com.consol.citrus.dsl.design.AbstractTestBehavior}
  */
 public abstract class CitrusTestBehavior extends CitrusTestBuilder implements TestBehavior {
 

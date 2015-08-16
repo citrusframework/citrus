@@ -33,7 +33,7 @@ import java.util.List;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.PurgeChannelsBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.PurgeChannelsBuilder}
  */
 public class PurgeMessageChannelActionDefinition extends AbstractActionDefinition<PurgeMessageChannelAction> {
 

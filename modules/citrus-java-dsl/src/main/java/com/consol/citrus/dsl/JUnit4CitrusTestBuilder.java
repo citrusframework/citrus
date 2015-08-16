@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
- * @deprecated since 2.2.1 in favor of {@link com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner}
+ * @deprecated since 2.3 in favor of {@link com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner}
  */
 public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements TestBuilder {
 

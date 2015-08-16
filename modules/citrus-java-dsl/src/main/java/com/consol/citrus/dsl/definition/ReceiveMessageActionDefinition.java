@@ -49,7 +49,7 @@ import java.util.Map;
  * include construction of control message payload and headers as well as value extraction.
  * 
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveMessageBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveMessageBuilder}
  */
 public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T extends ReceiveMessageActionDefinition> extends AbstractActionDefinition<A> {
 

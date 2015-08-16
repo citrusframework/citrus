@@ -29,7 +29,7 @@ import java.io.IOException;
  * Special SOAP receive message action definition adds SOAP specific properties.
  * 
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveSoapMessageBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveSoapMessageBuilder}
  */
 public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefinition<ReceiveSoapMessageAction, ReceiveSoapMessageActionDefinition> {
 

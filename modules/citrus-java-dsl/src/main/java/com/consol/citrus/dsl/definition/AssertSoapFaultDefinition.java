@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  * since 1.3
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AssertSoapFaultBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.AssertSoapFaultBuilder}
  */
 public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition<AssertSoapFault> {
 

@@ -47,7 +47,7 @@ import java.util.Map;
  * CitrusTestBuilder by simple method delegation.
  *
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of {@link com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner}
+ * @deprecated since 2.3 in favor of {@link com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner}
  */
 public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements TestBuilder {
 

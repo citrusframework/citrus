@@ -21,7 +21,7 @@ import com.consol.citrus.message.MessageHeaders;
 /**
  * Special set of web socket related message headers.
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketMessageHeaders {
 

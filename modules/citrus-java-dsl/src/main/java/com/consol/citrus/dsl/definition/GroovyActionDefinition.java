@@ -28,7 +28,7 @@ import java.io.IOException;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.GroovyActionBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.GroovyActionBuilder}
  */
 public class GroovyActionDefinition extends AbstractActionDefinition<GroovyAction> {
 

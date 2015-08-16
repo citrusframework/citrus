@@ -25,7 +25,7 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  * @since 1.3
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AbstractTestActionBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.AbstractTestActionBuilder}
  */
 public class AbstractActionDefinition<T extends TestAction> implements TestAction {
 

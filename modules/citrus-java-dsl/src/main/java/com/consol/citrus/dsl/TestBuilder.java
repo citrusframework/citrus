@@ -38,7 +38,7 @@ import java.util.Date;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
- * @deprecated since 2.2.1 in favor of {@link com.consol.citrus.dsl.design.TestDesigner}
+ * @deprecated since 2.3 in favor of {@link com.consol.citrus.dsl.design.TestDesigner}
  */
 public interface TestBuilder extends ApplicationContextAware {
 

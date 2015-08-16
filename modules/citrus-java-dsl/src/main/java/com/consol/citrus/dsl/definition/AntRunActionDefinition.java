@@ -27,7 +27,7 @@ import java.util.Arrays;
  * 
  * @author Christoph Deppisch
  * @since 1.3
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AntRunBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.AntRunBuilder}
  */
 public class AntRunActionDefinition extends AbstractActionDefinition<AntRunAction> {
 

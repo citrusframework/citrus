@@ -45,7 +45,7 @@ import java.util.Map;
  * constructing build methods.
  * 
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendMessageBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.SendMessageBuilder}
  */
 public class SendMessageActionDefinition<A extends SendMessageAction, T extends SendMessageActionDefinition> extends AbstractActionDefinition<A> {
 

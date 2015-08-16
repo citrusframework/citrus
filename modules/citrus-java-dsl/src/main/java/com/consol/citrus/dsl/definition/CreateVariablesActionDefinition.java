@@ -24,7 +24,7 @@ import com.consol.citrus.actions.CreateVariablesAction;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
- * @deprecated since 2.2.1
+ * @deprecated since 2.3
  */
 public class CreateVariablesActionDefinition extends AbstractActionDefinition<CreateVariablesAction> {
 

@@ -30,7 +30,7 @@ import java.io.IOException;
  * fork mode.
  * 
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendSoapMessageBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.SendSoapMessageBuilder}
  */
 public class SendSoapMessageActionDefinition extends SendMessageActionDefinition<SendSoapMessageAction, SendSoapMessageActionDefinition> {
 

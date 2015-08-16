@@ -30,7 +30,7 @@ import java.io.IOException;
  * constructing build methods.
  * 
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendSoapFaultBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.SendSoapFaultBuilder}
  */
 public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefinition {
 

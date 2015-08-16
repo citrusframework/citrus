@@ -29,7 +29,7 @@ import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
- * since 2.2.1
+ * since 2.3
  */
 public class AssertSoapFaultBuilder extends AbstractTestActionContainerBuilder<AssertSoapFault> {
 

@@ -26,7 +26,7 @@ import java.util.Arrays;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
- * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.JavaActionBuilder}
+ * @deprecated since 2.3 in favor of using {@link com.consol.citrus.dsl.builder.JavaActionBuilder}
  */
 public class JavaActionDefinition extends AbstractActionDefinition<JavaAction> {
 
