@@ -126,7 +126,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testHttpMethod() {
         reset(httpClient, messageProducer);
-        expect(httpClient.createProducer()).andReturn(messageProducer).once();
+        expect(httpClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(httpClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -176,7 +176,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testHttpRequestUriAndPath() {
         reset(httpClient, messageProducer);
-        expect(httpClient.createProducer()).andReturn(messageProducer).once();
+        expect(httpClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(httpClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -229,7 +229,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testHttpRequestUriAndQueryParams() {
         reset(httpClient, messageProducer);
-        expect(httpClient.createProducer()).andReturn(messageProducer).once();
+        expect(httpClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(httpClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {

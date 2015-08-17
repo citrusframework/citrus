@@ -319,7 +319,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(message.getAttachments().get(1).getContent(), testAttachment.getContent() + 2);
                 return null;
             }
-        }).once();
+        }).atLeastOnce();
         replay(soapClient, messageProducer);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
