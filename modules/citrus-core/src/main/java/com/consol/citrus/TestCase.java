@@ -201,14 +201,22 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param context
      */
     public void executeAction(TestAction action, TestContext context) {
-        if (!action.isDisabled(context)) {
-            testActionListeners.onTestActionStart(this, action);
-            setLastExecutedAction(action);
+        try {
+            if (!action.isDisabled(context)) {
+                testActionListeners.onTestActionStart(this, action);
+                setLastExecutedAction(action);
 
-            action.execute(context);
-            testActionListeners.onTestActionFinish(this, action);
-        } else {
-            testActionListeners.onTestActionSkipped(this, action);
+                action.execute(context);
+                testActionListeners.onTestActionFinish(this, action);
+            } else {
+                testActionListeners.onTestActionSkipped(this, action);
+            }
+        } catch (Exception e) {
+            testResult = TestResult.failed(getName(), e);
+            throw new TestCaseFailedException(e);
+        } catch (Error e) {
+            testResult = TestResult.failed(getName(), e);
+            throw new TestCaseFailedException(e);
         }
     }
 
@@ -230,7 +238,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             }
 
             if (testResult == null) {
-                testResult=  TestResult.success(getName());
+                testResult = TestResult.success(getName());
             }
         } catch (Exception e) {
             testResult = TestResult.failed(getName(), e);

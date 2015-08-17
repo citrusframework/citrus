@@ -86,7 +86,7 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
             }
 
             try {
-                testRunner.start();
+                start();
 
                 if (parameters != null) {
                     handleTestParameters(testResult.getMethod(),
@@ -97,14 +97,14 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
                 } else {
                     ReflectionUtils.invokeMethod(method, this);
                 }
-
-                testRunner.stop();
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
+            } finally {
+                stop();
             }
 
             super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);

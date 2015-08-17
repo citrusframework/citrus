@@ -61,9 +61,12 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
             name(frameworkMethod.getTestName());
             packageName(frameworkMethod.getPackageName());
 
-            testRunner.start();
-            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
-            testRunner.stop();
+            try {
+                start();
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
+            } finally {
+                stop();
+            }
         } else {
             super.run(frameworkMethod);
         }
