@@ -17,6 +17,7 @@ public class CitrusNamespacePrefixMapper extends NamespacePrefixMapper {
         namespaceMappings.put("http://www.citrusframework.org/schema/config", "citrus");
         namespaceMappings.put("http://www.citrusframework.org/schema/jms/config", "citrus-jms");
         namespaceMappings.put("http://www.citrusframework.org/schema/http/config", "citrus-http");
+        namespaceMappings.put("http://www.citrusframework.org/schema/websocket/config", "citrus-websocket");
         namespaceMappings.put("http://www.citrusframework.org/schema/ws/config", "citrus-ws");
         namespaceMappings.put("http://www.citrusframework.org/schema/ssh/config", "citrus-ssh");
         namespaceMappings.put("http://www.citrusframework.org/schema/mail/config", "citrus-mail");

@@ -14,6 +14,7 @@
         <include>com.consol.citrus:citrus-jms</include>
         <include>com.consol.citrus:citrus-ws</include>
         <include>com.consol.citrus:citrus-http</include>
+        <include>com.consol.citrus:citrus-websocket</include>
         <include>com.consol.citrus:citrus-ssh</include>
         <include>com.consol.citrus:citrus-mail</include>
         <include>com.consol.citrus:citrus-camel</include>
@@ -24,6 +25,7 @@
         <include>com.consol.citrus.model:citrus-model-core</include>
         <include>com.consol.citrus.model:citrus-model-jms</include>
         <include>com.consol.citrus.model:citrus-model-http</include>
+        <include>com.consol.citrus.model:citrus-model-websocket</include>
         <include>com.consol.citrus.model:citrus-model-ws</include>
         <include>com.consol.citrus.model:citrus-model-ssh</include>
         <include>com.consol.citrus.model:citrus-model-mail</include>

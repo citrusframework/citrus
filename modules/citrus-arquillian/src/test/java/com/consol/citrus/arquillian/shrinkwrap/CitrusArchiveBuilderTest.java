@@ -44,11 +44,12 @@ public class CitrusArchiveBuilderTest {
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 10);
+        Assert.assertEquals(artifactResources.length, 11);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");
         verifyArtifact(artifactResources, "citrus-http-.*jar");
+        verifyArtifact(artifactResources, "citrus-websocket-.*jar");
         verifyArtifact(artifactResources, "citrus-ws-.*jar");
         verifyArtifact(artifactResources, "citrus-ftp-.*jar");
         verifyArtifact(artifactResources, "citrus-camel-.*jar");
@@ -67,7 +68,7 @@ public class CitrusArchiveBuilderTest {
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 10);
+        Assert.assertEquals(artifactResources.length, 11);
 
         List<String> artifactFileNames = new ArrayList<>();
         for (File artifactResource : artifactResources) {
@@ -77,6 +78,7 @@ public class CitrusArchiveBuilderTest {
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");
         verifyArtifact(artifactResources, "citrus-http-.*jar");
+        verifyArtifact(artifactResources, "citrus-websocket-.*jar");
         verifyArtifact(artifactResources, "citrus-ws-.*jar");
         verifyArtifact(artifactResources, "citrus-ftp-.*jar");
         verifyArtifact(artifactResources, "citrus-camel-.*jar");

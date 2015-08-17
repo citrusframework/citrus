@@ -96,6 +96,7 @@ public final class CitrusArchiveBuilder {
         core();
         jms();
         http();
+        websocket();
         ws();
         ssh();
         ftp();
@@ -131,6 +132,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder http() {
         artifactCoordinates.add(getCoordinates("citrus-http"));
+        return this;
+    }
+
+    /**
+     * Gets the http Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder websocket() {
+        artifactCoordinates.add(getCoordinates("citrus-websocket"));
         return this;
     }
 
