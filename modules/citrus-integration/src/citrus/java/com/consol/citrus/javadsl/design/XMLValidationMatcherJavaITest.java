@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class XMLValidationMatcherJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void XMLValidationMatcherJavaITest() {
+    public void xmlValidationMatcher() {
         variable("greetingText", "Hello Citrus");      
         
         parallel(

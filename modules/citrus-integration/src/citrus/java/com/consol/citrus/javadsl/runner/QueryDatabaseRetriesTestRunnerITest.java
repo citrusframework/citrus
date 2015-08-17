@@ -37,7 +37,7 @@ public class QueryDatabaseRetriesTestRunnerITest extends TestNGCitrusTestRunner 
     private DataSource dataSource;
     
     @CitrusTest
-    public void QueryDatabaseRetriesTestRunnerITest() {
+    public void sqlQueryRetries() {
         parallel().actions(
             sequential().actions(
                 sql(new BuilderSupport<ExecuteSQLBuilder>() {

@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class SequentialJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SequentialJavaITest() {
+    public void sequentialContainer() {
         sequential(
             stopTime(),
             sleep(1000),

@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class WebServiceClientTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void WebServiceClientTestRunnerITest() {
+    public void soapClient() {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         

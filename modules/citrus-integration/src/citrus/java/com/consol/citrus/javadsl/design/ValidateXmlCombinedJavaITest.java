@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class ValidateXmlCombinedJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void ValidateXmlCombinedJavaITest() {
+    public void validateXmlCombined() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

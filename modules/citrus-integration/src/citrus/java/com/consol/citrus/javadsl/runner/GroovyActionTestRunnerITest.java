@@ -33,7 +33,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
     private static final String NEWLINE = System.getProperty("line.separator");
     
     @CitrusTest
-    public void GroovyActionTestRunnerITest() {
+    public void groovyAction() {
         variable("date", "citrus:currentDate()");
         variable("greetingText", "Hello Citrus!");
         

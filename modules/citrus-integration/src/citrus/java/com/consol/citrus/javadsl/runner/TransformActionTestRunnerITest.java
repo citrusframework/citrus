@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class TransformActionTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void TransformActionTestRunnerITest() {
+    public void transformAction() {
         transform(new BuilderSupport<TransformActionBuilder>() {
             @Override
             public void configure(TransformActionBuilder builder) {

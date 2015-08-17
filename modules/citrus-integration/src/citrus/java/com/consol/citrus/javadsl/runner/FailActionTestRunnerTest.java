@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class FailActionTestRunnerTest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void FailActionTestRunnerTest() {
+    public void failAction() {
         assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {

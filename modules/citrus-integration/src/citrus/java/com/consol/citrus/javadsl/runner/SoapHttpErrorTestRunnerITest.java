@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void SoapHttpErrorTestRunnerITest() {
+    public void soapHttpError() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

@@ -75,7 +75,7 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
             if (StringUtils.hasText(citrusTestAnnotation.name())) {
                 name(citrusTestAnnotation.name());
             } else {
-                name(method.getName());
+                name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
             }
 
             Object[][] parameters = null;

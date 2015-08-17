@@ -34,7 +34,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
     private NamespaceContextBuilder namespaceContextBuilder;
     
     @CitrusTest
-    public void ValidateXpathTestRunnerITest() {
+    public void validateXpath() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

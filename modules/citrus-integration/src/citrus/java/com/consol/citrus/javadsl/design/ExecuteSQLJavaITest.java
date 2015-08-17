@@ -35,7 +35,7 @@ public class ExecuteSQLJavaITest extends TestNGCitrusTestDesigner {
     private DataSource dataSource;
     
     @CitrusTest
-    public void ExecuteSQLJavaITest() {
+    public void executeSQLAction() {
         variable("rowsCount", "0");
         variable("customerId", "1");
         

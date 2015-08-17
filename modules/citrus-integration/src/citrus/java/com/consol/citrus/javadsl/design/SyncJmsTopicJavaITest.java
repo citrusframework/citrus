@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SyncJmsTopicJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SyncJmsTopicJavaITest() {
+    public void syncJmsTopic() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

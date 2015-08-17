@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class SendSoapAttachmentJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SendSoapAttachmentJavaITest() {
+    public void sendSoapAttachment() {
         parallel(
             send("webServiceClient")
                 .soap()

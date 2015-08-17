@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SoapHeaderFragmentJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SoapHeaderFragmentJavaITest() {
+    public void soapHeaderFragment() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

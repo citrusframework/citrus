@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void RepeatOnErrorJavaITest() {
+    public void repeatOnErrorContainer() {
         variable("message", "Hello TestFramework");
         
         repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");

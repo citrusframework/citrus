@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class ValidateXMLDataJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void ValidateXMLDataJavaITest() {
+    public void validateXMLData() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

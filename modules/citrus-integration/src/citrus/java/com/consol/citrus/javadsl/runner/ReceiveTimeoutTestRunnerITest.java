@@ -36,7 +36,7 @@ public class ReceiveTimeoutTestRunnerITest extends TestNGCitrusTestRunner {
     private Endpoint messageEndpoint;
     
     @CitrusTest
-    public void ReceiveTimeoutTestRunnerITest() {
+    public void receiveTimeoutAction() {
         receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
             @Override
             public void configure(ReceiveTimeoutBuilder builder) {

@@ -34,7 +34,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestDesigner {
     private SoapFaultValidator soapFaultValidator;
     
     @CitrusTest
-    public void ServerSoapFaultJavaITest() {
+    public void soapFaultAction() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

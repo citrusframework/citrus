@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class WebServiceClientJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void WebServiceClientJavaITest() {
+    public void soapClient() {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         

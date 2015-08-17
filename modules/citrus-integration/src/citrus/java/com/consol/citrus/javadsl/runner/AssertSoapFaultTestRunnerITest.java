@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class AssertSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void AssertSoapFaultTestRunnerITest() {
+    public void assertSoapFaultAction() {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         

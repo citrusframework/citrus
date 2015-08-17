@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void RepeatOnErrorTestRunnerITest() {
+    public void repeatOnErrorContainer() {
         variable("message", "Hello TestFramework");
         
         repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {

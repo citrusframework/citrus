@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void HttpServerStandaloneTestRunnerITest() {
+    public void httpServerStandalone() {
         variable("custom_header_id", "123456789");
         
         send(new BuilderSupport<SendMessageBuilder>() {

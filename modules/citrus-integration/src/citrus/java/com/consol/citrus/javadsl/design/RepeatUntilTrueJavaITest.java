@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class RepeatUntilTrueJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void RepeatUntilTrueJavaITest() {
+    public void repeatUntilTrueContainer() {
         variable("max", "3");
         
         repeat(echo("index is: ${i}")).until("i gt citrus:randomNumber(1)").index("i");

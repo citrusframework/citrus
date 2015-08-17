@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class InputActionTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void InputActionTestRunnerITest() {
+    public void inputAction() {
         variable("userinput", "");
         variable("userinput1", "");
         variable("userinput2", "y");

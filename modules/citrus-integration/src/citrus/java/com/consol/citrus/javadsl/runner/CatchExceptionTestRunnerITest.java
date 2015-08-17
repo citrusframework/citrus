@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class CatchExceptionTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void CatchExceptionTestRunnerITest() {
+    public void catchAction() {
         catchException().when(fail("Fail!"));
         
         catchException(new BuilderSupport<CatchExceptionBuilder>() {

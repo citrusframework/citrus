@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class EchoActionTestRunnerITest extends TestNGCitrusTestRunner {
 
     @CitrusTest
-    public void EchoActionTestRunnerITest() {
+    public void echoAction() {
         echo("Hello Citrus!");
         
         echo("Today is citrus:currentDate()");

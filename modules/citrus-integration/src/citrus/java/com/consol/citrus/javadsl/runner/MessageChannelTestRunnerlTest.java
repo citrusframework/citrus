@@ -33,7 +33,7 @@ import java.util.*;
 public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void MessageChannelTestRunnerlTest() {
+    public void messageChannels() {
         send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {

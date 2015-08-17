@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest(name = "HttpMessageControllerTestRunnerITest")
-    public void HttpMessageControllerTestRunnerITest() {
+    public void httpMessageControllerITest() {
         variable("id", "123456789");
         
         echo("First request without query parameter and context path variables.");

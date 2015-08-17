@@ -65,6 +65,7 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
         if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
             init();
             name(frameworkMethod.getTestName());
+            packageName(frameworkMethod.getPackageName());
 
             ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
 

@@ -37,7 +37,7 @@ public class ExecutePLSQLTestRunnerITest extends TestNGCitrusTestRunner {
     private DataSource dataSource;
     
     @CitrusTest
-    public void ExecutePLSQLTestRunnerITest() {
+    public void executePLSQLAction() {
         plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
             @Override
             public void configure(ExecutePLSQLBuilder builder) {

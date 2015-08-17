@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class WsAddressingJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void WsAddressingJavaITest() {
+    public void wsAddressing() {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         

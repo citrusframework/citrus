@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class CatchJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void CatchJavaITest() {
+    public void catchAction() {
         catchException(fail("Fail!"));
         
         catchException(fail("Fail!"))

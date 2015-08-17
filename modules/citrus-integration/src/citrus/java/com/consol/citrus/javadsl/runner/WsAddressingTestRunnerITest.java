@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class WsAddressingTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void WsAddressingTestRunnerITest() {
+    public void wsAddressing() {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         

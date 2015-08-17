@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 public class IterateTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void IterateTestRunnerITest() {
+    public void iterateContainer() {
         variable("max", "3");
         
         iterate(new BuilderSupport<IterateBuilder>() {

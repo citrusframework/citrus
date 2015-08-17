@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class AntRunTestRunnerITest extends TestNGCitrusTestRunner {
 
     @CitrusTest
-    public void AntRunTestRunnerITest() {
+    public void antRunAction() {
         variable("welcomeText", "Hello Citrus today is citrus:currentDate()!");
         variable("checked", "true");
         

@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class EmptySoapResponseJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void EmptySoapResponseJavaITest() {
+    public void test() {
         send("webServiceHelloClient")
             .payload("<ns0:SoapProbingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Timestamp>citrus:currentDate(\"yyyy-MM-dd'T'hh:mm:ss\")</ns0:Timestamp>" +

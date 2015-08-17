@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void SendSoapAttachmentTestRunnerITest() {
+    public void sendSoapAttachment() {
         parallel().actions(
             send(new BuilderSupport<SendMessageBuilder>() {
                 @Override

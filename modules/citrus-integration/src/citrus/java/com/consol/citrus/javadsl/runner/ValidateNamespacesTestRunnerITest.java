@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void ValidateNamespacesTestRunnerITest() {
+    public void validateNamespaces() {
         echo("Test: Success with single namespace validation");
         
         send(new BuilderSupport<SendMessageBuilder>() {

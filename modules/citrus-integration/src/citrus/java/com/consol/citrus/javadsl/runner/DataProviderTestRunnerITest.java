@@ -30,7 +30,7 @@ public class DataProviderTestRunnerITest extends TestNGCitrusTestRunner {
     @CitrusTest
     @CitrusParameters( {"message", "delay"} )
     @Test(dataProvider = "sampleDataProvider")
-    public void DataProviderTestRunnerITest(String message, Long sleep) {
+    public void dataProvider(String message, Long sleep) {
         echo(message);
         sleep(sleep);
 

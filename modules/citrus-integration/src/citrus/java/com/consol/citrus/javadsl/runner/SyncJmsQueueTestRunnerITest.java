@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class SyncJmsQueueTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void SyncJmsQueueTestRunnerITest() {
+    public void syncJmsQueue() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

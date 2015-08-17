@@ -15,7 +15,7 @@ public class EchoActionConfigureITest extends TestNGCitrusTestDesigner {
     }
 
     @Test
-    public void echoActionConfigureITest(ITestContext testContext) {
+    public void echoAction(ITestContext testContext) {
         executeTest(testContext);
     }
 }

@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class ParallelTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void ParallelTestRunnerITest() {
+    public void parallelContainer() {
         parallel().actions(
                 sleep(150),
                 sequential().actions(

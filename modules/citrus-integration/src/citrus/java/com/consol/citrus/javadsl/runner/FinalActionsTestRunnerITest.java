@@ -37,7 +37,7 @@ public class FinalActionsTestRunnerITest extends TestNGCitrusTestRunner {
     private DataSource dataSource;
     
     @CitrusTest
-    public void FinalActionsTestRunnerITest() {
+    public void finallyBlock() {
         variable("orderId", "citrus:randomNumber(5)");
 
         doFinally()

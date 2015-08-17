@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class ValidateValuesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void ValidateValuesTestRunnerITest() {
+    public void validateValues() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SoapMimeHeaderJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SoapMimeHeaderJavaITest() {
+    public void soapMimeHeader() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

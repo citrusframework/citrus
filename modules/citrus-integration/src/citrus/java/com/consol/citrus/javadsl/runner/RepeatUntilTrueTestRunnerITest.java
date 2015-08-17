@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 public class RepeatUntilTrueTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void RepeatUntilTrueTestRunnerITest() {
+    public void repeatUntilTrueContainer() {
         variable("max", "3");
         
         repeat(new BuilderSupport<RepeatBuilder>() {

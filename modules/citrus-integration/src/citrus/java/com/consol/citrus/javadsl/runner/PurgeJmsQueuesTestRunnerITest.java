@@ -50,7 +50,7 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
     private Queue queue3;
     
     @CitrusTest
-    public void PurgeJmsQueuesTestRunnerITest() {
+    public void purgeJmsQueuesAction() {
         purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
             @Override
             public void configure(PurgeJmsQueuesBuilder builder) {

@@ -30,7 +30,7 @@ import java.util.*;
 public class MessageChannelJavalTest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void MessageChannelJavalTest() {
+    public void messageChannels() {
         send("channelRequestSender")
             .payload("Hello Citrus")
             .header("Operation", "sayHello");

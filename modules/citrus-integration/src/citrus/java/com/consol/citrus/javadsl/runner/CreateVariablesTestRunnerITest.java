@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class  CreateVariablesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void CreateVariablesTestRunnerITest() {
+    public void createVariablesAction() {
         variable("myVariable", "12345");
         variable("newValue", "54321");
         

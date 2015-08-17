@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class JmsCommunicationJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void JmsCommunicationJavaITest() {
+    public void jmsQueues() {
         String operation = "sayHello";
         
         variable("correlationId", "citrus:randomNumber(10)");

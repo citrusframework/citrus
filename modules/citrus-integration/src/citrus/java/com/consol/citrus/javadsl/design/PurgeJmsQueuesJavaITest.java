@@ -48,7 +48,7 @@ public class PurgeJmsQueuesJavaITest extends TestNGCitrusTestDesigner {
     private Queue queue3;
     
     @CitrusTest
-    public void PurgeJmsQueuesJavaITest() {
+    public void purgeJmsQueuesAction() {
         purgeQueues()
             .queue("Citrus.Queue.Dummy")
             .queue("Citrus.Queue.Dummy.One.In")

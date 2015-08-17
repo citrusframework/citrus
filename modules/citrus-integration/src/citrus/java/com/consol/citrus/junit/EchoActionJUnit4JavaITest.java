@@ -25,7 +25,7 @@ public class EchoActionJUnit4JavaITest extends JUnit4CitrusTestDesigner {
 
     @Test
     @CitrusTest
-    public void EchoJavaTest() {
+    public void echoJavaTest() {
         variable("time", "citrus:currentDate()");
 
         echo("Hello Citrus!");
@@ -35,7 +35,7 @@ public class EchoActionJUnit4JavaITest extends JUnit4CitrusTestDesigner {
 
     @Test
     @CitrusTest(name = "EchoSampleTest")
-    public void EchoTest() {
+    public void echoTest() {
         variable("time", "citrus:currentDate()");
 
         echo("Hello Citrus!");

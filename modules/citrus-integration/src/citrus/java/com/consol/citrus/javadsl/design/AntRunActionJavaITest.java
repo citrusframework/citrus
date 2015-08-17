@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class AntRunActionJavaITest extends TestNGCitrusTestDesigner {
 
     @CitrusTest
-    public void AntRunActionJavaITest() {
+    public void antRunAction() {
         variable("welcomeText", "Hello Citrus today is citrus:currentDate()!");
         variable("checked", "true");
         

@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class SendReplyToJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SendReplyToJavaITest() {
+    public void jmsSyncQueues() {
         variable("operation", "GetDate");
         variable("conversationId", "123456789");
         

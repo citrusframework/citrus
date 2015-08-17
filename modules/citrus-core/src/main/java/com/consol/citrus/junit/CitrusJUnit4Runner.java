@@ -69,9 +69,7 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
                 CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getAnnotation(CitrusXmlTest.class);
                 String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
 
-                String testName = method.getName();
                 String packageName = method.getMethod().getDeclaringClass().getPackage().getName();
-
                 if (StringUtils.hasText(citrusXmlTestAnnotation.packageName())) {
                     packageName = citrusXmlTestAnnotation.packageName();
                 }
@@ -81,7 +79,7 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
                         interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), citrusXmlTestAnnotation.name()[i], packageName));
                     }
                 } else if (packagesToScan.length == 0) {
-                    interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), testName, packageName));
+                    interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getName(), packageName));
                 }
 
                 for (String packageScan : packagesToScan) {
@@ -106,7 +104,7 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
                     interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), citrusTestAnnotation.name(),
                             method.getMethod().getDeclaringClass().getPackage().getName()));
                 } else {
-                    interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getName(),
+                    interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getDeclaringClass().getSimpleName() + "." + method.getName(),
                             method.getMethod().getDeclaringClass().getPackage().getName()));
                 }
             } else {

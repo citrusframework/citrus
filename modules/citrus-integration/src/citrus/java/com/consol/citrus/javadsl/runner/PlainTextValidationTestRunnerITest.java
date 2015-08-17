@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class PlainTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void PlainTextValidationTestRunnerITest() {
+    public void plainTextValidation() {
         parallel().actions(
             send(new BuilderSupport<SendMessageBuilder>() {
                 @Override

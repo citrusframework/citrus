@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class PlainTextValidationJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void PlainTextValidationJavaITest() {
+    public void plainTextValidation() {
         parallel(
             send("httpClient")
                 .payload("Hello, World!"),

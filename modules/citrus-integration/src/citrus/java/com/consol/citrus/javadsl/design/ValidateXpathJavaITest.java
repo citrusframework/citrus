@@ -32,7 +32,7 @@ public class ValidateXpathJavaITest extends TestNGCitrusTestDesigner {
     private NamespaceContextBuilder namespaceContextBuilder;
     
     @CitrusTest
-    public void ValidateXpathJavaITest() {
+    public void validateXpath() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

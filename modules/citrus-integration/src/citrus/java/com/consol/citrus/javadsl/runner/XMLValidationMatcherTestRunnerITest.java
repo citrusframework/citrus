@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class XMLValidationMatcherTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void XMLValidationMatcherTestRunnerITest() {
+    public void xmlValidationMatcher() {
         variable("greetingText", "Hello Citrus");      
         
         parallel().actions(

@@ -34,7 +34,7 @@ public class JsonGroovyValidationTestRunnerITest extends TestNGCitrusTestRunner 
     private static final String NEWLINE = System.getProperty("line.separator");
     
     @CitrusTest
-    public void JsonGroovyValidationTestRunnerITest() {
+    public void jsonGroovyValidation() {
         parallel().actions(
             send(new BuilderSupport<SendMessageBuilder>() {
                 @Override

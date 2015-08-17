@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void JsonTextValidationTestRunnerITest() {
+    public void jsonTextValidation() {
         parallel().actions(
             send(new BuilderSupport<SendMessageBuilder>() {
                 @Override

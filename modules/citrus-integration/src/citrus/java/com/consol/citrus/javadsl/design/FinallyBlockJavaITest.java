@@ -35,7 +35,7 @@ public class FinallyBlockJavaITest extends TestNGCitrusTestDesigner {
     private DataSource dataSource;
     
     @CitrusTest
-    public void FinallyBlockJavaITest() {
+    public void finallyBlock() {
         variable("orderId", "citrus:randomNumber(5)");
 
         sql(dataSource)

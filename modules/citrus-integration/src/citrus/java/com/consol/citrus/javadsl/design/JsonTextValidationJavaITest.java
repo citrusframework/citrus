@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class JsonTextValidationJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void JsonTextValidationJavaITest() {
+    public void jsonTextValidation() {
         parallel(
             send("httpClient")
                 .payload("{" +

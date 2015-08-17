@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class LoadPropertiesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void LoadPropertiesTestRunnerITest() {
+    public void loadPropertiesAction() {
         variable("checkDate", "citrus:currentDate('yyyy-MM-dd')");
         
         load("classpath:com/consol/citrus/actions/load.properties");

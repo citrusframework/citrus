@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class FailActionJavaTest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void FailActionJavaTest() {
+    public void failAction() {
         assertException(fail("Failing ITest"))
             .exception(CitrusRuntimeException.class)
             .message("Failing ITest");

@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class JmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void JmsTopicTestRunnerITest() {
+    public void jmsTopics() {
         variable("correlationId", "citrus:randomNumber(10)");
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

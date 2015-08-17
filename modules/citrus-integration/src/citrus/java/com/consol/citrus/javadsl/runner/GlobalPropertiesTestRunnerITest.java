@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class GlobalPropertiesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void GlobalPropertiesTestRunnerITest() {
+    public void globalProperties() {
         echo("Project name is: ${project.name}");
         
         echo("Testing global variables from properties: ${globalWelcomingText}");

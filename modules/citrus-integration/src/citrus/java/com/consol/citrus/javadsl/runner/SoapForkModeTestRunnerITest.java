@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class SoapForkModeTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void SoapForkModeTestRunnerITest() {
+    public void soapForkMode() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

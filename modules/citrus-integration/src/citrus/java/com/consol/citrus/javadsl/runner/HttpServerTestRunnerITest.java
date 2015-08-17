@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void HttpServerTestRunnerITest() {
+    public void httpServer() {
         variable("custom_header_id", "123456789");
         
         echo("Send Http message and respond with 200 OK");

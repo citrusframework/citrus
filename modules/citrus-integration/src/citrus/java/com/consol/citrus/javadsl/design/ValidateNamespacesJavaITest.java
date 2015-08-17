@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class ValidateNamespacesJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void ValidateNamespacesJavaITest() {
+    public void validateNamespaces() {
         echo("Test: Success with single namespace validation");
         
         send("testMessageSender")
