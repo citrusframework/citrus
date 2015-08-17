@@ -26,7 +26,7 @@ import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -42,10 +42,8 @@ import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -1674,7 +1672,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         verify(messageEndpoint, messageConsumer, configuration);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test(expectedExceptions = TestCaseFailedException.class)
     public void testReceiveBuilderWithJsonPathExpressionsFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
         expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
@@ -1708,7 +1706,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         }
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test(expectedExceptions = TestCaseFailedException.class)
     public void testReceiveBuilderWithJsonValidationFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
         expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();

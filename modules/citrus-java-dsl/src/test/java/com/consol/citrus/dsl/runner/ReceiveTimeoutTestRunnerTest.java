@@ -166,7 +166,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
 
             Assert.fail("Missing validation exception due to message received during timeout");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("Message timeout validation failed"));
+            Assert.assertTrue(e.getCause().getMessage().contains("Message timeout validation failed"));
             verify(messageEndpoint, messageConsumer);
         }
     }
