@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="2.3" date="17.08.2015" description="2.3 release">
+    <release version="2.3" date="18.08.2015" description="2.3 release">
         <action dev="christophd" type="fix">
           GITHUB-45 Assertion error in parallel not causing test case to fail
         </action>
