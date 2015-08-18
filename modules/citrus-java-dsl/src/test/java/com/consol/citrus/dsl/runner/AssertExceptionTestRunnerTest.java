@@ -20,8 +20,6 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.AssertExceptionBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
@@ -57,13 +55,9 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                assertException(new BuilderSupport<AssertExceptionBuilder>() {
-                    @Override
-                    public void configure(AssertExceptionBuilder builder) {
-                        builder.exception(CitrusRuntimeException.class)
-                                .message("Unknown variable 'foo'");
-                    }
-                }).when(echo("${foo}"));
+                assertException().exception(CitrusRuntimeException.class)
+                                .message("Unknown variable 'foo'")
+                        .when(echo("${foo}"));
             }
         };
 
@@ -86,18 +80,14 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                assertException(new BuilderSupport<AssertExceptionBuilder>() {
-                    @Override
-                    public void configure(AssertExceptionBuilder builder) {
-                        builder.exception(CitrusRuntimeException.class)
-                                .message("Unknown variable 'foo'");
-                    }
-                }).when(new AbstractTestAction() {
-                    @Override
-                    public void doExecute(TestContext context) {
-                        context.getVariable("foo");
-                    }
-                });
+                assertException().exception(CitrusRuntimeException.class)
+                                .message("Unknown variable 'foo'")
+                        .when(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                context.getVariable("foo");
+                            }
+                        });
             }
         };
 

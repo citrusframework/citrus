@@ -16,14 +16,14 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.container.IteratingConditionExpression;
-import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class RepeatOnErrorBuilder extends AbstractTestActionContainerBuilder<RepeatOnErrorUntilTrue> {
+public class RepeatOnErrorBuilder extends AbstractTestContainerBuilder<RepeatOnErrorUntilTrue> {
 
 	/**
      * Default constructor using action container.
@@ -37,7 +37,22 @@ public class RepeatOnErrorBuilder extends AbstractTestActionContainerBuilder<Rep
 	 * Default constructor.
 	 */
 	public RepeatOnErrorBuilder() {
-		super(new RepeatOnErrorUntilTrue());
+		this(new RepeatOnErrorUntilTrue());
+	}
+
+	/**
+	 * Default constructor using runner and action container.
+	 * @param action
+	 */
+	public RepeatOnErrorBuilder(TestRunner runner, RepeatOnErrorUntilTrue action) {
+		super(runner, action);
+	}
+
+	/**
+	 * Default constructor using test runner.
+	 */
+	public RepeatOnErrorBuilder(TestRunner runner) {
+		this(runner, new RepeatOnErrorUntilTrue());
 	}
 
 	/**

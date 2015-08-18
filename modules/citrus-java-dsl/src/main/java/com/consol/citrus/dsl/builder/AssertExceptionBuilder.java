@@ -17,12 +17,13 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.Assert;
+import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class AssertExceptionBuilder extends AbstractTestActionContainerBuilder<Assert> {
+public class AssertExceptionBuilder extends AbstractTestContainerBuilder<Assert> {
 
 	/**
 	 * Constructor using action field.
@@ -36,7 +37,22 @@ public class AssertExceptionBuilder extends AbstractTestActionContainerBuilder<A
 	 * Default constructor.
 	 */
 	public AssertExceptionBuilder() {
-		super(new Assert());
+		this(new Assert());
+	}
+
+	/**
+	 * Default constructor using runner and action container.
+	 * @param action
+	 */
+	public AssertExceptionBuilder(TestRunner runner, Assert action) {
+		super(runner, action);
+	}
+
+	/**
+	 * Default constructor using test runner.
+	 */
+	public AssertExceptionBuilder(TestRunner runner) {
+		this(runner, new Assert());
 	}
 
 	/**

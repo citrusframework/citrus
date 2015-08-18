@@ -32,7 +32,7 @@ public void repeatOnErrorTest() {
     <para><emphasis>Java DSL runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void repeatOnErrorTest() {
-    repeatOnError(container -> container.until("i = 5").index("i"))
+    repeatOnError().until("i = 5").index("i"))
         .actions(
             echo("index is: ${i}"),
             fail("Force loop to fail!")
@@ -72,20 +72,10 @@ public void repeatOnErrorTest() {
     &lt;/echo&gt;
 &lt;/repeat-onerror-until-true&gt;</programlisting>
 
-    <para><emphasis>Java DSL designer</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void repeatOnErrorTest() {
-    repeatOnError(
-        query(testDataSource)
-            .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")
-            .validate("CNT_ORDERS", "1")
-    ).until("i = 5").index("i").autoSleep(1000);
-}</programlisting>
-
-    <para><emphasis>Java DSL runner</emphasis></para>
-    <programlisting language="java">@CitrusTest
-public void repeatOnErrorTest() {
-    repeatOnError(container -> container.until("i = 5").index("i").autoSleep(1000))
+    repeatOnError().until("i = 5").index("i").autoSleep(1000))
         .actions(
             query(action -> action.dataSource(testDataSource)
                 .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")

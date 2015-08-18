@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.IterateBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -31,43 +29,35 @@ public class ParallelTestRunnerITest extends TestNGCitrusTestRunner {
     @CitrusTest
     public void parallelContainer() {
         parallel().actions(
-                sleep(150),
-                sequential().actions(
-                        sleep(100),
-                        echo("1")
-                ),
-                echo("2"),
-                echo("3"),
-                iterate(new BuilderSupport<IterateBuilder>() {
-                    @Override
-                    public void configure(IterateBuilder builder) {
-                        builder.condition("i lt= 5").index("i");
-                    }
-                }).actions(
-                        echo("10")
+            sleep(150),
+            sequential().actions(
+                    sleep(100),
+                    echo("1")
+            ),
+            echo("2"),
+            echo("3"),
+            iterate().condition("i lt= 5").index("i")
+                .actions(
+                    echo("10")
                 )
         );
         
         assertException().when(
-                parallel().actions(
-                        sleep(150),
-                        sequential().actions(
-                                sleep(100),
-                                fail("This went wrong too"),
-                                echo("1")
-                        ),
-                        echo("2"),
+            parallel().actions(
+                sleep(150),
+                sequential().actions(
+                        sleep(100),
                         fail("This went wrong too"),
-                        echo("3"),
-                        iterate(new BuilderSupport<IterateBuilder>() {
-                            @Override
-                            public void configure(IterateBuilder builder) {
-                                builder.condition("i lt= 5").index("i");
-                            }
-                        }).actions(
-                                echo("10")
-                        )
-                )
+                        echo("1")
+                ),
+                echo("2"),
+                fail("This went wrong too"),
+                echo("3"),
+                iterate().condition("i lt= 5").index("i")
+                    .actions(
+                        echo("10")
+                    )
+            )
         );
     }
 }

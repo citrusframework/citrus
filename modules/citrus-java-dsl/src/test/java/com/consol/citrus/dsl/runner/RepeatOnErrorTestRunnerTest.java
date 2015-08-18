@@ -21,8 +21,6 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,23 +35,15 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-                    @Override
-                    public void configure(RepeatOnErrorBuilder builder) {
-                        builder.autoSleep(250)
-                                .until("i gt 5");
-                    }
-                }).actions(echo("${var}"), sleep(50), echo("${var}"));
+                repeatOnError().autoSleep(250)
+                                .until("i gt 5")
+                        .actions(echo("${var}"), sleep(50), echo("${var}"));
 
-                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-                    @Override
-                    public void configure(RepeatOnErrorBuilder builder) {
-                        builder.autoSleep(200)
+                repeatOnError().autoSleep(200)
                                 .index("k")
                                 .startsWith(2)
-                                .until("k gt= 5");
-                    }
-                }).actions(echo("${var}"));
+                                .until("k gt= 5")
+                        .actions(echo("${var}"));
             }
         };
 
@@ -92,18 +82,11 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-                    @Override
-                    public void configure(RepeatOnErrorBuilder builder) {
-                        builder.autoSleep(250)
-                                .until("i gt 5");
-                    }
-                }).actions(echo("${var}"), sleep(50), echo("${var}"));
+                repeatOnError().autoSleep(250)
+                                .until("i gt 5")
+                        .actions(echo("${var}"), sleep(50), echo("${var}"));
 
-                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-                    @Override
-                    public void configure(RepeatOnErrorBuilder builder) {
-                        builder.autoSleep(200)
+                repeatOnError().autoSleep(200)
                                 .index("k")
                                 .startsWith(2)
                                 .until(new IteratingConditionExpression() {
@@ -111,9 +94,8 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
                                     public boolean evaluate(int index, TestContext context) {
                                         return index >= 5;
                                     }
-                                });
-                    }
-                }).actions(echo("${var}"));
+                                })
+                        .actions(echo("${var}"));
             }
         };
 

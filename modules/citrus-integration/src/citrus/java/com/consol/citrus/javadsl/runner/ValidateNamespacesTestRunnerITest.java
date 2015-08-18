@@ -120,12 +120,8 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(
+        assertException().exception(ValidationException.class)
+            .when(
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
@@ -153,12 +149,8 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(
+        assertException().exception(ValidationException.class)
+            .when(
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
@@ -185,12 +177,8 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(
+        assertException().exception(ValidationException.class)
+            .when(
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {

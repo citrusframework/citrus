@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -31,7 +32,7 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * since 2.3
  */
-public class AssertSoapFaultBuilder extends AbstractTestActionContainerBuilder<AssertSoapFault> {
+public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertSoapFault> {
 
     private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
@@ -53,6 +54,26 @@ public class AssertSoapFaultBuilder extends AbstractTestActionContainerBuilder<A
      */
     public AssertSoapFaultBuilder() {
         this(new AssertSoapFault());
+    }
+
+    /**
+     * Default constructor using runner and action container.
+     * @param action
+     */
+    public AssertSoapFaultBuilder(TestRunner runner, AssertSoapFault action) {
+        super(runner, action);
+
+	    // for now support one single soap fault detail
+	    SoapFaultDetailValidationContext soapFaultDetailValidationContext = new SoapFaultDetailValidationContext();
+	    soapFaultDetailValidationContext.addValidationContext(validationContext);
+	    action.setValidationContext(soapFaultDetailValidationContext);
+    }
+
+    /**
+     * Default constructor using test runner.
+     */
+    public AssertSoapFaultBuilder(TestRunner runner) {
+        this(runner, new AssertSoapFault());
     }
 
     /**

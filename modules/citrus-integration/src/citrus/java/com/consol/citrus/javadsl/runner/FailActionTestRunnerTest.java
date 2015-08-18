@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.AssertExceptionBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
@@ -31,20 +29,12 @@ public class FailActionTestRunnerTest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void failAction() {
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(CitrusRuntimeException.class)
-                        .message("Failing ITest");
-            }
-        }).when(fail("Failing ITest"));
+        assertException().exception(CitrusRuntimeException.class)
+                        .message("Failing ITest")
+                .when(fail("Failing ITest"));
 
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(CitrusRuntimeException.class)
-                        .message("@startsWith('Missing asserted exception')@");
-            }
-        }).when(assertException().when(sleep(500)));
+        assertException().exception(CitrusRuntimeException.class)
+                        .message("@startsWith('Missing asserted exception')@")
+                .when(assertException().when(sleep(500)));
     }
 }

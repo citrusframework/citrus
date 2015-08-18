@@ -35,13 +35,9 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-            assertException(new BuilderSupport<AssertExceptionBuilder>() {
-                @Override
-                public void configure(AssertExceptionBuilder builder) {
-                    builder.exception(org.springframework.ws.client.WebServiceTransportException.class)
-                            .message("Server Error [500]");
-                }
-            }).when(
+            assertException().exception(org.springframework.ws.client.WebServiceTransportException.class)
+                            .message("Server Error [500]")
+                    .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {

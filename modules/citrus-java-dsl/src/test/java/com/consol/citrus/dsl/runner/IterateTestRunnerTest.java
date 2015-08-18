@@ -21,8 +21,6 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.IterateBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,15 +33,11 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new BuilderSupport<IterateBuilder>() {
-                    @Override
-                    public void configure(IterateBuilder builder) {
-                        builder.index("i")
-                                .startsWith(0)
-                                .step(1)
-                                .condition("i lt 5");
-                    }
-                }).actions(createVariable("index", "${i}"));
+                iterate().index("i")
+                            .startsWith(0)
+                            .step(1)
+                            .condition("i lt 5")
+                    .actions(createVariable("index", "${i}"));
             }
         };
 
@@ -69,20 +63,16 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new BuilderSupport<IterateBuilder>() {
-                    @Override
-                    public void configure(IterateBuilder builder) {
-                        builder.index("i")
-                                .startsWith(1)
-                                .step(1)
-                                .condition("i lt= 3");
-                    }
-                }).actions(createVariable("index", "${i}"), new AbstractTestAction() {
-                    @Override
-                    public void doExecute(TestContext context) {
-                        Assert.assertTrue(Integer.valueOf(context.getVariable("index")) > 0);
-                    }
-                });
+                iterate().index("i")
+                            .startsWith(1)
+                            .step(1)
+                            .condition("i lt= 3")
+                    .actions(createVariable("index", "${i}"), new AbstractTestAction() {
+                        @Override
+                        public void doExecute(TestContext context) {
+                            Assert.assertTrue(Integer.valueOf(context.getVariable("index")) > 0);
+                        }
+                    });
             }
         };
 
@@ -108,19 +98,15 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new BuilderSupport<IterateBuilder>() {
-                    @Override
-                    public void configure(IterateBuilder builder) {
-                        builder.startsWith(0)
-                                .step(1)
-                                .condition(new IteratingConditionExpression() {
-                                    @Override
-                                    public boolean evaluate(int index, TestContext context) {
-                                        return index < 5;
-                                    }
-                                });
-                    }
-                }).actions(createVariable("index", "${i}"));
+                iterate().startsWith(0)
+                            .step(1)
+                            .condition(new IteratingConditionExpression() {
+                                @Override
+                                public boolean evaluate(int index, TestContext context) {
+                                    return index < 5;
+                                }
+                            })
+                    .actions(createVariable("index", "${i}"));
             }
         };
 

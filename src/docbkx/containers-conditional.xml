@@ -25,33 +25,18 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL designer</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void conditionalTest() {
     variable("index", 5);
     variable("shouldSleep", true);
 
-    conditional(
-        sleep(10000L)
-    ).when("${index} = 5");
-
-    conditional(
-      sleep(10000L)
-    ).when("${shouldSleep}");
-}</programlisting>
-
-    <para><emphasis>Java DSL runner</emphasis></para>
-    <programlisting language="java">@CitrusTest
-public void conditionalTest() {
-    variable("index", 5);
-    variable("shouldSleep", true);
-
-    conditional(container -> container.when("${index} = 5"))
+    conditional().when("${index} = 5"))
         .actions(
             sleep(10000L)
         );
 
-    conditional(container -> container.when("${shouldSleep}"))
+    conditional().when("${shouldSleep}"))
         .actions(
             sleep(10000L)
         );

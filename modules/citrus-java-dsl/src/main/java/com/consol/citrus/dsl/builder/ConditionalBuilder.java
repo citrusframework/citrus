@@ -16,8 +16,8 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.container.ConditionExpression;
-import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * Action builder creates a conditional container, which executes nested test actions
@@ -26,7 +26,7 @@ import com.consol.citrus.container.Conditional;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class ConditionalBuilder extends AbstractTestActionContainerBuilder<Conditional> {
+public class ConditionalBuilder extends AbstractTestContainerBuilder<Conditional> {
 
 	/**
 	 * Constructor using action field.
@@ -40,7 +40,22 @@ public class ConditionalBuilder extends AbstractTestActionContainerBuilder<Condi
 	 * Default constructor.
 	 */
 	public ConditionalBuilder() {
-		super(new Conditional());
+		this(new Conditional());
+	}
+
+	/**
+	 * Default constructor using runner and action container.
+	 * @param action
+	 */
+	public ConditionalBuilder(TestRunner runner, Conditional action) {
+		super(runner, action);
+	}
+
+	/**
+	 * Default constructor using test runner.
+	 */
+	public ConditionalBuilder(TestRunner runner) {
+		this(runner, new Conditional());
 	}
 
 	/**

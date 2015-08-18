@@ -19,8 +19,6 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,35 +32,23 @@ public class RepeatOnErrorTestRunnerITest extends TestNGCitrusTestRunner {
     public void repeatOnErrorContainer() {
         variable("message", "Hello TestFramework");
         
-        repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-            @Override
-            public void configure(RepeatOnErrorBuilder builder) {
-                builder.until("i = 5").index("i");
-            }
-        }).actions(echo("${i}. Versuch: ${message}"));
+        repeatOnError().until("i = 5").index("i")
+                .actions(echo("${i}. Versuch: ${message}"));
         
-        repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-            @Override
-            public void configure(RepeatOnErrorBuilder builder) {
-                builder.until(new IteratingConditionExpression() {
+        repeatOnError().until(new IteratingConditionExpression() {
                     @Override
                     public boolean evaluate(int index, TestContext context) {
                         return index == 5;
                     }
-                }).autoSleep(500);
-            }
-        }).actions(echo("${i}. Versuch: ${message}"));
+                }).autoSleep(500)
+                .actions(echo("${i}. Versuch: ${message}"));
         
         assertException().when(
-                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-                    @Override
-                    public void configure(RepeatOnErrorBuilder builder) {
-                        builder.until("i = 3").index("i").autoSleep(200);
-                    }
-                }).actions(
+                repeatOnError().until("i = 3").index("i").autoSleep(200)
+                    .actions(
                         echo("${i}. Versuch: ${message}"),
                         fail("")
-                )
+                    )
         );
         
     }

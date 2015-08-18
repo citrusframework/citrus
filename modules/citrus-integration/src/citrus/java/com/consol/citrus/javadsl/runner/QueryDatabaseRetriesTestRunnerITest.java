@@ -47,12 +47,8 @@ public class QueryDatabaseRetriesTestRunnerITest extends TestNGCitrusTestRunner 
                                 .sqlResource("classpath:com/consol/citrus/actions/script.sql");
                     }
                 }),
-                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
-                    @Override
-                    public void configure(RepeatOnErrorBuilder builder) {
-                        builder.autoSleep(100).index("i").until("i = 5");
-                    }
-                }).actions(
+                repeatOnError().autoSleep(100).index("i").until("i = 5")
+                    .actions(
                         query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                             @Override
                             public void configure(ExecuteSQLQueryBuilder builder) {

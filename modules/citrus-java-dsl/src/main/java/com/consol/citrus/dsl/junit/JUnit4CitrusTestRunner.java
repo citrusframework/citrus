@@ -268,38 +268,28 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ExceptionContainerRunner assertException() {
+    public AssertExceptionBuilder assertException() {
         return testRunner.assertException();
     }
 
     @Override
-    public ExceptionContainerRunner assertException(BuilderSupport<AssertExceptionBuilder> configurer) {
-        return testRunner.assertException(configurer);
+    public CatchExceptionBuilder catchException() {
+        return testRunner.catchException();
     }
 
     @Override
-    public ExceptionContainerRunner catchException() {
-        return testRunner.assertException();
+    public AssertSoapFaultBuilder assertSoapFault() {
+        return testRunner.assertSoapFault();
     }
 
     @Override
-    public ExceptionContainerRunner catchException(BuilderSupport<CatchExceptionBuilder> configurer) {
-        return testRunner.catchException(configurer);
+    public ConditionalBuilder conditional() {
+        return testRunner.conditional();
     }
 
     @Override
-    public ExceptionContainerRunner assertSoapFault(BuilderSupport<AssertSoapFaultBuilder> configurer) {
-        return testRunner.assertSoapFault(configurer);
-    }
-
-    @Override
-    public ContainerRunner conditional(BuilderSupport<ConditionalBuilder> configurer) {
-        return testRunner.conditional(configurer);
-    }
-
-    @Override
-    public ContainerRunner iterate(BuilderSupport<IterateBuilder> configurer) {
-        return testRunner.iterate(configurer);
+    public IterateBuilder iterate() {
+        return testRunner.iterate();
     }
 
     @Override
@@ -308,13 +298,13 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ContainerRunner repeatOnError(BuilderSupport<RepeatOnErrorBuilder> configurer) {
-        return testRunner.repeatOnError(configurer);
+    public RepeatOnErrorBuilder repeatOnError() {
+        return testRunner.repeatOnError();
     }
 
     @Override
-    public ContainerRunner repeat(BuilderSupport<RepeatBuilder> configurer) {
-        return testRunner.repeat(configurer);
+    public RepeatBuilder repeat() {
+        return testRunner.repeat();
     }
 
     @Override

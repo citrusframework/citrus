@@ -17,9 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,13 +33,9 @@ public class AssertSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         
-        assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-            @Override
-            public void configure(AssertSoapFaultBuilder builder) {
-                builder.faultString("Invalid request")
-                        .faultCode("{http://www.citrusframework.org/faults}TEC-1001");
-            }
-        }).when(send(new BuilderSupport<SendMessageBuilder>() {
+        assertSoapFault().faultString("Invalid request")
+                        .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+                .when(send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("webServiceHelloClient")
@@ -51,13 +46,9 @@ public class AssertSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }));
         
-        assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-            @Override
-            public void configure(AssertSoapFaultBuilder builder) {
-                builder.faultString("@ignore@")
-                        .faultCode("{http://www.citrusframework.org/faults}TEC-1001");
-            }
-        }).when(send(new BuilderSupport<SendMessageBuilder>() {
+        assertSoapFault().faultString("@ignore@")
+                        .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+                .when(send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("webServiceHelloClient")
@@ -68,13 +59,9 @@ public class AssertSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }));
 
-        assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-            @Override
-            public void configure(AssertSoapFaultBuilder builder) {
-                builder.faultString("${soapFaultString}")
-                        .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}");
-            }
-        }).when(send(new BuilderSupport<SendMessageBuilder>() {
+        assertSoapFault().faultString("${soapFaultString}")
+                        .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
+                .when(send(new BuilderSupport<SendMessageBuilder>() {
                      @Override
                      public void configure(SendMessageBuilder builder) {
                          builder.endpoint("webServiceHelloClient")

@@ -21,19 +21,11 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
-    <para><emphasis>Java DSL designer</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void catchTest() {
-    catchException(echo("Current date is: ${date}"))
-        .exception(CitrusRuntimeException.class);
-}</programlisting>
-
-    <para><emphasis>Java DSL runner</emphasis></para>
-    <programlisting language="java">@CitrusTest
-public void catchTest() {
-    catchException(action ->
-        action.exception(CitrusRuntimeException.class);
-    ).when(echo("Current date is: ${date}"));
+    catchException().exception(CitrusRuntimeException.class)
+                    .when(echo("Current date is: ${date}"));
 }</programlisting>
 
     <important>

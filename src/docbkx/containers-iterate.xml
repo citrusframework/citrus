@@ -17,18 +17,10 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL designer</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void iterateTest() {
-    iterate(
-        echo("index is: ${i}")
-    ).condition("i lt 5").index("i");
-}</programlisting>
-
-    <para><emphasis>Java DSL designer</emphasis></para>
-    <programlisting language="java">@CitrusTest
-public void iterateTest() {
-    iterate(container -> container.condition("i lt 5").index("i"))
+    iterate().condition("i lt 5").index("i"))
         .actions(
             echo("index is: ${i}")
         );

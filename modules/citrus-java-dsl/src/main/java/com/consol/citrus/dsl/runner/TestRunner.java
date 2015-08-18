@@ -336,56 +336,34 @@ public interface TestRunner extends ApplicationContextAware {
     TransformAction transform(BuilderSupport<TransformActionBuilder> configurer);
 
     /**
-     * Assert default exception to happen in nested test action.
-     *
-     * @return
-     */
-    ExceptionContainerRunner assertException();
-
-    /**
      * Assert exception to happen in nested test action.
-     *
-     * @param configurer
      * @return
      */
-    ExceptionContainerRunner assertException(BuilderSupport<AssertExceptionBuilder> configurer);
-
-    /**
-     * Catch default exception when thrown in nested test action.
-     * @return
-     */
-    ExceptionContainerRunner catchException();
+    AssertExceptionBuilder assertException();
 
     /**
      * Catch exception when thrown in nested test action.
-     *
-     * @param configurer
      * @return
      */
-    ExceptionContainerRunner catchException(BuilderSupport<CatchExceptionBuilder> configurer);
+    CatchExceptionBuilder catchException();
 
     /**
      * Assert SOAP fault during action execution.
-     *
-     * @param configurer
      * @return
      */
-    ExceptionContainerRunner assertSoapFault(BuilderSupport<AssertSoapFaultBuilder> configurer);
+    AssertSoapFaultBuilder assertSoapFault();
 
     /**
      * Adds conditional container with nested test actions.
-     *
-     * @param configurer
      * @return
      */
-    ContainerRunner conditional(BuilderSupport<ConditionalBuilder> configurer);
+    ConditionalBuilder conditional();
 
     /**
      * Run nested test actions in iteration.
-     * @param configurer
      * @return
      */
-    ContainerRunner iterate(BuilderSupport<IterateBuilder> configurer);
+    IterateBuilder iterate();
 
     /**
      * Run nested test actions in parallel to each other using multiple threads.
@@ -395,19 +373,15 @@ public interface TestRunner extends ApplicationContextAware {
 
     /**
      * Adds repeat on error until true container with nested test actions.
-     *
-     * @param configurer
      * @return
      */
-    ContainerRunner repeatOnError(BuilderSupport<RepeatOnErrorBuilder> configurer);
+    RepeatOnErrorBuilder repeatOnError();
 
     /**
      * Adds repeat until true container with nested test actions.
-     *
-     * @param configurer
      * @return
      */
-    ContainerRunner repeat(BuilderSupport<RepeatBuilder> configurer);
+    RepeatBuilder repeat();
 
     /**
      * Run nested test actions in sequence.

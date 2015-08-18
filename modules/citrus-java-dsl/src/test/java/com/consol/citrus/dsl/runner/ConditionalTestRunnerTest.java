@@ -20,8 +20,6 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ConditionalBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,12 +32,8 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 5);
 
-                conditional(new BuilderSupport<ConditionalBuilder>() {
-                    @Override
-                    public void configure(ConditionalBuilder builder) {
-                        builder.when("${var} = 5");
-                    }
-                }).actions(echo("${var}"), createVariable("execution", "true"));
+                conditional().when("${var} = 5")
+                        .actions(echo("${var}"), createVariable("execution", "true"));
             }
         };
 
@@ -64,12 +58,8 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 0);
 
-                conditional(new BuilderSupport<ConditionalBuilder>() {
-                    @Override
-                    public void configure(ConditionalBuilder builder) {
-                        builder.when("${var} = 5");
-                    }
-                }).actions(echo("${var}"), createVariable("execution", "true"));
+                conditional().when("${var} = 5")
+                        .actions(echo("${var}"), createVariable("execution", "true"));
             }
         };
 
@@ -93,17 +83,13 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 5);
 
-                conditional(new BuilderSupport<ConditionalBuilder>() {
-                    @Override
-                    public void configure(ConditionalBuilder builder) {
-                        builder.when(new ConditionExpression() {
-                            @Override
-                            public boolean evaluate(TestContext context) {
-                                return context.getVariable("var").equals("5");
-                            }
-                        });
-                    }
-                }).actions(echo("${var}"), createVariable("execution", "true"));
+                conditional().when(new ConditionExpression() {
+                                        @Override
+                                        public boolean evaluate(TestContext context) {
+                                            return context.getVariable("var").equals("5");
+                                        }
+                                    })
+                        .actions(echo("${var}"), createVariable("execution", "true"));
             }
         };
 

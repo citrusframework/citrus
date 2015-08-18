@@ -387,71 +387,43 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ExceptionContainerRunner assertException() {
-        return assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-            }
-        });
-    }
-
-    @Override
-    public ExceptionContainerRunner assertException(BuilderSupport<AssertExceptionBuilder> configurer) {
-        AssertExceptionBuilder builder = new AssertExceptionBuilder();
-        configurer.configure(builder);
+    public AssertExceptionBuilder assertException() {
+        AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
         containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override
-    public ExceptionContainerRunner catchException() {
-        return catchException(new BuilderSupport<CatchExceptionBuilder>() {
-            @Override
-            public void configure(CatchExceptionBuilder builder) {
-            }
-        });
-    }
-
-    @Override
-    public ExceptionContainerRunner catchException(BuilderSupport<CatchExceptionBuilder> configurer) {
-        CatchExceptionBuilder builder = new CatchExceptionBuilder();
-        configurer.configure(builder);
+    public CatchExceptionBuilder catchException() {
+        CatchExceptionBuilder builder = new CatchExceptionBuilder(this);
         containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override
-    public ExceptionContainerRunner assertSoapFault(BuilderSupport<AssertSoapFaultBuilder> configurer) {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder();
+    public AssertSoapFaultBuilder assertSoapFault() {
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        containers.push(builder.build());
 
         if (applicationContext.containsBean("soapFaultValidator")) {
             builder.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
         }
 
-        configurer.configure(builder);
-        containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override
-    public ContainerRunner conditional(BuilderSupport<ConditionalBuilder> configurer) {
-        ConditionalBuilder builder = new ConditionalBuilder();
-        configurer.configure(builder);
+    public ConditionalBuilder conditional() {
+        ConditionalBuilder builder = new ConditionalBuilder(this);
         containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override
-    public ContainerRunner iterate(BuilderSupport<IterateBuilder> configurer) {
-        IterateBuilder builder = new IterateBuilder();
-        configurer.configure(builder);
+    public IterateBuilder iterate() {
+        IterateBuilder builder = new IterateBuilder(this);
         containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override
@@ -463,21 +435,17 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner repeatOnError(BuilderSupport<RepeatOnErrorBuilder> configurer) {
-        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder();
-        configurer.configure(builder);
+    public RepeatOnErrorBuilder repeatOnError() {
+        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
         containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override
-    public ContainerRunner repeat(BuilderSupport<RepeatBuilder> configurer) {
-        RepeatBuilder builder = new RepeatBuilder();
-        configurer.configure(builder);
+    public RepeatBuilder repeat() {
+        RepeatBuilder builder = new RepeatBuilder(this);
         containers.push(builder.build());
-
-        return new DefaultContainerRunner(builder.build(), this);
+        return builder;
     }
 
     @Override

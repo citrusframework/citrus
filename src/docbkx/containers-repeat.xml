@@ -23,18 +23,10 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-    <para><emphasis>Java DSL designer</emphasis></para>
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void repeatTest() {
-    repeat(echo("index is: ${i}"))
-        .until("(i gt 5) or (i = 3)")
-        .index("i");
-}</programlisting>
-
-    <para><emphasis>Java DSL runner</emphasis></para>
-    <programlisting language="java">@CitrusTest
-public void repeatTest() {
-    repeat(container -> container.until("(i gt 5) or (i = 3)").index("i"))
+    repeat().until("(i gt 5) or (i = 3)").index("i"))
         .actions(
             echo("index is: ${i}")
         );

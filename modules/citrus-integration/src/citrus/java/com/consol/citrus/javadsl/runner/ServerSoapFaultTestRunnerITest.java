@@ -42,13 +42,9 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-                @Override
-                public void configure(AssertSoapFaultBuilder builder) {
-                    builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
-                            .faultString("Invalid request");
-                }
-            }).when(
+            assertSoapFault().faultCode("{http://www.citrusframework.org/faults}TEC-1000")
+                            .faultString("Invalid request")
+                .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
@@ -98,14 +94,10 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test Soap fault actor support");
         
         parallel().actions(
-            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-                @Override
-                public void configure(AssertSoapFaultBuilder builder) {
-                    builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
+            assertSoapFault().faultCode("{http://www.citrusframework.org/faults}TEC-1000")
                             .faultString("Invalid request")
-                            .faultActor("SERVER");
-                }
-            }).when(
+                            .faultActor("SERVER")
+                .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
@@ -156,10 +148,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test XML Soap fault validation");
         
         parallel().actions(
-            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-                @Override
-                public void configure(AssertSoapFaultBuilder builder) {
-                    builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
+            assertSoapFault().faultCode("{http://www.citrusframework.org/faults}TEC-1000")
                             .faultString("Invalid request")
                             .faultDetail("<ns0:FaultDetail xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -167,9 +156,8 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                     "<ns0:ErrorCode>TEC-1000</ns0:ErrorCode>" +
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                     "</ns0:FaultDetail>")
-                            .validator(soapFaultValidator);
-                }
-            }).when(
+                            .validator(soapFaultValidator)
+                .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
@@ -219,10 +207,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test XML schema validation skip");
         
         parallel().actions(
-            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-                @Override
-                public void configure(AssertSoapFaultBuilder builder) {
-                    builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
+            assertSoapFault().faultCode("{http://www.citrusframework.org/faults}TEC-1000")
                             .faultString("Invalid request")
                             .faultDetail("<ns0:FaultDetail xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -230,9 +215,8 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                     "<ns0:ErrorCode>TEC-1000</ns0:ErrorCode>" +
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                     "</ns0:FaultDetail>")
-                            .schemaValidation(false);
-                }
-            }).when(
+                            .schemaValidation(false)
+                .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
@@ -282,10 +266,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test explicit XML schema repository");
         
         parallel().actions(
-            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-                @Override
-                public void configure(AssertSoapFaultBuilder builder) {
-                    builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
+            assertSoapFault().faultCode("{http://www.citrusframework.org/faults}TEC-1000")
                             .faultString("Invalid request")
                             .faultDetail("<ns0:FaultDetail xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHelloExtended.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -295,9 +276,8 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                     "<ns0:Reason>Client</ns0:Reason>" +
                                     "</ns0:FaultDetail>")
                             .validator(soapFaultValidator)
-                            .xsdSchemaRepository("helloSchemaRepository");
-                }
-            }).when(
+                            .xsdSchemaRepository("helloSchemaRepository")
+                .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
@@ -348,10 +328,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test explicit XML schema instance");
         
         parallel().actions(
-            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
-                @Override
-                public void configure(AssertSoapFaultBuilder builder) {
-                    builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
+            assertSoapFault().faultCode("{http://www.citrusframework.org/faults}TEC-1000")
                             .faultString("Invalid request")
                             .faultDetail("<ns0:FaultDetail xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHelloExtended.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -361,9 +338,8 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                     "<ns0:Reason>Client</ns0:Reason>" +
                                     "</ns0:FaultDetail>")
                             .validator(soapFaultValidator)
-                            .xsd("helloSchemaExtended");
-                }
-            }).when(
+                            .xsd("helloSchemaExtended")
+                .when(
                     send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {

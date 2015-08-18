@@ -16,8 +16,8 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.container.IteratingConditionExpression;
-import com.consol.citrus.container.RepeatUntilTrue;
+import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
@@ -26,7 +26,7 @@ import com.consol.citrus.container.RepeatUntilTrue;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class RepeatBuilder extends AbstractTestActionContainerBuilder<RepeatUntilTrue> {
+public class RepeatBuilder extends AbstractTestContainerBuilder<RepeatUntilTrue> {
 
 	/**
 	 * Constructor using action field.
@@ -40,7 +40,22 @@ public class RepeatBuilder extends AbstractTestActionContainerBuilder<RepeatUnti
 	 * Default constructor.
 	 */
 	public RepeatBuilder() {
-		super(new RepeatUntilTrue());
+		this(new RepeatUntilTrue());
+	}
+
+	/**
+	 * Default constructor using runner and action container.
+	 * @param action
+	 */
+	public RepeatBuilder(TestRunner runner, RepeatUntilTrue action) {
+		super(runner, action);
+	}
+
+	/**
+	 * Default constructor using test runner.
+	 */
+	public RepeatBuilder(TestRunner runner) {
+		this(runner, new RepeatUntilTrue());
 	}
 
 	/**

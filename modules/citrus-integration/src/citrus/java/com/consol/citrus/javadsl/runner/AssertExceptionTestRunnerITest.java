@@ -19,8 +19,6 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.AssertExceptionBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -40,93 +38,45 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
         
         assertException().when(fail("Fail once"));
 
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(CitrusRuntimeException.class)
-                        .message("Fail again");
-            }
-        }).when(fail("Fail again"));
+        assertException().exception(CitrusRuntimeException.class)
+                        .message("Fail again")
+                .when(fail("Fail again"));
 
         
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(CitrusRuntimeException.class)
-                        .message("${failMessage}");
-            }
-        }).when(fail("${failMessage}"));
+        assertException().exception(CitrusRuntimeException.class)
+                        .message("${failMessage}")
+                .when(fail("${failMessage}"));
 
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(CitrusRuntimeException.class)
-                        .message("@contains('wrong')@");
-            }
-        }).when(fail("${failMessage}"));
+        assertException().exception(CitrusRuntimeException.class)
+                        .message("@contains('wrong')@")
+                .when(fail("${failMessage}"));
 
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
-                    @Override
-                    public void configure(AssertExceptionBuilder builder) {
-                        builder.exception(IOException.class);
-                    }
-                }).when(fail("Fail another time")));
+        assertException().exception(ValidationException.class)
+                .when(assertException().exception(IOException.class)
+                        .when(fail("Fail another time")));
         
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
+        assertException().exception(ValidationException.class)
+                .when(assertException().exception(CitrusRuntimeException.class)
+                                .message("Fail again")
+                        .when(fail("Fail with nice error message")));
+
+        assertException().exception(ValidationException.class)
+                .when(assertException().exception(CitrusRuntimeException.class)
+                        .when(echo("Nothing fails here")));
+
+        assertException().exception(ValidationException.class)
+                .when(assertException().exception(CitrusRuntimeException.class)
+                                .message("Must be failing")
+                        .when(echo("Nothing fails here either")));
+
+
+        assertException().exception(CitrusRuntimeException.class)
+                        .message("Unknown variable 'foo'")
+                .when(new AbstractTestAction() {
                     @Override
-                    public void configure(AssertExceptionBuilder builder) {
-                        builder.exception(CitrusRuntimeException.class)
-                                .message("Fail again");
+                    public void doExecute(TestContext context) {
+                        context.getVariable("foo");
                     }
-                }).when(fail("Fail with nice error message")));
-
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
-                    @Override
-                    public void configure(AssertExceptionBuilder builder) {
-                        builder.exception(CitrusRuntimeException.class);
-                    }
-                }).when(echo("Nothing fails here")));
-
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(ValidationException.class);
-            }
-        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
-                    @Override
-                    public void configure(AssertExceptionBuilder builder) {
-                        builder.exception(CitrusRuntimeException.class)
-                                .message("Must be failing");
-                    }
-                }).when(echo("Nothing fails here either")));
-
-
-        assertException(new BuilderSupport<AssertExceptionBuilder>() {
-            @Override
-            public void configure(AssertExceptionBuilder builder) {
-                builder.exception(CitrusRuntimeException.class)
-                        .message("Unknown variable 'foo'");
-            }
-        }).when(new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                context.getVariable("foo");
-            }
-        });
+                });
     }
 }

@@ -166,14 +166,9 @@ public class MyFirstTestDesigner extends TestNGCitrusTestDesigner {
       <para>This is the basic test Java class pattern used in Citrus. You as a tester with development background can easily extend this pattern for customized logic. Again if you are
       coming without coding experience do not worry this Java code is optional. You can do exactly the same with the XML syntax only as shown before. The test designer Java DSL is much more powerful though as you can use the full Java programming
       language with class inheritance and method delegation.</para>
-    </section>
 
-    <section id="testcase-java-runner">
-      <title>Java DSL test runner</title>
-
-      <para>We have already seen the <emphasis>test-designer</emphasis> Java DSL implementation in Citrus. And we also have mentioned that the <emphasis>test-designer</emphasis> will build the complete test case in design time with all actions first
-      before execution of the whole test case takes place at runtime of the test. This approach has the advantage that Citrus knows all test actions in a test before execution. On the other hand you are limited in mixing Java DSL method calls and
-      normal Java code. The following example should clarify things a little bit.</para>
+      <para>We have mentioned that the <emphasis>test-designer</emphasis> will build the complete test case in design time with all actions first before execution of the whole test case takes place at runtime of the test. This approach has the advantage
+        that Citrus knows all test actions in a test before execution. On the other hand you are limited in mixing Java DSL method calls and normal Java code. The following example should clarify things a little bit.</para>
 
       <para><emphasis>Java DSL designer</emphasis></para>
       <programlisting language="java">import org.testng.annotations.Test;
@@ -248,7 +243,14 @@ public class LoggingTestDesigner extends TestNGCitrusTestDesigner {
   INFO        EchoAction| After loggingService call
   INFO            Citrus| TEST SUCCESS LoggingTest</programlisting>
 
-      <para>Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called <emphasis>test-runner</emphasis>. Have a look at this example:</para>
+      <para>Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called <emphasis>test-runner</emphasis> that we deal with in the next section.</para>
+    </section>
+
+    <section id="testcase-java-runner">
+      <title>Java DSL test runner</title>
+
+      <para>The new test runner concept solves the issues that may come along when working with the test designer. We have already seen a simple example where the test designer requires strict separation of designtime and runtime. The test runner implementation executes each test action
+      immediately. This changes the prerequisites in such that the test action Java DSL method calls can be mixed with usual Java code statements. The the example that we have seen before in a test runner implementation:</para>
 
       <para><emphasis>Java DSL runner</emphasis></para>
       <programlisting language="java">import org.testng.annotations.Test;
@@ -269,8 +271,15 @@ public class LoggingTestDesigner extends TestNGCitrusTestDesigner {
       }
   }</programlisting>
 
-      <para>With the new test runner implementation as base class we are able to mix Java DSL method calls and normal Java code statement in our test in an unlimited way. This example above will also create the expected logging output as all Java DSL method calls are executed immediately.
-      In difference to the test designer the test runner implementation will not build the complete test case before execution. Each test action is executed immediately as it is called with Java DSL builder methods. This creates a more natural way of coding test cases as you are also
+      <para>With the new test runner implementation as base class we are able to mix Java DSL method calls and normal Java code statement in our test in an unlimited way. This example above will also create the expected logging output as all Java DSL method calls are executed immediately.</para>
+
+      <programlisting>INFO            Citrus| STARTING TEST LoggingTest
+INFO        EchoAction| Before loggingService call
+INFO    LoggingService| Now called custom logging service
+INFO        EchoAction| After loggingService call
+INFO            Citrus| TEST SUCCESS LoggingTest</programlisting>
+
+      <para>In contrary to the test designer the test runner implementation will not build the complete test case before execution. Each test action is executed immediately as it is called with Java DSL builder methods. This creates a more natural way of coding test cases as you are also
       able to use iterations, try catch blocks, finally sections and so on.</para>
 
       <para>Feel free to choose the base class for <emphasis>test-designer</emphasis> or <emphasis>test-runner</emphasis> as you like. You can also mix those two approaches in your project. Citrus is able to handle both ways of Java DSL code in a project.</para>
