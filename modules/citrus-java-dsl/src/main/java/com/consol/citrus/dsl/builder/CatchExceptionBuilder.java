@@ -23,7 +23,7 @@ import com.consol.citrus.dsl.runner.TestRunner;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class CatchExceptionBuilder extends AbstractTestContainerBuilder<Catch> {
+public class CatchExceptionBuilder extends AbstractExceptionContainerBuilder<Catch> {
 
     /**
      * Constructor using action field.

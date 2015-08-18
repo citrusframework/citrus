@@ -18,8 +18,8 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
-import com.consol.citrus.dsl.runner.DefaultContainerRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 import java.util.List;
 
@@ -37,7 +37,8 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     protected final TestActionContainer container;
 
     /**
-     * Default constructor with test action.
+     * Default constructor with test runner and test action.
+     * @param runner
      * @param container
      */
     public AbstractTestContainerBuilder(TestRunner runner, T container) {
@@ -62,7 +63,19 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
      */
     public TestActionContainer actions(TestAction ... actions) {
         if (runner != null) {
-            return new DefaultContainerRunner(container, runner).actions(actions);
+            for (int i = 0; i < actions.length; i++) {
+                if (container.getActions().size() == i) {
+                    container.addTestAction(actions[i]);
+                } else if (!container.getActions().get(i).equals(actions[i])) {
+                    container.getActions().add(i, actions[i]);
+                }
+            }
+
+            if (container.getActions().size() != actions.length) {
+                throw new CitrusRuntimeException("Invalid number of nested test actions for container execution - found unexpected actions");
+            }
+
+            return runner.run(container);
         } else {
             for (TestAction action : actions) {
                 if (action instanceof TestActionBuilder<?>) {
@@ -74,15 +87,6 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
 
             return container;
         }
-    }
-
-    /**
-     * Delegates container execution to container runner or fills container with actions.
-     * @param actions
-     * @return
-     */
-    public TestActionContainer when(TestAction ... actions) {
-        return actions(actions);
     }
 
     @Override

@@ -23,7 +23,7 @@ import com.consol.citrus.dsl.runner.TestRunner;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class AssertExceptionBuilder extends AbstractTestContainerBuilder<Assert> {
+public class AssertExceptionBuilder extends AbstractExceptionContainerBuilder<Assert> {
 
 	/**
 	 * Constructor using action field.
