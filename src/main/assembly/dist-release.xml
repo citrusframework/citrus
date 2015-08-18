@@ -53,7 +53,7 @@
         <exclude>**/logs/**</exclude>
         <exclude>**/src/pom.xml</exclude>
         <exclude>**/citrus-test/pom.xml</exclude>
-        <exclude>src/main/script</exclude>
+        <exclude>src/main/script/**</exclude>
         <exclude>**/*.iml</exclude>
         <exclude>.project</exclude>
         <exclude>.classpath</exclude>
@@ -65,6 +65,7 @@
     <fileSet>
       <directory>../citrus-samples/src/main/script/lib</directory>
       <outputDirectory>samples/lib</outputDirectory>
+      <lineEnding>keep</lineEnding>
     </fileSet>
     
     <fileSet>
