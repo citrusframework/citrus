@@ -154,6 +154,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-model/model-websocket/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>modules/citrus-model/model-ws/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
@@ -211,6 +218,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-http/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-websocket/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>
