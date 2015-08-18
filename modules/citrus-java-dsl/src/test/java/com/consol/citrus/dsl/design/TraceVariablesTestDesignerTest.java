@@ -37,7 +37,7 @@ public class TraceVariablesTestDesignerTest extends AbstractTestNGUnitTest {
 
 		builder.configure();
 
-		TestCase test = builder.build();
+		TestCase test = builder.getTestCase();
 		Assert.assertEquals(test.getActionCount(), 2);
 		Assert.assertEquals(test.getActions().get(0).getClass(), TraceVariablesAction.class);
 		Assert.assertEquals(test.getActions().get(1).getClass(), TraceVariablesAction.class);

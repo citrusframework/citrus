@@ -45,7 +45,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
@@ -88,7 +88,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
@@ -129,7 +129,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
@@ -170,7 +170,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");

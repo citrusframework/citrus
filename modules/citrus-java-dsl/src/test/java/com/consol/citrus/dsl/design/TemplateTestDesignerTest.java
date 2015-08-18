@@ -66,7 +66,7 @@ public class TemplateTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
@@ -109,7 +109,7 @@ public class TemplateTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");

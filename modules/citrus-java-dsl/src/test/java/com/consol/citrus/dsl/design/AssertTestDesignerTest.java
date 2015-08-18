@@ -42,7 +42,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
@@ -74,7 +74,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");

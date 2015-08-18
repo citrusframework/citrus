@@ -48,7 +48,7 @@ public class StopServerTestDesignerTest extends AbstractTestNGUnitTest {
 
 		builder.configure();
 
-		TestCase test = builder.build();
+		TestCase test = builder.getTestCase();
 		Assert.assertEquals(test.getActionCount(), 2);
 		Assert.assertEquals(test.getActions().get(0).getClass(), StopServerAction.class);
 		Assert.assertEquals(test.getActions().get(1).getClass(), StopServerAction.class);

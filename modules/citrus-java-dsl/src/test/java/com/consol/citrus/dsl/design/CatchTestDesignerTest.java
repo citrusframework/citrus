@@ -42,7 +42,7 @@ public class CatchTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 2);
         assertEquals(test.getActions().get(0).getClass(), Catch.class);
         assertEquals(test.getActions().get(0).getName(), "catch");

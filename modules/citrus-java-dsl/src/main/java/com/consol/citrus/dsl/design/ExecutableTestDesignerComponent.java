@@ -39,7 +39,7 @@ public class ExecutableTestDesignerComponent extends TestDesignerComponent imple
      */
     public void execute(TestContext context) {
         configure();
-        build().execute(context);
+        getTestCase().execute(context);
     }
 
     /**

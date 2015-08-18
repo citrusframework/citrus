@@ -44,7 +44,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Builds the test case.
      * @return
      */
-    TestCase build();
+    TestCase getTestCase();
 
     /**
      * Set custom test case name.

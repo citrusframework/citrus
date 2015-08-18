@@ -66,7 +66,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeMessageChannelAction.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "purge-channel");
@@ -102,7 +102,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeMessageChannelAction.class);
 
@@ -136,7 +136,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeMessageChannelAction.class);
 

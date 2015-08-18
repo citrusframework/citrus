@@ -63,7 +63,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
@@ -104,7 +104,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
@@ -135,7 +135,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
@@ -168,7 +168,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
@@ -207,7 +207,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 

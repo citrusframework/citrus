@@ -44,7 +44,7 @@ public class RepeatOnErrorTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 2);
         assertEquals(test.getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
         assertEquals(test.getActions().get(0).getName(), "repeat-on-error");

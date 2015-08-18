@@ -72,7 +72,7 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
             }
 
             TestContext ctx = prepareTestContext(citrus.createTestContext());
-            TestCase testCase = testDesigner.build();
+            TestCase testCase = testDesigner.getTestCase();
             citrus.run(testCase, ctx);
         } else {
             super.run(frameworkMethod);
@@ -86,11 +86,6 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
         super.executeTest();
     }
 
-    @Override
-    public TestCase build() {
-        return testDesigner.build();
-    }
-
     /**
      * Main entrance method for builder pattern usage. Subclasses may override
      * this method and call Java DSL builder methods for adding test actions and
@@ -101,7 +96,7 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
 
     @Override
     public TestCase getTestCase() {
-        return testDesigner.build();
+        return testDesigner.getTestCase();
     }
 
     @Override

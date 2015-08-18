@@ -73,15 +73,15 @@ public class FinallySequenceBuilder extends AbstractTestContainerBuilder<Finally
         } else {
             for (TestAction action : actions) {
                 if (action instanceof TestActionBuilder<?>) {
-                    designer.build().getActions().remove(((TestActionBuilder<?>) action).build());
-                    designer.build().getFinalActions().add(((TestActionBuilder<?>) action).build());
+                    designer.getTestCase().getActions().remove(((TestActionBuilder<?>) action).build());
+                    designer.getTestCase().getFinalActions().add(((TestActionBuilder<?>) action).build());
                     container.addTestAction(((TestActionBuilder<?>) action).build());
                 } else if (!action.getClass().isAnonymousClass()) {
-                    designer.build().getActions().remove(action);
-                    designer.build().getFinalActions().add(action);
+                    designer.getTestCase().getActions().remove(action);
+                    designer.getTestCase().getFinalActions().add(action);
                     container.addTestAction(action);
                 } else {
-                    designer.build().getFinalActions().add(action);
+                    designer.getTestCase().getFinalActions().add(action);
                     container.addTestAction(action);
                 }
             }

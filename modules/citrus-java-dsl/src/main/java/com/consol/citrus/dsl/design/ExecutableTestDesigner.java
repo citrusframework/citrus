@@ -44,7 +44,7 @@ public class ExecutableTestDesigner extends DefaultTestDesigner implements Execu
      * @param context
      */
     public void execute(TestContext context) {
-        build().execute(context);
+        getTestCase().execute(context);
     }
 
     /**

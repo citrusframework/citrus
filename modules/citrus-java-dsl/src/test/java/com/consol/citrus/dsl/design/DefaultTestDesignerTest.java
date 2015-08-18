@@ -60,7 +60,7 @@ public class DefaultTestDesignerTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getName(), "");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus.dsl.design");

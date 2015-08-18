@@ -98,33 +98,33 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public void name(String name) {
-        build().setBeanName(name);
-        build().setName(name);
+        getTestCase().setBeanName(name);
+        getTestCase().setName(name);
     }
 
     @Override
     public void description(String description) {
-        build().setDescription(description);
+        getTestCase().setDescription(description);
     }
 
     @Override
     public void author(String author) {
-        build().getMetaInfo().setAuthor(author);
+        getTestCase().getMetaInfo().setAuthor(author);
     }
 
     @Override
     public void packageName(String packageName) {
-        build().setPackageName(packageName);
+        getTestCase().setPackageName(packageName);
     }
 
     @Override
     public void status(TestCaseMetaInfo.Status status) {
-        build().getMetaInfo().setStatus(status);
+        getTestCase().getMetaInfo().setStatus(status);
     }
 
     @Override
     public void creationDate(Date date) {
-        build().getMetaInfo().setCreationDate(date);
+        getTestCase().getMetaInfo().setCreationDate(date);
     }
 
     @Override
@@ -618,7 +618,7 @@ public class DefaultTestDesigner implements TestDesigner {
      * Builds the test case.
      * @return
      */
-    public TestCase build() {
+    public TestCase getTestCase() {
         return testCase;
     }
 

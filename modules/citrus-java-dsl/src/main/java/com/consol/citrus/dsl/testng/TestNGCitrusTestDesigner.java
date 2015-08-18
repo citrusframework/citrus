@@ -100,7 +100,7 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
                 }
 
                 TestContext ctx = prepareTestContext(citrus.createTestContext());
-                TestCase testCase = testDesigner.build();
+                TestCase testCase = testDesigner.getTestCase();
 
                 if (parameters != null) {
                     handleTestParameters(testResult.getMethod(), testCase,
@@ -129,11 +129,6 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
         super.executeTest(testContext);
     }
 
-    @Override
-    public TestCase build() {
-        return testDesigner.build();
-    }
-
     /**
      * Main entrance method for builder pattern usage. Subclasses may override
      * this method and call Java DSL builder methods for adding test actions and
@@ -144,7 +139,7 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
 
     @Override
     public TestCase getTestCase() {
-        return testDesigner.build();
+        return testDesigner.getTestCase();
     }
 
     @Override

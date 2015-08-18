@@ -39,7 +39,7 @@ public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
 
         builder.configure();
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
         assertEquals(test.getActions().get(0).getName(), "repeat");

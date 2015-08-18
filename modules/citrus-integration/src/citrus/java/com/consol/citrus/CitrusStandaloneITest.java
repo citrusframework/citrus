@@ -48,7 +48,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
         test.echo("Hello Citrus!");
 
-        citrus.run(test.build());
+        citrus.run(test.getTestCase());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
                 .messageType(MessageType.PLAINTEXT)
                 .message(new JmsMessage("Hello Citrus!"));
 
-        citrus.run(test.build());
+        citrus.run(test.getTestCase());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
                         .statusCode(HttpStatus.OK)
                         .reasonPhrase("OK"));
 
-        citrus.run(test.build());
+        citrus.run(test.getTestCase());
     }
 
     @Test
@@ -121,6 +121,6 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
                             "<ns0:Text>Hello User</ns0:Text>" +
                         "</ns0:HelloStandaloneResponse>")).schemaValidation(false);
 
-        citrus.run(test.build());
+        citrus.run(test.getTestCase());
     }
 }
