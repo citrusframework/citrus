@@ -98,33 +98,33 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public void name(String name) {
-        getTestCase().setBeanName(name);
-        getTestCase().setName(name);
+        build().setBeanName(name);
+        build().setName(name);
     }
 
     @Override
     public void description(String description) {
-        getTestCase().setDescription(description);
+        build().setDescription(description);
     }
 
     @Override
     public void author(String author) {
-        getTestCase().getMetaInfo().setAuthor(author);
+        build().getMetaInfo().setAuthor(author);
     }
 
     @Override
     public void packageName(String packageName) {
-        getTestCase().setPackageName(packageName);
+        build().setPackageName(packageName);
     }
 
     @Override
     public void status(TestCaseMetaInfo.Status status) {
-        getTestCase().getMetaInfo().setStatus(status);
+        build().getMetaInfo().setStatus(status);
     }
 
     @Override
     public void creationDate(Date date) {
-        getTestCase().getMetaInfo().setCreationDate(date);
+        build().getMetaInfo().setCreationDate(date);
     }
 
     @Override
@@ -561,18 +561,11 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public Parallel parallel(TestAction... actions) {
-        Parallel container = new Parallel();
-
-        for (TestAction action : actions) {
-            if (action instanceof TestActionBuilder<?>) {
-                container.addTestAction(((TestActionBuilder<?>) action).build());
-            } else {
-                container.addTestAction(action);
-            }
-        }
-        action(container);
-        return container;
+    public ParallelBuilder parallel(TestAction... actions) {
+        ParallelBuilder builder = new ParallelBuilder();
+        builder.actions(actions);
+        action(builder);
+        return builder;
     }
 
     @Override
@@ -592,18 +585,11 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public Sequence sequential(TestAction... actions) {
-        Sequence container = new Sequence();
-
-        for (TestAction action : actions) {
-            if (action instanceof TestActionBuilder<?>) {
-                container.addTestAction(((TestActionBuilder<?>) action).build());
-            } else {
-                container.addTestAction(action);
-            }
-        }
-        action(container);
-        return container;
+    public SequenceBuilder sequential(TestAction... actions) {
+        SequenceBuilder builder = new SequenceBuilder();
+        builder.actions(actions);
+        action(builder);
+        return builder;
     }
 
     @Override
@@ -617,31 +603,15 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public void doFinally(TestAction... actions) {
-        for (TestAction action : actions) {
-            if (action instanceof TestActionBuilder<?>) {
-                getTestCase().getActions().remove(((TestActionBuilder<?>) action).build());
-                getTestCase().getFinalActions().add(((TestActionBuilder<?>) action).build());
-            } else if (!action.getClass().isAnonymousClass()) {
-                getTestCase().getActions().remove(action);
-                getTestCase().getFinalActions().add(action);
-            } else {
-                getTestCase().getFinalActions().add(action);
-            }
-        }
+    public FinallySequenceBuilder doFinally(TestAction... actions) {
+        FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
+        builder.actions(actions);
+        return builder;
     }
 
     @Override
     public PositionHandle positionHandle() {
         return new PositionHandle(testCase.getActions());
-    }
-
-    /**
-     * Gets the test case.
-     * @return
-     */
-    protected TestCase getTestCase() {
-        return testCase;
     }
 
     /**

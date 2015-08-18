@@ -18,8 +18,6 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.container.Parallel;
-import com.consol.citrus.container.Sequence;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
@@ -482,7 +480,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    Parallel parallel(TestAction... actions);
+    ParallelBuilder parallel(TestAction... actions);
 
     /**
      * Adds repeat on error until true container with nested test actions.
@@ -506,7 +504,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    Sequence sequential(TestAction... actions);
+    SequenceBuilder sequential(TestAction... actions);
 
     /**
      * Adds template container with nested test actions.
@@ -521,7 +519,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      */
-    void doFinally(TestAction... actions);
+    FinallySequenceBuilder doFinally(TestAction... actions);
 
     /**
      * Gets new position handle of current test action situation.

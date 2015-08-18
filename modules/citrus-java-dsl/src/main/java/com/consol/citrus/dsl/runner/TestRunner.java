@@ -369,7 +369,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Run nested test actions in parallel to each other using multiple threads.
      * @return
      */
-    ContainerRunner parallel();
+    ParallelBuilder parallel();
 
     /**
      * Adds repeat on error until true container with nested test actions.
@@ -387,7 +387,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Run nested test actions in sequence.
      * @return
      */
-    ContainerRunner sequential();
+    SequenceBuilder sequential();
 
     /**
      * Adds template container with nested test actions.
@@ -401,7 +401,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Adds sequence of test actions to finally block.
      * @return
      */
-    ContainerRunner doFinally();
+    FinallySequenceBuilder doFinally();
 
     /**
      * Add test parameters to the test.

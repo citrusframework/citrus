@@ -31,10 +31,10 @@ import java.util.List;
 public abstract class AbstractTestContainerBuilder<T extends TestActionContainer> extends AbstractTestActionBuilder<T> implements TestActionContainerBuilder<T> {
 
     /** The test runner */
-    private TestRunner runner;
+    protected TestRunner runner;
 
     /** The action container */
-    private final TestActionContainer container;
+    protected final TestActionContainer container;
 
     /**
      * Default constructor with test action.

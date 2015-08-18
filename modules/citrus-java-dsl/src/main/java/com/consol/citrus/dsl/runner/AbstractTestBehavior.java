@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.dsl.builder.FinallySequenceBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -50,7 +51,7 @@ public abstract class AbstractTestBehavior extends DefaultTestRunner implements 
     }
 
     @Override
-    public ContainerRunner doFinally() {
+    public FinallySequenceBuilder doFinally() {
         return target.doFinally();
     }
 }

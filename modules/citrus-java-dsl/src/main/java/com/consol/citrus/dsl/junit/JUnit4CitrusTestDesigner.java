@@ -19,8 +19,6 @@ package com.consol.citrus.dsl.junit;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.Parallel;
-import com.consol.citrus.container.Sequence;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
@@ -372,7 +370,7 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public Parallel parallel(TestAction ... actions) {
+    public ParallelBuilder parallel(TestAction ... actions) {
         return testDesigner.parallel(actions);
     }
 
@@ -387,7 +385,7 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public Sequence sequential(TestAction ... actions) {
+    public SequenceBuilder sequential(TestAction ... actions) {
         return testDesigner.sequential(actions);
     }
 
@@ -397,8 +395,8 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public void doFinally(TestAction ... actions) {
-        testDesigner.doFinally(actions);
+    public FinallySequenceBuilder doFinally(TestAction ... actions) {
+        return testDesigner.doFinally(actions);
     }
 
     @Override

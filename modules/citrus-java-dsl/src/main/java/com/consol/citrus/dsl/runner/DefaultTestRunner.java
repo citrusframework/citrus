@@ -21,6 +21,7 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
+import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
@@ -427,11 +428,10 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner parallel() {
-        Parallel container = new Parallel();
-        containers.push(container);
-
-        return new DefaultContainerRunner(container, this);
+    public ParallelBuilder parallel() {
+        ParallelBuilder builder = new ParallelBuilder(this);
+        containers.push(builder.build());
+        return builder;
     }
 
     @Override
@@ -449,11 +449,10 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner sequential() {
-        Sequence container = new Sequence();
-        containers.push(container);
-
-        return new DefaultContainerRunner(container, this);
+    public SequenceBuilder sequential() {
+        SequenceBuilder builder = new SequenceBuilder(this);
+        containers.push(builder.build());
+        return builder;
     }
 
     @Override
@@ -467,11 +466,10 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner doFinally() {
-        FinallySequence container = new FinallySequence();
-        containers.push(container);
-
-        return new DefaultContainerRunner(container, this);
+    public FinallySequenceBuilder doFinally() {
+        FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
+        containers.push(builder.build());
+        return builder;
     }
 
     /**
@@ -499,10 +497,4 @@ public class DefaultTestRunner implements TestRunner {
         return testCase;
     }
 
-    /**
-     * Helper sequence to mark actions as finally actions that should be
-     * executed in finally block of test case.
-     */
-    private static class FinallySequence extends Sequence {
-    }
 }

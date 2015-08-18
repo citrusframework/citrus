@@ -293,7 +293,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ContainerRunner parallel() {
+    public ParallelBuilder parallel() {
         return testRunner.parallel();
     }
 
@@ -308,7 +308,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ContainerRunner sequential() {
+    public SequenceBuilder sequential() {
         return testRunner.sequential();
     }
 
@@ -318,7 +318,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ContainerRunner doFinally() {
+    public FinallySequenceBuilder doFinally() {
         return testRunner.doFinally();
     }
 }
