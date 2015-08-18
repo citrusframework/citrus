@@ -30,7 +30,7 @@ import static org.testng.Assert.assertTrue;
 
 public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
-    public void testAssertBuilder() {
+    public void testAssertBuilderNested() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -57,7 +57,35 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testAssertBuilderWithAnonymousAction() {
+    public void testAssertBuilder() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                assertException()
+                        .exception(CitrusRuntimeException.class)
+                        .message("Unknown variable 'foo'")
+                .when(echo("${foo}"));
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Assert.class);
+        assertEquals(test.getActions().get(0).getName(), "assert");
+
+        Assert container = (Assert)(test.getTestAction(0));
+
+        assertEquals(container.getActionCount(), 1);
+        assertEquals(container.getAction().getClass(), EchoAction.class);
+        assertEquals(container.getException(), CitrusRuntimeException.class);
+        assertEquals(container.getMessage(), "Unknown variable 'foo'");
+        assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+    }
+
+    @Test
+    public void testAssertBuilderWithAnonymousActionNested() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -69,6 +97,38 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
                         })
                     .exception(CitrusRuntimeException.class)
                     .message("Unknown variable 'foo'");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Assert.class);
+        assertEquals(test.getActions().get(0).getName(), "assert");
+
+        Assert container = (Assert)(test.getTestAction(0));
+
+        assertEquals(container.getActionCount(), 1);
+        assertTrue(container.getAction().getClass().isAnonymousClass());
+        assertEquals(container.getException(), CitrusRuntimeException.class);
+        assertEquals(container.getMessage(), "Unknown variable 'foo'");
+    }
+
+    @Test
+    public void testAssertBuilderWithAnonymousAction() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                assertException()
+                        .exception(CitrusRuntimeException.class)
+                        .message("Unknown variable 'foo'")
+                .when(new AbstractTestAction() {
+                    @Override
+                    public void doExecute(TestContext context) {
+                        context.getVariable("foo");
+                    }
+                });
             }
         };
 

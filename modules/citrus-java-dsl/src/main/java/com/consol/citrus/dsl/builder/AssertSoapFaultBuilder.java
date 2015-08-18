@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -38,10 +39,11 @@ public class AssertSoapFaultBuilder extends AbstractExceptionContainerBuilder<As
 
     /**
      * Constructor using action field.
+     * @param designer
      * @param action
      */
-	public AssertSoapFaultBuilder(AssertSoapFault action) {
-	    super(action);
+	public AssertSoapFaultBuilder(TestDesigner designer, AssertSoapFault action) {
+	    super(designer, action);
 
 	    // for now support one single soap fault detail
 	    SoapFaultDetailValidationContext soapFaultDetailValidationContext = new SoapFaultDetailValidationContext();
@@ -51,13 +53,15 @@ public class AssertSoapFaultBuilder extends AbstractExceptionContainerBuilder<As
 
     /**
      * Default constructor
+     * @param designer
      */
-    public AssertSoapFaultBuilder() {
-        this(new AssertSoapFault());
+    public AssertSoapFaultBuilder(TestDesigner designer) {
+        this(designer, new AssertSoapFault());
     }
 
     /**
      * Default constructor using runner and action container.
+     * @param runner
      * @param action
      */
     public AssertSoapFaultBuilder(TestRunner runner, AssertSoapFault action) {
@@ -71,6 +75,7 @@ public class AssertSoapFaultBuilder extends AbstractExceptionContainerBuilder<As
 
     /**
      * Default constructor using test runner.
+     * @param runner
      */
     public AssertSoapFaultBuilder(TestRunner runner) {
         this(runner, new AssertSoapFault());

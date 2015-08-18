@@ -345,8 +345,18 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public AssertExceptionBuilder assertException() {
+        return testDesigner.assertException();
+    }
+
+    @Override
     public CatchExceptionBuilder catchException(TestAction ... actions) {
         return testDesigner.catchException(actions);
+    }
+
+    @Override
+    public CatchExceptionBuilder catchException() {
+        return testDesigner.catchException();
     }
 
     @Override
@@ -355,8 +365,18 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public AssertSoapFaultBuilder assertSoapFault() {
+        return testDesigner.assertSoapFault();
+    }
+
+    @Override
     public ConditionalBuilder conditional(TestAction ... actions) {
         return testDesigner.conditional(actions);
+    }
+
+    @Override
+    public ConditionalBuilder conditional() {
+        return testDesigner.conditional();
     }
 
     @Override
@@ -365,23 +385,48 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public IterateBuilder iterate() {
+        return testDesigner.iterate();
+    }
+
+    @Override
     public ParallelBuilder parallel(TestAction ... actions) {
         return testDesigner.parallel(actions);
     }
 
     @Override
-    public RepeatOnErrorBuilder repeatOnError(TestAction... actions) {
+    public ParallelBuilder parallel() {
+        return testDesigner.parallel();
+    }
+
+    @Override
+    public RepeatOnErrorBuilder repeatOnError(TestAction ... actions) {
         return testDesigner.repeatOnError(actions);
     }
 
     @Override
-    public RepeatBuilder repeat(TestAction... actions) {
+    public RepeatOnErrorBuilder repeatOnError() {
+        return testDesigner.repeatOnError();
+    }
+
+    @Override
+    public RepeatBuilder repeat(TestAction ... actions) {
         return testDesigner.repeat(actions);
+    }
+
+    @Override
+    public RepeatBuilder repeat() {
+        return testDesigner.repeat();
     }
 
     @Override
     public SequenceBuilder sequential(TestAction ... actions) {
         return testDesigner.sequential(actions);
+    }
+
+    @Override
+    public SequenceBuilder sequential() {
+        return testDesigner.sequential();
     }
 
     @Override
@@ -392,6 +437,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     @Override
     public FinallySequenceBuilder doFinally(TestAction ... actions) {
         return testDesigner.doFinally(actions);
+    }
+
+    @Override
+    public FinallySequenceBuilder doFinally() {
+        return testDesigner.doFinally();
     }
 
     @Override

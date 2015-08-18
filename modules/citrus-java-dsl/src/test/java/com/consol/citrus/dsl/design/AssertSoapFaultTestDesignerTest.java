@@ -45,7 +45,46 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
     private Resource resource = EasyMock.createMock(Resource.class);
     private SoapFaultValidator soapFaultValidator = EasyMock.createMock(SoapFaultValidator.class);
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    
+
+    @Test
+    public void testAssertSoapFaultBuilderNested() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).andReturn(true).once();
+        expect(applicationContextMock.getBean(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+
+        replay(applicationContextMock);
+
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+            @Override
+            public void configure() {
+                assertSoapFault(echo("${foo}"))
+                        .faultCode(SOAP_ENV_SERVER_ERROR)
+                        .faultString(INTERNAL_SERVER_ERROR);
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
+
+        Assert.assertEquals(container.getActionCount(), 1);
+        Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
+        Assert.assertEquals(container.getFaultCode(), SOAP_ENV_SERVER_ERROR);
+        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+        Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+
+        verify(applicationContextMock);
+    }
+
     @Test
     public void testAssertSoapFaultBuilder() {
         reset(applicationContextMock);
@@ -61,9 +100,10 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
-                    .faultString(INTERNAL_SERVER_ERROR);
+                    .faultString(INTERNAL_SERVER_ERROR)
+                .when(echo("${foo}"));
             }
         };
 
@@ -100,10 +140,11 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
                     .faultString(INTERNAL_SERVER_ERROR)
-                    .faultDetail("<ErrorDetail><message>FooBar</message></ErrorDetail>");
+                    .faultDetail("<ErrorDetail><message>FooBar</message></ErrorDetail>")
+                .when(echo("${foo}"));
             }
         };
 
@@ -142,11 +183,12 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
                     .faultString(INTERNAL_SERVER_ERROR)
                     .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
-                    .faultDetail("<MessageDetail><message>FooBar</message></MessageDetail>");
+                    .faultDetail("<MessageDetail><message>FooBar</message></MessageDetail>")
+                .when(echo("${foo}"));
             }
         };
 
@@ -187,10 +229,11 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
                     .faultString(INTERNAL_SERVER_ERROR)
-                    .faultDetailResource(resource);
+                    .faultDetailResource(resource)
+                .when(echo("${foo}"));
             }
         };
 
@@ -229,10 +272,11 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                         .faultCode(SOAP_ENV_SERVER_ERROR)
                         .faultString(INTERNAL_SERVER_ERROR)
-                        .faultDetailResource("com/consol/citrus/soap/fault.xml");
+                        .faultDetailResource("com/consol/citrus/soap/fault.xml")
+                .when(echo("${foo}"));
             }
         };
 
@@ -273,11 +317,12 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
                     .faultString(INTERNAL_SERVER_ERROR)
                     .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
-                    .faultDetailResource(resource);
+                    .faultDetailResource(resource)
+                .when(echo("${foo}"));
             }
         };
 
@@ -317,10 +362,11 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
                     .faultString(INTERNAL_SERVER_ERROR)
-                    .validator(soapFaultValidator);
+                    .validator(soapFaultValidator)
+                .when(echo("${foo}"));
             }
         };
 
@@ -358,10 +404,11 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                assertSoapFault(echo("${foo}"))
+                assertSoapFault()
                     .faultCode(SOAP_ENV_SERVER_ERROR)
                     .faultString(INTERNAL_SERVER_ERROR)
-                    .faultActor("MyActor");
+                    .faultActor("MyActor")
+                .when(echo("${foo}"));
             }
         };
 

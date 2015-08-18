@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -32,6 +33,9 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
 
     /** The test runner */
     protected TestRunner runner;
+
+    /** The test designer */
+    protected TestDesigner designer;
 
     /** The action container */
     protected final TestActionContainer container;
@@ -49,10 +53,12 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
 
     /**
      * Default constructor.
+     * @param designer
      * @param container
      */
-    public AbstractTestContainerBuilder(T container) {
+    public AbstractTestContainerBuilder(TestDesigner designer, T container) {
         super(container);
+        this.designer = designer;
         this.container = container;
     }
 
@@ -85,6 +91,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
                 }
             }
 
+            designer.action(container);
             return container;
         }
     }

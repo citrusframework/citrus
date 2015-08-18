@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class IterateJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void iterateContainer() {
+    public void iterateContainerNested() {
         variable("max", "3");
         
         iterate(echo("index is: ${i}")).condition("i lt= citrus:randomNumber(1)").index("i");
@@ -56,5 +56,36 @@ public class IterateJavaITest extends TestNGCitrusTestDesigner {
         };
 
         iterate(createVariable("index", "${i}"), anonymous).condition("i lt 5").index("i");
+    }
+
+    @CitrusTest
+    public void iterateContainer() {
+        variable("max", "3");
+
+        iterate().condition("i lt= citrus:randomNumber(1)").index("i").actions(echo("index is: ${i}"));
+
+        iterate().condition("i lt 20").index("i").actions(echo("index is: ${i}"));
+
+        iterate().condition("(i lt 5) or (i = 5)").index("i").actions(echo("index is: ${i}"));
+
+        iterate().condition("(i lt 5) and (i lt 3)").index("i").actions(echo("index is: ${i}"));
+
+        iterate().condition("i = 0").index("i").actions(echo("index is: ${i}"));
+
+        iterate().condition("${max} gt= i").index("i").actions(echo("index is: ${i}"));
+
+        iterate().condition("i lt= 50").index("i")
+                .startsWith(0)
+                .step(5)
+                .actions(echo("index is: ${i}"));
+
+        AbstractTestAction anonymous = new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                log.info(context.getVariable("index"));
+            }
+        };
+
+        iterate().condition("i lt 5").index("i").actions(createVariable("index", "${i}"), anonymous);
     }
 }

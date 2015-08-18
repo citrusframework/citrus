@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class RepeatOnErrorJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void repeatOnErrorContainer() {
+    public void repeatOnErrorContainerNested() {
         variable("message", "Hello TestFramework");
         
         repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");
@@ -41,6 +41,22 @@ public class RepeatOnErrorJavaITest extends TestNGCitrusTestDesigner {
                     fail("")
             ).until("i = 3").index("i").autoSleep(200)
         ).exception(CitrusRuntimeException.class);
-        
+    }
+
+    @CitrusTest
+    public void repeatOnErrorContainer() {
+        variable("message", "Hello TestFramework");
+
+        repeatOnError().until("i = 5").index("i").actions(echo("${i}. Versuch: ${message}"));
+
+        repeatOnError().until("i = 5").index("i").autoSleep(500).actions(echo("${i}. Versuch: ${message}"));
+
+        assertException()
+            .exception(CitrusRuntimeException.class)
+            .when(repeatOnError()
+                .until("i = 3").index("i").autoSleep(200)
+                .actions(echo("${i}. Versuch: ${message}"), fail(""))
+            );
+
     }
 }

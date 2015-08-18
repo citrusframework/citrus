@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
@@ -30,21 +31,24 @@ public class RepeatBuilder extends AbstractTestContainerBuilder<RepeatUntilTrue>
 
 	/**
 	 * Constructor using action field.
+	 * @param designer
 	 * @param action
 	 */
-	public RepeatBuilder(RepeatUntilTrue action) {
-	    super(action);
+	public RepeatBuilder(TestDesigner designer, RepeatUntilTrue action) {
+	    super(designer, action);
     }
 
 	/**
 	 * Default constructor.
+	 * @param designer
 	 */
-	public RepeatBuilder() {
-		this(new RepeatUntilTrue());
+	public RepeatBuilder(TestDesigner designer) {
+		this(designer, new RepeatUntilTrue());
 	}
 
 	/**
 	 * Default constructor using runner and action container.
+	 * @param runner
 	 * @param action
 	 */
 	public RepeatBuilder(TestRunner runner, RepeatUntilTrue action) {
@@ -53,6 +57,7 @@ public class RepeatBuilder extends AbstractTestContainerBuilder<RepeatUntilTrue>
 
 	/**
 	 * Default constructor using test runner.
+	 * @param runner
 	 */
 	public RepeatBuilder(TestRunner runner) {
 		this(runner, new RepeatUntilTrue());

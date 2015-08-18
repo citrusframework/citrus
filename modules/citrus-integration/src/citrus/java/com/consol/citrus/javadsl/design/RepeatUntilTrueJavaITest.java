@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class RepeatUntilTrueJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void repeatUntilTrueContainer() {
+    public void repeatContainerNested() {
         variable("max", "3");
         
         repeat(echo("index is: ${i}")).until("i gt citrus:randomNumber(1)").index("i");
@@ -41,5 +41,22 @@ public class RepeatUntilTrueJavaITest extends TestNGCitrusTestDesigner {
         repeat(echo("index is: ${i}")).until("i gt 0").index("i");
         
         repeat(echo("index is: ${i}")).until("${max} lt i").index("i");
+    }
+
+    @CitrusTest
+    public void repeatContainer() {
+        variable("max", "3");
+
+        repeat().until("i gt citrus:randomNumber(1)").index("i").actions(echo("index is: ${i}"));
+
+        repeat().until("i gt= 5").index("i").actions(echo("index is: ${i}"));
+
+        repeat().until("(i gt 5) or (i = 5)").index("i").actions(echo("index is: ${i}"));
+
+        repeat().until("(i gt 5) and (i gt 3)").index("i").actions(echo("index is: ${i}"));
+
+        repeat().until("i gt 0").index("i").actions(echo("index is: ${i}"));
+
+        repeat().until("${max} lt i").index("i").actions(echo("index is: ${i}"));
     }
 }

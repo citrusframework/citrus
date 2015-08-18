@@ -36,5 +36,15 @@ public class CatchJavaITest extends TestNGCitrusTestDesigner {
         
         catchException(fail("Fail!"))
             .exception(CitrusRuntimeException.class);
+
+        catchException().when(fail("Fail!"));
+
+        catchException()
+                .exception(CitrusRuntimeException.class.getName())
+                .when(fail("Fail!"));
+
+        catchException()
+                .exception(CitrusRuntimeException.class)
+                .when(fail("Fail!"));
     }
 }

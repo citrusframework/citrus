@@ -33,7 +33,7 @@ import java.io.IOException;
 public class AssertJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void assertAction() {
+    public void assertActionNested() {
         variable("failMessage", "Something went wrong!");
         
         assertException(fail("Fail once"))
@@ -79,5 +79,68 @@ public class AssertJavaITest extends TestNGCitrusTestDesigner {
                 context.getVariable("foo");
             }
         }).exception(CitrusRuntimeException.class).message("Unknown variable 'foo'");
+    }
+
+    @CitrusTest
+    public void assertAction() {
+        variable("failMessage", "Something went wrong!");
+
+        assertException()
+                .exception(CitrusRuntimeException.class)
+                .when(fail("Fail once"));
+
+        assertException()
+                .exception(CitrusRuntimeException.class)
+                .message("Fail again")
+                .when(fail("Fail again"));
+
+        assertException()
+                .exception(CitrusRuntimeException.class)
+                .message("${failMessage}")
+                .when(fail("${failMessage}"));
+
+        assertException()
+                .exception(CitrusRuntimeException.class)
+                .message("@contains('wrong')@")
+                .when(fail("${failMessage}"));
+
+        assertException()
+                .exception(ValidationException.class)
+                .when(assertException()
+                        .exception(IOException.class)
+                        .when(fail("Fail another time"))
+                );
+
+        assertException()
+                .exception(ValidationException.class)
+                .when(assertException()
+                        .exception(CitrusRuntimeException.class)
+                        .message("Fail again")
+                        .when(fail("Fail with nice error message"))
+                );
+
+        assertException()
+                .exception(ValidationException.class)
+                .when(assertException()
+                        .exception(CitrusRuntimeException.class)
+                        .when(echo("Nothing fails here"))
+                );
+
+        assertException()
+                .exception(ValidationException.class)
+                .when(assertException()
+                        .exception(CitrusRuntimeException.class)
+                        .message("Must be failing")
+                        .when(echo("Nothing fails here either"))
+                );
+
+        assertException()
+                .exception(CitrusRuntimeException.class).message("Unknown variable 'foo'")
+                .when(new AbstractTestAction() {
+                    @Override
+                    public void doExecute(TestContext context) {
+                        context.getVariable("foo");
+                    }
+                });
     }
 }

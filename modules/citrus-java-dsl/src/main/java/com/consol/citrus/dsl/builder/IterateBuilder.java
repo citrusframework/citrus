@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.container.IteratingConditionExpression;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
@@ -28,21 +29,24 @@ public class IterateBuilder extends AbstractTestContainerBuilder<Iterate> {
 
     /**
      * Default constructor using designer and action container.
+     * @param designer
      * @param action
      */
-    public IterateBuilder(Iterate action) {
-        super(action);
+    public IterateBuilder(TestDesigner designer, Iterate action) {
+        super(designer, action);
     }
 
     /**
      * Default constructor using test designer.
+     * @param designer
      */
-    public IterateBuilder() {
-        this(new Iterate());
+    public IterateBuilder(TestDesigner designer) {
+        this(designer, new Iterate());
     }
 
     /**
      * Default constructor using runner and action container.
+     * @param runner
      * @param action
      */
     public IterateBuilder(TestRunner runner, Iterate action) {
@@ -51,6 +55,7 @@ public class IterateBuilder extends AbstractTestContainerBuilder<Iterate> {
 
     /**
      * Default constructor using test runner.
+     * @param runner
      */
     public IterateBuilder(TestRunner runner) {
         this(runner, new Iterate());

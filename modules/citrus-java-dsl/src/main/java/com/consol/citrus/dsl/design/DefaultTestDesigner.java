@@ -515,80 +515,127 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public AssertExceptionBuilder assertException(TestAction testAction) {
-        AssertExceptionBuilder builder = new AssertExceptionBuilder();
+        AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
         builder.actions(testAction);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public AssertExceptionBuilder assertException() {
+        AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
         return builder;
     }
 
     @Override
     public CatchExceptionBuilder catchException(TestAction... actions) {
-        CatchExceptionBuilder builder = new CatchExceptionBuilder()
+        CatchExceptionBuilder builder = new CatchExceptionBuilder(this)
                 .exception(CitrusRuntimeException.class.getName());
         builder.actions(actions);
+        return builder;
+    }
 
-        action(builder);
+    @Override
+    public CatchExceptionBuilder catchException() {
+        CatchExceptionBuilder builder = new CatchExceptionBuilder(this)
+                .exception(CitrusRuntimeException.class.getName());
         return builder;
     }
 
     @Override
     public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder();
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
         builder.actions(testAction);
 
         if (getApplicationContext().containsBean("soapFaultValidator")) {
             builder.validator(getApplicationContext().getBean("soapFaultValidator", SoapFaultValidator.class));
         }
+        return builder;
+    }
 
-        action(builder);
+    @Override
+    public AssertSoapFaultBuilder assertSoapFault() {
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        if (getApplicationContext().containsBean("soapFaultValidator")) {
+            builder.validator(getApplicationContext().getBean("soapFaultValidator", SoapFaultValidator.class));
+        }
         return builder;
     }
 
     @Override
     public ConditionalBuilder conditional(TestAction... actions) {
-        ConditionalBuilder builder = new ConditionalBuilder();
+        ConditionalBuilder builder = new ConditionalBuilder(this);
         builder.actions(actions);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public ConditionalBuilder conditional() {
+        ConditionalBuilder builder = new ConditionalBuilder(this);
         return builder;
     }
 
     @Override
     public IterateBuilder iterate(TestAction... actions) {
-        IterateBuilder builder = new IterateBuilder();
+        IterateBuilder builder = new IterateBuilder(this);
         builder.actions(actions);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public IterateBuilder iterate() {
+        IterateBuilder builder = new IterateBuilder(this);
         return builder;
     }
 
     @Override
     public ParallelBuilder parallel(TestAction... actions) {
-        ParallelBuilder builder = new ParallelBuilder();
+        ParallelBuilder builder = new ParallelBuilder(this);
         builder.actions(actions);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public ParallelBuilder parallel() {
+        ParallelBuilder builder = new ParallelBuilder(this);
         return builder;
     }
 
     @Override
     public RepeatOnErrorBuilder repeatOnError(TestAction... actions) {
-        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder();
+        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
         builder.actions(actions);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public RepeatOnErrorBuilder repeatOnError() {
+        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
         return builder;
     }
 
     @Override
     public RepeatBuilder repeat(TestAction... actions) {
-        RepeatBuilder builder = new RepeatBuilder();
+        RepeatBuilder builder = new RepeatBuilder(this);
         builder.actions(actions);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public RepeatBuilder repeat() {
+        RepeatBuilder builder = new RepeatBuilder(this);
         return builder;
     }
 
     @Override
     public SequenceBuilder sequential(TestAction... actions) {
-        SequenceBuilder builder = new SequenceBuilder();
+        SequenceBuilder builder = new SequenceBuilder(this);
         builder.actions(actions);
-        action(builder);
+        return builder;
+    }
+
+    @Override
+    public SequenceBuilder sequential() {
+        SequenceBuilder builder = new SequenceBuilder(this);
         return builder;
     }
 
@@ -606,6 +653,12 @@ public class DefaultTestDesigner implements TestDesigner {
     public FinallySequenceBuilder doFinally(TestAction... actions) {
         FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
         builder.actions(actions);
+        return builder;
+    }
+
+    @Override
+    public FinallySequenceBuilder doFinally() {
+        FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
         return builder;
     }
 

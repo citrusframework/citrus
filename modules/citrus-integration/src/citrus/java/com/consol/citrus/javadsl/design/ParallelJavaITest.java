@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class ParallelJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void parallelContainer() {
+    public void parallelContainerNested() {
         parallel(
             sleep(150),
             sequential(
@@ -58,5 +58,40 @@ public class ParallelJavaITest extends TestNGCitrusTestDesigner {
                 ).condition("i lt= 5").index("i")
             )
         ).exception(CitrusRuntimeException.class);
+    }
+
+    @CitrusTest
+    public void parallelContainer() {
+        parallel().actions(
+            sleep(150),
+            sequential().actions(
+                sleep(100),
+                echo("1")
+            ),
+            echo("2"),
+            echo("3"),
+            iterate()
+                .condition("i lt= 5").index("i")
+                .actions(echo("10"))
+        );
+
+        assertException()
+            .exception(CitrusRuntimeException.class)
+            .when(
+                parallel().actions(
+                    sleep(150),
+                    sequential().actions(
+                        sleep(100),
+                        fail("This went wrong too"),
+                        echo("1")
+                    ),
+                    echo("2"),
+                    fail("This went wrong too"),
+                    echo("3"),
+                    iterate()
+                        .condition("i lt= 5").index("i")
+                        .actions(echo("10"))
+                )
+            );
     }
 }

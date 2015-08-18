@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.Catch;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
@@ -27,21 +28,24 @@ public class CatchExceptionBuilder extends AbstractExceptionContainerBuilder<Cat
 
     /**
      * Constructor using action field.
+     * @param designer
      * @param action
      */
-    public CatchExceptionBuilder(Catch action) {
-        super(action);
+    public CatchExceptionBuilder(TestDesigner designer, Catch action) {
+        super(designer, action);
     }
 
     /**
      * Default constructor.
+     * @param designer
      */
-    public CatchExceptionBuilder() {
-        this(new Catch());
+    public CatchExceptionBuilder(TestDesigner designer) {
+        this(designer, new Catch());
     }
 
     /**
      * Default constructor using runner and action container.
+     * @param runner
      * @param action
      */
     public CatchExceptionBuilder(TestRunner runner, Catch action) {
@@ -50,6 +54,7 @@ public class CatchExceptionBuilder extends AbstractExceptionContainerBuilder<Cat
 
     /**
      * Default constructor using test runner.
+     * @param runner
      */
     public CatchExceptionBuilder(TestRunner runner) {
         this(runner, new Catch());

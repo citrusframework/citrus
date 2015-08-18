@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
@@ -27,21 +28,24 @@ public class ParallelBuilder extends AbstractTestContainerBuilder<Parallel> {
 
     /**
      * Default constructor using designer and action container.
+     * @param designer
      * @param action
      */
-    public ParallelBuilder(Parallel action) {
-        super(action);
+    public ParallelBuilder(TestDesigner designer, Parallel action) {
+        super(designer, action);
     }
 
     /**
      * Default constructor using test designer.
+     * @param designer
      */
-    public ParallelBuilder() {
-        this(new Parallel());
+    public ParallelBuilder(TestDesigner designer) {
+        this(designer, new Parallel());
     }
 
     /**
      * Default constructor using runner and action container.
+     * @param runner
      * @param action
      */
     public ParallelBuilder(TestRunner runner, Parallel action) {
@@ -50,6 +54,7 @@ public class ParallelBuilder extends AbstractTestContainerBuilder<Parallel> {
 
     /**
      * Default constructor using test runner.
+     * @param runner
      */
     public ParallelBuilder(TestRunner runner) {
         this(runner, new Parallel());

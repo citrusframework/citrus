@@ -443,12 +443,24 @@ public interface TestDesigner extends ApplicationContextAware {
     AssertExceptionBuilder assertException(TestAction testAction);
 
     /**
+     * Assert exception to happen in nested test action.
+     * @return
+     */
+    AssertExceptionBuilder assertException();
+
+    /**
      * Action catches possible exceptions in nested test actions.
      *
      * @param actions
      * @return
      */
     CatchExceptionBuilder catchException(TestAction... actions);
+
+    /**
+     * Action catches possible exceptions in nested test actions.
+     * @return
+     */
+    CatchExceptionBuilder catchException();
 
     /**
      * Assert SOAP fault during action execution.
@@ -459,12 +471,24 @@ public interface TestDesigner extends ApplicationContextAware {
     AssertSoapFaultBuilder assertSoapFault(TestAction testAction);
 
     /**
+     * Assert SOAP fault during action execution.
+     * @return
+     */
+    AssertSoapFaultBuilder assertSoapFault();
+
+    /**
      * Adds conditional container with nested test actions.
      *
      * @param actions
      * @return
      */
     ConditionalBuilder conditional(TestAction... actions);
+
+    /**
+     * Adds conditional container with nested test actions.
+     * @return
+     */
+    ConditionalBuilder conditional();
 
     /**
      * Adds iterate container with nested test actions.
@@ -475,12 +499,24 @@ public interface TestDesigner extends ApplicationContextAware {
     IterateBuilder iterate(TestAction... actions);
 
     /**
+     * Adds iterate container with nested test actions.
+     * @return
+     */
+    IterateBuilder iterate();
+
+    /**
      * Adds parallel container with nested test actions.
      *
      * @param actions
      * @return
      */
     ParallelBuilder parallel(TestAction... actions);
+
+    /**
+     * Adds parallel container with nested test actions.
+     * @return
+     */
+    ParallelBuilder parallel();
 
     /**
      * Adds repeat on error until true container with nested test actions.
@@ -491,6 +527,12 @@ public interface TestDesigner extends ApplicationContextAware {
     RepeatOnErrorBuilder repeatOnError(TestAction... actions);
 
     /**
+     * Adds repeat on error until true container with nested test actions.
+     * @return
+     */
+    RepeatOnErrorBuilder repeatOnError();
+
+    /**
      * Adds repeat until true container with nested test actions.
      *
      * @param actions
@@ -499,12 +541,24 @@ public interface TestDesigner extends ApplicationContextAware {
     RepeatBuilder repeat(TestAction... actions);
 
     /**
+     * Adds repeat until true container with nested test actions.
+     * @return
+     */
+    RepeatBuilder repeat();
+
+    /**
      * Adds sequential container with nested test actions.
      *
      * @param actions
      * @return
      */
     SequenceBuilder sequential(TestAction... actions);
+
+    /**
+     * Adds sequential container with nested test actions.
+     * @return
+     */
+    SequenceBuilder sequential();
 
     /**
      * Adds template container with nested test actions.
@@ -520,6 +574,11 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      */
     FinallySequenceBuilder doFinally(TestAction... actions);
+
+    /**
+     * Adds sequence of test actions to finally block.
+     */
+    FinallySequenceBuilder doFinally();
 
     /**
      * Gets new position handle of current test action situation.

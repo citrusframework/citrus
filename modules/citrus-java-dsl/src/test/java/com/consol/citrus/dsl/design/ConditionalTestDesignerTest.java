@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
-    public void testConditionalBuilder() {
+    public void testConditionalBuilderNested() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -47,16 +47,37 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testConditionalBuilder() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                conditional().when("${var} = 5").actions(echo("${var}"));
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
+
+        Conditional container = (Conditional)test.getActions().get(0);
+        Assert.assertEquals(container.getActionCount(), 1);
+        Assert.assertEquals(container.getCondition(), "${var} = 5");
+    }
+
+    @Test
     public void testConditionalBuilderConditionExpression() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                conditional(echo("${var}")).when(new ConditionExpression() {
+                conditional().when(new ConditionExpression() {
                     @Override
                     public boolean evaluate(TestContext context) {
                         return context.getVariable("var").equals("Hello");
                     }
-                });
+                }).actions(echo("${var}"));
             }
         };
 

@@ -32,7 +32,7 @@ public class SequentialJavaITest extends TestNGCitrusTestDesigner {
     public void sequentialContainer() {
         sequential(
             stopTime(),
-            sleep(1000),
+            sleep(500),
             echo("Hello Citrus"),
             stopTime()
         );
@@ -45,7 +45,31 @@ public class SequentialJavaITest extends TestNGCitrusTestDesigner {
                     context.setVariable("anonymous", "anonymous");
                 }
             },
-            sleep(1000),
+            sleep(500),
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    log.info(context.getVariable("anonymous"));
+                }
+            }
+        );
+
+        sequential().actions(
+            stopTime(),
+            sleep(200),
+            echo("Hello Citrus"),
+            stopTime()
+        );
+
+        sequential().actions(
+            echo("Hello Citrus"),
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    context.setVariable("anonymous", "anonymous");
+                }
+            },
+            sleep(200),
             new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {

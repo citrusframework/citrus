@@ -28,17 +28,13 @@ import com.consol.citrus.dsl.runner.TestRunner;
  */
 public class FinallySequenceBuilder extends AbstractTestContainerBuilder<FinallySequence> {
 
-    /** The test designer */
-    private TestDesigner designer;
-
     /**
      * Default constructor using designer and action container.
      * @param designer
      * @param action
      */
     public FinallySequenceBuilder(TestDesigner designer, FinallySequence action) {
-        super(action);
-        this.designer = designer;
+        super(designer, action);
     }
 
     /**

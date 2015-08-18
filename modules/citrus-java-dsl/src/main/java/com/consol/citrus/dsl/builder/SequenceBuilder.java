@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.Sequence;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
@@ -27,21 +28,24 @@ public class SequenceBuilder extends AbstractTestContainerBuilder<Sequence> {
 
     /**
      * Default constructor using designer and action container.
+     * @param designer
      * @param action
      */
-    public SequenceBuilder(Sequence action) {
-        super(action);
+    public SequenceBuilder(TestDesigner designer, Sequence action) {
+        super(designer, action);
     }
 
     /**
      * Default constructor using test designer.
+     * @param designer
      */
-    public SequenceBuilder() {
-        this(new Sequence());
+    public SequenceBuilder(TestDesigner designer) {
+        this(designer, new Sequence());
     }
 
     /**
      * Default constructor using runner and action container.
+     * @param runner
      * @param action
      */
     public SequenceBuilder(TestRunner runner, Sequence action) {
@@ -50,6 +54,7 @@ public class SequenceBuilder extends AbstractTestContainerBuilder<Sequence> {
 
     /**
      * Default constructor using test runner.
+     * @param runner
      */
     public SequenceBuilder(TestRunner runner) {
         this(runner, new Sequence());
