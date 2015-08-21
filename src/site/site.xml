@@ -42,8 +42,8 @@
       <item name="Sources" href="source-repository.html"/>
       <item name="Team" href="team-list.html"/>
       <item name="Issues" href="issues.html"/>
-      <item name="Continuous Build" href="http://labs.consol.de/jenkins/"/>
-      <item name="Sonar" href="http://labs.consol.de/sonar/"/>
+      <item name="Continuous Build" href="http://labs-build.consol.de/"/>
+      <item name="Sonar" href="http://labs-build1.consol.de:9000/"/>
       <item name="Customize" href="tutorials.html">
         <item name="Custom functions" href="tutorials-functions.html"/>
         <item name="Custom actions" href="tutorials-actions.html"/>

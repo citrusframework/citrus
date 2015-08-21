@@ -24,7 +24,7 @@
 
   <ciManagement>
     <system>Jenkins</system>
-    <url>http://labs.consol.de/jenkins/job/Citrus/</url>
+    <url>http://labs-build.consol.de/view/Citrus/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -171,7 +171,7 @@
     <slf4j.version>1.7.12</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
     <arquillian.version>1.1.8.Final</arquillian.version>
-    <sonar.host.url>http://labs.consol.de/sonar</sonar.host.url>
+    <sonar.host.url>http://labs-build1.consol.de:9000</sonar.host.url>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
