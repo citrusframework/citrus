@@ -110,7 +110,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         resultMap1.put("STATUS", "in_progress");
         
         expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
-        
+
         Map<String, Object> resultMap2 = new HashMap<String, Object>();
         resultMap2.put("NAME", "Mickey Mouse");
         resultMap2.put("HEIGHT", "0,3");
@@ -347,6 +347,38 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         verify(jdbcTemplate);
         
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+
+    @Test
+    public void testResultSetValidationLowerCase() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("ordertype", "small");
+        resultMap.put("status", "in_progress");
+
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+
+        replay(jdbcTemplate);
+
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("ORDERTYPE", Collections.singletonList("small"));
+        controlResultSet.put("STATUS", Collections.singletonList("in_progress"));
+
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+
+        executeSQLQueryAction.execute(context);
+
+        verify(jdbcTemplate);
+
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
         Assert.assertNotNull(context.getVariable("${STATUS}"));

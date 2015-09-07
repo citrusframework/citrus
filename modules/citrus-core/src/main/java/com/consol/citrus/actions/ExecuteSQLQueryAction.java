@@ -221,7 +221,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         for (Entry<String, List<String>> controlEntry : controlResultSet.entrySet()) {
             String columnName = controlEntry.getKey();
 
-            if (!columnValuesMap.containsKey(columnName)) {
+            if (columnValuesMap.containsKey(columnName.toLowerCase())) {
+                columnName = columnName.toLowerCase();
+            } else if (columnValuesMap.containsKey(columnName.toUpperCase())) {
+                columnName = columnName.toUpperCase();
+            } else {
                 throw new CitrusRuntimeException("Could not find column '" + columnName + "' in SQL result set");
             }
 
