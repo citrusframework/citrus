@@ -16,22 +16,21 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.*;
-
-import org.easymock.EasyMock;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.ScriptValidationContext;
+import org.easymock.EasyMock;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -73,6 +72,32 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	    Assert.assertNotNull(context.getVariable("${STATUS}"));
         Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
 	}
+
+    @Test
+    public void testSQLStatementLowerCaseColumnNames() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("ordertype", "small");
+        resultMap.put("status", "in_progress");
+
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+
+        replay(jdbcTemplate);
+
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+
+        executeSQLQueryAction.execute(context);
+
+        verify(jdbcTemplate);
+
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
 	
 	@Test
     public void testSQLMultipleStatements() {
@@ -232,6 +257,41 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("${orderStatus}"), "in_progress");
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+
+    @Test
+    public void testExtractToVariablesLowerCaseColumnNames() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("ordertype", "small");
+        resultMap.put("status", "in_progress");
+
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+
+        replay(jdbcTemplate);
+
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+
+        Map<String, String> extractVariables = new HashMap<String, String>();
+        extractVariables.put("ordertype", "orderType");
+        extractVariables.put("STATUS", "orderStatus");
+        executeSQLQueryAction.setExtractVariables(extractVariables);
+
+        executeSQLQueryAction.execute(context);
+
+        verify(jdbcTemplate);
+
+        Assert.assertNotNull(context.getVariable("${orderStatus}"));
+        Assert.assertEquals(context.getVariable("${orderStatus}"), "in_progress");
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${orderType}"));
+        Assert.assertEquals(context.getVariable("${orderType}"), "small");
         Assert.assertNotNull(context.getVariable("${STATUS}"));
         Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
     }
