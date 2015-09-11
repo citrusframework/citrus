@@ -68,11 +68,11 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
             method = httpMessage.getRequestMethod();
         }
 
-        if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)) {
+        if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method) || HttpMethod.DELETE.equals(method)) {
             return new HttpEntity(payload, httpHeaders);
         }
 
-        return new HttpEntity<Object>(httpHeaders);
+        return new HttpEntity<>(httpHeaders);
     }
 
     @Override

@@ -86,7 +86,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             if (StringUtils.hasText(scriptResourcePath)) {
                 scriptMessageBuilder.setScriptResourcePath(scriptResourcePath);
             } else {
-                scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement));
+                scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement).trim());
             }
         }
         
@@ -105,7 +105,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
         if (xmlDataElement != null) {
             messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadData(DomUtils.getTextValue(xmlDataElement));
+            messageBuilder.setPayloadData(DomUtils.getTextValue(xmlDataElement).trim());
         }
 
         Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
@@ -189,7 +189,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             
             List<Element> headerDataElements = DomUtils.getChildElementsByTagName(headerElement, "data");
             for (Element headerDataElement : headerDataElements) {
-                messageBuilder.getHeaderData().add(DomUtils.getTextValue(headerDataElement));
+                messageBuilder.getHeaderData().add(DomUtils.getTextValue(headerDataElement).trim());
             }
 
             List<Element> headerResourceElements = DomUtils.getChildElementsByTagName(headerElement, "resource");
