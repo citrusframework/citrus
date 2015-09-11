@@ -43,10 +43,10 @@ import java.util.List;
 public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /** List of queue names to be purged */
-    private List<String> queueNames = new ArrayList<String>();
+    private List<String> queueNames = new ArrayList<>();
 
     /** List of queues to be purged */
-    private List<Queue> queues = new ArrayList<Queue>();
+    private List<Queue> queues = new ArrayList<>();
     
     /** ConnectionFactory */
     private ConnectionFactory connectionFactory;
@@ -57,9 +57,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     /** Wait some time between message consumption in ms */
     private long sleepTime = 350;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
 
     /**
@@ -90,7 +88,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             }
 
         } catch (JMSException e) {
-            log.error("Error while establishing jms queue connection", e);
+            log.error("Error while establishing jms connection", e);
             throw new CitrusRuntimeException(e);
         } finally {
             JmsUtils.closeSession(session);
@@ -129,9 +127,10 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      */
     private void purgeDestination(Destination destination, Session session, String destinationName) throws JMSException {
         if (log.isDebugEnabled()) {
-            log.debug("Try to purge queue " + destinationName);
+            log.debug("Try to purge destination " + destinationName);
         }
 
+        int messagesPurged = 0;
         MessageConsumer messageConsumer = session.createConsumer(destination);
         try {
             javax.jms.Message message;
@@ -139,8 +138,9 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
                 message = (receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
     
                 if (message != null) {
-                    log.debug("Removed message from queue " + destinationName);
-                    
+                    log.debug("Removed message from destination " + destinationName);
+                    messagesPurged++;
+
                     try {
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {
@@ -148,6 +148,10 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
                     }
                 }
             } while (message != null);
+
+            if (log.isDebugEnabled()) {
+                log.debug("Purged " + messagesPurged + " messages from destination");
+            }
         } finally {
             JmsUtils.closeMessageConsumer(messageConsumer);
         }

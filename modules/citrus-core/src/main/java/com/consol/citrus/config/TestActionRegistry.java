@@ -46,6 +46,7 @@ public final class TestActionRegistry {
         registerActionParser("trace-time", new StopTimeActionParser());
         registerActionParser("echo", new EchoActionParser());
         registerActionParser("expect-timeout", new ReceiveTimeoutActionParser());
+        registerActionParser("purge-endpoint", new PurgeEndpointActionParser());
         registerActionParser("purge-channel", new PurgeMessageChannelActionParser());
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());

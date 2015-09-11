@@ -230,6 +230,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public PurgeEndpointsBuilder purgeEndpoints() {
+        return testDesigner.purgeEndpoints();
+    }
+
+    @Override
     public ReceiveSoapMessageBuilder receive(WebServiceServer server) {
         return testDesigner.receive(server);
     }

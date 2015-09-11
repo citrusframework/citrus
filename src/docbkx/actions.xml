@@ -23,6 +23,7 @@
   <xi:include href='actions-load.xml'/>
   <xi:include href='actions-purge-jms.xml'/>
   <xi:include href='actions-purge-channels.xml'/>
+  <xi:include href='actions-purge-endpoints.xml'/>
   <xi:include href='actions-assert.xml'/>
   <xi:include href='actions-catch.xml'/>
   <xi:include href='actions-antrun.xml'/>

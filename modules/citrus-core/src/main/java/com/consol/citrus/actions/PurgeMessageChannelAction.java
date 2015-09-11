@@ -40,10 +40,10 @@ import java.util.List;
  */
 public class PurgeMessageChannelAction extends AbstractTestAction implements InitializingBean, BeanFactoryAware {
     /** List of channel names to be purged */
-    private List<String> channelNames = new ArrayList<String>();
+    private List<String> channelNames = new ArrayList<>();
 
     /** List of channels to be purged */
-    private List<MessageChannel> channels = new ArrayList<MessageChannel>();
+    private List<MessageChannel> channels = new ArrayList<>();
     
     /** The parent bean factory used for channel name resolving */
     private BeanFactory beanFactory;
@@ -78,11 +78,11 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
             purgeChannel(resolveChannelName(channelName));
         }
 
-        log.info("Message channel purged successfully");
+        log.info("Message channels purged successfully");
     }
 
     /**
-     * Purges all messages from a message channel. Prerequisit is that channel is
+     * Purges all messages from a message channel. Prerequisite is that channel is
      * of type {@link QueueChannel}.
      * 
      * @param channel

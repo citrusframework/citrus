@@ -134,9 +134,9 @@ public class TimeBasedMessageSelector implements MessageSelector {
     
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;purge-channels message-selector=&quot;specialMessageSelector&quot;&gt;
-          &lt;channel name=&quot;someChannelName&quot;/&gt;
-          &lt;channel name=&quot;anotherChannelName&quot;/&gt;
-      &lt;/purge-channels&gt;</programlisting>
+  &lt;channel name=&quot;someChannelName&quot;/&gt;
+  &lt;channel name=&quot;anotherChannelName&quot;/&gt;
+&lt;/purge-channels&gt;</programlisting>
 
     <para><emphasis>Java DSL designer</emphasis></para>
     <programlisting language="java">
@@ -163,6 +163,8 @@ public void purgeTest() {
         action.channelNames("ch1", "ch2", "ch3")
                 .selector(specialMessageSelector));
 }</programlisting>
+
+    <para>In the examples above we use a message selector implementation that gets injected via Spring IoC container.</para>
     
     <para>Purging channels in each test case every time is quite exhausting because every test case needs to define a purging action at the 
     very beginning of the test. A more straight forward approach would be to introduce some purging action which is automatically executed before each test. 

@@ -311,6 +311,14 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public PurgeEndpointsBuilder purgeEndpoints() {
+        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder();
+        builder.withApplicationContext(getApplicationContext());
+        action(builder);
+        return builder;
+    }
+
+    @Override
     public ReceiveSoapMessageBuilder receive(WebServiceServer server) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
         action.setEndpoint(server);

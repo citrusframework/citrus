@@ -193,6 +193,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
+    public PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer) {
+        return testRunner.purgeEndpoints(configurer);
+    }
+
+    @Override
     public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
         return testRunner.receive(configurer);
     }

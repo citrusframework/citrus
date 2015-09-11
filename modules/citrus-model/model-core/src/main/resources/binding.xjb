@@ -34,7 +34,12 @@
         <elementName suffix="Definition" />
       </nameXmlTransform>
     </schemaBindings>
-    <bindings node="//xs:element[@name='selector']">
+    <bindings node="//xs:complexType[@name='ReceiveActionType']/xs:sequence/xs:element[@name='selector']">
+      <bindings node=".//xs:element[@name='value']">
+        <property name="SelectorValue"/>
+      </bindings>
+    </bindings>
+    <bindings node="//xs:complexType[@name='PurgeEndpointActionType']/xs:sequence/xs:element[@name='selector']">
       <bindings node=".//xs:element[@name='value']">
         <property name="SelectorValue"/>
       </bindings>

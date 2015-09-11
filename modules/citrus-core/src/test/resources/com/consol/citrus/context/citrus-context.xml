@@ -62,5 +62,9 @@
     <bean id="mockChannel" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
     </bean>
+
+    <bean id="mockEndpoint" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
+    </bean>
     
 </beans>

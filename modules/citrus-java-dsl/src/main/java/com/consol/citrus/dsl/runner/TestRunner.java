@@ -212,6 +212,15 @@ public interface TestRunner extends ApplicationContextAware {
     PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer);
 
     /**
+     * Creates a new purge message endpoint action definition
+     * for further configuration.
+     *
+     * @param configurer
+     * @return
+     */
+    PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer);
+
+    /**
      * Creates receive message action definition with message endpoint instance.
      *
      * @param configurer

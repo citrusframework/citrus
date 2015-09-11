@@ -286,6 +286,14 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer) {
+        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder();
+        builder.withApplicationContext(applicationContext);
+        configurer.configure(builder);
+        return run(builder.build());
+    }
+
+    @Override
     public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
         ReceiveMessageBuilder<ReceiveMessageAction, ReceiveMessageBuilder> builder = new ReceiveMessageBuilder();
         builder.withApplicationContext(applicationContext);

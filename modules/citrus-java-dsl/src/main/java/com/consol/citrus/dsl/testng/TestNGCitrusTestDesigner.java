@@ -273,6 +273,11 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
+    public PurgeEndpointsBuilder purgeEndpoints() {
+        return testDesigner.purgeEndpoints();
+    }
+
+    @Override
     public ReceiveSoapMessageBuilder receive(WebServiceServer server) {
         return testDesigner.receive(server);
     }

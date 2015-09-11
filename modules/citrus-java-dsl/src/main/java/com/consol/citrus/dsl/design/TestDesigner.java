@@ -243,6 +243,7 @@ public interface TestDesigner extends ApplicationContextAware {
      */
     PurgeJmsQueuesBuilder purgeQueues();
 
+
     /**
      * Creates a new purge message channel action definition
      * for further configuration.
@@ -250,6 +251,13 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      */
     PurgeChannelsBuilder purgeChannels();
+
+    /**
+     * Purge endpoints.
+     *
+     * @return
+     */
+    PurgeEndpointsBuilder purgeEndpoints();
 
     /**
      * Creates special SOAP receive message action definition with web service server instance.
