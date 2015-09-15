@@ -25,6 +25,7 @@
     <module>model-vertx</module>
     <module>model-camel</module>
     <module>model-ftp</module>
+    <module>model-docker</module>
   </modules>
 
   <dependencies>
