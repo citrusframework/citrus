@@ -87,7 +87,9 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
 
         for (int i = 0; i < element.getAttributes().getLength(); i++) {
             Node attribute = element.getAttributes().item(i);
-            command.getParameters().put(attribute.getNodeName(), attribute.getNodeValue());
+            if (!attribute.getNodeName().equals("docker-client")) {
+                command.getParameters().put(attribute.getNodeName(), attribute.getNodeValue());
+            }
         }
         beanDefinition.addPropertyValue("command", command);
 

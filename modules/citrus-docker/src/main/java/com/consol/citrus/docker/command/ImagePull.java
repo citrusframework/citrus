@@ -25,13 +25,15 @@ import com.github.dockerjava.core.command.PullImageResultCallback;
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ImagePull extends AbstractDockerCommand<String> {
+public class ImagePull extends AbstractDockerCommand<Boolean> {
 
     /**
      * Default constructor initializing the command name.
      */
     public ImagePull() {
         super("docker:pull");
+
+        setCommandResult(false);
     }
 
     @Override
@@ -54,5 +56,7 @@ public class ImagePull extends AbstractDockerCommand<String> {
         command.exec(imageResult);
 
         imageResult.awaitSuccess();
+
+        setCommandResult(true);
     }
 }
