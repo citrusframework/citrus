@@ -33,96 +33,96 @@ public class DockerExecuteActionParserTest extends AbstractActionParserTest<Dock
         assertActionClassAndName(DockerExecuteAction.class, "docker-execute");
 
         DockerExecuteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Info.class);
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), Info.class);
         Assert.assertEquals(action.getDockerClient().getClass(), DockerClientImpl.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 0);
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Info.class);
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), Info.class);
         Assert.assertEquals(action.getDockerClient(), beanDefinitionContext.getBean("myDockerClient", DockerClient.class));
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 0);
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Ping.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), Ping.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 0);
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Version.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), Version.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 0);
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ImagePull.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 4);
-        Assert.assertEquals(action.getCommand().getParameters().get("image"), "image_pull");
-        Assert.assertEquals(action.getCommand().getParameters().get("tag"), "image_tag");
-        Assert.assertEquals(action.getCommand().getParameters().get("registry"), "docker_registry");
-        Assert.assertEquals(action.getCommand().getParameters().get("repository"), "docker_repository");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ImagePull.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 4);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("image"), "image_pull");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("tag"), "image_tag");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("registry"), "docker_registry");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("repository"), "docker_repository");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ImageBuild.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 6);
-        Assert.assertEquals(action.getCommand().getParameters().get("tag"), "image_tag");
-        Assert.assertEquals(action.getCommand().getParameters().get("basedir"), "base_dir");
-        Assert.assertEquals(action.getCommand().getParameters().get("dockerfile"), "path_to_dockerfile");
-        Assert.assertEquals(action.getCommand().getParameters().get("no-cache"), "true");
-        Assert.assertEquals(action.getCommand().getParameters().get("quiet"), "true");
-        Assert.assertEquals(action.getCommand().getParameters().get("remove"), "false");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ImageBuild.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 6);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("tag"), "image_tag");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("basedir"), "base_dir");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("dockerfile"), "path_to_dockerfile");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("no-cache"), "true");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("quiet"), "true");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("remove"), "false");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ImageRemove.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get("image"), "image_remove");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ImageRemove.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 1);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("image"), "image_remove");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ContainerRemove.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get("container"), "container_remove");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ContainerRemove.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 1);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("container"), "container_remove");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ImageInspect.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get("image"), "image_inspect");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ImageInspect.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 1);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("image"), "image_inspect");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ContainerInspect.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get("container"), "container_inspect");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ContainerInspect.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 1);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("container"), "container_inspect");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ContainerCreate.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 16);
-        Assert.assertEquals(action.getCommand().getParameters().get("image"), "image_create");
-        Assert.assertEquals(action.getCommand().getParameters().get("cmd"), "echo 'Hello World'");
-        Assert.assertEquals(action.getCommand().getParameters().get("capability-add"), "CHOWN,KILL");
-        Assert.assertEquals(action.getCommand().getParameters().get("domain-name"), "domain_name");
-        Assert.assertEquals(action.getCommand().getParameters().get("env"), "-Dsource.encoding=UTF-8");
-        Assert.assertEquals(action.getCommand().getParameters().get("exposed-ports"), "tcp:8080");
-        Assert.assertEquals(action.getCommand().getParameters().get("hostname"), "foo_host");
-        Assert.assertEquals(action.getCommand().getParameters().get("name"), "foo_container");
-        Assert.assertEquals(action.getCommand().getParameters().get("working-dir"), ".");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ContainerCreate.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 16);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("image"), "image_create");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("cmd"), "echo 'Hello World'");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("capability-add"), "CHOWN,KILL");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("domain-name"), "domain_name");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("env"), "-Dsource.encoding=UTF-8");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("exposed-ports"), "tcp:8080");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("hostname"), "foo_host");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("name"), "foo_container");
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("working-dir"), ".");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ContainerStart.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get("container"), "container_start");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ContainerStart.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 1);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("container"), "container_start");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), ContainerStop.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
-        Assert.assertEquals(action.getCommand().getParameters().get("container"), "container_stop");
+        Assert.assertNotNull(action.getCommands().get(0));
+        Assert.assertEquals(action.getCommands().get(0).getClass(), ContainerStop.class);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 1);
+        Assert.assertEquals(action.getCommands().get(0).getParameters().get("container"), "container_stop");
     }
 
     @Test

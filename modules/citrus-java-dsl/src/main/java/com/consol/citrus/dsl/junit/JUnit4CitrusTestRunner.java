@@ -21,6 +21,7 @@ import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
@@ -315,6 +316,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public SequenceBuilder sequential() {
         return testRunner.sequential();
+    }
+
+    @Override
+    public DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer) {
+        return testRunner.docker(configurer);
     }
 
     @Override

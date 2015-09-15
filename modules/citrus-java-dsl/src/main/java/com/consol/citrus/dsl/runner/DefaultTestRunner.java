@@ -20,6 +20,7 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -461,6 +462,13 @@ public class DefaultTestRunner implements TestRunner {
         SequenceBuilder builder = new SequenceBuilder(this);
         containers.push(builder.build());
         return builder;
+    }
+
+    @Override
+    public DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer) {
+        DockerActionBuilder builder = new DockerActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override

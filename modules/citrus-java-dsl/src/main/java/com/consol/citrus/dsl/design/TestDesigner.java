@@ -569,6 +569,12 @@ public interface TestDesigner extends ApplicationContextAware {
     SequenceBuilder sequential();
 
     /**
+     * Creates a new docker execute action.
+     * @return
+     */
+    DockerActionBuilder docker();
+
+    /**
      * Adds template container with nested test actions.
      *
      * @param name

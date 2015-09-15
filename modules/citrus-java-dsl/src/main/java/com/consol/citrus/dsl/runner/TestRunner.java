@@ -20,6 +20,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
@@ -397,6 +398,12 @@ public interface TestRunner extends ApplicationContextAware {
      * @return
      */
     SequenceBuilder sequential();
+
+    /**
+     * Run docker command action.
+     * @return
+     */
+    DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer);
 
     /**
      * Adds template container with nested test actions.

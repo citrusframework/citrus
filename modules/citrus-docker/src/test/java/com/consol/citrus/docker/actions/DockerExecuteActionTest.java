@@ -56,7 +56,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), result);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), result);
 
         verify(dockerClient, command);
     }
@@ -78,7 +78,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
 
         verify(dockerClient, command);
     }
@@ -101,7 +101,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), result);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), result);
 
         verify(dockerClient, command);
     }
@@ -124,13 +124,13 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerCreate());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("image", "image_create");
-        action.getCommand().getParameters().put("tag", "latest");
-        action.getCommand().getParameters().put("name", "my_container");
+        action.getCommands().get(0).getParameters().put("image", "image_create");
+        action.getCommands().get(0).getParameters().put("tag", "latest");
+        action.getCommands().get(0).getParameters().put("name", "my_container");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
 
         verify(dockerClient, command);
@@ -159,12 +159,12 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerCreate());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("image", "image_create");
-        action.getCommand().getParameters().put("tag", "latest");
+        action.getCommands().get(0).getParameters().put("image", "image_create");
+        action.getCommands().get(0).getParameters().put("tag", "latest");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
 
@@ -187,11 +187,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerInspect());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("container", "container_inspect");
+        action.getCommands().get(0).getParameters().put("container", "container_inspect");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), response);
 
         verify(dockerClient, command);
     }
@@ -212,11 +212,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ImageInspect());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("image", "image_inspect");
+        action.getCommands().get(0).getParameters().put("image", "image_inspect");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), response);
 
         verify(dockerClient, command);
     }
@@ -236,11 +236,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerRemove());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("container", "container_inspect");
+        action.getCommands().get(0).getParameters().put("container", "container_inspect");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
 
         verify(dockerClient, command);
     }
@@ -260,11 +260,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ImageRemove());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("image", "image_remove");
+        action.getCommands().get(0).getParameters().put("image", "image_remove");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
 
         verify(dockerClient, command);
     }
@@ -284,11 +284,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerStart());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("container", "container_start");
+        action.getCommands().get(0).getParameters().put("container", "container_start");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
 
         verify(dockerClient, command);
     }
@@ -308,11 +308,11 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerStop());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("container", "container_stop");
+        action.getCommands().get(0).getParameters().put("container", "container_stop");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
 
         verify(dockerClient, command);
     }
@@ -345,12 +345,12 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ImagePull());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("image", "image_pull");
-        action.getCommand().getParameters().put("tag", "image_tag");
+        action.getCommands().get(0).getParameters().put("image", "image_pull");
+        action.getCommands().get(0).getParameters().put("tag", "image_tag");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
 
         verify(dockerClient, command, responseItem);
     }
@@ -384,12 +384,12 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ImageBuild());
         action.setDockerClient(dockerClient);
 
-        action.getCommand().getParameters().put("image", "image_pull");
-        action.getCommand().getParameters().put("tag", "latest");
+        action.getCommands().get(0).getParameters().put("image", "image_pull");
+        action.getCommands().get(0).getParameters().put("tag", "latest");
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getCommandResult(), "new_image");
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), "new_image");
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.IMAGE_ID), "new_image");
 
         verify(dockerClient, command, responseItem);

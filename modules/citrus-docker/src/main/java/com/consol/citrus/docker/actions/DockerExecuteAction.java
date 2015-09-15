@@ -27,6 +27,8 @@ import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+
 /**
  * Executes docker command with given docker client implementation. Possible command result is stored within command object.
  *
@@ -42,7 +44,7 @@ public class DockerExecuteAction extends AbstractTestAction {
     private DockerClientConfig dockerClientConfig;
 
     /** Docker command to execute */
-    private DockerCommand command;
+    private List<DockerCommand> commands = new ArrayList<>();
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DockerExecuteAction.class);
@@ -57,9 +59,11 @@ public class DockerExecuteAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            log.info(String.format("Executing Docker command '%s", command.getName()));
-            command.execute(getDockerClient(), context);
-            log.info(String.format("Successfully executed Docker command '%s", command.getName()));
+            for (DockerCommand command : commands) {
+                log.info(String.format("Executing Docker command '%s", command.getName()));
+                command.execute(getDockerClient(), context);
+                log.info(String.format("Successfully executed Docker command '%s", command.getName()));
+            }
         } catch (Exception e) {
             throw new CitrusRuntimeException("Unable to perform docker command", e);
         }
@@ -75,21 +79,40 @@ public class DockerExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Gets the docker command to execute.
+     * Gets the docker commands to execute.
      * @return
      */
-    public DockerCommand getCommand() {
-        return command;
+    public List<DockerCommand> getCommands() {
+        return commands;
     }
 
     /**
-     * Sets the docker command to execute.
+     * Sets the docker commands to execute.
+     * @param commands
+     * @return
+     */
+    public DockerExecuteAction setCommands(List<DockerCommand> commands) {
+        this.commands = commands;
+        return this;
+    }
+
+    /**
+     * Adds docker command to execute.
+     * @param command
+     * @return
+     */
+    public DockerExecuteAction addCommand(DockerCommand command) {
+        this.commands.add(command);
+        return this;
+    }
+
+    /**
+     * Sets single docker command to execute.
      * @param command
      * @return
      */
     public DockerExecuteAction setCommand(DockerCommand command) {
-        this.command = command;
-        return this;
+        return addCommand(command);
     }
 
     /**

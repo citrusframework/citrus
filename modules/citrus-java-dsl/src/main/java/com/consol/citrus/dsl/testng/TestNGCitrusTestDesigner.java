@@ -477,6 +477,11 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
+    public DockerActionBuilder docker() {
+        return testDesigner.docker();
+    }
+
+    @Override
     public TemplateBuilder applyTemplate(String name) {
         return testDesigner.applyTemplate(name);
     }

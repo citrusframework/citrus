@@ -435,6 +435,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public DockerActionBuilder docker() {
+        return testDesigner.docker();
+    }
+
+    @Override
     public TemplateBuilder applyTemplate(String name) {
         return testDesigner.applyTemplate(name);
     }

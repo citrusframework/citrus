@@ -648,6 +648,13 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public DockerActionBuilder docker() {
+        DockerActionBuilder builder = new DockerActionBuilder();
+        action(builder);
+        return builder;
+    }
+
+    @Override
     public TemplateBuilder applyTemplate(String name) {
         Template template = new Template();
         template.setName(name);
