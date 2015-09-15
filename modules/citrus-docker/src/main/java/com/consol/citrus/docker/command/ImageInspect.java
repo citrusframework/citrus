@@ -41,7 +41,7 @@ public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        InspectImageCmd command = dockerClient.inspectImageCmd(context.replaceDynamicContentInString(getImageId()));
+        InspectImageCmd command = dockerClient.inspectImageCmd(getImageId(context));
         InspectImageResponse response = command.exec();
 
         setCommandResult(response);

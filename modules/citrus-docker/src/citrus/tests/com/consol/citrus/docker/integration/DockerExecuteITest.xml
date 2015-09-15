@@ -23,6 +23,7 @@
 
     <variables>
       <variable name="imageId" value="hello-world"></variable>
+      <variable name="containerId" value="citrus_hello"></variable>
     </variables>
 
     <actions>
@@ -30,26 +31,28 @@
         <message>Pull docker image '${imageId}'</message>
       </echo>
 
-      <docker:pull image="${imageId}"/>
+      <docker:pull image="${imageId}"
+                   tag="latest"/>
 
       <echo>
         <message>Create container from docker image '${imageId}'</message>
       </echo>
 
-      <docker:create image="${imageId}"/>
+      <docker:create image="${imageId}"
+                     name="${containerId}"/>
 
       <echo>
-        <message>Starting docker container '${DOCKER_CONTAINER_NAME}'</message>
+        <message>Starting docker container '${containerId}'</message>
       </echo>
 
-      <docker:start container="${DOCKER_CONTAINER_NAME}"/>
-      <docker:inspect container="${DOCKER_CONTAINER_NAME}"/>
+      <docker:start container="${containerId}"/>
+      <docker:inspect container="${containerId}"/>
 
       <echo>
-        <message>Removing docker container '${DOCKER_CONTAINER_NAME}'</message>
+        <message>Removing docker container '${containerId}'</message>
       </echo>
 
-      <docker:remove container="${DOCKER_CONTAINER_NAME}"/>
+      <docker:remove container="${containerId}"/>
 
     </actions>
   </testcase>

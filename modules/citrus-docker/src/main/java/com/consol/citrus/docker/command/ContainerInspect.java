@@ -41,7 +41,7 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        InspectContainerCmd command = dockerClient.inspectContainerCmd(context.replaceDynamicContentInString(getContainerId()));
+        InspectContainerCmd command = dockerClient.inspectContainerCmd(getContainerId(context));
         InspectContainerResponse response = command.exec();
 
         setCommandResult(response);

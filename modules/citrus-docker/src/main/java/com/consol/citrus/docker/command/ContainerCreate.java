@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.*;
@@ -41,75 +42,75 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        CreateContainerCmd command = dockerClient.createContainerCmd(context.replaceDynamicContentInString(getImageId()));
+        CreateContainerCmd command = dockerClient.createContainerCmd(getImageId(context));
 
         if (hasParameter("name")) {
-            command.withName(getParameter("name"));
+            command.withName(getParameter("name", context));
         }
 
         if (hasParameter("attach-stderr")) {
-            command.withAttachStderr(Boolean.valueOf(getParameter("attach-stderr")));
+            command.withAttachStderr(Boolean.valueOf(getParameter("attach-stderr", context)));
         }
 
         if (hasParameter("attach-stdin")) {
-            command.withAttachStdin(Boolean.valueOf(getParameter("attach-stdin")));
+            command.withAttachStdin(Boolean.valueOf(getParameter("attach-stdin", context)));
         }
 
         if (hasParameter("attach-stdout")) {
-            command.withAttachStdout(Boolean.valueOf(getParameter("attach-stdout")));
+            command.withAttachStdout(Boolean.valueOf(getParameter("attach-stdout", context)));
         }
 
         if (hasParameter("capability-add")) {
-            command.withCapAdd(getCapabilities("capability-add"));
+            command.withCapAdd(getCapabilities("capability-add", context));
         }
 
         if (hasParameter("capability-drop")) {
-            command.withCapDrop(getCapabilities("capability-drop"));
+            command.withCapDrop(getCapabilities("capability-drop", context));
         }
 
         if (hasParameter("domain-name")) {
-            command.withDomainName(getParameter("domain-name"));
+            command.withDomainName(getParameter("domain-name", context));
         }
 
         if (hasParameter("cmd")) {
-            command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd"), DELIMITER));
+            command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd", context), DELIMITER));
         }
 
         if (hasParameter("env")) {
-            command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env"), DELIMITER));
+            command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env", context), DELIMITER));
         }
 
         if (hasParameter("entrypoint")) {
-            command.withEntrypoint(getParameter("entrypoint"));
+            command.withEntrypoint(getParameter("entrypoint", context));
         }
 
         if (hasParameter("hostname")) {
-            command.withHostName(getParameter("hostname"));
+            command.withHostName(getParameter("hostname", context));
         }
 
         if (hasParameter("port-specs")) {
-            command.withPortSpecs(StringUtils.delimitedListToStringArray(getParameter("port-specs"), DELIMITER));
+            command.withPortSpecs(StringUtils.delimitedListToStringArray(getParameter("port-specs", context), DELIMITER));
         }
 
         if (hasParameter("exposed-ports")) {
-            command.withExposedPorts(getExposedPorts());
+            command.withExposedPorts(getExposedPorts(context));
         }
 
         if (hasParameter("volumes")) {
-            command.withVolumes(getVolumes());
+            command.withVolumes(getVolumes(context));
         }
 
         if (hasParameter("working-dir")) {
-            command.withWorkingDir(getParameter("working-dir"));
+            command.withWorkingDir(getParameter("working-dir", context));
         }
 
         CreateContainerResponse response = command.exec();
-        context.setVariable("DOCKER_CONTAINER_ID", response.getId());
+        context.setVariable(DockerMessageHeaders.CONTAINER_ID, response.getId());
 
         if (!hasParameter("name")) {
             InspectContainerCmd inspect = dockerClient.inspectContainerCmd(response.getId());
             InspectContainerResponse inspectResponse = inspect.exec();
-            context.setVariable("DOCKER_CONTAINER_NAME", inspectResponse.getName().substring(1));
+            context.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
         }
 
         setCommandResult(true);
@@ -119,8 +120,8 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
      * Gets the volume specs from comma delimited string.
      * @return
      */
-    private Volume[] getVolumes() {
-        String[] volumes = StringUtils.commaDelimitedListToStringArray(getParameter("volumes"));
+    private Volume[] getVolumes(TestContext context) {
+        String[] volumes = StringUtils.commaDelimitedListToStringArray(getParameter("volumes", context));
         Volume[] volumeSpecs = new Volume[volumes.length];
 
         for (int i = 0; i < volumes.length; i++) {
@@ -134,8 +135,8 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
      * Gets the capabilities added.
      * @return
      */
-    private Capability[] getCapabilities(String addDrop) {
-        String[] capabilities = StringUtils.commaDelimitedListToStringArray(getParameter(addDrop));
+    private Capability[] getCapabilities(String addDrop, TestContext context) {
+        String[] capabilities = StringUtils.commaDelimitedListToStringArray(getParameter(addDrop, context));
         Capability[] capAdd = new Capability[capabilities.length];
 
         for (int i = 0; i < capabilities.length; i++) {
@@ -149,8 +150,8 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
      * Construct set of exposed ports from comma delimited list of ports.
      * @return
      */
-    private ExposedPort[] getExposedPorts() {
-        String[] ports = StringUtils.commaDelimitedListToStringArray(getParameter("exposed-ports"));
+    private ExposedPort[] getExposedPorts(TestContext context) {
+        String[] ports = StringUtils.commaDelimitedListToStringArray(getParameter("exposed-ports", context));
         ExposedPort[] exposedPorts = new ExposedPort[ports.length];
 
         for (int i = 0; i < ports.length; i++) {

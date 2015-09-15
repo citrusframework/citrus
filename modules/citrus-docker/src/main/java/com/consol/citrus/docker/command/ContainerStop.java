@@ -37,7 +37,7 @@ public class ContainerStop extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        StopContainerCmd command = dockerClient.stopContainerCmd(context.replaceDynamicContentInString(getContainerId()));
+        StopContainerCmd command = dockerClient.stopContainerCmd(getContainerId(context));
         command.exec();
 
         setCommandResult(true);

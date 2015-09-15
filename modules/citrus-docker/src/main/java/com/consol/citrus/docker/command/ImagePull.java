@@ -36,19 +36,19 @@ public class ImagePull extends AbstractDockerCommand<String> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        PullImageCmd command = dockerClient.pullImageCmd(context.replaceDynamicContentInString(getImageId()));
+        PullImageCmd command = dockerClient.pullImageCmd(getImageId(context));
         PullImageResultCallback imageResult = new PullImageResultCallback();
 
         if (hasParameter("registry")) {
-            command.withRegistry(getParameter("registry"));
+            command.withRegistry(getParameter("registry", context));
         }
 
         if (hasParameter("repository")) {
-            command.withRepository(getParameter("repository"));
+            command.withRepository(getParameter("repository", context));
         }
 
         if (hasParameter("tag")) {
-            command.withTag(getParameter("tag"));
+            command.withTag(getParameter("tag", context));
         }
 
         command.exec(imageResult);

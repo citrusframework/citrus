@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.docker.command;
+package com.consol.citrus.docker.message;
 
-import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.StartContainerCmd;
+import com.consol.citrus.message.MessageHeaders;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ContainerStart extends AbstractDockerCommand<Boolean> {
+public class DockerMessageHeaders {
 
     /**
-     * Default constructor initializing the command name.
+     * Prevent instantiation.
      */
-    public ContainerStart() {
-        super("docker:start");
-
-        setCommandResult(false);
+    private DockerMessageHeaders() {
     }
 
-    @Override
-    public void execute(DockerClient dockerClient, TestContext context) {
-        StartContainerCmd command = dockerClient.startContainerCmd(getContainerId(context));
-        command.exec();
+    public static final String DOCKER_PREFIX = MessageHeaders.PREFIX + "docker_";
 
-        setCommandResult(true);
-    }
+    public static final String IMAGE_ID = DOCKER_PREFIX + "imageId";
+    public static final String CONTAINER_ID = DOCKER_PREFIX + "containerId";
+    public static final String CONTAINER_NAME = DOCKER_PREFIX + "containerName";
 }

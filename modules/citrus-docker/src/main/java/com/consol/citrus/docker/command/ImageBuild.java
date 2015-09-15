@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.github.dockerjava.api.DockerClient;
@@ -43,12 +44,12 @@ public class ImageBuild extends AbstractDockerCommand<String> {
         BuildImageCmd command = dockerClient.buildImageCmd();
 
         if (hasParameter("no-cache")) {
-            command.withNoCache(Boolean.valueOf(getParameter("no-cache")));
+            command.withNoCache(Boolean.valueOf(getParameter("no-cache", context)));
         }
 
         if (hasParameter("basedir")) {
             try {
-                command.withBaseDirectory(FileUtils.getFileResource(getParameter("basedir"), context).getFile());
+                command.withBaseDirectory(FileUtils.getFileResource(getParameter("basedir", context), context).getFile());
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to access Dockerfile base directory", e);
             }
@@ -56,22 +57,22 @@ public class ImageBuild extends AbstractDockerCommand<String> {
 
         if (hasParameter("dockerfile")) {
             try {
-                command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile"), context).getFile());
+                command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", context), context).getFile());
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read Dockerfile", e);
             }
         }
 
         if (hasParameter("quiet")) {
-            command.withNoCache(Boolean.valueOf(getParameter("quiet")));
+            command.withNoCache(Boolean.valueOf(getParameter("quiet", context)));
         }
 
         if (hasParameter("remove")) {
-            command.withRemove(Boolean.valueOf(getParameter("remove")));
+            command.withRemove(Boolean.valueOf(getParameter("remove", context)));
         }
 
         if (hasParameter("tag")) {
-            command.withTag(getParameter("tag"));
+            command.withTag(getParameter("tag", context));
         }
 
         BuildImageResultCallback imageResult = new BuildImageResultCallback();
@@ -79,6 +80,6 @@ public class ImageBuild extends AbstractDockerCommand<String> {
         String imageId = imageResult.awaitImageId();
 
         setCommandResult(imageId);
-        context.setVariable("DOCKER_IMAGE_ID", imageId);
+        context.setVariable(DockerMessageHeaders.IMAGE_ID, imageId);
     }
 }
