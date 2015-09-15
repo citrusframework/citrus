@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.docker;
+package com.consol.citrus.docker.command;
+
+import com.consol.citrus.context.TestContext;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.PingCmd;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public enum DockerCommand {
-    /** General */
-    INFO,
-    PING,
-    VERSION,
+public class Ping extends AbstractDockerCommand<Boolean> {
 
-    /** Images */
-    IMAGE_PULL,
-    IMAGE_BUILD,
-    IMAGE_REMOVE,
-    IMAGE_CREATE,
-    IMAGE_LIST,
-    IMAGE_INSPECT,
+    /**
+     * Default constructor initializing the command name.
+     */
+    public Ping() {
+        super("docker:ping");
 
-    /** Container */
-    CONTAINER_START,
-    CONTAINER_STOP,
-    CONTAINER_CREATE,
-    CONTAINER_REMOVE,
-    CONTAINER_LIST,
-    CONTAINER_INSPECT
+        setCommandResult(false);
+    }
+
+    @Override
+    public void execute(DockerClient dockerClient, TestContext context) {
+        PingCmd command = dockerClient.pingCmd();
+        command.exec();
+
+        setCommandResult(true);
+    }
 }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.docker.config.handler;
 
+import com.consol.citrus.docker.command.*;
 import com.consol.citrus.docker.config.xml.DockerExecuteActionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
@@ -26,6 +27,15 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusDockerTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("execute", new DockerExecuteActionParser());
+        registerBeanDefinitionParser("info", new DockerExecuteActionParser(new Info()));
+        registerBeanDefinitionParser("ping", new DockerExecuteActionParser(new Ping()));
+        registerBeanDefinitionParser("version", new DockerExecuteActionParser(new Version()));
+        registerBeanDefinitionParser("build", new DockerExecuteActionParser(new ImageBuild()));
+        registerBeanDefinitionParser("pull", new DockerExecuteActionParser(new ImagePull()));
+        registerBeanDefinitionParser("inspect", new DockerExecuteActionParser(new ImageInspect(), new ContainerInspect()));
+        registerBeanDefinitionParser("remove", new DockerExecuteActionParser(new ImageRemove(), new ContainerRemove()));
+        registerBeanDefinitionParser("start", new DockerExecuteActionParser(new ContainerStart()));
+        registerBeanDefinitionParser("stop", new DockerExecuteActionParser(new ContainerStop()));
+        registerBeanDefinitionParser("create", new DockerExecuteActionParser(new ContainerCreate()));
     }
 }

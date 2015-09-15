@@ -30,26 +30,26 @@
         <message>Pull docker image '${imageId}'</message>
       </echo>
 
-      <docker:execute command="IMAGE_PULL" image="${imageId}"/>
+      <docker:pull image="${imageId}"/>
 
       <echo>
         <message>Create container from docker image '${imageId}'</message>
       </echo>
 
-      <docker:execute command="CONTAINER_CREATE" image="${imageId}"/>
+      <docker:create image="${imageId}"/>
 
       <echo>
         <message>Starting docker container '${DOCKER_CONTAINER_NAME}'</message>
       </echo>
 
-      <docker:execute command="CONTAINER_START" container="${DOCKER_CONTAINER_NAME}"/>
-      <docker:execute command="CONTAINER_INSPECT" container="${DOCKER_CONTAINER_NAME}"/>
+      <docker:start container="${DOCKER_CONTAINER_NAME}"/>
+      <docker:inspect container="${DOCKER_CONTAINER_NAME}"/>
 
       <echo>
         <message>Removing docker container '${DOCKER_CONTAINER_NAME}'</message>
       </echo>
 
-      <docker:execute command="CONTAINER_REMOVE" container="${DOCKER_CONTAINER_NAME}"/>
+      <docker:remove container="${DOCKER_CONTAINER_NAME}"/>
 
     </actions>
   </testcase>
