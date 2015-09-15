@@ -17,15 +17,16 @@
 package com.consol.citrus.docker.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.testng.annotations.Test;
 
 /**
+ * Only execute integration tests if Docker is available on host system.
+ *
  * @author Christoph Deppisch
  * @since 2.3.1
  */
 @Test
-public class DockerExecuteITest extends AbstractTestNGCitrusTest {
+public class DockerExecuteITest extends AbstractDockerITest {
 
     @CitrusXmlTest(name = "DockerExecuteITest")
     public void dockerInfoTest() {}
