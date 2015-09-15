@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 
 import java.util.Map;
 
@@ -44,6 +45,8 @@ public class CamelEndpointComponent extends AbstractEndpointComponent {
                 endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean(CamelContext.class));
             } else if (context.getApplicationContext().containsBean("camelContext")) {
                 endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean("camelContext", CamelContext.class));
+            } else {
+                endpoint.getEndpointConfiguration().setCamelContext(new DefaultCamelContext());
             }
         }
 
