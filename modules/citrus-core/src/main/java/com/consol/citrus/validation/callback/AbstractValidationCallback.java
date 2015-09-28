@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.callback;
 
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.callback.ValidationCallback;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
@@ -28,7 +27,7 @@ import java.util.Map;
  *  
  * @author Christoph Deppisch
  */
-public abstract class AbstractValidationCallback implements ValidationCallback {
+public abstract class AbstractValidationCallback<T> implements ValidationCallback {
 
     /** Spring application context injected before validation callback is called */
     protected ApplicationContext applicationContext;
@@ -36,8 +35,8 @@ public abstract class AbstractValidationCallback implements ValidationCallback {
     /**
      * Validate message automatically unmarshalling message payload.
      */
-    public final void validate(Message message) {
-        validate(message.getPayload(), message.copyHeaders());
+    public void validate(Message message) {
+        validate((T) message.getPayload(), message.copyHeaders());
     }
     
     /**
@@ -45,7 +44,7 @@ public abstract class AbstractValidationCallback implements ValidationCallback {
      * @param payload the message payload object.
      * @param headers the message headers
      */
-    public abstract void validate(Object payload, Map<String, Object> headers);
+    public abstract void validate(T payload, Map<String, Object> headers);
     
     /**
      * Sets the applicationContext.

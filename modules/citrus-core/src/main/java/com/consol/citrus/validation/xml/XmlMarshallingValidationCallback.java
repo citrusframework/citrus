@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.callback.ValidationCallback;
-import org.springframework.context.ApplicationContext;
+import com.consol.citrus.validation.callback.AbstractValidationCallback;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringSource;
@@ -30,7 +29,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Validation callback automatically unmarshalling message payload so we work with
@@ -38,41 +36,31 @@ import java.util.Map;
  *  
  * @author Christoph Deppisch
  */
-public abstract class MarshallingValidationCallback<T> implements ValidationCallback {
+public abstract class XmlMarshallingValidationCallback<T> extends AbstractValidationCallback<T> {
 
     /** Unmarshaller */
     private Unmarshaller unmarshaller;
     
-    /** Spring application context injected before validation callback is called */
-    private ApplicationContext applicationContext;
-    
     /**
      * Default constructor.
      */
-    public MarshallingValidationCallback() {
+    public XmlMarshallingValidationCallback() {
         super();
     }
     
     /**
      * Default constructor with unmarshaller.
      */
-    public MarshallingValidationCallback(Unmarshaller unmarshaller) {
+    public XmlMarshallingValidationCallback(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
     
     /**
      * Validate message automatically unmarshalling message payload.
      */
-    public final void validate(Message message) {
+    public void validate(Message message) {
         validate(unmarshalMessage(message), message.copyHeaders());
     }
-    
-    /**
-     * Subclasses must override this method for validation.
-     * @param message marshalled message payload object.
-     * @param headers message headers
-     */
-    public abstract void validate(T message, Map<String, Object> headers);
     
     @SuppressWarnings("unchecked")
     private T unmarshalMessage(Message message) {
@@ -113,13 +101,5 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
         }
         
         return source;
-    }
-    
-    /**
-     * Sets the applicationContext.
-     * @param applicationContext the applicationContext to set
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 }

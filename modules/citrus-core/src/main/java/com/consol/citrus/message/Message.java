@@ -45,7 +45,7 @@ public interface Message extends Serializable {
      * @param headerValue
      * @return
      */
-    DefaultMessage setHeader(String headerName, Object headerValue);
+    Message setHeader(String headerName, Object headerValue);
 
     /**
      * Removes the message header if it not a reserved message header such as unique message id.
@@ -59,7 +59,7 @@ public interface Message extends Serializable {
      * @param headerData
      * @return
      */
-    DefaultMessage addHeaderData(String headerData);
+    Message addHeaderData(String headerData);
 
     /**
      * Gets the list of header data in this message.
