@@ -27,7 +27,7 @@ import java.util.Map;
  * Action executes docker commands.
  * 
  * @author Christoph Deppisch
- * @since 2.3.1
+ * @since 2.4
  */
 public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecuteAction> {
 

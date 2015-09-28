@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
- * @since 2.3.1
+ * @since 2.4
  */
 public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
 

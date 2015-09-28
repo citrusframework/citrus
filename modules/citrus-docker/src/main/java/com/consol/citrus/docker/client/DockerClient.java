@@ -24,7 +24,7 @@ import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
  * Docker client uses Java docker client implementation for executing docker commands.
  *
  * @author Christoph Deppisch
- * @since 2.3.1
+ * @since 2.4
  */
 public class DockerClient {
 

@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Bean definition parser for docker client instance.
  * 
  * @author Christoph Deppisch
- * @since 2.3.1
+ * @since 2.4
  */
 public class DockerClientParser implements BeanDefinitionParser {
 

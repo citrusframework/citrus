@@ -39,7 +39,7 @@ import java.util.*;
  * a list of endpoint objects or a list of endpoint names that are resolved dynamically at runtime.
  * 
  * @author Christoph Deppisch
- * @since 2.3.1
+ * @since 2.4
  */
 public class PurgeEndpointAction extends AbstractTestAction implements BeanFactoryAware {
     /** List of endpoint names to be purged */

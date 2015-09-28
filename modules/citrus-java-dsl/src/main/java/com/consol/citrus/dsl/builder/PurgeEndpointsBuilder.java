@@ -28,7 +28,7 @@ import java.util.*;
  * list of endpoint objects or a list of endpoint names that are resolved dynamically at runtime.
  * 
  * @author Christoph Deppisch
- * @since 2.3.1
+ * @since 2.4
  */
 public class PurgeEndpointsBuilder extends AbstractTestActionBuilder<PurgeEndpointAction> {
 
