@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.builder;
+package com.consol.citrus.dsl.endpoint.builder;
 
 import com.consol.citrus.dsl.design.ExecutableTestDesignerComponent;
 import com.consol.citrus.message.MessageType;

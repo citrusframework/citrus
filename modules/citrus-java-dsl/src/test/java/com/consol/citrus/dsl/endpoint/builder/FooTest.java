@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.builder;
+package com.consol.citrus.dsl.endpoint.builder;
 
 import com.consol.citrus.dsl.design.ExecutableTestDesignerComponent;
 import com.consol.citrus.message.MessageType;
 import org.springframework.stereotype.Component;
 
-@Component("FooBarTest")
-public class FooBarTest extends ExecutableTestDesignerComponent {
+@Component("FooTest")
+public class FooTest extends ExecutableTestDesignerComponent {
 
     @Override
     public void configure() {
         receive("inboundChannelEndpoint")
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<FooBarTest></FooBarTest>");
+                .payload("<Test name=\"FooTest\"></Test>");
 
         send("inboundChannelEndpoint")
-                .payload("<FooBarTest>OK</FooBarTest>");
+                .payload("<Test name=\"FooTest\">OK</Test>");
 
-        echo("FooBar Test OK!");
+        echo("Foo Test OK!");
     }
 }

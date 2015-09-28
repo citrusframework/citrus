@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint;
+package com.consol.citrus.dsl.endpoint;
 
-import com.consol.citrus.dsl.endpoint.TestExecutingEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
@@ -38,7 +37,7 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void loadContext() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:com/consol/citrus/endpoint/TestExecutingEndpointAdapterTest-context.xml"}, applicationContext);
+        ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:com/consol/citrus/dsl/endpoint/TestExecutingEndpointAdapterTest-context.xml"}, applicationContext);
         endpointAdapter = ctx.getBean(TestExecutingEndpointAdapter.class);
     }
 
