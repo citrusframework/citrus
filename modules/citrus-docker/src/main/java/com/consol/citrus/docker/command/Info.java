@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class Info extends AbstractDockerCommand<com.github.dockerjava.api.model.
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        setCommandResult(dockerClient.infoCmd().exec());
+        setCommandResult(dockerClient.getDockerClient().infoCmd().exec());
         log.info(getCommandResult().toString());
     }
 }

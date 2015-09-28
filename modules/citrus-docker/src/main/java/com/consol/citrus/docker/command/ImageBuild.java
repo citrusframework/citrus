@@ -17,10 +17,10 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 
@@ -41,7 +41,7 @@ public class ImageBuild extends AbstractDockerCommand<String> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        BuildImageCmd command = dockerClient.buildImageCmd();
+        BuildImageCmd command = dockerClient.getDockerClient().buildImageCmd();
 
         if (hasParameter("no-cache")) {
             command.withNoCache(Boolean.valueOf(getParameter("no-cache", context)));

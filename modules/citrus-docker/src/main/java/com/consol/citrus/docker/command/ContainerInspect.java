@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerCmd;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        InspectContainerCmd command = dockerClient.inspectContainerCmd(getContainerId(context));
+        InspectContainerCmd command = dockerClient.getDockerClient().inspectContainerCmd(getContainerId(context));
         InspectContainerResponse response = command.exec();
 
         setCommandResult(response);

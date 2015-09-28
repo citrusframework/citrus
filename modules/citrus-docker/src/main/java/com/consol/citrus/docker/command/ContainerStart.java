@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.StartContainerCmd;
 
 /**
@@ -37,7 +37,7 @@ public class ContainerStart extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        StartContainerCmd command = dockerClient.startContainerCmd(getContainerId(context));
+        StartContainerCmd command = dockerClient.getDockerClient().startContainerCmd(getContainerId(context));
         command.exec();
 
         setCommandResult(true);

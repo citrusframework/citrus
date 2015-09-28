@@ -18,16 +18,16 @@ package com.consol.citrus.docker.actions;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.DockerCommand;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Executes docker command with given docker client implementation. Possible command result is stored within command object.
@@ -37,11 +37,10 @@ import java.util.*;
  */
 public class DockerExecuteAction extends AbstractTestAction {
 
+    @Autowired(required = false)
+    @Qualifier("dockerClient")
     /** Docker client instance  */
-    private DockerClient dockerClient;
-
-    /** Docker client configuration */
-    private DockerClientConfig dockerClientConfig;
+    private DockerClient dockerClient = new DockerClient();
 
     /** Docker command to execute */
     private List<DockerCommand> commands = new ArrayList<>();
@@ -61,21 +60,12 @@ public class DockerExecuteAction extends AbstractTestAction {
         try {
             for (DockerCommand command : commands) {
                 log.info(String.format("Executing Docker command '%s", command.getName()));
-                command.execute(getDockerClient(), context);
+                command.execute(dockerClient, context);
                 log.info(String.format("Successfully executed Docker command '%s", command.getName()));
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException("Unable to perform docker command", e);
         }
-    }
-
-    /**
-     * Creates new Docker client instance with configuration.
-     * @return
-     */
-    private DockerClient createDockerClient() {
-        return DockerClientImpl.getInstance(getDockerClientConfig())
-                .withDockerCmdExecFactory(new DockerCmdExecFactoryImpl());
     }
 
     /**
@@ -120,10 +110,6 @@ public class DockerExecuteAction extends AbstractTestAction {
      * @return
      */
     public DockerClient getDockerClient() {
-        if (dockerClient == null) {
-            dockerClient = createDockerClient();
-        }
-
         return dockerClient;
     }
 
@@ -136,20 +122,4 @@ public class DockerExecuteAction extends AbstractTestAction {
         return this;
     }
 
-    /**
-     * Gets the docker client configuration.
-     * @return
-     */
-    public DockerClientConfig getDockerClientConfig() {
-        if (dockerClientConfig == null) {
-            dockerClientConfig = DockerClientConfig.createDefaultConfigBuilder().build();
-        }
-
-        return dockerClientConfig;
-    }
-
-    public DockerExecuteAction setDockerClientConfig(DockerClientConfig dockerClientConfig) {
-        this.dockerClientConfig = dockerClientConfig;
-        return this;
-    }
 }

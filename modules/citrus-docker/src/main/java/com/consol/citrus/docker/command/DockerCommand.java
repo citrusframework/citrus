@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 
 import java.util.Map;
 

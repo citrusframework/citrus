@@ -16,6 +16,7 @@
 
 package com.consol.citrus.docker.config.handler;
 
+import com.consol.citrus.docker.config.xml.DockerClientParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -26,5 +27,6 @@ public class CitrusDockerConfigNamespaceHandler extends NamespaceHandlerSupport 
 
     @Override
     public void init() {
+        registerBeanDefinitionParser("client", new DockerClientParser());
     }
 }

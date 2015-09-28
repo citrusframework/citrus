@@ -20,4 +20,21 @@
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
+  <xs:element name="client">
+    <xs:annotation>
+      <xs:documentation>Docker Http client component able to execute docker commands such as inspect, start, stop.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="url" type="xs:string"/>
+      <xs:attribute name="version" type="xs:string"/>
+      <xs:attribute name="username" type="xs:string"/>
+      <xs:attribute name="password" type="xs:string"/>
+      <xs:attribute name="email" type="xs:string"/>
+      <xs:attribute name="server-address" type="xs:string"/>
+      <xs:attribute name="cert-path" type="xs:string"/>
+      <xs:attribute name="config-path" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
 </xs:schema>

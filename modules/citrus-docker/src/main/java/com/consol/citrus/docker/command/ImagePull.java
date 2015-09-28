@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.PullImageCmd;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 
@@ -38,7 +38,7 @@ public class ImagePull extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        PullImageCmd command = dockerClient.pullImageCmd(getImageId(context));
+        PullImageCmd command = dockerClient.getDockerClient().pullImageCmd(getImageId(context));
         PullImageResultCallback imageResult = new PullImageResultCallback();
 
         if (hasParameter("registry")) {

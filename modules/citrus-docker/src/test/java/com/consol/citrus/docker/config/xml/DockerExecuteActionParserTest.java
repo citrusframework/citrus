@@ -17,10 +17,9 @@
 package com.consol.citrus.docker.config.xml;
 
 import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.*;
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DockerClientImpl;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,7 +34,7 @@ public class DockerExecuteActionParserTest extends AbstractActionParserTest<Dock
         DockerExecuteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommands().get(0));
         Assert.assertEquals(action.getCommands().get(0).getClass(), Info.class);
-        Assert.assertEquals(action.getDockerClient().getClass(), DockerClientImpl.class);
+        Assert.assertEquals(action.getDockerClient().getClass(), DockerClient.class);
         Assert.assertEquals(action.getCommands().get(0).getParameters().size(), 0);
 
         action = getNextTestActionFromTest();

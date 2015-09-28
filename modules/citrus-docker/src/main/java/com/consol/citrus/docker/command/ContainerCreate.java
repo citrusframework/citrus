@@ -17,8 +17,8 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
-import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.*;
 import org.springframework.util.StringUtils;
@@ -42,7 +42,7 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        CreateContainerCmd command = dockerClient.createContainerCmd(getImageId(context));
+        CreateContainerCmd command = dockerClient.getDockerClient().createContainerCmd(getImageId(context));
 
         if (hasParameter("name")) {
             command.withName(getParameter("name", context));
@@ -108,7 +108,7 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
         context.setVariable(DockerMessageHeaders.CONTAINER_ID, response.getId());
 
         if (!hasParameter("name")) {
-            InspectContainerCmd inspect = dockerClient.inspectContainerCmd(response.getId());
+            InspectContainerCmd inspect = dockerClient.getDockerClient().inspectContainerCmd(response.getId());
             InspectContainerResponse inspectResponse = inspect.exec();
             context.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
         }

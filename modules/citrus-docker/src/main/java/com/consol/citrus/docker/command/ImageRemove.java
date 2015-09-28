@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.RemoveImageCmd;
 
 /**
@@ -37,7 +37,7 @@ public class ImageRemove extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        RemoveImageCmd command = dockerClient.removeImageCmd(getImageId(context));
+        RemoveImageCmd command = dockerClient.getDockerClient().removeImageCmd(getImageId(context));
 
         if (hasParameter("force")) {
             command.withForce(Boolean.valueOf(getParameter("force", context)));

@@ -56,7 +56,7 @@
     </testcase>
     
     <spring:bean id="myDockerClient" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.github.dockerjava.api.DockerClient"/>
+        <spring:constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
     </spring:bean>
     
 </spring:beans>

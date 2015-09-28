@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.VersionCmd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class Version extends AbstractDockerCommand<com.github.dockerjava.api.mod
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        VersionCmd command = dockerClient.versionCmd();
+        VersionCmd command = dockerClient.getDockerClient().versionCmd();
         setCommandResult(command.exec());
 
         log.info(getCommandResult().toString());

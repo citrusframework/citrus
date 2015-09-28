@@ -48,6 +48,8 @@
       <docker:start container="${containerId}"/>
       <docker:inspect container="${containerId}"/>
 
+      <sleep milliseconds="300"/>
+
       <echo>
         <message>Removing docker container '${containerId}'</message>
       </echo>

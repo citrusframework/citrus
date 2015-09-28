@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.PingCmd;
 
 /**
@@ -37,7 +37,7 @@ public class Ping extends AbstractDockerCommand<Boolean> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        PingCmd command = dockerClient.pingCmd();
+        PingCmd command = dockerClient.getDockerClient().pingCmd();
         command.exec();
 
         setCommandResult(true);

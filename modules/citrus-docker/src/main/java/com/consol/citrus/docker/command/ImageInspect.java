@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.github.dockerjava.api.DockerClient;
+import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.InspectImageCmd;
 import com.github.dockerjava.api.command.InspectImageResponse;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        InspectImageCmd command = dockerClient.inspectImageCmd(getImageId(context));
+        InspectImageCmd command = dockerClient.getDockerClient().inspectImageCmd(getImageId(context));
         InspectImageResponse response = command.exec();
 
         setCommandResult(response);
