@@ -25,6 +25,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -91,8 +92,13 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
                 command.getParameters().put(attribute.getNodeName(), attribute.getNodeValue());
             }
         }
-        beanDefinition.addPropertyValue("command", command);
 
+        Element expectCmdResult = DomUtils.getChildElementByTagName(element, "expect");
+        if (expectCmdResult != null) {
+            command.setExpectedCommandResult(DomUtils.getTextValue(DomUtils.getChildElementByTagName(expectCmdResult, "result")));
+        }
+
+        beanDefinition.addPropertyValue("command", command);
         return beanDefinition.getBeanDefinition();
     }
 }

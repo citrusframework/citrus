@@ -19,12 +19,13 @@ package com.consol.citrus.docker.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.RemoveImageCmd;
+import com.github.dockerjava.api.model.ResponseItem;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ImageRemove extends AbstractDockerCommand<Boolean> {
+public class ImageRemove extends AbstractDockerCommand<ResponseItem> {
 
     /**
      * Default constructor initializing the command name.
@@ -32,7 +33,7 @@ public class ImageRemove extends AbstractDockerCommand<Boolean> {
     public ImageRemove() {
         super("docker:image:remove");
 
-        setCommandResult(false);
+        setCommandResult(new ResponseItem());
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ImageRemove extends AbstractDockerCommand<Boolean> {
 
         command.exec();
 
-        setCommandResult(true);
+        setCommandResult(success());
     }
 
 }

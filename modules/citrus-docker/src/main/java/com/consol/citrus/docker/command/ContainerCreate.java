@@ -27,7 +27,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ContainerCreate extends AbstractDockerCommand<Boolean> {
+public class ContainerCreate extends AbstractDockerCommand<CreateContainerResponse> {
 
     public static final String DELIMITER = ";";
 
@@ -36,8 +36,6 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
      */
     public ContainerCreate() {
         super("docker:container:create");
-
-        setCommandResult(false);
     }
 
     @Override
@@ -106,14 +104,13 @@ public class ContainerCreate extends AbstractDockerCommand<Boolean> {
 
         CreateContainerResponse response = command.exec();
         context.setVariable(DockerMessageHeaders.CONTAINER_ID, response.getId());
+        setCommandResult(response);
 
         if (!hasParameter("name")) {
             InspectContainerCmd inspect = dockerClient.getDockerClient().inspectContainerCmd(response.getId());
             InspectContainerResponse inspectResponse = inspect.exec();
             context.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
         }
-
-        setCommandResult(true);
     }
 
     /**

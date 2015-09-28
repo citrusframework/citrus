@@ -19,27 +19,32 @@ package com.consol.citrus.docker.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.PullImageCmd;
+import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ImagePull extends AbstractDockerCommand<Boolean> {
+public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
 
     /**
      * Default constructor initializing the command name.
      */
     public ImagePull() {
         super("docker:pull");
-
-        setCommandResult(false);
     }
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        PullImageCmd command = dockerClient.getDockerClient().pullImageCmd(getImageId(context));
-        PullImageResultCallback imageResult = new PullImageResultCallback();
+        final PullImageCmd command = dockerClient.getDockerClient().pullImageCmd(getImageId(context));
+        PullImageResultCallback imageResult = new PullImageResultCallback() {
+            @Override
+            public void onNext(PullResponseItem item) {
+                setCommandResult(item);
+                super.onNext(item);
+            }
+        };
 
         if (hasParameter("registry")) {
             command.withRegistry(getParameter("registry", context));
@@ -56,7 +61,5 @@ public class ImagePull extends AbstractDockerCommand<Boolean> {
         command.exec(imageResult);
 
         imageResult.awaitSuccess();
-
-        setCommandResult(true);
     }
 }

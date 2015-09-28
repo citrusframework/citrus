@@ -19,20 +19,20 @@ package com.consol.citrus.docker.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.StopContainerCmd;
+import com.github.dockerjava.api.model.ResponseItem;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ContainerStop extends AbstractDockerCommand<Boolean> {
+public class ContainerStop extends AbstractDockerCommand<ResponseItem> {
 
     /**
      * Default constructor initializing the command name.
      */
     public ContainerStop() {
         super("docker:stop");
-
-        setCommandResult(false);
+        setCommandResult(new ResponseItem());
     }
 
     @Override
@@ -40,6 +40,6 @@ public class ContainerStop extends AbstractDockerCommand<Boolean> {
         StopContainerCmd command = dockerClient.getDockerClient().stopContainerCmd(getContainerId(context));
         command.exec();
 
-        setCommandResult(true);
+        setCommandResult(success());
     }
 }

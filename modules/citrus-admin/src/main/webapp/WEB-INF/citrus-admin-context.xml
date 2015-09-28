@@ -90,29 +90,26 @@
       <property name="objectMapper" ref="jacksonObjectMapper"/>
     </bean>
 
-    <bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
-
-    <bean id="jacksonSerializationConfig" class="org.codehaus.jackson.map.SerializationConfig"
-          factory-bean="jacksonObjectMapper" factory-method="getSerializationConfig" />
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
     <!-- Ensure null Objects/values are ignored and not shown in the produced
       json message -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-      <property name="targetObject" ref="jacksonSerializationConfig" />
+      <property name="targetObject" ref="jacksonObjectMapper" />
       <property name="targetMethod" value="setSerializationInclusion" />
       <property name="arguments">
         <list>
-          <value type="org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion">NON_NULL</value>
+          <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
         </list>
       </property>
     </bean>
 
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-      <property name="targetObject" ref="jacksonSerializationConfig" />
+      <property name="targetObject" ref="jacksonObjectMapper" />
       <property name="targetMethod" value="enable" />
       <property name="arguments">
         <list>
-          <value type="org.codehaus.jackson.map.SerializationConfig.Feature">INDENT_OUTPUT</value>
+          <value type="com.fasterxml.jackson.databind.SerializationFeature">INDENT_OUTPUT</value>
         </list>
       </property>
     </bean>

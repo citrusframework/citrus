@@ -17,12 +17,13 @@
 package com.consol.citrus.docker.actions;
 
 import com.consol.citrus.docker.command.*;
+import com.consol.citrus.docker.command.Info;
+import com.consol.citrus.docker.command.Version;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.*;
-import com.github.dockerjava.api.model.BuildResponseItem;
-import com.github.dockerjava.api.model.PullResponseItem;
+import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import org.easymock.EasyMock;
@@ -78,7 +79,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(((ResponseItem)action.getCommands().get(0).getCommandResult()).getStatus(), "success");
 
         verify(dockerClient, command);
     }
@@ -130,7 +131,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), response);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
 
         verify(dockerClient, command);
@@ -164,7 +165,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), response);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
 
@@ -240,7 +241,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(((ResponseItem)action.getCommands().get(0).getCommandResult()).getStatus(), "success");
 
         verify(dockerClient, command);
     }
@@ -264,7 +265,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(((ResponseItem)action.getCommands().get(0).getCommandResult()).getStatus(), "success");
 
         verify(dockerClient, command);
     }
@@ -288,7 +289,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(((ResponseItem)action.getCommands().get(0).getCommandResult()).getStatus(), "success");
 
         verify(dockerClient, command);
     }
@@ -312,7 +313,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(((ResponseItem)action.getCommands().get(0).getCommandResult()).getStatus(), "success");
 
         verify(dockerClient, command);
     }
@@ -350,7 +351,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), true);
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), responseItem);
 
         verify(dockerClient, command, responseItem);
     }
@@ -389,7 +390,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), "new_image");
+        Assert.assertEquals(action.getCommands().get(0).getCommandResult(), responseItem);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.IMAGE_ID), "new_image");
 
         verify(dockerClient, command, responseItem);

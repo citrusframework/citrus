@@ -19,12 +19,13 @@ package com.consol.citrus.docker.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.PingCmd;
+import com.github.dockerjava.api.model.ResponseItem;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class Ping extends AbstractDockerCommand<Boolean> {
+public class Ping extends AbstractDockerCommand<ResponseItem> {
 
     /**
      * Default constructor initializing the command name.
@@ -32,7 +33,7 @@ public class Ping extends AbstractDockerCommand<Boolean> {
     public Ping() {
         super("docker:ping");
 
-        setCommandResult(false);
+        setCommandResult(new ResponseItem());
     }
 
     @Override
@@ -40,6 +41,6 @@ public class Ping extends AbstractDockerCommand<Boolean> {
         PingCmd command = dockerClient.getDockerClient().pingCmd();
         command.exec();
 
-        setCommandResult(true);
+        setCommandResult(success());
     }
 }

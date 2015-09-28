@@ -29,6 +29,11 @@
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

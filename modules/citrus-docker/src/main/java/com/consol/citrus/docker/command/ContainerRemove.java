@@ -19,20 +19,20 @@ package com.consol.citrus.docker.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.RemoveContainerCmd;
+import com.github.dockerjava.api.model.ResponseItem;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ContainerRemove extends AbstractDockerCommand<Boolean> {
+public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
 
     /**
      * Default constructor initializing the command name.
      */
     public ContainerRemove() {
         super("docker:container:remove");
-
-        setCommandResult(false);
+        setCommandResult(new ResponseItem());
     }
 
     @Override
@@ -45,6 +45,6 @@ public class ContainerRemove extends AbstractDockerCommand<Boolean> {
 
         command.exec();
 
-        setCommandResult(true);
+        setCommandResult(success());
     }
 }

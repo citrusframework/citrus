@@ -51,4 +51,15 @@ public interface DockerCommand<R> {
      * @return
      */
     R getCommandResult();
+
+    /**
+     * Sets the expected command result.
+     */
+    void setExpectedCommandResult(String result);
+
+    /**
+     * Gets the expected command result.
+     * @return
+     */
+    String getExpectedCommandResult();
 }

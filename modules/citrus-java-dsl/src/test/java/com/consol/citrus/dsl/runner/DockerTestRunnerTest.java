@@ -78,7 +78,7 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
                 docker(new BuilderSupport<DockerActionBuilder>() {
                     @Override
                     public void configure(DockerActionBuilder builder) {
-                        builder.client(dockerClient)
+                        builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
                             .info()
                             .ping()
                             .version()

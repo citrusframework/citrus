@@ -30,6 +30,10 @@
       <xs:documentation>Executes info command on docker and print result to console</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -48,6 +52,10 @@
       <xs:documentation>Gets docker version and prints result to console</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -59,6 +67,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="tag" type="xs:string"/>
@@ -77,6 +86,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="image" type="xs:string" use="required"/>
@@ -93,6 +103,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="container" type="xs:string"/>
@@ -107,6 +118,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="container" type="xs:string"/>
@@ -122,6 +134,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="container" type="xs:string" use="required"/>
@@ -135,6 +148,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="container" type="xs:string" use="required"/>
@@ -148,6 +162,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="docker-client" type="xs:string"/>
       <xs:attribute name="image" type="xs:string" use="required"/>
@@ -169,4 +184,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:complexType name="ExpectCmdResultType">
+    <xs:annotation>
+      <xs:documentation>Expects and validates a command result</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="result" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>

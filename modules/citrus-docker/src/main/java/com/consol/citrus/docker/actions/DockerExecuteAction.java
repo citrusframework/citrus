@@ -21,10 +21,17 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.DockerCommand;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +52,14 @@ public class DockerExecuteAction extends AbstractTestAction {
     /** Docker command to execute */
     private List<DockerCommand> commands = new ArrayList<>();
 
+    @Autowired(required = false)
+    @Qualifier("dockerCommandResultMapper")
+    /** JSON data binding */
+    private ObjectMapper jsonMapper = new ObjectMapper();
+
+    @Autowired
+    private JsonTextMessageValidator jsonTextMessageValidator;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DockerExecuteAction.class);
 
@@ -61,10 +76,38 @@ public class DockerExecuteAction extends AbstractTestAction {
             for (DockerCommand command : commands) {
                 log.info(String.format("Executing Docker command '%s", command.getName()));
                 command.execute(dockerClient, context);
+
+                validateCommandResult(command, context);
+
                 log.info(String.format("Successfully executed Docker command '%s", command.getName()));
             }
+        } catch (CitrusRuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new CitrusRuntimeException("Unable to perform docker command", e);
+        }
+    }
+
+    /**
+     * Validate command results.
+     * @param command
+     * @param context
+     */
+    private void validateCommandResult(DockerCommand command, TestContext context) {
+        if (StringUtils.hasText(command.getExpectedCommandResult())) {
+            if (command.getCommandResult() == null) {
+                throw new ValidationException("Missing command result for validation");
+            }
+
+            try {
+                String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
+                JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+                validationContext.setControlMessage(new DefaultMessage(command.getExpectedCommandResult()));
+                jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), context, validationContext);
+                log.info("Validation of command result successful - all values OK!");
+            } catch (JsonProcessingException e) {
+                throw new CitrusRuntimeException(e);
+            }
         }
     }
 
@@ -122,4 +165,11 @@ public class DockerExecuteAction extends AbstractTestAction {
         return this;
     }
 
+    /**
+     * Sets the JSON object mapper.
+     * @param jsonMapper
+     */
+    public void setJsonMapper(ObjectMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
+    }
 }

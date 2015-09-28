@@ -171,6 +171,7 @@
     <testng.version>6.9.6</testng.version>
     <slf4j.version>1.7.12</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
+    <jackson.version>2.6.2</jackson.version>
     <arquillian.version>1.1.8.Final</arquillian.version>
     <sonar.host.url>http://labs-build1.consol.de:9000</sonar.host.url>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -532,6 +533,13 @@
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
         <version>${jaxb.version}</version>
+      </dependency>
+
+      <!-- JSON jackson binding -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
 
       <!-- Logging -->

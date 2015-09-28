@@ -18,7 +18,10 @@ package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.github.dockerjava.api.model.ResponseItem;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,12 +43,28 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
     /** Command result if any */
     private R commandResult;
 
+    /** Expected command result for validation */
+    private String expectedCommandResult;
+
     /**
      * Default constructor initializing the command name.
      * @param name
      */
     public AbstractDockerCommand(String name) {
         this.name = name;
+    }
+
+    /**
+     * Construct default success response for commands without return value.
+     * @return
+     */
+    protected ResponseItem success() {
+        ResponseItem response = new ResponseItem();
+
+        Field statusField = ReflectionUtils.findField(ResponseItem.class, "status");
+        ReflectionUtils.makeAccessible(statusField);
+        ReflectionUtils.setField(statusField, response, "success");
+        return response;
     }
 
     /**
@@ -106,6 +125,16 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
     @Override
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    @Override
+    public String getExpectedCommandResult() {
+        return expectedCommandResult;
+    }
+
+    @Override
+    public void setExpectedCommandResult(String expectedCommandResult) {
+        this.expectedCommandResult = expectedCommandResult;
     }
 
     /**

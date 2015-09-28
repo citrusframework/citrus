@@ -17,9 +17,8 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.*;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DockerClientConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,14 +54,6 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	 */
 	public DockerActionBuilder client(DockerClient dockerClient) {
 		action.setDockerClient(dockerClient);
-		return this;
-	}
-
-	/**
-	 * Use a custom docker client.
-	 */
-	public DockerActionBuilder configuration(DockerClientConfig dockerClientConfig) {
-		action.setDockerClientConfig(dockerClientConfig);
 		return this;
 	}
 

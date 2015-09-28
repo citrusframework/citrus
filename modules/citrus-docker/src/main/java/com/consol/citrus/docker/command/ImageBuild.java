@@ -22,6 +22,7 @@ import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.github.dockerjava.api.command.BuildImageCmd;
+import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * @since 2.3.1
  */
-public class ImageBuild extends AbstractDockerCommand<String> {
+public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
 
     /**
      * Default constructor initializing the command name.
@@ -75,11 +76,17 @@ public class ImageBuild extends AbstractDockerCommand<String> {
             command.withTag(getParameter("tag", context));
         }
 
-        BuildImageResultCallback imageResult = new BuildImageResultCallback();
+        BuildImageResultCallback imageResult = new BuildImageResultCallback() {
+            @Override
+            public void onNext(BuildResponseItem item) {
+                super.onNext(item);
+                setCommandResult(item);
+            }
+        };
+
         command.exec(imageResult);
         String imageId = imageResult.awaitImageId();
 
-        setCommandResult(imageId);
         context.setVariable(DockerMessageHeaders.IMAGE_ID, imageId);
     }
 }

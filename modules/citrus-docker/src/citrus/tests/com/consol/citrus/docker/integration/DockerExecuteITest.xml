@@ -28,6 +28,30 @@
 
     <actions>
       <echo>
+        <message>Validate docker API version</message>
+      </echo>
+
+      <docker:ping></docker:ping>
+
+      <docker:version>
+        <docker:expect>
+          <docker:result>
+            <![CDATA[
+              {
+                "Version":"1.7.1",
+                "ApiVersion":"1.19",
+                "GitCommit":"@ignore@",
+                "GoVersion":"@ignore@",
+                "Os":"@ignore@",
+                "Arch":"@ignore@",
+                "KernelVersion":"@ignore@"
+              }
+            ]]>
+          </docker:result>
+        </docker:expect>
+      </docker:version>
+
+      <echo>
         <message>Pull docker image '${imageId}'</message>
       </echo>
 
@@ -39,15 +63,63 @@
       </echo>
 
       <docker:create image="${imageId}"
-                     name="${containerId}"/>
+                     name="${containerId}">
+        <docker:expect>
+          <docker:result>
+            <![CDATA[
+              {"Id":"@ignore@","Warnings":null}
+            ]]>
+          </docker:result>
+        </docker:expect>
+      </docker:create>
 
       <echo>
         <message>Starting docker container '${containerId}'</message>
       </echo>
 
       <docker:start container="${containerId}"/>
-      <docker:inspect container="${containerId}"/>
 
+      <docker:inspect container="${containerId}">
+        <docker:expect>
+          <docker:result>
+            <![CDATA[
+              {
+                "Args":[],
+                "Config":"@ignore@",
+                "Created":"@ignore@",
+                "Driver":"@ignore@",
+                "ExecDriver":"@ignore@",
+                "HostConfig":"@ignore@",
+                "HostnamePath":"@ignore@",
+                "HostsPath":"@ignore@",
+                "Id":"@ignore@",
+                "Image":"@ignore@",
+                "MountLabel":"",
+                "Name":"/citrus_hello",
+                "NetworkSettings":"@ignore@",
+                "Path":"/hello",
+                "ProcessLabel":"",
+                "ResolvConfPath":"@ignore@",
+                "ExecIDs":null,
+                "State":
+                {
+                  "Running":true,
+                  "Paused":false,
+                  "Pid": "@ignore@",
+                  "ExitCode":0,
+                  "StartedAt":"@ignore@",
+                  "FinishedAt":"@ignore@"
+                },
+                "Volumes":{},
+                "VolumesRW":{}
+              }
+            ]]>
+          </docker:result>
+        </docker:expect>
+      </docker:inspect>
+    </actions>
+
+    <finally>
       <sleep milliseconds="300"/>
 
       <echo>
@@ -55,7 +127,7 @@
       </echo>
 
       <docker:remove container="${containerId}"/>
+    </finally>
 
-    </actions>
   </testcase>
 </spring:beans>

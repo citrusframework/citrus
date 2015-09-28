@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.jackson;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
