@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import java.util.Arrays;
 
 /**
- * Action executes docker commands.
+ * Action executes Camel route action commands.
  * 
  * @author Christoph Deppisch
  * @since 2.4
@@ -55,6 +55,18 @@ public class CamelRouteActionBuilder extends AbstractTestActionBuilder<Delegatin
 	public CamelRouteActionBuilder context(ModelCamelContext camelContext) {
 		this.camelContext = camelContext;
 		return this;
+	}
+
+	/**
+	 * Execute control bus Camel operations.
+	 * @return
+	 */
+	public CamelControlBusActionBuilder controlBus() {
+		CamelControlBusAction camelControlBusAction = new CamelControlBusAction();
+		camelControlBusAction.setCamelContext(camelContext);
+		action.setDelegate(camelControlBusAction);
+
+		return new CamelControlBusActionBuilder(camelControlBusAction);
 	}
 
 	/**

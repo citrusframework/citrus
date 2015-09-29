@@ -25,6 +25,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.SimpleBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -275,5 +276,90 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getRoutes().size(), 2);
 
         Assert.assertEquals(defaultContext.getRouteDefinitions().size(), 3);
+    }
+
+    @Test
+    public void testCamelControlBusBuilder() throws Exception {
+        camelContext.addRoutes(new RouteBuilder(camelContext) {
+            @Override
+            public void configure() throws Exception {
+                from("direct:news")
+                        .routeId("route_1")
+                        .autoStartup(false)
+                        .setHeader("headline", simple("This is BIG news!"))
+                        .to("mock:news");
+
+                from("direct:rumors")
+                        .routeId("route_2")
+                        .autoStartup(false)
+                        .setHeader("headline", simple("This is just a rumor!"))
+                        .to("mock:rumors");
+            }
+        });
+
+        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
+        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                camel(new BuilderSupport<CamelRouteActionBuilder>() {
+                    @Override
+                    public void configure(CamelRouteActionBuilder builder) {
+                        builder.context(camelContext)
+                                .controlBus()
+                                    .route("route_1", "status")
+                                    .result(ServiceStatus.Stopped);
+                    }
+                });
+
+                camel(new BuilderSupport<CamelRouteActionBuilder>() {
+                    @Override
+                    public void configure(CamelRouteActionBuilder builder) {
+                        builder.context(camelContext)
+                                .controlBus()
+                                .route("route_1", "start");
+                    }
+                });
+
+                camel(new BuilderSupport<CamelRouteActionBuilder>() {
+                    @Override
+                    public void configure(CamelRouteActionBuilder builder) {
+                        builder.context(camelContext)
+                                .controlBus()
+                                .language(SimpleBuilder.simple("${camelContext.getRouteStatus('route_1')}"))
+                                .result(ServiceStatus.Started);
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 3);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), CamelControlBusAction.class);
+        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+
+        CamelControlBusAction action = (CamelControlBusAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(action.getName(), "controlbus");
+        Assert.assertEquals(action.getRouteId(), "route_1");
+        Assert.assertEquals(action.getAction(), "status");
+        Assert.assertEquals(action.getResult(), "Stopped");
+
+        action = (CamelControlBusAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
+        Assert.assertEquals(action.getName(), "controlbus");
+        Assert.assertEquals(action.getRouteId(), "route_1");
+        Assert.assertEquals(action.getAction(), "start");
+        Assert.assertNull(action.getResult());
+
+        action = (CamelControlBusAction) ((DelegatingTestAction)test.getActions().get(2)).getDelegate();
+        Assert.assertEquals(action.getName(), "controlbus");
+        Assert.assertEquals(action.getLanguageType(), "simple");
+        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteStatus('route_1')}");
+        Assert.assertEquals(action.getResult(), "Started");
+
+        Assert.assertEquals(camelContext.getRouteDefinitions().size(), 2);
+        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Started);
+        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
     }
 }

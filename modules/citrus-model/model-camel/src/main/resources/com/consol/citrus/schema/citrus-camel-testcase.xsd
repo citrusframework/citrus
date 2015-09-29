@@ -109,6 +109,8 @@
                   <xs:restriction base="xs:string">
                     <xs:enumeration value="start"/>
                     <xs:enumeration value="stop"/>
+                    <xs:enumeration value="suspend"/>
+                    <xs:enumeration value="resume"/>
                     <xs:enumeration value="status"/>
                     <xs:enumeration value="stats"/>
                   </xs:restriction>

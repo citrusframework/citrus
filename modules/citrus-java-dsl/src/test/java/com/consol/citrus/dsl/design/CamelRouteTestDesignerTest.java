@@ -23,6 +23,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.SimpleBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -239,5 +240,39 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
         CreateCamelRouteAction action = (CreateCamelRouteAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "create-routes");
         Assert.assertEquals(action.getRoutes().size(), 2);
+    }
+
+    @Test
+    public void testCamelControlBusBuilder() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                camel().controlBus()
+                        .route("default_route", "status")
+                        .result(ServiceStatus.Started);
+
+                camel().controlBus()
+                        .language(SimpleBuilder.simple("${camelContext.getRouteStatus('default_route')}"));
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), CamelControlBusAction.class);
+
+        CamelControlBusAction action = (CamelControlBusAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(action.getName(), "controlbus");
+        Assert.assertEquals(action.getRouteId(), "default_route");
+        Assert.assertEquals(action.getAction(), "status");
+        Assert.assertEquals(action.getResult(), "Started");
+
+        action = (CamelControlBusAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
+        Assert.assertEquals(action.getName(), "controlbus");
+        Assert.assertEquals(action.getLanguageType(), "simple");
+        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteStatus('default_route')}");
+        Assert.assertNull(action.getResult());
     }
 }
