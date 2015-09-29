@@ -93,4 +93,43 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="control-bus">
+    <xs:annotation>
+      <xs:documentation>Executes operations on Camel control bus</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:choice>
+          <xs:element name="route">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required"/>
+              <xs:attribute name="action" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="start"/>
+                    <xs:enumeration value="stop"/>
+                    <xs:enumeration value="status"/>
+                    <xs:enumeration value="stats"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="language">
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="type" type="xs:string" default="simple"/>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:element name="result" type="xs:string" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="camel-context" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
 </xs:schema>

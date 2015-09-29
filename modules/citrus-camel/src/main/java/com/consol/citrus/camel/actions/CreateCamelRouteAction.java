@@ -68,7 +68,8 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
      * Sets the route definitions.
      * @param routes
      */
-    public void setRoutes(List<RouteDefinition> routes) {
+    public CreateCamelRouteAction setRoutes(List<RouteDefinition> routes) {
         this.routes = routes;
+        return this;
     }
 }

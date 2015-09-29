@@ -3,6 +3,7 @@
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/camel/testcase http://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="CamelEndpointFactoryITest">
@@ -44,6 +45,11 @@
           <data>Started</data>
         </message>
       </receive>
+
+      <control-bus camel-context="camelContext" xmlns="http://www.citrusframework.org/schema/camel/testcase">
+        <route id="helloRoute" action="status"/>
+        <result>Started</result>
+      </control-bus>
 
     </actions>
   </testcase>

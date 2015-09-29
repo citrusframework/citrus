@@ -37,8 +37,9 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
      * Sets the target Camel context.
      * @param camelContext
      */
-    public void setCamelContext(CamelContext camelContext) {
+    public AbstractCamelRouteAction setCamelContext(CamelContext camelContext) {
         this.camelContext = camelContext;
+        return this;
     }
 
     /**
@@ -53,8 +54,9 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
      * Sets the Camel routes.
      * @param routeIds
      */
-    public void setRouteIds(List<String> routeIds) {
+    public AbstractCamelRouteAction setRouteIds(List<String> routeIds) {
         this.routeIds = routeIds;
+        return this;
     }
 
     /**

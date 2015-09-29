@@ -30,5 +30,6 @@ public class CitrusCamelTestcaseNamespaceHandler extends NamespaceHandlerSupport
         registerBeanDefinitionParser("start-routes", new StartCamelRouteActionParser());
         registerBeanDefinitionParser("stop-routes", new StopCamelRouteActionParser());
         registerBeanDefinitionParser("remove-routes", new RemoveCamelRouteActionParser());
+        registerBeanDefinitionParser("control-bus", new CamelControlBusActionParser());
     }
 }

@@ -62,9 +62,31 @@
     </actions>
 
     <finally>
+      <echo>
+        <message>Stop Camel route</message>
+      </echo>
+
       <camel:stop-routes camel-context="camelContext">
         <camel:route id="myRoute"/>
       </camel:stop-routes>
+
+      <echo>
+        <message>Validate that route was stopped</message>
+      </echo>
+
+      <camel:control-bus camel-context="camelContext">
+        <camel:route id="myRoute" action="status"/>
+        <camel:result>Stopped</camel:result>
+      </camel:control-bus>
+
+      <camel:control-bus camel-context="camelContext">
+        <camel:language type="simple">${camelContext.getRouteStatus('myRoute')}</camel:language>
+        <camel:result>Stopped</camel:result>
+      </camel:control-bus>
+
+      <echo>
+        <message>Remove Camel route</message>
+      </echo>
 
       <camel:remove-routes camel-context="camelContext">
         <camel:route id="myRoute"/>
