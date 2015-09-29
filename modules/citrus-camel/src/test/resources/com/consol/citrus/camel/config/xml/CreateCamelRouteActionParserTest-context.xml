@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/camel/testcase http://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd">
+
+    <testcase name="CreateCamelRouteActionParserTest">
+        <actions>
+          <camel:create-routes>
+            <routeContext xmlns="http://camel.apache.org/schema/spring">
+              <route id="route_1">
+                <from uri="direct:test1"/>
+                <to uri="mock:test1"/>
+              </route>
+
+              <route id="route_2">
+                <from uri="direct:test2"/>
+                <to uri="mock:test2"/>
+              </route>
+            </routeContext>
+          </camel:create-routes>
+
+          <camel:create-routes camel-context="camelContext">
+            <routeContext xmlns="http://camel.apache.org/schema/spring">
+              <route>
+                <from uri="direct:test3"/>
+                <to uri="mock:test3"/>
+              </route>
+            </routeContext>
+          </camel:create-routes>
+        </actions>
+    </testcase>
+
+    <spring:bean id="citrusCamelContext" class="org.easymock.EasyMock" factory-method="createMock">
+      <spring:constructor-arg value="org.apache.camel.CamelContext"/>
+    </spring:bean>
+
+    <spring:bean id="camelContext" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="org.apache.camel.CamelContext"/>
+    </spring:bean>
+    
+</spring:beans>
