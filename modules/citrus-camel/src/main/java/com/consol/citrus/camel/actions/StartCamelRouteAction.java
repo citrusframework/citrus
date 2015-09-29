@@ -21,8 +21,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.4
@@ -31,9 +29,6 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(StartCamelRouteAction.class);
-
-    /** The Camel route to start */
-    private List<String> routeIds;
 
     /**
      * Default constructor.
@@ -53,21 +48,5 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to start Camel routes", e);
         }
-    }
-
-    /**
-     * Sets the Camel routes to start.
-     * @param routeIds
-     */
-    public void setRouteIds(List<String> routeIds) {
-        this.routeIds = routeIds;
-    }
-
-    /**
-     * Gets the Camel routes to start.
-     * @return
-     */
-    public List<String> getRouteIds() {
-        return routeIds;
     }
 }

@@ -655,6 +655,14 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public CamelRouteActionBuilder camel() {
+        CamelRouteActionBuilder builder = new CamelRouteActionBuilder()
+                .withApplicationContext(getApplicationContext());
+        action(builder);
+        return builder;
+    }
+
+    @Override
     public TemplateBuilder applyTemplate(String name) {
         Template template = new Template();
         template.setName(name);

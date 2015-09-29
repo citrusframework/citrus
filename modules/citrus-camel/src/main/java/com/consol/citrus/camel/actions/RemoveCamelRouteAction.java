@@ -21,8 +21,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.4
@@ -31,9 +29,6 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RemoveCamelRouteAction.class);
-
-    /** The Camel route to start */
-    private List<String> routeIds;
 
     /**
      * Default constructor.
@@ -63,21 +58,5 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
                 throw new CitrusRuntimeException(String.format("Failed to remove Camel route '%s' from context '%s'", routeId, camelContext.getName()), e);
             }
         }
-    }
-
-    /**
-     * Sets the Camel routes to stop.
-     * @param routeIds
-     */
-    public void setRouteIds(List<String> routeIds) {
-        this.routeIds = routeIds;
-    }
-
-    /**
-     * Gets the Camel routes to remove.
-     * @return
-     */
-    public List<String> getRouteIds() {
-        return routeIds;
     }
 }

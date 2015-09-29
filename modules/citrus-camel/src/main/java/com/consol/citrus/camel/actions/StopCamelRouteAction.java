@@ -21,9 +21,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.4
@@ -32,9 +29,6 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(StopCamelRouteAction.class);
-
-    /** The Camel route to start */
-    private List<String> routeIds = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -54,21 +48,5 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to stop Camel routes", e);
         }
-    }
-
-    /**
-     * Sets the Camel routes to stop.
-     * @param routeIds
-     */
-    public void setRouteIds(List<String> routeIds) {
-        this.routeIds = routeIds;
-    }
-
-    /**
-     * Gets the Camel routes to stop.
-     * @return
-     */
-    public List<String> getRouteIds() {
-        return routeIds;
     }
 }

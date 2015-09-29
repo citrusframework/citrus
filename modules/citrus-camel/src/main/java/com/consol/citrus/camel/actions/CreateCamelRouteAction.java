@@ -19,6 +19,8 @@ package com.consol.citrus.camel.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.camel.model.RouteDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -27,6 +29,9 @@ import java.util.List;
  * @since 2.4
  */
 public class CreateCamelRouteAction extends AbstractCamelRouteAction {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CreateCamelRouteAction.class);
 
     /** Camel route */
     private List<RouteDefinition> routes;
@@ -40,12 +45,14 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
     @Override
     public void doExecute(TestContext context) {
-        try {
-            for (RouteDefinition routeDefinition : routes) {
+        for (RouteDefinition routeDefinition : routes) {
+            try {
+                log.info(String.format("Creating new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
                 camelContext.addRouteDefinition(routeDefinition);
+                log.info(String.format("Successfully created new Camel route '%s'", routeDefinition.getId()));
+            } catch (Exception e) {
+                throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context", routeDefinition.getId(), camelContext.getName()), e);
             }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to add route definition to Camel context", e);
         }
     }
 

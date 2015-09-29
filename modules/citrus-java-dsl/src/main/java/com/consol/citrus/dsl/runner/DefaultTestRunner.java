@@ -18,9 +18,11 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
+import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -467,6 +469,14 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer) {
         DockerActionBuilder builder = new DockerActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
+    }
+
+    @Override
+    public DelegatingTestAction<AbstractCamelRouteAction> camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
+        CamelRouteActionBuilder builder = new CamelRouteActionBuilder();
+        builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build());
     }

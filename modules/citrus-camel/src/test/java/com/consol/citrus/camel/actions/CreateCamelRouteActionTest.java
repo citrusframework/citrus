@@ -37,6 +37,9 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
      public void testCreateRoute() throws Exception {
         reset(camelContext, route);
 
+        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        expect(route.getId()).andReturn("route_1").atLeastOnce();
+
         camelContext.addRouteDefinition(route);
         expectLastCall().once();
 
@@ -54,6 +57,9 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testCreateRouteWithException() throws Exception {
         reset(camelContext, route);
+
+        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        expect(route.getId()).andReturn("route_1").atLeastOnce();
 
         camelContext.addRouteDefinition(route);
         expectLastCall().andThrow(new FailedToStartRouteException("routeId", "Failed to start route")).once();

@@ -575,6 +575,12 @@ public interface TestDesigner extends ApplicationContextAware {
     DockerActionBuilder docker();
 
     /**
+     * Creates a new Camel route action.
+     * @return
+     */
+    CamelRouteActionBuilder camel();
+
+    /**
      * Adds template container with nested test actions.
      *
      * @param name

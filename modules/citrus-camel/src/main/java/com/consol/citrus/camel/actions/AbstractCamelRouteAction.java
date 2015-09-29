@@ -19,6 +19,8 @@ package com.consol.citrus.camel.actions;
 import com.consol.citrus.actions.AbstractTestAction;
 import org.apache.camel.CamelContext;
 
+import java.util.List;
+
 /**
  * @author Christoph Deppisch
  * @since 2.4
@@ -27,6 +29,9 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
 
     /** Target Camel context */
     protected CamelContext camelContext;
+
+    /** The Camel route to start */
+    protected List<String> routeIds;
 
     /**
      * Sets the target Camel context.
@@ -42,5 +47,21 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
      */
     public CamelContext getCamelContext() {
         return camelContext;
+    }
+
+    /**
+     * Sets the Camel routes.
+     * @param routeIds
+     */
+    public void setRouteIds(List<String> routeIds) {
+        this.routeIds = routeIds;
+    }
+
+    /**
+     * Gets the Camel routes.
+     * @return
+     */
+    public List<String> getRouteIds() {
+        return routeIds;
     }
 }
