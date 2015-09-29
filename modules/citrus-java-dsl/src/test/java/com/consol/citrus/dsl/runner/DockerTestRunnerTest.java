@@ -17,7 +17,9 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.docker.command.CommandResultCallback;
 import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.DockerActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -79,11 +81,45 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(DockerActionBuilder builder) {
                         builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
-                            .info()
-                            .ping()
+                            .info();
+                    }
+                });
+
+                docker(new BuilderSupport<DockerActionBuilder>() {
+                    @Override
+                    public void configure(DockerActionBuilder builder) {
+                        builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
+                            .ping();
+                    }
+                });
+
+                docker(new BuilderSupport<DockerActionBuilder>() {
+                    @Override
+                    public void configure(DockerActionBuilder builder) {
+                        builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
                             .version()
+                            .validateCommandResult(new CommandResultCallback<Version>() {
+                                @Override
+                                public void doWithCommandResult(Version result, TestContext context) {
+                                    Assert.assertNotNull(result);
+                                }
+                            });
+                    }
+                });
+
+                docker(new BuilderSupport<DockerActionBuilder>() {
+                    @Override
+                    public void configure(DockerActionBuilder builder) {
+                        builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
                             .create("new_image")
-                                .withParam("name", "my_container")
+                                .withParam("name", "my_container");
+                    }
+                });
+
+                docker(new BuilderSupport<DockerActionBuilder>() {
+                    @Override
+                    public void configure(DockerActionBuilder builder) {
+                        builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
                             .inspectContainer("my_container");
                     }
                 });
@@ -91,13 +127,30 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActionCount(), 5);
         Assert.assertEquals(test.getActions().get(0).getClass(), DockerExecuteAction.class);
         Assert.assertEquals(test.getLastExecutedAction().getClass(), DockerExecuteAction.class);
 
         DockerExecuteAction action = (DockerExecuteAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommands().size(), 5);
+        Assert.assertEquals(action.getCommand().getClass(), com.consol.citrus.docker.command.Info.class);
+
+        action = (DockerExecuteAction)test.getActions().get(1);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), com.consol.citrus.docker.command.Ping.class);
+
+        action = (DockerExecuteAction)test.getActions().get(2);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), com.consol.citrus.docker.command.Version.class);
+        Assert.assertNotNull(action.getCommand().getResultCallback());
+
+        action = (DockerExecuteAction)test.getActions().get(3);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), com.consol.citrus.docker.command.ContainerCreate.class);
+
+        action = (DockerExecuteAction)test.getActions().get(4);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), com.consol.citrus.docker.command.ContainerInspect.class);
 
         verify(dockerClient, infoCmd, pingCmd, versionCmd, createCmd, inspectCmd);
     }

@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.command.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -34,27 +35,43 @@ public class DockerTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                docker()
-                    .info()
-                    .version()
-                    .ping()
-                    .create("my_image");
+                docker().info()
+                        .validateCommandResult(new CommandResultCallback<com.github.dockerjava.api.model.Info>() {
+                            @Override
+                            public void doWithCommandResult(com.github.dockerjava.api.model.Info result, TestContext context) {
+                                Assert.assertNotNull(result);
+                            }
+                        });
+
+                docker().version();
+                docker().ping();
+
+                docker().create("my_image");
             }
         };
 
         builder.configure();
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActionCount(), 4);
         Assert.assertEquals(test.getActions().get(0).getClass(), DockerExecuteAction.class);
 
         DockerExecuteAction action = (DockerExecuteAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "docker-execute");
-        Assert.assertEquals(action.getCommands().size(), 4);
-        Assert.assertEquals(action.getCommands().get(0).getClass(), Info.class);
-        Assert.assertEquals(action.getCommands().get(1).getClass(), Version.class);
-        Assert.assertEquals(action.getCommands().get(2).getClass(), Ping.class);
-        Assert.assertEquals(action.getCommands().get(3).getClass(), ContainerCreate.class);
-        Assert.assertEquals(action.getCommands().get(3).getParameters().get("image"), "my_image");
+        Assert.assertEquals(action.getCommand().getClass(), Info.class);
+        Assert.assertNotNull(action.getCommand().getResultCallback());
+
+        action = (DockerExecuteAction)test.getActions().get(1);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), Version.class);
+
+        action = (DockerExecuteAction)test.getActions().get(2);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), Ping.class);
+
+        action = (DockerExecuteAction)test.getActions().get(3);
+        Assert.assertEquals(action.getName(), "docker-execute");
+        Assert.assertEquals(action.getCommand().getClass(), ContainerCreate.class);
+        Assert.assertEquals(action.getCommand().getParameters().get("image"), "my_image");
     }
 }

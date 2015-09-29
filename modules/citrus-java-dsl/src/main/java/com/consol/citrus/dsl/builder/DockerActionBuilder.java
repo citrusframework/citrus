@@ -20,9 +20,6 @@ import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Action executes docker commands.
  * 
@@ -30,9 +27,6 @@ import java.util.Map;
  * @since 2.4
  */
 public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecuteAction> {
-
-	/** Current command parameters */
-	private Map<String, String> commandParameter = new HashMap<>();
 
 	/**
 	 * Constructor using action field.
@@ -60,95 +54,87 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	/**
      * Use a info command.
      */
-    public DockerActionBuilder info() {
-        action.addCommand(new Info());
-        return this;
+    public Info info() {
+		Info command = new Info();
+        action.setCommand(command);
+        return command;
     }
 
 	/**
 	 * Adds a ping command.
 	 */
-	public DockerActionBuilder ping() {
-		action.addCommand(new Ping());
-		return this;
+	public Ping ping() {
+		Ping command = new Ping();
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
 	 * Adds a version command.
 	 */
-	public DockerActionBuilder version() {
-		action.addCommand(new Version());
-		return this;
+	public Version version() {
+		Version command = new Version();
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
 	 * Adds a create command.
 	 */
-	public DockerActionBuilder create(String imageId) {
+	public ContainerCreate create(String imageId) {
 		ContainerCreate command = new ContainerCreate();
 		command.getParameters().put("image", imageId);
-
-		this.commandParameter = command.getParameters();
-		action.addCommand(command);
-		return this;
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
 	 * Adds a start command.
 	 */
-	public DockerActionBuilder start(String containerId) {
+	public ContainerStart start(String containerId) {
 		ContainerStart command = new ContainerStart();
 		command.getParameters().put("container", containerId);
-
-		this.commandParameter = command.getParameters();
-		action.addCommand(command);
-		return this;
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
 	 * Adds a stop command.
 	 */
-	public DockerActionBuilder stop(String containerId) {
+	public ContainerStop stop(String containerId) {
 		ContainerStop command = new ContainerStop();
 		command.getParameters().put("container", containerId);
-
-		this.commandParameter = command.getParameters();
-		action.addCommand(command);
-		return this;
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
 	 * Adds a inspect container command.
 	 */
-	public DockerActionBuilder inspectContainer(String containerId) {
+	public ContainerInspect inspectContainer(String containerId) {
 		ContainerInspect command = new ContainerInspect();
 		command.getParameters().put("container", containerId);
-
-		this.commandParameter = command.getParameters();
-		action.addCommand(command);
-		return this;
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
 	 * Adds a inspect container command.
 	 */
-	public DockerActionBuilder inspectImage(String imageId) {
+	public ImageInspect inspectImage(String imageId) {
 		ImageInspect command = new ImageInspect();
 		command.getParameters().put("image", imageId);
-
-		this.commandParameter = command.getParameters();
-		action.addCommand(command);
-		return this;
+		action.setCommand(command);
+		return command;
 	}
 
 	/**
-	 * Adds command parameter to current command.
-	 * @param name
-	 * @param value
+	 * Adds expected command result.
+	 * @param result
 	 * @return
 	 */
-	public DockerActionBuilder withParam(String name, String value) {
-		commandParameter.put(name, value);
+	public DockerActionBuilder result(String result) {
+		action.setExpectedCommandResult(result);
 		return this;
 	}
 }

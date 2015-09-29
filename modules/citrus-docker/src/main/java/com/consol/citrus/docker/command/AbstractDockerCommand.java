@@ -43,8 +43,8 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
     /** Command result if any */
     private R commandResult;
 
-    /** Expected command result for validation */
-    private String expectedCommandResult;
+    /** Optional command result validation */
+    private CommandResultCallback<R> resultCallback;
 
     /**
      * Default constructor initializing the command name.
@@ -127,21 +127,40 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
         return parameters;
     }
 
-    @Override
-    public String getExpectedCommandResult() {
-        return expectedCommandResult;
-    }
-
-    @Override
-    public void setExpectedCommandResult(String expectedCommandResult) {
-        this.expectedCommandResult = expectedCommandResult;
-    }
-
     /**
      * Sets the command parameters.
      * @param parameters
      */
     public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
+    }
+
+    /**
+     * Adds command parameter to current command.
+     * @param name
+     * @param value
+     * @return
+     */
+    public AbstractDockerCommand withParam(String name, String value) {
+        parameters.put(name, value);
+        return this;
+    }
+
+    /**
+     * Adds validation callback with command result.
+     * @param callback
+     * @return
+     */
+    public AbstractDockerCommand validateCommandResult(CommandResultCallback<R> callback) {
+        this.resultCallback = callback;
+        return this;
+    }
+
+    /**
+     * Gets the result validation callback.
+     * @return
+     */
+    public CommandResultCallback<R> getResultCallback() {
+        return resultCallback;
     }
 }

@@ -33,9 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Executes docker command with given docker client implementation. Possible command result is stored within command object.
  *
@@ -50,7 +47,10 @@ public class DockerExecuteAction extends AbstractTestAction {
     private DockerClient dockerClient = new DockerClient();
 
     /** Docker command to execute */
-    private List<DockerCommand> commands = new ArrayList<>();
+    private DockerCommand command;
+
+    /** Expected command result for validation */
+    private String expectedCommandResult;
 
     @Autowired(required = false)
     @Qualifier("dockerCommandResultMapper")
@@ -73,14 +73,12 @@ public class DockerExecuteAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            for (DockerCommand command : commands) {
-                log.info(String.format("Executing Docker command '%s", command.getName()));
-                command.execute(dockerClient, context);
+            log.info(String.format("Executing Docker command '%s", command.getName()));
+            command.execute(dockerClient, context);
 
-                validateCommandResult(command, context);
+            validateCommandResult(command, context);
 
-                log.info(String.format("Successfully executed Docker command '%s", command.getName()));
-            }
+            log.info(String.format("Successfully executed Docker command '%s", command.getName()));
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -94,7 +92,7 @@ public class DockerExecuteAction extends AbstractTestAction {
      * @param context
      */
     private void validateCommandResult(DockerCommand command, TestContext context) {
-        if (StringUtils.hasText(command.getExpectedCommandResult())) {
+        if (StringUtils.hasText(expectedCommandResult)) {
             if (command.getCommandResult() == null) {
                 throw new ValidationException("Missing command result for validation");
             }
@@ -102,50 +100,35 @@ public class DockerExecuteAction extends AbstractTestAction {
             try {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                validationContext.setControlMessage(new DefaultMessage(command.getExpectedCommandResult()));
+                validationContext.setControlMessage(new DefaultMessage(expectedCommandResult));
                 jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), context, validationContext);
                 log.info("Validation of command result successful - all values OK!");
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);
             }
         }
+
+        if (command.getResultCallback() != null) {
+            command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
+        }
     }
 
     /**
-     * Gets the docker commands to execute.
+     * Gets the docker command to execute.
      * @return
      */
-    public List<DockerCommand> getCommands() {
-        return commands;
+    public DockerCommand getCommand() {
+        return command;
     }
 
     /**
-     * Sets the docker commands to execute.
-     * @param commands
-     * @return
-     */
-    public DockerExecuteAction setCommands(List<DockerCommand> commands) {
-        this.commands = commands;
-        return this;
-    }
-
-    /**
-     * Adds docker command to execute.
-     * @param command
-     * @return
-     */
-    public DockerExecuteAction addCommand(DockerCommand command) {
-        this.commands.add(command);
-        return this;
-    }
-
-    /**
-     * Sets single docker command to execute.
+     * Sets docker command to execute.
      * @param command
      * @return
      */
     public DockerExecuteAction setCommand(DockerCommand command) {
-        return addCommand(command);
+        this.command = command;
+        return this;
     }
 
     /**
@@ -166,10 +149,28 @@ public class DockerExecuteAction extends AbstractTestAction {
     }
 
     /**
+     * Gets the expected command result data.
+     * @return
+     */
+    public String getExpectedCommandResult() {
+        return expectedCommandResult;
+    }
+
+    /**
+     * Sets the expected command result data.
+     * @param expectedCommandResult
+     */
+    public DockerExecuteAction setExpectedCommandResult(String expectedCommandResult) {
+        this.expectedCommandResult = expectedCommandResult;
+        return this;
+    }
+
+    /**
      * Sets the JSON object mapper.
      * @param jsonMapper
      */
-    public void setJsonMapper(ObjectMapper jsonMapper) {
+    public DockerExecuteAction setJsonMapper(ObjectMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
+        return this;
     }
 }

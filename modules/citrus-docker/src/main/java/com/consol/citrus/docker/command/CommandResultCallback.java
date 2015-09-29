@@ -17,44 +17,17 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.client.DockerClient;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public interface DockerCommand<R> {
+public interface CommandResultCallback<R> {
 
     /**
-     * Executes command with given docker client and test context.
-     * @param dockerClient
+     * Callback method called with command result.
+     * @param result
      * @param context
      */
-    void execute(DockerClient dockerClient, TestContext context);
-
-    /**
-     * Gets the Docker command name.
-     * @return
-     */
-    String getName();
-
-    /**
-     * Gets the command parameters.
-     * @return
-     */
-    Map<String, Object> getParameters();
-
-    /**
-     * Provides access to this command result if any.
-     * @return
-     */
-    R getCommandResult();
-
-    /**
-     * Gets the command result callback.
-     * @return
-     */
-    CommandResultCallback<R> getResultCallback();
+    void doWithCommandResult(R result, TestContext context);
 }

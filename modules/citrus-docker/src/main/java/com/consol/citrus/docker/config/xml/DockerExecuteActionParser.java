@@ -95,7 +95,7 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
 
         Element expectCmdResult = DomUtils.getChildElementByTagName(element, "expect");
         if (expectCmdResult != null) {
-            command.setExpectedCommandResult(DomUtils.getTextValue(DomUtils.getChildElementByTagName(expectCmdResult, "result")));
+            beanDefinition.addPropertyValue("expectedCommandResult", DomUtils.getTextValue(DomUtils.getChildElementByTagName(expectCmdResult, "result")));
         }
 
         beanDefinition.addPropertyValue("command", command);
