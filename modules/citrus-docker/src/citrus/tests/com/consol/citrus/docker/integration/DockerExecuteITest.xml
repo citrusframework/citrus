@@ -38,8 +38,8 @@
           <docker:result>
             <![CDATA[
               {
-                "Version":"1.7.1",
-                "ApiVersion":"1.19",
+                "Version":"@ignore@",
+                "ApiVersion":"@ignore@",
                 "GitCommit":"@ignore@",
                 "GoVersion":"@ignore@",
                 "Os":"@ignore@",
