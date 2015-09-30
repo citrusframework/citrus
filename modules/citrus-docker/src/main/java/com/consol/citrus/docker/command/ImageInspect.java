@@ -47,4 +47,14 @@ public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
         setCommandResult(response);
         log.info(response.toString());
     }
+
+    /**
+     * Sets the image id parameter.
+     * @param id
+     * @return
+     */
+    public ImageInspect image(String id) {
+        getParameters().put(IMAGE_ID, id);
+        return this;
+    }
 }

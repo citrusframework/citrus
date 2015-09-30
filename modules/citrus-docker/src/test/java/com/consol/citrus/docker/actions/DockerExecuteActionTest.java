@@ -28,9 +28,11 @@ import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.UUID;
 
 import static org.easymock.EasyMock.*;
@@ -122,12 +124,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ContainerCreate());
+        action.setCommand(new ContainerCreate()
+            .image("image_create")
+            .name("my_container"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("image", "image_create");
-        action.getCommand().getParameters().put("tag", "latest");
-        action.getCommand().getParameters().put("name", "my_container");
 
         action.execute(context);
 
@@ -157,11 +157,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command, inspectCommand, inspectResponse);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ContainerCreate());
+        action.setCommand(new ContainerCreate()
+            .image("image_create"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("image", "image_create");
-        action.getCommand().getParameters().put("tag", "latest");
 
         action.execute(context);
 
@@ -185,10 +183,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ContainerInspect());
+        action.setCommand(new ContainerInspect()
+            .container("container_inspect"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("container", "container_inspect");
 
         action.execute(context);
 
@@ -210,10 +207,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ImageInspect());
+        action.setCommand(new ImageInspect()
+            .image("image_inspect"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("image", "image_inspect");
 
         action.execute(context);
 
@@ -234,10 +230,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ContainerRemove());
+        action.setCommand(new ContainerRemove()
+            .container("container_inspect"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("container", "container_inspect");
 
         action.execute(context);
 
@@ -258,10 +253,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ImageRemove());
+        action.setCommand(new ImageRemove()
+            .image("image_remove"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("image", "image_remove");
 
         action.execute(context);
 
@@ -282,10 +276,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ContainerStart());
+        action.setCommand(new ContainerStart()
+            .container("container_start"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("container", "container_start");
 
         action.execute(context);
 
@@ -306,10 +299,9 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ContainerStop());
+        action.setCommand(new ContainerStop()
+            .container("container_stop"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("container", "container_stop");
 
         action.execute(context);
 
@@ -343,11 +335,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command, responseItem);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ImagePull());
+        action.setCommand(new ImagePull()
+            .image("image_pull")
+            .tag("image_tag"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("image", "image_pull");
-        action.getCommand().getParameters().put("tag", "image_tag");
 
         action.execute(context);
 
@@ -366,6 +357,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         expect(dockerClient.buildImageCmd()).andReturn(command).once();
         expect(responseItem.isBuildSuccessIndicated()).andReturn(true).once();
         expect(responseItem.getImageId()).andReturn("new_image").once();
+        expect(command.withDockerfile(anyObject(File.class))).andReturn(command).once();
         expect(command.withTag("latest")).andReturn(command).once();
         expect(command.exec(anyObject(BuildImageResultCallback.class))).andAnswer(new IAnswer<BuildImageResultCallback>() {
             @Override
@@ -382,11 +374,10 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         replay(dockerClient, command, responseItem);
 
         DockerExecuteAction action = new DockerExecuteAction();
-        action.setCommand(new ImageBuild());
+        action.setCommand(new ImageBuild()
+                .dockerFile(new ClassPathResource("com/consol/citrus/docker/DockerFile"))
+                .tag("latest"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
-
-        action.getCommand().getParameters().put("image", "image_pull");
-        action.getCommand().getParameters().put("tag", "latest");
 
         action.execute(context);
 

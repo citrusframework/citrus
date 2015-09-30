@@ -42,4 +42,14 @@ public class ContainerStop extends AbstractDockerCommand<ResponseItem> {
 
         setCommandResult(success());
     }
+
+    /**
+     * Sets the container id parameter.
+     * @param id
+     * @return
+     */
+    public ContainerStop container(String id) {
+        getParameters().put(CONTAINER_ID, id);
+        return this;
+    }
 }

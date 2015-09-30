@@ -62,4 +62,44 @@ public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
 
         imageResult.awaitSuccess();
     }
+
+    /**
+     * Sets the image id parameter.
+     * @param id
+     * @return
+     */
+    public ImagePull image(String id) {
+        getParameters().put(IMAGE_ID, id);
+        return this;
+    }
+
+    /**
+     * Sets the tag parameter.
+     * @param tag
+     * @return
+     */
+    public ImagePull tag(String tag) {
+        getParameters().put("tag", tag);
+        return this;
+    }
+
+    /**
+     * Sets the repository command parameter.
+     * @param repository
+     * @return
+     */
+    public ImagePull repository(String repository) {
+        getParameters().put("repository", repository);
+        return this;
+    }
+
+    /**
+     * Sets the registry command parameter.
+     * @param registry
+     * @return
+     */
+    public ImagePull registry(String registry) {
+        getParameters().put("registry", registry);
+        return this;
+    }
 }

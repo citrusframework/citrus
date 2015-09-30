@@ -24,6 +24,7 @@ import com.consol.citrus.util.FileUtils;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 
@@ -58,7 +59,11 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
 
         if (hasParameter("dockerfile")) {
             try {
-                command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", context), context).getFile());
+                if (getParameters().get("dockerfile") instanceof Resource) {
+                    command.withDockerfile(((Resource)getParameters().get("dockerfile")).getFile());
+                } else {
+                    command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", context), context).getFile());
+                }
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read Dockerfile", e);
             }
@@ -88,5 +93,75 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
         String imageId = imageResult.awaitImageId();
 
         context.setVariable(DockerMessageHeaders.IMAGE_ID, imageId);
+    }
+
+    /**
+     * Sets the noCache parameter.
+     * @param noCache
+     * @return
+     */
+    public ImageBuild noCache(Boolean noCache) {
+        getParameters().put("no-cache", noCache);
+        return this;
+    }
+
+    /**
+     * Sets the basedir parameter.
+     * @param basedir
+     * @return
+     */
+    public ImageBuild basedir(String basedir) {
+        getParameters().put("basedir", basedir);
+        return this;
+    }
+
+    /**
+     * Sets the tag parameter.
+     * @param tag
+     * @return
+     */
+    public ImageBuild tag(String tag) {
+        getParameters().put("tag", tag);
+        return this;
+    }
+
+    /**
+     * Sets the remove parameter.
+     * @param remove
+     * @return
+     */
+    public ImageBuild remove(Boolean remove) {
+        getParameters().put("remove", remove);
+        return this;
+    }
+
+    /**
+     * Sets the quiet parameter.
+     * @param quiet
+     * @return
+     */
+    public ImageBuild quiet(Boolean quiet) {
+        getParameters().put("quiet", quiet);
+        return this;
+    }
+
+    /**
+     * Sets the docker file parameter.
+     * @param filePath
+     * @return
+     */
+    public ImageBuild dockerFile(String filePath) {
+        getParameters().put("dockerfile", filePath);
+        return this;
+    }
+
+    /**
+     * Sets the docker file parameter.
+     * @param fileResource
+     * @return
+     */
+    public ImageBuild dockerFile(Resource fileResource) {
+        getParameters().put("dockerfile", fileResource);
+        return this;
     }
 }

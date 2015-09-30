@@ -43,4 +43,14 @@ public class ContainerStart extends AbstractDockerCommand<ResponseItem> {
         setCommandResult(success());
     }
 
+    /**
+     * Sets the container id parameter.
+     * @param id
+     * @return
+     */
+    public ContainerStart container(String id) {
+        getParameters().put(CONTAINER_ID, id);
+        return this;
+    }
+
 }

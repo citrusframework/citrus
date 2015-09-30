@@ -48,4 +48,14 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
 
         log.info(response.toString());
     }
+
+    /**
+     * Sets the container id parameter.
+     * @param id
+     * @return
+     */
+    public ContainerInspect container(String id) {
+        getParameters().put(CONTAINER_ID, id);
+        return this;
+    }
 }

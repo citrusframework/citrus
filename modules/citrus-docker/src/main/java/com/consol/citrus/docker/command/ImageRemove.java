@@ -49,4 +49,24 @@ public class ImageRemove extends AbstractDockerCommand<ResponseItem> {
         setCommandResult(success());
     }
 
+    /**
+     * Sets the image id parameter.
+     * @param id
+     * @return
+     */
+    public ImageRemove image(String id) {
+        getParameters().put(IMAGE_ID, id);
+        return this;
+    }
+
+    /**
+     * Sets the force parameter.
+     * @param force
+     * @return
+     */
+    public ImageRemove force(Boolean force) {
+        getParameters().put("force", force);
+        return this;
+    }
+
 }

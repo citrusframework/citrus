@@ -59,11 +59,19 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("capability-add")) {
-            command.withCapAdd(getCapabilities("capability-add", context));
+            if (getParameters().get("capability-add") instanceof Capability[]) {
+                command.withCapAdd((Capability[]) getParameters().get("capability-add"));
+            } else {
+                command.withCapAdd(getCapabilities("capability-add", context));
+            }
         }
 
         if (hasParameter("capability-drop")) {
-            command.withCapDrop(getCapabilities("capability-drop", context));
+            if (getParameters().get("capability-drop") instanceof Capability[]) {
+                command.withCapAdd((Capability[]) getParameters().get("capability-drop"));
+            } else {
+                command.withCapDrop(getCapabilities("capability-drop", context));
+            }
         }
 
         if (hasParameter("domain-name")) {
@@ -71,11 +79,19 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("cmd")) {
-            command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd", context), DELIMITER));
+            if (getParameters().get("cmd") instanceof Capability[]) {
+                command.withCmd((String[]) getParameters().get("cmd"));
+            } else {
+                command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd", context), DELIMITER));
+            }
         }
 
         if (hasParameter("env")) {
-            command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env", context), DELIMITER));
+            if (getParameters().get("env") instanceof Capability[]) {
+                command.withEnv((String[]) getParameters().get("env"));
+            } else {
+                command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env", context), DELIMITER));
+            }
         }
 
         if (hasParameter("entrypoint")) {
@@ -87,15 +103,27 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("port-specs")) {
-            command.withPortSpecs(StringUtils.delimitedListToStringArray(getParameter("port-specs", context), DELIMITER));
+            if (getParameters().get("port-specs") instanceof Capability[]) {
+                command.withPortSpecs((String[]) getParameters().get("port-specs"));
+            } else {
+                command.withPortSpecs(StringUtils.delimitedListToStringArray(getParameter("port-specs", context), DELIMITER));
+            }
         }
 
         if (hasParameter("exposed-ports")) {
-            command.withExposedPorts(getExposedPorts(context));
+            if (getParameters().get("exposed-ports") instanceof ExposedPort[]) {
+                command.withExposedPorts((ExposedPort[]) getParameters().get("exposed-ports"));
+            } else {
+                command.withExposedPorts(getExposedPorts(context));
+            }
         }
 
         if (hasParameter("volumes")) {
-            command.withVolumes(getVolumes(context));
+            if (getParameters().get("volumes") instanceof ExposedPort[]) {
+                command.withVolumes((Volume[]) getParameters().get("volumes"));
+            } else {
+                command.withVolumes(getVolumes(context));
+            }
         }
 
         if (hasParameter("working-dir")) {
@@ -162,5 +190,165 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         return exposedPorts;
+    }
+
+    /**
+     * Sets the image id parameter.
+     * @param id
+     * @return
+     */
+    public ContainerCreate image(String id) {
+        getParameters().put(IMAGE_ID, id);
+        return this;
+    }
+
+    /**
+     * Sets the image name parameter.
+     * @param name
+     * @return
+     */
+    public ContainerCreate name(String name) {
+        getParameters().put("name", name);
+        return this;
+    }
+
+    /**
+     * Sets the attach-stderr parameter.
+     * @param attachStderr
+     * @return
+     */
+    public ContainerCreate attachStdErr(Boolean attachStderr) {
+        getParameters().put("attach-stderr", attachStderr);
+        return this;
+    }
+
+    /**
+     * Sets the attach-stdin parameter.
+     * @param attachStdin
+     * @return
+     */
+    public ContainerCreate attachStdIn(Boolean attachStdin) {
+        getParameters().put("attach-stdin", attachStdin);
+        return this;
+    }
+
+    /**
+     * Sets the attach-stdout parameter.
+     * @param attachStdout
+     * @return
+     */
+    public ContainerCreate attachStdOut(Boolean attachStdout) {
+        getParameters().put("attach-stdout", attachStdout);
+        return this;
+    }
+
+    /**
+     * Adds capabilities as command parameter.
+     * @param capabilities
+     * @return
+     */
+    public ContainerCreate addCapability(Capability ... capabilities) {
+        getParameters().put("capability-add", capabilities);
+        return this;
+    }
+
+    /**
+     * Drops capabilities as command parameter.
+     * @param capabilities
+     * @return
+     */
+    public ContainerCreate dropCapability(Capability ... capabilities) {
+        getParameters().put("capability-drop", capabilities);
+        return this;
+    }
+
+    /**
+     * Sets the domain-name parameter.
+     * @param domainName
+     * @return
+     */
+    public ContainerCreate domainName(String domainName) {
+        getParameters().put("domain-name", domainName);
+        return this;
+    }
+
+    /**
+     * Adds commands as command parameter.
+     * @param commands
+     * @return
+     */
+    public ContainerCreate cmd(String ... commands) {
+        getParameters().put("cmd", commands);
+        return this;
+    }
+
+    /**
+     * Adds environment variables as command parameter.
+     * @param envVars
+     * @return
+     */
+    public ContainerCreate env(String ... envVars) {
+        getParameters().put("env", envVars);
+        return this;
+    }
+
+    /**
+     * Sets the entrypoint parameter.
+     * @param entrypoint
+     * @return
+     */
+    public ContainerCreate entryPoint(String entrypoint) {
+        getParameters().put("entrypoint", entrypoint);
+        return this;
+    }
+
+    /**
+     * Sets the hostname parameter.
+     * @param hostname
+     * @return
+     */
+    public ContainerCreate hostName(String hostname) {
+        getParameters().put("hostname", hostname);
+        return this;
+    }
+
+    /**
+     * Adds port-specs variables as command parameter.
+     * @param portSpecs
+     * @return
+     */
+    public ContainerCreate portSpecs(String ... portSpecs) {
+        getParameters().put("port-specs", portSpecs);
+        return this;
+    }
+
+    /**
+     * Adds exposed-ports variables as command parameter.
+     * @param exposedPorts
+     * @return
+     */
+    public ContainerCreate exposedPorts(ExposedPort ... exposedPorts) {
+        getParameters().put("exposed-ports", exposedPorts);
+        return this;
+    }
+
+    /**
+     * Adds volumes variables as command parameter.
+     * @param volumes
+     * @return
+     */
+    public ContainerCreate volumes(Volume ... volumes) {
+        getParameters().put("volumes", volumes);
+        return this;
+    }
+
+    /**
+     * Sets the working-dir parameter.
+     * @param workingDir
+     * @return
+     */
+    public ContainerCreate workingDir(String workingDir) {
+        getParameters().put("working-dir", workingDir);
+        return this;
     }
 }

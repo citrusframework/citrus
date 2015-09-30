@@ -38,7 +38,7 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
     private final String name;
 
     /** Command parameters */
-    private Map<String, String> parameters = new HashMap<>();
+    private Map<String, Object> parameters = new HashMap<>();
 
     /** Command result if any */
     private R commandResult;
@@ -98,7 +98,7 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
      */
     protected String getParameter(String parameterName, TestContext context) {
         if (getParameters().containsKey(parameterName)) {
-            return context.replaceDynamicContentInString(getParameters().get(parameterName));
+            return context.replaceDynamicContentInString(getParameters().get(parameterName).toString());
         } else {
             throw new CitrusRuntimeException(String.format("Missing docker command parameter '%s'", parameterName));
         }
@@ -123,7 +123,7 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
     }
 
     @Override
-    public Map<String, String> getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
 
@@ -131,7 +131,7 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand {
      * Sets the command parameters.
      * @param parameters
      */
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
     }
 

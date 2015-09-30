@@ -47,4 +47,24 @@ public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
 
         setCommandResult(success());
     }
+
+    /**
+     * Sets the container id parameter.
+     * @param id
+     * @return
+     */
+    public ContainerRemove container(String id) {
+        getParameters().put(CONTAINER_ID, id);
+        return this;
+    }
+
+    /**
+     * Sets the force parameter.
+     * @param force
+     * @return
+     */
+    public ContainerRemove force(Boolean force) {
+        getParameters().put("force", force);
+        return this;
+    }
 }

@@ -112,7 +112,7 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
                     public void configure(DockerActionBuilder builder) {
                         builder.client(new com.consol.citrus.docker.client.DockerClient(dockerClient))
                             .create("new_image")
-                                .withParam("name", "my_container");
+                                .name("my_container");
                     }
                 });
 

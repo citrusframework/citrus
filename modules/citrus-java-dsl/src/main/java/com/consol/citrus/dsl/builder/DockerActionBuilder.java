@@ -83,7 +83,7 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	 */
 	public ContainerCreate create(String imageId) {
 		ContainerCreate command = new ContainerCreate();
-		command.getParameters().put("image", imageId);
+		command.image(imageId);
 		action.setCommand(command);
 		return command;
 	}
@@ -93,7 +93,7 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	 */
 	public ContainerStart start(String containerId) {
 		ContainerStart command = new ContainerStart();
-		command.getParameters().put("container", containerId);
+		command.container(containerId);
 		action.setCommand(command);
 		return command;
 	}
@@ -103,7 +103,7 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	 */
 	public ContainerStop stop(String containerId) {
 		ContainerStop command = new ContainerStop();
-		command.getParameters().put("container", containerId);
+		command.container(containerId);
 		action.setCommand(command);
 		return command;
 	}
@@ -113,7 +113,7 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	 */
 	public ContainerInspect inspectContainer(String containerId) {
 		ContainerInspect command = new ContainerInspect();
-		command.getParameters().put("container", containerId);
+		command.container(containerId);
 		action.setCommand(command);
 		return command;
 	}
@@ -123,7 +123,16 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	 */
 	public ImageInspect inspectImage(String imageId) {
 		ImageInspect command = new ImageInspect();
-		command.getParameters().put("image", imageId);
+		command.image(imageId);
+		action.setCommand(command);
+		return command;
+	}
+
+	/**
+	 * Adds a inspect container command.
+	 */
+	public ImageBuild buildImage() {
+		ImageBuild command = new ImageBuild();
 		action.setCommand(command);
 		return command;
 	}
