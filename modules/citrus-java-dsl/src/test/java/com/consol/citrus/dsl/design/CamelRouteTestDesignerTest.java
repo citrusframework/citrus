@@ -208,8 +208,6 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testDefaultCamelContextBuilder() {
         CamelContext defaultContext = applicationContext.getBean(CamelContext.class);
-        Assert.assertEquals(defaultContext.getRouteDefinitions().size(), 1);
-
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
