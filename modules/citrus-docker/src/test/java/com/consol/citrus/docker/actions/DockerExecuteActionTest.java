@@ -375,7 +375,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageBuild()
-                .dockerFile(new ClassPathResource("com/consol/citrus/docker/DockerFile"))
+                .dockerFile(new ClassPathResource("com/consol/citrus/docker/Dockerfile"))
                 .tag("latest"));
         action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
 
