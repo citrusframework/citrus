@@ -2,11 +2,11 @@
 <section id="actions-purge-endpoints">
     <title>Purging endpoints</title>
 
-    <para>Citrus works with message endpoints when sending and receiving messages. In general endpoints can also queue messages. This is especially the case when using
-    JMS message endpoints or any server endpoint component in Citrus. These are namely in memory message queues holding
-    messages for test cases. These messages may become obsolete during a test run, especially when test cases fail and stop in 
-    their message consumption. Deleting all messages from a message endpoint is therefore a useful task and is essential in these scenarios in order to not influence
-    upcoming test cases. Each test case should only receive those messages that actually refer to the test model. Therefore it is a 
+    <para>Citrus works with message endpoints when sending and receiving messages. In general endpoints can also queue messages.
+    This is especially the case when using JMS message endpoints or any server endpoint component in Citrus. These are in
+    memory message queues holding messages for test cases. These messages may become obsolete during a test run, especially when a
+    test case that would consume the messages fails. Deleting all messages from a message endpoint is therefore a useful task
+    and is essential in such scenarios so that upcoming test cases are not influenced. Each test case should only receive those messages that actually refer to the test model. Therefore it is a
     good idea to purge all message endpoint destinations between the test cases. Obsolete messages that get stuck in a message endpoint
     destination for some reason are then removed so that upcoming test case are not broken.</para>
     
@@ -92,8 +92,8 @@ public void purgeTest() {
                 .endpoint(endpoint3));
 }</programlisting>
     
-    <para>Message selectors enable you to selectively remove messages from the endpoint. All messages that
-    pass the message selection logic get deleted the other messages will remain unchanged inside the endpoint destination. The
+    <para>Message selectors enable you to selectively remove messages from an endpoint. All messages that
+    meet the message selector condition get deleted and the other messages remain inside the endpoint destination. The
     message selector is either a normal String name-value representation or a map of key value pairs:</para>
 
     <para><emphasis>XML DSL</emphasis></para>
@@ -123,7 +123,7 @@ public void purgeTest() {
                 .selector("operation = 'sayHello'"));
 }</programlisting>
 
-    <para>In the examples above we use a String representation of the message selector expression. In general the message selector operates on the message header. So following from that
+    <para>In the examples above we use a String to represent the message selector expression. In general the message selector operates on the message header. So following on from that
     we remove all messages selectively that have a message header <emphasis>operation</emphasis> with its value <emphasis>sayHello</emphasis>.</para>
     
     <para>Purging endpoints in each test case every time is quite exhausting because every test case needs to define a purging action at the
