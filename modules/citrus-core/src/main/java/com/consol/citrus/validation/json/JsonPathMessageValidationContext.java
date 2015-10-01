@@ -31,7 +31,7 @@ import java.util.Map;
 public class JsonPathMessageValidationContext extends ControlMessageValidationContext {
 
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+    private Map<String, String> jsonPathExpressions = new HashMap<>();
 
     /**
      * Default constructor using JSON message type.

@@ -30,7 +30,7 @@ import java.util.Set;
 public class JsonMessageValidationContext extends ControlMessageValidationContext {
 
     /** Map holding xpath expressions to identify the ignored message elements */
-    private Set<String> ignoreExpressions = new HashSet<String>();
+    private Set<String> ignoreExpressions = new HashSet<>();
 
     /**
      * Default constructor using message type field.
