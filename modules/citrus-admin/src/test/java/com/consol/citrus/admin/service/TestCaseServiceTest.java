@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.admin.model.*;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTests() throws IOException {
         reset(project);
+        expect(project.getSrcDirectory()).andReturn(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY).atLeastOnce();
         expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).atLeastOnce();
         replay(project);
 

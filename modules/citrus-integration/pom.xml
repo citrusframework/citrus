@@ -133,14 +133,6 @@
                 <include>**</include>
             </includes>
         </testResource>
-        <testResource>
-            <directory>src/it/tests</directory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <excludes>
-            </excludes>
-        </testResource>
     </testResources>
   </build>
   

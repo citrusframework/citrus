@@ -666,31 +666,6 @@
   </dependencies>
   
   <build>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-        <excludes>
-        </excludes>
-      </testResource>
-      <testResource>
-        <directory>src/it/resources</directory>
-        <includes>
-          <include>**</include>
-        </includes>
-      </testResource>
-      <testResource>
-        <directory>src/it/tests</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-        <excludes>
-        </excludes>
-      </testResource>
-    </testResources>
-
     <pluginManagement>
       <plugins>
         <plugin>

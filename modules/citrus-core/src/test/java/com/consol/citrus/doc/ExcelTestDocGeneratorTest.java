@@ -84,7 +84,7 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
                         .withOutputFile("CustomCitrusTests.xls")
                         .withPageTitle("CustomPageTitle")
                         .withCustomHeaders("Id;Name;Autor;Status;Beschreibung;Datum;Dateiname")
-                        .useTestDirectory("src/it/tests/com/consol/citrus/sample");
+                        .useSrcDirectory("src" + File.separator + "test" + File.separator);
         
         creator.generateDoc();
         

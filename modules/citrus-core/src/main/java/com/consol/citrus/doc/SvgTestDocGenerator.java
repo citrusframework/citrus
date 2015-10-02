@@ -16,17 +16,15 @@
 
 package com.consol.citrus.doc;
 
-import java.io.*;
-import java.util.List;
-import java.util.Properties;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.xml.sax.SAXException;
 
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.SAXException;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Class to automatically generate a visual representation of a {@link com.consol.citrus.TestCase} in SVG.
@@ -107,12 +105,12 @@ public final class SvgTestDocGenerator extends AbstractTestDocGenerator {
     }
     
     /**
-     * Adds a custom test directory.
-     * @param testDir the test directory.
+     * Adds a custom test source directory.
+     * @param testDir the test source directory.
      * @return
      */
-    public SvgTestDocGenerator useTestDirectory(String testDir) {
-        this.setTestDirectory(testDir);
+    public SvgTestDocGenerator useSrcDirectory(String testDir) {
+        this.setSrcDirectory(testDir);
         return this;
     }
     

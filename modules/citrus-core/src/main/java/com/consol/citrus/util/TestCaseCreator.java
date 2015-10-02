@@ -45,6 +45,9 @@ public class TestCaseCreator {
     
     /** Target package of test case */
     private String targetPackage;
+
+    /** Source directory for tests */
+    private String srcDirectory = CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY;
     
     /** Sample XML-Request */
     private String xmlRequest;
@@ -84,12 +87,10 @@ public class TestCaseCreator {
      */
     public static void main(String[] args) {
         Options options = new TestCaseCreatorCliOptions();
-        CommandLineParser cliParser = new GnuParser();
-        
-        CommandLine cmd = null;
-        
+
         try {
-            cmd = cliParser.parse(options, args);
+            CommandLineParser cliParser = new GnuParser();
+            CommandLine cmd = cliParser.parse(options, args);
             
             if (cmd.hasOption("help")) {
                 HelpFormatter formatter = new HelpFormatter();
@@ -102,6 +103,7 @@ public class TestCaseCreator {
                 .withAuthor(cmd.getOptionValue("author", "Unknown"))
                 .withDescription(cmd.getOptionValue("description", "TODO: Description"))
                 .usePackage(cmd.getOptionValue("package", "com.consol.citrus"))
+                .useSrcDirectory(cmd.getOptionValue("srcdir", CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY))
                 .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "testng")));
             
             creator.createTestCase();
@@ -124,11 +126,11 @@ public class TestCaseCreator {
         targetPackage = targetPackage.replace('.', '/');
         
         createFileFromTemplate(properties,
-                CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + File.separator + name + ".xml",
+                srcDirectory + File.separator + "resources" + File.separator + targetPackage + File.separator + name + ".xml",
                 getTemplateFileForXMLTest(xmlRequest != null && xmlResponse != null));
         
-        createFileFromTemplate(properties, 
-                CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + File.separator + name + ".java", 
+        createFileFromTemplate(properties,
+                srcDirectory + File.separator + "java" + File.separator + targetPackage + File.separator + name + ".java",
                 getTemplateFileForJavaClass());
     }
     
@@ -149,7 +151,9 @@ public class TestCaseCreator {
         
         properties.put("test.method.name", name.substring(0,1).toLowerCase() + name.substring(1));
         properties.put("test.package", targetPackage);
-        
+
+        properties.put("test.src.directory", srcDirectory);
+
         if (xmlRequest != null && xmlResponse != null) {
             properties.put("test.request", xmlRequest);
             properties.put("test.response", xmlResponse);
@@ -314,6 +318,16 @@ public class TestCaseCreator {
         this.targetPackage = targetPackage;
         return this;
     }
+
+    /**
+     * Set test source directory via builder method.
+     * @param srcDirectory
+     * @return
+     */
+    public TestCaseCreator useSrcDirectory(String srcDirectory) {
+        this.srcDirectory = srcDirectory;
+        return this;
+    }
     
     /**
      * Set the unit testing framework to use.
@@ -379,6 +393,12 @@ public class TestCaseCreator {
                     .withDescription("the package to use (optional)")
                     .isRequired(false)
                     .create("package"));
+
+            this.addOption(OptionBuilder.withArgName("srcdir")
+                    .hasArg()
+                    .withDescription("the test source directory to use (optional)")
+                    .isRequired(false)
+                    .create("srcdir"));
             
             this.addOption(OptionBuilder.withArgName("framework")
                     .hasArg()
@@ -442,6 +462,22 @@ public class TestCaseCreator {
      */
     public void setPackage(String targetPackage) {
         this.targetPackage = targetPackage;
+    }
+
+    /**
+     * Get the test source directory.
+     * @return the srcDirectory
+     */
+    public String getSrcDirectory() {
+        return srcDirectory;
+    }
+
+    /**
+     * Set the test source directory.
+     * @param srcDirectory the srcDirectory to set
+     */
+    public void setSrcDirectory(String srcDirectory) {
+        this.srcDirectory = srcDirectory;
     }
 
     /**

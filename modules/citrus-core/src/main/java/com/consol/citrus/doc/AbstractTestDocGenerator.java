@@ -45,7 +45,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
 
     private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "doc";
     
-    protected String testDirectory = CitrusConstants.DEFAULT_TEST_DIRECTORY;
+    protected String srcDirectory = CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY;
     protected String testDocTemplate;
     protected String outputFile;
     
@@ -160,7 +160,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
      */
     protected List<File> getTestFiles() throws IOException {
         if (testFiles == null) {
-            testFiles = FileUtils.getTestFiles(testDirectory);
+            testFiles = FileUtils.getTestFiles(srcDirectory + "resources" + File.separator);
         }
         
         return testFiles;
@@ -204,17 +204,17 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
     }
     
     /**
-     * @param testDirectory the testDirectory to set
+     * @param srcDirectory the srcDirectory to set
      */
-    public void setTestDirectory(String testDirectory) {
-        this.testDirectory = testDirectory;
+    public void setSrcDirectory(String srcDirectory) {
+        this.srcDirectory = srcDirectory;
     }
 
     /**
-     * @return the testDirectory
+     * @return the srcDirectory
      */
-    public String getTestDirectory() {
-        return testDirectory;
+    public String getSrcDirectory() {
+        return srcDirectory;
     }
     
     /**

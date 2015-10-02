@@ -61,12 +61,12 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src" + File.separator + "it" +
-                                                        File.separator + "tests" + 
+        Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
+                                                        File.separator + "resources" +
                                                         File.separator + "com" + 
                                                         File.separator + "consol" + 
                                                         File.separator + "citrus" + 
-                                                        File.separator + "sample" + 
+                                                        File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
     }
     
@@ -76,12 +76,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
                         .withLogo("test-logo.png")
                         .withOverviewTitle("CustomOverview")
                         .withPageTitle("CustomPageTitle")
-                        .useTestDirectory("src" + File.separator + "it" +
-                                                    File.separator + "tests" + 
-                                                    File.separator + "com" + 
-                                                    File.separator + "consol" + 
-                                                    File.separator + "citrus" + 
-                                                    File.separator + "sample");
+                        .useSrcDirectory("src" + File.separator + "test" + File.separator);
         
         creator.generateDoc();
         
@@ -95,12 +90,12 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src" + File.separator + "it" +
-                                                        File.separator + "tests" + 
+        Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
+                                                        File.separator + "resources" +
                                                         File.separator + "com" + 
                                                         File.separator + "consol" + 
                                                         File.separator + "citrus" + 
-                                                        File.separator + "sample" + 
+                                                        File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
         
     }
