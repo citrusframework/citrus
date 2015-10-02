@@ -177,6 +177,9 @@
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
+
+    <skip.integration.tests>false</skip.integration.tests>
+    <skip.unit.tests>false</skip.unit.tests>
   </properties>
 
   <dependencyManagement>
@@ -673,16 +676,13 @@
         </excludes>
       </testResource>
       <testResource>
-        <directory>src/citrus/resources</directory>
+        <directory>src/it/resources</directory>
         <includes>
           <include>**</include>
         </includes>
-        <excludes>
-          <exclude>*.java</exclude>
-        </excludes>
       </testResource>
       <testResource>
-        <directory>src/citrus/tests</directory>
+        <directory>src/it/tests</directory>
         <includes>
           <include>**/*</include>
         </includes>
@@ -741,27 +741,29 @@
             </systemProperties>
             <forkMode>once</forkMode>
             <failIfNoTests>false</failIfNoTests>
+            <skipTests>${skip.unit.tests}</skipTests>
             <excludes>
-              <exclude>**/integration/**/*.java</exclude>
+              <exclude>**/IT*.java</exclude>
+              <exclude>**/*IT.java</exclude>
             </excludes>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.18.1</version>
           <executions>
             <execution>
               <id>integration-tests</id>
-              <phase>integration-test</phase>
               <goals>
-                <goal>test</goal>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
               </goals>
               <configuration>
-                <reportsDirectory>${project.build.directory}/surefire-reports/integration-tests</reportsDirectory>
-                <excludes>
-                  <exclude>none</exclude>
-                </excludes>
-                <includes>
-                  <include>**/integration/**/*.java</include>
-                </includes>
                 <failIfNoTests>false</failIfNoTests>
+                <skipTests>${skip.integration.tests}</skipTests>
               </configuration>
             </execution>
           </executions>
@@ -963,6 +965,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>

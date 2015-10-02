@@ -17,7 +17,7 @@
                         context-config-location="classpath:com/consol/citrus/http/servlet-context.xml"
                         message-converter="messageConverter"
                         connector="connector"
-                        resource-base="src/citrus/resources"
+                        resource-base="src/it/resources"
                         root-parent-context="true"
                         context-path="/citrus"
                         servlet-name="citrus-http"

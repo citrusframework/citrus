@@ -138,7 +138,7 @@
         <programlisting>&lt;citrus-http:server id=&quot;helloHttpServer&quot;
                 port=&quot;8080&quot;
                 auto-start=&quot;true&quot;
-                resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
+                resource-base=&quot;src/it/resources&quot;/&gt;</programlisting>
         
         <para>Citrus uses an embedded Jetty server that will automatically start when the Spring application context is loaded (auto-start=&quot;true&quot;). The basic connector is listening on
         port <emphasis>8080</emphasis> for requests. Test cases can interact with this server instance via message channels by default. The server provides an inbound channel that holds incoming request messages. The
@@ -200,7 +200,7 @@
           port=&quot;8080&quot;
           auto-start=&quot;true&quot;
           endpoint-adapter=&quot;emptyResponseEndpointAdapter&quot;
-          resource-base=&quot;src/citrus/resources&quot;/&gt;
+          resource-base=&quot;src/it/resources&quot;/&gt;
 
           &lt;citrus:empty-response-adapter id=&quot;emptyResponseEndpointAdapter&quot;/&gt;</programlisting>
 
@@ -483,7 +483,7 @@ Content-Length: 175
         <programlisting>&lt;citrus-http:server id=&quot;basicAuthHttpServer&quot;
                 port=&quot;8090&quot;
                 auto-start=&quot;true&quot;
-                resource-base=&quot;src/citrus/resources&quot;
+                resource-base=&quot;src/it/resources&quot;
                 security-handler=&quot;basicSecurityHandler&quot;/&gt;
 
 &lt;bean id=&quot;securityHandler&quot; class=&quot;com.consol.citrus.http.security.SecurityHandlerFactory&quot;&gt;
@@ -559,6 +559,6 @@ Content-Length: 175
       port=&quot;8080&quot;
       auto-start=&quot;true&quot;
       context-config-location=&quot;classpath:com/consol/citrus/http/custom-servlet-context.xml&quot;
-      resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
+      resource-base=&quot;src/it/resources&quot;/&gt;</programlisting>
     </section>
 </chapter>

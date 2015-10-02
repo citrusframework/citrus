@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="VertxSyncEndpointIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-05-17</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-05-17T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test synchronously sends and receives messages to/from Vert.x event bus.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Send Vert.x message on event bus and receive synchronous reply</message>
+      </echo>
+
+      <send endpoint="vertxHelloEndpoint" fork="true">
+        <message type="plaintext">
+          <data>Hello from Citrus!</data>
+        </message>
+      </send>
+
+      <receive endpoint="vertxReplyEndpoint">
+        <message type="plaintext">
+          <data>Hello from Citrus!</data>
+        </message>
+        <header>
+          <element name="citrus_vertx_address" value="hello"/>
+        </header>
+      </receive>
+
+      <send endpoint="vertxReplyEndpoint">
+        <message type="plaintext">
+          <data>Hello from Vert.x!</data>
+        </message>
+      </send>
+
+      <receive endpoint="vertxHelloEndpoint">
+        <message type="plaintext">
+          <data>Hello from Vert.x!</data>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

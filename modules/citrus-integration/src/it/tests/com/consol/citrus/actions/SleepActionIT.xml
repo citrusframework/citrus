@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="SleepActionIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
+		</meta-info>
+		
+        <description>
+			This test shows how to make the whole Citrus test run sleep 
+			for a given amount of time. The service bean "waitDelay" 
+			offers the property delay, to define the amount of time in seconds.
+			
+			As shown in this example decimal values are supported to specify the 
+			time to wait. The bean can also be used without defining a custom delay.
+			In this case the default delay of 5 secinds will be used.
+		</description>
+        <actions>
+            <sleep time="0.3"/>
+            <sleep seconds="1.0"/>
+            <sleep milliseconds="500"/>
+        </actions>
+    </testcase>
+</spring:beans>

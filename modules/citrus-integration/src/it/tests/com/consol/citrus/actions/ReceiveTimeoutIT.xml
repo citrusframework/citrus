@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+	<testcase name="ReceiveTimeoutIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
+		</meta-info>
+		
+		<description>
+			In some cases it might be necessary to expect a timout when receiving a message from jms destinations. 
+			For instance the tester intends to ensure that no message is sent to a certain queue. In that case the JMS 
+			receive timeout would not be a test aborting error. The timout would rather be the expected behaviour.
+			
+			In order to validate such a timeout situation the beans receiveTimout_xxx can be used. They expect the JMS timeout
+			to happen and fail if a message is received. The bean usage is very simple.
+			
+			The bean offers two properties:
+				- timeout to declare the amount of time to wait for a message
+				- destination to declare the queue to receive from
+			
+			Note: There are two possibilites to define thosse properties. On the one hand you can use a general timeout bean, where
+			the properties have to be set in every test case as shown in the first example below. The advantage in this strategy is
+			to minimize the configuration work in the service beans context, because you have one bean for many queues. On the other 
+			hand you can inherit those properties from a parent bean configured in the service beans context. In this case the timeout 
+			bean is only of use for one special queue (FLNManagementOut). The configuration work in the service beans context increases
+			but the tester does not have to worry about queue names and other properties as shown in the second example. 
+		</description>
+		<actions>
+			<expect-timeout endpoint="dummyMessageReceiver" wait="500"/>
+		</actions>
+	</testcase>
+	
+</spring:beans>

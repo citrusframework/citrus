@@ -36,21 +36,21 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
         TestCaseCreator creator = TestCaseCreator.build()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
-                                         .withName("SampleTest")
+                                         .withName("SampleIT")
                                          .usePackage("com.consol.citrus")
                                          .withFramework(UnitFramework.TESTNG);
 
         creator.createTestCase();
         
-        File javaFile = new File("src/citrus/java/com/consol/citrus/SampleTest.java");
+        File javaFile = new File("src/it/java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
         
-        File xmlFile = new File("src/citrus/tests/com/consol/citrus/SampleTest.xml");
+        File xmlFile = new File("src/it/tests/com/consol/citrus/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
         
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
-        Assert.assertTrue(javaContent.contains("public class SampleTest"));
+        Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
@@ -58,7 +58,7 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleTest\">"));
+        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleIT\">"));
     }
     
     @Test
@@ -66,21 +66,21 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
         TestCaseCreator creator = TestCaseCreator.build()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
-                                         .withName("SampleTest")
+                                         .withName("SampleIT")
                                          .usePackage("com.consol.citrus")
                                          .withFramework(UnitFramework.JUNIT);
 
         creator.createTestCase();
         
-        File javaFile = new File("src/citrus/java/com/consol/citrus/SampleTest.java");
+        File javaFile = new File("src/it/java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
         
-        File xmlFile = new File("src/citrus/tests/com/consol/citrus/SampleTest.xml");
+        File xmlFile = new File("src/it/tests/com/consol/citrus/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
         
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
-        Assert.assertTrue(javaContent.contains("public class SampleTest"));
+        Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractJUnit4CitrusTest"));
@@ -88,7 +88,7 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleTest\">"));
+        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleIT\">"));
     }
     
     @Test
@@ -110,17 +110,17 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testDefaultValues() throws IOException {
-        TestCaseCreator.main(new String[] {"-name", "SampleTest"});
+        TestCaseCreator.main(new String[] {"-name", "SampleIT"});
         
-        File javaFile = new File("src/citrus/java/com/consol/citrus/SampleTest.java");
+        File javaFile = new File("src/it/java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
         
-        File xmlFile = new File("src/citrus/tests/com/consol/citrus/SampleTest.xml");
+        File xmlFile = new File("src/it/tests/com/consol/citrus/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
         
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Unknown"));
-        Assert.assertTrue(javaContent.contains("public class SampleTest"));
+        Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* TODO: Description"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
@@ -128,7 +128,7 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Unknown</author>"));
         Assert.assertTrue(xmlContent.contains("<description>TODO: Description</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleTest\">"));
+        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleIT\">"));
     }
     
     @Test

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="WebServiceServer_2_IT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-02-04</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-02-04T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test receives SOAP messages as Http server instance and sends proper SOAP response back to client.</description>
+
+    <variables>
+      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
+      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
+      <variable name="user" value="Christoph"></variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Test: Receive Http SOAP request via server instance and send back SOAP response.</message>
+      </echo>
+
+      <send endpoint="echoSoapClient" fork="true">
+        <message>
+          <data>
+            <![CDATA[
+              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>${user}</User>
+                <Text>Hello Citrus</Text>
+              </HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+          <element name="{http://citrusframework.org/test}CorrelationId" value="${correlationId}"/>
+        </header>
+      </send>
+
+      <receive endpoint="echoSoapServer">
+        <message>
+          <data>
+            <![CDATA[
+              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>${user}</User>
+                <Text>Hello Citrus</Text>
+              </HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+        </header>
+      </receive>
+
+      <send endpoint="echoSoapServer">
+        <message>
+          <data>
+            <![CDATA[
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>HelloService</User>
+                <Text>Hello ${user}</Text>
+              </HelloResponse>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+          <element name="{http://citrusframework.org/test}CorrelationId" value="${correlationId}"/>
+        </header>
+      </send>
+
+      <receive endpoint="echoSoapClient">
+        <message>
+          <data>
+            <![CDATA[
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>HelloService</User>
+                <Text>Hello ${user}</Text>
+              </HelloResponse>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+        </header>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

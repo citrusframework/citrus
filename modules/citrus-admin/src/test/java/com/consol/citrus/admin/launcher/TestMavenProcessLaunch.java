@@ -46,9 +46,9 @@ public class TestMavenProcessLaunch {
     }
 
     private static ProcessLauncher singleTest(int maxExecutionTimeSeconds) throws InterruptedException {
-        ProcessBuilder pb = new MavenRunSingleTestCommand(PROJECT_ROOT_DIR, "CreateVariablesITest", new MavenRunConfiguration()).getProcessBuilder();
+        ProcessBuilder pb = new MavenRunSingleTestCommand(PROJECT_ROOT_DIR, "CreateVariablesIT", new MavenRunConfiguration()).getProcessBuilder();
         ProcessListener pli = getProcessListener();
-        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, "CreateVariablesITest");
+        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, "CreateVariablesIT");
         pla.addProcessListener(pli);
         pla.launchAndWait(pb, maxExecutionTimeSeconds);
         return pla;

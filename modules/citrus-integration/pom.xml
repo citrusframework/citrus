@@ -74,7 +74,8 @@
         </plugin>
 
         <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
             <configuration> 
                 <junitArtifactName>none:none</junitArtifactName>
                 <excludes>
@@ -84,9 +85,9 @@
             <executions>
               <execution>
                   <id>junit-tests</id>
-                  <phase>test</phase>
+                  <phase>integration-test</phase>
                   <goals>
-                      <goal>test</goal>
+                      <goal>integration-test</goal>
                   </goals>
                   <configuration>
                       <junitArtifactName>junit:junit</junitArtifactName> 
@@ -123,20 +124,17 @@
         </plugin>
 
     </plugins>
-    
-  	<testSourceDirectory>src/citrus/java</testSourceDirectory>
+
+  	<testSourceDirectory>src/it/java</testSourceDirectory>
     <testResources>
         <testResource>
-            <directory>src/citrus/resources</directory>
+            <directory>src/it/resources</directory>
             <includes>
                 <include>**</include>
             </includes>
-            <excludes>
-                <exclude>*.java</exclude>
-            </excludes>
         </testResource>
         <testResource>
-            <directory>src/citrus/tests</directory>
+            <directory>src/it/tests</directory>
             <includes>
                 <include>**/*</include>
             </includes>

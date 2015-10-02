@@ -16,22 +16,21 @@
 
 package com.consol.citrus.doc;
 
-import java.io.*;
-import java.util.List;
-import java.util.Properties;
+import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.*;
-import org.xml.sax.SAXException;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.PropertyUtils;
+import java.io.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
@@ -46,7 +45,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
 
     private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "doc";
     
-    protected String testDirectory = "src" + File.separator + "citrus" + File.separator + "tests";
+    protected String testDirectory = CitrusConstants.DEFAULT_TEST_DIRECTORY;
     protected String testDocTemplate;
     protected String outputFile;
     

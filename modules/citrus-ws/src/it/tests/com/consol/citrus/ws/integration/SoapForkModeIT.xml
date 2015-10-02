@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+
+  <testcase name="SoapForkModeIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2011-02-01</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2011-02-01T00:00:00</last-updated-on>
+    </meta-info>
+
+    <variables>
+      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
+      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
+      <variable name="user" value="Christoph"></variable>
+    </variables>
+
+    <actions>
+      <ws:send endpoint="helloSoapClient" fork="true">
+        <message>
+          <data>
+            <![CDATA[
+              <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>${messageId}</ns0:MessageId>
+                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                <ns0:User>${user}</ns0:User>
+                <ns0:Text>Hello WebServer</ns0:Text>
+              </ns0:HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+        </header>
+      </ws:send>
+
+      <receive endpoint="soapRequestEndpoint">
+        <message schema-validation="false">
+          <data>
+            <![CDATA[
+              <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+								<ns0:MessageId>${messageId}</ns0:MessageId>
+								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+								<ns0:User>${user}</ns0:User>
+								<ns0:Text>Hello WebServer</ns0:Text>
+							</ns0:HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+        <extract>
+          <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+        </extract>
+      </receive>
+
+      <send endpoint="soapResponseEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+							<ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+								<ns0:MessageId>${messageId}</ns0:MessageId>
+								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+								<ns0:User>WebServer</ns0:User>
+								<ns0:Text>Hello ${user}</ns0:Text>
+							</ns0:HelloResponse>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloSoapClient" timeout="5000">
+        <message schema-validation="false">
+          <data>
+            <![CDATA[
+              <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>${messageId}</ns0:MessageId>
+                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                <ns0:User>WebServer</ns0:User>
+                <ns0:Text>Hello ${user}</ns0:Text>
+              </ns0:HelloResponse>
+            ]]>
+          </data>
+        </message>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

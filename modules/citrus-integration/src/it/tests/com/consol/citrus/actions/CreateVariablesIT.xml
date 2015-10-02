@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="CreateVariablesIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
+		</meta-info>
+		
+        <description>
+			It might be helpful to reset existing variables during the testworkflow as well as to define new
+			variables during a test.
+			
+			To archieve that, you can easily use the service bean 'settingVariables'. This bean offers a map 'variables' to declare
+			new variables or overwrite existing variable values using the well known key-value syntax of the entry element.
+			
+			New variables can be defined by simply declaring a new variable name. These variables are valid for the rest of the testworkflow. 
+			Existing variable values will be exchanged with the new value given.
+		</description>
+        <variables>
+            <variable name="myVariable" value="12345"/>
+            <variable name="newValue" value="54321"/>
+        </variables>
+        <actions>
+            <echo>
+                <message>Current variable value: ${myVariable} </message>
+            </echo>
+            
+            <create-variables>
+                <variable name="myVariable" value="${newValue}"/>
+                <variable name="new" value="'this is a test'"/>
+            </create-variables>
+            
+            <echo>
+                <message>Current variable value: ${myVariable}</message>
+            </echo>
+            <echo>
+                <message>New variable 'new' has the value: ${new} </message>
+            </echo>
+            
+            <create-variables>
+                <variable name="scriptVariable">
+                    <value>
+                        <script type="groovy">
+                            ${newValue} + 5
+                        </script>
+                    </value>
+                </variable>
+            </create-variables>
+            
+            <groovy>
+                assert ${scriptVariable} == 54326
+            </groovy>
+        </actions>
+    </testcase>
+</spring:beans>

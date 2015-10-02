@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="DataProviderIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2011-04-01</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2011-04-01T00:00:00</last-updated-on>
+		</meta-info>
+		
+        <description>
+			The example shows the usage of TestNG parameters that get injected into the test case
+            on startup. The 'message' variable is set in respective Java part of the test. The parameter value comes 
+            from a data provider which can have data sources from external (e.g. files, databases, etc.).
+            
+            The test gets executed several times in case multiple values for a parameter are provided. In this example the test
+            is executed three times as the data provider offers three values for 'message' ('Hello World', 'Hello Welt' and 'Hello Citrus').
+		</description>
+    
+        <actions>
+            <echo>
+                <message>${message}</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>

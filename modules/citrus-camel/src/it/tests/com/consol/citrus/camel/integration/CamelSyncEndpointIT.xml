@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="CamelSyncEndpointIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-06-07</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-06-07T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test sends message to Camel endpoint and receives synchronous response.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Send message to Camel endpoint and receive synchronous response</message>
+      </echo>
+
+      <send endpoint="camel:sync:direct:hello" fork="true">
+        <message type="plaintext">
+          <data>Hello Camel!</data>
+        </message>
+      </send>
+
+      <receive endpoint="camelHelloEndpoint">
+        <message type="plaintext">
+          <data>Hello Camel!</data>
+        </message>
+      </receive>
+
+      <sleep milliseconds="1000"/>
+
+      <send endpoint="camelHelloEndpoint">
+        <message type="plaintext">
+          <data>Hello from Citrus!</data>
+        </message>
+      </send>
+
+      <receive endpoint="camel:sync:direct:hello">
+        <message type="plaintext">
+          <data>Hello from Citrus!</data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test: Send message to Camel control bus and receive synchronous response</message>
+      </echo>
+
+      <send endpoint="camelNewsStatusEndpoint">
+        <message type="plaintext">
+          <data></data>
+        </message>
+      </send>
+
+      <receive endpoint="camelNewsStatusEndpoint">
+        <message type="plaintext">
+          <data>Started</data>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>
