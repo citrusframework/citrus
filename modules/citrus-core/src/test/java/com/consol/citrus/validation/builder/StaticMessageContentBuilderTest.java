@@ -38,8 +38,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder = new StaticMessageContentBuilder(testMessage);
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message, testMessage);
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
+        Assert.assertEquals(message.copyHeaders().size(), testMessage.copyHeaders().size());
+        Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
         Assert.assertEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
     }
 
@@ -150,9 +151,8 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder = new StaticMessageContentBuilder(testMessage);
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message, testMessage);
-        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
+        Assert.assertEquals(message.getPayload(), "TestMessage");
+        Assert.assertEquals(message.getHeader("header1"), "value1");
         Assert.assertEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
     }
 
@@ -164,7 +164,6 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder = new StaticMessageContentBuilder(testMessage);
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
-        Assert.assertEquals(message, testMessage);
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
         Assert.assertEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));

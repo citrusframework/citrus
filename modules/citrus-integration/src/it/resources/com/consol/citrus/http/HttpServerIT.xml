@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
     <testcase name="HttpServerIT">
         <meta-info>
           <author>Unknown</author>
@@ -23,23 +29,20 @@
             </echo>
             
             <parallel>
-              <send endpoint="httpClient" actor="helloClient">
-                <message>
-                  <data>
-                    <![CDATA[
-                      <testRequestMessage>
-                        <text>Hello HttpServer</text>
-                      </testRequestMessage>
-                    ]]>
-                  </data>
-                </message>
-                <header>
-                  <element name="CustomHeaderId" value="${custom_header_id}"/>
-                  <element name="Content-Type" value="text/xml"/>
-                  <element name="Accept" value="text/xml, */*"/>
-                  <element name="citrus_http_method" value="POST"/>
-                </header>
-              </send>
+              <http:post client="httpClient" actor="helloClient">
+                <http:headers>
+                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                  <http:contentType>text/xml</http:contentType>
+                  <http:accept>text/xml, */*</http:accept>
+                </http:headers>
+                <http:body>
+                  <![CDATA[
+                    <testRequestMessage>
+                      <text>Hello HttpServer</text>
+                    </testRequestMessage>
+                  ]]>
+                </http:body>
+              </http:post>
 
               <sequential>
                   <receive endpoint="httpServerRequestEndpoint" actor="helloClient">
@@ -110,23 +113,20 @@
             </echo>
             
             <parallel>
-                <send endpoint="httpClient" actor="helloClient">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <testRequestMessage>
-                                    <text>Hello HttpServer</text>
-                                </testRequestMessage>
-                            ]]>
-                        </data>
-                    </message>
-                    <header>
-                        <element name="CustomHeaderId" value="${custom_header_id}"/>
-                        <element name="Content-Type" value="text/xml"/>
-                        <element name="Accept" value="text/xml, */*"/>
-                        <element name="citrus_http_method" value="POST"/>
-                    </header>
-                </send>
+                <http:post client="httpClient" actor="helloClient">
+                    <http:headers>
+                        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                        <http:contentType>text/xml</http:contentType>
+                        <http:accept>text/xml, */*</http:accept>
+                    </http:headers>
+                    <http:body>
+                        <![CDATA[
+                            <testRequestMessage>
+                                <text>Hello HttpServer</text>
+                            </testRequestMessage>
+                        ]]>
+                    </http:body>
+                </http:post>
               
                 <sequential>
                     <receive endpoint="httpServerRequestEndpoint" actor="helloClient">
@@ -182,21 +182,19 @@
                 <message>Skip response and use fallback endpoint adapter</message>
             </echo>
             
-            <send endpoint="httpClient">
-              <message>
-                <data>
-                  <![CDATA[
-                    <testRequestMessage>
-                      <text>Hello HttpServer</text>
-                    </testRequestMessage>
-                  ]]>
-                </data>
-              </message>
-              <header>
-                <element name="CustomHeaderId" value="${custom_header_id}"/>
-              </header>
-            </send>
-            
+            <http:post client="httpClient">
+              <http:headers>
+                <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+              </http:headers>
+              <http:body>
+                <![CDATA[
+                  <testRequestMessage>
+                    <text>Hello HttpServer</text>
+                  </testRequestMessage>
+                ]]>
+              </http:body>
+            </http:post>
+
             <receive endpoint="httpClient" timeout="2000">
               <message/>
               <header>
