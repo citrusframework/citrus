@@ -1306,7 +1306,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         callback.setApplicationContext(applicationContext);
         expectLastCall().once();
-        callback.validate(anyObject(Message.class));
+        callback.validate(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().once();
         replay(callback, messageEndpoint, messageConsumer, configuration);
 

@@ -186,7 +186,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
         }
 
         if (validationCallback != null) {
-            validationCallback.validate(receivedMessage);
+            validationCallback.validate(receivedMessage, context);
         } else if (validator != null) {
             validator.validateMessage(receivedMessage, context, validationContexts);
         } else {

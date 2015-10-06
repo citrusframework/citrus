@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.xml;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.callback.AbstractValidationCallback;
@@ -55,11 +56,9 @@ public abstract class XmlMarshallingValidationCallback<T> extends AbstractValida
         this.unmarshaller = unmarshaller;
     }
     
-    /**
-     * Validate message automatically unmarshalling message payload.
-     */
-    public void validate(Message message) {
-        validate(unmarshalMessage(message), message.copyHeaders());
+    @Override
+    public void validate(Message message, TestContext context) {
+        validate(unmarshalMessage(message), message.copyHeaders(), context);
     }
     
     @SuppressWarnings("unchecked")
