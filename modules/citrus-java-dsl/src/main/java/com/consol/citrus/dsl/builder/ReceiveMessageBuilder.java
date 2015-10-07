@@ -24,10 +24,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -60,7 +60,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     private MessageType messageType = MessageType.valueOf(CitrusConstants.DEFAULT_MESSAGE_TYPE);
 
     /** Validation context used in this action builder */
-    private ControlMessageValidationContext validationContext;
+    private ValidationContext validationContext;
 
     /** JSON validation context used in this action builder */
     private JsonPathMessageValidationContext jsonPathValidationContext;
@@ -596,14 +596,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     /**
      * Creates new validation context according to message type.
      */
-    private ControlMessageValidationContext getValidationContext() {
+    private ValidationContext getValidationContext() {
         if (validationContext == null) {
             if (messageType.equals(MessageType.XML)) {
                 validationContext = new XmlMessageValidationContext();
             } else if (messageType.equals(MessageType.JSON)) {
                 validationContext = new JsonMessageValidationContext();
             } else {
-                validationContext = new ControlMessageValidationContext(messageType.toString());
+                validationContext = new DefaultValidationContext();
             }
 
             action.getValidationContexts().add(validationContext);
@@ -788,7 +788,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * Sets the validation context.
      * @param validationContext
      */
-    protected void setValidationContext(ControlMessageValidationContext validationContext) {
+    protected void setValidationContext(ValidationContext validationContext) {
         this.validationContext = validationContext;
     }
 }

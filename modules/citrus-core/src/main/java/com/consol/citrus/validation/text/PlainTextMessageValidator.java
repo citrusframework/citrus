@@ -16,25 +16,24 @@
 
 package com.consol.citrus.validation.text;
 
-import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.ControlMessageValidationContext;
-import org.springframework.util.Assert;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.ControlMessageValidator;
+import com.consol.citrus.validation.DefaultMessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
+import org.springframework.util.Assert;
 
 /**
  * Plain text validator using simple String comparison.
  * 
  * @author Christoph Deppisch
  */
-public class PlainTextMessageValidator extends ControlMessageValidator {
+public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     @Override
     public void validateMessagePayload(Message receivedMessage, Message controlMessage,
-                                       ControlMessageValidationContext validationContext, TestContext context) throws ValidationException {
+                                       ValidationContext validationContext, TestContext context) throws ValidationException {
         log.info("Start plain text message validation");
         
         if (log.isDebugEnabled()) {

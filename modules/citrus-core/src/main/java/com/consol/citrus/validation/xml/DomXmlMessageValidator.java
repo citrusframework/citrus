@@ -22,9 +22,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.ControlMessageValidator;
+import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -65,7 +64,7 @@ import java.util.Map.Entry;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageValidationContext> implements ApplicationContextAware {
+public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> implements ApplicationContextAware {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
     
@@ -705,17 +704,6 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
         return cntAttributes;
     }
 
-    @Override
-    public XmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
-        for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof XmlMessageValidationContext) {
-                return (XmlMessageValidationContext) validationContext;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Checks whether the given node contains a validation matcher
      * @param node
@@ -734,6 +722,11 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
 
             default: return false; //validation matchers makes no sense
         }
+    }
+
+    @Override
+    protected Class<XmlMessageValidationContext> getRequiredValidationContextType() {
+        return XmlMessageValidationContext.class;
     }
 
     @Override

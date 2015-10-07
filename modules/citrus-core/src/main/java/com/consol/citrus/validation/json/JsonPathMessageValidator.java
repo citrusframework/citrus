@@ -17,12 +17,12 @@
 package com.consol.citrus.validation.json;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.jayway.jsonpath.*;
 import net.minidev.json.JSONArray;
 import net.minidev.json.parser.JSONParser;
@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,14 +92,8 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
     }
 
     @Override
-    public JsonPathMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
-        for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof JsonPathMessageValidationContext) {
-                return (JsonPathMessageValidationContext) validationContext;
-            }
-        }
-
-        return null;
+    protected Class<JsonPathMessageValidationContext> getRequiredValidationContextType() {
+        return JsonPathMessageValidationContext.class;
     }
 
     @Override

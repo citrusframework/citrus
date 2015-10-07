@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,24 @@
 
 package com.consol.citrus.validation;
 
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.ValidationContext;
 
-
 /**
- * Validation context providing a control message for message validation. 
- * The control message holds expected message content and header information. Message 
- * validators compare the actual message to the control message marking differences.
+ * Basic control message validator provides message header validation. Subclasses only have to add
+ * specific logic for message payload validation. This validator is based on a control message.
  * 
  * @author Christoph Deppisch
  */
-public class ControlMessageValidationContext implements ValidationContext {
-    /** The message type this context was built for */
-    private final String messageType;
+public class DefaultMessageValidator extends AbstractMessageValidator<ValidationContext> {
 
-    /**
-     * Default constructor using message type field.
-     * @param messageType
-     */
-    public ControlMessageValidationContext(String messageType) {
-        this.messageType = messageType;
+    @Override
+    public boolean supportsMessageType(String messageType, Message message) {
+        return true;
     }
 
     @Override
-    public String getMessageType() {
-        return messageType;
+    protected Class<ValidationContext> getRequiredValidationContextType() {
+        return ValidationContext.class;
     }
 }

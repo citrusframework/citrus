@@ -33,11 +33,11 @@ import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -152,7 +152,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), ControlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");

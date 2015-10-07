@@ -20,8 +20,8 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -120,7 +120,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                     validationContexts.add(jsonPathMessageValidationContext);
                 }
             } else {
-                validationContexts.add(new ControlMessageValidationContext(messageType));
+                validationContexts.add(new DefaultValidationContext());
             }
 
             ScriptValidationContext scriptValidationContext = getScriptValidationContext(messageElement, messageType);
@@ -138,7 +138,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
             }
         } else {
-            validationContexts.add(new ControlMessageValidationContext(CitrusConstants.DEFAULT_MESSAGE_TYPE));
+            validationContexts.add(new DefaultValidationContext());
         }
 
         return validationContexts;

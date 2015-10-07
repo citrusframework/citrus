@@ -128,7 +128,10 @@ public class ScriptValidationContext implements ValidationContext {
         this.scriptType = scriptType;
     }
 
-    @Override
+    /**
+     * Gets the message type.
+     * @return
+     */
     public String getMessageType() {
         return messageType;
     }

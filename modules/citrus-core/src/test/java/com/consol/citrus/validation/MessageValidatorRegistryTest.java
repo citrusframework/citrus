@@ -18,6 +18,7 @@ package com.consol.citrus.validation;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -39,7 +40,7 @@ public class MessageValidatorRegistryTest {
     public void testFindMessageValidators() throws Exception {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
-        List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<MessageValidator<? extends ValidationContext>>();
+        List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<>();
         messageValidators.add(new PlainTextMessageValidator());
 
         messageValidatorRegistry.setMessageValidators(messageValidators);
@@ -52,7 +53,7 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(0).getClass(), PlainTextMessageValidator.class);
 
         try {
-            messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""), Collections.<ValidationContext>singletonList(new ControlMessageValidationContext(MessageType.JSON.name())));
+            messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""), Collections.<ValidationContext>singletonList(new DefaultValidationContext()));
             Assert.fail("Missing exception due to no matching validator implementation");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Could not find proper message validator for message type"));
@@ -61,7 +62,7 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.getMessageValidators().add(new DomXmlMessageValidator());
         messageValidatorRegistry.getMessageValidators().add(new GroovyScriptMessageValidator());
 
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        List<ValidationContext> validationContexts = new ArrayList<>();
         validationContexts.add(new XmlMessageValidationContext());
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""), validationContexts);
 
@@ -70,8 +71,8 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(0).getClass(), PlainTextMessageValidator.class);
         Assert.assertEquals(matchingValidators.get(1).getClass(), GroovyScriptMessageValidator.class);
 
-        Assert.assertNotNull(matchingValidators.get(0).findValidationContext(validationContexts));
-        Assert.assertNull(matchingValidators.get(1).findValidationContext(validationContexts));
+        Assert.assertNotNull(((AbstractMessageValidator)matchingValidators.get(0)).findValidationContext(validationContexts));
+        Assert.assertNull(((AbstractMessageValidator)matchingValidators.get(1)).findValidationContext(validationContexts));
 
         validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""), validationContexts);
@@ -81,10 +82,10 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(0).getClass(), PlainTextMessageValidator.class);
         Assert.assertEquals(matchingValidators.get(1).getClass(), GroovyScriptMessageValidator.class);
 
-        Assert.assertNotNull(matchingValidators.get(0).findValidationContext(validationContexts));
-        Assert.assertNotNull(matchingValidators.get(1).findValidationContext(validationContexts));
+        Assert.assertNotNull(((AbstractMessageValidator)matchingValidators.get(0)).findValidationContext(validationContexts));
+        Assert.assertNotNull(((AbstractMessageValidator)matchingValidators.get(1)).findValidationContext(validationContexts));
 
-        validationContexts = new ArrayList<ValidationContext>();
+        validationContexts = new ArrayList<>();
         validationContexts.add(new XmlMessageValidationContext());
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage(""), validationContexts);
 

@@ -16,8 +16,7 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.ControlMessageValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.core.io.Resource;
 
 import java.util.*;
@@ -28,7 +27,7 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class XmlMessageValidationContext extends ControlMessageValidationContext {
+public class XmlMessageValidationContext implements ValidationContext {
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<String>();
 
@@ -49,13 +48,6 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     
     /** Explicit schema instance to use for this validation */
     private String schema;
-
-    /**
-     * Default constructor using message type field.
-     */
-    public XmlMessageValidationContext() {
-        super(MessageType.XML.toString());
-    }
 
     /**
      * Get ignored message elements.
