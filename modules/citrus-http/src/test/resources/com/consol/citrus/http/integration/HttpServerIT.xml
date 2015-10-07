@@ -29,7 +29,7 @@
         <message>Test: Receive Http request via server instance and send back response.</message>
       </echo>
 
-      <http:request client="echoHttpClient" fork="true">
+      <http:send-request client="echoHttpClient" fork="true">
         <http:POST>
           <http:headers>
             <http:header name="Operation" value="sayHello"/>
@@ -48,30 +48,36 @@
             </http:data>
           </http:body>
         </http:POST>
-      </http:request>
+      </http:send-request>
 
-      <receive endpoint="echoHttpServer">
-        <message>
-          <data>
-            <![CDATA[
-              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                <MessageId>${messageId}</MessageId>
-                <CorrelationId>${correlationId}</CorrelationId>
-                <User>${user}</User>
-                <Text>Hello Citrus</Text>
-              </HelloRequest>
-            ]]>
-          </data>
-        </message>
-        <header>
-          <element name="Operation" value="sayHello"/>
-          <element name="CorrelationId" value="${correlationId}"/>
-        </header>
-      </receive>
+      <http:receive-request server="echoHttpServer">
+        <http:POST>
+          <http:headers>
+            <http:header name="Operation" value="sayHello"/>
+            <http:header name="CorrelationId" value="${correlationId}"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <MessageId>${messageId}</MessageId>
+                  <CorrelationId>${correlationId}</CorrelationId>
+                  <User>${user}</User>
+                  <Text>Hello Citrus</Text>
+                </HelloRequest>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:receive-request>
 
-      <send endpoint="echoHttpServer">
-        <message>
-          <data>
+      <http:send-response server="echoHttpServer">
+        <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+          <http:header name="Operation" value="sayHello"/>
+          <http:header name="CorrelationId" value="${correlationId}"/>
+        </http:headers>
+        <http:body>
+          <http:data>
             <![CDATA[
               <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <MessageId>${messageId}</MessageId>
@@ -80,20 +86,11 @@
                 <Text>Hello ${user}</Text>
               </HelloResponse>
             ]]>
-          </data>
-        </message>
-        <header>
-          <element name="citrus_http_status_code" value="200"/>
-          <element name="citrus_http_version" value="HTTP/1.1"/>
-          <element name="citrus_http_reason_phrase" value="OK"/>
-          <element name="citrus_http_request_uri" value="/echo"/>
-          <element name="citrus_http_method" value="POST"/>
-          <element name="Operation" value="sayHello"/>
-          <element name="CorrelationId" value="${correlationId}"/>
-        </header>
-      </send>
+          </http:data>
+        </http:body>
+      </http:send-response>
 
-      <http:response client="echoHttpClient">
+      <http:receive-response client="echoHttpClient">
         <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
         <http:header name="Operation" value="sayHello"/>
           <http:header name="CorrelationId" value="${correlationId}"/>
@@ -110,7 +107,7 @@
             ]]>
           </http:data>
         </http:body>
-      </http:response>
+      </http:receive-response>
     </actions>
   </testcase>
 </spring:beans>

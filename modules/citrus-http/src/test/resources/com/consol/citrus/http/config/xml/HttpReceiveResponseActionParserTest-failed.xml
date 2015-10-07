@@ -9,11 +9,11 @@
 
     <testcase name="HttpReceiveResponseActionParserTest">
       <actions>
-        <http:response>
+        <http:receive-response>
           <http:body>
             <http:data></http:data>
           </http:body>
-        </http:response>
+        </http:receive-response>
       </actions>
     </testcase>
 

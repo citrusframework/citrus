@@ -31,7 +31,7 @@
             <message>Sending request message #${i}</message>
           </echo>
 
-          <http:request uri="http://localhost:8074/test?endpointName=echoHttpClient${i}" fork="true">
+          <http:send-request uri="http://localhost:8074/test?endpointName=echoHttpClient${i}" fork="true">
             <http:POST>
               <http:headers content-type="text/xml" accept="text/xml,*/*">
                 <http:header name="CustomHeaderId" value="${custom_header_id}"/>
@@ -46,53 +46,48 @@
                 </http:data>
               </http:body>
             </http:POST>
-          </http:request>
+          </http:send-request>
         </iterate>
 
         <iterate index="k" condition="k lt= ${overallIterations}">
           <sequential>
-            <receive endpoint="echoHttpServer">
-              <message>
-                <data>
-                  <![CDATA[
-                      <testRequestMessage>
-                          <text>Hello HttpServer</text>
-                      </testRequestMessage>
-                  ]]>
-                </data>
-              </message>
-              <header>
-                <element name="CustomHeaderId" value="${custom_header_id}"/>
-                <element name="Content-Type" value="text/xml"/>
-                <element name="Accept" value="text/xml,*/*"/>
-                <element name="citrus_http_method" value="POST"/>
-                <element name="citrus_http_request_uri" value="/test"/>
-              </header>
-            </receive>
+            <http:receive-request server="echoHttpServer">
+              <http:POST path="/test">
+                <http:headers content-type="text/xml" accept="text/xml,*/*">
+                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                </http:headers>
+                <http:body>
+                  <http:data>
+                    <![CDATA[
+                        <testRequestMessage>
+                            <text>Hello HttpServer</text>
+                        </testRequestMessage>
+                    ]]>
+                  </http:data>
+                </http:body>
+              </http:POST>
+            </http:receive-request>
 
-            <send endpoint="echoHttpServer">
-              <message>
-                <data>
+            <http:send-response server="echoHttpServer">
+              <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+                <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                <http:header name="Content-Type" value="text/xml"/>
+              </http:headers>
+              <http:body>
+                <http:data>
                   <![CDATA[
                     <testResponseMessage>
                       <text>Hello Citrus</text>
                     </testResponseMessage>
                   ]]>
-                </data>
-              </message>
-              <header>
-                <element name="CustomHeaderId" value="${custom_header_id}"/>
-                <element name="citrus_http_status_code" value="200"/>
-                <element name="citrus_http_version" value="HTTP/1.1"/>
-                <element name="citrus_http_reason_phrase" value="OK"/>
-                <element name="Content-Type" value="text/xml"/>
-              </header>
-            </send>
+                </http:data>
+              </http:body>
+            </http:send-response>
           </sequential>
         </iterate>
 
         <iterate index="j" condition="j lt= ${overallIterations}">
-          <http:response uri="http://localhost:8074/test?endpointName=echoHttpClient${j}">
+          <http:receive-response uri="http://localhost:8074/test?endpointName=echoHttpClient${j}">
             <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
               <http:header name="CustomHeaderId" value="${custom_header_id}"/>
             </http:headers>
@@ -105,7 +100,7 @@
                 ]]>
               </http:data>
             </http:body>
-          </http:response>
+          </http:receive-response>
 
           <echo>
             <message>Successfully received response message #${j}</message>

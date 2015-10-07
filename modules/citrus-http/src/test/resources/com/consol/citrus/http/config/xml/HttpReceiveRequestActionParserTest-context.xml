@@ -7,21 +7,21 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
 
-    <testcase name="HttpSendRequestActionParserTest">
+    <testcase name="HttpReceiveRequestActionParserTest">
       <actions>
-        <http:send-request client="httpClient">
+        <http:receive-request server="httpServer">
           <http:GET/>
-        </http:send-request>
+        </http:receive-request>
 
-        <http:send-request uri="http://localhost:8080/test" fork="true">
+        <http:receive-request server="httpServer">
           <http:GET path="/order/${id}">
             <http:param name="id" value="12345"/>
             <http:param name="type" value="gold"/>
             <http:headers content-type="text/xml" accept="text/xml" version="HTTP/1.1"/>
           </http:GET>
-        </http:send-request>
+        </http:receive-request>
 
-        <http:send-request client="httpClient">
+        <http:receive-request server="httpServer">
           <http:POST path="/user">
             <http:headers>
               <http:header name="userId" value="1001"/>
@@ -34,24 +34,24 @@
               </http:data>
             </http:body>
           </http:POST>
-        </http:send-request>
+        </http:receive-request>
 
-        <http:send-request client="httpClient">
+        <http:receive-request server="httpServer">
           <http:DELETE path="/user/${id}"/>
-        </http:send-request>
+        </http:receive-request>
 
-        <http:send-request client="httpClient" uri="http://localhost:8080/test">
+        <http:receive-request server="httpServer">
           <http:HEAD/>
-        </http:send-request>
+        </http:receive-request>
 
-        <http:send-request uri="http://localhost:8080/test" actor="testActor">
+        <http:receive-request server="httpServer" actor="testActor">
           <http:OPTIONS/>
-        </http:send-request>
+        </http:receive-request>
       </actions>
     </testcase>
     
-    <spring:bean id="httpClient" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
+    <spring:bean id="httpServer" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.http.server.HttpServer"/>
     </spring:bean>
 
     <spring:bean id="testActor" class="org.easymock.EasyMock" factory-method="createMock">

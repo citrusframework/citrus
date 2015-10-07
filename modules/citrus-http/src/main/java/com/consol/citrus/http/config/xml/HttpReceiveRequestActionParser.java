@@ -20,14 +20,13 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -38,7 +37,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser {
+public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -53,18 +52,24 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
 
-        if (!element.hasAttribute("uri") && !element.hasAttribute("client")) {
-            throw new BeanCreationException("Neither http request uri nor http client endpoint reference is given - invalid test action definition");
-        }
-
-        if (element.hasAttribute("client")) {
-            builder.addPropertyReference("endpoint", element.getAttribute("client"));
-        } else if (element.hasAttribute("uri")) {
-            builder.addPropertyValue("endpointUri", element.getAttribute("uri"));
+        if (element.hasAttribute("server")) {
+            builder.addPropertyReference("endpoint", element.getAttribute("server"));
         }
 
         HttpMessage httpMessage = new HttpMessage();
-        Element headers = DomUtils.getChildElementByTagName(element, "headers");
+        Element requestElement = DomUtils.getChildElements(element).get(0);
+        httpMessage.method(HttpMethod.valueOf(requestElement.getLocalName().toUpperCase()));
+        if (requestElement.hasAttribute("path")) {
+            httpMessage.path(requestElement.getAttribute("path"));
+        }
+
+        List<?> params = DomUtils.getChildElementsByTagName(requestElement, "param");
+        for (Iterator<?> iter = params.iterator(); iter.hasNext();) {
+            Element param = (Element) iter.next();
+            httpMessage.queryParam(param.getAttribute("name"), param.getAttribute("value"));
+        }
+
+        Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
             for (Iterator<?> iter = headerElements.iterator(); iter.hasNext();) {
@@ -72,14 +77,14 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
                 httpMessage.setHeader(header.getAttribute("name"), header.getAttribute("value"));
             }
 
-            String statusCode = headers.getAttribute("status");
-            if (StringUtils.hasText(statusCode)) {
-                httpMessage.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, statusCode);
+            String contentType = headers.getAttribute("content-type");
+            if (StringUtils.hasText(contentType)) {
+                httpMessage.contentType(contentType);
             }
 
-            String reasonPhrase = headers.getAttribute("reason-phrase");
-            if (StringUtils.hasText(reasonPhrase)) {
-                httpMessage.reasonPhrase(reasonPhrase);
+            String accept = headers.getAttribute("accept");
+            if (StringUtils.hasText(accept)) {
+                httpMessage.accept(accept);
             }
 
             String version = headers.getAttribute("version");
@@ -88,7 +93,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             }
         }
 
-        Element body = DomUtils.getChildElementByTagName(element, "body");
+        Element body = DomUtils.getChildElementByTagName(requestElement, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);

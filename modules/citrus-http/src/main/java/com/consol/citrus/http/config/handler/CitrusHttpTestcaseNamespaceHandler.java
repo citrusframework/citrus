@@ -16,8 +16,7 @@
 
 package com.consol.citrus.http.config.handler;
 
-import com.consol.citrus.http.config.xml.HttpReceiveResponseActionParser;
-import com.consol.citrus.http.config.xml.HttpSendRequestActionParser;
+import com.consol.citrus.http.config.xml.*;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -27,7 +26,9 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusHttpTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("request", new HttpSendRequestActionParser());
-        registerBeanDefinitionParser("response", new HttpReceiveResponseActionParser());
+        registerBeanDefinitionParser("send-request", new HttpSendRequestActionParser());
+        registerBeanDefinitionParser("receive-response", new HttpReceiveResponseActionParser());
+        registerBeanDefinitionParser("receive-request", new HttpReceiveRequestActionParser());
+        registerBeanDefinitionParser("send-response", new HttpSendResponseActionParser());
     }
 }

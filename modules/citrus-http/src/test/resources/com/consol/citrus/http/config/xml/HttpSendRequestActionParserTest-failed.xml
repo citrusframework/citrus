@@ -9,9 +9,9 @@
 
     <testcase name="HttpSendRequestActionParserTest">
       <actions>
-        <http:request>
+        <http:send-request>
           <http:GET/>
-        </http:request>
+        </http:send-request>
       </actions>
     </testcase>
 

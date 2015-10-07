@@ -18,13 +18,11 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -38,7 +36,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser {
+public class HttpSendResponseActionParser extends SendMessageActionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -48,22 +46,11 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         DescriptionElementParser.doParse(element, builder);
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
-        String receiveTimeout = element.getAttribute("timeout");
-        if (StringUtils.hasText(receiveTimeout)) {
-            builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
-        }
-
-        if (!element.hasAttribute("uri") && !element.hasAttribute("client")) {
-            throw new BeanCreationException("Neither http request uri nor http client endpoint reference is given - invalid test action definition");
-        }
-
-        if (element.hasAttribute("client")) {
-            builder.addPropertyReference("endpoint", element.getAttribute("client"));
-        } else if (element.hasAttribute("uri")) {
-            builder.addPropertyValue("endpointUri", element.getAttribute("uri"));
-        }
-
         HttpMessage httpMessage = new HttpMessage();
+        if (element.hasAttribute("server")) {
+            builder.addPropertyReference("endpoint", element.getAttribute("server"));
+        }
+
         Element headers = DomUtils.getChildElementByTagName(element, "headers");
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
@@ -89,8 +76,6 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         }
 
         Element body = DomUtils.getChildElementByTagName(element, "body");
-        List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
-
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);
         Map<String, Object> messageHeaders = httpMessage.copyHeaders();
         messageHeaders.remove(MessageHeaders.ID);
@@ -98,8 +83,6 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         messageBuilder.setMessageHeaders(messageHeaders);
 
         builder.addPropertyValue("messageBuilder", messageBuilder);
-        builder.addPropertyValue("validationContexts", validationContexts);
-        builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();
     }

@@ -7,16 +7,16 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
 
-    <testcase name="HttpReceiveResponseActionParserTest">
+    <testcase name="HttpSendResponseActionParserTest">
       <actions>
-        <http:receive-response client="httpClient">
-        </http:receive-response>
+        <http:send-response server="httpServer">
+        </http:send-response>
 
-        <http:receive-response uri="http://localhost:8080/test">
+        <http:send-response server="httpServer">
           <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1"/>
-        </http:receive-response>
+        </http:send-response>
 
-        <http:receive-response client="httpClient">
+        <http:send-response server="httpServer">
           <http:headers>
             <http:header name="userId" value="1001"/>
           </http:headers>
@@ -27,14 +27,14 @@
               ]]>
             </http:data>
           </http:body>
-        </http:receive-response>
+        </http:send-response>
 
-        <http:receive-response uri="http://localhost:8080/test" actor="testActor"/>
+        <http:send-response server="httpServer" actor="testActor"/>
       </actions>
     </testcase>
     
-    <spring:bean id="httpClient" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
+    <spring:bean id="httpServer" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.http.server.HttpServer"/>
     </spring:bean>
 
     <spring:bean id="testActor" class="org.easymock.EasyMock" factory-method="createMock">

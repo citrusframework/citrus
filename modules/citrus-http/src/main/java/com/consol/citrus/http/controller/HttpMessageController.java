@@ -111,7 +111,8 @@ public class HttpMessageController {
             queryParams = queryParams.replaceAll("&", ",");
         }
 
-        request.uri(pathHelper.getRequestUri(servletRequest))
+        request.path(pathHelper.getRequestUri(servletRequest))
+                .uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
                 .queryParams(queryParams)
                 .method(method);

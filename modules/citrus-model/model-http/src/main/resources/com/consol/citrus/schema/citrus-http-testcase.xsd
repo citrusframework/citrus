@@ -25,7 +25,7 @@
 
   <xs:element name="description" type="xs:string"/>
 
-  <xs:element name="request">
+  <xs:element name="send-request">
     <xs:annotation>
       <xs:documentation>Sends Http request as client to server.</xs:documentation>
     </xs:annotation>
@@ -47,16 +47,119 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="response">
+  <xs:element name="receive-response">
     <xs:annotation>
       <xs:documentation>Received Http response as client from server.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="ResponseType">
+          <xs:sequence>
+            <xs:element name="extract" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="name" type="xs:string" use="required"/>
+                      <xs:attribute name="variable" type="xs:string" use="required"/>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="body" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="path" type="xs:string" use="required"/>
+                          <xs:attribute name="variable" type="xs:string" use="required"/>
+                          <xs:attribute name="result-type">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:enumeration value="node"/>
+                                <xs:enumeration value="boolean"/>
+                                <xs:enumeration value="string"/>
+                                <xs:enumeration value="number"/>
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
           <xs:attribute name="client" type="xs:string"/>
           <xs:attribute name="uri" type="xs:string"/>
           <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="receive-request">
+    <xs:annotation>
+      <xs:documentation>Receives Http request as server.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element name="GET" type="RequestType"/>
+          <xs:element name="POST" type="RequestType"/>
+          <xs:element name="PUT" type="RequestType"/>
+          <xs:element name="DELETE" type="RequestType"/>
+          <xs:element name="HEAD" type="RequestType"/>
+          <xs:element name="OPTIONS" type="RequestType"/>
+          <xs:element name="TRACE" type="RequestType"/>
+          <xs:element name="PATCH" type="RequestType"/>
+        </xs:choice>
+        <xs:element name="extract" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="required"/>
+                  <xs:attribute name="variable" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="body" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="path" type="xs:string" use="required"/>
+                      <xs:attribute name="variable" type="xs:string" use="required"/>
+                      <xs:attribute name="result-type">
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="node"/>
+                            <xs:enumeration value="boolean"/>
+                            <xs:enumeration value="string"/>
+                            <xs:enumeration value="number"/>
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="server" type="xs:string" use="required"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+      <xs:attribute name="actor" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="send-response">
+    <xs:annotation>
+      <xs:documentation>Sends Http response as server to calling client.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ResponseType">
+          <xs:attribute name="server" type="xs:string" use="required"/>
           <xs:attribute name="actor" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>

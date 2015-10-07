@@ -30,95 +30,89 @@
             </echo>
             
             <parallel>
-                <http:request client="httpClient" uri="http://localhost:8072">
+                <http:send-request client="httpClient" uri="http://localhost:8072">
                     <http:GET>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8"/>
                     </http:GET>
-                </http:request>
+                </http:send-request>
 
                 <sequential>
-                    <receive endpoint="httpServerRequestEndpoint">
-                        <message><data></data></message>
-                        <header>
-                            <element name="Host" value="localhost:8072"/>
-                            <element name="Content-Type" value="text/html"/>
-                            <element name="Accept" value="application/xml;charset=UTF-8"/>
-                            <element name="citrus_http_method" value="GET"/>
-                            <element name="citrus_http_request_uri" value="/"/>
-                            <element name="citrus_http_context_path" value=""/>
-                            <element name="citrus_http_query_params" value=""/>
-                        </header>
-                    </receive>
+                    <http:receive-request server="httpServerRequestEndpoint">
+                      <http:GET path="/">
+                        <http:headers version="HTTP/1.1" content-type="text/html" accept="application/xml;charset=UTF-8">
+                            <http:header name="Host" value="localhost:8072"/>
+                            <http:header name="citrus_http_context_path" value=""/>
+                            <http:header name="citrus_http_query_params" value=""/>
+                        </http:headers>
+                      </http:GET>
+                    </http:receive-request>
                 </sequential>
             </parallel>
             
-            <http:response client="httpClient" timeout="2000">
+            <http:receive-response client="httpClient" timeout="2000">
                 <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-            </http:response>
+            </http:receive-response>
             
             <echo>
                 <message>Use context path variables.</message>
             </echo>
             
             <parallel>
-                <http:request client="httpClient" uri="http://localhost:8072/test/user/${id}">
+                <http:send-request client="httpClient" uri="http://localhost:8072/test/user/${id}">
                     <http:GET>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8"/>
                     </http:GET>
-                </http:request>
+                </http:send-request>
 
                 <sequential>
-                    <receive endpoint="httpServerRequestEndpoint">
-                        <message><data></data></message>
-                        <header>
-                            <element name="Host" value="localhost:8072"/>
-                            <element name="Content-Type" value="text/html"/>
-                            <element name="Accept" value="application/xml;charset=UTF-8"/>
-                            <element name="citrus_http_method" value="GET"/>
-                            <element name="citrus_http_request_uri" value="citrus:concat('/test/user/', ${id})"/>
-                            <element name="citrus_http_context_path" value=""/>
-                            <element name="citrus_http_query_params" value=""/>
-                        </header>
-                    </receive>
+                    <http:receive-request server="httpServerRequestEndpoint">
+                      <http:GET path="/test/user/${id}">
+                        <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
+                            <http:header name="Host" value="localhost:8072"/>
+                            <http:header name="citrus_http_context_path" value=""/>
+                            <http:header name="citrus_http_query_params" value=""/>
+                        </http:headers>
+                        <http:body><http:data></http:data></http:body>
+                      </http:GET>
+                    </http:receive-request>
                 </sequential>
             </parallel>
             
-            <http:response client="httpClient" timeout="2000">
+            <http:receive-response client="httpClient" timeout="2000">
                 <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-            </http:response>
+            </http:receive-response>
             
             <echo>
                 <message>Use query parameter and context path variables.</message>
             </echo>
             
             <parallel>
-                <http:request client="httpClient" uri="http://localhost:8072/test/user">
+                <http:send-request client="httpClient" uri="http://localhost:8072/test/user">
                     <http:GET>
                         <http:param name="id" value="${id}"/>
                         <http:param name="name" value="TestUser"/>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8"/>
                     </http:GET>
-                </http:request>
+                </http:send-request>
 
                 <sequential>
-                    <receive endpoint="httpServerRequestEndpoint">
-                        <message><data></data></message>
-                        <header>
-                            <element name="Host" value="localhost:8072"/>
-                            <element name="Content-Type" value="text/html"/>
-                            <element name="Accept" value="application/xml;charset=UTF-8"/>
-                            <element name="citrus_http_method" value="GET"/>
-                            <element name="citrus_http_request_uri" value="/test/user"/>
-                            <element name="citrus_http_context_path" value=""/>
-                            <element name="citrus_http_query_params" value="id=${id},name=TestUser"/>
-                        </header>
-                    </receive>
+                    <http:receive-request server="httpServerRequestEndpoint">
+                      <http:GET path="/test/user">
+                        <http:param name="id" value="${id}"/>
+                        <http:param name="name" value="TestUser"/>
+                        <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
+                            <http:header name="Host" value="localhost:8072"/>
+                            <http:header name="citrus_http_context_path" value=""/>
+                        </http:headers>
+                        <http:body><http:data></http:data></http:body>
+                      </http:GET>
+                    </http:receive-request>
                 </sequential>
             </parallel>
 
-            <http:response client="httpClient" timeout="2000">
+            <http:receive-response client="httpClient" timeout="2000">
                 <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-            </http:response>
+            </http:receive-response>
             
         </actions>
     </testcase>

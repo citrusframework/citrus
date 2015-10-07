@@ -172,7 +172,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param element
      * @return
      */
-    private List<VariableExtractor> getVariableExtractors(Element element) {
+    protected List<VariableExtractor> getVariableExtractors(Element element) {
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
 
         parseExtractHeaderElements(element, variableExtractors);
