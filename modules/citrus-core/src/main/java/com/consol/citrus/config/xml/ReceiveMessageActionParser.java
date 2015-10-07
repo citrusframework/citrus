@@ -80,12 +80,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
         parseHeaderElements(element, messageBuilder);
 
-        for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof ControlMessageValidationContext) {
-                ((ControlMessageValidationContext) validationContext).setMessageBuilder(messageBuilder);
-            }
-        }
-
+        builder.addPropertyValue("messageBuilder", messageBuilder);
         builder.addPropertyValue("validationContexts", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
@@ -315,7 +310,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         
         parseXPathValidationElements(messageElement, context);
 
-        context.setMessageBuilder(parentContext.getMessageBuilder());
         context.setControlNamespaces(parentContext.getControlNamespaces());
         context.setNamespaces(parentContext.getNamespaces());
         context.setIgnoreExpressions(parentContext.getIgnoreExpressions());

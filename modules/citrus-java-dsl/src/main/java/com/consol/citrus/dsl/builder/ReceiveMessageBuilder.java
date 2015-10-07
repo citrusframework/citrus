@@ -141,12 +141,8 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T message(Message controlMessage) {
-        if (validationContext != null) {
-            throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
-        }
-
-        getValidationContext().setControlMessage(controlMessage);
-        
+        action.setMessageBuilder(StaticMessageContentBuilder.withMessage(controlMessage));
+        getValidationContext();
         return self;
     }
     
@@ -230,7 +226,8 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T header(String name, Object value) {
-        getMessageContentBuilder().getMessageHeaders().put(name, value);
+        ((AbstractMessageContentBuilder)action.getMessageBuilder()).getMessageHeaders().put(name, value);
+        getValidationContext();
         return self;
     }
     
@@ -241,7 +238,8 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T header(String data) {
-        getMessageContentBuilder().getHeaderData().add(data);
+        ((AbstractMessageContentBuilder)action.getMessageBuilder()).getHeaderData().add(data);
+        getValidationContext();
         return self;
     }
 
@@ -253,7 +251,8 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T header(Resource resource) {
         try {
-            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource));
+            ((AbstractMessageContentBuilder)action.getMessageBuilder()).getHeaderData().add(FileUtils.readToString(resource));
+            getValidationContext();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
@@ -532,6 +531,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         receiveSoapMessageAction.setMessageSelector(action.getMessageSelector());
         receiveSoapMessageAction.setMessageSelectorString(action.getMessageSelectorString());
         receiveSoapMessageAction.setMessageType(action.getMessageType());
+        receiveSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
         receiveSoapMessageAction.setReceiveTimeout(action.getReceiveTimeout());
         receiveSoapMessageAction.setValidationCallback(action.getValidationCallback());
         receiveSoapMessageAction.setValidationContexts(action.getValidationContexts());
@@ -577,31 +577,18 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
-     * Gets the message builder on the validation context. Constructs message content builder if necessary.
-     * @return
-     */
-    protected AbstractMessageContentBuilder getMessageContentBuilder() {
-        if (getValidationContext().getMessageBuilder() instanceof AbstractMessageContentBuilder) {
-            return (AbstractMessageContentBuilder) getValidationContext().getMessageBuilder();
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            getValidationContext().setMessageBuilder(messageBuilder);
-            return messageBuilder;
-        }
-    }
-
-    /**
      * Forces a payload template message builder.
      * @return
      */
     protected PayloadTemplateMessageBuilder getPayloadTemplateMessageBuilder() {
-        MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+        MessageContentBuilder messageContentBuilder = action.getMessageBuilder();
+        getValidationContext();
 
-        if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+        if (messageContentBuilder != null && messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
             return (PayloadTemplateMessageBuilder) messageContentBuilder;
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            getValidationContext().setMessageBuilder(messageBuilder);
+            action.setMessageBuilder(messageBuilder);
             return messageBuilder;
         }
     }
@@ -705,7 +692,6 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             return ((XpathMessageValidationContext)validationContext);
         } else if (validationContext instanceof XmlMessageValidationContext) {
             XpathMessageValidationContext xPathContext = new XpathMessageValidationContext();
-            xPathContext.setMessageBuilder(validationContext.getMessageBuilder());
             xPathContext.setNamespaces(((XmlMessageValidationContext) validationContext).getNamespaces());
             xPathContext.setControlNamespaces(((XmlMessageValidationContext) validationContext).getControlNamespaces());
             xPathContext.setIgnoreExpressions(((XmlMessageValidationContext) validationContext).getIgnoreExpressions());

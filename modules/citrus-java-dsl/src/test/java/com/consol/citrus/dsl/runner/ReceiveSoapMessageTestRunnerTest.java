@@ -115,11 +115,9 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), ControlMessageValidationContext.class);
 
-        ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
-
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
-        Assert.assertNotNull(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeader("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertNotNull(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
@@ -170,11 +168,9 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
-        
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertNotNull(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeader("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertNotNull(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
@@ -225,10 +221,8 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
-        
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
@@ -285,10 +279,8 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
-        
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Assert.assertEquals(action.getAttachments().get(0).getContent(), "This is an attachment");
         Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
@@ -351,10 +343,8 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
-
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Assert.assertEquals(action.getAttachments().size(), 2L);
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());

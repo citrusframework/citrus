@@ -46,13 +46,13 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript(validationScript);
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         
         validationScript += "assert json.person.age == 32";
         validationContext.setValidationScript(validationScript);
         
         try {
-            validator.validateMessage(message, context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
             Assert.fail("Missing validation exception for groovy JSON slurper.");
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("assert json.person.age == 32"));

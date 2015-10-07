@@ -64,7 +64,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
 		PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -94,7 +94,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
         
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -129,7 +129,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setScriptData(sb.toString());
         
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -166,7 +166,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setScriptData(sb.toString());
         
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -196,7 +196,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
         
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -226,7 +226,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -258,7 +258,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml");
         
         context.setVariable("myText", "Hello World!");
@@ -290,7 +290,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
         
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -320,7 +320,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
@@ -357,7 +357,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
 
         Map<String, String> overwriteElements = new HashMap<String, String>();
@@ -393,7 +393,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
@@ -430,7 +430,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
         
@@ -470,7 +470,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">?</ns1:Message></ns0:TestRequest>");
         
@@ -510,7 +510,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>");
         
@@ -549,7 +549,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -585,7 +585,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         context.setVariable("myOperation", "sayHello");
@@ -623,7 +623,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -664,7 +664,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -699,7 +699,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, String> headers = new HashMap<String, String>();
@@ -743,7 +743,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/TestRequest/Message", "Hello World!");
@@ -776,7 +776,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/:TestRequest/:Message", "Hello World!");
@@ -812,7 +812,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
@@ -848,7 +848,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
@@ -884,7 +884,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
@@ -924,7 +924,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
         Map<String, String> extractMessageElements = new HashMap<String, String>();
@@ -968,7 +968,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, String> extractMessageElements = new HashMap<String, String>();
@@ -1008,7 +1008,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
@@ -1052,7 +1052,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
         
@@ -1096,7 +1096,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
 
@@ -1140,7 +1140,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
@@ -1188,7 +1188,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> jsonPathExpressions = new HashMap<String, String>();
         jsonPathExpressions.put("$..text", "Hello World!");
@@ -1224,7 +1224,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> jsonPathExpressions = new HashMap<String, String>();
         jsonPathExpressions.put("$..text", "Hello Citrus!");
@@ -1260,7 +1260,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> jsonPathExpressions = new HashMap<String, String>();
         jsonPathExpressions.put("$.person.age", "50");
@@ -1296,7 +1296,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(3000L);
@@ -1328,7 +1328,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         String messageSelectorString = "Operation = 'sayHello'";
@@ -1363,7 +1363,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
@@ -1400,7 +1400,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> messageSelector = new HashMap<>();
@@ -1436,7 +1436,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
@@ -1473,7 +1473,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1507,7 +1507,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("");
         
         Message controlMessage = new DefaultMessage("");
@@ -1537,7 +1537,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Message controlMessage = new DefaultMessage("");
@@ -1633,7 +1633,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -1687,7 +1687,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1719,7 +1719,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);

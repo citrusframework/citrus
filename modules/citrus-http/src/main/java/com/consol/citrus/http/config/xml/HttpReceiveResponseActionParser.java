@@ -22,7 +22,6 @@ import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
@@ -98,12 +97,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         messageHeaders.remove(MessageHeaders.TIMESTAMP);
         messageBuilder.setMessageHeaders(messageHeaders);
 
-        for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof ControlMessageValidationContext) {
-                ((ControlMessageValidationContext) validationContext).setMessageBuilder(messageBuilder);
-            }
-        }
-
+        builder.addPropertyValue("messageBuilder", messageBuilder);
         builder.addPropertyValue("validationContexts", validationContexts);
 
         return builder.getBeanDefinition();

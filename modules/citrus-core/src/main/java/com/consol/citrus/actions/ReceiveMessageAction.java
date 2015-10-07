@@ -20,19 +20,19 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -49,7 +49,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction implements InitializingBean {
+public class ReceiveMessageAction extends AbstractTestAction {
     /** Build message selector with name value pairs */
     private Map<String, Object> messageSelector = new HashMap<>();
 
@@ -64,6 +64,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
     
     /** Receive timeout */
     private long receiveTimeout = 0L;
+
+    /** Builder constructing a control message */
+    private MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
 
     /** MessageValidator responsible for message validation */
     private MessageValidator<? extends ValidationContext> validator;
@@ -171,8 +174,6 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
             log.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
             return receive(context);
         }
-
-
     }
 
     /**
@@ -188,15 +189,29 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
         if (validationCallback != null) {
             validationCallback.validate(receivedMessage, context);
         } else if (validator != null) {
-            validator.validateMessage(receivedMessage, context, validationContexts);
+            validator.validateMessage(receivedMessage, createControlMessage(context, messageType), context, validationContexts);
         } else {
             List<MessageValidator<? extends ValidationContext>> validators = 
                                 context.getMessageValidatorRegistry().findMessageValidators(messageType, receivedMessage, validationContexts);
             
             for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                messageValidator.validateMessage(receivedMessage, context, validationContexts);
+                messageValidator.validateMessage(receivedMessage, createControlMessage(context, messageType), context, validationContexts);
             }
         }
+    }
+
+    /**
+     * Create control message that is expected.
+     * @param context
+     * @param messageType
+     * @return
+     */
+    protected Message createControlMessage(TestContext context, String messageType) {
+        if (dataDictionary != null) {
+            messageBuilder.setDataDictionary(dataDictionary);
+        }
+
+        return messageBuilder.buildMessageContent(context, messageType);
     }
     
     @Override
@@ -420,14 +435,20 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
         return this;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (dataDictionary != null) {
-            for (ValidationContext validationContext : validationContexts) {
-                if (validationContext instanceof ControlMessageValidationContext) {
-                    ((ControlMessageValidationContext) validationContext).getMessageBuilder().setDataDictionary(dataDictionary);
-                }
-            }
-        }
+    /**
+     * Gets the messageBuilder.
+     * @return the messageBuilder
+     */
+    public MessageContentBuilder getMessageBuilder() {
+        return messageBuilder;
+    }
+
+    /**
+     * Sets the message builder implementation.
+     * @param messageBuilder the messageBuilder to set
+     */
+    public ReceiveMessageAction setMessageBuilder(MessageContentBuilder messageBuilder) {
+        this.messageBuilder = messageBuilder;
+        return this;
     }
 }

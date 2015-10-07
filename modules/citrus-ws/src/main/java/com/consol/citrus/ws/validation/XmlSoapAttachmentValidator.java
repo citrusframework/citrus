@@ -17,7 +17,6 @@
 package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -41,10 +40,6 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator {
 
 	@Override
     protected void validateAttachmentContentData(String receivedContent, String controlContent, String controlContentId) {
-        Message controlMessage = new DefaultMessage(controlContent);
-        validationContext.setControlMessage(controlMessage);
-
-        Message receivedMessage = new DefaultMessage(receivedContent);
-        validator.validateMessage(receivedMessage, null, validationContext);
+        validator.validateMessage(new DefaultMessage(receivedContent), new DefaultMessage(controlContent), null, validationContext);
     }
 }

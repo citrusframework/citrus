@@ -77,9 +77,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -115,9 +113,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -157,9 +153,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -201,9 +195,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -239,9 +231,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -279,9 +269,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -319,9 +307,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -357,9 +343,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -401,9 +385,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -446,9 +428,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 JsonTextMessageValidator validator = new JsonTextMessageValidator();
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -490,9 +470,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -535,10 +513,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
                 validationContext.setSchemaValidation(false);
                 
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -581,10 +558,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
                 validationContext.setSchemaValidation(false);
                 
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -626,9 +602,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -672,9 +646,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -785,9 +757,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -819,9 +789,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(new DefaultMessage(""));
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), new DefaultMessage(""), context, validationContext);
                 return null;
             }
         }).once();
@@ -857,9 +825,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -895,9 +861,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -933,9 +897,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();
@@ -1002,9 +964,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(controlMessage);
-                
-                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), controlMessage, context, validationContext);
                 return null;
             }
         }).once();

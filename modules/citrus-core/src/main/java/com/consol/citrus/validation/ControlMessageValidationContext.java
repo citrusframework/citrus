@@ -16,10 +16,7 @@
 
 package com.consol.citrus.validation;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.message.Message;
 
 
 /**
@@ -30,9 +27,6 @@ import com.consol.citrus.message.Message;
  * @author Christoph Deppisch
  */
 public class ControlMessageValidationContext implements ValidationContext {
-    /** Builder constructing a control message */
-    private MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-
     /** The message type this context was built for */
     private final String messageType;
 
@@ -42,41 +36,6 @@ public class ControlMessageValidationContext implements ValidationContext {
      */
     public ControlMessageValidationContext(String messageType) {
         this.messageType = messageType;
-    }
-
-    /**
-     * Gets the control message in particular builds the control message with 
-     * defined message builder implementation.
-     * 
-     * @param context the current test context.
-     * @return the controlMessage
-     */
-    public Message getControlMessage(TestContext context) {
-        return messageBuilder.buildMessageContent(context, messageType);
-    }
-    
-    /**
-     * Sets a static control message for this validation context.
-     * @param controlMessage the static control message.
-     */
-    public void setControlMessage(Message controlMessage) {
-        messageBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
-    }
-
-    /**
-     * Sets the control message builder.
-     * @param messageBuilder the messageBuilder to set
-     */
-    public void setMessageBuilder(MessageContentBuilder messageBuilder) {
-        this.messageBuilder = messageBuilder;
-    }
-
-    /**
-     * Gets the messageBuilder.
-     * @return the messageBuilder
-     */
-    public MessageContentBuilder getMessageBuilder() {
-        return messageBuilder;
     }
 
     @Override

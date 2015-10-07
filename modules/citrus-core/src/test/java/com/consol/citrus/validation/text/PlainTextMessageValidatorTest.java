@@ -36,8 +36,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("Hello World!");
 
         ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-        validationContext.setControlMessage(controlMessage);
-        
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -51,8 +49,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         context.setVariable("world", "World");
 
         ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-        validationContext.setControlMessage(controlMessage);
-        
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -64,8 +60,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("Hello Citrus!");
 
         ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-        validationContext.setControlMessage(controlMessage);
-        
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {

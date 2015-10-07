@@ -31,16 +31,14 @@ import java.util.List;
  */
 public abstract class AbstractMessageValidator<T extends ValidationContext> implements MessageValidator<T> {
 
-    /**
-     * Try to find proper validation context in list and perform message validation.
-     */
-    public void validateMessage(Message receivedMessage, TestContext context,
+    @Override
+    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,
             List<ValidationContext> validationContexts) throws ValidationException {
         T validationContext = findValidationContext(validationContexts);
         
         // check if we were able to find a proper validation context
         if (validationContext != null) {
-            validateMessage(receivedMessage, context, validationContext);
+            validateMessage(receivedMessage, controlMessage, context, validationContext);
         }
     }
 }

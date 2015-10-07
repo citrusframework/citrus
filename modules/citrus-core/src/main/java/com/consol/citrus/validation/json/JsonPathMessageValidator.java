@@ -45,7 +45,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
     private static Logger log = LoggerFactory.getLogger(JsonPathMessageValidator.class);
 
     @Override
-    public void validateMessage(Message receivedMessage, TestContext context, JsonPathMessageValidationContext validationContext) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, JsonPathMessageValidationContext validationContext) throws ValidationException {
         if (CollectionUtils.isEmpty(validationContext.getJsonPathExpressions())) { return; }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {

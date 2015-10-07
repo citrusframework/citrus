@@ -38,8 +38,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
 
@@ -51,8 +49,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"id\":\"x123456789x\"}");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
 
@@ -64,8 +60,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -83,8 +77,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         		"{\"text\":\"Hola del mundo!\", \"index\":3}]");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
 
@@ -100,8 +92,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("[{\"text\":\"Hello World!\", \"index\":1}] ");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
 
@@ -119,8 +109,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
                 "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -136,8 +124,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         context.setVariable("id", "x123456789x");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -150,8 +136,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected '4'"));
@@ -172,8 +156,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'x123456789x'"));
@@ -194,8 +176,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'Doe'"));
@@ -222,8 +202,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected '2'"));
@@ -249,8 +227,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected '3'"));
@@ -274,8 +250,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'JSONArray'"));
@@ -299,8 +273,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'JSONObject'"));
@@ -323,8 +295,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":\"@ignore@\", \"object\":{\"id\":\"@ignore@\"}, \"greetings\":\"@ignore@\"}");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
 
@@ -342,8 +312,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.getIgnoreExpressions().add("$..index");
         validationContext.getIgnoreExpressions().add("$.object.id");
         validationContext.getIgnoreExpressions().add("$.greetings");
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -356,8 +324,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof ParseException);
@@ -376,8 +342,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -389,8 +353,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -403,8 +365,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
             Assert.fail("Missing validation exception due to validation error");
         } catch (ValidationException e) {
@@ -415,8 +375,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         controlMessage = new DefaultMessage("");
 
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -429,8 +387,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
             Assert.fail("Missing validation exception due to wrong value");
         } catch (ValidationException e) {
@@ -442,8 +398,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         try {
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
             Assert.fail("Missing validation exception due to wrong value");
         } catch (ValidationException e) {

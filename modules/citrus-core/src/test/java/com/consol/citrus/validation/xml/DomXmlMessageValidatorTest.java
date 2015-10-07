@@ -489,10 +489,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                     + "</root>");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
     
     @Test
@@ -518,10 +516,9 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         ignoreExpressions.add("//root/element/sub-element1");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
         validationContext.setIgnoreExpressions(ignoreExpressions);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -540,9 +537,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -561,9 +557,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -582,9 +577,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test
@@ -603,9 +597,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test
@@ -624,9 +617,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test
@@ -645,9 +637,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test
@@ -666,9 +657,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test
@@ -687,9 +677,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -708,9 +697,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -729,9 +717,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -750,9 +737,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -771,9 +757,8 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
 }

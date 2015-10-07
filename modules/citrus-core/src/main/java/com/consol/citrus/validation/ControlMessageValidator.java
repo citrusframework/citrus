@@ -43,15 +43,10 @@ public class ControlMessageValidator<T extends ControlMessageValidationContext> 
      */
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
     
-    /**
-     * Implementation performs message header validation as well as message
-     * payload validation.
-     */
-    public void validateMessage(Message receivedMessage, TestContext context,
+    @Override
+    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,
             T validationContext) {
         log.info("Start message validation ...");
-
-        Message controlMessage = validationContext.getControlMessage(context);
 
         // validate message payload first
         validateMessagePayload(receivedMessage,

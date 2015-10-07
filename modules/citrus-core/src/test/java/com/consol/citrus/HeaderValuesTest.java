@@ -75,7 +75,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -123,7 +123,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -173,7 +173,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -222,7 +222,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -271,7 +271,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -321,7 +321,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -371,7 +371,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setMessageBuilder(controlMessageBuilder);
+        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"

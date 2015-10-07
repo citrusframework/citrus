@@ -54,7 +54,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript(validationScript);
         
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
     
     @Test
@@ -70,7 +70,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript(validationScript);
         
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
     
     @Test
@@ -84,7 +84,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setValidationScript(validationScript);
         
         try {
-            validator.validateMessage(message, context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Groovy script validation failed"));
             Assert.assertTrue(e.getMessage().contains("Hello Citrus"));
@@ -101,6 +101,6 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript(validationScript);
         
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 }
