@@ -23,6 +23,7 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -111,6 +112,13 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
         messageBuilder.setMessageHeaders(messageHeaders);
 
         builder.addPropertyValue("messageBuilder", messageBuilder);
+
+        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        parseExtractHeaderElements(element, variableExtractors);
+
+        if (!variableExtractors.isEmpty()) {
+            builder.addPropertyValue("variableExtractors", variableExtractors);
+        }
 
         return builder.getBeanDefinition();
     }

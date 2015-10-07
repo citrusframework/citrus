@@ -93,6 +93,8 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             }
         }
 
+        parseMessageSelector(element, builder);
+
         Element body = DomUtils.getChildElementByTagName(requestElement, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 

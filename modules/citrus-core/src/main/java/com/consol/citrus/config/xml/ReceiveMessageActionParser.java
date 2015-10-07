@@ -149,7 +149,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param element
      * @param builder
      */
-    private void parseMessageSelector(Element element, BeanDefinitionBuilder builder) {
+    protected void parseMessageSelector(Element element, BeanDefinitionBuilder builder) {
         Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
         if (messageSelectorElement != null) {
             Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");
