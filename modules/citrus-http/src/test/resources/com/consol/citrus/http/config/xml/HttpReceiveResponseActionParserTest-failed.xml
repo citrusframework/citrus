@@ -7,11 +7,13 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
 
-    <testcase name="HttpSendRequestActionParserTest">
+    <testcase name="HttpReceiveResponseActionParserTest">
       <actions>
-        <http:request>
-          <http:GET/>
-        </http:request>
+        <http:response>
+          <http:body>
+            <http:data></http:data>
+          </http:body>
+        </http:response>
       </actions>
     </testcase>
 

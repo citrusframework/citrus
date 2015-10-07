@@ -8,28 +8,46 @@
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
 
     <testcase name="HttpSendRequestActionParserTest">
-        <actions>
-            <http:get client="httpClient"/>
+      <actions>
+        <http:request client="httpClient">
+          <http:GET/>
+        </http:request>
 
-            <http:get uri="http://localhost:8080/test" path="/order/${id}" fork="true">
-              <http:param name="id" value="12345"/>
-              <http:param name="type" value="gold"/>
-            </http:get>
+        <http:request uri="http://localhost:8080/test" fork="true">
+          <http:GET path="/order/${id}">
+            <http:param name="id" value="12345"/>
+            <http:param name="type" value="gold"/>
+            <http:headers content-type="text/xml" accept="text/xml" version="HTTP/1.1"/>
+          </http:GET>
+        </http:request>
 
-            <http:post client="httpClient" path="/user">
-              <http:body>
+        <http:request client="httpClient">
+          <http:POST path="/user">
+            <http:headers>
+              <http:header name="userId" value="1001"/>
+            </http:headers>
+            <http:body>
+              <http:data>
                 <![CDATA[
                   <user><id>1001</id><name>new_user</name></user>
                 ]]>
-              </http:body>
-            </http:post>
+              </http:data>
+            </http:body>
+          </http:POST>
+        </http:request>
 
-            <http:delete client="httpClient" path="/user/${id}"/>
+        <http:request client="httpClient">
+          <http:DELETE path="/user/${id}"/>
+        </http:request>
 
-            <http:head client="httpClient" uri="http://localhost:8080/test"/>
+        <http:request client="httpClient" uri="http://localhost:8080/test">
+          <http:HEAD/>
+        </http:request>
 
-            <http:options uri="http://localhost:8080/test" actor="testActor"/>
-        </actions>
+        <http:request uri="http://localhost:8080/test" actor="testActor">
+          <http:OPTIONS/>
+        </http:request>
+      </actions>
     </testcase>
     
     <spring:bean id="httpClient" class="org.easymock.EasyMock" factory-method="createMock">

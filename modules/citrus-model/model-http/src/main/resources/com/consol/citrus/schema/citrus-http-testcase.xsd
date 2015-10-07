@@ -25,115 +25,106 @@
 
   <xs:element name="description" type="xs:string"/>
 
-  <xs:element name="get">
+  <xs:element name="request">
     <xs:annotation>
-      <xs:documentation>Performs Http GET request on server uri.</xs:documentation>
+      <xs:documentation>Sends Http request as client to server.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
-        <xs:element name="headers" minOccurs="0" type="HeadersType"/>
-        <xs:element name="body" minOccurs="0" type="xs:string"/>
-      </xs:sequence>
+      <xs:choice>
+        <xs:element name="GET" type="RequestType"/>
+        <xs:element name="POST" type="RequestType"/>
+        <xs:element name="PUT" type="RequestType"/>
+        <xs:element name="DELETE" type="RequestType"/>
+        <xs:element name="HEAD" type="RequestType"/>
+        <xs:element name="OPTIONS" type="RequestType"/>
+        <xs:element name="TRACE" type="RequestType"/>
+        <xs:element name="PATCH" type="RequestType"/>
+      </xs:choice>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="uri" type="xs:string"/>
-      <xs:attribute name="path" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="fork" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="post">
+  <xs:element name="response">
     <xs:annotation>
-      <xs:documentation>Performs Http POST request on server uri.</xs:documentation>
+      <xs:documentation>Received Http response as client from server.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="headers" minOccurs="0" type="HeadersType"/>
-        <xs:element name="body" minOccurs="0" type="xs:string"/>
-      </xs:sequence>
-      <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="uri" type="xs:string"/>
-      <xs:attribute name="path" type="xs:string"/>
-      <xs:attribute name="actor" type="xs:string"/>
-      <xs:attribute name="fork" type="xs:boolean"/>
+      <xs:complexContent>
+        <xs:extension base="ResponseType">
+          <xs:attribute name="client" type="xs:string"/>
+          <xs:attribute name="uri" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="actor" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="put">
+  <xs:complexType name="RequestType">
     <xs:annotation>
-      <xs:documentation>Performs Http PUT request on server uri.</xs:documentation>
+      <xs:documentation>Http request type with parameters, headers and body.</xs:documentation>
     </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="headers" minOccurs="0" type="HeadersType"/>
-        <xs:element name="body" minOccurs="0" type="xs:string"/>
-      </xs:sequence>
-      <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="uri" type="xs:string"/>
-      <xs:attribute name="path" type="xs:string"/>
-      <xs:attribute name="actor" type="xs:string"/>
-      <xs:attribute name="fork" type="xs:boolean"/>
-    </xs:complexType>
-  </xs:element>
+    <xs:sequence>
+      <xs:element ref="description" minOccurs="0"/>
+      <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
+      <xs:element name="headers" minOccurs="0" type="RequestHeadersType"/>
+      <xs:element name="body" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice>
+              <xs:element name="payload">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="data" type="xs:string"/>
+              <xs:element name="resource">
+                <xs:complexType>
+                  <xs:attribute name="file" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:sequence>
+          <xs:attribute name="type" default="xml" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="path" type="xs:string"/>
+  </xs:complexType>
 
-  <xs:element name="delete">
-    <xs:annotation>
-      <xs:documentation>Performs Http DELETE request on server uri.</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
-        <xs:element name="headers" minOccurs="0" type="HeadersType"/>
-        <xs:element name="body" minOccurs="0" type="xs:string"/>
-      </xs:sequence>
-      <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="uri" type="xs:string"/>
-      <xs:attribute name="path" type="xs:string"/>
-      <xs:attribute name="actor" type="xs:string"/>
-      <xs:attribute name="fork" type="xs:boolean"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="head">
-    <xs:annotation>
-      <xs:documentation>Performs Http HEAD request on server uri.</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
-        <xs:element name="headers" minOccurs="0" type="HeadersType"/>
-      </xs:sequence>
-      <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="uri" type="xs:string"/>
-      <xs:attribute name="path" type="xs:string"/>
-      <xs:attribute name="actor" type="xs:string"/>
-      <xs:attribute name="fork" type="xs:boolean"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="options">
-    <xs:annotation>
-      <xs:documentation>Performs Http OPTIONS request on server uri.</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
-        <xs:element name="headers" minOccurs="0" type="HeadersType"/>
-      </xs:sequence>
-      <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="uri" type="xs:string"/>
-      <xs:attribute name="path" type="xs:string"/>
-      <xs:attribute name="actor" type="xs:string"/>
-      <xs:attribute name="fork" type="xs:boolean"/>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="ResponseType">
+    <xs:sequence>
+      <xs:element ref="description" minOccurs="0"/>
+      <xs:element name="headers" minOccurs="0" type="ResponseHeadersType"/>
+      <xs:element name="body" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice>
+              <xs:element name="payload">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="data" type="xs:string"/>
+              <xs:element name="resource">
+                <xs:complexType>
+                  <xs:attribute name="file" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:sequence>
+          <xs:attribute name="type" default="xml" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:complexType name="ParamType">
     <xs:annotation>
@@ -143,22 +134,32 @@
     <xs:attribute name="value" type="xs:string"/>
   </xs:complexType>
 
-  <xs:complexType name="HeadersType">
-    <xs:group ref="headerGroup" maxOccurs="unbounded"/>
-  </xs:complexType>
-
-  <xs:group name="headerGroup">
-    <xs:choice>
-      <xs:element name="contentType" type="xs:string"/>
-      <xs:element name="accept" type="xs:string"/>
-      <xs:element name="header">
+  <xs:complexType name="RequestHeadersType">
+    <xs:sequence>
+      <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:attribute name="name" type="xs:string"/>
           <xs:attribute name="value" type="xs:string"/>
         </xs:complexType>
       </xs:element>
-      <xs:any namespace="##other" processContents="strict"/>
-    </xs:choice>
-  </xs:group>
+    </xs:sequence>
+    <xs:attribute name="content-type" type="xs:string" default="application/xml"/>
+    <xs:attribute name="accept" type="xs:string" default="application/xml"/>
+    <xs:attribute name="version" type="xs:string" default="HTTP/1.1"/>
+  </xs:complexType>
+
+  <xs:complexType name="ResponseHeadersType">
+    <xs:sequence>
+      <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="status" type="xs:string" default="200"/>
+    <xs:attribute name="reason-phrase" type="xs:string" default="OK"/>
+    <xs:attribute name="version" type="xs:string" default="HTTP/1.1"/>
+  </xs:complexType>
 
 </xs:schema>

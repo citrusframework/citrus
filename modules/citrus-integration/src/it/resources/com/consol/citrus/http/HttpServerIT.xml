@@ -29,20 +29,22 @@
             </echo>
             
             <parallel>
-              <http:post client="httpClient" actor="helloClient">
-                <http:headers>
-                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-                  <http:contentType>text/xml</http:contentType>
-                  <http:accept>text/xml, */*</http:accept>
-                </http:headers>
-                <http:body>
-                  <![CDATA[
-                    <testRequestMessage>
-                      <text>Hello HttpServer</text>
-                    </testRequestMessage>
-                  ]]>
-                </http:body>
-              </http:post>
+              <http:request client="httpClient" actor="helloClient">
+                <http:POST>
+                  <http:headers content-type="text/xml" accept="text/xml, */*">
+                    <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                  </http:headers>
+                  <http:body>
+                    <http:data>
+                      <![CDATA[
+                        <testRequestMessage>
+                          <text>Hello HttpServer</text>
+                        </testRequestMessage>
+                      ]]>
+                    </http:data>
+                  </http:body>
+                </http:POST>
+              </http:request>
 
               <sequential>
                   <receive endpoint="httpServerRequestEndpoint" actor="helloClient">
@@ -90,44 +92,43 @@
                 </sequential>
             </parallel>
 
-            <receive endpoint="httpClient" actor="helloServer">
-              <message>
-                <data>
+            <http:response client="httpClient" actor="helloServer">
+              <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+                <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+              </http:headers>
+              <http:body>
+                <http:data>
                   <![CDATA[
-                      <testResponseMessage>
-                        <text>Hello Citrus</text>
-                      </testResponseMessage>
-                    ]]>
-                </data>
-              </message>
-              <header>
-                <element name="CustomHeaderId" value="${custom_header_id}"/>
-                <element name="citrus_http_status_code" value="200"/>
-                <element name="citrus_http_version" value="HTTP/1.1"/>
-                <element name="citrus_http_reason_phrase" value="OK"/>
-              </header>
-            </receive>
+                    <testResponseMessage>
+                      <text>Hello Citrus</text>
+                    </testResponseMessage>
+                  ]]>
+                </http:data>
+              </http:body>
+            </http:response>
 
             <echo>
                 <message>Send Http request and respond with 404 status code</message>
             </echo>
             
             <parallel>
-                <http:post client="httpClient" actor="helloClient">
-                    <http:headers>
-                        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-                        <http:contentType>text/xml</http:contentType>
-                        <http:accept>text/xml, */*</http:accept>
-                    </http:headers>
-                    <http:body>
-                        <![CDATA[
-                            <testRequestMessage>
-                                <text>Hello HttpServer</text>
-                            </testRequestMessage>
-                        ]]>
-                    </http:body>
-                </http:post>
-              
+                <http:request client="httpClient" actor="helloClient">
+                  <http:POST>
+                      <http:headers content-type="text/xml" accept="text/xml, */*">
+                          <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                      </http:headers>
+                      <http:body>
+                        <http:data>
+                          <![CDATA[
+                              <testRequestMessage>
+                                  <text>Hello HttpServer</text>
+                              </testRequestMessage>
+                          ]]>
+                        </http:data>
+                      </http:body>
+                  </http:POST>
+                </http:request>
+
                 <sequential>
                     <receive endpoint="httpServerRequestEndpoint" actor="helloClient">
                         <message>
@@ -166,43 +167,36 @@
                 </sequential>
             </parallel>
             
-            <receive endpoint="httpClient" actor="helloServer">
-                <message>
-                    <data></data>
-                </message>
-                <header>
-                    <element name="citrus_http_status_code" value="404"/>
-                    <element name="citrus_http_version" value="HTTP/1.1"/>
-                    <element name="citrus_http_reason_phrase" value="NOT_FOUND"/>
-                    <element name="Content-Type" value="text/plain"/>
-                </header>
-            </receive>
+            <http:response client="httpClient" actor="helloServer">
+                <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1">
+                    <http:header name="Content-Type" value="text/plain"/>
+                </http:headers>
+            </http:response>
             
             <echo>
                 <message>Skip response and use fallback endpoint adapter</message>
             </echo>
-            
-            <http:post client="httpClient">
-              <http:headers>
-                <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-              </http:headers>
-              <http:body>
-                <![CDATA[
-                  <testRequestMessage>
-                    <text>Hello HttpServer</text>
-                  </testRequestMessage>
-                ]]>
-              </http:body>
-            </http:post>
 
-            <receive endpoint="httpClient" timeout="2000">
-              <message/>
-              <header>
-                <element name="citrus_http_status_code" value="200"/>
-                <element name="citrus_http_version" value="HTTP/1.1"/>
-                <element name="citrus_http_reason_phrase" value="OK"/>
-              </header>
-            </receive>
+            <http:request client="httpClient">
+              <http:POST>
+                <http:headers>
+                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                </http:headers>
+                <http:body>
+                  <http:data>
+                    <![CDATA[
+                      <testRequestMessage>
+                        <text>Hello HttpServer</text>
+                      </testRequestMessage>
+                    ]]>
+                  </http:data>
+                </http:body>
+              </http:POST>
+            </http:request>
+
+            <http:response client="httpClient" timeout="2000">
+              <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
+            </http:response>
             
         </actions>
     </testcase>

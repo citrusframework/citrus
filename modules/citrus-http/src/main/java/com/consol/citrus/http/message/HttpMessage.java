@@ -92,6 +92,15 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
+     * Sets the Http response status code.
+     * @param statusCode
+     */
+    public HttpMessage statusCode(Integer statusCode) {
+        setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, statusCode);
+        return this;
+    }
+
+    /**
      * Sets the Http response reason phrase.
      * @param reasonPhrase
      */

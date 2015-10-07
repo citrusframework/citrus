@@ -21,23 +21,24 @@
         
         <actions>
             <parallel>
-                <http:post client="httpClient">
-                    <http:headers>
-                        <http:contentType>text/xml</http:contentType>
-                        <http:accept>text/xml, */*</http:accept>
-                    </http:headers>
-                    <http:body>
-                        <![CDATA[
-                            <testRequestMessage>
-                                <text>citrus:cdataSection('<data>
-                                  <greeting>Hello Citrus</greeting>
-                                  <timestamp>2012-07-01T00:00:00</timestamp>
-                                </data>')</text>
-                            </testRequestMessage>
-                        ]]>
-                    </http:body>
-                </http:post>
-              
+                <http:request client="httpClient">
+                    <http:POST>
+                        <http:headers content-type="text/xml" accept="text/xml, */*"/>
+                        <http:body>
+                          <http:data>
+                            <![CDATA[
+                                <testRequestMessage>
+                                    <text>citrus:cdataSection('<data>
+                                      <greeting>Hello Citrus</greeting>
+                                      <timestamp>2012-07-01T00:00:00</timestamp>
+                                    </data>')</text>
+                                </testRequestMessage>
+                            ]]>
+                          </http:data>
+                        </http:body>
+                    </http:POST>
+                </http:request>
+
                 <sequential>
                     <receive endpoint="httpServerRequestEndpoint">
                         <message>
@@ -85,22 +86,18 @@
                 </sequential>
             </parallel>
             
-            <receive endpoint="httpClient">
-                <message>
-                    <data>
-                        <![CDATA[
-                            <testResponseMessage>
-                                <text>Hello Citrus</text>
-                            </testResponseMessage>
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="citrus_http_status_code" value="200"/>
-                    <element name="citrus_http_version" value="HTTP/1.1"/>
-                    <element name="citrus_http_reason_phrase" value="OK"/>
-                </header>
-            </receive>
+            <http:response client="httpClient">
+                <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
+                <http:body>
+                  <http:data>
+                    <![CDATA[
+                        <testResponseMessage>
+                            <text>Hello Citrus</text>
+                        </testResponseMessage>
+                    ]]>
+                  </http:data>
+                </http:body>
+            </http:response>
         </actions>
     </testcase>
 </spring:beans>

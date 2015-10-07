@@ -31,20 +31,22 @@
             <message>Sending request message #${i}</message>
           </echo>
 
-          <http:post uri="http://localhost:8074/test?endpointName=echoHttpClient${i}" fork="true">
-            <http:headers>
-              <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-              <http:contentType>text/xml</http:contentType>
-              <http:accept>text/xml,*/*</http:accept>
-            </http:headers>
-            <http:body>
-              <![CDATA[
+          <http:request uri="http://localhost:8074/test?endpointName=echoHttpClient${i}" fork="true">
+            <http:POST>
+              <http:headers content-type="text/xml" accept="text/xml,*/*">
+                <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+              </http:headers>
+              <http:body>
+                <http:data>
+                  <![CDATA[
                     <testRequestMessage>
                       <text>Hello HttpServer</text>
                     </testRequestMessage>
                   ]]>
-            </http:body>
-          </http:post>
+                </http:data>
+              </http:body>
+            </http:POST>
+          </http:request>
         </iterate>
 
         <iterate index="k" condition="k lt= ${overallIterations}">
@@ -90,23 +92,20 @@
         </iterate>
 
         <iterate index="j" condition="j lt= ${overallIterations}">
-          <receive endpoint="http://localhost:8074/test?endpointName=echoHttpClient${j}">
-            <message>
-              <data>
+          <http:response uri="http://localhost:8074/test?endpointName=echoHttpClient${j}">
+            <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+              <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+            </http:headers>
+            <http:body>
+              <http:data>
                 <![CDATA[
-                      <testResponseMessage>
-                        <text>Hello Citrus</text>
-                      </testResponseMessage>
-                    ]]>
-              </data>
-            </message>
-            <header>
-              <element name="CustomHeaderId" value="${custom_header_id}"/>
-              <element name="citrus_http_status_code" value="200"/>
-              <element name="citrus_http_version" value="HTTP/1.1"/>
-              <element name="citrus_http_reason_phrase" value="OK"/>
-            </header>
-          </receive>
+                  <testResponseMessage>
+                    <text>Hello Citrus</text>
+                  </testResponseMessage>
+                ]]>
+              </http:data>
+            </http:body>
+          </http:response>
 
           <echo>
             <message>Successfully received response message #${j}</message>

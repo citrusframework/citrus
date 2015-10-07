@@ -16,13 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.*;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.XMLUtils;
+import org.w3c.dom.*;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Bean definition parser for payload element used in message 
@@ -40,8 +39,7 @@ public abstract class PayloadElementParser {
     
     /**
      * Static parse method taking care of payload element.
-     * @param element
-     * @param builder
+     * @param payloadElement
      */
     public static String parseMessagePayload(Element payloadElement) {
         if (payloadElement == null) {
