@@ -32,14 +32,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:choice>
-          <xs:element name="GET" type="RequestType"/>
-          <xs:element name="POST" type="RequestType"/>
-          <xs:element name="PUT" type="RequestType"/>
-          <xs:element name="DELETE" type="RequestType"/>
-          <xs:element name="HEAD" type="RequestType"/>
-          <xs:element name="OPTIONS" type="RequestType"/>
-          <xs:element name="TRACE" type="RequestType"/>
-          <xs:element name="PATCH" type="RequestType"/>
+          <xs:element name="GET" type="ClientRequestType"/>
+          <xs:element name="POST" type="ClientRequestType"/>
+          <xs:element name="PUT" type="ClientRequestType"/>
+          <xs:element name="DELETE" type="ClientRequestType"/>
+          <xs:element name="HEAD" type="ClientRequestType"/>
+          <xs:element name="OPTIONS" type="ClientRequestType"/>
+          <xs:element name="TRACE" type="ClientRequestType"/>
+          <xs:element name="PATCH" type="ClientRequestType"/>
         </xs:choice>
         <xs:element name="extract" minOccurs="0">
           <xs:complexType>
@@ -85,7 +85,7 @@
         <xs:element name="body" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
-              <xs:choice>
+              <xs:choice minOccurs="0">
                 <xs:element name="payload">
                   <xs:complexType>
                     <xs:sequence>
@@ -100,7 +100,74 @@
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
+              <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="script" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="type" use="required">
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:enumeration value="groovy"/>
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="file" type="xs:string"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="xpath" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="expression" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="result-type">
+                          <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                              <xs:enumeration value="node"/>
+                              <xs:enumeration value="boolean"/>
+                              <xs:enumeration value="string"/>
+                              <xs:enumeration value="number"/>
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:attribute>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="json-path" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="expression" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="prefix" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="path" type="xs:string"/>
+                  <xs:attribute name="value" type="xs:string"/>
+                  <xs:attribute name="result-type">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="node"/>
+                        <xs:enumeration value="boolean"/>
+                        <xs:enumeration value="string"/>
+                        <xs:enumeration value="number"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
+            <xs:attribute name="schema-validation" type="xs:boolean"/>
+            <xs:attribute name="schema" type="xs:string"/>
+            <xs:attribute name="schema-repository" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="data-dictionary" type="xs:string"/>
             <xs:attribute name="type" default="xml" type="xs:string"/>
           </xs:complexType>
         </xs:element>
@@ -164,14 +231,14 @@
           </xs:complexType>
         </xs:element>
         <xs:choice>
-          <xs:element name="GET" type="RequestType"/>
-          <xs:element name="POST" type="RequestType"/>
-          <xs:element name="PUT" type="RequestType"/>
-          <xs:element name="DELETE" type="RequestType"/>
-          <xs:element name="HEAD" type="RequestType"/>
-          <xs:element name="OPTIONS" type="RequestType"/>
-          <xs:element name="TRACE" type="RequestType"/>
-          <xs:element name="PATCH" type="RequestType"/>
+          <xs:element name="GET" type="ServerRequestType"/>
+          <xs:element name="POST" type="ServerRequestType"/>
+          <xs:element name="PUT" type="ServerRequestType"/>
+          <xs:element name="DELETE" type="ServerRequestType"/>
+          <xs:element name="HEAD" type="ServerRequestType"/>
+          <xs:element name="OPTIONS" type="ServerRequestType"/>
+          <xs:element name="TRACE" type="ServerRequestType"/>
+          <xs:element name="PATCH" type="ServerRequestType"/>
         </xs:choice>
         <xs:element name="extract" minOccurs="0">
           <xs:complexType>
@@ -248,7 +315,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:complexType name="RequestType">
+  <xs:complexType name="ClientRequestType">
     <xs:annotation>
       <xs:documentation>Http request type with parameters, headers and body.</xs:documentation>
     </xs:annotation>
@@ -275,6 +342,107 @@
               </xs:element>
             </xs:choice>
           </xs:sequence>
+          <xs:attribute name="type" default="xml" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="path" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ServerRequestType">
+    <xs:annotation>
+      <xs:documentation>Http request type with parameters, headers and body.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="description" minOccurs="0"/>
+      <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
+      <xs:element name="headers" minOccurs="0" type="RequestHeadersType"/>
+      <xs:element name="body" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0">
+              <xs:element name="payload">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="data" type="xs:string"/>
+              <xs:element name="resource">
+                <xs:complexType>
+                  <xs:attribute name="file" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+            <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="script" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="type" use="required">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:enumeration value="groovy"/>
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:attribute>
+                          <xs:attribute name="file" type="xs:string"/>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="xpath" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="expression" type="xs:string" use="required"/>
+                      <xs:attribute name="value" type="xs:string" use="required"/>
+                      <xs:attribute name="result-type">
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="node"/>
+                            <xs:enumeration value="boolean"/>
+                            <xs:enumeration value="string"/>
+                            <xs:enumeration value="number"/>
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="json-path" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="expression" type="xs:string" use="required"/>
+                      <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="prefix" type="xs:string" use="required"/>
+                      <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="path" type="xs:string"/>
+                <xs:attribute name="value" type="xs:string"/>
+                <xs:attribute name="result-type">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="node"/>
+                      <xs:enumeration value="boolean"/>
+                      <xs:enumeration value="string"/>
+                      <xs:enumeration value="number"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="schema-validation" type="xs:boolean"/>
+          <xs:attribute name="schema" type="xs:string"/>
+          <xs:attribute name="schema-repository" type="xs:string"/>
+          <xs:attribute name="validator" type="xs:string"/>
+          <xs:attribute name="data-dictionary" type="xs:string"/>
           <xs:attribute name="type" default="xml" type="xs:string"/>
         </xs:complexType>
       </xs:element>
