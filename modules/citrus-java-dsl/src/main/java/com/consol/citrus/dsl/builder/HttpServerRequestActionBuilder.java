@@ -21,13 +21,14 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
-import org.springframework.http.HttpStatus;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import org.springframework.http.HttpMethod;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder> {
+public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder> {
 
     /** Http message to send or receive */
     private HttpMessage httpMessage = new HttpMessage();
@@ -35,12 +36,12 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
     /**
      * Default constructor using http client endpoint.
      * @param delegate
-     * @param httpClient
+     * @param httpServer
      */
-    public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpClient) {
+    public HttpServerRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpServer) {
         super();
-        action.setEndpoint(httpClient);
-        message(httpMessage);
+        action.setEndpoint(httpServer);
+        action.setMessageBuilder(new StaticMessageContentBuilder(httpMessage));
         delegate.setDelegate(action);
     }
 
@@ -50,32 +51,45 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
     }
 
     /**
-     * Sets the response status.
-     * @param status
+     * Sets the request path.
+     * @param path
      * @return
      */
-    public HttpClientResponseActionBuilder status(HttpStatus status) {
-        httpMessage.status(status);
+    public HttpServerRequestActionBuilder path(String path) {
+        httpMessage.path(path);
         return this;
     }
 
     /**
-     * Sets the response status code.
-     * @param statusCode
+     * Sets the request method.
+     * @param method
      * @return
      */
-    public HttpClientResponseActionBuilder statusCode(Integer statusCode) {
-        httpMessage.statusCode(statusCode);
+    public HttpServerRequestActionBuilder method(HttpMethod method) {
+        httpMessage.method(method);
         return this;
     }
 
     /**
-     * Sets the response reason phrase.
-     * @param reasonPhrase
+     * Set the endpoint URI for the request. This works only if the HTTP endpoint used
+     * doesn't provide an own endpoint URI resolver.
+     *
+     * @param uri absolute URI to use for the endpoint
+     * @return self
+     */
+    public HttpServerRequestActionBuilder uri(String uri) {
+        httpMessage.uri(uri);
+        return this;
+    }
+
+    /**
+     * Adds a query param to the request uri.
+     * @param name
+     * @param value
      * @return
      */
-    public HttpClientResponseActionBuilder reasonPhrase(String reasonPhrase) {
-        httpMessage.reasonPhrase(reasonPhrase);
+    public HttpServerRequestActionBuilder queryParam(String name, String value) {
+        httpMessage.queryParam(name, value);
         return this;
     }
 
@@ -84,7 +98,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param version
      * @return
      */
-    public HttpClientResponseActionBuilder version(String version) {
+    public HttpServerRequestActionBuilder version(String version) {
         httpMessage.version(version);
         return this;
     }
@@ -94,8 +108,18 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param contentType
      * @return
      */
-    public HttpClientResponseActionBuilder contentType(String contentType) {
+    public HttpServerRequestActionBuilder contentType(String contentType) {
         httpMessage.contentType(contentType);
+        return this;
+    }
+
+    /**
+     * Sets the request accept header.
+     * @param accept
+     * @return
+     */
+    public HttpServerRequestActionBuilder accept(String accept) {
+        httpMessage.accept(accept);
         return this;
     }
 }

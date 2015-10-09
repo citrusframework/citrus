@@ -55,9 +55,10 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 7L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 8L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/order/${id}");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/order/${id}");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("Content-Type"), "text/xml");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("Accept"), "text/xml");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");

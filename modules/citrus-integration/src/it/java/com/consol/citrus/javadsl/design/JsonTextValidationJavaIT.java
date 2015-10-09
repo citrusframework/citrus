@@ -40,7 +40,8 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                     "\"path\" : \"used\"" +
                   "}"),
             sequential(
-                receive("httpServerRequestEndpoint")
+                http().server("httpServerRequestEndpoint")
+                   .post()
                    .messageType(MessageType.JSON)
                    .payload("{" +
                             "\"type\" : \"read\"," +
@@ -49,7 +50,8 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                             "\"path\" : \"@equalsIgnoreCase('USED')@\"" +
                           "}")
                    .extractFromHeader("citrus_jms_messageId", "correlation_id"),
-                send("httpServerResponseEndpoint")
+                http().server("httpServerResponseEndpoint")
+                   .respond(HttpStatus.OK)
                    .payload("{" +
                         "\"timestamp\" : \"2011-01-01\"," +
                         "\"status\" : 200," +
@@ -62,9 +64,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                           "}," +
                         "\"value\" : 512" +
                       "}")
-                   .header("citrus_http_status_code", "200")
-                   .header("citrus_http_version", "HTTP/1.1")
-                   .header("citrus_http_reason_phrase", "OK")
+                   .version("HTTP/1.1")
                    .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );

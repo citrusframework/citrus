@@ -44,27 +44,25 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                 .accept("text/xml, */*"),
             
             sequential(
-                receive("httpServerRequestEndpoint")
+                http().server("httpServerRequestEndpoint")
+                    .post("/test")
                     .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .header("Content-Type", "text/xml")
-                    .header("Accept", "text/xml, */*")
+                    .contentType("text/xml")
+                    .accept("text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .header("citrus_http_method", "POST")
-                    .header("citrus_http_request_uri", "/test")
                     .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                     
-               send("httpServerResponseEndpoint")
+               http().server("httpServerResponseEndpoint")
+                   .respond(HttpStatus.OK)
                    .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .header("citrus_http_status_code", "200")
-                    .header("citrus_http_version", "HTTP/1.1")
-                    .header("citrus_http_reason_phrase", "OK")
-                    .header("Content-Type", "text/xml")
+                    .version("HTTP/1.1")
+                    .contentType("text/xml")
                     .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );
@@ -90,27 +88,27 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                 .accept("text/xml, */*"),
             
             sequential(
-                receive("httpServerRequestEndpoint")
+                http().server("httpServerRequestEndpoint")
+                    .post()
+                    .path("/test")
                     .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .header("Content-Type", "text/xml")
-                    .header("Accept", "text/xml, */*")
+                    .contentType("text/xml")
+                    .accept("text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .header("citrus_http_method", "POST")
-                    .header("citrus_http_request_uri", "/test")
                     .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                     
-               send("httpServerResponseEndpoint")
+               http().server("httpServerResponseEndpoint")
+                   .respond()
+                   .status(HttpStatus.NOT_FOUND)
                    .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .header("citrus_http_status_code", "404")
-                    .header("citrus_http_version", "HTTP/1.1")
-                    .header("citrus_http_reason_phrase", "OK")
-                    .header("Content-Type", "text/xml")
+                    .version("HTTP/1.1")
+                    .contentType("text/xml")
                     .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );

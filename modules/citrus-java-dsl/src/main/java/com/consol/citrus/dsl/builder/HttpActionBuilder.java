@@ -18,7 +18,9 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.server.HttpServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
@@ -54,7 +56,26 @@ public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestA
 	 */
 	public HttpClientActionBuilder client(String httpClient) {
 		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-		HttpClientActionBuilder clientAction = new HttpClientActionBuilder(action, applicationContext.getBean(httpClient, HttpClient.class))
+		HttpClientActionBuilder clientAction = new HttpClientActionBuilder(action, applicationContext.getBean(httpClient, Endpoint.class))
+				.withApplicationContext(applicationContext);
+		return clientAction;
+	}
+
+	/**
+	 * Initiate http server action.
+	 */
+	public HttpServerActionBuilder server(HttpServer httpServer) {
+		HttpServerActionBuilder clientAction = new HttpServerActionBuilder(action, httpServer)
+				.withApplicationContext(applicationContext);
+		return clientAction;
+	}
+
+	/**
+	 * Initiate http server action.
+	 */
+	public HttpServerActionBuilder server(String httpServer) {
+		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+		HttpServerActionBuilder clientAction = new HttpServerActionBuilder(action, applicationContext.getBean(httpServer, Endpoint.class))
 				.withApplicationContext(applicationContext);
 		return clientAction;
 	}

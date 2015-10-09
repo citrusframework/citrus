@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.builder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
-import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
@@ -38,7 +38,7 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
      * @param delegate
      * @param httpClient
      */
-    public HttpClientRequestActionBuilder(DelegatingTestAction<TestAction> delegate, HttpClient httpClient) {
+    public HttpClientRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpClient) {
         super();
         action.setEndpoint(httpClient);
         action.setMessageBuilder(new StaticMessageContentBuilder(httpMessage));

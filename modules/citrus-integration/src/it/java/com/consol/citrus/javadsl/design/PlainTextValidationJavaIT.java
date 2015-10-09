@@ -35,15 +35,15 @@ public class PlainTextValidationJavaIT extends TestNGCitrusTestDesigner {
                 .post()
                 .payload("Hello, World!"),
             sequential(
-                receive("httpServerRequestEndpoint")
+                http().server("httpServerRequestEndpoint")
+                   .post()
                    .messageType(MessageType.PLAINTEXT)
                    .payload("Hello, World!")
                    .extractFromHeader("citrus_jms_messageId", "correlation_id"),
-                send("httpServerResponseEndpoint")
+                http().server("httpServerResponseEndpoint")
+                   .respond(HttpStatus.OK)
                    .payload("Hello, Citrus!")
-                   .header("citrus_http_status_code", "200")
-                   .header("citrus_http_version", "HTTP/1.1")
-                   .header("citrus_http_reason_phrase", "OK")
+                   .version("HTTP/1.1")
                    .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );

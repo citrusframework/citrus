@@ -17,7 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
@@ -27,7 +27,7 @@ import org.springframework.http.HttpStatus;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder> {
+public class HttpServerResponseActionBuilder extends SendMessageBuilder<SendMessageAction, HttpServerResponseActionBuilder> {
 
     /** Http message to send or receive */
     private HttpMessage httpMessage = new HttpMessage();
@@ -35,11 +35,11 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
     /**
      * Default constructor using http client endpoint.
      * @param delegate
-     * @param httpClient
+     * @param httpServer
      */
-    public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpClient) {
+    public HttpServerResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpServer) {
         super();
-        action.setEndpoint(httpClient);
+        action.setEndpoint(httpServer);
         message(httpMessage);
         delegate.setDelegate(action);
     }
@@ -54,7 +54,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param status
      * @return
      */
-    public HttpClientResponseActionBuilder status(HttpStatus status) {
+    public HttpServerResponseActionBuilder status(HttpStatus status) {
         httpMessage.status(status);
         return this;
     }
@@ -64,7 +64,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param statusCode
      * @return
      */
-    public HttpClientResponseActionBuilder statusCode(Integer statusCode) {
+    public HttpServerResponseActionBuilder statusCode(Integer statusCode) {
         httpMessage.statusCode(statusCode);
         return this;
     }
@@ -74,7 +74,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param reasonPhrase
      * @return
      */
-    public HttpClientResponseActionBuilder reasonPhrase(String reasonPhrase) {
+    public HttpServerResponseActionBuilder reasonPhrase(String reasonPhrase) {
         httpMessage.reasonPhrase(reasonPhrase);
         return this;
     }
@@ -84,7 +84,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param version
      * @return
      */
-    public HttpClientResponseActionBuilder version(String version) {
+    public HttpServerResponseActionBuilder version(String version) {
         httpMessage.version(version);
         return this;
     }
@@ -94,7 +94,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param contentType
      * @return
      */
-    public HttpClientResponseActionBuilder contentType(String contentType) {
+    public HttpServerResponseActionBuilder contentType(String contentType) {
         httpMessage.contentType(contentType);
         return this;
     }

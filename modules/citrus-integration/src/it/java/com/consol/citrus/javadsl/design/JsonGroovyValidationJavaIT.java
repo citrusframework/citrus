@@ -43,14 +43,16 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
                     "\"path\" : \"used\"" +
                   "}"),
             sequential(
-                receive("httpServerRequestEndpoint")
+                http().server("httpServerRequestEndpoint")
+                   .post("/")
                    .messageType(MessageType.JSON)
                    .validator("defaultGroovyJsonMessageValidator")
                    .validateScript("assert json.type == 'read'" + NEWLINE +
                               "assert json.mbean == 'java.lang:type=Memory'" + NEWLINE +
                               "assert json.attribute == 'HeapMemoryUsage'")
                    .extractFromHeader("citrus_jms_messageId", "correlation_id"),
-                send("httpServerResponseEndpoint")
+                http().server("httpServerResponseEndpoint")
+                   .respond(HttpStatus.OK)
                    .payload("{" + NEWLINE +
                         "\"timestamp\" : \"2011-01-01\"," + NEWLINE +
                         "\"status\" : 200," + NEWLINE +
@@ -63,9 +65,7 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
                           "}," + NEWLINE +
                         "\"value\" : 512" + NEWLINE +
                       "}")
-                   .header("citrus_http_status_code", "200")
-                   .header("citrus_http_version", "HTTP/1.1")
-                   .header("citrus_http_reason_phrase", "OK")
+                   .version("HTTP/1.1")
                    .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );

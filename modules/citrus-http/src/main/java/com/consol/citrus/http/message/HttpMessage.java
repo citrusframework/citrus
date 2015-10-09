@@ -186,6 +186,7 @@ public class HttpMessage extends DefaultMessage {
      * @return
      */
     public HttpMessage path(String path) {
+        header(HttpMessageHeaders.HTTP_REQUEST_URI, path);
         header(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
         return this;
     }

@@ -162,11 +162,17 @@ public class DefaultTestDesigner implements TestDesigner {
                     testCase.getActions().remove(((TestActionBuilder<?>) action).build());
                 } else if (!action.getClass().isAnonymousClass()) {
                     if (!testCase.getActions().remove(action)) {
+                        TestAction toBeRemoved = null;
                         for (TestAction testCaseAction : testCase.getActions()) {
                             if (testCaseAction instanceof DelegatingTestAction &&
                                     ((DelegatingTestAction) testCaseAction).getDelegate().equals(action)) {
-                                testCase.getActions().remove(testCaseAction);
+                                toBeRemoved = testCaseAction;
+                                break;
                             }
+                        }
+
+                        if (toBeRemoved != null) {
+                            testCase.getActions().remove(toBeRemoved);
                         }
                     }
                 }
