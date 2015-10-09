@@ -23,9 +23,9 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.*;
+import com.consol.citrus.dsl.runner.DefaultTestRunner;
+import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
@@ -326,7 +326,12 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public DelegatingTestAction<AbstractCamelRouteAction> camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
+    public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
+        return testRunner.http(configurer);
+    }
+
+    @Override
+    public AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         return testRunner.camel(configurer);
     }
 

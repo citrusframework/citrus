@@ -17,10 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -33,10 +32,11 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
     public void httpServerStandalone() {
         variable("custom_header_id", "123456789");
         
-        send(new BuilderSupport<SendMessageBuilder>() {
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("httpStandaloneClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpStandaloneClient")
+                        .post()
                         .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                                 "</testRequestMessage>")
@@ -44,23 +44,23 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("httpStandaloneClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpStandaloneClient")
+                        .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello TestFramework</text>" +
                                 "</testResponseMessage>")
-                        .header("citrus_http_status_code", "200")
-                        .header("citrus_http_version", "HTTP/1.1")
-                        .header("citrus_http_reason_phrase", "OK");
+                        .version("HTTP/1.1");
             }
         });
         
-        send(new BuilderSupport<SendMessageBuilder>() {
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("httpStandaloneClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpStandaloneClient")
+                        .post()
                         .payload("<moreRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                                 "</moreRequestMessage>")
@@ -68,16 +68,15 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("httpStandaloneClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpStandaloneClient")
+                        .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello TestFramework</text>" +
                                 "</testResponseMessage>")
-                        .header("citrus_http_status_code", "200")
-                        .header("citrus_http_version", "HTTP/1.1")
-                        .header("citrus_http_reason_phrase", "OK");
+                        .version("HTTP/1.1");
             }
         });
     }

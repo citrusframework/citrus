@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -72,6 +73,10 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
             for (int i = 0; i < actions.length; i++) {
                 if (container.getActions().size() == i) {
                     container.addTestAction(actions[i]);
+                } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
+                    if (!actions[i].equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
+                        container.getActions().add(i, ((DelegatingTestAction) actions[i]).getDelegate());
+                    }
                 } else if (!container.getActions().get(i).equals(actions[i])) {
                     container.getActions().add(i, actions[i]);
                 }

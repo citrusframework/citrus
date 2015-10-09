@@ -17,11 +17,10 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -36,10 +35,11 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void jsonGroovyValidation() {
         parallel().actions(
-            send(new BuilderSupport<SendMessageBuilder>() {
+            http(new BuilderSupport<HttpActionBuilder>() {
                 @Override
-                public void configure(SendMessageBuilder builder) {
-                    builder.endpoint("httpClient")
+                public void configure(HttpActionBuilder builder) {
+                    builder.client("httpClient")
+                            .post()
                             .payload("{" +
                                     "\"type\" : \"read\"," +
                                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -49,10 +49,11 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                http(new BuilderSupport<HttpActionBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint("httpServerRequestEndpoint")
+                    public void configure(HttpActionBuilder builder) {
+                        builder.server("httpServerRequestEndpoint")
+                                .post()
                                 .messageType(MessageType.JSON)
                                 .validator("defaultGroovyJsonMessageValidator")
                                 .validateScript("assert json.type == 'read'" + NEWLINE +
@@ -61,10 +62,11 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "correlation_id");
                     }
                 }),
-                send(new BuilderSupport<SendMessageBuilder>() {
+                http(new BuilderSupport<HttpActionBuilder>() {
                     @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("httpServerResponseEndpoint")
+                    public void configure(HttpActionBuilder builder) {
+                        builder.server("httpServerResponseEndpoint")
+                                .respond(HttpStatus.OK)
                                 .payload("{" + NEWLINE +
                                         "\"timestamp\" : \"2011-01-01\"," + NEWLINE +
                                         "\"status\" : 200," + NEWLINE +
@@ -77,19 +79,18 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                                         "}," + NEWLINE +
                                         "\"value\" : 512" + NEWLINE +
                                         "}")
-                                .header("citrus_http_status_code", "200")
-                                .header("citrus_http_version", "HTTP/1.1")
-                                .header("citrus_http_reason_phrase", "OK")
+                                .version("HTTP/1.1")
                                 .header("citrus_jms_correlationId", "${correlation_id}");
                     }
                 })
             )
         );
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("httpClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpClient")
+                        .response(HttpStatus.OK)
                         .messageType(MessageType.JSON)
                         .validator("defaultGroovyJsonMessageValidator")
                         .validateScript("assert json.request.type == 'read'" + NEWLINE +
@@ -98,9 +99,7 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                                 "assert json.status == 200" + NEWLINE +
                                 "assert json.value >= 256" + NEWLINE +
                                 "assert json.value <= 1024")
-                        .header("citrus_http_status_code", "200")
-                        .header("citrus_http_version", "HTTP/1.1")
-                        .header("citrus_http_reason_phrase", "OK");
+                        .version("HTTP/1.1");
             }
         });
     }

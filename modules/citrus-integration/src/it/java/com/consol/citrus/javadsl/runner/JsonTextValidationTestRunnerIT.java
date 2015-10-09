@@ -17,11 +17,10 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -33,10 +32,11 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void jsonTextValidation() {
         parallel().actions(
-            send(new BuilderSupport<SendMessageBuilder>() {
+            http(new BuilderSupport<HttpActionBuilder>() {
                 @Override
-                public void configure(SendMessageBuilder builder) {
-                    builder.endpoint("httpClient")
+                public void configure(HttpActionBuilder builder) {
+                    builder.client("httpClient")
+                            .post()
                             .payload("{" +
                                     "\"type\" : \"read\"," +
                                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -46,10 +46,11 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                http(new BuilderSupport<HttpActionBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint("httpServerRequestEndpoint")
+                    public void configure(HttpActionBuilder builder) {
+                        builder.server("httpServerRequestEndpoint")
+                                .post()
                                 .messageType(MessageType.JSON)
                                 .payload("{" +
                                         "\"type\" : \"read\"," +
@@ -60,10 +61,11 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "correlation_id");
                     }
                 }),
-                send(new BuilderSupport<SendMessageBuilder>() {
+                http(new BuilderSupport<HttpActionBuilder>() {
                     @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("httpServerResponseEndpoint")
+                    public void configure(HttpActionBuilder builder) {
+                        builder.server("httpServerResponseEndpoint")
+                                .respond(HttpStatus.OK)
                                 .payload("{" +
                                         "\"timestamp\" : \"2011-01-01\"," +
                                         "\"status\" : 200," +
@@ -76,19 +78,18 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                                         "}," +
                                         "\"value\" : 512" +
                                         "}")
-                                .header("citrus_http_status_code", "200")
-                                .header("citrus_http_version", "HTTP/1.1")
-                                .header("citrus_http_reason_phrase", "OK")
+                                .version("HTTP/1.1")
                                 .header("citrus_jms_correlationId", "${correlation_id}");
                     }
                 })
             )
         );
-        
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
+
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("httpClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpClient")
+                        .response(HttpStatus.OK)
                         .messageType(MessageType.JSON)
                         .payload("{" +
                                 "\"timestamp\" : \"@matchesDatePattern('yyyy-MM-dd')@\"," +
@@ -102,16 +103,15 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                                 "}," +
                                 "\"value\" : \"@isNumber()@\"" +
                                 "}")
-                        .header("citrus_http_status_code", "200")
-                        .header("citrus_http_version", "HTTP/1.1")
-                        .header("citrus_http_reason_phrase", "OK");
+                        .version("HTTP/1.1");
             }
         });
-        
-        send(new BuilderSupport<SendMessageBuilder>() {
+
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("httpClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpClient")
+                        .post()
                         .payload("{" +
                                 "\"type\" : \"read\"," +
                                 "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -123,14 +123,13 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
         
         sleep(2000);
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
+        http(new BuilderSupport<HttpActionBuilder>() {
             @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("httpClient")
+            public void configure(HttpActionBuilder builder) {
+                builder.client("httpClient")
+                        .response(HttpStatus.OK)
                         .messageType(MessageType.JSON)
-                        .header("citrus_http_status_code", "200")
-                        .header("citrus_http_version", "HTTP/1.1")
-                        .header("citrus_http_reason_phrase", "OK");
+                        .version("HTTP/1.1");
             }
         });
     }

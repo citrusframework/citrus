@@ -22,7 +22,6 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
@@ -408,10 +407,16 @@ public interface TestRunner extends ApplicationContextAware {
     DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer);
 
     /**
+     * Run docker command action.
+     * @return
+     */
+    TestAction http(BuilderSupport<HttpActionBuilder> configurer);
+
+    /**
      * Run Camel route actions.
      * @return
      */
-    DelegatingTestAction<AbstractCamelRouteAction> camel(BuilderSupport<CamelRouteActionBuilder> configurer);
+    AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer);
 
     /**
      * Adds template container with nested test actions.

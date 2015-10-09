@@ -65,9 +65,9 @@ public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestA
 	 * Initiate http server action.
 	 */
 	public HttpServerActionBuilder server(HttpServer httpServer) {
-		HttpServerActionBuilder clientAction = new HttpServerActionBuilder(action, httpServer)
+		HttpServerActionBuilder serverAction = new HttpServerActionBuilder(action, httpServer)
 				.withApplicationContext(applicationContext);
-		return clientAction;
+		return serverAction;
 	}
 
 	/**
@@ -75,9 +75,9 @@ public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestA
 	 */
 	public HttpServerActionBuilder server(String httpServer) {
 		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-		HttpServerActionBuilder clientAction = new HttpServerActionBuilder(action, applicationContext.getBean(httpServer, Endpoint.class))
+		HttpServerActionBuilder serverAction = new HttpServerActionBuilder(action, applicationContext.getBean(httpServer, Endpoint.class))
 				.withApplicationContext(applicationContext);
-		return clientAction;
+		return serverAction;
 	}
 
 	/**
