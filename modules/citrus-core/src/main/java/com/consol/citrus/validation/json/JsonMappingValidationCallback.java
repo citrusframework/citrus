@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.json;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.callback.AbstractValidationCallback;
@@ -52,11 +53,9 @@ public abstract class JsonMappingValidationCallback<T> extends AbstractValidatio
         this.jsonMapper = jsonMapper;
     }
 
-    /**
-     * Validate message automatically unmarshalling message payload.
-     */
-    public void validate(Message message) {
-        validate(readJson(message), message.copyHeaders());
+    @Override
+    public void validate(Message message, TestContext context) {
+        validate(readJson(message), message.copyHeaders(), context);
     }
 
     @SuppressWarnings("unchecked")

@@ -95,7 +95,7 @@ public class DefaultMessage implements Message {
         this.payload = payload;
         this.headers = headers;
 
-        this.headers.put(MessageHeaders.ID, UUID.randomUUID());
+        this.headers.put(MessageHeaders.ID, UUID.randomUUID().toString());
         this.headers.put(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
     }
 

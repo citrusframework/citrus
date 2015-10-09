@@ -47,9 +47,7 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
       */
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setControlMessage(new DefaultMessage(control));
-        
-        xmlMessageValidator.validateMessage(new DefaultMessage(removeCDataElements(value)), context, validationContext);
+        xmlMessageValidator.validateMessage(new DefaultMessage(removeCDataElements(value)), new DefaultMessage(control), context, validationContext);
     }
 
     /**

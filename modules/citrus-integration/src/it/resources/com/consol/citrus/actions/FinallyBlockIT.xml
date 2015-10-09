@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="FinallyBlockIT">
+        <meta-info>
+          <author>Christoph Deppisch</author>
+          <creationdate>2008-04-25</creationdate>
+          <status>FINAL</status>
+          <last-updated-by>Christoph Deppisch</last-updated-by>
+          <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+        </meta-info>
+		
+        <description>
+          Sometimes it is important to do finishing work when a test case failes. For instance it might
+          be necessary to clean up the database. These actions have to be executed in any case, even if the test chain
+          breaks due to errors.
+
+          Therefore a test case offers a finalActions besides the testActions. The actions in this finally chain will be executed after
+          the test, even in case off errors.
+
+          In the example below the first action creates an order in the database. Then some more actions might follow. Here it is a simple
+          TraceVariablesAction. But there can be errors in these actions. To be sure that the order in the database is deleted after the test, the
+          finalActions contains the respective action. This action will be executed even in case of errors in the testActions above.
+        </description>
+        <variables>
+            <variable name="orderId" value="1"/>
+        </variables>
+        <actions>
+            <sql datasource="testDataSource">
+                <statement>INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')</statement>
+            </sql>
+            <echo>
+                <message>ORDER creation time: citrus:currentDate('dd.MM.yyyy')</message>
+            </echo>
+        </actions>
+        <finally>
+            <sql datasource="testDataSource">
+                <statement>DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'</statement>
+            </sql>
+        </finally>
+    </testcase>
+</spring:beans>

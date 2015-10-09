@@ -48,7 +48,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript(validationScript);
         
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
     
     @Test
@@ -62,7 +62,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript(validationScript);
         
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
     
     @Test
@@ -75,7 +75,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setValidationScript(validationScript);
         
         try {
-            validator.validateMessage(message, context, validationContext);
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getCause() instanceof AssertionError);
             return;
@@ -95,7 +95,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         Assert.assertNull(context.getVariables().get("operation"));
         Assert.assertNull(context.getVariables().get("text"));
         
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         
         Assert.assertNotNull(context.getVariables().get("operation"));
         Assert.assertNotNull(context.getVariables().get("text"));

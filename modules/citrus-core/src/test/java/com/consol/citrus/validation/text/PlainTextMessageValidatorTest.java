@@ -17,9 +17,11 @@
 package com.consol.citrus.validation.text;
 
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.ControlMessageValidationContext;
+import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,9 +37,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello World!");
 
-        ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-        validationContext.setControlMessage(controlMessage);
-        
+        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -50,9 +50,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         context.setVariable("world", "World");
 
-        ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-        validationContext.setControlMessage(controlMessage);
-        
+        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
@@ -63,9 +61,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello Citrus!");
 
-        ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-        validationContext.setControlMessage(controlMessage);
-        
+        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
         } catch (ValidationException e) {

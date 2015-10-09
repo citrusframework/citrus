@@ -17,7 +17,7 @@
             "config": "config", //#config
             "config/:page": "config", //#config/endpoints
             "tests": "tests", // #tests
-            "tests/:testName": "testDetails", // #tests/EchoActionITest
+            "tests/:testName": "testDetails", // #tests/EchoActionIT
             "stats": "stats", // #stats
             "settings": "settings", // #settings
             "about": "about" // #about

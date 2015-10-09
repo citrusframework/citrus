@@ -31,6 +31,9 @@ public abstract class PropertyConstants {
     /** Base package for test cases to look for */
     public static final String BASE_PACKAGE = "test.base.package";
 
+    /** Test source directory */
+    public static final String TEST_SRC_DIRECTORY = "test.source.directory";
+
     /**
      * Prevent instantiation.
      */

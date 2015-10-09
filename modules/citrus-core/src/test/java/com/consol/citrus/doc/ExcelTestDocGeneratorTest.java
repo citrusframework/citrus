@@ -16,20 +16,20 @@
 
 package com.consol.citrus.doc;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import org.springframework.core.io.FileSystemResource;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.junit.Assert;
-import org.springframework.core.io.FileSystemResource;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.*;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
 /**
  * @author Christoph Deppisch
@@ -39,11 +39,11 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     
     @BeforeClass
-    public void createSampleTest() {
+    public void createSampleIT() {
         TestCaseCreator creator = TestCaseCreator.build()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
-                .withName("SampleTest")
+                .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
@@ -68,12 +68,12 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Date</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">File</Data>"));
         
-        Assert.assertTrue(docContent.contains(">SampleTest<"));
+        Assert.assertTrue(docContent.contains(">SampleIT<"));
         Assert.assertTrue(docContent.contains(">Christoph<"));
         Assert.assertTrue(docContent.contains(">DRAFT<"));
         Assert.assertTrue(docContent.contains(">This is a sample test<"));
         Assert.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
-        Assert.assertTrue(docContent.contains(">SampleTest.xml<"));
+        Assert.assertTrue(docContent.contains(">SampleIT.xml<"));
     }
     
     @Test
@@ -84,7 +84,7 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
                         .withOutputFile("CustomCitrusTests.xls")
                         .withPageTitle("CustomPageTitle")
                         .withCustomHeaders("Id;Name;Autor;Status;Beschreibung;Datum;Dateiname")
-                        .useTestDirectory("src/citrus/tests/com/consol/citrus/sample");
+                        .useSrcDirectory("src" + File.separator + "test" + File.separator);
         
         creator.generateDoc();
         
@@ -101,11 +101,11 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Datum</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Dateiname</Data>"));
         
-        Assert.assertTrue(docContent.contains(">SampleTest<"));
+        Assert.assertTrue(docContent.contains(">SampleIT<"));
         Assert.assertTrue(docContent.contains(">Christoph<"));
         Assert.assertTrue(docContent.contains(">DRAFT<"));
         Assert.assertTrue(docContent.contains(">This is a sample test<"));
         Assert.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
-        Assert.assertTrue(docContent.contains(">SampleTest.xml<"));
+        Assert.assertTrue(docContent.contains(">SampleIT.xml<"));
     }
 }

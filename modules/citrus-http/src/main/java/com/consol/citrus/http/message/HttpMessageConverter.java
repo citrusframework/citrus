@@ -90,8 +90,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
         }
 
         if (message instanceof ResponseEntity) {
-            httpMessage.statusCode(((ResponseEntity) message).getStatusCode());
-            httpMessage.reasonPhrase(((ResponseEntity) message).getStatusCode().name());
+            httpMessage.status(((ResponseEntity) message).getStatusCode());
         }
 
         return httpMessage;

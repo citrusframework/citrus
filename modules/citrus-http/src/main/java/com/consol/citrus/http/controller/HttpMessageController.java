@@ -111,7 +111,8 @@ public class HttpMessageController {
             queryParams = queryParams.replaceAll("&", ",");
         }
 
-        request.uri(pathHelper.getRequestUri(servletRequest))
+        request.path(pathHelper.getRequestUri(servletRequest))
+                .uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
                 .queryParams(queryParams)
                 .method(method);
@@ -128,7 +129,7 @@ public class HttpMessageController {
             }
 
             if (httpResponse.getStatusCode() == null) {
-                httpResponse.statusCode(HttpStatus.OK);
+                httpResponse.status(HttpStatus.OK);
             }
 
             responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration);

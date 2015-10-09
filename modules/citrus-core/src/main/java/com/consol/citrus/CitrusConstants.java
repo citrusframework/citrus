@@ -43,8 +43,7 @@ public final class CitrusConstants {
     public static final String DEFAULT_APPLICATION_CONTEXT = "citrus-context.xml";
 
     /** Default test directories */
-    public static final String DEFAULT_JAVA_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "java" + File.separator;
-    public static final String DEFAULT_TEST_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "tests" + File.separator;
+    public static final String DEFAULT_TEST_SRC_DIRECTORY = "src" + File.separator + "test" + File.separator;
 
     /** Placeholder used in messages to ignore elements */
     public static final String IGNORE_PLACEHOLDER = "@ignore@";

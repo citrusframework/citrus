@@ -52,6 +52,13 @@
           <failIfNoTests>false</failIfNoTests>
         </configuration>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <failIfNoTests>false</failIfNoTests>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

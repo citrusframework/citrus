@@ -24,10 +24,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -60,7 +60,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     private MessageType messageType = MessageType.valueOf(CitrusConstants.DEFAULT_MESSAGE_TYPE);
 
     /** Validation context used in this action builder */
-    private ControlMessageValidationContext validationContext;
+    private ValidationContext validationContext;
 
     /** JSON validation context used in this action builder */
     private JsonPathMessageValidationContext jsonPathValidationContext;
@@ -141,13 +141,28 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T message(Message controlMessage) {
-        if (validationContext != null) {
-            throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
-        }
-
-        getValidationContext().setControlMessage(controlMessage);
-        
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
+        staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
+        action.setMessageBuilder(staticMessageContentBuilder);
+        getValidationContext();
         return self;
+    }
+
+    /**
+     * Sets the payload data on the message builder implementation.
+     * @param payload
+     * @return
+     */
+    protected void setPayload(String payload) {
+        MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+
+        if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+            ((PayloadTemplateMessageBuilder) messageContentBuilder).setPayloadData(payload);
+        } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
+            ((StaticMessageContentBuilder) messageContentBuilder).getMessage().setPayload(payload);
+        } else {
+            throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
+        }
     }
     
     /**
@@ -156,7 +171,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T payload(String payload) {
-        getPayloadTemplateMessageBuilder().setPayloadData(payload);
+        setPayload(payload);
         return self;
     }
     
@@ -167,7 +182,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T payload(Resource payloadResource) {
         try {
-            getPayloadTemplateMessageBuilder().setPayloadData(FileUtils.readToString(payloadResource));
+            setPayload(FileUtils.readToString(payloadResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
@@ -193,7 +208,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
         }
 
-        getPayloadTemplateMessageBuilder().setPayloadData(result.toString());
+        setPayload(result.toString());
 
         return self;
     }
@@ -532,6 +547,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         receiveSoapMessageAction.setMessageSelector(action.getMessageSelector());
         receiveSoapMessageAction.setMessageSelectorString(action.getMessageSelectorString());
         receiveSoapMessageAction.setMessageType(action.getMessageType());
+        receiveSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
         receiveSoapMessageAction.setReceiveTimeout(action.getReceiveTimeout());
         receiveSoapMessageAction.setValidationCallback(action.getValidationCallback());
         receiveSoapMessageAction.setValidationContexts(action.getValidationContexts());
@@ -577,31 +593,18 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
-     * Gets the message builder on the validation context. Constructs message content builder if necessary.
-     * @return
+     * Get message builder, if already registered or create a new message builder and register it
+     *
+     * @return the message builder in use
      */
     protected AbstractMessageContentBuilder getMessageContentBuilder() {
-        if (getValidationContext().getMessageBuilder() instanceof AbstractMessageContentBuilder) {
-            return (AbstractMessageContentBuilder) getValidationContext().getMessageBuilder();
+        getValidationContext();
+
+        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
+            return (AbstractMessageContentBuilder) action.getMessageBuilder();
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            getValidationContext().setMessageBuilder(messageBuilder);
-            return messageBuilder;
-        }
-    }
-
-    /**
-     * Forces a payload template message builder.
-     * @return
-     */
-    protected PayloadTemplateMessageBuilder getPayloadTemplateMessageBuilder() {
-        MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
-
-        if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
-            return (PayloadTemplateMessageBuilder) messageContentBuilder;
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            getValidationContext().setMessageBuilder(messageBuilder);
+            action.setMessageBuilder(messageBuilder);
             return messageBuilder;
         }
     }
@@ -609,14 +612,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     /**
      * Creates new validation context according to message type.
      */
-    private ControlMessageValidationContext getValidationContext() {
+    private ValidationContext getValidationContext() {
         if (validationContext == null) {
             if (messageType.equals(MessageType.XML)) {
                 validationContext = new XmlMessageValidationContext();
             } else if (messageType.equals(MessageType.JSON)) {
                 validationContext = new JsonMessageValidationContext();
             } else {
-                validationContext = new ControlMessageValidationContext(messageType.toString());
+                validationContext = new DefaultValidationContext();
             }
 
             action.getValidationContexts().add(validationContext);
@@ -705,7 +708,6 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             return ((XpathMessageValidationContext)validationContext);
         } else if (validationContext instanceof XmlMessageValidationContext) {
             XpathMessageValidationContext xPathContext = new XpathMessageValidationContext();
-            xPathContext.setMessageBuilder(validationContext.getMessageBuilder());
             xPathContext.setNamespaces(((XmlMessageValidationContext) validationContext).getNamespaces());
             xPathContext.setControlNamespaces(((XmlMessageValidationContext) validationContext).getControlNamespaces());
             xPathContext.setIgnoreExpressions(((XmlMessageValidationContext) validationContext).getIgnoreExpressions());
@@ -802,7 +804,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * Sets the validation context.
      * @param validationContext
      */
-    protected void setValidationContext(ControlMessageValidationContext validationContext) {
+    protected void setValidationContext(ValidationContext validationContext) {
         this.validationContext = validationContext;
     }
 }

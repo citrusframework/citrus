@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="VariablesOrderIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-05-14</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-05-14T00:00:00</last-updated-on>
+		</meta-info>
+		
+        <description>
+			Testing that variables should be stored in natural order.
+		</description>
+		
+		<variables>
+			<variable name="variable" value="1"/>
+			<variable name="first" value="${variable}"/>
+			<variable name="second" value="${first}"></variable>
+			<variable name="a" value="${variable}"></variable>
+		</variables>
+		
+        <actions>
+        	<create-variables>
+        		<variable name="z" value="success"/>
+        		<variable name="anotherVariable" value="${z}"/>
+        	</create-variables>
+        	
+        	<trace-variables/>
+        	
+        	<echo>
+        		<message>${a}</message>
+        	</echo>
+        	
+        	<echo>
+        		<message>${anotherVariable}</message>
+        	</echo>
+        </actions>
+    </testcase>
+</spring:beans>

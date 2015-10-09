@@ -12,8 +12,8 @@
     generates both parts in your test directory. For example: if you create a new test named 
     <emphasis>MyFirstCitrusTest</emphasis> you will find these two files as a result:</para>
     
-    <para><literal>src/citrus/tests/com/consol/citrus/MyFirstCitrusTest.xml</literal></para>
-    <para><literal>src/citrus/java/com/consol/citrus/MyFirstCitrusTest.java</literal></para>
+    <para><literal>src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml</literal></para>
+    <para><literal>src/it/java/com/consol/citrus/MyFirstCitrusTest.java</literal></para>
 
     <note>
         <para>If you prefer to just write Java code you can throw away the XML part immediately and continue working with the Java part only. In case
@@ -57,8 +57,8 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author Unknown
  */
 @Test
-public class SampleTest extends AbstractTestNGCitrusTest {
-    @CitrusXmlTest(name = "SampleTest")
+public class SampleIT extends AbstractTestNGCitrusTest {
+    @CitrusXmlTest(name = "SampleIT")
     public void sampleTest() {}
 }</programlisting>
         
@@ -79,7 +79,7 @@ public class SampleTest extends AbstractTestNGCitrusTest {
 
         <para>The default naming convention requires a XML file with the tests name in the same package that the
         Java class is placed in. In the basic example above this means that Citrus searches for a XML test file in
-        <emphasis>com/consol/citrus/samples/SampleTest.xml</emphasis>. You tell Citrus to search for another XML file by using the @CitrusXmlTest
+        <emphasis>com/consol/citrus/samples/SampleIT.xml</emphasis>. You tell Citrus to search for another XML file by using the @CitrusXmlTest
         annotation properties. Following annotation properties are valid:</para>
 
         <itemizedlist mark="opencircle">
@@ -102,14 +102,14 @@ public class SampleTest extends AbstractTestNGCitrusTest {
         single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.</para>
 
         <programlisting language="java">@Test
-public class SampleTest extends AbstractTestNGCitrusTest {
-    @CitrusXmlTest(name = "SampleTest")
+public class SampleIT extends AbstractTestNGCitrusTest {
+    @CitrusXmlTest(name = "SampleIT")
     public void sampleTest() {}
 
-    @CitrusXmlTest(name = { "SampleTest", "Sample2Test" })
+    @CitrusXmlTest(name = { "SampleIT", "AnotherIT" })
     public void multipleTests() {}
 
-    @CitrusXmlTest(name = "OtherTest", packageName = "com.other.testpackage")
+    @CitrusXmlTest(name = "OtherIT", packageName = "com.other.testpackage")
     public void otherPackageTest() {}
 
     @CitrusXmlTest(packageScan =  { "com.some.testpackage", "com.other.testpackage" })
@@ -138,7 +138,7 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 
 @Test
 public class MyFirstTestDesigner extends TestNGCitrusTestDesigner {
-    @CitrusTest(name = "MyFirstTest")
+    @CitrusTest(name = "MyFirstIT")
     public void myFirstTest() {
         description("First example showing the basic test case definition elements!");
 
@@ -163,12 +163,12 @@ public class MyFirstTestDesigner extends TestNGCitrusTestDesigner {
         a specific parameter value. With Citrus you can use those data provider parameters inside the test as variables. See the next listing
         on how to use TestNG data providers in Citrus:</para>
 
-        <programlisting language="java">public class DataProviderITest extends AbstractTestNGCitrusTest {
+        <programlisting language="java">public class DataProviderIT extends AbstractTestNGCitrusTest {
 
   @CitrusXmlTest
   @CitrusParameters( "message" )
   @Test(dataProvider = "messageDataProvider")
-  public void DataProviderITest(ITestContext testContext) {
+  public void DataProviderIT(ITestContext testContext) {
   }
 
   @DataProvider
@@ -207,17 +207,17 @@ import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
  *
  * @author Unknown
  */
-public class SampleTest extends AbstractJUnit4CitrusTest {
+public class SampleIT extends AbstractJUnit4CitrusTest {
     @Test
-    @CitrusXmlTest(name = "SampleTest")
+    @CitrusXmlTest(name = "SampleIT")
     public void sampleTest() {}
 
     @Test
-    @CitrusXmlTest(name = { "SampleTest", "Sample2Test" })
+    @CitrusXmlTest(name = { "SampleIT", "AnotherIT" })
     public void multipleTests() {}
 
     @Test
-    @CitrusXmlTest(name = "OtherTest", packageName = "com.other.testpackage")
+    @CitrusXmlTest(name = "OtherIT", packageName = "com.other.testpackage")
     public void otherPackageTest() {}
 
     @Test
@@ -256,18 +256,18 @@ import org.junit.Test;
  *
  * @author Unknown
  */
-public class SampleTest extends JUnit4CitrusTestDesigner {
+public class SampleIT extends JUnit4CitrusTestDesigner {
 
     @Test
     @CitrusTest
-    public void EchoSampleTest() {
+    public void EchoSampleIT() {
         variable("time", "citrus:currentDate()");
         echo("Hello Citrus!");
         echo("CurrentTime is: ${time}");
     }
 
     @Test
-    @CitrusTest(name = "CitrusEchoTest")
+    @CitrusTest(name = "EchoIT")
     public void echoTest() {
         echo("Hello Citrus!");
     }

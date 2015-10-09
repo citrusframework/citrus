@@ -24,7 +24,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -37,7 +36,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.namespace.NamespaceContext;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,7 +52,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     @Override
-    public void validateMessage(Message receivedMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
+    public void validateMessage(Message receivedMessage,Message controlMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
         if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
@@ -120,14 +118,8 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     }
 
     @Override
-    public XpathMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
-        for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof XpathMessageValidationContext) {
-                return (XpathMessageValidationContext) validationContext;
-            }
-        }
-
-        return null;
+    protected Class<XpathMessageValidationContext> getRequiredValidationContextType() {
+        return XpathMessageValidationContext.class;
     }
 
     @Override

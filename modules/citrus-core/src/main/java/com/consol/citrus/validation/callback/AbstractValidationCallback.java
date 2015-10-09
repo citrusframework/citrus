@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.callback;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import org.springframework.context.ApplicationContext;
 
@@ -32,19 +33,18 @@ public abstract class AbstractValidationCallback<T> implements ValidationCallbac
     /** Spring application context injected before validation callback is called */
     protected ApplicationContext applicationContext;
     
-    /**
-     * Validate message automatically unmarshalling message payload.
-     */
-    public void validate(Message message) {
-        validate((T) message.getPayload(), message.copyHeaders());
+    @Override
+    public void validate(Message message, TestContext context) {
+        validate((T) message.getPayload(), message.copyHeaders(), context);
     }
     
     /**
      * Subclasses do override this method for validation purpose.
      * @param payload the message payload object.
      * @param headers the message headers
+     * @param context the current test context
      */
-    public abstract void validate(T payload, Map<String, Object> headers);
+    public abstract void validate(T payload, Map<String, Object> headers, TestContext context);
     
     /**
      * Sets the applicationContext.

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="SendReplyToIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
+		</meta-info>
+		
+        <description>
+			The test suit supports synchronous communication. On the one hand you can specify a replyToQueue
+			in your sender bean, so that the receiver directly answeres to this queue. This example can be found in
+			the file SendWithReplyToQueueTest.xml. In this case the testsuite defines the replyToQueue.
+			
+			On the other hand it is possible that the testsuite has to answer a jms message synchronously. In this 
+			case the testsuite does not specify the replyToQueue. In fact the testsuite has to send the reply to a 
+			temporary queue that was generated dynamically. The generated queue name of this temporary queue was stored in the
+			message by the sender. The queue name therefore is unknown until the testsuite receives the synchronous message from
+			the sender.
+			
+			To store this dynamic queue name the receiving bean has to take care of the replyToQueue, if it is defined in
+			the receiving message. This means that all receiving jms beans are looking for replyToQueues in the messages they 
+			are receiving. If the beans find such a dynamic replyToQueue they automatically store this queue name in the test
+			constant named ${REPLY_TO_QUEUE}. This is the only way that the testsuite can remember these dynamic names.
+			
+			The following sender bean can now easily send its message to the right replyToQueue, by the additional property "destination".
+			This property should be set to the test constant ${REPLY_TO_QUEUE}, in order to get the previously stored queue name.
+			
+			Note that this strategy is only usefull when using synchronous jms communication, in detail when the testsuite has to
+			reply a received message on a temporary queue.
+			
+			The example below tries to realize a synchronous communication. First of all a asynchronous message is sent to initiate
+			further actions. Then the testsuite receives a message synchronously. Note that the receiving bean does not need any additional
+			information, because it automatically checks for temporary reply queues.
+			
+			The only additional property for synchronous commnuication is given in the third bean, that tries to send the synchronous answer
+			to the temporary queue. The property "destination" is set to the constant ${REPLY_TO_QUEUE} which holds the dynamic queue name.
+		</description>
+        <variables>
+            <variable name="operation" value="GetDate"/>
+            <variable name="conversationId" value="123456789"/>
+        </variables>
+        <actions>
+            <parallel>
+              <send endpoint="syncGetDateRequestSender">
+                  <message>
+                      <data>
+                      <![CDATA[
+                          <GetDateRequestMessage>
+                            <MessageHeader>
+                              <ConversationId>_</ConversationId>
+                              <Timestamp>citrus:currentDate()</Timestamp>
+                            </MessageHeader>
+                            <MessageBody>
+                              <Format>yyyy-mm-dd</Format>
+                            </MessageBody>
+                          </GetDateRequestMessage>
+                      ]]>
+                      </data>
+                      <element path="ConversationId" value="${conversationId}"/>
+                  </message>
+                  <header>
+                      <element name="Operation" value="${operation}"/>
+                      <element name="ConversationId" value="${conversationId}"/>
+                  </header>
+                  <extract>
+                      <header name="citrus_message_id" variable="syncRequestCorrelatorId"></header>
+                  </extract>
+              </send>
+              
+              <sequential>
+                <receive endpoint="syncGetDateRequestReceiver">
+                    <message validator="defaultXmlMessageValidator">
+                        <data>
+                        <![CDATA[
+	                        <GetDateRequestMessage>
+	                            <MessageHeader>
+	                                <ConversationId>${conversationId}</ConversationId>
+	                                <Timestamp>citrus:currentDate()</Timestamp>
+	                            </MessageHeader>
+	                            <MessageBody>
+	                                <Format>yyyy-mm-dd</Format>
+	                            </MessageBody>
+	                        </GetDateRequestMessage>    
+                        ]]>
+                        </data>
+                    </message>
+                    <header>
+                        <element name="Operation" value="${operation}"/>
+                        <element name="ConversationId" value="${conversationId}"/>
+                    </header>
+                </receive>
+
+                <send endpoint="syncGetDateRequestReceiver">
+                    <message>
+                        <data>
+                        <![CDATA[
+	                        <GetDateResponseMessage>
+	                            <MessageHeader>
+	                                <ConversationId>_</ConversationId>
+	                                <Timestamp>citrus:currentDate()</Timestamp>
+	                            </MessageHeader>
+	                            <MessageBody>
+	                                <Value>citrus:currentDate()</Value>
+	                            </MessageBody>
+	                        </GetDateResponseMessage>  
+                        ]]>
+                        </data>
+                        <element path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+                    </message>
+                    <header>
+                        <element name="Operation" value="${operation}"/>
+                        <element name="ConversationId" value="${conversationId}"/>
+                    </header>
+                </send>
+                
+                <receive endpoint="syncGetDateRequestSender" timeout="5000">
+                    <selector>
+                        <element name="citrus_message_id" value="${syncRequestCorrelatorId}"/>
+                    </selector>
+                    <message>
+                        <data>
+                        <![CDATA[
+                            <GetDateResponseMessage>
+                                <MessageHeader>
+                                    <ConversationId>_</ConversationId>
+                                    <Timestamp>citrus:currentDate()</Timestamp>
+                                </MessageHeader>
+                                <MessageBody>
+                                    <Value>citrus:currentDate()</Value>
+                                </MessageBody>
+                            </GetDateResponseMessage>
+                        ]]>
+                        </data>
+                        <element path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+                    </message>
+                    <header>
+                        <element name="Operation" value="${operation}"/>
+                        <element name="ConversationId" value="${conversationId}"/>
+                    </header>
+                </receive> 
+              </sequential>
+            </parallel>
+        </actions>
+    </testcase>
+</spring:beans>

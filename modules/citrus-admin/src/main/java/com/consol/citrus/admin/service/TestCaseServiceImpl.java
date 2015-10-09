@@ -16,7 +16,6 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.admin.configuration.*;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.*;
@@ -351,7 +350,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * @return
      */
     private String getTestDirectory(Project project) {
-        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + project.getSrcDirectory() + "resources" + File.separator;
     }
 
     /**
@@ -359,6 +358,6 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * @return
      */
     private String getJavaDirectory(Project project) {
-        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
+        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + project.getSrcDirectory() + "java" + File.separator;
     }
 }

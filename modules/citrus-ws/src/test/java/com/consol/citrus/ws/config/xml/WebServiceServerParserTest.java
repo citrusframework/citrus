@@ -60,7 +60,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8081);
-        Assert.assertEquals(server.getResourceBase(), "src/citrus/resources");
+        Assert.assertEquals(server.getResourceBase(), "src/it/resources");
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-ws-servlet.xml");
         Assert.assertEquals(server.getContextPath(), "/citrus");
         Assert.assertEquals(server.getServletName(), "citrus-ws");

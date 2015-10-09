@@ -103,7 +103,7 @@
       <programlisting>&lt;citrus-websocket:server id=&quot;helloHttpServer&quot;
         port=&quot;8080&quot;
         auto-start=&quot;true&quot;
-        resource-base=&quot;src/citrus/resources&quot;&gt;
+        resource-base=&quot;src/it/resources&quot;&gt;
     &lt;citrus-websocket:endpoints&gt;
         &lt;citrus-websocket:endpoint ref=&quot;websocket1&quot;/&gt;
         &lt;citrus-websocket:endpoint ref=&quot;websocket2&quot;/&gt;

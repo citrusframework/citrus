@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="WebSocketEndpoint_2_IT">
+    <meta-info>
+      <author>Martin Maher</author>
+      <creationdate>2015-07-22</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-08-03T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test sends and receives messages via web socket connection. This time messages are sliced into pieces and aggregated on web socket server.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Send multiple WebSocket requests via client and aggregate messages on server until last message was sent</message>
+      </echo>
+
+      <send endpoint="webSocketClient1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            [
+            {
+            "event" : "client_message_1",
+            "timestamp" : "citrus:currentDate()"
+            },
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_websocket_is_last" value="false"/>
+        </header>
+      </send>
+
+      <expect-timeout endpoint="webSocketEndpoint1">
+      </expect-timeout>
+
+      <send endpoint="webSocketClient1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_2",
+            "timestamp" : "citrus:currentDate()"
+            }
+            ]
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_websocket_is_last" value="true"/>
+        </header>
+      </send>
+
+      <receive endpoint="webSocketEndpoint1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            [
+              {
+              "event" : "client_message_1",
+              "timestamp" : "@ignore@"
+              },
+              {
+              "event" : "client_message_2",
+              "timestamp" : "@ignore@"
+              }
+            ]
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

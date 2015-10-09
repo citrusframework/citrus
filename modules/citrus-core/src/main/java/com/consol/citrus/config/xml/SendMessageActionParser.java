@@ -58,9 +58,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         }
 
         DescriptionElementParser.doParse(element, builder);
-        
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
-
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -91,11 +89,6 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         }
 
         return builder.getBeanDefinition();
-    }
-
-    @Override
-    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder) {
-        super.parseHeaderElements(actionElement, messageBuilder);
     }
 
     /**

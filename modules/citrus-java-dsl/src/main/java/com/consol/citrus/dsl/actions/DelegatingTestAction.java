@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.actions;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
@@ -28,7 +29,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class DelegatingTestAction<T extends AbstractTestAction> extends AbstractTestAction {
+public class DelegatingTestAction<T extends TestAction> extends AbstractTestAction {
 
     /** Delegate */
     private T delegate;

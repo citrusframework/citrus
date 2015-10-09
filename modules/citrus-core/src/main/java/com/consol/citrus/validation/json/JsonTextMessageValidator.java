@@ -22,16 +22,17 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.ControlMessageValidator;
+import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import net.minidev.json.*;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.springframework.util.*;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -47,7 +48,7 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class JsonTextMessageValidator extends ControlMessageValidator<JsonMessageValidationContext> {
+public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> {
 
     /** Should also check exact amount of object fields */
     private boolean strict = true;
@@ -237,16 +238,10 @@ public class JsonTextMessageValidator extends ControlMessageValidator<JsonMessag
     }
 
     @Override
-    public JsonMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
-        for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof JsonMessageValidationContext) {
-                return (JsonMessageValidationContext) validationContext;
-            }
-        }
-
-        return null;
+    protected Class<JsonMessageValidationContext> getRequiredValidationContextType() {
+        return JsonMessageValidationContext.class;
     }
-    
+
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.JSON.toString());

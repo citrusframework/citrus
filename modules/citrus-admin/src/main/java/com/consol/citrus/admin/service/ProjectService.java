@@ -84,7 +84,7 @@ public class ProjectService implements InitializingBean {
      * @return properties loaded or empty properties if nothing is found
      */
     public Properties getProjectProperties() {
-        String defaultPropertyFilePath = getActiveProject().getProjectHome() + "/src/citrus/resources/citrus.properties";
+        String defaultPropertyFilePath = getActiveProject().getProjectHome() + "/src/it/resources/citrus.properties";
         FileSystemResource defaultPropertyFile = new FileSystemResource(defaultPropertyFilePath);
 
         try {
@@ -106,11 +106,10 @@ public class ProjectService implements InitializingBean {
 
         try {
             Assert.isTrue(homeDir.exists());
-            Assert.isTrue(new File(homeDir, "src/citrus").exists());
-            Assert.isTrue(new File(homeDir, "src/citrus/resources").exists());
-            Assert.isTrue(new File(homeDir, "src/citrus/resources/citrus-context.xml").exists());
-            Assert.isTrue(new File(homeDir, "src/citrus/tests").exists());
-            Assert.isTrue(new File(homeDir, "src/citrus/java").exists());
+            Assert.isTrue(new File(homeDir, "src/it").exists());
+            Assert.isTrue(new File(homeDir, "src/it/resources").exists());
+            Assert.isTrue(new File(homeDir, "src/it/resources/citrus-context.xml").exists());
+            Assert.isTrue(new File(homeDir, "src/it/java").exists());
         } catch (IllegalArgumentException e) {
             log.warn("Project home validation failed", e);
             return false;

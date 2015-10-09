@@ -32,8 +32,8 @@ public class LoggingReporterTest {
     private EchoAction echo = new EchoAction();
 
     @BeforeClass
-    public void setupSampleTestCase() {
-        test.setName("SampleTestCase");
+    public void setupSampleIT() {
+        test.setName("SampleIT");
         test.setPackageName("com.consol.citrus.sample");
 
         echo.setDescription("Test echo action");

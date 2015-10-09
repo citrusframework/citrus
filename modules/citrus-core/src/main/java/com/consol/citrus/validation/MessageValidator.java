@@ -34,31 +34,16 @@ public interface MessageValidator<T extends ValidationContext> {
     /**
      * Validates a message with given test context and validation context.
      * @param receivedMessage the message to validate.
+     * @param controlMessage the expected control message.
      * @param context the current test context.
      * @param validationContexts list of available validation contexts.
      */
     void validateMessage(Message receivedMessage,
-                                TestContext context, 
-                                List<ValidationContext> validationContexts) 
+                         Message controlMessage,
+                                TestContext context,
+                                List<ValidationContext> validationContexts)
                                 throws ValidationException;
-    
-    /**
-     * Validates a message with given test context and validation context.
-     * @param receivedMessage the message to validate.
-     * @param context the current test context
-     * @param validationContext the proper validation context.
-     */
-    void validateMessage(Message receivedMessage,
-                                TestContext context, 
-                                T validationContext) 
-                                throws ValidationException;
-    
-    /**
-     * Returns the validation context required for this validator implementation.
-     * @return the validation context.
-     */
-    T findValidationContext(List<ValidationContext> validationContexts);
-    
+
     /**
      * Checks if this message validator is capable of this message type. XML message validators may only apply to this message
      * type while JSON message validator implementations do not and vice versa. This check is called by the {@link MessageValidatorRegistry}

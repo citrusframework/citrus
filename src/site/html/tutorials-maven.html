@@ -106,9 +106,9 @@ mvn install</pre>
       <p>
         Congratulations! You just have built the complete project and you
         also have executed the first Citrus tests in your project. The project
-        comes with a sample Citrus test &quot;SampleTest&quot;. You can find
-        this test in &quot;src/citrus/tests&quot; and
-        &quot;src/citrus/java&quot;. The Citrus test was automatically executed
+        comes with a sample Citrus test &quot;SampleIT&quot;. You can find
+        this test in &quot;src/it/tests&quot; and
+        &quot;src/it/java&quot;. The Citrus test was automatically executed
         in the integration test phase in Maven project lifecycle.
       </p>
       
@@ -259,17 +259,17 @@ mvn install</pre>
 
       <p>Last not least the Citrus source directories defined as test sources for Maven:</p>
 
-      <pre class="prettyprint linenums">&lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
+      <pre class="prettyprint linenums">&lt;testSourceDirectory&gt;src/it/java&lt;/testSourceDirectory&gt;
 &lt;testResources&gt;
   &lt;testResource&gt;
-    &lt;directory&gt;src/citrus/resources&lt;/directory&gt;
+    &lt;directory&gt;src/it/resources&lt;/directory&gt;
     &lt;includes&gt;
       &lt;include&gt;**/*&lt;/include&gt;
     &lt;/includes&gt;
     &lt;filtering&gt;true&lt;/filtering&gt;
   &lt;/testResource&gt;
   &lt;testResource&gt;
-    &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
+    &lt;directory&gt;src/it/tests&lt;/directory&gt;
     &lt;includes&gt;
       &lt;include&gt;**/*.xml&lt;/include&gt;
     &lt;/includes&gt;
@@ -294,8 +294,8 @@ Choose unit test framework testng: :</pre>
       <p>
         You have to specify the test name, author, description, package
         and the test framework. The plugin sucessfully generates the new test
-        files for you. On the one hand a new Java class in src/citrus/java and
-        a new XML test file in src/citrus/tests. The test is runnable right
+        files for you. On the one hand a new Java class in src/it/java and
+        a new XML test file in src/it/tests. The test is runnable right
         now. Try it and execute &quot;mvn integration-test&quot; once more. In
         the Citrus test results you will see that the new test was executed
         during integration-test phase along with the other existing test case.

@@ -100,8 +100,7 @@ public class DockerExecuteAction extends AbstractTestAction {
             try {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                validationContext.setControlMessage(new DefaultMessage(expectedCommandResult));
-                jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), context, validationContext);
+                jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, validationContext);
                 log.info("Validation of command result successful - all values OK!");
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);

@@ -16,17 +16,17 @@
 
 package com.consol.citrus.doc;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.*;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -34,11 +34,11 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
-    public void createSampleTest() {
+    public void createSampleIT() {
         TestCaseCreator creator = TestCaseCreator.build()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
-                .withName("SampleTest")
+                .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
@@ -57,17 +57,17 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
         Assert.assertTrue(docContent.contains("<h1>Citrus Test Documentation</h1>"));
         Assert.assertTrue(docContent.contains(">Overview</th>"));
-        Assert.assertTrue(docContent.contains("<li><a href=\"#0\">SampleTest.xml</a>"));
+        Assert.assertTrue(docContent.contains("<li><a href=\"#0\">SampleIT.xml</a>"));
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src" + File.separator + "citrus" + 
-                                                        File.separator + "tests" + 
+        Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
+                                                        File.separator + "resources" +
                                                         File.separator + "com" + 
                                                         File.separator + "consol" + 
                                                         File.separator + "citrus" + 
-                                                        File.separator + "sample" + 
-                                                        File.separator + "SampleTest.xml\">SampleTest.xml</a>"));
+                                                        File.separator + "sample" +
+                                                        File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
     }
     
     @Test
@@ -76,12 +76,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
                         .withLogo("test-logo.png")
                         .withOverviewTitle("CustomOverview")
                         .withPageTitle("CustomPageTitle")
-                        .useTestDirectory("src" + File.separator + "citrus" + 
-                                                    File.separator + "tests" + 
-                                                    File.separator + "com" + 
-                                                    File.separator + "consol" + 
-                                                    File.separator + "citrus" + 
-                                                    File.separator + "sample");
+                        .useSrcDirectory("src" + File.separator + "test" + File.separator);
         
         creator.generateDoc();
         
@@ -91,17 +86,17 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));
         Assert.assertTrue(docContent.contains("<h1>CustomPageTitle</h1>"));
         Assert.assertTrue(docContent.contains(">CustomOverview</th>"));
-        Assert.assertTrue(docContent.contains("<li><a href=\"#0\">SampleTest.xml</a>"));
+        Assert.assertTrue(docContent.contains("<li><a href=\"#0\">SampleIT.xml</a>"));
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src" + File.separator + "citrus" + 
-                                                        File.separator + "tests" + 
+        Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
+                                                        File.separator + "resources" +
                                                         File.separator + "com" + 
                                                         File.separator + "consol" + 
                                                         File.separator + "citrus" + 
-                                                        File.separator + "sample" + 
-                                                        File.separator + "SampleTest.xml\">SampleTest.xml</a>"));
+                                                        File.separator + "sample" +
+                                                        File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
         
     }
 }

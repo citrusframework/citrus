@@ -26,6 +26,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.SoapAttachment;
@@ -72,7 +73,8 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(soapClient)
-                    .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
+                    .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
+                        .header("additional", "additionalValue");
                 
                 send(soapClient)
                     .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
@@ -91,20 +93,21 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
-        
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
+        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
-        
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "additionalValue");
+
         Assert.assertFalse(action.isForkMode());
         
         action = ((SendSoapMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
         
         Assert.assertTrue(action.isForkMode());
     }

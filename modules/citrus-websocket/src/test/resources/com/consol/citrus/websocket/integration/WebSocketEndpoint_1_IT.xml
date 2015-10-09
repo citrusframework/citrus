@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="WebSocketEndpoint_1_IT">
+    <meta-info>
+      <author>Martin Maher</author>
+      <creationdate>2015-07-22</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-08-03T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test sends and receives messages via web socket connection. Server instances and clients send and receive messages bidirectional.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Send WebSocket request via client and receive message on server.</message>
+      </echo>
+
+      <send endpoint="webSocketClient1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_1",
+            "timestamp" : "citrus:currentDate()"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="webSocketEndpoint1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_1",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test: Send WebSocket request via server and receive message on client.</message>
+      </echo>
+
+      <send endpoint="webSocketEndpoint1">
+        <message>
+          <data>
+            <![CDATA[
+            {
+            "event" : "server_message_1",
+            "timestamp" : "citrus:currentDate()"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="webSocketClient1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "server_message_1",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test: Send WebSocket request via 2nd client and receive message on server.</message>
+      </echo>
+
+      <send endpoint="webSocketClient2">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_2",
+            "timestamp" : "citrus:currentDate()"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="webSocketEndpoint2">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_2",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test: Send WebSocket request via 2nd server and receive message on client.</message>
+      </echo>
+
+      <send endpoint="webSocketEndpoint2">
+        <message>
+          <data>
+            <![CDATA[
+            {
+            "event" : "server_message_2",
+            "timestamp" : "citrus:currentDate()"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="webSocketClient2">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "server_message_2",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Testing dynamic web socket endpoints by sending with dynamic client endpoint</message>
+      </echo>
+
+      <send endpoint="ws://localhost:12080/websocket1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_99",
+            "timestamp" : "citrus:currentDate()"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="webSocketEndpoint1">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client_message_99",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

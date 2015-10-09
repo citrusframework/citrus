@@ -16,17 +16,16 @@
 
 package com.consol.citrus.doc;
 
-import java.io.*;
-
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 import org.junit.Assert;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.TestCaseCreator;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -34,11 +33,11 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 public class SvgTestDocGeneratorTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
-    public void createSampleTest() {
+    public void createSampleIT() {
         TestCaseCreator creator = TestCaseCreator.build()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
-                .withName("SampleTest")
+                .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
@@ -51,10 +50,10 @@ public class SvgTestDocGeneratorTest extends AbstractTestNGUnitTest {
         
         generator.generateDoc();
         
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + "/SampleTest.svg"));
+        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + "/SampleIT.svg"));
         
-        Assert.assertTrue(docContent.contains("<title>SampleTest</title>"));
+        Assert.assertTrue(docContent.contains("<title>SampleIT</title>"));
         Assert.assertTrue(docContent.contains("<desc>This is a sample test"));
-        Assert.assertTrue(docContent.contains("TestCase: SampleTest"));
+        Assert.assertTrue(docContent.contains("TestCase: SampleIT"));
     }
 }

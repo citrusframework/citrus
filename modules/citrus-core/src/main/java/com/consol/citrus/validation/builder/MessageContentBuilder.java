@@ -17,9 +17,9 @@
 package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.message.Message;
 
 /**
  * Interface for classes beeing able to build control messages for validation.

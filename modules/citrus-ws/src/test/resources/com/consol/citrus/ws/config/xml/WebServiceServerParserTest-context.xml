@@ -13,7 +13,7 @@
                       port="8081"
                       root-parent-context="true"
                       context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
-                      resource-base="src/citrus/resources"
+                      resource-base="src/it/resources"
                       context-path="/citrus"
                       servlet-name="citrus-ws"
                       servlet-mapping-path="/foo"

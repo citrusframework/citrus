@@ -14,7 +14,7 @@
     port=&quot;8080&quot;
     auto-start=&quot;true&quot;
     endpoint-adapter=&quot;emptyResponseEndpointAdapter&quot;
-    resource-base=&quot;src/citrus/resources&quot;/&gt;
+    resource-base=&quot;src/it/resources&quot;/&gt;
 
     &lt;citrus:empty-response-adapter id=&quot;emptyResponseEndpointAdapter&quot;/&gt;</programlisting>
 

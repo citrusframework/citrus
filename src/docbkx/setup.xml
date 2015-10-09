@@ -134,10 +134,10 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
         
         <para>The Citrus source directories are defined as test sources like follows:</para>
                 
-        <programlisting>&lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
+        <programlisting>&lt;testSourceDirectory&gt;src/it/java&lt;/testSourceDirectory&gt;
 &lt;testResources&gt;
   &lt;testResource&gt;
-    &lt;directory&gt;src/citrus/java&lt;/directory&gt;
+    &lt;directory&gt;src/it/java&lt;/directory&gt;
     &lt;includes&gt;
       &lt;include&gt;**&lt;/include&gt;
     &lt;/includes&gt;
@@ -146,7 +146,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     &lt;/excludes&gt;
   &lt;/testResource&gt;
   &lt;testResource&gt;
-    &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
+    &lt;directory&gt;src/it/tests&lt;/directory&gt;
     &lt;includes&gt;
       &lt;include&gt;**/*&lt;/include&gt;
     &lt;/includes&gt;
@@ -242,7 +242,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       
       <programlisting>&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot; xmlns:artifact=&quot;antlib:org.apache.maven.artifact.ant&quot;&gt;
 
-  &lt;property file=&quot;src/citrus/resources/citrus.properties&quot;/&gt;
+  &lt;property file=&quot;src/it/resources/citrus.properties&quot;/&gt;
 
   &lt;path id=&quot;maven-ant-tasks.classpath&quot; path=&quot;lib/maven-ant-tasks-2.1.3.jar&quot; /&gt;
   &lt;typedef resource=&quot;org/apache/maven/artifact/ant/antlib.xml&quot;
@@ -253,17 +253,17 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
   &lt;artifact:dependencies filesetId=&quot;citrus-dependencies&quot; pomRefId=&quot;citrus-pom&quot; /&gt;
 
   &lt;path id=&quot;citrus-classpath&quot;&gt;
-    &lt;pathelement path=&quot;src/citrus/java&quot;/&gt;
-    &lt;pathelement path=&quot;src/citrus/resources&quot;/&gt;
-    &lt;pathelement path=&quot;src/citrus/tests&quot;/&gt;
+    &lt;pathelement path=&quot;src/it/java&quot;/&gt;
+    &lt;pathelement path=&quot;src/it/resources&quot;/&gt;
+    &lt;pathelement path=&quot;src/it/tests&quot;/&gt;
     &lt;fileset refid=&quot;citrus-dependencies&quot;/&gt;
   &lt;/path&gt;
 
   &lt;taskdef resource=&quot;testngtasks&quot; classpath=&quot;lib/testng-6.8.8.jar&quot;/&gt;
 
   &lt;target name=&quot;compile.tests&quot;&gt;
-    &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
-    &lt;javac srcdir=&quot;src/citrus/tests&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
+    &lt;javac srcdir=&quot;src/it/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
+    &lt;javac srcdir=&quot;src/it/tests&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;create.test&quot; description=&quot;Creates a new empty test case&quot;&gt;
@@ -281,7 +281,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
 
   &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
     &lt;testng classpathref=&quot;citrus-classpath&quot;&gt;
-      &lt;classfileset dir=&quot;src/citrus/java&quot; includes=&quot;**/*.class&quot; /&gt;
+      &lt;classfileset dir=&quot;src/it/java&quot; includes=&quot;**/*.class&quot; /&gt;
     &lt;/testng&gt;
   &lt;/target&gt;
 
@@ -297,7 +297,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     &lt;/propertyfile&gt;
 
     &lt;testng classpathref=&quot;citrus-classpath&quot;&gt;
-      &lt;classfileset dir=&quot;src/citrus/java&quot; includes=&quot;**/${testclass}.class&quot; /&gt;
+      &lt;classfileset dir=&quot;src/it/java&quot; includes=&quot;**/${testclass}.class&quot; /&gt;
     &lt;/testng&gt;
   &lt;/target&gt;
 

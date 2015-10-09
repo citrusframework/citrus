@@ -55,7 +55,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.numbers", "[10,20,30,40]"));
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.person", "{\"name\":\"Penny\"}"));
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setJsonPathExpressions(validationExpressions);
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -84,7 +84,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setJsonPathExpressions(validationExpressions);
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -93,7 +93,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setJsonPathExpressions(Collections.singletonMap(
                 "$..element.sub-element", "false-value"));
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setJsonPathExpressions(Collections.singletonMap(
                 "$.root.element.sub-element", "text-value"));
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -111,7 +111,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setJsonPathExpressions(Collections.singletonMap(
                 "$.root.element.sub-element", "false-value"));
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
     @Test
@@ -123,6 +123,6 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationExpressions.put("$.root.element.sub-element", "text-value");
         validationContext.setJsonPathExpressions(validationExpressions);
 
-        validator.validateMessage(message, context, validationContext);
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 }

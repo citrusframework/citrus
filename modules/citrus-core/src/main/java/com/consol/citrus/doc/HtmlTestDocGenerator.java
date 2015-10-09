@@ -16,16 +16,14 @@
 
 package com.consol.citrus.doc;
 
-import java.io.*;
-import java.util.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.xml.sax.SAXException;
 
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.SAXException;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
+import java.util.*;
 
 /**
  * Class to automatically generate a list of all available tests in HTML.
@@ -156,12 +154,12 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
     }
     
     /**
-     * Adds a custom test directory.
-     * @param testDir the test directory.
+     * Adds a custom test source directory.
+     * @param testDir the test source directory.
      * @return
      */
-    public HtmlTestDocGenerator useTestDirectory(String testDir) {
-        this.setTestDirectory(testDir);
+    public HtmlTestDocGenerator useSrcDirectory(String testDir) {
+        this.setSrcDirectory(testDir);
         return this;
     }
     
@@ -173,7 +171,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
         try {    
             HtmlTestDocGenerator creator = HtmlTestDocGenerator.build();
             
-            creator.useTestDirectory(args.length == 1 ? args[0] : creator.testDirectory)
+            creator.useSrcDirectory(args.length == 1 ? args[0] : creator.srcDirectory)
                 .withOutputFile(args.length == 2 ? args[1] : creator.outputFile)
                 .withPageTitle(args.length == 3 ? args[2] : creator.pageTitle)
                 .withLogo(args.length == 4 ? args[3] : creator.logoFilePath)

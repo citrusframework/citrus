@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="MailSendReceiveIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2013-12-10</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2013-12-10T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test mail SMTP communication.</description>
+
+    <variables>
+      <variable name="from" value="christoph@citrusframework.com"></variable>
+      <variable name="to" value="citrus@citrusframework.com"></variable>
+      <variable name="subject" value="This is a test mail message"></variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Test 1: Send mail to Citrus smtp server and receive mail via mail message channel</message>
+      </echo>
+
+      <send endpoint="mailMessageSender">
+        <description>
+          Send mail: Citrus -> Citrus SMTP server
+        </description>
+        <message>
+          <data>
+            <![CDATA[
+              <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
+                <from>${from}</from>
+                <to>${to}</to>
+                <cc></cc>
+                <bcc></bcc>
+                <subject>${subject}</subject>
+                <body>
+                  <contentType>text/plain; charset=utf-8</contentType>
+                  <content>Hello Citrus mail server!</content>
+                </body>
+              </mail-message>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_mail_content_type" value="text/plain"/>
+        </header>
+      </send>
+
+      <receive endpoint="smtpMailServer">
+        <description>
+          Receive mail message: Citrus SMTP server channel -> Citrus
+        </description>
+        <message>
+          <data>
+            <![CDATA[
+              <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
+                <from>${from}</from>
+                <to>${to}</to>
+                <cc></cc>
+                <bcc></bcc>
+                <subject>${subject}</subject>
+                <body>
+                  <contentType>text/plain; charset=utf-8</contentType>
+                  <content>Hello Citrus mail server!</content>
+                </body>
+              </mail-message>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_mail_from" value="${from}"/>
+          <element name="citrus_mail_to" value="${to}"/>
+          <element name="citrus_mail_subject" value="${subject}"/>
+          <element name="citrus_mail_content_type" value="text/plain; charset=utf-8"/>
+        </header>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

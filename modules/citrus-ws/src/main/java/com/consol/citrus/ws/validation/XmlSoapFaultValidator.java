@@ -66,11 +66,7 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implemen
             xmlMessageValidationContext = new XmlMessageValidationContext();
         }
         
-        Message controlMessage = new DefaultMessage(controlDetailString);
-        xmlMessageValidationContext.setControlMessage(controlMessage);
-
-        Message receivedMessage = new DefaultMessage(receivedDetailString);
-        messageValidator.validateMessage(receivedMessage, context, xmlMessageValidationContext);
+        messageValidator.validateMessage(new DefaultMessage(receivedDetailString), new DefaultMessage(controlDetailString), context, xmlMessageValidationContext);
     }
 
     @Override

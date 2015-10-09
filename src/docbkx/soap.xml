@@ -113,7 +113,7 @@
         <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
              port=&quot;8080&quot;
              auto-start=&quot;true&quot;
-             resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
+             resource-base=&quot;src/it/resources&quot;/&gt;</programlisting>
         
         <para>The server component is able to start automatically when application starts up. In the example above the server is listening for requests on port <literal>8080</literal>. This setup uses the standard
         connector configuration for the Jetty server. For detailed customization the Citrus Jetty server configuration also supports explicit connector configurations (@connector and @connectors attributes).
@@ -177,7 +177,7 @@
         port=&quot;8080&quot;
         auto-start=&quot;true&quot;
         endpoint-adapter=&quot;emptyResponseEndpointAdapter&quot;
-        resource-base=&quot;src/citrus/resources&quot;/&gt;
+        resource-base=&quot;src/it/resources&quot;/&gt;
 
         &lt;citrus:empty-response-adapter id=&quot;emptyResponseEndpointAdapter&quot;/&gt;</programlisting>
 
@@ -272,7 +272,7 @@
         port=&quot;8080&quot;
         auto-start=&quot;true&quot;
         handle-mime-headers=&quot;true&quot;
-        resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
+        resource-base=&quot;src/it/resources&quot;/&gt;</programlisting>
 
       <para>With this configuration Citrus will handle all available mime headers and pass those to the test case for normal header validation.</para>
 
@@ -1024,7 +1024,7 @@ Server: Jetty(7.0.0.pre5)
         <programlisting>&lt;citrus-ws:server id=&quot;simpleSoapServer&quot;
              port=&quot;8080&quot;
              auto-start=&quot;true&quot;
-             resource-base=&quot;src/citrus/resources&quot;
+             resource-base=&quot;src/it/resources&quot;
              security-handler=&quot;basicSecurityHandler&quot;/&gt;
 
 &lt;bean id=&quot;securityHandler&quot; class=&quot;com.consol.citrus.ws.security.SecurityHandlerFactory&quot;&gt;
