@@ -19,6 +19,7 @@ package com.consol.citrus.javadsl.design;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.MessageType;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -30,7 +31,8 @@ public class PlainTextValidationJavaIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void plainTextValidation() {
         parallel(
-            send("httpClient")
+            http().client("httpClient")
+                .post()
                 .payload("Hello, World!"),
             sequential(
                 receive("httpServerRequestEndpoint")
@@ -46,22 +48,21 @@ public class PlainTextValidationJavaIT extends TestNGCitrusTestDesigner {
             )
         );
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response(HttpStatus.OK)
             .messageType(MessageType.PLAINTEXT)
             .payload("Hello, Citrus!")
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .version("HTTP/1.1");
         
-        send("httpClient")
+        http().client("httpClient")
+            .post()
             .payload("Hello, World!");
         
         sleep(2000);
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response(HttpStatus.OK)
             .messageType(MessageType.PLAINTEXT)
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .version("HTTP/1.1");
     }
 }

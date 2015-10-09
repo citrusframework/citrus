@@ -440,6 +440,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public HttpActionBuilder http() {
+        return testDesigner.http();
+    }
+
+    @Override
     public CamelRouteActionBuilder camel() {
         return testDesigner.camel();
     }

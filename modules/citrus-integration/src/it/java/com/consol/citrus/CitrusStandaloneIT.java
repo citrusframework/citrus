@@ -88,8 +88,7 @@ public class CitrusStandaloneIT extends AbstractTestNGCitrusTest {
 
         test.receive("http://localhost:8073/test")
                 .message(new HttpMessage("<testResponseMessage><text>Hello TestFramework</text></testResponseMessage>")
-                        .statusCode(HttpStatus.OK)
-                        .reasonPhrase("OK"));
+                        .status(HttpStatus.OK));
 
         citrus.run(test.getTestCase());
     }

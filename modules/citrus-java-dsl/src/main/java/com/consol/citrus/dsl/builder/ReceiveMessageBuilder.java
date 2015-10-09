@@ -141,9 +141,28 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T message(Message controlMessage) {
-        action.setMessageBuilder(StaticMessageContentBuilder.withMessage(controlMessage));
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
+        staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
+        action.setMessageBuilder(staticMessageContentBuilder);
         getValidationContext();
         return self;
+    }
+
+    /**
+     * Sets the payload data on the message builder implementation.
+     * @param payload
+     * @return
+     */
+    protected void setPayload(String payload) {
+        MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+
+        if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+            ((PayloadTemplateMessageBuilder) messageContentBuilder).setPayloadData(payload);
+        } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
+            ((StaticMessageContentBuilder) messageContentBuilder).getMessage().setPayload(payload);
+        } else {
+            throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
+        }
     }
     
     /**
@@ -152,7 +171,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T payload(String payload) {
-        getPayloadTemplateMessageBuilder().setPayloadData(payload);
+        setPayload(payload);
         return self;
     }
     
@@ -163,7 +182,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T payload(Resource payloadResource) {
         try {
-            getPayloadTemplateMessageBuilder().setPayloadData(FileUtils.readToString(payloadResource));
+            setPayload(FileUtils.readToString(payloadResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
@@ -189,7 +208,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
         }
 
-        getPayloadTemplateMessageBuilder().setPayloadData(result.toString());
+        setPayload(result.toString());
 
         return self;
     }
@@ -226,8 +245,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T header(String name, Object value) {
-        ((AbstractMessageContentBuilder)action.getMessageBuilder()).getMessageHeaders().put(name, value);
-        getValidationContext();
+        getMessageContentBuilder().getMessageHeaders().put(name, value);
         return self;
     }
     
@@ -238,8 +256,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T header(String data) {
-        ((AbstractMessageContentBuilder)action.getMessageBuilder()).getHeaderData().add(data);
-        getValidationContext();
+        getMessageContentBuilder().getHeaderData().add(data);
         return self;
     }
 
@@ -251,8 +268,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T header(Resource resource) {
         try {
-            ((AbstractMessageContentBuilder)action.getMessageBuilder()).getHeaderData().add(FileUtils.readToString(resource));
-            getValidationContext();
+            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
@@ -577,15 +593,15 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
-     * Forces a payload template message builder.
-     * @return
+     * Get message builder, if already registered or create a new message builder and register it
+     *
+     * @return the message builder in use
      */
-    protected PayloadTemplateMessageBuilder getPayloadTemplateMessageBuilder() {
-        MessageContentBuilder messageContentBuilder = action.getMessageBuilder();
+    protected AbstractMessageContentBuilder getMessageContentBuilder() {
         getValidationContext();
 
-        if (messageContentBuilder != null && messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
-            return (PayloadTemplateMessageBuilder) messageContentBuilder;
+        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
+            return (AbstractMessageContentBuilder) action.getMessageBuilder();
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             action.setMessageBuilder(messageBuilder);

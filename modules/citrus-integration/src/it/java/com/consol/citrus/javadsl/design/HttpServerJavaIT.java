@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -33,14 +34,14 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         echo("Send Http message and respond with 200 OK");
         
         parallel(
-            send("httpClient")
+            http().client("httpClient")
+                .post()
                 .payload("<testRequestMessage>" +
-                                "<text>Hello HttpServer</text>" +
-                            "</testRequestMessage>")
+                        "<text>Hello HttpServer</text>" +
+                        "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
-                .header("Content-Type", "text/xml")
-                .header("Accept", "text/xml, */*")
-                .header("citrus_http_method", "POST"),
+                .contentType("text/xml")
+                .accept("text/xml, */*"),
             
             sequential(
                 receive("httpServerRequestEndpoint")
@@ -68,27 +69,25 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
             )
         );
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
-                        "<text>Hello Citrus</text>" +
+                    "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
             .header("CustomHeaderId", "${custom_header_id}")
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
-        
+            .version("HTTP/1.1");
+
         echo("Send Http request and respond with 404 status code");
         
-        
         parallel(
-            send("httpClient")
+            http().client("httpClient")
+                .post()
                 .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
-                .header("Content-Type", "text/xml")
-                .header("Accept", "text/xml, */*")
-                .header("citrus_http_method", "POST"),
+                .contentType("text/xml")
+                .accept("text/xml, */*"),
             
             sequential(
                 receive("httpServerRequestEndpoint")
@@ -116,32 +115,30 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
             )
         );
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response()
+            .status(HttpStatus.NOT_FOUND)
             .payload("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
             .header("CustomHeaderId", "${custom_header_id}")
-            .header("citrus_http_status_code", "404")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "NOT_FOUND");
+            .version("HTTP/1.1");
         
         echo("Skip response and use fallback endpoint adapter");
         
-        send("httpClient")
+        http().client("httpClient")
+            .post()
             .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}")
-            .header("Content-Type", "text/xml")
-            .header("Accept", "text/xml, */*")
-            .header("citrus_http_method", "POST");
-        
-        
-        receive("httpClient")
-            .timeout(2000L)
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
-        
+            .contentType("text/xml")
+            .accept("text/xml, */*");
+
+        http().client("httpClient")
+            .response(HttpStatus.OK)
+            .version("HTTP/1.1")
+            .timeout(2000L);
+
     }
 }

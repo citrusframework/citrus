@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 
 /**
@@ -73,6 +74,11 @@ public abstract class AbstractTestActionBuilder<T extends TestAction> implements
     public final AbstractTestActionBuilder setName(String name) {
         action.setName(name);
         return this;
+    }
+
+    @Override
+    public TestActor getActor() {
+        return action.getActor();
     }
 
     @Override

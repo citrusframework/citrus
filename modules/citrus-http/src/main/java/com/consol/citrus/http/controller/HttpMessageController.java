@@ -129,7 +129,7 @@ public class HttpMessageController {
             }
 
             if (httpResponse.getStatusCode() == null) {
-                httpResponse.statusCode(HttpStatus.OK);
+                httpResponse.status(HttpStatus.OK);
             }
 
             responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration);

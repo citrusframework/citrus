@@ -19,6 +19,7 @@ package com.consol.citrus.javadsl.design;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.MessageType;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -30,7 +31,8 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void jsonTextValidation() {
         parallel(
-            send("httpClient")
+            http().client("httpClient")
+                .post()
                 .payload("{" +
                     "\"type\" : \"read\"," +
                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -67,7 +69,8 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
             )
         );
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response(HttpStatus.OK)
             .messageType(MessageType.JSON)
             .payload("{" +
                         "\"timestamp\" : \"@matchesDatePattern('yyyy-MM-dd')@\"," +
@@ -81,11 +84,10 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                           "}," +
                         "\"value\" : \"@isNumber()@\"" +
                       "}")
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .version("HTTP/1.1");
         
-        send("httpClient")
+        http().client("httpClient")
+            .post()
             .payload("{" +
                 "\"type\" : \"read\"," +
                 "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -95,10 +97,10 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
         
         sleep(2000);
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response()
             .messageType(MessageType.JSON)
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .status(HttpStatus.OK)
+            .version("HTTP/1.1");
     }
 }

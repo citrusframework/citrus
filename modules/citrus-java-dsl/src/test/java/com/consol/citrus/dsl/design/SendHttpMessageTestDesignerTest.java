@@ -29,6 +29,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
@@ -53,7 +54,8 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(httpClient)
-                        .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
+                        .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
+                            .header("additional", "additionalValue");
 
                 send(httpClient)
                         .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
@@ -72,12 +74,13 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
+        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "additionalValue");
 
         Assert.assertFalse(action.isForkMode());
 
@@ -85,7 +88,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         Assert.assertTrue(action.isForkMode());
     }

@@ -16,9 +16,10 @@
 
 package com.consol.citrus.javadsl.design;
 
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.message.MessageType;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -33,7 +34,8 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void jsonGroovyValidation() {
         parallel(
-            send("httpClient")
+            http().client("httpClient")
+                .post()
                 .payload("{" +
                     "\"type\" : \"read\"," +
                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -68,7 +70,8 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
             )
         );
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response(HttpStatus.OK)
             .messageType(MessageType.JSON)
             .validator("defaultGroovyJsonMessageValidator")
             .validateScript("assert json.request.type == 'read'" + NEWLINE +
@@ -77,8 +80,6 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
                               "assert json.status == 200" + NEWLINE +
                               "assert json.value >= 256" + NEWLINE +
                               "assert json.value <= 1024")
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .version("HTTP/1.1");
     }
 }

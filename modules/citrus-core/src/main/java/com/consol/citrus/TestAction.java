@@ -61,5 +61,11 @@ public interface TestAction {
      * @return true if action is marked disabled.
      */
     boolean isDisabled(TestContext context);
+
+    /**
+     * Gets the test actor associated with this test action.
+     * @return
+     */
+    TestActor getActor();
     
 }

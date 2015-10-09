@@ -86,8 +86,9 @@ public class HttpMessage extends DefaultMessage {
      * Sets the Http response status code.
      * @param statusCode
      */
-    public HttpMessage statusCode(HttpStatus statusCode) {
-        setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, Integer.valueOf(statusCode.value()));
+    public HttpMessage status(HttpStatus statusCode) {
+        statusCode(Integer.valueOf(statusCode.value()));
+        reasonPhrase(statusCode.name());
         return this;
     }
 

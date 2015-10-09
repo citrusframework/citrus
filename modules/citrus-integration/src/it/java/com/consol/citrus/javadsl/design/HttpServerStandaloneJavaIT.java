@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -30,32 +31,32 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusTestDesigner {
     public void httpServerStandalone() {
         variable("custom_header_id", "123456789");
         
-        send("httpStandaloneClient")
+        http().client("httpStandaloneClient")
+            .post()
             .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}");
         
-        receive("httpStandaloneClient")
+        http().client("httpStandaloneClient")
+            .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .version("HTTP/1.1");
         
-        send("httpStandaloneClient")
+        http().client("httpStandaloneClient")
+            .post()
             .payload("<moreRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}");
         
-        receive("httpStandaloneClient")
+        http().client("httpStandaloneClient")
+            .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .version("HTTP/1.1");
     }
 }

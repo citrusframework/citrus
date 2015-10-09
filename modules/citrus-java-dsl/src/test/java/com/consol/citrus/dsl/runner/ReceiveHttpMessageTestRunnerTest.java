@@ -121,8 +121,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .method(HttpMethod.GET)
                 .uri("/test")
-                .statusCode(HttpStatus.OK)
-                .reasonPhrase(HttpStatus.OK.name())
+                .status(HttpStatus.OK)
                 .version("HTTP/1.1")).atLeastOnce();
         replay(httpClient, messageConsumer, configuration);
 

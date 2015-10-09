@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 
 /**
@@ -72,6 +73,11 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
      */
     public final String getName() {
         return action.getName();
+    }
+
+    @Override
+    public TestActor getActor() {
+        return action.getActor();
     }
 
     /**

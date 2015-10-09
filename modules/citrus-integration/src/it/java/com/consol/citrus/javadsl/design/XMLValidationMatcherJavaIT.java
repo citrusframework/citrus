@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -31,16 +32,16 @@ public class XMLValidationMatcherJavaIT extends TestNGCitrusTestDesigner {
         variable("greetingText", "Hello Citrus");      
         
         parallel(
-            send("httpClient")
+            http().client("httpClient")
+                .post()
                 .payload("<testRequestMessage>" +
                             "<text>citrus:cdataSection('<data>" +
                               "<greeting>Hello Citrus</greeting>" +
                               "<timestamp>2012-07-01T00:00:00</timestamp>" +
                             "</data>')</text>" +
                         "</testRequestMessage>")
-                .header("Content-Type", "text/xml")
-                .header("Accept", "text/xml, */*")
-                .header("citrus_http_method", "POST"),
+                .contentType("text/xml")
+                .accept("text/xml, */*"),
             sequential(
                 receive("httpServerRequestEndpoint")
                     .payload("<testRequestMessage>" +
@@ -67,12 +68,11 @@ public class XMLValidationMatcherJavaIT extends TestNGCitrusTestDesigner {
             )
         );
         
-        receive("httpClient")
+        http().client("httpClient")
+            .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
-             .header("citrus_http_status_code", "200")
-             .header("citrus_http_version", "HTTP/1.1")
-             .header("citrus_http_reason_phrase", "OK");
+             .version("HTTP/1.1");
     }
 }

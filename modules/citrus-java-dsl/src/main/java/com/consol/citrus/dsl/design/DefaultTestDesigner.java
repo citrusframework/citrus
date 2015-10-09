@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
@@ -160,7 +161,14 @@ public class DefaultTestDesigner implements TestDesigner {
                 if (action instanceof TestActionBuilder<?>) {
                     testCase.getActions().remove(((TestActionBuilder<?>) action).build());
                 } else if (!action.getClass().isAnonymousClass()) {
-                    testCase.getActions().remove(action);
+                    if (!testCase.getActions().remove(action)) {
+                        for (TestAction testCaseAction : testCase.getActions()) {
+                            if (testCaseAction instanceof DelegatingTestAction &&
+                                    ((DelegatingTestAction) testCaseAction).getDelegate().equals(action)) {
+                                testCase.getActions().remove(testCaseAction);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -650,6 +658,14 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public DockerActionBuilder docker() {
         DockerActionBuilder builder = new DockerActionBuilder();
+        action(builder);
+        return builder;
+    }
+
+    @Override
+    public HttpActionBuilder http() {
+        HttpActionBuilder builder = new HttpActionBuilder()
+                .withApplicationContext(getApplicationContext());
         action(builder);
         return builder;
     }
