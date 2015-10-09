@@ -29,14 +29,7 @@ import java.util.Set;
 public class JsonMessageValidationContext implements ValidationContext {
 
     /** Map holding xpath expressions to identify the ignored message elements */
-    private Set<String> ignoreExpressions = new HashSet<String>();
-
-    /**
-     * Default constructor using message type field.
-     */
-    public JsonMessageValidationContext() {
-        super(MessageType.JSON.toString());
-    }
+    private Set<String> ignoreExpressions = new HashSet<>();
 
     /**
      * Get ignored message elements.
