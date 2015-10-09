@@ -226,6 +226,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
+    public WaitAction waitFor(BuilderSupport<WaitActionBuilder> configurer) {
+        return testRunner.waitFor(configurer);
+    }
+
+    @Override
     public StartServerAction start(Server... servers) {
         return testRunner.start(servers);
     }

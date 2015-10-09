@@ -332,6 +332,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public WaitAction waitFor(BuilderSupport<WaitActionBuilder> configurer) {
+        WaitActionBuilder builder = new WaitActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
+    }
+
+    @Override
     public StartServerAction start(Server... servers) {
         StartServerAction action = new StartServerAction();
         action.getServerList().addAll(Arrays.asList(servers));

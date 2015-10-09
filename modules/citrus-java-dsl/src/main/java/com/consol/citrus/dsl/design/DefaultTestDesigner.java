@@ -445,6 +445,14 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public WaitActionBuilder waitFor() {
+        WaitAction action = new WaitAction();
+        WaitActionBuilder builder = new WaitActionBuilder(action);
+        action(builder);
+        return builder;
+    }
+
+    @Override
     public StartServerAction start(Server... servers) {
         StartServerAction action = new StartServerAction();
         action.getServerList().addAll(Arrays.asList(servers));

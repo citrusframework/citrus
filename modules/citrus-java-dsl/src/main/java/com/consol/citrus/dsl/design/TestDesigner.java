@@ -349,6 +349,13 @@ public interface TestDesigner extends ApplicationContextAware {
     SleepAction sleep(double seconds);
 
     /**
+     * Add wait action.
+     *
+     * @return
+     */
+    WaitActionBuilder waitFor();
+
+    /**
      * Creates a new start server action definition
      * for further configuration.
      *

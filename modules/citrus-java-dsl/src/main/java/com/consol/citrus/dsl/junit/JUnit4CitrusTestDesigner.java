@@ -16,12 +16,17 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.*;
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.design.*;
+import com.consol.citrus.dsl.design.DefaultTestDesigner;
+import com.consol.citrus.dsl.design.TestBehavior;
+import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
@@ -287,6 +292,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     @Override
     public SleepAction sleep(double seconds) {
         return testDesigner.sleep(seconds);
+    }
+
+    @Override
+    public WaitActionBuilder waitFor() {
+        return testDesigner.waitFor();
     }
 
     @Override

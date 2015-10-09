@@ -262,6 +262,14 @@ public interface TestRunner extends ApplicationContextAware {
     SleepAction sleep(long milliseconds);
 
     /**
+     * Creates a wait action that waits for a condition to be satisfied before continuing.
+     *
+     * @param configurer
+     * @return
+     */
+    WaitAction waitFor(BuilderSupport<WaitActionBuilder> configurer);
+
+    /**
      * Creates a new start server action definition
      * for further configuration.
      *

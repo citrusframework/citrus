@@ -710,6 +710,28 @@
         <xs:attribute name="server" type="xs:string"/>
     </xs:complexType>
 
+    <xs:complexType name="WaitActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:choice>
+                <xs:element name="http" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute name="url" type="xs:string" />
+                        <xs:attribute name="statusCode" type="xs:string" use="optional" />
+                        <xs:attribute name="timeout" type="xs:string" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="file" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute name="path" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="time" type="xs:string" use="optional" />
+        <xs:attribute name="testInterval" type="xs:string" use="optional" />
+    </xs:complexType>
+
     <xs:complexType name="ScriptDefinitionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -769,6 +791,7 @@
             <xs:element ref="ant"/>
             <xs:element ref="start"/>
             <xs:element ref="stop"/>
+            <xs:element ref="wait"/>
             <xs:any namespace="##other" processContents="strict"/>
         </xs:choice>
     </xs:group>
@@ -839,6 +862,7 @@
     <xs:element name="ant" type="AntActionType"/>
     <xs:element name="start" type="StartActionType"/>
     <xs:element name="stop" type="StopActionType"/>
+    <xs:element name="wait" type="WaitActionType"/>
 
     <xs:element name="template" type="TemplateType"/>
 

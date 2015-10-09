@@ -143,6 +143,34 @@
 					<rect width="2.2857144" height="3.6363637" x="-24.727272" y="7.5844154" transform="matrix(0,-1,1,0,0,0)"
 						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
 				</symbol>
+				<symbol id="wait"> <!-- TODO CD what has to be done here? -->
+					<rect width="104" height="54" rx="0" ry="25" x="5" y="5"
+						style="fill:#000000;fill-opacity:0.15;stroke:none;stroke-width:1.8;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1" />
+					<rect width="100" height="50" rx="0" ry="25" x="5" y="5"
+						style="fill:url(#lnrGradientSleep);fill-opacity:1;stroke:#000000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1" />
+					<text style="font-size:16pt;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial" xml:space="preserve" y="35" x="30">sleep</text>
+					<use x="75" y="28" xlink:href="#sleepIcon"/>
+				</symbol>
+				<symbol id="waitIcon">
+					<path d="M 41.454546,21.870131 C 41.454546,30.907518 33.918975,38.233767 24.623377,38.233767 C 15.327779,38.233767 7.7922076,30.907518 7.7922077,21.870131 C 7.7922076,12.832744 15.327779,5.5064947 24.623377,5.5064947 C 33.918975,5.5064947 41.454546,12.832744 41.454546,21.870131 L 41.454546,21.870131 z"
+						transform="matrix(1.1535182,0,0,1.1864759,-4.7476684,-2.7470865)"
+						style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<path d="M 90.597403,31.636364 C 90.597403,40.731132 83.015316,48.103897 73.662339,48.103897 C 64.309361,48.103897 56.727274,40.731132 56.727274,31.636364 C 56.727274,22.541596 64.309361,15.168831 73.662339,15.168831 C 83.015316,15.168831 90.597403,22.541596 90.597403,31.636364 L 90.597403,31.636364 z"
+						transform="matrix(0.9743099,0,0,1.0019716,-48.205008,-8.5104244)"
+						style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<path d="M 24.755335,31.153973 C 24.516284,30.543838 24.298177,29.926924 24.081052,29.30869 C 23.643208,28.040508 23.189103,26.77811 22.760029,25.506809 C 22.301103,24.061351 21.800046,22.630191 21.281984,21.205054 C 20.817725,19.982151 20.415076,18.73588 19.93695,17.518473 C 19.612574,16.681968 19.239685,15.864934 18.875247,15.045241 C 18.716908,14.687439 18.566248,14.317493 18.352578,13.988282 L 19.664761,13.225771 C 19.86727,13.571365 20.009898,13.952244 20.163251,14.321324 C 20.512412,15.15213 20.850377,15.988462 21.175301,16.829011 C 21.638767,18.055126 22.040862,19.304224 22.490443,20.535566 C 23.003216,21.963458 23.500539,23.39648 23.972571,24.838427 C 24.40023,26.106122 24.869449,27.358117 25.33631,28.611693 C 25.575246,29.218691 25.802687,29.831469 26.104045,30.41118 L 24.755335,31.153973 z"
+						style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<path d="M 19.26613,29.053776 C 19.4413,28.505868 19.824258,28.041668 20.157169,27.582427 C 20.294248,27.40176 20.427713,27.218293 20.568406,27.040427 C 20.727739,26.838995 21.52427,25.879326 21.659216,25.717143 C 22.401944,24.824512 23.14551,23.933053 23.897582,23.048271 C 25.503222,21.163057 27.205421,19.364302 28.955071,17.61287 C 29.937919,16.614524 30.904571,15.60049 31.921766,14.636841 C 32.491454,14.081234 33.106919,13.575463 33.690649,13.035435 C 33.868005,12.870387 34.039042,12.698572 34.20048,12.517966 L 35.600741,11.922129 C 35.446875,12.123769 35.258172,12.296338 35.072333,12.468612 C 34.478701,13.028437 33.822608,13.521665 33.240714,14.095427 C 32.188919,15.072979 31.185174,16.099435 30.16702,17.111734 C 28.384703,18.849738 26.661818,20.648813 25.05956,22.555469 C 24.328794,23.426666 23.609789,24.30615 22.895171,25.190619 C 22.884368,25.203989 21.908101,26.415032 21.853899,26.485734 C 21.722056,26.657711 21.59929,26.836462 21.471985,27.011825 C 21.169536,27.446405 20.843218,27.88162 20.65483,28.380388 L 19.26613,29.053776 z"
+						style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<rect width="2.2857144" height="3.6363637" x="22.233767" y="7.2727275"
+						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<rect width="2.2857144" height="3.6363637" x="22.233765" y="35.064934"
+						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<rect width="2.2857144" height="3.6363637" x="-24.831169" y="35.584415" transform="matrix(0,-1,1,0,0,0)"
+						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+					<rect width="2.2857144" height="3.6363637" x="-24.727272" y="7.5844154" transform="matrix(0,-1,1,0,0,0)"
+						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+				</symbol>
 				<symbol id="end">
 					<rect width="104" height="54" rx="20" ry="25" x="5" y="5"
 						style="fill:#000000;fill-opacity:0.15;stroke:none;stroke-width:1.8;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1" />
