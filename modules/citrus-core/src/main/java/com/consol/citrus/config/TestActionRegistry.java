@@ -68,6 +68,7 @@ public final class TestActionRegistry {
         registerActionParser("ant", new AntRunActionParser());
         registerActionParser("start", new StartServerActionParser());
         registerActionParser("stop", new StopServerActionParser());
+        registerActionParser("wait", new WaitActionParser());
     }
 
     /**

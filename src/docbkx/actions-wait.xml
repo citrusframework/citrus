@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2006-2015 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<section id="actions-wait">
+    <title>Wait</title>
+
+    <para>This action shows how to make the test framework wait until a certain condition is satisfied. The attribute
+      'time' defines the amount of time to wait in seconds. The attribute 'testInterval' defines the amount of time to
+      wait *between* each check. If the check does not exceed within the defined 'time' then the test execution fails
+      with an appropriate error message. Different conditions can be checked, depending on your use-case. If you
+      want to check if a web-server is running then use the 'http' condition. Or if you would like to check for the
+      presence of a file then use the file check. Examples of both are shown below.
+    </para>
+    
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;testcase name=&quot;waitTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;wait time=&quot;10&quot; testInterval=&quot;2&quot; &gt;
+
+        &lt;http url=&quot;http://a.b.c/&quot; statusCode=&quot;200&quot; timeout=&quot;2&quot; /&gt;
+
+        &lt;wait/&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void waitTest() {
+    wait(10); // wait in total for 10 seconds, repeating the check every 2 seconds
+}</programlisting>
+    
+    <para>When should somebody use this action? This action is very useful when you want your test to wait for a certain
+      event to occur before continuing with the test execution. For example if you wish that your test waits until a docker
+      container is started or for an application to create a log file before continuing, then use this action. You can
+      also create your own Conditions ... TODO CD is this possible when using the XML DSL?
+    </para>
+</section>

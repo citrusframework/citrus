@@ -333,6 +333,11 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
+    public WaitActionBuilder waitFor() {
+        return testDesigner.waitFor();
+    }
+
+    @Override
     public StartServerAction start(Server... servers) {
         return testDesigner.start(servers);
     }
