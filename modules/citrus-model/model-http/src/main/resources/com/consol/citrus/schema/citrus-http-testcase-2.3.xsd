@@ -467,9 +467,9 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
-    <xs:attribute name="content-type" type="xs:string" default="application/xml"/>
-    <xs:attribute name="accept" type="xs:string" default="application/xml"/>
-    <xs:attribute name="version" type="xs:string" default="HTTP/1.1"/>
+    <xs:attribute name="content-type" type="xs:string"/>
+    <xs:attribute name="accept" type="xs:string"/>
+    <xs:attribute name="version" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="ResponseHeadersType">
@@ -481,9 +481,9 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
-    <xs:attribute name="status" type="xs:string" default="200"/>
-    <xs:attribute name="reason-phrase" type="xs:string" default="OK"/>
-    <xs:attribute name="version" type="xs:string" default="HTTP/1.1"/>
+    <xs:attribute name="status" type="xs:string"/>
+    <xs:attribute name="reason-phrase" type="xs:string"/>
+    <xs:attribute name="version" type="xs:string"/>
   </xs:complexType>
 
 </xs:schema>
