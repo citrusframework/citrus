@@ -21,7 +21,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.message.MessageType;
 import org.springframework.http.HttpMethod;
 
 /**
@@ -41,7 +41,8 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
     public HttpServerRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpServer) {
         super();
         action.setEndpoint(httpServer);
-        action.setMessageBuilder(new StaticMessageContentBuilder(httpMessage));
+        message(httpMessage);
+        messageType(MessageType.XML);
         delegate.setDelegate(action);
     }
 

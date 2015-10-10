@@ -89,7 +89,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
         expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
         expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage()).atLeastOnce();
+        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("<Message>Hello</Message>")).atLeastOnce();
         replay(messageEndpoint, messageConsumer, configuration);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
@@ -113,7 +113,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 0);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
 
         verify(messageEndpoint, messageConsumer, configuration);
     }
@@ -1352,8 +1352,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
-        
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1410,8 +1414,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
-        
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
@@ -1465,10 +1473,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
-        
+
         Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(0);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");

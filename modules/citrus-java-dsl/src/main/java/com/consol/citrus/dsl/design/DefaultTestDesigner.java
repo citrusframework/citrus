@@ -25,6 +25,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
@@ -337,6 +338,7 @@ public class DefaultTestDesigner implements TestDesigner {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
         action.setEndpoint(server);
         ReceiveSoapMessageBuilder builder = new ReceiveSoapMessageBuilder(action)
+                .messageType(MessageType.XML)
                 .withApplicationContext(getApplicationContext());
         action(builder);
         return builder;
@@ -347,6 +349,7 @@ public class DefaultTestDesigner implements TestDesigner {
         ReceiveMessageAction action = new ReceiveMessageAction();
         action.setEndpoint(messageEndpoint);
         ReceiveMessageBuilder builder = new ReceiveMessageBuilder(action)
+                .messageType(MessageType.XML)
                 .withApplicationContext(getApplicationContext());
         action(builder);
 
@@ -359,6 +362,7 @@ public class DefaultTestDesigner implements TestDesigner {
         ReceiveMessageAction action = new ReceiveMessageAction();
         action.setEndpointUri(messageEndpointUri);
         ReceiveMessageBuilder builder = new ReceiveMessageBuilder(action)
+                .messageType(MessageType.XML)
                 .withApplicationContext(getApplicationContext());
         action(builder);
 

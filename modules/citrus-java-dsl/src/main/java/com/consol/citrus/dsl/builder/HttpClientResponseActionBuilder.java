@@ -21,6 +21,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.message.MessageType;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -41,6 +42,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         super();
         action.setEndpoint(httpClient);
         message(httpMessage);
+        messageType(MessageType.XML);
         delegate.setDelegate(action);
     }
 

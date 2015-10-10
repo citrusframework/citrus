@@ -191,11 +191,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
         } else if (validator != null) {
             validator.validateMessage(receivedMessage, createControlMessage(context, messageType), context, validationContexts);
         } else {
-            List<MessageValidator<? extends ValidationContext>> validators = 
+            Message controlMessage = createControlMessage(context, messageType);
+            List<MessageValidator<? extends ValidationContext>> validators =
                                 context.getMessageValidatorRegistry().findMessageValidators(messageType, receivedMessage, validationContexts);
-            
+
+            if (controlMessage.getPayload() != null && validators.isEmpty()) {
+                log.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
+            }
+
             for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                messageValidator.validateMessage(receivedMessage, createControlMessage(context, messageType), context, validationContexts);
+                messageValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
             }
         }
     }

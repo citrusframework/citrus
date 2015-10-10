@@ -26,6 +26,7 @@ import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
@@ -297,8 +298,9 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
-        ReceiveMessageBuilder<ReceiveMessageAction, ReceiveMessageBuilder> builder = new ReceiveMessageBuilder();
-        builder.withApplicationContext(applicationContext);
+        ReceiveMessageBuilder<ReceiveMessageAction, ReceiveMessageBuilder> builder = new ReceiveMessageBuilder()
+                .messageType(MessageType.XML)
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build());
     }
