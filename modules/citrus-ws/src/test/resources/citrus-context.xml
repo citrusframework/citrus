@@ -117,17 +117,17 @@
   <citrus-ws:client id="helloSoapClient"
                     request-url="http://localhost:13080/hello"
                     endpoint-resolver="soapEndpointUriResolver"
-                    timeout="1000"/>
+                    timeout="3000"/>
 
   <citrus-ws:client id="helloSoapFaultClient"
                     request-url="http://localhost:13080/hello"
                     fault-strategy="propagateError"
-                    timeout="1000"/>
+                    timeout="3000"/>
 
   <citrus-ws:client id="helloWsAddressingSoapClient"
                     request-url="http://localhost:13080/hello"
                     message-converter="wsAddressingMessageConverter"
-                    timeout="1000"/>
+                    timeout="3000"/>
 
   <citrus-ws:server id="helloSoapServer"
                     port="13080"
@@ -144,28 +144,30 @@
 
   <citrus-http:client id="echoHttpClient"
                     request-url="http://localhost:14080/echo"
-                    timeout="1000"/>
+                    timeout="3000"/>
 
   <citrus-ws:client id="echoSoapClient"
                     request-url="http://localhost:14080/echo"
-                    timeout="1000"/>
+                    timeout="3000"/>
 
   <citrus-ws:server id="echoSoapServer"
                     port="14080"
                     auto-start="true"
                     root-parent-context="true"
+                    timeout="3000"
                     resource-base="src/it/resources"/>
 
   <citrus-ws:client id="echoSoap12Client"
                     request-url="http://localhost:14081/echo"
                     message-factory="soap12MessageFactory"
-                    timeout="1000"/>
+                    timeout="3000"/>
 
   <citrus-ws:server id="echoSoap12Server"
                     port="14081"
                     auto-start="true"
                     root-parent-context="true"
                     message-factory="soap12MessageFactory"
+                    timeout="3000"
                     resource-base="src/it/resources"/>
 
 </beans>
