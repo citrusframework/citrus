@@ -27,7 +27,7 @@ import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,15 +184,14 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             schemaRepository.getName()));
                 }
 
-                List<Resource> schemas = new ArrayList<Resource>();
-
+                List<Resource> schemas = new ArrayList<>();
                 for (XsdSchema xsdSchema : schemaRepository.getSchemas()) {
-                    if (xsdSchema instanceof MultiResourceXsdSchema) {
-                        for (Resource resource : ((MultiResourceXsdSchema) xsdSchema).getSchemas()) {
+                    if (xsdSchema instanceof XsdSchemaCollection) {
+                        for (Resource resource : ((XsdSchemaCollection) xsdSchema).getSchemaResources()) {
                             schemas.add(resource);
                         }                            
                     } else if (xsdSchema instanceof WsdlXsdSchema) {
-                        for (Resource resource : ((WsdlXsdSchema) xsdSchema).getSchemas()) {
+                        for (Resource resource : ((WsdlXsdSchema) xsdSchema).getSchemaResources()) {
                             schemas.add(resource);
                         }
                     } else {

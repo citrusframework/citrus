@@ -16,17 +16,15 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,22 +39,18 @@ public class SchemaCollectionParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MultiResourceXsdSchema.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaCollection.class);
 
-        ManagedList<Resource> schemas = new ManagedList<Resource>();
-
+        List<String> schemas = new ArrayList<>();
         Element schemasElement = DomUtils.getChildElementByTagName(element, "schemas");
         if (schemasElement != null) {
             List<Element> schemaElements = DomUtils.getChildElementsByTagName(schemasElement, "schema");
             for (Element schemaElement : schemaElements) {
-                schemas.add(new PathMatchingResourcePatternResolver().getResource(schemaElement.getAttribute("location")));
+                schemas.add(schemaElement.getAttribute("location"));
             }
         }
 
-        if (schemas.size() > 0) {
-            builder.addPropertyValue("schemas", schemas);
-        }
-
+        builder.addPropertyValue("schemas", schemas);
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
 
         return null;

@@ -17,8 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
-import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
-import org.springframework.core.io.ClassPathResource;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,15 +30,15 @@ public class SchemaCollectionParserTest extends AbstractBeanDefinitionParserTest
 
     @Test
     public void testSchemaRepositoryParser() {
-        Map<String, MultiResourceXsdSchema> schemaCollections = beanDefinitionContext.getBeansOfType(MultiResourceXsdSchema.class);
+        Map<String, XsdSchemaCollection> schemaCollections = beanDefinitionContext.getBeansOfType(XsdSchemaCollection.class);
         
         Assert.assertEquals(schemaCollections.size(), 1);
         
         // 1st schema repository
-        MultiResourceXsdSchema schema = schemaCollections.get("schemaCollection1");
+        XsdSchemaCollection schema = schemaCollections.get("schemaCollection1");
         Assert.assertNotNull(schema.getSchemas());
-        Assert.assertEquals(schema.getSchemas().length, 2);
-        Assert.assertEquals(schema.getSchemas()[0].getClass(), ClassPathResource.class);
-        Assert.assertEquals(schema.getSchemas()[1].getClass(), ClassPathResource.class);
+        Assert.assertEquals(schema.getSchemas().size(), 2);
+        Assert.assertEquals(schema.getSchemas().get(0), "classpath:com/consol/citrus/validation/test.xsd");
+        Assert.assertEquals(schema.getSchemas().get(1), "classpath:com/consol/citrus/validation/sample.xsd");
     }
 }

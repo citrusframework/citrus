@@ -18,7 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
-import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
@@ -48,7 +48,7 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), WsdlXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), MultiResourceXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), XsdSchemaCollection.class);
         Assert.assertNotNull(schemaRepository.getLocations());
         Assert.assertEquals(schemaRepository.getLocations().size(), 0);
 
