@@ -124,44 +124,49 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             Map.Entry controlJsonEntry = (Map.Entry) stringObjectEntry;
 
             Object controlKey = controlJsonEntry.getKey();
+            Object controlValue = controlJsonEntry.getValue();
+            Object receivedValue = receivedJson.get(controlKey);
             Assert.isTrue(receivedJson.containsKey(controlKey),
                     "Missing JSON entry: + '" + controlKey + "'");
 
-            if (controlJsonEntry.getValue() == null) {
-                Assert.isTrue(receivedJson.get(controlKey) == null,
+            if (controlValue == null) {
+                Assert.isTrue(receivedValue == null,
                         ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
-                                controlJsonEntry.getValue(), receivedJson.get(controlKey)));
+                                controlValue, receivedValue));
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlJsonEntry.getValue() + ")");
+                    log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlValue + ")");
                 }
 
                 continue;
+            } else {
+                Assert.isTrue(receivedValue != null, ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
+                        controlValue, receivedValue));
             }
 
             // check if entry is ignored by placeholder
-            if (isIgnored(controlJsonEntry, receivedJson.get(controlKey), validationContext.getIgnoreExpressions(), readContext)) {
+            if (isIgnored(controlJsonEntry, receivedValue, validationContext.getIgnoreExpressions(), readContext)) {
                 continue;
             }
 
-            if (ValidationMatcherUtils.isValidationMatcherExpression(controlJsonEntry.getValue().toString())) {
+            if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue.toString())) {
                 ValidationMatcherUtils.resolveValidationMatcher(controlKey.toString(),
-                        receivedJson.get(controlKey).toString(),
-                        controlJsonEntry.getValue().toString(), context);
-            } else if (controlJsonEntry.getValue() instanceof JSONObject) {
-                Assert.isTrue(receivedJson.get(controlKey) instanceof JSONObject,
+                        receivedValue.toString(),
+                        controlValue.toString(), context);
+            } else if (controlValue instanceof JSONObject) {
+                Assert.isTrue(receivedValue instanceof JSONObject,
                         ValidationUtils.buildValueMismatchErrorMessage("Type mismatch for JSON entry '" + controlKey + "'",
-                                JSONObject.class.getSimpleName(), receivedJson.get(controlKey).getClass().getSimpleName()));
+                                JSONObject.class.getSimpleName(), receivedValue.getClass().getSimpleName()));
 
-                validateJson((JSONObject) receivedJson.get(controlKey),
-                        (JSONObject) controlJsonEntry.getValue(), validationContext, context, readContext);
-            } else if (controlJsonEntry.getValue() instanceof JSONArray) {
-                Assert.isTrue(receivedJson.get(controlKey) instanceof JSONArray,
+                validateJson((JSONObject) receivedValue,
+                        (JSONObject) controlValue, validationContext, context, readContext);
+            } else if (controlValue instanceof JSONArray) {
+                Assert.isTrue(receivedValue instanceof JSONArray,
                         ValidationUtils.buildValueMismatchErrorMessage("Type mismatch for JSON entry '" + controlKey + "'",
-                                JSONArray.class.getSimpleName(), receivedJson.get(controlKey).getClass().getSimpleName()));
+                                JSONArray.class.getSimpleName(), receivedValue.getClass().getSimpleName()));
 
-                JSONArray jsonArrayControl = (JSONArray) controlJsonEntry.getValue();
-                JSONArray jsonArrayReceived = (JSONArray) receivedJson.get(controlKey);
+                JSONArray jsonArrayControl = (JSONArray) controlValue;
+                JSONArray jsonArrayReceived = (JSONArray) receivedValue;
 
                 if (log.isDebugEnabled()) {
                     log.debug("Validating JSONArray containing " + jsonArrayControl.size() + " entries");
@@ -187,13 +192,13 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                     }
                 }
             } else {
-                Assert.isTrue(controlJsonEntry.getValue().equals(receivedJson.get(controlKey)),
+                Assert.isTrue(controlValue.equals(receivedValue),
                         ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
-                                controlJsonEntry.getValue(), receivedJson.get(controlKey)));
+                                controlValue, receivedValue));
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlJsonEntry.getValue() + ")");
+                log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlValue + ")");
             }
         }
     }
