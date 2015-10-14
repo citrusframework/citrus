@@ -15,13 +15,45 @@
   </properties>
   
   <body>
-    <release version="2.4" date="01.12.2015" description="2.4 release">
+    <release version="2.4" date="01.11.2015" description="2.4 release">
+        <action dev="christophd" type="update">
+          TAIGA-27 Validation callback with TestContext
+        </action>
+        <action dev="christophd" type="update">
+          TAIGA-26 Improved REST support
+        </action>
         <action dev="maherm" type="add">
-          CITRUS-??? Wait-Condition Action
+          TAIGA-24 Timer Action
+        </action>
+        <action dev="maherm" type="add">
+          TAIGA-22 Wait-Condition Action
+        </action>
+        <action dev="christophd" type="add">
+          TAIGA-21 Camel route test actions
+        </action>
+        <action dev="christophd" type="update">
+          TAIGA-20 Http DELETE with payload
+        </action>
+        <action dev="christophd" type="add">
+          TAIGA-19 Purge endpoints action
+        </action>
+        <action dev="christophd" type="update">
+          TAIGA-14 Update plugin versions
+        </action>
+        <action dev="christophd" type="update">
+          TAIGA-13 Update dependency versions
+        </action>
+        <action dev="christophd" type="add">
+          TAIGA-12 Release archetypes to central
+        </action>
+        <action dev="christophd" type="add">
+          TAIGA-11 Release to Maven central
+        </action>
+        <action dev="christophd" type="add">
+          TAIGA-6 Docker support
         </action>
     </release>
 
-  <body>
     <release version="2.3" date="18.08.2015" description="2.3 release">
         <action dev="christophd" type="fix">
           GITHUB-45 Assertion error in parallel not causing test case to fail
