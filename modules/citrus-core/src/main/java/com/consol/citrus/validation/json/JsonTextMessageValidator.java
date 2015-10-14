@@ -81,7 +81,6 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             Object receivedJson = parser.parse(receivedJsonText);
             ReadContext readContext = JsonPath.parse(receivedJson);
             Object controlJson = parser.parse(controlJsonText);
-            
             if (receivedJson instanceof JSONObject) {
                 validateJson((JSONObject) receivedJson, (JSONObject) controlJson, validationContext, context, readContext);
             } else if (receivedJson instanceof JSONArray) {
@@ -139,15 +138,15 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                 }
 
                 continue;
-            } else {
-                Assert.isTrue(receivedValue != null, ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
-                        controlValue, receivedValue));
             }
 
             // check if entry is ignored by placeholder
             if (isIgnored(controlJsonEntry, receivedValue, validationContext.getIgnoreExpressions(), readContext)) {
                 continue;
             }
+
+            Assert.isTrue(receivedValue != null, ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
+                    controlValue, receivedValue));
 
             if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue.toString())) {
                 ValidationMatcherUtils.resolveValidationMatcher(controlKey.toString(),
