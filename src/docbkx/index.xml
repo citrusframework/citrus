@@ -14,6 +14,10 @@
                 <firstname>Christoph</firstname>
                 <surname>Deppisch</surname>
             </author>
+            <author>
+                <firstname>Martin</firstname>
+                <surname>Maher</surname>
+            </author>
         </authorgroup>
         <copyright>
             <year>2015</year>
@@ -80,6 +84,7 @@
 
         <para>In the following sections we you will find out what has happened in the past Citrus releases.</para>
 
+        <xi:include href='changes-2-3.xml'/>
         <xi:include href='changes-2-2.xml'/>
         <xi:include href='changes-2-1.xml'/>
         <xi:include href='changes-2-0.xml'/>
