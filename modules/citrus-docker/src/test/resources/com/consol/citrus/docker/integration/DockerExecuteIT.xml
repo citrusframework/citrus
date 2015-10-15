@@ -133,7 +133,9 @@
         <message>Removing docker container '${containerName}'</message>
       </echo>
 
-      <docker:remove container="${containerName}"/>
+      <catch>
+        <docker:remove container="${containerName}"/>
+      </catch>
     </finally>
 
   </testcase>
