@@ -266,4 +266,177 @@
     <para>In the example abpove we have two Camel context instances loaded. The endpoint has to pick the context to use with the attribute <emphasis>camel-context</emphasis> which resides to the Spring bean id of the Camel context.</para>
   </section>
 
+  <section id="camel-actions">
+    <title>Camel route actions</title>
+
+    <para>Since Citrus 2.4 we introduced some Camel specific test actions that enable easy interaction with Camel routes and the Camel context. The test actions do follow a specific XML namespace so we have to add this namespace to the test case
+    when using the actions.</para>
+
+    <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xmlns:camel=&quot;http://www.citrusframework.org/schema/camel/testcase&quot;
+      xsi:schemaLocation=&quot;
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/camel/testcase
+      http://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd&quot;&gt;
+
+  [...]
+
+&lt;/beans&gt;</programlisting>
+
+    <para>We added a special camel namespace with prefix <emphasis>camel:</emphasis> so now we can start to add Camel test actions to the test case:</para>
+
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;testcase name=&quot;CamelRouteIT&quot;&gt;
+  &lt;actions&gt;
+      &lt;camel:create-routes&gt;
+        &lt;routeContext xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
+          &lt;route id=&quot;route_1&quot;&gt;
+            &lt;from uri=&quot;direct:test1&quot;/&gt;
+            &lt;to uri=&quot;mock:test1&quot;/&gt;
+          &lt;/route&gt;
+
+          &lt;route id=&quot;route_2&quot;&gt;
+              &lt;from uri=&quot;direct:test2&quot;/&gt;
+              &lt;to uri=&quot;mock:test2&quot;/&gt;
+          &lt;/route&gt;
+        &lt;/routeContext&gt;
+      &lt;/camel:create-routes&gt;
+
+      &lt;camel:create-routes camel-context=&quot;camelContext&quot;&gt;
+        &lt;routeContext xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
+          &lt;route&gt;
+            &lt;from uri=&quot;direct:test3&quot;/&gt;
+            &lt;to uri=&quot;mock:test3&quot;/&gt;
+          &lt;/route&gt;
+        &lt;/routeContext&gt;
+      &lt;/camel:create-routes&gt;
+  &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+    <para>In the example above we have used the <emphasis>camel:create-route</emphasis> test action that will create new Camel routes at runtime in the Camel context. The target Camel context is specified with the optional <emphasis>camel-context</emphasis>
+    attribute. By default Citrus will search for a Camel context available in the Spring bean application context. Removing routes at runtime is also supported.</para>
+
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;testcase name=&quot;CamelRouteIT&quot;&gt;
+  &lt;actions&gt;
+      &lt;camel:remove-routes camel-context=&quot;camelContext&quot;&gt;
+        &lt;route id=&quot;route_1&quot;/&gt;
+        &lt;route id=&quot;route_2&quot;/&gt;
+        &lt;route id=&quot;route_3&quot;/&gt;
+      &lt;/camel:remove-routes&gt;
+  &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+
+    <para>Next operation we will discuss is the start and stop of existing Camel routes:</para>
+
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;testcase name=&quot;CamelRouteIT&quot;&gt;
+  &lt;actions&gt;
+      &lt;camel:start-routes camel-context=&quot;camelContext&quot;&gt;
+        &lt;route id=&quot;route_1&quot;/&gt;
+      &lt;/camel:start-routes&gt;
+
+      &lt;camel:stop-routes camel-context=&quot;camelContext&quot;&gt;
+      &lt;route id=&quot;route_2&quot;/&gt;
+      &lt;route id=&quot;route_3&quot;/&gt;
+      &lt;/camel:stop-routes&gt;
+  &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+    <para>Starting and stopping Camel routes at runtime is important when temporarily Citrus need to receive a message on a Camel endpoint URI. We can stop a route, use a Citrus camel endpoint instead for validation and start the route after the test is done. This
+    way wen can also simulate errors and failure scenarios in a Camel route interaction.</para>
+
+    <para>Of course all Camel route actions are also available in Java DSL.</para>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+private CamelContext camelContext;
+
+@CitrusTest
+public void camelRouteTest() {
+    camel().context(camelContext).create(new RouteBuilder(camelContext) {
+          @Override
+          public void configure() throws Exception {
+              from("direct:news")
+                  .routeId("route_1")
+                  .autoStartup(false)
+                  .setHeader("headline", simple("This is BIG news!"))
+                  .to("mock:news");
+
+              from("direct:rumors")
+                  .routeId("route_2")
+                  .autoStartup(false)
+                  .setHeader("headline", simple("This is just a rumor!"))
+                  .to("mock:rumors");
+          }
+      });
+
+    camel().context(camelContext).start("route_1", "route_2");
+
+    camel().context(camelContext).stop("route_2");
+
+    camel().context(camelContext).remove("route_2");
+}</programlisting>
+
+
+    <para>As you can see we have access to the Camel route builder that adds 1-n new Camel routes to the context. After that we can start, stop and remove the routes within the test case.</para>
+  </section>
+
+  <section id="camel-controlbus">
+    <title>Camel controlbus actions</title>
+
+    <para>The Camel controlbus component is a good way to access route statistics and route status information within a Camel context. Citrus provides controlbus test actions to easily access the controlbus operations at runtime.</para>
+
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;testcase name=&quot;CamelControlBusIT&quot;&gt;
+  &lt;actions&gt;
+    &lt;camel:control-bus&gt;
+      &lt;camel:route id=&quot;route_1&quot; action=&quot;start&quot;/&gt;
+    &lt;/camel:control-bus&gt;
+
+    &lt;camel:control-bus camel-context=&quot;camelContext&quot;&gt;
+      &lt;camel:route id=&quot;route_2&quot; action=&quot;status&quot;/&gt;
+      &lt;camel:result&gt;Stopped&lt;/camel:result&gt;
+    &lt;/camel:control-bus&gt;
+
+    &lt;camel:control-bus&gt;
+      &lt;camel:language type=&quot;simple&quot;&gt;${camelContext.stop()}&lt;/camel:language&gt;
+    &lt;/camel:control-bus&gt;
+
+    &lt;camel:control-bus camel-context=&quot;camelContext&quot;&gt;
+      &lt;camel:language type=&quot;simple&quot;&gt;${camelContext.getRouteStatus('route_3')}&lt;/camel:language&gt;
+      &lt;camel:result&gt;Started&lt;/camel:result&gt;
+    &lt;/camel:control-bus&gt;
+  &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+    <para>The example test case shows the controlbus access. Camel provides two different ways to specify operations and parameters. The first option is the use of an <emphasis>action</emphasis> attribute. The Camel route id has
+    to be specified as mandatory attribute. As a result the controlbus action will be executed on the target route during test runtime. This way we can also start and stop Camel routes in a Camel context.</para>
+
+    <para>In case an controlbus operation has a result such as the <emphasis>status</emphasis> action we can specify a control result that is compared. Citrus will raise validation exceptions when the results differ. The second
+    option for executing a controlbus action is the language expression. We can use Camel language expressions on the Camel context for accessing a controlbus operation. Also here we can define an optional outcome as expected result.</para>
+
+    <para>The Java DSL also supports these controlbus operations as the next example shows:</para>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+private CamelContext camelContext;
+
+@CitrusTest
+public void camelRouteTest() {
+      camel().controlBus()
+              .route("my_route", "start");
+
+      camel().controlBus()
+              .language(SimpleBuilder.simple("${camelContext.getRouteStatus('my_route')}"))
+              .result(ServiceStatus.Started);
+}</programlisting>
+
+    <para>The Java DSL works with Camel language expression builders as well as <emphasis>ServiceStatus</emphasis> enum values as expected result.</para>
+
+  </section>
+
 </chapter>
