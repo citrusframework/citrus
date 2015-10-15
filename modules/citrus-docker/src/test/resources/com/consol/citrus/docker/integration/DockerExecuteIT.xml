@@ -22,8 +22,8 @@
     <description>Test docker container command execution with docker client.</description>
 
     <variables>
-      <variable name="imageId" value="hello-world"></variable>
-      <variable name="containerId" value="citrus_hello"></variable>
+      <variable name="imageId" value="busybox"></variable>
+      <variable name="containerName" value="citrus_box"></variable>
     </variables>
 
     <actions>
@@ -63,23 +63,26 @@
       </echo>
 
       <docker:create image="${imageId}"
-                     name="${containerId}">
+                     name="${containerName}"
+                     cmd="top">
         <docker:expect>
           <docker:result>
             <![CDATA[
-              {"Id":"@ignore@","Warnings":null}
+              {"Id":"@variable(containerId)@","Warnings":null}
             ]]>
           </docker:result>
         </docker:expect>
       </docker:create>
 
       <echo>
-        <message>Starting docker container '${containerId}'</message>
+        <message>Starting docker container '${containerName}'</message>
       </echo>
 
-      <docker:start container="${containerId}"/>
+      <docker:start container="${containerName}"/>
 
-      <docker:inspect container="${containerId}">
+      <sleep milliseconds="1000"/>
+
+      <docker:inspect container="${containerName}">
         <docker:expect>
           <docker:result>
             <![CDATA[
@@ -92,12 +95,12 @@
                 "HostConfig":"@ignore@",
                 "HostnamePath":"@ignore@",
                 "HostsPath":"@ignore@",
-                "Id":"@ignore@",
+                "Id":"${containerId}",
                 "Image":"@ignore@",
                 "MountLabel":"",
-                "Name":"/citrus_hello",
+                "Name":"/${containerName}",
                 "NetworkSettings":"@ignore@",
-                "Path":"/hello",
+                "Path":"top",
                 "ProcessLabel":"",
                 "ResolvConfPath":"@ignore@",
                 "ExecIDs":null,
@@ -110,8 +113,8 @@
                   "StartedAt":"@ignore@",
                   "FinishedAt":"@ignore@"
                 },
-                "Volumes":{},
-                "VolumesRW":{}
+                "Volumes": "@ignore@",
+                "VolumesRW": "@ignore@"
               }
             ]]>
           </docker:result>
@@ -122,11 +125,15 @@
     <finally>
       <sleep milliseconds="300"/>
 
+      <catch>
+        <docker:stop container="${containerName}"/>
+      </catch>
+
       <echo>
-        <message>Removing docker container '${containerId}'</message>
+        <message>Removing docker container '${containerName}'</message>
       </echo>
 
-      <docker:remove container="${containerId}"/>
+      <docker:remove container="${containerName}"/>
     </finally>
 
   </testcase>
