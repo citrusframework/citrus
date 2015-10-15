@@ -11,6 +11,13 @@
       building, starting, stopping and inspecting Docker images and containers in a test. See <xref linkend="docker"/> for details.</para>
   </section>
 
+  <section id="new-2-4-http">
+    <title>Http REST actions</title>
+
+    <para>We have significantly improved the Http REST support in Citrus. The focus is on simplifying the Http REST usage in Citrus test cases. With new
+    Http specific test actions on client and server we can send and receive Http REST messages very easy. See <xref linkend="http"/> for details.</para>
+  </section>
+
   <section id="new-2-4-camel">
     <title>Camel actions</title>
 

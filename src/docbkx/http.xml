@@ -47,21 +47,23 @@
         <para>On the client side we have a simple HTTP message client component connecting to the server. The <b>request-url</b> attribute defines the HTTP server
         endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages. Citrus as client waits for the
         response message from server. After that the response message goes through the validation process as usual. Let us see how a Citrus HTTP client component looks like:</para>
-        
+
         <programlisting>&lt;citrus-http:client id=&quot;helloHttpClient&quot;
           request-url=&quot;http://localhost:8080/hello&quot;
           request-method=&quot;GET&quot;
           content-type=&quot;application/xml&quot;
           timeout=&quot;60000&quot;/&gt;</programlisting>
-        
+
         <para>The <emphasis>request-method</emphasis> defines the HTTP method to use. In addition to that we can specify the content-type of the request we are about to send.
         The client builds the HTTP request and sends it to the HTTP server. While the client is waiting for the synchronous HTTP response to arrive we are able to poll several
         times for the response message in our test case. As usual aou can use the same client endpoint in your test case to send and receive messages synchronously. In case the reply
         message comes in too late according to the timeout settings a respective timeout error is raised.</para>
-        
-        <para>The request method is statically set to <emphasis>GET</emphasis> in the example above. You can also overwrite the HTTP request method inside the
-        sending test action which gives more flexibility. Use something like this in your test:</para>
-        
+
+        <para>Http defines several request methods that a client can use to access Http server resources. In the example client above we are using <emphasis>GET</emphasis> as default
+        request method. Of course you can overwrite this setting in a test case action by setting the HTTP request method inside the
+        sending test action. The Http client component can be used as normal endpoint in a sending test action. Use something like this in your test:</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;send endpoint=&quot;helloHttpClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -109,23 +111,108 @@
 &lt;/bean&gt;
         </programlisting>
         </tip>
-        
-        <tip><para>Here is another tip for you regarding dynamic endpoint URIs in HTTP clients. Similar to the endpoint resolving mechanism in SOAP you can dynamically set
-        the called endpoint URI at test runtime by using special message header values. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action
-        inside the test.</para>
 
-        <para>The <emphasis>dynamicEndpointResolver</emphasis> bean must implement the EndpointUriResolver interface in order to resolve
-          dynamic endpoint uri values. Citrus offers a default implementation, the <emphasis>DynamicEndpointUriResolver</emphasis>, which
-          uses a specific message header for setting dynamic endpoint uri. The message header needs to specify the header
-          <emphasis>citrus_endpoint_uri</emphasis> with a valid request uri.</para>
+        <para>Up to now we have used a normal <emphasis>send</emphasis> test action to send Http requests as a client. This is completely valid strategy as the Citrus
+        Http client is a normal endpoint. But we might want to set some more Http REST specific properties and settings. In order to simplify the Http usage in a test case
+        we can use a special test action implementation. The Citrus Http specific actions are located in a separate XML namespace. So wen need to add this namespace to our test case
+        XML first.</para>
 
-        <programlisting>&lt;header&gt;
-    &lt;element name=&quot;citrus_endpoint_uri&quot; value=&quot;http://localhost:8080/customers/${customerId}&quot;/&gt;
-&lt;/header&gt;</programlisting>
-        
-        <para>The specific send action above will send its message to the dynamic endpoint (http://localhost:8080/customers/${customerId}) which is set in the header <emphasis>citrus_endpoint_uri</emphasis>. 
-        As you can see the endpoint contains a variable entry so you can reuse the same HTTP message client with different endpoint URI. This is essential when calling RESTful WebServices where the
-        URI contains parameters, identifiers and modifiers.</para></tip>
+        <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xmlns:http=&quot;http://www.citrusframework.org/schema/http/testcase&quot;
+        xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/http/testcase
+        http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd&quot;&gt;
+
+      [...]
+
+    &lt;/beans&gt;</programlisting>
+
+        <para>The test case is now ready to use the specific Http test actions by using the prefix <emphasis>http:</emphasis>.</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
+        <programlisting>&lt;http:send-request client=&quot;httpClient&quot;&gt;
+  &lt;http:POST path=&quot;/customer&quot;&gt;
+    &lt;http:headers content-type=&quot;application/xml&quot; accept=&quot;application/xml, */*&quot;&gt;
+      &lt;http:header name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+    &lt;/http:headers&gt;
+    &lt;http:body&gt;
+      &lt;http:data&gt;
+        &lt;![CDATA[
+          &lt;testRequestMessage&gt;
+            &lt;text&gt;Hello HttpServer&lt;/text&gt;
+          &lt;/testRequestMessage&gt;
+        ]]&gt;
+      &lt;/http:data&gt;
+    &lt;/http:body&gt;
+  &lt;/http:POST&gt;
+&lt;/http:send-request&gt;</programlisting>
+
+        <para>The action above uses several Http specific settings such as the request method <emphasis>POST</emphasis> as well as the
+        <emphasis>content-type</emphasis> and <emphasis>accept</emphasis> headers. As usual the send action needs a target Http client
+        endpoint component. We can specify a request <emphasis>path</emphasis> attribute that added as relative path to the base uri used
+        on the client.</para>
+
+        <para>When using a <emphasis>GET</emphasis> request we can specify some request uri parameters.</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
+        <programlisting>&lt;http:send-request client=&quot;httpClient&quot;&gt;
+  &lt;http:GET path=&quot;/customer/${custom_header_id}&quot;&gt;
+    &lt;http:params content-type=&quot;application/xml&quot; accept=&quot;application/xml, */*&quot;&gt;
+      &lt;http:param name=&quot;type&quot; value=&quot;active&quot;/&gt;
+    &lt;/http:params&gt;
+  &lt;/http:GET&gt;
+&lt;/http:send-request&gt;</programlisting>
+
+        <para>The send action above uses a <emphasis>GET</emphasis> request on the endpoint uri <emphasis>http://localhost:8080/customer/1234?type=active</emphasis>.</para>
+
+        <para>Of course when sending Http client requests we are also interested in receiving Http response messages. We want to validate the success response with Http status code.</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
+        <programlisting>&lt;http:receive-response client="httpClient"&gt;
+  &lt;http:headers status="200" reason-phrase="OK" version="HTTP/1.1"&gt;
+    &lt;http:header name="CustomHeaderId" value="${custom_header_id}"/&gt;
+  &lt;/http:headers&gt;
+  &lt;http:body&gt;
+    &lt;http:data&gt;
+      &lt;![CDATA[
+        &lt;testResponseMessage&gt;
+          &lt;text&gt;Hello Citrus&lt;/text&gt;
+        &lt;/testResponseMessage&gt;
+      ]]&gt;
+    &lt;/http:data&gt;
+  &lt;/http:body&gt;
+&lt;/http:receive-response&gt;</programlisting>
+
+        <para>The <emphasis>receive-response</emphasis> test action also uses a client component. We can expect response status code information such as <emphasis>status</emphasis> and
+        <emphasis>reason-phrase</emphasis>. Of course Citrus will raise a validation exception in case Http status codes mismatch.</para>
+
+        <para>Up to now we have used XML DSL test cases. The Java DSL in Citrus also works with specific Http test actions. See following example and find out how this works:</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
+        <programlisting lang="java">@CitrusTest
+public void httpActionTest() {
+    http().client("httpClient")
+          .post()
+          .payload("<testRequestMessage>" +
+                    "<text>Hello HttpServer</text>" +
+                  "</testRequestMessage>")
+          .header("CustomHeaderId", "${custom_header_id}")
+          .contentType("text/xml")
+          .accept("text/xml, */*");
+
+    http().client("httpClient")
+          .response(HttpStatus.OK)
+          .payload("<testResponseMessage>" +
+                    "<text>Hello Citrus</text>" +
+                  "</testResponseMessage>")
+          .header("CustomHeaderId", "${custom_header_id}")
+          .version("HTTP/1.1");
+}</programlisting>
+
+        <para>Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.</para>
     </section>
     
     <section id="http-server">
