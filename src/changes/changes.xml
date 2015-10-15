@@ -17,40 +17,40 @@
   <body>
     <release version="2.4" date="01.11.2015" description="2.4 release">
         <action dev="christophd" type="update">
-          TAIGA-27 Validation callback with TestContext
+          CITRUS-27 Validation callback with TestContext
         </action>
         <action dev="christophd" type="update">
-          TAIGA-26 Improved REST support
+          CITRUS-26 Improved REST support
         </action>
         <action dev="maherm" type="add">
-          TAIGA-24 Timer Action
+          CITRUS-24 Timer Action
         </action>
         <action dev="maherm" type="add">
-          TAIGA-22 Wait-Condition Action
+          CITRUS-22 Wait-Condition Action
         </action>
         <action dev="christophd" type="add">
-          TAIGA-21 Camel route test actions
+          CITRUS-21 Camel route test actions
         </action>
         <action dev="christophd" type="update">
-          TAIGA-20 Http DELETE with payload
+          CITRUS-20 Http DELETE with payload
         </action>
         <action dev="christophd" type="add">
-          TAIGA-19 Purge endpoints action
+          CITRUS-19 Purge endpoints action
         </action>
         <action dev="christophd" type="update">
-          TAIGA-14 Update plugin versions
+          CITRUS-14 Update plugin versions
         </action>
         <action dev="christophd" type="update">
-          TAIGA-13 Update dependency versions
+          CITRUS-13 Update dependency versions
         </action>
         <action dev="christophd" type="add">
-          TAIGA-12 Release archetypes to central
+          CITRUS-12 Release archetypes to central
         </action>
         <action dev="christophd" type="add">
-          TAIGA-11 Release to Maven central
+          CITRUS-11 Release to Maven central
         </action>
         <action dev="christophd" type="add">
-          TAIGA-6 Docker support
+          CITRUS-6 Docker support
         </action>
     </release>
 

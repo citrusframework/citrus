@@ -311,6 +311,29 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testWaitContainer() throws Exception {
+        WaitContainerCmd command = EasyMock.createMock(WaitContainerCmd.class);
+
+        reset(dockerClient, command);
+
+        expect(dockerClient.waitContainerCmd("container_wait")).andReturn(command).once();
+        expect(command.exec()).andReturn(0).once();
+
+        replay(dockerClient, command);
+
+        DockerExecuteAction action = new DockerExecuteAction();
+        action.setCommand(new ContainerWait()
+                .container("container_wait"));
+        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+
+        action.execute(context);
+
+        Assert.assertEquals(((ContainerWait.ExitCode)action.getCommand().getCommandResult()).getExitCode(), new Integer(0));
+
+        verify(dockerClient, command);
+    }
+
+    @Test
     public void testPullImage() throws Exception {
         PullImageCmd command = EasyMock.createMock(PullImageCmd.class);
         final PullResponseItem responseItem = EasyMock.createMock(PullResponseItem.class);

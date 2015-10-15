@@ -28,7 +28,7 @@ public class DockerExecuteActionParserTest extends AbstractActionParserTest<Dock
 
     @Test
     public void testDockerExecuteActionParser() {
-        assertActionCount(13);
+        assertActionCount(14);
         assertActionClassAndName(DockerExecuteAction.class, "docker-execute");
 
         DockerExecuteAction action = getNextTestActionFromTest();
@@ -122,6 +122,12 @@ public class DockerExecuteActionParserTest extends AbstractActionParserTest<Dock
         Assert.assertEquals(action.getCommand().getClass(), ContainerStop.class);
         Assert.assertEquals(action.getCommand().getParameters().size(), 1);
         Assert.assertEquals(action.getCommand().getParameters().get("container"), "container_stop");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), ContainerWait.class);
+        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
+        Assert.assertEquals(action.getCommand().getParameters().get("container"), "container_wait");
     }
 
     @Test

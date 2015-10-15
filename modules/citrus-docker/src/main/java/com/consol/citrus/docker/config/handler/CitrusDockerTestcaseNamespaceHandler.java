@@ -37,5 +37,6 @@ public class CitrusDockerTestcaseNamespaceHandler extends NamespaceHandlerSuppor
         registerBeanDefinitionParser("start", new DockerExecuteActionParser(new ContainerStart()));
         registerBeanDefinitionParser("stop", new DockerExecuteActionParser(new ContainerStop()));
         registerBeanDefinitionParser("create", new DockerExecuteActionParser(new ContainerCreate()));
+        registerBeanDefinitionParser("wait", new DockerExecuteActionParser(new ContainerWait()));
     }
 }

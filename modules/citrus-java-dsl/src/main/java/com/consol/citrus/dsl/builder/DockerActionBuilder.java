@@ -109,6 +109,16 @@ public class DockerActionBuilder extends AbstractTestActionBuilder<DockerExecute
 	}
 
 	/**
+	 * Adds a wait command.
+	 */
+	public ContainerWait wait(String containerId) {
+		ContainerWait command = new ContainerWait();
+		command.container(containerId);
+		action.setCommand(command);
+		return command;
+	}
+
+	/**
 	 * Adds a inspect container command.
 	 */
 	public ContainerInspect inspectContainer(String containerId) {

@@ -184,6 +184,20 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="wait">
+    <xs:annotation>
+      <xs:documentation>Stops docker container and waits for its exitCode</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="docker-client" type="xs:string"/>
+      <xs:attribute name="container" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:complexType name="ExpectCmdResultType">
     <xs:annotation>
       <xs:documentation>Expects and validates a command result</xs:documentation>
