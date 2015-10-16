@@ -63,6 +63,10 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             httpMessage.path(requestElement.getAttribute("path"));
         }
 
+        if (requestElement.hasAttribute("context-path")) {
+            httpMessage.contextPath(requestElement.getAttribute("context-path"));
+        }
+
         List<?> params = DomUtils.getChildElementsByTagName(requestElement, "param");
         for (Iterator<?> iter = params.iterator(); iter.hasNext();) {
             Element param = (Element) iter.next();

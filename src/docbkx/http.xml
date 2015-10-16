@@ -474,7 +474,7 @@ Server: Jetty(7.0.0.pre5)
         the client to call <emphasis>http://localhost:8080/app/users?id=123456789</emphasis>. As a tester we need to validate the request method, request URI, context path and the query parameters.</para>
 
         <programlisting>&lt;http:receive-request server=&quot;httpServer&quot;&gt;
-  &lt;http:GET path=&quot;/app/users&quot;&gt;
+  &lt;http:GET path=&quot;/app/users&quot; context-path=&quot;/app&quot;&gt;
     &lt;http:params&gt;
         &lt;http:param name=&quot;id&quot; value=&quot;123456789&quot;/&gt;
     &lt;/http:params&gt;
@@ -482,7 +482,6 @@ Server: Jetty(7.0.0.pre5)
         &lt;http:header name=&quot;Host&quot; value=&quot;localhost:8080&quot;/&gt;
         &lt;http:header name=&quot;Content-Type&quot; value=&quot;text/html&quot;/&gt;
         &lt;http:header name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
-        &lt;http:header name=&quot;citrus_http_context_path&quot; value=&quot;/app&quot;/&gt;
     &lt;/http:headers&gt;
     &lt;http:body&gt;
         &lt;http:data&gt;&lt;/http:data&gt;

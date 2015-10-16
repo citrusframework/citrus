@@ -38,11 +38,9 @@
 
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint">
-                      <http:GET path="/">
+                      <http:GET path="/" context-path="">
                         <http:headers version="HTTP/1.1" content-type="text/html" accept="application/xml;charset=UTF-8">
                             <http:header name="Host" value="localhost:8072"/>
-                            <http:header name="citrus_http_context_path" value=""/>
-                            <http:header name="citrus_http_query_params" value=""/>
                         </http:headers>
                       </http:GET>
                     </http:receive-request>
@@ -66,11 +64,9 @@
 
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint">
-                      <http:GET path="/test/user/${id}">
+                      <http:GET path="/test/user/${id}" context-path="">
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
                             <http:header name="Host" value="localhost:8072"/>
-                            <http:header name="citrus_http_context_path" value=""/>
-                            <http:header name="citrus_http_query_params" value=""/>
                         </http:headers>
                         <http:body><http:data></http:data></http:body>
                       </http:GET>
@@ -97,12 +93,11 @@
 
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint">
-                      <http:GET path="/test/user">
+                      <http:GET path="/test/user" context-path="">
                         <http:param name="id" value="${id}"/>
                         <http:param name="name" value="TestUser"/>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
                             <http:header name="Host" value="localhost:8072"/>
-                            <http:header name="citrus_http_context_path" value=""/>
                         </http:headers>
                         <http:body><http:data></http:data></http:body>
                       </http:GET>
