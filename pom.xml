@@ -925,7 +925,7 @@
         <plugin>
           <groupId>org.codehaus.sonar</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>4.4.1</version>
+          <version>5.1</version>
         </plugin>
 
       </plugins>
@@ -1596,33 +1596,46 @@
             <version>0.7.5.201505241946</version>
             <executions>
               <execution>
-                <id>jacoco-initialize</id>
+                <id>jacoco-unit-init</id>
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
                 <configuration>
+                  <propertyName>surefireArgLine</propertyName>
                   <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
                 </configuration>
               </execution>
               <execution>
-                <id>prepare-integration-tests</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-                <configuration>
-                  <propertyName>itCoverageAgent</propertyName>
-                  <destFile>${basedir}/target/coverage-reports/jacoco-it.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-report</id>
+                <id>jacoco-unit-report</id>
                 <phase>package</phase>
                 <goals>
                   <goal>report</goal>
                 </goals>
                 <configuration>
                   <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>jacoco-it-init</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <propertyName>failsafeArgLine</propertyName>
+                  <destFile>${basedir}/target/coverage-reports/jacoco-it.exec</destFile>
+                </configuration>
+              </execution>
+              <execution>
+                <id>jacoco-it-report</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+                <configuration>
+                  <dataFile>${basedir}/target/coverage-reports/jacoco-it.exec</dataFile>
+                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                 </configuration>
               </execution>
             </executions>
