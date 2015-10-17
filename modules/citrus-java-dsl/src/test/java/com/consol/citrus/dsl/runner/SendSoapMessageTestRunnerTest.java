@@ -145,7 +145,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSoapAction() {
         reset(soapClient, messageProducer);
-        expect(soapClient.createProducer()).andReturn(messageProducer).once();
+        expect(soapClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(soapClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -195,7 +195,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSoapAttachment() {
         reset(soapClient, messageProducer);
-        expect(soapClient.createProducer()).andReturn(messageProducer).once();
+        expect(soapClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(soapClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -252,7 +252,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSoapAttachmentData() {
         reset(soapClient, messageProducer);
-        expect(soapClient.createProducer()).andReturn(messageProducer).once();
+        expect(soapClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(soapClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -373,7 +373,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSoapAttachmentResource() throws IOException {
         reset(resource, soapClient, messageProducer);
-        expect(soapClient.createProducer()).andReturn(messageProducer).once();
+        expect(soapClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(soapClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
