@@ -33,4 +33,10 @@
     </citrus:schemas>
   </citrus:schema-repository>
 
+  <citrus:schema-repository id="sampleServiceSchemaRepository">
+    <citrus:schemas>
+      <citrus:schema id="sampleServiceSchema" location="classpath:com/consol/citrus/schema/SampleServiceWithImports.wsdl" />
+    </citrus:schemas>
+  </citrus:schema-repository>
+
 </beans>

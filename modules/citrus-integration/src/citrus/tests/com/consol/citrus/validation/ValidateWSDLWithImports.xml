@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+			  xmlns:spring="http://www.springframework.org/schema/beans"
+			  xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+
+	<testcase name="ValidateWSDLWithImports">
+		<meta-info>
+			<author>Reinhard Steiner</author>
+			<creationdate>2015-10-27</creationdate>
+			<status>FINAL</status>
+		</meta-info>
+
+		<description>Validating SOAP message with special WSDL using imports</description>
+
+		<actions>
+
+			<echo>
+				<message>Test: Sending valid SOAP message</message>
+			</echo>
+
+			<parallel>
+				<send endpoint="testWebServiceClient">
+					<message>
+						<data>
+                            <![CDATA[
+                                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+                                    <hello>Are you there?</hello>
+                                    <test>FOO</test>
+                                </sample:sampleMessage>
+                            ]]>
+						</data>
+					</message>
+				</send>
+
+				<sequential>
+					<receive endpoint="testSoapServer">
+						<message schema-repository="sampleServiceSchemaRepository">
+							<data>
+								<![CDATA[
+									<sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+										<hello>Are you there?</hello>
+										<test>FOO</test>
+									</sample:sampleMessage>
+								]]>
+							</data>
+						</message>
+					</receive>
+
+					<send endpoint="testSoapServer">
+						<message>
+							<data>
+								<![CDATA[
+									<sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+										<reply>Yes!</reply>
+										<test>BAR</test>
+									</sample:sampleMessageResponse>
+								]]>
+							</data>
+						</message>
+					</send>
+				</sequential>
+			</parallel>
+
+			<receive endpoint="testWebServiceClient">
+				<message schema-repository="sampleServiceSchemaRepository">
+					<data>
+						<![CDATA[
+							<sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+								<reply>Yes!</reply>
+								<test>BAR</test>
+							</sample:sampleMessageResponse>
+						]]>
+					</data>
+				</message>
+			</receive>
+
+			<echo>
+				<message>Test: Sending invalid SOAP message</message>
+			</echo>
+
+			<parallel>
+				<send endpoint="testWebServiceClient">
+					<message>
+						<data>
+                            <![CDATA[
+                                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+                                    <hello>Are you there?</hello>
+                                    <test>FOO-wrong</test>
+                                </sample:sampleMessage>
+                            ]]>
+						</data>
+					</message>
+				</send>
+
+				<sequential>
+					<assert exception="com.consol.citrus.exceptions.ValidationException">
+						<receive endpoint="testSoapServer">
+							<message schema-repository="sampleServiceSchemaRepository">
+								<data>
+									<![CDATA[
+										<sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+											<hello>Are you there?</hello>
+											<test>FOO-wrong</test>
+										</sample:sampleMessage>
+									]]>
+								</data>
+							</message>
+						</receive>
+					</assert>
+
+					<send endpoint="testSoapServer">
+						<message>
+							<data>
+								<![CDATA[
+									<sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+										<reply>Yes!</reply>
+										<test>BAR-wrong</test>
+									</sample:sampleMessageResponse>
+								]]>
+							</data>
+						</message>
+					</send>
+				</sequential>
+			</parallel>
+
+			<assert exception="com.consol.citrus.exceptions.ValidationException">
+				<receive endpoint="testWebServiceClient">
+					<message schema-repository="sampleServiceSchemaRepository">
+						<data>
+							<![CDATA[
+								<sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands">
+									<reply>Yes!</reply>
+									<test>BAR-wrong</test>
+								</sample:sampleMessageResponse>
+							]]>
+						</data>
+					</message>
+				</receive>
+			</assert>
+
+		</actions>
+	</testcase>
+</spring:beans>

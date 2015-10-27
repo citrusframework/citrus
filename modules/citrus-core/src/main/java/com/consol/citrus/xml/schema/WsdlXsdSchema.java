@@ -105,6 +105,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
         Types types = definition.getTypes();
         List<?> schemaTypes = types.getExtensibilityElements();
         boolean xsdSet = false;
+        Resource firstSchemaInWSDL = null;
         for (Object schemaObject : schemaTypes) {
             if (schemaObject instanceof SchemaImpl) {
                 SchemaImpl schema = (SchemaImpl) schemaObject;
@@ -119,24 +120,25 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
                     Resource schemaResource = new ByteArrayResource(bos.toByteArray());
 
                     importedSchemas.add(getTargetNamespace(schema));
+                    addImportedSchemas(schema);
+                    addIncludedSchemas(schema);
                     schemas.add(schemaResource);
 
                     if (definition.getTargetNamespace().equals(getTargetNamespace(schema)) && !xsdSet) {
                         setXsd(schemaResource);
                         xsdSet = true;
-                    }
+                    } else if(firstSchemaInWSDL == null && !xsdSet) {
+						firstSchemaInWSDL = schemaResource;
+					}
                 }
-
-                addImportedSchemas(schema);
-                addIncludedSchemas(schema);
             } else {
                 log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
             }
         }
 
-        if (!xsdSet && schemas.size() > 0) {
+        if (!xsdSet && firstSchemaInWSDL != null) {
             // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
-            setXsd(schemas.get(0));
+            setXsd(firstSchemaInWSDL);
         }
 
         for (Object imports : definition.getImports().values()) {
