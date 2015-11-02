@@ -16,6 +16,9 @@
   
   <body>
     <release version="2.4" date="03.11.2015" description="2.4 release">
+        <action dev="christophd" type="fix">
+          GITHUB-47 JSON data dictionary throws NullPointerException
+        </action>
         <action dev="christophd" type="update">
           CITRUS-27 Validation callback with TestContext
         </action>
