@@ -35,7 +35,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateExactMatchStrategy() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text", "Hello!");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
@@ -49,7 +49,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateStartsWithStrategy() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Other", "Bye!");
 
@@ -65,7 +65,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateEndsWithStrategy() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("Text", "Hello!");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
@@ -80,7 +80,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateWithVariables() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text", "${helloText}");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
@@ -96,7 +96,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateWithArrays() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":[\"Hello World!\",\"Hello Galaxy!\"],\"OtherText\":\"No changes\"}}");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text[0]", "Hello!");
         mappings.put("TestMessage.Text[1]", "Hello Universe!");
 
@@ -111,7 +111,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateWithArraysAndObjects() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Greetings\":[{\"Text\":\"Hello World!\"},{\"Text\":\"Hello Galaxy!\"}],\"OtherText\":\"No changes\"}}");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Greetings[0].Text", "Hello!");
         mappings.put("TestMessage.Greetings[1].Text", "Hello Universe!");
 
@@ -132,5 +132,19 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
 
         Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");
+    }
+
+    @Test
+    public void testTranslateWithNullValues() {
+        Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":null,\"OtherText\":null}}");
+
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("TestMessage.Text", "Hello!");
+
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":null}}");
     }
 }

@@ -85,7 +85,8 @@ public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<
                     }
                 }
             } else {
-                jsonEntry.setValue(translate((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()), jsonEntry.getValue().toString(), context));
+                jsonEntry.setValue(translate((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()),
+                                              jsonEntry.getValue() != null ? jsonEntry.getValue().toString() : null, context));
             }
         }
     }
