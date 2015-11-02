@@ -20,11 +20,11 @@
             		<data>
             			<![CDATA[
             				<ns0:HelloStandaloneRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-								<ns0:MessageId>${messageId}</ns0:MessageId>
-								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>User</ns0:User>
-								<ns0:Text>Hello WebServer</ns0:Text>
-							</ns0:HelloStandaloneRequest>
+											<ns0:MessageId>${messageId}</ns0:MessageId>
+											<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+											<ns0:User>User</ns0:User>
+											<ns0:Text>Hello WebServer</ns0:Text>
+										</ns0:HelloStandaloneRequest>
             			]]>
             		</data>
             	</message>
@@ -39,11 +39,11 @@
             		<data>
             			<![CDATA[
             				<ns0:HelloStandaloneResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-								<ns0:MessageId>${messageId}</ns0:MessageId>
-								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>WebServer</ns0:User>
-								<ns0:Text>Hello User</ns0:Text>
-							</ns0:HelloStandaloneResponse>
+											<ns0:MessageId>${messageId}</ns0:MessageId>
+											<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+											<ns0:User>WebServer</ns0:User>
+											<ns0:Text>Hello User</ns0:Text>
+										</ns0:HelloStandaloneResponse>
             			]]>
             		</data>
             	</message>

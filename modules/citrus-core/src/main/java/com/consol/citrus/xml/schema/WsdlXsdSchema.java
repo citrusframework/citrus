@@ -99,6 +99,9 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                 SchemaImpl schema = (SchemaImpl) schemaObject;
                 inheritNamespaces(schema, definition);
 
+                addImportedSchemas(schema);
+                addIncludedSchemas(schema);
+
                 if (!importedSchemas.contains(getTargetNamespace(schema))) {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     Source source = new DOMSource(schema.getElement());
@@ -114,9 +117,6 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                         targetXsd = schemaResource;
                     }
                 }
-
-                addImportedSchemas(schema);
-                addIncludedSchemas(schema);
             } else {
                 log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
             }

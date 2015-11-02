@@ -29,7 +29,7 @@
             </echo>
 
             <parallel>
-            	<ws:send endpoint="imageServiceClient" mtom-enabled="true">
+            	<ws:send endpoint="soapClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
@@ -47,7 +47,7 @@
                 </ws:send>
                                 
                 <sequential>
-                    <ws:receive endpoint="imageSoapServer">
+                    <ws:receive endpoint="soapServer">
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
@@ -64,7 +64,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send endpoint="imageSoapServer">
+                    <ws:send endpoint="soapServer">
                         <message>
                             <data>
                                 <![CDATA[
@@ -78,7 +78,7 @@
                 </sequential>
             </parallel>
             
-            <ws:receive endpoint="imageServiceClient">
+            <ws:receive endpoint="soapClient">
                 <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
@@ -95,7 +95,7 @@
             </echo>
 
             <parallel>
-            	<ws:send endpoint="imageServiceClient" mtom-enabled="true">
+            	<ws:send endpoint="soapClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
@@ -116,7 +116,7 @@
                 </ws:send>
                                 
                 <sequential>
-                    <ws:receive endpoint="imageSoapServer">
+                    <ws:receive endpoint="soapServer">
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
@@ -136,7 +136,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send endpoint="imageSoapServer">
+                    <ws:send endpoint="soapServer">
                         <message>
                             <data>
                                 <![CDATA[
@@ -150,7 +150,7 @@
                 </sequential>
             </parallel>
             
-            <ws:receive endpoint="imageServiceClient">
+            <ws:receive endpoint="soapClient">
                 <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
@@ -167,7 +167,7 @@
             </echo>
 
             <parallel>
-            	<ws:send endpoint="imageServiceClient" mtom-enabled="true">
+            	<ws:send endpoint="soapClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
@@ -188,7 +188,7 @@
                 </ws:send>
                 
                 <sequential>
-                    <ws:receive endpoint="imageSoapServer">
+                    <ws:receive endpoint="soapServer">
                         <message schema-repository="imageServiceSchemaRepository">
                             <data>
                                 <![CDATA[
@@ -202,7 +202,7 @@
                         </message>
                     </ws:receive>
                     
-                    <ws:send endpoint="imageSoapServer">
+                    <ws:send endpoint="soapServer">
                         <message>
                             <data>
                                 <![CDATA[
@@ -216,7 +216,7 @@
                 </sequential>
             </parallel>
             
-            <ws:receive endpoint="imageServiceClient">
+            <ws:receive endpoint="soapClient">
                 <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[

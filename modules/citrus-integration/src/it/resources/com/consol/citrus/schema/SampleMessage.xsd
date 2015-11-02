@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.citrusframework.org/SampleService/Message"
+           targetNamespace="http://www.citrusframework.org/SampleService/Message"
+           xmlns:types="http://www.citrusframework.org/SampleService/Types"
+           elementFormDefault="unqualified"
+           attributeFormDefault="unqualified">
+
+  <!-- Import dependency XML schema to test schema loading -->
+  <xs:import namespace="http://www.citrusframework.org/SampleService/Types" schemaLocation="SampleTypes.xsd"/>
+
+  <xs:complexType name="SampleMessageType">
+    <xs:sequence>
+      <xs:element name="command" type="xs:string"/>
+      <xs:element name="message" type="types:SampleType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="sampleRequest" type="SampleMessageType"/>
+
+</xs:schema>
