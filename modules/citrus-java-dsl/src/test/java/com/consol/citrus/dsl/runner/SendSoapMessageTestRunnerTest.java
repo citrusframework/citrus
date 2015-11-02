@@ -309,7 +309,6 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testMultipleSoapAttachmentData() {
         reset(soapClient, messageProducer);
-        expect(soapClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(soapClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -323,6 +322,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).atLeastOnce();
+        expect(soapClient.createProducer()).andReturn(messageProducer).anyTimes();
         replay(soapClient, messageProducer);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
