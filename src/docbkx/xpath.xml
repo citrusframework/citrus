@@ -32,7 +32,9 @@
     &lt;xpath expression=&quot;//User/Address[@type='office']/Street&quot; value=&quot;Companystreet 21&quot;/&gt;
     &lt;xpath expression=&quot;//User/Name&quot; value=&quot;${userName}&quot;/&gt;
     &lt;xpath expression=&quot;//User/@isAdmin&quot; value=&quot;${isAdmin}&quot;/&gt;
+    &lt;xpath expression=&quot;//User/@isAdmin&quot; value=&quot;true&quot; result-type=&quot;boolean&quot;/&gt;
     &lt;xpath expression=&quot;//*[.='search-for']&quot; value=&quot;searched-for&quot;/&gt;
+    &lt;xpath expression=&quot;count(//orderStatus[.='success'])&quot; value=&quot;3&quot; result-type=&quot;number&quot;/&gt;
   &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
 
@@ -121,6 +123,35 @@ public void receiveMessageTest() {
           XPath is much more powerful - no doubt. However the dot-notated syntax might help those of you that are not familiar with XPath.
           So the dot-notation is supported wherever XPath expressions might apply.</para>
       </tip>
+
+      <para>The Xpath expressions can evaluate to different result types. By default Citrus is operating on <emphasis>NODE</emphasis> and <emphasis>STRING</emphasis> result types so that you can validate some element value. But you can also use
+      different result types such as <emphasis>NODESET</emphasis> and <emphasis>BOOLEAN</emphasis>. See this example how that works:</para>
+
+      <para><emphasis>XML DSL</emphasis></para>
+      <programlisting>&lt;message&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;/TestRequest/Error&quot; value=&quot;false&quot; result-type=&quot;boolean&quot;/&gt;
+    &lt;xpath expression=&quot;/TestRequest/Status[.='success']&quot; value=&quot;3&quot; result-type=&quot;number&quot;/&gt;
+    &lt;xpath expression=&quot;/TestRequest/OrderType&quot; value=&quot;single,multi,multi&quot; result-type=&quot;node-set&quot;/&gt;
+  &lt;/validate&gt;
+&lt;/message&gt;</programlisting>
+
+      <para><emphasis>Java DSL designer</emphasis></para>
+      <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
+    receive("helloServiceServer")
+        .validate("boolean:/TestRequest/Error", "false")
+        .validate("number:/TestRequest/Status[.='success']", "3")
+        .validate("node-set:/TestRequest/OrderType", "single,multi,multi")
+        .header("Operation", "sayHello");
+}</programlisting>
+
+      <para>In the example above we use different expression result types. First we want to make sure nor <emphasis>/TestRequest/Error</emphasis> element is present. This can be done with a boolean result type and <emphasis>false</emphasis> value.
+      Second we want to validate the number of found elements for the expression <emphasis>/TestRequest/Status[.='success']</emphasis>. The XPath expression evaluates to a node list that results in its list size to be checked. And last not least we
+      evaluate to a <emphasis>node-set</emphasis> result type where all values in the node list will be translated to a comma delimited string value.</para>
+
+      <para>This is how you can add very powerful message element validation in XML using XPath expressions.</para>
+
     </section>
 
     <section id="xpath-extract">
@@ -151,6 +182,12 @@ public void receiveMessageTest() {
       <para>As you can see Citrus is able to extract both header and message payload content into test variables. It does not matter if you use new test variables
         or existing variables as target. The extraction will automatically create a new variable in case it does not exist. The time the variable was created
         all following test actions can access the test variables as usual. So you can reference the variable values in response messages or other test steps ahead.</para>
+
+      <tip>
+        <para>We can also use expression result types in order to manipulate the test variable outcome. In case we use a <emphasis>boolean</emphasis> result type the existence of
+        elements can be saved to variable values. The result type <emphasis>node-set</emphasis> translates a node list result to a comma separated string of all values in this node list. Simply use the expression
+        result type attributes as shown in previous sections.</para>
+      </tip>
     </section>
     
     <section id="xpath-namespace">

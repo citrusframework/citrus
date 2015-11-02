@@ -182,4 +182,54 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
+
+    @Test
+    public void testValidateMessageElementsWithNodeListResult() {
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                + "<sub-element attribute='A'>text-value</sub-element>"
+                + "<sub-element attribute='B'>other-value</sub-element>"
+                + "</element>"
+                + "</root>");
+
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
+        validationContext.setXpathExpressions(Collections.singletonMap("node-set://element/sub-element", "text-value,other-value"));
+
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
+
+    @Test
+    public void testValidateMessageElementsWithNodeListResultNoMatch() {
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                + "<sub-element attribute='A'>text-value</sub-element>"
+                + "<sub-element attribute='B'>other-value</sub-element>"
+                + "</element>"
+                + "</root>");
+
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
+
+        HashMap<String, String> expressions = new HashMap<>();
+        expressions.put("node-set://element/other-element", "");
+        expressions.put("boolean://element/other-element", "false");
+        expressions.put("boolean://element/sub-element", "true");
+        validationContext.setXpathExpressions(expressions);
+
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
+
+    @Test
+    public void testValidateMessageElementsWithNodeListCount() {
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                + "<sub-element attribute='A'>text-value</sub-element>"
+                + "<sub-element attribute='B'>text-value</sub-element>"
+                + "</element>"
+                + "</root>");
+
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
+        validationContext.setXpathExpressions(Collections.singletonMap("number:count(//element/sub-element[.='text-value'])", "2.0"));
+
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
 }

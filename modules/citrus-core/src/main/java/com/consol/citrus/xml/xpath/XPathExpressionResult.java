@@ -33,14 +33,15 @@ import javax.xml.xpath.XPathConstants;
  * @author Christoph Deppisch
  */
 public enum XPathExpressionResult {
-    NODE, STRING, BOOLEAN, NUMBER;
+    NODE, NODESET, STRING, BOOLEAN, NUMBER;
     
     /** Prefix for XPath expressions in Citrus determining the result type */
     private static final String STRING_PREFIX = "string:";
     private static final String NUMBER_PREFIX = "number:";
     private static final String NODE_PREFIX = "node:";
+    private static final String NODESET_PREFIX = "node-set:";
     private static final String BOOLEAN_PREFIX = "boolean:";
-    
+
     /**
      * Get the enumeration value from an expression string. According to the leading
      * prefix and a default result type the enumeration value is returned.
@@ -52,6 +53,8 @@ public enum XPathExpressionResult {
             return STRING;  
         } else if (value.startsWith(NODE_PREFIX)) {
             return NODE;
+        } else if (value.startsWith(NODESET_PREFIX)) {
+            return NODESET;
         } else if (value.startsWith(BOOLEAN_PREFIX)) {
             return BOOLEAN;
         } else if (value.startsWith(NUMBER_PREFIX)) {
@@ -70,6 +73,8 @@ public enum XPathExpressionResult {
             return XPathConstants.STRING;
         } else if (this.equals(NODE)) {
             return XPathConstants.NODE;
+        } else if (this.equals(NODESET)) {
+            return XPathConstants.NODESET;
         } else if (this.equals(BOOLEAN)) {
             return XPathConstants.BOOLEAN;
         } else if (this.equals(NUMBER)) {
@@ -89,6 +94,8 @@ public enum XPathExpressionResult {
             return expression.substring(STRING_PREFIX.length());  
         } else if (expression.startsWith(NODE_PREFIX)) {
             return expression.substring(NODE_PREFIX.length());
+        } else if (expression.startsWith(NODESET_PREFIX)) {
+            return expression.substring(NODESET_PREFIX.length());
         } else if (expression.startsWith(BOOLEAN_PREFIX)) {
             return expression.substring(BOOLEAN_PREFIX.length());
         } else if (expression.startsWith(NUMBER_PREFIX)) {

@@ -1002,6 +1002,52 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testReceiveMessageWithExtractVariablesFromMessageXPathNodeList() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpoint(endpoint);
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        receiveAction.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest>" +
+                  "<Message>Hello</Message>" +
+                  "<Message>ByeBye</Message>" +
+                "</TestRequest>");
+
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("node-set://TestRequest/Message", "messageVar");
+
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setXpathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
+
+        Message controlMessage = new DefaultMessage("<TestRequest>" +
+                  "<Message>Hello</Message>" +
+                  "<Message>ByeBye</Message>" +
+                "</TestRequest>");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello,ByeBye");
+
+        verify(endpoint, consumer, endpointConfiguration);
+    }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);

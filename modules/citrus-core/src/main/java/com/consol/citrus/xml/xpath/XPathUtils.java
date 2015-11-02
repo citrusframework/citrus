@@ -19,12 +19,12 @@ package com.consol.citrus.xml.xpath;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -137,6 +137,25 @@ public abstract class XPathUtils {
             } else {
                 return resultNode.getNodeValue();
             }
+        } else if (resultType.equals(XPathExpressionResult.NODESET)) {
+            NodeList resultNodeList = evaluateAsNodeList(node, xPathExpression, nsContext);
+
+            ArrayList<String> values = new ArrayList<>();
+            for (int i = 0; i < resultNodeList.getLength(); i++) {
+                Node resultNode = resultNodeList.item(i);
+
+                if (resultNode.getNodeType() == Node.ELEMENT_NODE) {
+                    if (resultNode.getFirstChild() != null) {
+                        values.add(resultNode.getFirstChild().getNodeValue());
+                    } else {
+                        values.add("");
+                    }
+                } else {
+                    values.add(resultNode.getNodeValue());
+                }
+            }
+
+            return StringUtils.arrayToCommaDelimitedString(values.toArray(new String[values.size()]));
         } else if (resultType.equals(XPathExpressionResult.STRING)){
             return evaluateAsString(node, xPathExpression, nsContext);
         } else {
@@ -159,6 +178,23 @@ public abstract class XPathUtils {
      */
     public static Node evaluateAsNode(Node node, String xPathExpression, NamespaceContext nsContext) {
         Node result = (Node) evaluateExpression(node, xPathExpression, nsContext, XPathConstants.NODE);
+
+        if (result == null) {
+            throw new CitrusRuntimeException("No result for XPath expression: '" + xPathExpression + "'");
+        }
+
+        return result;
+    }
+
+    /**
+     * Evaluate XPath expression with result type NodeList.
+     * @param node
+     * @param xPathExpression
+     * @param nsContext
+     * @return
+     */
+    public static NodeList evaluateAsNodeList(Node node, String xPathExpression, NamespaceContext nsContext) {
+        NodeList result = (NodeList) evaluateExpression(node, xPathExpression, nsContext, XPathConstants.NODESET);
 
         if (result == null) {
             throw new CitrusRuntimeException("No result for XPath expression: '" + xPathExpression + "'");
