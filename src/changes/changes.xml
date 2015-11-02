@@ -15,15 +15,12 @@
   </properties>
   
   <body>
-    <release version="2.4" date="01.11.2015" description="2.4 release">
+    <release version="2.4" date="03.11.2015" description="2.4 release">
         <action dev="christophd" type="update">
           CITRUS-27 Validation callback with TestContext
         </action>
         <action dev="christophd" type="update">
           CITRUS-26 Improved REST support
-        </action>
-        <action dev="maherm" type="add">
-          CITRUS-24 Timer Action
         </action>
         <action dev="maherm" type="add">
           CITRUS-22 Wait-Condition Action

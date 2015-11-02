@@ -21,6 +21,7 @@
   <xi:include href='actions-fail.xml'/>
   <xi:include href='actions-input.xml'/>
   <xi:include href='actions-load.xml'/>
+  <xi:include href='actions-wait.xml'/>
   <xi:include href='actions-purge-jms.xml'/>
   <xi:include href='actions-purge-channels.xml'/>
   <xi:include href='actions-purge-endpoints.xml'/>

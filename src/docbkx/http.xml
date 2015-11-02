@@ -44,7 +44,7 @@
     <section id="http-client">
         <title>HTTP REST client</title>
         
-        <para>On the client side we have a simple HTTP message client component connecting to the server. The <b>request-url</b> attribute defines the HTTP server
+        <para>On the client side we have a simple HTTP message client component connecting to the server. The <emphasis>request-url</emphasis> attribute defines the HTTP server
         endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages. Citrus as client waits for the
         response message from server. After that the response message goes through the validation process as usual. Let us see how a Citrus HTTP client component looks like:</para>
 
@@ -141,9 +141,10 @@
     &lt;http:body&gt;
       &lt;http:data&gt;
         &lt;![CDATA[
-          &lt;testRequestMessage&gt;
-            &lt;text&gt;Hello HttpServer&lt;/text&gt;
-          &lt;/testRequestMessage&gt;
+          &lt;customer&gt;
+            &lt;id&gt;citrus:randomNumber()&lt;/id&gt;
+            &lt;name&gt;testuser&lt;/name&gt;
+          &lt;/customer&gt;
         ]]&gt;
       &lt;/http:data&gt;
     &lt;/http:body&gt;
@@ -178,9 +179,9 @@
   &lt;http:body&gt;
     &lt;http:data&gt;
       &lt;![CDATA[
-        &lt;testResponseMessage&gt;
-          &lt;text&gt;Hello Citrus&lt;/text&gt;
-        &lt;/testResponseMessage&gt;
+          &lt;customerResponse&gt;
+            &lt;success&gt;true&lt;/success&gt;
+          &lt;/customerResponse&gt;
       ]]&gt;
     &lt;/http:data&gt;
   &lt;/http:body&gt;
@@ -195,19 +196,20 @@
         <programlisting lang="java">@CitrusTest
 public void httpActionTest() {
     http().client("httpClient")
-          .post()
-          .payload("&lt;testRequestMessage&gt;" +
-                    "&lt;text&gt;Hello HttpServer&lt;/text&gt;" +
-                  "&lt;/testRequestMessage&gt;")
+          .post("/customer")
+          .payload("&lt;customer&gt;" +
+                    "&lt;id&gt;citrus:randomNumber()&lt;/id&gt;" +
+                    "&lt;name&gt;testuser&lt;/name&gt;" +
+                  "&lt;/customer&gt;")
           .header("CustomHeaderId", "${custom_header_id}")
           .contentType("text/xml")
           .accept("text/xml, */*");
 
     http().client("httpClient")
           .response(HttpStatus.OK)
-          .payload("&lt;testResponseMessage&gt;" +
-                    "&lt;text&gt;Hello Citrus&lt;/text&gt;" +
-                  "&lt;/testResponseMessage&gt;")
+          .payload("&lt;customerResponse&gt;" +
+                    "&lt;success&gt;true&lt;/success&gt;" +
+                  "&lt;/customerResponse&gt;")
           .header("CustomHeaderId", "${custom_header_id}")
           .version("HTTP/1.1");
 }</programlisting>
