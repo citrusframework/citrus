@@ -18,7 +18,6 @@ package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
 import org.easymock.EasyMock;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
@@ -35,7 +34,7 @@ public class FileConditionTest {
     @Test
     public void isSatisfiedShouldSucceedWithValidFilename() throws Exception {
         FileCondition testling = new FileCondition();
-        String filePath = new ClassPathResource("citrus.variables").getFile().getAbsolutePath();
+        String filePath = "classpath:citrus.variables";
         testling.setFilePath(filePath);
 
         reset(contextMock);

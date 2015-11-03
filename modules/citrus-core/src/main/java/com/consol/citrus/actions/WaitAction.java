@@ -57,9 +57,12 @@ public class WaitAction extends AbstractTestAction {
     @Override
     public void doExecute(final TestContext context) {
         Boolean conditionSatisfied = null;
-        long startTime = System.currentTimeMillis();
-        long finishTime = startTime + getWaitTimeMs(context);
+        long timeLeft = getWaitTimeMs(context);
         long interval = getIntervalMs(context);
+
+        if (interval > timeLeft) {
+            interval = timeLeft;
+        }
 
         Callable<Boolean> callable = new Callable<Boolean>() {
             @Override
@@ -68,20 +71,18 @@ public class WaitAction extends AbstractTestAction {
             }
         };
 
-        while (finishTime > System.currentTimeMillis()) {
+        while (timeLeft > 0) {
+            timeLeft -= interval;
+
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Waiting for condition %s", condition.getName()));
             }
 
-            long lastCheckStartTime = System.currentTimeMillis();
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<Boolean> future = executor.submit(callable);
+            long checkStartTime = System.currentTimeMillis();
             try {
-                long timeout = interval;
-                if (lastCheckStartTime + timeout > finishTime) {
-                    timeout = finishTime - lastCheckStartTime;
-                }
-                conditionSatisfied = future.get(timeout, TimeUnit.MILLISECONDS);
+                conditionSatisfied = future.get(interval, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
                 log.debug(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
             }
@@ -92,12 +93,8 @@ public class WaitAction extends AbstractTestAction {
                 return;
             }
 
-            long lastCheckEndTime = System.currentTimeMillis();
-            long sleepTime = lastCheckStartTime + interval - lastCheckEndTime;
+            long sleepTime = interval - (System.currentTimeMillis() - checkStartTime);
             if (sleepTime > 0) {
-                if(lastCheckEndTime + sleepTime > finishTime) {
-                    sleepTime = finishTime - lastCheckEndTime;
-                }
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {

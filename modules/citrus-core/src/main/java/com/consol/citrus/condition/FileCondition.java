@@ -17,10 +17,9 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 /**
  * Tests for the presence of a file and returns true if the file exists
@@ -45,12 +44,11 @@ public class FileCondition extends AbstractCondition {
 
     @Override
     public boolean isSatisfied(TestContext context) {
-        String path = context.replaceDynamicContentInString(filePath);
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Checking file path '%s'", path));
+            log.debug(String.format("Checking file path '%s'", filePath));
         }
 
-        return new File(path).exists();
+        return FileUtils.getFileResource(filePath, context).exists();
     }
 
     @Override
