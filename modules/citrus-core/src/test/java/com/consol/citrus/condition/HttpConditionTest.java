@@ -21,6 +21,9 @@ import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import static org.easymock.EasyMock.*;
 
 /**
@@ -30,42 +33,65 @@ import static org.easymock.EasyMock.*;
 public class HttpConditionTest {
 
     private TestContext context = EasyMock.createMock(TestContext.class);
+    private HttpURLConnection connection = EasyMock.createMock(HttpURLConnection.class);
 
-    @Test(enabled = false)
-    // TODO Easymock cannot mock final classes (URL etc.) -> enable/rewrite test when mockito introduced
+    @Test
     public void isSatisfiedShouldSucceedWithValidUrl() throws Exception {
-        String url = "http://www.google.com:80";
-        String timeoutSeconds = "5";
+        String url = "http://www.citrusframework.org";
+        String timeout = "3000";
         String httpResponseCode = "200";
 
-        HttpCondition testling = new HttpCondition();
+        reset(connection);
+        connection.setConnectTimeout(3000);
+        expectLastCall().once();
+
+        connection.setRequestMethod("HEAD");
+        expectLastCall().once();
+
+        expect(connection.getResponseCode()).andReturn(200).once();
+
+        connection.disconnect();
+        expectLastCall().once();
+        replay(connection);
+
+        HttpCondition testling = new HttpCondition() {
+            @Override
+            protected HttpURLConnection openConnection(URL url) {
+                Assert.assertEquals(url.toExternalForm(), "http://www.citrusframework.org");
+
+                return connection;
+            }
+        };
+
         testling.setUrl(url);
-        testling.setTimeoutSeconds(timeoutSeconds);
+        testling.setTimeout(timeout);
         testling.setHttpResponseCode(httpResponseCode);
 
         reset(context);
         expect(context.resolveDynamicValue(url)).andReturn(url).anyTimes();
         expect(context.resolveDynamicValue(httpResponseCode)).andReturn(httpResponseCode).anyTimes();
-        expect(context.resolveDynamicValue(timeoutSeconds)).andReturn(timeoutSeconds).anyTimes();
+        expect(context.resolveDynamicValue(timeout)).andReturn(timeout).anyTimes();
         replay(context);
 
         Assert.assertTrue(testling.isSatisfied(context));
+
+        verify(connection);
     }
 
     @Test
     public void isSatisfiedShouldFailDueToInvalidUrl() throws Exception {
         String url = "http://127.0.0.1:13333/some/unknown/path";
         String httpResponseCode = "200";
-        String timeoutSeconds = "1";
+        String timeout = "1000";
         HttpCondition testling = new HttpCondition();
         testling.setUrl(url);
         testling.setHttpResponseCode(httpResponseCode);
-        testling.setTimeoutSeconds(timeoutSeconds);
+        testling.setTimeout(timeout);
 
         reset(context);
         expect(context.resolveDynamicValue(url)).andReturn(url).anyTimes();
         expect(context.resolveDynamicValue(httpResponseCode)).andReturn(httpResponseCode).anyTimes();
-        expect(context.resolveDynamicValue(timeoutSeconds)).andReturn(timeoutSeconds).anyTimes();
+        expect(context.resolveDynamicValue(timeout)).andReturn(timeout).anyTimes();
         replay(context);
 
         Assert.assertFalse(testling.isSatisfied(context));

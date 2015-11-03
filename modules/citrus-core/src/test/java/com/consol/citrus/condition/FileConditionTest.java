@@ -18,12 +18,12 @@ package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
 import org.easymock.EasyMock;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
-import java.io.File;
-
-import static org.testng.Assert.*;
 import static org.easymock.EasyMock.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Martin Maher
@@ -35,26 +35,30 @@ public class FileConditionTest {
     @Test
     public void isSatisfiedShouldSucceedWithValidFilename() throws Exception {
         FileCondition testling = new FileCondition();
-        String filename = File.createTempFile("somefile", ".tmp").getAbsolutePath();
-        testling.setFilename(filename);
+        String filePath = new ClassPathResource("citrus.variables").getFile().getAbsolutePath();
+        testling.setFilePath(filePath);
 
         reset(contextMock);
-        expect(contextMock.resolveDynamicValue(filename)).andReturn(filename).anyTimes();
+        expect(contextMock.replaceDynamicContentInString(filePath)).andReturn(filePath).anyTimes();
         replay(contextMock);
 
         assertTrue(testling.isSatisfied(contextMock));
+
+        verify(contextMock);
     }
 
     @Test
     public void isSatisfiedShouldFailDueToInvalidFilename() throws Exception {
         FileCondition testling = new FileCondition();
-        String filename = "SomeMissingFile.xyz";
-        testling.setFilename(filename);
+        String filePath = "SomeMissingFile.xyz";
+        testling.setFilePath(filePath);
 
         reset(contextMock);
-        expect(contextMock.resolveDynamicValue(filename)).andReturn(filename).anyTimes();
+        expect(contextMock.replaceDynamicContentInString(filePath)).andReturn(filePath).anyTimes();
         replay(contextMock);
 
         assertFalse(testling.isSatisfied(contextMock));
+
+        verify(contextMock);
     }
 }

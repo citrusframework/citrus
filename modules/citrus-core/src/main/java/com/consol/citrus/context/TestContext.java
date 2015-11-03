@@ -251,7 +251,7 @@ public class TestContext {
     }
     
     /**
-     * Checks wether the given expression is a variable or function and resolves the value
+     * Checks weather the given expression is a variable or function and resolves the value
      * accordingly
      * @param expression the expression to resolve
      * @return the resolved expression value

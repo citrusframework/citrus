@@ -38,16 +38,15 @@ import org.w3c.dom.Element;
  */
 public class WaitActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see BeanDefinitionParser#parse(Element, ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(WaitAction.class);
 
         DescriptionElementParser.doParse(element, builder);
 
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("time"), "waitForSeconds");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("testInterval"), "testIntervalSeconds");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("seconds"), "seconds");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("milliseconds"), "milliseconds");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("interval"), "interval");
 
         Element conditionElement = DOMUtil.getFirstChildElement(element);
         if (conditionElement != null && conditionElement.getTagName().equals("description")) {
@@ -71,23 +70,40 @@ public class WaitActionParser implements BeanDefinitionParser {
         return builder.getBeanDefinition();
     }
 
+    /**
+     * Parse Http request condition.
+     * @param element
+     * @return
+     */
     private Condition parseHttpCondition(Element element) {
         HttpCondition condition = new HttpCondition();
         condition.setUrl(element.getAttribute("url"));
-        String statusCode = element.getAttribute("statusCode");
+
+        String method = element.getAttribute("method");
+        if (StringUtils.hasText(method)) {
+            condition.setMethod(method);
+        }
+
+        String statusCode = element.getAttribute("status");
         if (StringUtils.hasText(statusCode)) {
             condition.setHttpResponseCode(statusCode);
         }
+
         String timeout = element.getAttribute("timeout");
         if (StringUtils.hasText(timeout)) {
-            condition.setTimeoutSeconds(timeout);
+            condition.setTimeout(timeout);
         }
         return condition;
     }
 
+    /**
+     * Parse file existence condition.
+     * @param element
+     * @return
+     */
     private Condition parseFileCondition(Element element) {
         FileCondition condition = new FileCondition();
-        condition.setFilename(element.getAttribute("path"));
+        condition.setFilePath(element.getAttribute("path"));
         return condition;
     }
 }

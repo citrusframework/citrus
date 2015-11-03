@@ -17,6 +17,8 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -26,47 +28,46 @@ import java.io.File;
  * @author Martin Maher
  * @since 2.4
  */
-public class FileCondition implements Condition {
+public class FileCondition extends AbstractCondition {
 
-    private String filename;
+    /** File path to check for existence */
+    private String filePath;
 
-    public String getFilename() {
-        return filename;
-    }
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(FileCondition.class);
 
-    private File getFile(TestContext context) {
-        return new File(context.resolveDynamicValue(filename));
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
+    /**
+     * Default constructor.
+     */
+    public FileCondition() {
+        super("file-check");
     }
 
     @Override
     public boolean isSatisfied(TestContext context) {
-        return getFile(context).isFile();
+        String path = context.replaceDynamicContentInString(filePath);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Checking file path '%s'", path));
+        }
+
+        return new File(path).exists();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileCondition condition = (FileCondition) o;
-
-        return !(filename != null ? !filename.equals(condition.filename) : condition.filename != null);
-
+    public String getSuccessMessage(TestContext context) {
+        return String.format("File condition success - file '%s' does exist", context.replaceDynamicContentInString(filePath));
     }
 
     @Override
-    public int hashCode() {
-        return filename != null ? filename.hashCode() : 0;
+    public String getErrorMessage(TestContext context) {
+        return String.format("Failed to check file condition - file '%s' does not exist", context.replaceDynamicContentInString(filePath));
     }
 
-    @Override
-    public String toString() {
-        return "FileCondition{" +
-                "filename='" + filename + '\'' +
-                '}';
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

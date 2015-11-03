@@ -21,6 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.*;
 
@@ -34,25 +35,17 @@ public class WaitAction extends AbstractTestAction {
     /** Logger */
     private static final Logger log = LoggerFactory.getLogger(WaitAction.class);
 
-    private static final int SEC_IN_MILLISEC = 1000;
-
-    public final static String DEFAULT_WAIT_TIME = "5";
-    public final static String DEFAULT_INTERVAL = "1";
-
-    /**
-     * Condition to be met
-     */
+    /** Condition to be met */
     private Condition condition;
 
-    /**
-     * The total time to wait in seconds, for the condition to be met before failing
-     */
-    private String waitForSeconds = DEFAULT_WAIT_TIME;
+    /** The total time to wait in seconds, for the condition to be met before failing */
+    private String seconds;
 
-    /**
-     * The time interval in seconds <<b>between</b> each test of the condition
-     */
-    private String testIntervalSeconds = DEFAULT_INTERVAL;
+    /** The total time to wait in milliseconds, for the condition to be met before failing */
+    private String milliseconds = "5000";
+
+    /** The time interval in milliseconds between each test of the condition */
+    private String interval = "1000";
 
     /**
      * Default constructor.
@@ -65,8 +58,8 @@ public class WaitAction extends AbstractTestAction {
     public void doExecute(final TestContext context) {
         Boolean conditionSatisfied = null;
         long startTime = System.currentTimeMillis();
-        long finishTime = startTime + getWaitForMiliseconds(context);
-        long interval = getTestIntervalMilieconds(context);
+        long finishTime = startTime + getWaitTimeMs(context);
+        long interval = getIntervalMs(context);
 
         Callable<Boolean> callable = new Callable<Boolean>() {
             @Override
@@ -76,7 +69,10 @@ public class WaitAction extends AbstractTestAction {
         };
 
         while (finishTime > System.currentTimeMillis()) {
-            log.info(String.format("Testing condition %s", condition));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Waiting for condition %s", condition.getName()));
+            }
+
             long lastCheckStartTime = System.currentTimeMillis();
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<Boolean> future = executor.submit(callable);
@@ -87,12 +83,12 @@ public class WaitAction extends AbstractTestAction {
                 }
                 conditionSatisfied = future.get(timeout, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
-                log.debug(String.format("Condition check ended with '%s'", e.getClass().getSimpleName()));
+                log.debug(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
             }
             executor.shutdown();
 
             if (Boolean.TRUE.equals(conditionSatisfied)) {
-                log.info(String.format("Condition %s satisfied", condition));
+                log.info(String.format(condition.getSuccessMessage(context)));
                 return;
             }
 
@@ -110,23 +106,45 @@ public class WaitAction extends AbstractTestAction {
             }
         }
 
-        throw new CitrusRuntimeException(String.format("Condition %s NOT satisfied", condition));
+        throw new CitrusRuntimeException(condition.getErrorMessage(context));
     }
 
-    private long getWaitForMiliseconds(TestContext context) {
-        return Long.parseLong(context.resolveDynamicValue(waitForSeconds)) * SEC_IN_MILLISEC;
+    /**
+     * Gets total wait time in milliseconds. Either uses second time value or default milliseconds.
+     * @param context
+     * @return
+     */
+    private long getWaitTimeMs(TestContext context) {
+        if (StringUtils.hasText(seconds)) {
+            return Long.valueOf(context.replaceDynamicContentInString(seconds)) * 1000;
+        } else {
+            return Long.valueOf(context.replaceDynamicContentInString(milliseconds));
+        }
     }
 
-    private long getTestIntervalMilieconds(TestContext context) {
-        return Long.parseLong(context.resolveDynamicValue(testIntervalSeconds)) * SEC_IN_MILLISEC;
+    /**
+     * Gets the time interval for the condition check in milliseconds.
+     * @param context
+     * @return
+     */
+    private long getIntervalMs(TestContext context) {
+        return Long.valueOf(context.replaceDynamicContentInString(interval));
     }
 
-    public String getWaitForSeconds() {
-        return waitForSeconds;
+    public String getSeconds() {
+        return seconds;
     }
 
-    public void setWaitForSeconds(String waitForSeconds) {
-        this.waitForSeconds = waitForSeconds;
+    public void setSeconds(String seconds) {
+        this.seconds = seconds;
+    }
+
+    public String getMilliseconds() {
+        return milliseconds;
+    }
+
+    public void setMilliseconds(String milliseconds) {
+        this.milliseconds = milliseconds;
     }
 
     public Condition getCondition() {
@@ -137,11 +155,11 @@ public class WaitAction extends AbstractTestAction {
         this.condition = condition;
     }
 
-    public String getTestIntervalSeconds() {
-        return testIntervalSeconds;
+    public String getInterval() {
+        return interval;
     }
 
-    public void setTestIntervalSeconds(String testIntervalSeconds) {
-        this.testIntervalSeconds = testIntervalSeconds;
+    public void setInterval(String interval) {
+        this.interval = interval;
     }
 }

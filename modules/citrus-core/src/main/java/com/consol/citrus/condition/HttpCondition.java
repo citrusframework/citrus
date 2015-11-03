@@ -17,11 +17,12 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 
 /**
  * Tests if a HTTP Endpoint is reachable. The test is successful if the endpoint responds with the expected response
@@ -30,43 +31,116 @@ import java.net.URL;
  * @author Martin Maher
  * @since 2.4
  */
-public class HttpCondition implements Condition {
-    protected static final int SEC_IN_MILLISEC = 1000;
-    public static final String DEFAULT_TIMEOUT = "1";
-    public static final String DEFAULT_RESPONSE_CODE = "200"; // HTTP Success Code
+public class HttpCondition extends AbstractCondition {
 
+    /** Http request URL to invoke for the condition check */
     private String url;
-    private String timeoutSeconds = DEFAULT_TIMEOUT;
-    private String httpResponseCode = DEFAULT_RESPONSE_CODE;
+    private String timeout = "1000";
+
+    /** Expected response code */
+    private String httpResponseCode = "200";
+
+    /** Request method */
+    private String method = "HEAD";
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(HttpCondition.class);
+
+    /**
+     * Default constructor.
+     */
+    public HttpCondition() {
+        super("http-check");
+    }
 
     @Override
     public boolean isSatisfied(TestContext context) {
-        return getHttpResponseCode(context) == testUrl(context);
+        return getHttpResponseCode(context) == invokeUrl(context);
     }
 
-    private int testUrl(TestContext context) {
+    @Override
+    public String getSuccessMessage(TestContext context) {
+        return String.format("Http condition success - request url '%s' did return expected status '%s'", getUrl(context), getHttpResponseCode(context));
+    }
+
+    @Override
+    public String getErrorMessage(TestContext context) {
+        return String.format("Failed to check Http condition - request url '%s' did not return expected status '%s'", getUrl(context), getHttpResponseCode(context));
+    }
+
+    /**
+     * Invokes Http request URL and returns response code.
+     * @param context
+     * @return
+     */
+    private int invokeUrl(TestContext context) {
+        URL url = getUrl(context);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Probing Http request url '%s'", url.toExternalForm()));
+        }
+
         int responseCode = -1;
 
+        HttpURLConnection httpURLConnection = null;
         try {
-            URL testUrl = getUrl(context);
-            HttpURLConnection huc = (HttpURLConnection) testUrl.openConnection();
-            huc.setConnectTimeout(getTimeoutMilliseconds(context));
-            huc.setRequestMethod("HEAD");
-            responseCode = huc.getResponseCode();
-            huc.disconnect();
+            httpURLConnection = openConnection(url);
+            httpURLConnection.setConnectTimeout(getTimeout(context));
+            httpURLConnection.setRequestMethod(method);
+
+            responseCode = httpURLConnection.getResponseCode();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn(String.format("Could not access Http url '%s' - %s", url.toExternalForm(), e.getMessage()));
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
         }
 
         return responseCode;
     }
 
-    public String getUrl() {
-        return url;
+    /**
+     * Open Http url connection.
+     * @param url
+     * @return
+     */
+    protected HttpURLConnection openConnection(URL url) throws IOException {
+        return (HttpURLConnection) url.openConnection();
     }
 
-    protected URL getUrl(TestContext context) throws MalformedURLException {
-        URL url = new URL(context.resolveDynamicValue(this.url));
+
+    /**
+     * Gets the request url with test variable support.
+     * @param context
+     * @return
+     */
+    private URL getUrl(TestContext context) {
+        try {
+            return new URL(context.resolveDynamicValue(this.url));
+        } catch (MalformedURLException e) {
+            throw new CitrusRuntimeException("Invalid request url", e);
+        }
+    }
+
+    /**
+     * Gets the timeout in milliseconds.
+     * @param context
+     * @return
+     */
+    private int getTimeout(TestContext context) {
+        return Integer.parseInt(context.resolveDynamicValue(timeout));
+    }
+
+    /**
+     * Gets the expected Http response code.
+     * @param context
+     * @return
+     */
+    private int getHttpResponseCode(TestContext context) {
+        return Integer.parseInt(context.resolveDynamicValue(httpResponseCode));
+    }
+
+    public String getUrl() {
         return url;
     }
 
@@ -74,58 +148,27 @@ public class HttpCondition implements Condition {
         this.url = url;
     }
 
-    public String getTimeoutSeconds() {
-        return timeoutSeconds;
+    public String getMethod() {
+        return method;
     }
 
-    private int getTimeoutMilliseconds(TestContext context) {
-        return Integer.parseInt(context.resolveDynamicValue(timeoutSeconds)) * SEC_IN_MILLISEC;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
-    public void setTimeoutSeconds(String timeoutSeconds) {
-        this.timeoutSeconds = timeoutSeconds;
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
     }
 
     public String getHttpResponseCode() {
         return httpResponseCode;
     }
 
-    private int getHttpResponseCode(TestContext context) {
-        return Integer.parseInt(context.resolveDynamicValue(httpResponseCode));
-    }
-
     public void setHttpResponseCode(String httpResponseCode) {
         this.httpResponseCode = httpResponseCode;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        HttpCondition that = (HttpCondition) o;
-
-        if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (timeoutSeconds != null ? !timeoutSeconds.equals(that.timeoutSeconds) : that.timeoutSeconds != null)
-            return false;
-        return !(httpResponseCode != null ? !httpResponseCode.equals(that.httpResponseCode) : that.httpResponseCode != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = url != null ? url.hashCode() : 0;
-        result = 31 * result + (timeoutSeconds != null ? timeoutSeconds.hashCode() : 0);
-        result = 31 * result + (httpResponseCode != null ? httpResponseCode.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "HttpCondition{" +
-                "url='" + url + '\'' +
-                ", timeoutSeconds='" + timeoutSeconds + '\'' +
-                ", httpResponseCode='" + httpResponseCode + '\'' +
-                '}';
     }
 }

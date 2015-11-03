@@ -20,6 +20,7 @@ import com.consol.citrus.condition.Condition;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
@@ -37,14 +38,16 @@ public class WaitActionTest {
 
     @Test
     public void shouldSatisfyWaitConditionOnFirstAttempt() throws Exception {
-        String waitForSeconds = "10";
-        String testIntervalSeconds = "1";
+        String seconds = "10";
+        String interval = "1000";
 
-        WaitAction testling = getWaitAction(waitForSeconds, testIntervalSeconds);
+        WaitAction testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(waitForSeconds, testIntervalSeconds);
+        prepareContextMock(seconds, interval);
+        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
         expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.TRUE).once();
+        expect(conditionMock.getSuccessMessage(contextMock)).andReturn("Condition success!").once();
         replay(contextMock, conditionMock);
 
         startTimer();
@@ -57,15 +60,17 @@ public class WaitActionTest {
 
     @Test
     public void shouldSatisfyWaitConditionOnLastAttempt() throws Exception {
-        String waitForSeconds = "4";
-        String testIntervalSeconds = "1";
+        String seconds = "4";
+        String interval = "1000";
 
-        WaitAction testling = getWaitAction(waitForSeconds, testIntervalSeconds);
+        WaitAction testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(waitForSeconds, testIntervalSeconds);
+        prepareContextMock(seconds, interval);
+        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
         expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.FALSE).times(3);
         expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.TRUE).once();
+        expect(conditionMock.getSuccessMessage(contextMock)).andReturn("Condition success!").once();
         replay(contextMock, conditionMock);
 
         startTimer();
@@ -73,19 +78,21 @@ public class WaitActionTest {
         stopTimer();
 
         verify(contextMock, conditionMock);
-        assertConditionExecutedWithinSeconds(waitForSeconds);
+        assertConditionExecutedWithinSeconds(seconds);
     }
 
     @Test
     public void shouldSatisfyWaitConditionWithBiggerIntervalThanTimeout() throws Exception {
-        String waitForSeconds = "1";
-        String testIntervalSeconds = "10";
+        String seconds = "1";
+        String interval = "10000";
 
-        WaitAction testling = getWaitAction(waitForSeconds, testIntervalSeconds);
+        WaitAction testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(waitForSeconds, testIntervalSeconds);
+        prepareContextMock(seconds, interval);
+        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
         expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.TRUE).once();
+        expect(conditionMock.getSuccessMessage(contextMock)).andReturn("Condition success!").once();
         replay(contextMock, conditionMock);
 
         startTimer();
@@ -93,19 +100,21 @@ public class WaitActionTest {
         stopTimer();
 
         verify(contextMock, conditionMock);
-        assertConditionExecutedWithinSeconds(waitForSeconds);
+        assertConditionExecutedWithinSeconds(seconds);
     }
 
     @Test
     public void shouldNotSatisfyWaitCondition() throws Exception {
-        String waitForSeconds = "3";
-        String testIntervalSeconds = "1";
+        String seconds = "3";
+        String interval = "1000";
 
-        WaitAction testling = getWaitAction(waitForSeconds, testIntervalSeconds);
+        WaitAction testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(waitForSeconds, testIntervalSeconds);
+        prepareContextMock(seconds, interval);
+        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
         expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.FALSE).times(3);
+        expect(conditionMock.getErrorMessage(contextMock)).andReturn("Condition failed!").once();
         replay(contextMock, conditionMock);
 
         startTimer();
@@ -118,20 +127,22 @@ public class WaitActionTest {
         stopTimer();
 
         verify(contextMock, conditionMock);
-        assertConditionExecutedWithinSeconds(waitForSeconds);
+        assertConditionExecutedWithinSeconds(seconds);
     }
 
 
     @Test
     public void shouldNotSatisfyWaitConditionWithBiggerIntervalThanTimeout() throws Exception {
-        String waitForSeconds = "1";
-        String testIntervalSeconds = "10";
+        String seconds = "1";
+        String interval = "10000";
 
-        WaitAction testling = getWaitAction(waitForSeconds, testIntervalSeconds);
+        WaitAction testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(waitForSeconds, testIntervalSeconds);
+        prepareContextMock(seconds, interval);
+        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
         expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.FALSE).once();
+        expect(conditionMock.getErrorMessage(contextMock)).andReturn("Condition failed!").once();
         replay(contextMock, conditionMock);
 
         startTimer();
@@ -144,27 +155,30 @@ public class WaitActionTest {
         stopTimer();
 
         verify(contextMock, conditionMock);
-        assertConditionExecutedWithinSeconds(waitForSeconds);
+        assertConditionExecutedWithinSeconds(seconds);
     }
 
-    private void prepareContextMock(String waitForSeconds, String testIntervalSeconds) {
-        expect(contextMock.resolveDynamicValue(waitForSeconds)).andReturn(waitForSeconds).atLeastOnce();
-        expect(contextMock.resolveDynamicValue(testIntervalSeconds)).andReturn(testIntervalSeconds).atLeastOnce();
+    private void prepareContextMock(String waitTime, String interval) {
+        expect(contextMock.replaceDynamicContentInString(waitTime)).andReturn(waitTime).atLeastOnce();
+        expect(contextMock.replaceDynamicContentInString(interval)).andReturn(interval).atLeastOnce();
     }
 
-    private WaitAction getWaitAction(String waitForSeconds, String testIntervalSeconds) {
+    private WaitAction getWaitAction(String waitTimeSeconds, String interval) {
         WaitAction testling = new WaitAction();
         testling.setCondition(conditionMock);
-        testling.setWaitForSeconds(waitForSeconds);
-        testling.setTestIntervalSeconds(testIntervalSeconds);
+
+        if (StringUtils.hasText(waitTimeSeconds)) {
+            testling.setSeconds(waitTimeSeconds);
+        }
+
+        testling.setInterval(interval);
         return testling;
     }
 
     private void assertConditionExecutedWithinSeconds(String seconds) {
         final long tolerance = 500L; // allow some tolerance in check
-        final long secInMillisec = 1000L;
         final long totalExecutionTime = endTime - startTime;
-        long permittedTime = (Integer.parseInt(seconds) * secInMillisec) + tolerance;
+        long permittedTime = (Integer.parseInt(seconds) * 1000L) + tolerance;
         if (totalExecutionTime > permittedTime) {
             fail(String.format("Expected conditional check to execute in %s milliseconds but took %s milliseconds", permittedTime, totalExecutionTime));
         }

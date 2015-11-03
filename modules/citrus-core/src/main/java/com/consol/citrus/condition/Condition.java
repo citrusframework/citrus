@@ -25,6 +25,13 @@ import com.consol.citrus.context.TestContext;
  * @since 2.4
  */
 public interface Condition {
+
+    /**
+     * Gets the condition name.
+     * @return
+     */
+    String getName();
+
     /**
      * Tests the condition returning true if it is satisfied.
      *
@@ -32,4 +39,18 @@ public interface Condition {
      * @return true when satisfied otherwise false
      */
     boolean isSatisfied(TestContext context);
+
+    /**
+     * Construct proper success message for this condition.
+     * @param context the citrus test context
+     * @return
+     */
+    String getSuccessMessage(TestContext context);
+
+    /**
+     * Construct proper error message for this condition.
+     * @param context the citrus test context
+     * @return
+     */
+    String getErrorMessage(TestContext context);
 }

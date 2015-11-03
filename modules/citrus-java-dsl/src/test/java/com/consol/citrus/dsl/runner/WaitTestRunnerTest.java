@@ -39,12 +39,14 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testWaitBuilder() {
         reset(condition);
+        expect(condition.getName()).andReturn("check").atLeastOnce();
         expect(condition.isSatisfied(anyObject(TestContext.class))).andReturn(Boolean.FALSE).once();
         expect(condition.isSatisfied(anyObject(TestContext.class))).andReturn(Boolean.TRUE).once();
+        expect(condition.getSuccessMessage(anyObject(TestContext.class))).andReturn("Condition success!").once();
         replay(condition);
 
-        final String waitTime = "3";
-        final String waitInterval = "1";
+        final String seconds = "3";
+        final String interval = "500";
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -52,7 +54,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
                 waitFor(new BuilderSupport<WaitActionBuilder>() {
                     @Override
                     public void configure(WaitActionBuilder builder) {
-                        builder.time(waitTime).interval(waitInterval).condition(condition);
+                        builder.condition(condition).seconds(seconds).interval(interval);
                     }
                 });
             }
@@ -64,8 +66,8 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
 
         WaitAction action = (WaitAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
-        Assert.assertEquals(action.getWaitForSeconds(), waitTime);
-        Assert.assertEquals(action.getTestIntervalSeconds(), waitInterval);
+        Assert.assertEquals(action.getSeconds(), seconds);
+        Assert.assertEquals(action.getInterval(), interval);
         Assert.assertEquals(action.getCondition(), condition);
 
         verify(condition);

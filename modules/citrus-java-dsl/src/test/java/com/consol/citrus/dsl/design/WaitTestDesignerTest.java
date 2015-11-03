@@ -30,14 +30,14 @@ import org.testng.annotations.Test;
 public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testWaitBuilder() {
-        final String waitTime = "3";
-        final String waitInterval = "1";
+        final String seconds = "3";
+        final String interval = "1500";
         final String url = "http://some.path/";
 
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                waitFor().time(waitTime).interval(waitInterval).httpCondition(url);
+                waitFor().http(url).seconds(seconds).interval(interval);
             }
         };
         builder.configure();
@@ -48,13 +48,13 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
         WaitAction action = (WaitAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
-        Assert.assertEquals(action.getWaitForSeconds(), waitTime);
-        Assert.assertEquals(action.getTestIntervalSeconds(), waitInterval);
+        Assert.assertEquals(action.getSeconds(), seconds);
+        Assert.assertEquals(action.getInterval(), interval);
         Assert.assertEquals(action.getCondition().getClass(), HttpCondition.class);
         HttpCondition condition = (HttpCondition) action.getCondition();
         Assert.assertEquals(condition.getUrl(), url);
-        Assert.assertEquals(condition.getHttpResponseCode(), HttpCondition.DEFAULT_RESPONSE_CODE);
-        Assert.assertEquals(condition.getTimeoutSeconds(), HttpCondition.DEFAULT_TIMEOUT);
+        Assert.assertEquals(condition.getHttpResponseCode(), "200");
+        Assert.assertEquals(condition.getTimeout(), "1000");
     }
 
 }

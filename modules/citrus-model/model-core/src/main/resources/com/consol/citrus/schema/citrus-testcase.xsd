@@ -720,7 +720,8 @@
                 <xs:element name="http" minOccurs="0">
                     <xs:complexType>
                         <xs:attribute name="url" type="xs:string" />
-                        <xs:attribute name="statusCode" type="xs:string" use="optional" />
+                        <xs:attribute name="method" type="xs:string" use="optional" />
+                        <xs:attribute name="status" type="xs:string" use="optional" />
                         <xs:attribute name="timeout" type="xs:string" use="optional" />
                     </xs:complexType>
                 </xs:element>
@@ -731,8 +732,9 @@
                 </xs:element>
             </xs:choice>
         </xs:sequence>
-        <xs:attribute name="time" type="xs:string" use="optional" />
-        <xs:attribute name="testInterval" type="xs:string" use="optional" />
+        <xs:attribute name="seconds" type="xs:string" use="optional" />
+        <xs:attribute name="milliseconds" type="xs:string" use="optional" />
+        <xs:attribute name="interval" type="xs:string" use="optional" />
     </xs:complexType>
 
     <xs:complexType name="ScriptDefinitionType">

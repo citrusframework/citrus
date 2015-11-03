@@ -17,9 +17,9 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.actions.WaitAction;
-import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
-import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.condition.*;
+
+import java.io.File;
 
 /**
  * Wait action pauses test execution until a condition is satisfied. If the condition is not satisfied after the
@@ -46,12 +46,42 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	}
 
 	/**
-	 * The total length of time to wait on the condition to be satisfied
-	 * @param waitTime
+	 * The total length of seconds to wait on the condition to be satisfied
+	 * @param seconds
 	 * @return
 	 */
-	public WaitActionBuilder time(String waitTime) {
-		action.setWaitForSeconds(waitTime);
+	public WaitActionBuilder seconds(String seconds) {
+		action.setSeconds(seconds);
+		return this;
+	}
+
+	/**
+	 * The total length of seconds to wait on the condition to be satisfied
+	 * @param seconds
+	 * @return
+	 */
+	public WaitActionBuilder seconds(Long seconds) {
+		action.setSeconds(seconds.toString());
+		return this;
+	}
+
+	/**
+	 * The total length of milliseconds to wait on the condition to be satisfied
+	 * @param milliseconds
+	 * @return
+	 */
+	public WaitActionBuilder ms(String milliseconds) {
+		action.setMilliseconds(milliseconds);
+		return this;
+	}
+
+	/**
+	 * The total length of milliseconds to wait on the condition to be satisfied
+	 * @param milliseconds
+	 * @return
+	 */
+	public WaitActionBuilder ms(Long milliseconds) {
+		action.setMilliseconds(milliseconds.toString());
 		return this;
 	}
 
@@ -61,7 +91,7 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	 * @return
 	 */
 	public WaitActionBuilder interval(String interval) {
-		action.setTestIntervalSeconds(interval);
+		action.setInterval(interval);
 		return this;
 	}
 
@@ -76,11 +106,11 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	}
 
 	/**
-	 * The HTTP Condition to wait for during execution.
+	 * The HTTP condition to wait for during execution.
 	 * @param url
 	 * @return
 	 */
-	public WaitActionBuilder httpCondition(String url) {
+	public WaitActionBuilder http(String url) {
 		HttpCondition condition = new HttpCondition();
 		action.setCondition(condition);
 		condition.setUrl(url);
@@ -88,14 +118,26 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	}
 
 	/**
-	 * The File Condition to wait for during execution.
+	 * The file condition to wait for during execution.
 	 * @param path
 	 * @return
 	 */
-	public WaitActionBuilder fileCondition(String path) {
+	public WaitActionBuilder file(String path) {
 		FileCondition condition = new FileCondition();
 		action.setCondition(condition);
-		condition.setFilename(path);
+		condition.setFilePath(path);
+		return this;
+	}
+
+	/**
+	 * The file condition to wait for during execution.
+	 * @param file
+	 * @return
+	 */
+	public WaitActionBuilder file(File file) {
+		FileCondition condition = new FileCondition();
+		action.setCondition(condition);
+		condition.setFilePath(file.getAbsolutePath());
 		return this;
 	}
 }

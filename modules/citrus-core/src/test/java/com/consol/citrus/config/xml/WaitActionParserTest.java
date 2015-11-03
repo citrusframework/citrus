@@ -30,6 +30,11 @@ import org.testng.annotations.Test;
  */
 public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
 
+    private static final String DEFAULT_WAIT_TIME = "5000";
+    private static final String DEFAULT_INTERVAL = "1000";
+    private static final String DEFAULT_TIMEOUT = "1000";
+    private static final String DEFAULT_RESPONSE_CODE = "200";
+
     @Test
     public void testWaitActionParser() {
         String httpUrl = "http://some.url/";
@@ -40,23 +45,24 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
 
         WaitAction action = getNextTestActionFromTest();
         Condition condition = getFileCondition(filePath);
-        validateWaitAction(action, WaitAction.DEFAULT_WAIT_TIME, WaitAction.DEFAULT_INTERVAL, condition);
+        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
         action = getNextTestActionFromTest();
-        validateWaitAction(action, "10", "2", condition);
+        validateWaitAction(action, "10", DEFAULT_WAIT_TIME, "2000", condition);
 
         action = getNextTestActionFromTest();
-        condition = getHttpCondition(httpUrl, HttpCondition.DEFAULT_RESPONSE_CODE, HttpCondition.DEFAULT_TIMEOUT);
-        validateWaitAction(action, WaitAction.DEFAULT_WAIT_TIME, WaitAction.DEFAULT_INTERVAL, condition);
+        condition = getHttpCondition(httpUrl, DEFAULT_RESPONSE_CODE, DEFAULT_TIMEOUT);
+        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
         action = getNextTestActionFromTest();
-        condition = getHttpCondition(httpUrl, "503", "2");
-        validateWaitAction(action, WaitAction.DEFAULT_WAIT_TIME, WaitAction.DEFAULT_INTERVAL, condition);
+        condition = getHttpCondition(httpUrl, "503", "2000");
+        ((HttpCondition)condition).setMethod("GET");
+        validateWaitAction(action, null, "3000", DEFAULT_INTERVAL, condition);
     }
 
     private Condition getFileCondition(String path) {
         FileCondition condition = new FileCondition();
-        condition.setFilename(path);
+        condition.setFilePath(path);
         return condition;
     }
 
@@ -64,15 +70,29 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         HttpCondition condition = new HttpCondition();
         condition.setUrl(url);
         condition.setHttpResponseCode(responseCode);
-        condition.setTimeoutSeconds(timeout);
+        condition.setTimeout(timeout);
         return condition;
     }
 
-    private void validateWaitAction(WaitAction action, String expectedWaitTime, String expectedWaitInterval, Condition expectedCondition) {
-        Assert.assertEquals(action.getWaitForSeconds(), expectedWaitTime);
-        Assert.assertEquals(action.getTestIntervalSeconds(), expectedWaitInterval);
-        Condition condition = action.getCondition();
-        Assert.assertNotNull(condition);
-        Assert.assertEquals(condition, expectedCondition);
+    private void validateWaitAction(WaitAction action, String expectedSeconds, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
+        Assert.assertEquals(action.getSeconds(), expectedSeconds);
+        Assert.assertEquals(action.getMilliseconds(), expectedMilliseconds);
+        Assert.assertEquals(action.getInterval(), expectedInterval);
+
+        Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
+
+        if (expectedCondition instanceof HttpCondition) {
+            HttpCondition condition = (HttpCondition) action.getCondition();
+            Assert.assertNotNull(condition);
+            Assert.assertEquals(condition.getName(), expectedCondition.getName());
+            Assert.assertEquals(condition.getUrl(), ((HttpCondition) expectedCondition).getUrl());
+            Assert.assertEquals(condition.getTimeout(), ((HttpCondition) expectedCondition).getTimeout());
+            Assert.assertEquals(condition.getMethod(), ((HttpCondition) expectedCondition).getMethod());
+        } else if (expectedCondition instanceof FileCondition) {
+            FileCondition condition = (FileCondition) action.getCondition();
+            Assert.assertNotNull(condition);
+            Assert.assertEquals(condition.getName(), expectedCondition.getName());
+            Assert.assertEquals(condition.getFilePath(), ((FileCondition) expectedCondition).getFilePath());
+        }
     }
 }
