@@ -21,6 +21,8 @@ import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 /**
  * Tests for the presence of a file and returns true if the file exists
  *
@@ -48,7 +50,12 @@ public class FileCondition extends AbstractCondition {
             log.debug(String.format("Checking file path '%s'", filePath));
         }
 
-        return FileUtils.getFileResource(filePath, context).exists();
+        try {
+            return FileUtils.getFileResource(filePath, context).getFile().isFile();
+        } catch (IOException e) {
+            log.warn(String.format("Failed to access file resource '%s'", e.getMessage()));
+            return false;
+        }
     }
 
     @Override

@@ -64,7 +64,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
         }
 
         for (Iterator<Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-            String key = ((Entry<Object, Object>)iter.next()).getKey().toString();
+            String key = iter.next().getKey().toString();
 
             log.info("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
 
