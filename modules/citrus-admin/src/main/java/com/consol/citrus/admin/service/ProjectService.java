@@ -90,7 +90,7 @@ public class ProjectService implements InitializingBean {
         try {
             return PropertiesLoaderUtils.loadProperties(defaultPropertyFile);
         } catch (IOException e) {
-            log.warn(String. format("Unable to read default Citrus project properties from file resource '%s'", defaultPropertyFilePath));
+            log.warn(String. format("Unable to read default Citrus project properties from file resource '%s'", defaultPropertyFilePath), e);
         }
 
         return new Properties();

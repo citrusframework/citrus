@@ -100,7 +100,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @return
      */
     private String buildHeaderXml() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         
         buf.append("<headers xmlns=\"http://www.citrusframework.org/schema/doc/header\">");
         

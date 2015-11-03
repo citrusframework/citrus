@@ -25,6 +25,8 @@ import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListeners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -58,17 +60,19 @@ public final class Citrus {
     /** Basic Spring application context */
     private ApplicationContext applicationContext;
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(Citrus.class);
+
     /** Load Citrus version */
     static {
-        Properties versionProperties = new Properties();
-
         try (final InputStream in = new ClassPathResource("META-INF/citrus.version").getInputStream()) {
+            Properties versionProperties = new Properties();
             versionProperties.load(in);
+            version = versionProperties.get("citrus.version").toString();
         } catch (IOException e) {
+            log.warn("Unable to read Citrus version information", e);
             version = "";
         }
-
-        version = versionProperties.get("citrus.version").toString();
     }
 
     /**
@@ -174,7 +178,7 @@ public final class Citrus {
         try {
             return getApplicationContext().getBean(requiredType);
         } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException(String.format("Unable to find endpoint for type '%s'", requiredType));
+            throw new CitrusRuntimeException(String.format("Unable to find endpoint for type '%s'", requiredType), e);
         }
     }
 
@@ -188,7 +192,7 @@ public final class Citrus {
         try {
             return getApplicationContext().getBean(name, requiredType);
         } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException(String.format("Unable to find endpoint for name '%s'", name));
+            throw new CitrusRuntimeException(String.format("Unable to find endpoint for name '%s'", name), e);
         }
     }
 

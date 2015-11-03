@@ -31,9 +31,7 @@ import java.util.concurrent.*;
  * @since 2.4
  */
 public class WaitAction extends AbstractTestAction {
-    /**
-     * Logger
-     */
+    /** Logger */
     private static final Logger log = LoggerFactory.getLogger(WaitAction.class);
 
     private static final int SEC_IN_MILLISEC = 1000;
@@ -63,38 +61,6 @@ public class WaitAction extends AbstractTestAction {
         setName("wait");
     }
 
-    public Condition getCondition() {
-        return condition;
-    }
-
-    public void setCondition(Condition condition) {
-        this.condition = condition;
-    }
-
-    public String getWaitForSeconds() {
-        return waitForSeconds;
-    }
-
-    private long getWaitForMiliseconds(TestContext context) {
-        return Integer.parseInt(context.resolveDynamicValue(waitForSeconds)) * SEC_IN_MILLISEC;
-    }
-
-    public void setWaitForSeconds(String waitForSeconds) {
-        this.waitForSeconds = waitForSeconds;
-    }
-
-    public String getTestIntervalSeconds() {
-        return testIntervalSeconds;
-    }
-
-    private long getTestIntervalMilieconds(TestContext context) {
-        return Integer.parseInt(context.resolveDynamicValue(testIntervalSeconds)) * SEC_IN_MILLISEC;
-    }
-
-    public void setTestIntervalSeconds(String testIntervalSeconds) {
-        this.testIntervalSeconds = testIntervalSeconds;
-    }
-
     @Override
     public void doExecute(final TestContext context) {
         Boolean conditionSatisfied = null;
@@ -121,7 +87,7 @@ public class WaitAction extends AbstractTestAction {
                 }
                 conditionSatisfied = future.get(timeout, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
-                e.printStackTrace();
+                log.debug(String.format("Condition check ended with '%s'", e.getClass().getSimpleName()));
             }
             executor.shutdown();
 
@@ -139,10 +105,43 @@ public class WaitAction extends AbstractTestAction {
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.warn("Interrupted during wait!", e);
                 }
             }
         }
+
         throw new CitrusRuntimeException(String.format("Condition %s NOT satisfied", condition));
+    }
+
+    private long getWaitForMiliseconds(TestContext context) {
+        return Long.parseLong(context.resolveDynamicValue(waitForSeconds)) * SEC_IN_MILLISEC;
+    }
+
+    private long getTestIntervalMilieconds(TestContext context) {
+        return Long.parseLong(context.resolveDynamicValue(testIntervalSeconds)) * SEC_IN_MILLISEC;
+    }
+
+    public String getWaitForSeconds() {
+        return waitForSeconds;
+    }
+
+    public void setWaitForSeconds(String waitForSeconds) {
+        this.waitForSeconds = waitForSeconds;
+    }
+
+    public Condition getCondition() {
+        return condition;
+    }
+
+    public void setCondition(Condition condition) {
+        this.condition = condition;
+    }
+
+    public String getTestIntervalSeconds() {
+        return testIntervalSeconds;
+    }
+
+    public void setTestIntervalSeconds(String testIntervalSeconds) {
+        this.testIntervalSeconds = testIntervalSeconds;
     }
 }

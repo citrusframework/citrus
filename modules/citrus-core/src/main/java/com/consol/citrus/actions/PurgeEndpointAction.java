@@ -112,6 +112,7 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
                     message = (receiveTimeout >= 0) ? messageConsumer.receive(context, receiveTimeout) : messageConsumer.receive(context);
                 }
             } catch (ActionTimeoutException e) {
+                log.info("Stop purging due to timeout - " + e.getMessage());
                 break;
             }
 

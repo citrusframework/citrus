@@ -146,19 +146,27 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
             result.setSuccess(true);
         } catch (Exception e) {
             log.warn("Failed to execute Citrus test case '" + testName + "'", e);
-
-            result.setSuccess(false);
-
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(os));
-            result.setStackTrace("Caused by: " + os.toString());
-
-            if (e instanceof CitrusRuntimeException) {
-                result.setFailureStack(((CitrusRuntimeException)e).getFailureStackAsString());
-            }
+            setFailureStack(result, e);
         }
 
         return result;
+    }
+
+    /**
+     * Adds failure stack information to test result.
+     * @param result
+     * @param e
+     */
+    private void setFailureStack(TestResult result, Exception e) {
+        result.setSuccess(false);
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        e.printStackTrace(new PrintStream(os));
+        result.setStackTrace("Caused by: " + os.toString());
+
+        if (e instanceof CitrusRuntimeException) {
+            result.setFailureStack(((CitrusRuntimeException)e).getFailureStackAsString());
+        }
     }
 
     @Override

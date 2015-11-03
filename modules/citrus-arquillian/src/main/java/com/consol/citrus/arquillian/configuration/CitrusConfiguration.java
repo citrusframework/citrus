@@ -99,7 +99,7 @@ public final class CitrusConfiguration implements Serializable {
             }
         }
 
-        log.debug(String.format("Using Citrus configuration:%n", configuration.toString()));
+        log.debug(String.format("Using Citrus configuration:%n%s", configuration.toString()));
 
         return configuration;
     }

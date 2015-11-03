@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.spring;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.spring.model.*;
 import com.consol.citrus.model.config.core.ObjectFactory;
 import com.consol.citrus.model.config.core.*;
@@ -51,13 +52,20 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
                             schema.setId(String.valueOf(System.currentTimeMillis()));
                         }
 
-                        if (bean.getClazz().equals(SimpleXsdSchema.class.getName())) {
+                        Class beanClass;
+                        try {
+                            beanClass = Class.forName(springBean.getClazz());
+                        } catch (ClassNotFoundException e) {
+                            throw new CitrusAdminRuntimeException(String.format("Failed to access Spring bean of type '%s'", springBean.getClazz()));
+                        }
+
+                        if (SimpleXsdSchema.class.isAssignableFrom(beanClass)) {
                             for (Property beanProperty : bean.getProperties()) {
                                 if (beanProperty.getName().equals("xsd")) {
                                     schema.setLocation(beanProperty.getValue());
                                 }
                             }
-                        } else if (bean.getClazz().equals(WsdlXsdSchema.class.getName())) {
+                        } else if (WsdlXsdSchema.class.isAssignableFrom(beanClass)) {
                             for (Property beanProperty : bean.getProperties()) {
                                 if (beanProperty.getName().equals("wsdl")) {
                                     schema.setLocation(beanProperty.getValue());

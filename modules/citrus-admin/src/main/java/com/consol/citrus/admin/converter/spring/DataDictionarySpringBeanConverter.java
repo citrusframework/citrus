@@ -37,18 +37,25 @@ public class DataDictionarySpringBeanConverter implements SpringBeanConverter<Da
     public DataDictionaryType convert(SpringBean springBean) {
         DataDictionaryType library;
 
-        if (springBean.getClazz().equals(XpathMappingDataDictionary.class.getName())) {
+        Class beanClass;
+        try {
+            beanClass = Class.forName(springBean.getClazz());
+        } catch (ClassNotFoundException e) {
+            throw new CitrusAdminRuntimeException(String.format("Failed to access Spring bean of type '%s'", springBean.getClazz()));
+        }
+
+        if (XpathMappingDataDictionary.class.isAssignableFrom(beanClass)) {
             library = new ObjectFactory().createXpathDataDictionaryDefinition();
-        } else if (springBean.getClazz().equals(NodeMappingDataDictionary.class.getName())) {
+        } else if (NodeMappingDataDictionary.class.isAssignableFrom(beanClass)) {
             library = new ObjectFactory().createXmlDataDictionaryDefinition();
-        } else if (springBean.getClazz().equals(JsonMappingDataDictionary.class.getName())) {
+        } else if (JsonMappingDataDictionary.class.isAssignableFrom(beanClass)) {
             library = new ObjectFactory().createJsonDataDictionaryDefinition();
         } else {
             throw new CitrusAdminRuntimeException(String.format("Failed to convert Spring bean of type '%s' to data dictionary model object", springBean.getClazz()));
         }
 
         for (Property property : springBean.getProperties()) {
-            if (property.getName().equals("mappings")) {
+            if ("mappings".equals(property.getName())) {
                 for (Entry entry : property.getMap().getEntries()) {
                     DataDictionaryType.Mappings.Mapping mapping = new DataDictionaryType.Mappings.Mapping();
                     mapping.setPath(entry.getKey());
