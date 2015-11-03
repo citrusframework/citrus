@@ -323,7 +323,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         }).atLeastOnce();
         expect(soapClient.createProducer()).andReturn(messageProducer).anyTimes();
-        replay(soapClient, messageProducer);
+        replay(messageProducer, soapClient);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
