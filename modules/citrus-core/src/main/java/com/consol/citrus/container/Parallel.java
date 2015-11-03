@@ -114,7 +114,7 @@ public class Parallel extends AbstractActionContainer {
             } catch (Exception e) {
                 log.error("Parallel test action raised error", e);
                 exceptionCallback(new CitrusRuntimeException(e));
-            } catch (Error e) {
+            } catch (AssertionError e) {
                 log.error("Parallel test action raised error", e);
                 exceptionCallback(new CitrusRuntimeException(e));
             }

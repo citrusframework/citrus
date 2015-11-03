@@ -118,7 +118,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         } catch (Exception e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
-        } catch (Error e) {
+        } catch (AssertionError e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
         }
@@ -143,7 +143,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             } catch (Exception e) {
                 testResult = TestResult.failed(getName(), e);
                 throw new TestCaseFailedException(e);
-            } catch (Error e) {
+            } catch (AssertionError e) {
                 testResult = TestResult.failed(getName(), e);
                 throw new TestCaseFailedException(e);
             } finally {
@@ -188,7 +188,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                     }
                 } catch (Exception e) {
                     log.warn("After test failed with errors", e);
-                } catch (Error e) {
+                } catch (AssertionError e) {
                     log.warn("After test failed with errors", e);
                 }
             }
@@ -214,7 +214,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         } catch (Exception e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
-        } catch (Error e) {
+        } catch (AssertionError e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
         }
@@ -243,7 +243,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         } catch (Exception e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
-        } catch (Error e) {
+        } catch (AssertionError e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
         } finally {
