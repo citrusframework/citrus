@@ -46,63 +46,13 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	}
 
 	/**
-	 * The total length of seconds to wait on the condition to be satisfied
-	 * @param seconds
-	 * @return
-	 */
-	public WaitActionBuilder seconds(String seconds) {
-		action.setSeconds(seconds);
-		return this;
-	}
-
-	/**
-	 * The total length of seconds to wait on the condition to be satisfied
-	 * @param seconds
-	 * @return
-	 */
-	public WaitActionBuilder seconds(Long seconds) {
-		action.setSeconds(seconds.toString());
-		return this;
-	}
-
-	/**
-	 * The total length of milliseconds to wait on the condition to be satisfied
-	 * @param milliseconds
-	 * @return
-	 */
-	public WaitActionBuilder ms(String milliseconds) {
-		action.setMilliseconds(milliseconds);
-		return this;
-	}
-
-	/**
-	 * The total length of milliseconds to wait on the condition to be satisfied
-	 * @param milliseconds
-	 * @return
-	 */
-	public WaitActionBuilder ms(Long milliseconds) {
-		action.setMilliseconds(milliseconds.toString());
-		return this;
-	}
-
-	/**
-	 * The interval in seconds to use between each test of the condition
-	 * @param interval
-	 * @return
-	 */
-	public WaitActionBuilder interval(String interval) {
-		action.setInterval(interval);
-		return this;
-	}
-
-	/**
 	 * Condition to wait for during execution.
 	 * @param condition
 	 * @return
 	 */
-	public WaitActionBuilder condition(Condition condition) {
+	public WaitConditionBuilder condition(Condition condition) {
 		action.setCondition(condition);
-		return this;
+		return new WaitConditionBuilder(action, condition);
 	}
 
 	/**
@@ -110,11 +60,11 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	 * @param url
 	 * @return
 	 */
-	public WaitActionBuilder http(String url) {
+	public WaitHttpConditionBuilder http(String url) {
 		HttpCondition condition = new HttpCondition();
 		action.setCondition(condition);
 		condition.setUrl(url);
-		return this;
+		return new WaitHttpConditionBuilder(action, condition);
 	}
 
 	/**
@@ -122,11 +72,10 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	 * @param path
 	 * @return
 	 */
-	public WaitActionBuilder file(String path) {
+	public WaitConditionBuilder file(String path) {
 		FileCondition condition = new FileCondition();
-		action.setCondition(condition);
 		condition.setFilePath(path);
-		return this;
+		return condition(condition);
 	}
 
 	/**
@@ -134,10 +83,9 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	 * @param file
 	 * @return
 	 */
-	public WaitActionBuilder file(File file) {
+	public WaitConditionBuilder file(File file) {
 		FileCondition condition = new FileCondition();
-		action.setCondition(condition);
 		condition.setFilePath(file.getAbsolutePath());
-		return this;
+		return condition(condition);
 	}
 }
