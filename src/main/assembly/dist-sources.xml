@@ -64,6 +64,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-model/model-docker/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>modules/citrus-model/model-vertx/target</directory>
       <outputDirectory></outputDirectory>
       <includes>
@@ -128,6 +135,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-camel/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-docker/target</directory>
       <outputDirectory></outputDirectory>
       <includes>
         <include>*sources.jar</include>
