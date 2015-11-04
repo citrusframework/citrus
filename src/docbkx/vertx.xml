@@ -13,7 +13,7 @@
     <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-vertx&lt;/artifactId&gt;
-  &lt;version&gt;2.4-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;2.4&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
     <para>Citrus provides a special Vert.x configuration schema that
