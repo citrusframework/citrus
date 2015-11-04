@@ -1270,6 +1270,24 @@
                 </goals>
               </execution>
               <execution>
+                <id>copy-citrus-http-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/http/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-http/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-http-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
                 <id>copy-citrus-websocket-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
@@ -1423,6 +1441,60 @@
                       <directory>modules/citrus-model/model-camel/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-camel-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-camel-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/camel/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-camel/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-camel-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-docker-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/docker/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-docker/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-docker-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-docker-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/docker/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-docker/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-docker-testcase*.xsd</include>
                       </includes>
                     </resource>
                   </resources>
