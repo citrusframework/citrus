@@ -13,7 +13,7 @@
         <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-docker&lt;/artifactId&gt;
-  &lt;version&gt;2.4&lt;/version&gt;
+  &lt;version&gt;2.5-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
         <para>Citrus provides a "citrus-docker" configuration namespace and schema definition for Docker related components and actions. Include this namespace into your Spring
