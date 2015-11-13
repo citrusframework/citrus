@@ -120,9 +120,16 @@ public class TestCaseParser implements BeanDefinitionParser {
                     testVariables.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
                 } else {
                     Element variableScript = DomUtils.getChildElementByTagName(variableValueElement, "script");
-                    String scriptEngine = variableScript.getAttribute("type");
-                    testVariables.put(variableDefinition.getAttribute("name"), VariableUtils.getValueFromScript(scriptEngine, 
-                            variableScript.getTextContent()));
+                    if (variableScript != null) {
+                        String scriptEngine = variableScript.getAttribute("type");
+                        testVariables.put(variableDefinition.getAttribute("name"), VariableUtils.getValueFromScript(scriptEngine,
+                                variableScript.getTextContent()));
+                    }
+
+                    Element variableData = DomUtils.getChildElementByTagName(variableValueElement, "data");
+                    if (variableData != null) {
+                        testVariables.put(variableDefinition.getAttribute("name"), DomUtils.getTextValue(variableData).trim());
+                    }
                 }
             }
             testCase.addPropertyValue("variableDefinitions", testVariables);

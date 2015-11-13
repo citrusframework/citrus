@@ -24,10 +24,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Bean definition parser for create-variables action in test case.
@@ -53,8 +50,15 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
                 variables.put(variable.getAttribute("name"), variable.getAttribute("value"));
             } else {
                 Element variableScript = DomUtils.getChildElementByTagName(variableValueElement, "script");
-                String scriptEngine = variableScript.getAttribute("type");
-                variables.put(variable.getAttribute("name"), "script:<" + scriptEngine + ">"  + variableScript.getTextContent());
+                if (variableScript != null) {
+                    String scriptEngine = variableScript.getAttribute("type");
+                    variables.put(variable.getAttribute("name"), "script:<" + scriptEngine + ">"  + variableScript.getTextContent());
+                }
+
+                Element variableData = DomUtils.getChildElementByTagName(variableValueElement, "data");
+                if (variableData != null) {
+                    variables.put(variable.getAttribute("name"), DomUtils.getTextValue(variableData).trim());
+                }
             }
         }
         beanDefinition.addPropertyValue("variables", variables);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="TestCaseParserTest">
+        <variables>
+          <variable name="text" value="Hello"/>
+          <variable name="sum">
+            <value>
+              <script type="groovy">(1+2+3+4+5)</script>
+            </value>
+          </variable>
+          <variable name="embeddedXml">
+            <value>
+              <data>
+                <![CDATA[
+                  <embeddedXml>works!</embeddedXml>
+                ]]>
+              </data>
+            </value>
+          </variable>
+        </variables>
+
+        <actions>
+          <echo>
+            <message>This test should have some variables: ${text}, ${sum}, ${embeddedXml}</message>
+          </echo>
+        </actions>
+    </testcase>
+</spring:beans>

@@ -13,6 +13,15 @@
                         <script type="groovy">(1+2+3+4+5)</script>
                     </value>
                 </variable>
+                <variable name="embeddedXml">
+                    <value>
+                        <data>
+                          <![CDATA[
+                            <embeddedXml>This is an embedded Xml variable value</embeddedXml>
+                          ]]>
+                        </data>
+                    </value>
+                </variable>
             </create-variables>
         </actions>
     </testcase>

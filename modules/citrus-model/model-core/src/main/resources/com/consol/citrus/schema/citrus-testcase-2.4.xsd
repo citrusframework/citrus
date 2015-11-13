@@ -454,9 +454,10 @@
                     <xs:sequence>
                       <xs:element name="value" minOccurs="0" maxOccurs="1">
                         <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="script" type="ScriptDefinitionType" minOccurs="1" maxOccurs="1"/>
-                            </xs:sequence>
+                            <xs:choice>
+                                <xs:element name="data" type="xs:string"/>
+                                <xs:element name="script" type="ScriptDefinitionType"/>
+                            </xs:choice>
                         </xs:complexType>
                       </xs:element>
                     </xs:sequence>
@@ -822,9 +823,10 @@
                         <xs:sequence>
                           <xs:element name="value" minOccurs="0" maxOccurs="1">
                               <xs:complexType>
-                                  <xs:sequence>
-                                      <xs:element name="script" type="ScriptDefinitionType" minOccurs="1" maxOccurs="1"/>
-                                  </xs:sequence>
+                                  <xs:choice>
+                                      <xs:element name="data" type="xs:string"/>
+                                      <xs:element name="script" type="ScriptDefinitionType"/>
+                                  </xs:choice>
                               </xs:complexType>
                           </xs:element>
                         </xs:sequence>
