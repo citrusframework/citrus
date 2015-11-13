@@ -4,8 +4,7 @@
 
             events: {
                 "show .nav-tabs a": "navigateTab",
-                "click #footer-maximize": "maximize",
-                "click #footer-minimize" : "minimize"
+                "click i#footer-toggle" : "toggleFooter"
             },
 
             initialize: function () {
@@ -110,55 +109,28 @@
                 // show processId details tab
                 $('#footer-tabs a[href="#footer-tab-' + idHash + '"]').tab('show');
             },
-          
-            maximize: function() {
-                if ($('#footer').hasClass('maximized')) {
-                    $('#footer').removeClass('maximized');
-                    $('.footer-tab').removeClass('maximized');
-                    $('.footer-task-bar').removeClass('maximized');
-                    $('pre.logger').removeClass('maximized');
-                } else {
-                    $('#footer').addClass('maximized');
-                    $('.footer-tab').addClass('maximized');
-                    $('.footer-task-bar').addClass('maximized');
-                    $('pre.logger').addClass('maximized');
 
-                    if ($('#footer').hasClass('minimized')) {
-                        this.minimize();
-                    }
-                }
-            },
-
-            minimize: function() {
+            toggleFooter: function() {
                 if ($('#footer').hasClass('minimized')) {
-                    $('#footer').hide('slide', {direction: 'down'}, 150, function() {
-                        $('#footer').removeClass('minimized');
-                        $('.footer-tab').removeClass('minimized');
-                        $('.footer-task-bar').removeClass('minimized');
-                        $('pre.logger').removeClass('minimized');
+                    $('#footer').removeClass('minimized');
+                    $('.footer-tab').removeClass('minimized');
+                    $('.footer-task-bar').removeClass('minimized');
+                    $('pre.logger').removeClass('minimized');
 
-                        $('i#footer-minimize').addClass('fa-chevron-down');
-                        $('i#footer-minimize').removeClass('fa-chevron-up');
+                    $('i#footer-toggle').addClass('fa-chevron-down');
+                    $('i#footer-toggle').removeClass('fa-chevron-up');
 
-                        $('#footer').show('slide', {direction: 'down'}, 300);
-                    });
+                    $('#footer-tab-content').show('slide', {direction: 'down'}, 300);
                 } else {
-                    $('#footer').hide('slide', {direction: 'down'}, 300, function() {
-                        $('#footer').removeClass('maximized');
-                        $('.footer-tab').removeClass('maximized');
-                        $('.footer-task-bar').removeClass('maximized');
-                        $('pre.logger').removeClass('maximized');
+                    $('i#footer-toggle').removeClass('fa-chevron-down');
+                    $('i#footer-toggle').addClass('fa-chevron-up');
 
-                        $('i#footer-minimize').removeClass('fa-chevron-down');
-                        $('i#footer-minimize').addClass('fa-chevron-up');
+                    $('#footer').addClass('minimized');
+                    $('.footer-tab').addClass('minimized');
+                    $('.footer-task-bar').addClass('minimized');
+                    $('pre.logger').addClass('minimized');
 
-                        $('#footer').addClass('minimized');
-                        $('.footer-tab').addClass('minimized');
-                        $('.footer-task-bar').addClass('minimized');
-                        $('pre.logger').addClass('minimized');
-
-                        $('#footer').show('slide', {direction: 'down'}, 150);
-                    });
+                    $('#footer-tab-content').hide('slide', {direction: 'down'}, 150);
                 }
             }
 

@@ -1,17 +1,17 @@
-<div class="footer-bar pull-right">
-    <i id="footer-minimize" class="fa fa-chevron-up clickable"></i>
+<div class="footer-bar">
+    <i id="footer-toggle" class="fa fa-chevron-up clickable"></i>
 </div>
 <ul class="nav nav-pills">
-    <li class="active"><a href="#console-tab" data-toggle="tab">Console</a></li>
+    <li role="presentation" class="active"><a href="#console-tab" data-toggle="tab">Console</a></li>
 </ul>
 
 <div id="footer-tab-content" class="tab-content" style="display: none;">
     <div id="console-tab" class="tab-pane active">
-        <div class="footer-tab">
-            <div class="footer-task-bar">
+        <div class="footer-tab minimized">
+            <div class="footer-task-bar minimized">
                 <i id="footer-tab-clear-console" class="fa fa-trash-o clickable"></i>
             </div>
-            <pre class="logger"></pre>
+            <pre class="logger minimized"></pre>
         </div>
     </div>
 </div>

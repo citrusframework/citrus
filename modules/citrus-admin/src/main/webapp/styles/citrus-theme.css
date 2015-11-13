@@ -533,13 +533,9 @@ div.file-tree {
 
 /** Footer **/
 
-.footer .nav {
-    height: 25px;
-	margin-bottom: 0px;
-}
-
 .footer .nav li {
-    line-height: 5px;
+    line-height: 3px;
+    margin: 0px;
 }
 
 .footer .tab-content {
@@ -564,7 +560,7 @@ div.file-tree {
     display: block;
     text-align: center;
     padding: 3px;
-    margin: 0 1px;
+    margin: 1px 6px;
 }
 
 .footer-bar i:hover {
