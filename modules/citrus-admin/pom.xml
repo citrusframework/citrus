@@ -362,6 +362,10 @@
                     <name>test.base.package</name>
                     <value>com.consol.citrus</value>
                   </systemProperty>
+                  <systemProperty>
+                    <name>test.source.directory</name>
+                    <value>src/it/</value>
+                  </systemProperty>
               </systemProperties>
           </configuration>
         </plugin>

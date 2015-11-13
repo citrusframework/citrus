@@ -86,7 +86,7 @@
         </bean> 
     </mvc:interceptors>
     
-    <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+    <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
       <property name="objectMapper" ref="jacksonObjectMapper"/>
     </bean>
 
@@ -94,7 +94,7 @@
 
     <!-- Ensure null Objects/values are ignored and not shown in the produced
       json message -->
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
       <property name="targetObject" ref="jacksonObjectMapper" />
       <property name="targetMethod" value="setSerializationInclusion" />
       <property name="arguments">
@@ -104,7 +104,7 @@
       </property>
     </bean>
 
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
       <property name="targetObject" ref="jacksonObjectMapper" />
       <property name="targetMethod" value="enable" />
       <property name="arguments">
