@@ -15,6 +15,12 @@
   </properties>
   
   <body>
+    <release version="2.5" date="15.12.2015" description="2.5 release">
+        <action dev="christophd" type="fix">
+          GITHUB-50 allow variable value definition in cdata section
+        </action>
+    </release>
+
     <release version="2.4" date="03.11.2015" description="2.4 release">
         <action dev="christophd" type="fix">
           GITHUB-47 JSON data dictionary throws NullPointerException
