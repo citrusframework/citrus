@@ -19,11 +19,8 @@ package com.consol.citrus.channel;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import org.easymock.EasyMock;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.HeaderChannelRegistry;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -50,8 +47,6 @@ public class ChannelEndpointComponentTest {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
         reset(applicationContext);
-        expect(applicationContext.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
-                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         replay(applicationContext);
 
         Endpoint endpoint = component.createEndpoint("channel:channelName", context);
@@ -71,8 +66,6 @@ public class ChannelEndpointComponentTest {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
         reset(applicationContext);
-        expect(applicationContext.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
-                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         replay(applicationContext);
 
         Endpoint endpoint = component.createEndpoint("channel:sync:channelName", context);
@@ -93,8 +86,6 @@ public class ChannelEndpointComponentTest {
         reset(applicationContext);
         expect(applicationContext.containsBean("myChannelResolver")).andReturn(true).once();
         expect(applicationContext.getBean("myChannelResolver")).andReturn(channelResolver).once();
-        expect(applicationContext.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
-                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         replay(applicationContext);
 
         Endpoint endpoint = component.createEndpoint("channel:channelName?timeout=10000&channelResolver=myChannelResolver", context);

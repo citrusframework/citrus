@@ -24,11 +24,8 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.channel.DefaultHeaderChannelRegistry;
-import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.HeaderChannelRegistry;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
@@ -80,13 +77,9 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
     @Test
     public void testPurgeChannelBuilderWithNames() {
         reset(applicationContextMock);
-
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
-                .andReturn(new DefaultHeaderChannelRegistry()).once();
-
         replay(applicationContextMock);
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
@@ -122,8 +115,6 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
-                .andReturn(new DefaultHeaderChannelRegistry()).once();
         replay(applicationContextMock);
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {

@@ -21,14 +21,16 @@ import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ssh.SshCommand;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.message.SshMessageConverter;
-import org.apache.sshd.common.KeyPairProvider;
-import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
-import org.apache.sshd.common.keyprovider.ResourceKeyPairProvider;
+import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
+import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
+import org.apache.sshd.common.util.SecurityUtils;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.CommandFactory;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -78,20 +80,25 @@ public class SshServer extends AbstractServer {
     private SshMessageConverter messageConverter = new SshMessageConverter();
 
     /** SSH server used **/
-    private org.apache.sshd.SshServer sshd;
+    private org.apache.sshd.server.SshServer sshd;
 
     @Override
     protected void startup() {
         if (!StringUtils.hasText(user)) {
             throw new CitrusRuntimeException("No 'user' provided (mandatory for authentication)");
         }
-        sshd = org.apache.sshd.SshServer.setUpDefaultServer();
+        sshd = org.apache.sshd.server.SshServer.setUpDefaultServer();
         sshd.setPort(port);
-        KeyPairProvider prov =
-                hostKeyPath != null ?
-                        new FileKeyPairProvider(new String[] {hostKeyPath}) :
-                        new ResourceKeyPairProvider(new String[] { "com/consol/citrus/ssh/citrus.pem" });
-        sshd.setKeyPairProvider(prov);
+
+        if (hostKeyPath != null) {
+            AbstractFileKeyPairProvider fileKeyPairProvider = SecurityUtils.createFileKeyPairProvider();
+            fileKeyPairProvider.setPaths(Arrays.asList(new File(hostKeyPath).toPath()));
+            sshd.setKeyPairProvider(fileKeyPairProvider);
+        } else {
+            AbstractClassLoadableResourceKeyPairProvider resourceKeyPairProvider = SecurityUtils.createClassLoadableResourceKeyPairProvider();
+            resourceKeyPairProvider.setResources(Arrays.asList("com/consol/citrus/ssh/citrus.pem"));
+            sshd.setKeyPairProvider(resourceKeyPairProvider);
+        }
 
         // Authentication
         boolean authFound = false;
@@ -127,7 +134,7 @@ public class SshServer extends AbstractServer {
     protected void shutdown() {
         try {
             sshd.stop();
-        } catch (InterruptedException e) {
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Cannot stop SSHD: " + e,e);
         }
     }

@@ -17,8 +17,8 @@
 package com.consol.citrus.ssh.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.apache.sshd.common.util.IoUtils;
-import org.apache.sshd.server.PublickeyAuthenticator;
+import org.apache.sshd.common.util.io.IoUtils;
+import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;

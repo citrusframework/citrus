@@ -18,8 +18,8 @@ package com.consol.citrus.ssh.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ssh.SshCommand;
-import org.apache.sshd.common.KeyPairProvider;
-import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
+import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.CommandFactory;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -102,9 +102,9 @@ public class SshServerTest {
         server.setHostKeyPath("/never/existing/directory");
         server.start();
         try {
-            org.apache.sshd.SshServer sshd = (org.apache.sshd.SshServer) ReflectionTestUtils.getField(server, "sshd");
+            org.apache.sshd.server.SshServer sshd = (org.apache.sshd.server.SshServer) ReflectionTestUtils.getField(server, "sshd");
             KeyPairProvider prov = sshd.getKeyPairProvider();
-            assertTrue(prov instanceof FileKeyPairProvider);
+            assertTrue(prov instanceof AbstractFileKeyPairProvider);
             Iterable<KeyPair> keys = prov.loadKeys();
             assertFalse(keys.iterator().hasNext());
         } finally {
@@ -117,7 +117,7 @@ public class SshServerTest {
         prepareServer(true);
         server.start();
         try {
-            org.apache.sshd.SshServer sshd = (org.apache.sshd.SshServer) ReflectionTestUtils.getField(server, "sshd");
+            org.apache.sshd.server.SshServer sshd = (org.apache.sshd.server.SshServer) ReflectionTestUtils.getField(server, "sshd");
             CommandFactory fact = sshd.getCommandFactory();
             Command cmd = fact.createCommand("shutdown now");
             assertTrue(cmd instanceof SshCommand);

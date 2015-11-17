@@ -43,7 +43,7 @@ public class DockerClientParserTest extends AbstractBeanDefinitionParserTest {
         dockerClient = clients.get("dockerClient2");
         Assert.assertNotNull(dockerClient.getDockerClient());
         Assert.assertEquals(dockerClient.getDockerClientConfig().getUri().toString(), "http://localhost:2376");
-        Assert.assertEquals(dockerClient.getDockerClientConfig().getVersion(), "1.19");
+        Assert.assertEquals(dockerClient.getDockerClientConfig().getVersion().asWebPathPart(), "v1.19");
         Assert.assertEquals(dockerClient.getDockerClientConfig().getUsername(), "user");
         Assert.assertEquals(dockerClient.getDockerClientConfig().getPassword(), "s!cr!t");
         Assert.assertEquals(dockerClient.getDockerClientConfig().getEmail(), "user@consol.de");

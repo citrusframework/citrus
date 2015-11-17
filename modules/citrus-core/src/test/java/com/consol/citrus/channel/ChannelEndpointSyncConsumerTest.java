@@ -25,11 +25,8 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.integration.support.channel.HeaderChannelRegistry;
 import org.springframework.messaging.*;
 import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.messaging.support.GenericMessage;
@@ -153,13 +150,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
-        
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
         expect(factory.getBean("replyChannel", MessageChannel.class)).andReturn(replyChannel).once();
-        expect(factory.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
-                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
-        
         replay(messagingTemplate, channel, replyChannel, factory);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();

@@ -54,9 +54,15 @@ public final class MessageHeaderUtils {
             return true;
         } else if (headerName.equals(MessageHeaders.ERROR_CHANNEL)) {
             return true;
+        } else if (headerName.equals(MessageHeaders.CONTENT_TYPE)) {
+            return true;
         } else if (headerName.equals(IntegrationMessageHeaderAccessor.PRIORITY)) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.POSTPROCESS_RESULT)) {
+        } else if (headerName.equals(IntegrationMessageHeaderAccessor.CORRELATION_ID)) {
+            return true;
+        } else if (headerName.equals(IntegrationMessageHeaderAccessor.ROUTING_SLIP)) {
+            return true;
+        } else if (headerName.equals(IntegrationMessageHeaderAccessor.DUPLICATE_MESSAGE)) {
             return true;
         } else if (headerName.equals(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER)) {
             return true;

@@ -16,7 +16,8 @@
 
 package com.consol.citrus.websocket.handler;
 
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+import org.springframework.context.Lifecycle;
+import org.springframework.web.socket.server.support.WebSocketHandlerMapping;
 
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketUrlHandlerMapping extends SimpleUrlHandlerMapping {
+public class WebSocketUrlHandlerMapping extends WebSocketHandlerMapping {
 
     /**
      * Workaround for registering the WebSocket request handlers, after the spring context has been
@@ -34,5 +35,11 @@ public class WebSocketUrlHandlerMapping extends SimpleUrlHandlerMapping {
      */
     public void postRegisterUrlHandlers(Map<String, Object> wsHandlers) {
         registerHandlers(wsHandlers);
+
+        for (Object handler : wsHandlers.values()) {
+            if (handler instanceof Lifecycle) {
+                ((Lifecycle) handler).start();
+            }
+        }
     }
 }

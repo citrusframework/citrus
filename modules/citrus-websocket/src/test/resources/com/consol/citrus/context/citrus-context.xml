@@ -14,4 +14,10 @@
       <property name="order" value="1" />
     </bean>
 
+    <bean id="citrusHandshakeHandler" class="org.springframework.web.socket.server.support.DefaultHandshakeHandler">
+      <constructor-arg ref="upgradeStrategy"/>
+    </bean>
+
+    <bean id="upgradeStrategy" class="org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy"/>
+
 </beans>

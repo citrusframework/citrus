@@ -160,19 +160,19 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>4.1.7.RELEASE</spring.version>
-    <spring.ws.version>2.2.1.RELEASE</spring.ws.version>
-    <spring.integration.version>4.1.6.RELEASE</spring.integration.version>
-    <apache.camel.version>2.15.2</apache.camel.version>
-    <activemq.version>5.11.1</activemq.version>
+    <spring.version>4.2.3.RELEASE</spring.version>
+    <spring.ws.version>2.2.3.RELEASE</spring.ws.version>
+    <spring.integration.version>4.2.1.RELEASE</spring.integration.version>
+    <apache.camel.version>2.16.0</apache.camel.version>
+    <activemq.version>5.12.1</activemq.version>
     <vertx.version>2.1.6</vertx.version>
-    <groovy.version>2.4.4</groovy.version>
-    <jetty.version>9.2.11.v20150529</jetty.version>
-    <testng.version>6.9.6</testng.version>
-    <slf4j.version>1.7.12</slf4j.version>
+    <groovy.version>2.4.5</groovy.version>
+    <jetty.version>9.3.6.v20151106</jetty.version>
+    <testng.version>6.9.9</testng.version>
+    <slf4j.version>1.7.13</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
-    <jackson.version>2.6.2</jackson.version>
-    <arquillian.version>1.1.8.Final</arquillian.version>
+    <jackson.version>2.6.3</jackson.version>
+    <arquillian.version>1.1.10.Final</arquillian.version>
     <sonar.host.url>http://labs-build1.consol.de:9000</sonar.host.url>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <docbkx.img.path>images</docbkx.img.path>
@@ -257,22 +257,22 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5</version>
+        <version>4.5.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sshd</groupId>
         <artifactId>sshd-core</artifactId>
-        <version>0.14.0</version>
+        <version>1.0.0</version>
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcprov-jdk15on</artifactId>
-        <version>1.51</version>
+        <version>1.53</version>
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcpkix-jdk15on</artifactId>
-        <version>1.51</version>
+        <version>1.53</version>
       </dependency>
       <dependency>
         <groupId>com.jcraft</groupId>
@@ -341,6 +341,11 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-messaging</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>
@@ -429,7 +434,7 @@
       <dependency>
         <groupId>net.minidev</groupId>
         <artifactId>json-smart</artifactId>
-        <version>2.2</version>
+        <version>2.2.1</version>
       </dependency>
       <dependency>
         <groupId>com.jayway.jsonpath</groupId>
@@ -513,12 +518,12 @@
       <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-        <version>2.1.1</version>
+        <version>2.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
-        <version>1.2.2</version>
+        <version>1.2.3</version>
       </dependency>
 
       <!-- JaxB Bindings (API and implementation) -->
@@ -591,7 +596,7 @@
       <dependency>
         <groupId>com.github.docker-java</groupId>
         <artifactId>docker-java</artifactId>
-        <version>2.1.1</version>
+        <version>2.1.2</version>
       </dependency>
       
       <!-- Test scoped dependencies -->
@@ -613,7 +618,7 @@
       <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
-        <version>4.3</version>
+        <version>4.4</version>
       </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
@@ -675,7 +680,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>2.5.3</version>
           <configuration>
             <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
             <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -702,7 +707,7 @@
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.18.1</version>
+          <version>2.19</version>
           <configuration>
             <argLine>${surefireArgLine}</argLine>
             <systemProperties>
@@ -729,7 +734,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.18.1</version>
+          <version>2.19</version>
           <executions>
             <execution>
               <id>integration-tests</id>
@@ -773,7 +778,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.6.1</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
@@ -857,7 +862,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.5.5</version>
+          <version>2.6</version>
         </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
@@ -885,7 +890,7 @@
         <plugin>
           <groupId>com.agilejava.docbkx</groupId>
           <artifactId>docbkx-maven-plugin</artifactId>
-          <version>2.0.7</version>
+          <version>2.0.16</version>
           <dependencies>
             <dependency>
               <groupId>org.docbook</groupId>
@@ -1667,7 +1672,7 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.4.201502262128</version>
+            <version>0.7.5.201505241946</version>
             <executions>
               <execution>
                 <id>jacoco-unit-init</id>
