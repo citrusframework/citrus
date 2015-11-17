@@ -103,6 +103,7 @@ public final class CitrusArchiveBuilder {
         mail();
         camel();
         vertx();
+        docker();
         javaDsl();
 
         return this;
@@ -177,6 +178,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder camel() {
         artifactCoordinates.add(getCoordinates("citrus-camel"));
+        return this;
+    }
+
+    /**
+     * Gets the docker Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder docker() {
+        artifactCoordinates.add(getCoordinates("citrus-docker"));
         return this;
     }
 
