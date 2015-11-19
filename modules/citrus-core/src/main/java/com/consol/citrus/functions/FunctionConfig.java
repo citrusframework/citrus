@@ -55,6 +55,7 @@ public class FunctionConfig {
     private final DigestAuthHeaderFunction digestAuthHeaderFunction = new DigestAuthHeaderFunction();
     private final LocalHostAddressFunction localHostAddressFunction = new LocalHostAddressFunction();
     private final ChangeDateFunction changeDateFunction = new ChangeDateFunction();
+    private final ReadFileResourceFunction readFileResourceFunction = new ReadFileResourceFunction();
 
     @Bean(name = "functionRegistry")
     public FunctionRegistry getFunctionRegistry() {
@@ -96,6 +97,7 @@ public class FunctionConfig {
         citrusFunctionLibrary.getMembers().put("digestAuthHeader", digestAuthHeaderFunction);
         citrusFunctionLibrary.getMembers().put("localHostAddress", localHostAddressFunction);
         citrusFunctionLibrary.getMembers().put("changeDate", changeDateFunction);
+        citrusFunctionLibrary.getMembers().put("readFile", readFileResourceFunction);
 
         return citrusFunctionLibrary;
     }

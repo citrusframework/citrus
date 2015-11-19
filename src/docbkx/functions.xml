@@ -451,7 +451,7 @@
         
         <para>The function will decode binary data to a character sequence using base64 hexadecimal decoding.</para>
         
-        <programlisting>&lt;variable name=&quot;decoded&quot; value=&quot;citrus:encodeBase64('VGVzdCBGcmFtZXdvcms=')&quot;/&gt;</programlisting>
+        <programlisting>&lt;variable name=&quot;decoded&quot; value=&quot;citrus:decodeBase64('VGVzdCBGcmFtZXdvcms=')&quot;/&gt;</programlisting>
         
         <para>decoded = <emphasis>Hallo Testframework</emphasis></para>
     </section>
@@ -556,6 +556,27 @@ uri=http://127.0.0.1:8080,response=51f98c,opaque=b29a30,algorithm=md5&gt;</progr
         <para><emphasis>1999-12-09</emphasis></para>
 
         <para>With this you are able to manipulate all date values of static or dynamic nature at test runtime.</para>
+    </section>
+
+    <section id="functions-read-file">
+        <title>citrus:readFile()</title>
+
+        <para>The <emphasis>readFile</emphasis> function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file
+        path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values
+        and other functions.</para>
+
+        <para>Let's see this function in action:</para>
+
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:readFile('classpath:some/path/to/file.txt')&lt;/message&gt;
+&lt;/echo&gt;
+&lt;echo&gt;
+    &lt;message&gt;citrus:readFile(${filePath})&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
+
+        <para>The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance.
+        This is a very powerful way to extract large message parts to separate file resources. Just add the <emphasis>readFile</emphasis> function somewhere to the message content and Citrus will load the extra file content and place
+        it right into the message payload for you.</para>
     </section>
 
 </chapter>

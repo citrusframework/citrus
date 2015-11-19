@@ -40,6 +40,7 @@
       <variable name="localHostAddress" value="citrus:localHostAddress()"/>
       <variable name="changedDate" value="citrus:changeDate(citrus:currentDate(), '+1y')"/>
       <variable name="changedDateCustomFormat" value="citrus:changeDate(citrus:currentDate('yyyy-MM-dd'), '-1y+1M+1d', 'yyyy-MM-dd')"/>
+      <variable name="readFile" value="citrus:readFile('classpath:com/consol/citrus/functions/file.txt')"/>
     </variables>
 
     <actions>

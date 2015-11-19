@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.functions;
 
 import com.consol.citrus.functions.core.RandomStringFunction;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -25,83 +26,83 @@ import java.text.SimpleDateFormat;
 
 import static com.consol.citrus.dsl.functions.Functions.*;
 
-public class FunctionsTest {
+public class FunctionsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCurrentDate() throws Exception {
-        new SimpleDateFormat("dd.MM.yyyy").parse(currentDate());
+        new SimpleDateFormat("dd.MM.yyyy").parse(currentDate(context));
     }
 
     @Test
     public void testCurrentDateFormat() throws Exception {
-        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(currentDate("yyyy-MM-dd'T'HH:mm:ss"));
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(currentDate("yyyy-MM-dd'T'HH:mm:ss", context));
     }
 
     @Test
     public void testChangeDate() throws Exception {
-        Assert.assertEquals(changeDate("01.01.2014", "+1y"), "01.01.2015");
-        Assert.assertEquals(changeDate("2014-01-01T12:00:00", "+1y", "yyyy-MM-dd'T'HH:mm:ss"), "2015-01-01T12:00:00");
+        Assert.assertEquals(changeDate("01.01.2014", "+1y", context), "01.01.2015");
+        Assert.assertEquals(changeDate("2014-01-01T12:00:00", "+1y", "yyyy-MM-dd'T'HH:mm:ss", context), "2015-01-01T12:00:00");
     }
 
     @Test
     public void testCreateCDataSection() throws Exception {
-        Assert.assertEquals(createCDataSection("<Test><Message>Some Text<Message></Test>"), "<![CDATA[<Test><Message>Some Text<Message></Test>]]>");
+        Assert.assertEquals(createCDataSection("<Test><Message>Some Text<Message></Test>", context), "<![CDATA[<Test><Message>Some Text<Message></Test>]]>");
     }
 
     @Test
     public void testEncodeBase64() throws Exception {
-        Assert.assertEquals(encodeBase64("Foo"), "Rm9v");
+        Assert.assertEquals(encodeBase64("Foo", context), "Rm9v");
     }
 
     @Test
     public void testEncodeBase64WithCharset() throws Exception {
-        Assert.assertEquals(encodeBase64("Foo", Charset.forName("UTF-8")), "Rm9v");
+        Assert.assertEquals(encodeBase64("Foo", Charset.forName("UTF-8"), context), "Rm9v");
     }
 
     @Test
     public void testDecodeBase64() throws Exception {
-        Assert.assertEquals(decodeBase64("Rm9v"), "Foo");
+        Assert.assertEquals(decodeBase64("Rm9v", context), "Foo");
     }
 
     @Test
     public void testDecodeBase64WithCharset() throws Exception {
-        Assert.assertEquals(decodeBase64("Rm9v", Charset.forName("UTF-8")), "Foo");
+        Assert.assertEquals(decodeBase64("Rm9v", Charset.forName("UTF-8"), context), "Foo");
     }
 
     @Test
     public void testDigestAuthHeader() throws Exception {
-        digestAuthHeader("username", "password", "authRealm", "acegi", "POST", "http://localhost:8080", "citrus", "md5");
+        digestAuthHeader("username", "password", "authRealm", "acegi", "POST", "http://localhost:8080", "citrus", "md5", context);
     }
 
     @Test
     public void testRandomUUID() throws Exception {
-        Assert.assertNotNull(randomUUID());
+        Assert.assertNotNull(randomUUID(context));
     }
 
     @Test
     public void testRandomNumber() throws Exception {
-        Assert.assertTrue(randomNumber(10L).length() > 9);
+        Assert.assertTrue(randomNumber(10L, context).length() > 9);
     }
 
     @Test
     public void testRandomNumberWithParams() throws Exception {
-        Assert.assertTrue(randomNumber(10L, true).length() > 9);
+        Assert.assertTrue(randomNumber(10L, true, context).length() > 9);
     }
 
     @Test
     public void testRandomString() throws Exception {
-        Assert.assertEquals(randomString(10L).length(), 10);
+        Assert.assertEquals(randomString(10L, context).length(), 10);
     }
 
     @Test
     public void testRandomStringWithParams() throws Exception {
-        Assert.assertEquals(randomString(10L, false).length(), 10);
-        Assert.assertEquals(randomString(10L, RandomStringFunction.LOWERCASE).length(), 10);
-        Assert.assertEquals(randomString(10L, RandomStringFunction.UPPERCASE, false).length(), 10);
+        Assert.assertEquals(randomString(10L, false, context).length(), 10);
+        Assert.assertEquals(randomString(10L, RandomStringFunction.LOWERCASE, context).length(), 10);
+        Assert.assertEquals(randomString(10L, RandomStringFunction.UPPERCASE, false, context).length(), 10);
     }
 
     @Test
     public void testEscapeXml() throws Exception {
-        Assert.assertEquals(escapeXml("<Test><Message>Some Text<Message></Test>"), "&lt;Test&gt;&lt;Message&gt;Some Text&lt;Message&gt;&lt;/Test&gt;");
+        Assert.assertEquals(escapeXml("<Test><Message>Some Text<Message></Test>", context), "&lt;Test&gt;&lt;Message&gt;Some Text&lt;Message&gt;&lt;/Test&gt;");
     }
 }

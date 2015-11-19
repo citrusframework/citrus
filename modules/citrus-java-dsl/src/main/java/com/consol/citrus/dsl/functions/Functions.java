@@ -16,10 +16,12 @@
 
 package com.consol.citrus.dsl.functions;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.core.*;
 
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -37,16 +39,16 @@ public final class Functions {
      * Runs current date function with arguments.
      * @return
      */
-    public static String currentDate() {
-        return new CurrentDateFunction().execute(Collections.<String>emptyList(), null);
+    public static String currentDate(TestContext context) {
+        return new CurrentDateFunction().execute(Collections.<String>emptyList(), context);
     }
 
     /**
      * Runs current date function with arguments.
      * @return
      */
-    public static String currentDate(String dateFormat) {
-        return new CurrentDateFunction().execute(Collections.singletonList(dateFormat), null);
+    public static String currentDate(String dateFormat, TestContext context) {
+        return new CurrentDateFunction().execute(Collections.singletonList(dateFormat), context);
     }
 
     /**
@@ -56,8 +58,8 @@ public final class Functions {
      * @param dateFormat
      * @return
      */
-    public static String changeDate(String date, String dateOffset, String dateFormat) {
-        return new ChangeDateFunction().execute(Arrays.asList(date, dateOffset, dateFormat), null);
+    public static String changeDate(String date, String dateOffset, String dateFormat, TestContext context) {
+        return new ChangeDateFunction().execute(Arrays.asList(date, dateOffset, dateFormat), context);
     }
 
     /**
@@ -66,64 +68,64 @@ public final class Functions {
      * @param dateOffset
      * @return
      */
-    public static String changeDate(String date, String dateOffset) {
-        return new ChangeDateFunction().execute(Arrays.asList(date, dateOffset), null);
+    public static String changeDate(String date, String dateOffset, TestContext context) {
+        return new ChangeDateFunction().execute(Arrays.asList(date, dateOffset), context);
     }
 
     /**
      * Runs create CData section function with arguments.
      * @return
      */
-    public static String createCDataSection(String content) {
-        return new CreateCDataSectionFunction().execute(Collections.singletonList(content), null);
+    public static String createCDataSection(String content, TestContext context) {
+        return new CreateCDataSectionFunction().execute(Collections.singletonList(content), context);
     }
 
     /**
      * Runs encode base 64 function with arguments.
      * @return
      */
-    public static String encodeBase64(String content) {
-        return new EncodeBase64Function().execute(Collections.singletonList(content), null);
+    public static String encodeBase64(String content, TestContext context) {
+        return new EncodeBase64Function().execute(Collections.singletonList(content), context);
     }
 
     /**
      * Runs encode base 64 function with arguments.
      * @return
      */
-    public static String encodeBase64(String content, Charset charset) {
-        return new EncodeBase64Function().execute(Arrays.asList(content, charset.displayName()), null);
+    public static String encodeBase64(String content, Charset charset, TestContext context) {
+        return new EncodeBase64Function().execute(Arrays.asList(content, charset.displayName()), context);
     }
 
     /**
      * Runs decode base 64 function with arguments.
      * @return
      */
-    public static String decodeBase64(String content) {
-        return new DecodeBase64Function().execute(Collections.singletonList(content), null);
+    public static String decodeBase64(String content, TestContext context) {
+        return new DecodeBase64Function().execute(Collections.singletonList(content), context);
     }
 
     /**
      * Runs decode base 64 function with arguments.
      * @return
      */
-    public static String decodeBase64(String content, Charset charset) {
-        return new DecodeBase64Function().execute(Arrays.asList(content, charset.displayName()), null);
+    public static String decodeBase64(String content, Charset charset, TestContext context) {
+        return new DecodeBase64Function().execute(Arrays.asList(content, charset.displayName()), context);
     }
 
     /**
      * Runs create digest auth header function with arguments.
      * @return
      */
-    public static String digestAuthHeader(String username, String password, String realm, String noncekey, String method, String uri, String opaque, String algorithm) {
-        return new DigestAuthHeaderFunction().execute(Arrays.asList(username, password, realm, noncekey, method, uri, opaque, algorithm), null);
+    public static String digestAuthHeader(String username, String password, String realm, String noncekey, String method, String uri, String opaque, String algorithm, TestContext context) {
+        return new DigestAuthHeaderFunction().execute(Arrays.asList(username, password, realm, noncekey, method, uri, opaque, algorithm), context);
     }
 
     /**
      * Runs random UUID function with arguments.
      * @return
      */
-    public static String randomUUID() {
-        return new RandomUUIDFunction().execute(Collections.<String>emptyList(), null);
+    public static String randomUUID(TestContext context) {
+        return new RandomUUIDFunction().execute(Collections.<String>emptyList(), context);
     }
 
     /**
@@ -131,8 +133,8 @@ public final class Functions {
      * @param length
      * @return
      */
-    public static String randomNumber(Long length) {
-        return new RandomNumberFunction().execute(Collections.singletonList(String.valueOf(length)), null);
+    public static String randomNumber(Long length, TestContext context) {
+        return new RandomNumberFunction().execute(Collections.singletonList(String.valueOf(length)), context);
     }
 
     /**
@@ -141,8 +143,8 @@ public final class Functions {
      * @param padding
      * @return
      */
-    public static String randomNumber(Long length, boolean padding) {
-        return new RandomNumberFunction().execute(Arrays.asList(String.valueOf(length), String.valueOf(padding)), null);
+    public static String randomNumber(Long length, boolean padding, TestContext context) {
+        return new RandomNumberFunction().execute(Arrays.asList(String.valueOf(length), String.valueOf(padding)), context);
     }
 
     /**
@@ -150,8 +152,8 @@ public final class Functions {
      * @param numberOfLetters
      * @return
      */
-    public static String randomString(Long numberOfLetters) {
-        return new RandomStringFunction().execute(Collections.singletonList(String.valueOf(numberOfLetters)), null);
+    public static String randomString(Long numberOfLetters, TestContext context) {
+        return new RandomStringFunction().execute(Collections.singletonList(String.valueOf(numberOfLetters)), context);
     }
 
     /**
@@ -160,8 +162,8 @@ public final class Functions {
      * @param useNumbers
      * @return
      */
-    public static String randomString(Long numberOfLetters, boolean useNumbers) {
-        return randomString(numberOfLetters, RandomStringFunction.MIXED, useNumbers);
+    public static String randomString(Long numberOfLetters, boolean useNumbers, TestContext context) {
+        return randomString(numberOfLetters, RandomStringFunction.MIXED, useNumbers, context);
     }
 
     /**
@@ -171,8 +173,8 @@ public final class Functions {
      * @param useNumbers
      * @return
      */
-    public static String randomString(Long numberOfLetters, String notationMethod, boolean useNumbers) {
-        return new RandomStringFunction().execute(Arrays.asList(String.valueOf(numberOfLetters), notationMethod, String.valueOf(useNumbers)), null);
+    public static String randomString(Long numberOfLetters, String notationMethod, boolean useNumbers, TestContext context) {
+        return new RandomStringFunction().execute(Arrays.asList(String.valueOf(numberOfLetters), notationMethod, String.valueOf(useNumbers)), context);
     }
 
     /**
@@ -181,15 +183,24 @@ public final class Functions {
      * @param notationMethod
      * @return
      */
-    public static String randomString(Long numberOfLetters, String notationMethod) {
-        return new RandomStringFunction().execute(Arrays.asList(String.valueOf(numberOfLetters), String.valueOf(notationMethod)), null);
+    public static String randomString(Long numberOfLetters, String notationMethod, TestContext context) {
+        return new RandomStringFunction().execute(Arrays.asList(String.valueOf(numberOfLetters), String.valueOf(notationMethod)), context);
     }
 
     /**
      * Runs escape XML function with arguments.
      * @return
      */
-    public static String escapeXml(String content) {
-        return new EscapeXmlFunction().execute(Collections.singletonList(content), null);
+    public static String escapeXml(String content, TestContext context) {
+        return new EscapeXmlFunction().execute(Collections.singletonList(content), context);
+    }
+
+    /**
+     * Reads the file resource and returns the complete file content.
+     * @param filePath
+     * @return
+     */
+    public static String readFile(String filePath, TestContext context) {
+        return new ReadFileResourceFunction().execute(Collections.singletonList(filePath), context);
     }
 }

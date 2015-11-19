@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +20,33 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
-import org.apache.commons.codec.binary.Base64;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.List;
 
 /**
- * Decodes base64 binary data to a character sequence.
- * 
+ * Function reads file from given file path and returns the complete file content as function result.
+ * File content is automatically parsed for test variables.
+ *
+ * File path can also have test variables as part of the file name or path.
+ *
  * @author Christoph Deppisch
+ * @since 2.4
  */
-public class DecodeBase64Function implements Function {
+public class ReadFileResourceFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList) || parameterList.size() < 1) {
-            throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
+        if (CollectionUtils.isEmpty(parameterList)) {
+            throw new InvalidFunctionUsageException("Missing file path function parameter");
         }
-        
-        String charset = "UTF-8";
-        if (parameterList.size() > 1) {
-            charset = parameterList.get(1);
-        }
-        
+
         try {
-            return new String(Base64.decodeBase64(parameterList.get(0)), charset);
-        } catch (UnsupportedEncodingException e) {
-            throw new CitrusRuntimeException("Unsupported character encoding", e);
+            return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(parameterList.get(0), context)));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read file", e);
         }
     }
-
 }

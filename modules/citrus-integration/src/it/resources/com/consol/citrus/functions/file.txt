@@ -1,0 +1,2 @@
+This is a sample file content!
+We can also use variables '${randomUUID}' and functions citrus:currentDate()
