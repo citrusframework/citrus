@@ -16,32 +16,29 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class DispatchingMessageSelectorTest {
 
-    private BeanFactory beanFactory = EasyMock.createMock(BeanFactory.class);
+    private BeanFactory beanFactory = Mockito.mock(BeanFactory.class);
     
     @BeforeMethod
     public void setupMock() {
         reset(beanFactory);
-        
-        expect(beanFactory.getBean(NamespaceContextBuilder.class))
-            .andThrow(new NoSuchBeanDefinitionException(NamespaceContextBuilder.class)).atLeastOnce();
-        
-        replay(beanFactory);
+        doThrow(new NoSuchBeanDefinitionException(NamespaceContextBuilder.class)).when(beanFactory).getBean(NamespaceContextBuilder.class);
     }
     
     @Test
@@ -155,9 +152,8 @@ public class DispatchingMessageSelectorTest {
         
         reset(beanFactory);
         
-        expect(beanFactory.getBean(NamespaceContextBuilder.class)).andReturn(nsContextBuilder).atLeastOnce();
-        
-        replay(beanFactory);
+        when(beanFactory.getBean(NamespaceContextBuilder.class)).thenReturn(nsContextBuilder);
+
         
         DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://foo:FooTest/foo:text = 'foobar'", beanFactory);
         
@@ -178,7 +174,6 @@ public class DispatchingMessageSelectorTest {
         
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
-        
-        verify(beanFactory);
+
     }
 }

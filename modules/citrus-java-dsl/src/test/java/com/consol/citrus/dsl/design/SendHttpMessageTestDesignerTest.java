@@ -30,7 +30,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
@@ -38,15 +38,16 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
-    private HttpClient httpClient = EasyMock.createMock(HttpClient.class);
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private HttpClient httpClient = Mockito.mock(HttpClient.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testFork() {
@@ -192,11 +193,9 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testSendBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -219,7 +218,6 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointUri(), "httpClient");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        verify(applicationContextMock);
     }
 
 }

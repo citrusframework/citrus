@@ -15,28 +15,28 @@
  */
 package com.consol.citrus.xml.schema;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.*;
-
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.xml.xsd.XsdSchema;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import java.util.*;
+
+import static org.mockito.Mockito.*;
+
 /**
  * @author Christoph Deppisch
  */
 public class SchemaMappingStrategyChainTest {
     
-    private XsdSchema schemaMock = EasyMock.createMock(XsdSchema.class);
+    private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);
     
     @Test
     public void testStrategyChain() {
-        Document doc = EasyMock.createMock(Document.class);
-        Node rootNode = EasyMock.createMock(Node.class);
+        Document doc = Mockito.mock(Document.class);
+        Node rootNode = Mockito.mock(Node.class);
         
         SchemaMappingStrategyChain strategy = new SchemaMappingStrategyChain();
         RootQNameSchemaMappingStrategy qNameStrategy = new RootQNameSchemaMappingStrategy();
@@ -57,23 +57,21 @@ public class SchemaMappingStrategyChainTest {
 
         reset(doc, rootNode, schemaMock);
         
-        expect(doc.getFirstChild()).andReturn(rootNode).anyTimes();
-        expect(rootNode.getNamespaceURI()).andReturn("http://citrusframework.org/schema").anyTimes();
-        expect(rootNode.getLocalName()).andReturn("foo").anyTimes();
+        when(doc.getFirstChild()).thenReturn(rootNode);
+        when(rootNode.getNamespaceURI()).thenReturn("http://citrusframework.org/schema");
+        when(rootNode.getLocalName()).thenReturn("foo");
         
-        expect(schemaMock.getTargetNamespace()).andReturn("http://citrusframework.org/schema").anyTimes();
-        
-        replay(doc, rootNode, schemaMock);
+        when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
+
         
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
-        
-        verify(doc, rootNode, schemaMock);
+
     }
     
     @Test
     public void testStrategyChainFallback() {
-        Document doc = EasyMock.createMock(Document.class);
-        Node rootNode = EasyMock.createMock(Node.class);
+        Document doc = Mockito.mock(Document.class);
+        Node rootNode = Mockito.mock(Node.class);
         
         SchemaMappingStrategyChain strategy = new SchemaMappingStrategyChain();
         RootQNameSchemaMappingStrategy qNameStrategy = new RootQNameSchemaMappingStrategy();
@@ -94,17 +92,15 @@ public class SchemaMappingStrategyChainTest {
 
         reset(doc, rootNode, schemaMock);
         
-        expect(doc.getFirstChild()).andReturn(rootNode).anyTimes();
-        expect(rootNode.getNamespaceURI()).andReturn("http://citrusframework.org/schema").anyTimes();
-        expect(rootNode.getLocalName()).andReturn("bar").anyTimes();
+        when(doc.getFirstChild()).thenReturn(rootNode);
+        when(rootNode.getNamespaceURI()).thenReturn("http://citrusframework.org/schema");
+        when(rootNode.getLocalName()).thenReturn("bar");
         
-        expect(schemaMock.getTargetNamespace()).andReturn("http://citrusframework.org/schema").anyTimes();
-        
-        replay(doc, rootNode, schemaMock);
+        when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
+
         
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
-        
-        verify(doc, rootNode, schemaMock);
+
     }
     
 }

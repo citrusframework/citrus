@@ -23,20 +23,20 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private SelectiveConsumer consumer = EasyMock.createMock(SelectiveConsumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
 	@Test
 	public void testReceiveTimeout() {
@@ -44,17 +44,15 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 		receiveTimeout.setEndpoint(endpoint);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(context, 1000L)).andReturn(null).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(context, 1000L)).thenReturn(null);
+        when(endpoint.getActor()).thenReturn(null);
         
 		receiveTimeout.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
 	}
 	
 	@Test
@@ -65,17 +63,15 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         receiveTimeout.setTimeout(500L);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(context, 500L)).andReturn(null).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(context, 500L)).thenReturn(null);
+        when(endpoint.getActor()).thenReturn(null);
         
         receiveTimeout.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 	
     @Test
@@ -87,13 +83,12 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("<TestMessage>Hello World!</TestMessage>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(context, 1000L)).andReturn(message).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(context, 1000L)).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         try {
             receiveTimeout.execute(context);
@@ -112,16 +107,14 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         receiveTimeout.setMessageSelector("Operation = 'sayHello'");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive("Operation = 'sayHello'", context, 1000L)).andReturn(null).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive("Operation = 'sayHello'", context, 1000L)).thenReturn(null);
+        when(endpoint.getActor()).thenReturn(null);
         
         receiveTimeout.execute(context);
-        
-        verify(endpoint, consumer, endpointConfiguration);
+
     }
 }

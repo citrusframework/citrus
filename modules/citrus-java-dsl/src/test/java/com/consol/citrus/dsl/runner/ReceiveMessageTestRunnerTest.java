@@ -44,7 +44,7 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
@@ -62,18 +62,18 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     
-    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
-    private Consumer messageConsumer = EasyMock.createMock(Consumer.class);
-    private EndpointConfiguration configuration = EasyMock.createMock(EndpointConfiguration.class);
-    private Resource resource = EasyMock.createMock(Resource.class);
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private Consumer messageConsumer = Mockito.mock(Consumer.class);
+    private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
+    private Resource resource = Mockito.mock(Resource.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     private XStreamMarshaller marshaller = new XStreamMarshaller();
 
@@ -85,13 +85,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveEmpty() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("<Message>Hello</Message>")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("<Message>Hello</Message>"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -115,19 +113,16 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilder() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("Foo").setHeader("operation", "foo")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("Foo").setHeader("operation", "foo"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -158,28 +153,25 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
         Assert.assertNotNull(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
-        verify(messageEndpoint, messageConsumer, configuration);
 
     }
 
     @Test
     public void testReceiveBuilderWithPayloadModel() {
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
+                        .setHeader("operation", "foo"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
@@ -209,21 +201,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
                 "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshaller() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .setHeader("operation", "foo"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -252,27 +241,24 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshallerName() {
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
+                        .setHeader("operation", "foo"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean("myMarshaller", Marshaller.class)).thenReturn(marshaller);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
@@ -301,21 +287,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithPayloadString() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .setHeader("operation", "foo"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -344,23 +327,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithPayloadResource() throws IOException {
         reset(resource, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
+                        .setHeader("operation", "foo"));
 
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes())).once();
-        replay(resource, messageEndpoint, messageConsumer, configuration);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -388,28 +368,25 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
-        verify(resource, messageEndpoint, messageConsumer, configuration);
+
     }
     
     @Test
     public void testReceiveBuilderWithEndpointName() {
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
+                        .setHeader("operation", "foo"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).andReturn(messageEndpoint).atLeastOnce();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
@@ -432,19 +409,16 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithTimeout() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .setHeader("operation", "foo"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -469,22 +443,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getReceiveTimeout(), 1000L);
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithHeaders() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello")
-                        .setHeader("foo", "bar")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .setHeader("foo", "bar"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -537,22 +508,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithHeaderData() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo")
-                        .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -605,23 +573,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderResources().size(), 0L);
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithMultipleHeaderData() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo1</Value></Header>")
-                        .addHeaderData("<Header><Name>operation</Name><Value>foo2</Value></Header>")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .addHeaderData("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -678,29 +643,25 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderResources().size(), 0L);
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithHeaderResource() throws IOException {
         reset(resource, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
-                new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong()))
+                .thenReturn(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo")
-                        .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>")).once();
-
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
-                new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>"))
+                .thenReturn(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "bar")
-                        .addHeaderData("<Header><Name>operation</Name><Value>bar</Value></Header>")).once();
+                        .addHeaderData("<Header><Name>operation</Name><Value>bar</Value></Header>"));
 
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes())).once();
-        replay(resource, messageEndpoint, messageConsumer, configuration);
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -751,30 +712,27 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>bar</Value></Header>");
-        
-        verify(resource, messageEndpoint, messageConsumer, configuration);
+
     }
 
     @Test
     public void testReceiveBuilderWithMultipleHeaderResource() throws IOException {
         reset(resource, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo")
                         .addHeaderData("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>")
-                        .addHeaderData("<Header><Name>operation</Name><Value>bar</Value></Header>")).times(2);
+                        .addHeaderData("<Header><Name>operation</Name><Value>bar</Value></Header>"));
 
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes())).once();
-        replay(resource, messageEndpoint, messageConsumer, configuration);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -833,19 +791,16 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
 
-        verify(resource, messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithValidator() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
@@ -879,7 +834,6 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
@@ -887,19 +841,17 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello")).atLeastOnce();
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -932,23 +884,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithSelector() {
-        SelectiveConsumer selectiveConsumer = EasyMock.createMock(SelectiveConsumer.class);
+        SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
 
         reset(messageEndpoint, selectiveConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(selectiveConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(selectiveConsumer.receive(eq("operation = 'sayHello'"), anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(selectiveConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(selectiveConsumer.receive(eq("operation = 'sayHello'"), any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
-        replay(messageEndpoint, selectiveConsumer, configuration);
-
+                        .setHeader("operation", "sayHello"));
         final Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("operation", "sayHello");
 
@@ -978,23 +927,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
 
-        verify(messageEndpoint, selectiveConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithSelectorExpression() {
-        SelectiveConsumer selectiveConsumer = EasyMock.createMock(SelectiveConsumer.class);
+        SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
 
         reset(messageEndpoint, selectiveConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(selectiveConsumer).times(2);
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(selectiveConsumer.receive(eq("operation = 'sayHello'"), anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(selectiveConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(selectiveConsumer.receive(eq("operation = 'sayHello'"), any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
-        replay(messageEndpoint, selectiveConsumer, configuration);
-
+                        .setHeader("operation", "sayHello"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -1022,26 +968,23 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
 
-        verify(messageEndpoint, selectiveConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
+                        .setHeader("operation", "sayHello"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -1079,26 +1022,23 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderExtractJsonPathFromPayload() {
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
+                        .setHeader("operation", "sayHello"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -1137,22 +1077,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
         Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello")
-                        .setHeader("requestId", "123456")).atLeastOnce();
-
-        replay(messageEndpoint, messageConsumer, configuration);
+                        .setHeader("requestId", "123456"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1190,22 +1127,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
         Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderExtractCombined() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello")
-                        .setHeader("requestId", "123456")).atLeastOnce();
-
-        replay(messageEndpoint, messageConsumer, configuration);
+                        .setHeader("requestId", "123456"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1254,25 +1188,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
     public void testReceiveBuilderWithValidationCallback() {
-        final ValidationCallback callback = EasyMock.createMock(ValidationCallback.class);
+        final ValidationCallback callback = Mockito.mock(ValidationCallback.class);
 
         reset(callback, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello")).atLeastOnce();
-
-        callback.setApplicationContext(applicationContext);
-        expectLastCall().once();
-        callback.validate(anyObject(Message.class), anyObject(TestContext.class));
-        expectLastCall().once();
-        replay(callback, messageEndpoint, messageConsumer, configuration);
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1305,27 +1232,26 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
-        verify(callback, messageEndpoint, messageConsumer, configuration);
+        verify(callback).setApplicationContext(applicationContext);
+        verify(callback).validate(any(Message.class), any(TestContext.class));
     }
-    
+
     @Test
     public void testReceiveBuilderWithValidatonScript() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello")).atLeastOnce();
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -1362,32 +1288,29 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
-        
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+
     }
     
     @Test
     public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
-        final File file = EasyMock.createMock(File.class);
+        final File file = Mockito.mock(File.class);
 
         reset(resource, file, applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello")).atLeastOnce();
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        expect(resource.getFile()).andReturn(file).once();
-        expect(file.getAbsolutePath()).andReturn("classpath:com/consol/citrus/dsl/runner/validation.groovy").once();
+        when(resource.getFile()).thenReturn(file);
+        when(file.getAbsolutePath()).thenReturn("classpath:com/consol/citrus/dsl/runner/validation.groovy");
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(resource, file, applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -1424,8 +1347,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
         Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "classpath:com/consol/citrus/dsl/runner/validation.groovy");
-        
-        verify(resource, file, applicationContextMock, messageEndpoint, messageConsumer, configuration);
+
     }
     
     @Test
@@ -1433,19 +1355,17 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello")).atLeastOnce();
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -1488,22 +1408,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData());
         Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadResourcePath());
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
-        
-        verify(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+
     }
     
     @Test
     public void testReceiveBuilderWithNamespaceValidation() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "foo")).atLeastOnce();
-        replay(messageEndpoint, messageConsumer, configuration);
-
+                        .setHeader("operation", "foo"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -1537,21 +1454,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 "<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://www.consol.de/schemas/test");
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithXpathExpressions() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
-
-        replay(messageEndpoint, messageConsumer, configuration);
+                        .setHeader("operation", "sayHello"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1587,21 +1501,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getXpathExpressions().get("TestRequest.Message"), "Hello World!");
         Assert.assertEquals(validationContext.getXpathExpressions().get("TestRequest.Operation"), "SayHello");
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithJsonPathExpressions() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
-
-        replay(messageEndpoint, messageConsumer, configuration);
+                        .setHeader("operation", "sayHello"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1639,89 +1550,74 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "John");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)
     public void testReceiveBuilderWithJsonPathExpressionsFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
+                        .setHeader("operation", "sayHello"));
 
-        replay(messageEndpoint, messageConsumer, configuration);
-
-        try {
-            new MockTestRunner(getClass().getSimpleName(), applicationContext) {
-                @Override
-                public void execute() {
-                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                        @Override
-                        public void configure(ReceiveMessageBuilder builder) {
-                            builder.endpoint(messageEndpoint)
-                                    .messageType(MessageType.JSON)
-                                    .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                    .validate("$.person.name", "John")
-                                    .validate("$.text", "Hello Citrus!");
-                        }
-                    });
-                }
-            };
-        } finally {
-            verify(messageEndpoint, messageConsumer, configuration);
-        }
+        new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                    @Override
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .validate("$.person.name", "John")
+                                .validate("$.text", "Hello Citrus!");
+                    }
+                });
+            }
+        };
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)
     public void testReceiveBuilderWithJsonValidationFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
+                        .setHeader("operation", "sayHello"));
 
-        replay(messageEndpoint, messageConsumer, configuration);
-
-        try {
-            new MockTestRunner(getClass().getSimpleName(), applicationContext) {
-                @Override
-                public void execute() {
-                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                        @Override
-                        public void configure(ReceiveMessageBuilder builder) {
-                            builder.endpoint(messageEndpoint)
-                                    .messageType(MessageType.JSON)
-                                    .payload("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                    .validate("$.person.name", "John")
-                                    .validate("$.text", "Hello World!");
-                        }
-                    });
-                }
-            };
-        } finally {
-            verify(messageEndpoint, messageConsumer, configuration);
-        }
+        new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                    @Override
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .validate("$.person.name", "John")
+                                .validate("$.text", "Hello World!");
+                    }
+                });
+            }
+        };
     }
     
     @Test
     public void testReceiveBuilderWithIgnoreElementsXpath() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
-
-        replay(messageEndpoint, messageConsumer, configuration);
+                        .setHeader("operation", "sayHello"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1756,21 +1652,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 1L);
         Assert.assertEquals(validationContext.getIgnoreExpressions().iterator().next(), "TestRequest.Message");
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithIgnoreElementsJson() {
         reset(messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
-
-        replay(messageEndpoint, messageConsumer, configuration);
+                        .setHeader("operation", "sayHello"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -1810,32 +1703,29 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.person.surname"));
         Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.index"));
 
-        verify(messageEndpoint, messageConsumer, configuration);
     }
 
     @Test
     public void testReceiveBuilderWithSchema() throws IOException {
         XsdSchema schema = applicationContext.getBean("testSchema", XsdSchema.class);
-        XmlValidator validator = EasyMock.createMock(XmlValidator.class);
+        XmlValidator validator = Mockito.mock(XmlValidator.class);
 
         reset(applicationContextMock, schema, validator, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
+                        .setHeader("operation", "sayHello"));
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        expect(schema.createValidator()).andReturn(validator).once();
-        expect(validator.validate(anyObject(Source.class))).andReturn(new SAXParseException[] {}).once();
-
-        replay(applicationContextMock, schema, validator, messageEndpoint, messageConsumer, configuration);
+        when(schema.createValidator()).thenReturn(validator);
+        when(validator.validate(any(Source.class))).thenReturn(new SAXParseException[] {});
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -1869,7 +1759,6 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(validationContext.getSchema(), "testSchema");
 
-        verify(applicationContextMock, schema, validator, messageEndpoint, messageConsumer, configuration);
     }
     
     @Test
@@ -1877,16 +1766,16 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         XsdSchema schema = applicationContext.getBean("testSchema", XsdSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
-        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
-        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
-                        .setHeader("operation", "sayHello")).atLeastOnce();
+                        .setHeader("operation", "sayHello"));
 
-        expect(schema.getTargetNamespace()).andReturn("http://citrusframework.org/test").atLeastOnce();
-        expect(schema.getSource()).andReturn(new StringSource("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n" +
+        when(schema.getTargetNamespace()).thenReturn("http://citrusframework.org/test");
+        when(schema.getSource()).thenReturn(new StringSource("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n" +
                 "     xmlns=\"http://citrusframework.org/test\"\n" +
                 "     targetNamespace=\"http://citrusframework.org/test\"\n" +
                 "     elementFormDefault=\"qualified\"\n" +
@@ -1897,9 +1786,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 "            <xs:element name=\"Message\" type=\"xs:string\"/>\n" +
                 "          </xs:sequence>\n" +
                 "      </xs:complexType>\n" +
-                "    </xs:element></xs:schema>")).once();
-        replay(schema, messageEndpoint, messageConsumer, configuration);
-
+                "    </xs:element></xs:schema>"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -1932,6 +1819,5 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(validationContext.getSchemaRepository(), "customSchemaRepository");
 
-        verify(schema, messageEndpoint, messageConsumer, configuration);
     }
 }

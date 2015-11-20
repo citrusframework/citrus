@@ -21,29 +21,25 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.FailedToStartRouteException;
 import org.apache.camel.model.RouteDefinition;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
-    private RouteDefinition route = EasyMock.createMock(RouteDefinition.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private RouteDefinition route = Mockito.mock(RouteDefinition.class);
 
     @Test
      public void testCreateRoute() throws Exception {
         reset(camelContext, route);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
-        expect(route.getId()).andReturn("route_1").atLeastOnce();
-
-        camelContext.addRouteDefinition(route);
-        expectLastCall().once();
-
-        replay(camelContext, route);
+        when(camelContext.getName()).thenReturn("camel_context");
+        when(route.getId()).thenReturn("route_1");
 
         CreateCamelRouteAction action = new CreateCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -51,20 +47,17 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, route);
+        verify(camelContext).addRouteDefinition(route);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testCreateRouteWithException() throws Exception {
         reset(camelContext, route);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
-        expect(route.getId()).andReturn("route_1").atLeastOnce();
+        when(camelContext.getName()).thenReturn("camel_context");
+        when(route.getId()).thenReturn("route_1");
 
-        camelContext.addRouteDefinition(route);
-        expectLastCall().andThrow(new FailedToStartRouteException("routeId", "Failed to start route")).once();
-
-        replay(camelContext, route);
+        doThrow(new FailedToStartRouteException("routeId", "Failed to start route")).when(camelContext).addRouteDefinition(route);
 
         CreateCamelRouteAction action = new CreateCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -72,6 +65,5 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, route);
     }
 }

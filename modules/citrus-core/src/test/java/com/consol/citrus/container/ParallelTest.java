@@ -20,40 +20,36 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class ParallelTest extends AbstractTestNGUnitTest {
 
-    private TestAction action = EasyMock.createMock(TestAction.class);
+    private TestAction action = Mockito.mock(TestAction.class);
 
     @Test
     public void testSingleAction() {
         Parallel parallelAction = new Parallel();
 
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().once();
-        
-        replay(action);
-        
+
         List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(action);
-        
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
 
-        verify(action);
+        verify(action).execute(context);
     }
     
     @Test
@@ -61,22 +57,17 @@ public class ParallelTest extends AbstractTestNGUnitTest {
         Parallel parallelAction = new Parallel();
         
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().once();
-        
-        replay(action);
-        
+
         List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(new EchoAction());
         actionList.add(action);
         actionList.add(new EchoAction());
-        
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
 
-        verify(action);
+        verify(action).execute(context);
     }
     
     @Test
@@ -142,22 +133,17 @@ public class ParallelTest extends AbstractTestNGUnitTest {
         Parallel parallelAction = new Parallel();
         
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().once();
-        
-        replay(action);
-        
+
         List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(new EchoAction());
         actionList.add(new FailAction());
         actionList.add(action);
         actionList.add(new FailAction());
-        
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
 
-        verify(action);
+        verify(action).execute(context);
     }
 }

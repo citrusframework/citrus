@@ -19,12 +19,12 @@ package com.consol.citrus.arquillian.container;
 import com.consol.citrus.arquillian.enricher.CitrusRemoteInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
 import com.consol.citrus.arquillian.lifecycle.CitrusRemoteLifecycleHandler;
-import org.easymock.EasyMock;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.when;
 
 public class CitrusRemoteExtensionTest {
 
@@ -32,17 +32,14 @@ public class CitrusRemoteExtensionTest {
 
     @Test
     public void testRegister() throws Exception {
-        LoadableExtension.ExtensionBuilder extensionBuilder = EasyMock.createMock(LoadableExtension.ExtensionBuilder.class);
+        LoadableExtension.ExtensionBuilder extensionBuilder = Mockito.mock(LoadableExtension.ExtensionBuilder.class);
 
-        expect(extensionBuilder.service(TestEnricher.class, CitrusTestEnricher.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusRemoteConfigurationProducer.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusRemoteInstanceProducer.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusRemoteLifecycleHandler.class)).andReturn(extensionBuilder).once();
-
-        replay(extensionBuilder);
+        when(extensionBuilder.service(TestEnricher.class, CitrusTestEnricher.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.observer(CitrusRemoteConfigurationProducer.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.observer(CitrusRemoteInstanceProducer.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.observer(CitrusRemoteLifecycleHandler.class)).thenReturn(extensionBuilder);
 
         extension.register(extensionBuilder);
 
-        verify(extensionBuilder);
     }
 }

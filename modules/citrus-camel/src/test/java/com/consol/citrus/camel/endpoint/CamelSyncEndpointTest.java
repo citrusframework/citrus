@@ -22,12 +22,13 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -35,10 +36,10 @@ import static org.easymock.EasyMock.*;
  */
 public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
-    private ProducerTemplate producerTemplate = EasyMock.createMock(ProducerTemplate.class);
-    private ConsumerTemplate consumerTemplate = EasyMock.createMock(ConsumerTemplate.class);
-    private MessageListeners messageListeners = EasyMock.createMock(MessageListeners.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
+    private ConsumerTemplate consumerTemplate = Mockito.mock(ConsumerTemplate.class);
+    private MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
 
     @Test
     public void testCamelSyncEndpointProducer() {
@@ -59,11 +60,9 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
-
-        replay(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         camelEndpoint.createProducer().send(requestMessage, context);
         Message reply = camelEndpoint.createConsumer().receive(context, 5000L);
@@ -74,7 +73,6 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
         Assert.assertEquals(reply.getHeader("operation"), "newsFeed");
 
-        verify(camelContext, producerTemplate);
     }
 
     @Test
@@ -97,13 +95,9 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, consumerTemplate);
 
-        expect(camelContext.createConsumerTemplate()).andReturn(consumerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).andReturn(exchange).once();
-        consumerTemplate.doneUoW(exchange);
-        expectLastCall().once();
-
-        replay(camelContext, consumerTemplate);
+        when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).thenReturn(exchange);
 
         Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
@@ -117,7 +111,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(exchange.getOut().getBody().toString(), replyMessage.getPayload());
         Assert.assertEquals(exchange.getOut().getHeaders().get("operation"), "hello");
 
-        verify(camelContext, consumerTemplate);
+        verify(consumerTemplate).doneUoW(exchange);
     }
 
     @Test
@@ -140,28 +134,23 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate, messageListeners);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-        expect(messageListeners.isEmpty()).andReturn(false).times(2);
-        messageListeners.onOutboundMessage(requestMessage, context);
-        expectLastCall().once();
-        messageListeners.onInboundMessage(anyObject(Message.class), eq(context));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
+        when(messageListeners.isEmpty()).thenReturn(false);
+        doAnswer(new Answer() {
             @Override
-            public Object answer() throws Throwable {
-                Message inboundMessage = (Message) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message inboundMessage = (Message) invocation.getArguments()[0];
                 Assert.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
                 return null;
             }
-        }).once();
-
-        replay(camelContext, producerTemplate, messageListeners);
+        }).when(messageListeners).onInboundMessage(any(Message.class), eq(context));
 
         camelEndpoint.createProducer().send(requestMessage, context);
         camelEndpoint.createConsumer().receive(context, 5000L);
 
-        verify(camelContext, producerTemplate, messageListeners);
+        verify(messageListeners).onOutboundMessage(requestMessage, context);
     }
 }

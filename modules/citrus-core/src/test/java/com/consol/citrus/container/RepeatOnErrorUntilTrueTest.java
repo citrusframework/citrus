@@ -21,19 +21,19 @@ import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
 
-    private TestAction action = EasyMock.createMock(TestAction.class);
+    private TestAction action = Mockito.mock(TestAction.class);
 
     @Test
     public void testSuccessOnFirstIteration() {
@@ -41,18 +41,14 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
 
 
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().once();
-        
-        replay(action);
-        
+
         repeat.setActions(Collections.singletonList(action));
-        
+
         repeat.setIndexName("i");
         repeat.setCondition("i = 5");
-        
+
         repeat.execute(context);
+        verify(action).execute(context);
     }
     
     @Test(expectedExceptions=CitrusRuntimeException.class)
@@ -62,22 +58,18 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         List<TestAction> actions = new ArrayList<TestAction>();
 
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().times(4);
-        
-        replay(action);
-        
+
         actions.add(action);
         actions.add(new FailAction());
-        
+
         repeat.setActions(actions);
-        
+
         repeat.setIndexName("i");
         repeat.setCondition("i = 5");
         repeat.setAutoSleep(0L);
-        
+
         repeat.execute(context);
+        verify(action, times(4)).execute(context);
     }
 
     @Test(expectedExceptions=CitrusRuntimeException.class)
@@ -87,11 +79,6 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         List<TestAction> actions = new ArrayList<TestAction>();
 
         reset(action);
-
-        action.execute(context);
-        expectLastCall().times(4);
-
-        replay(action);
 
         actions.add(action);
         actions.add(new FailAction());
@@ -107,5 +94,6 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         repeat.setAutoSleep(0L);
 
         repeat.execute(context);
+        verify(action, times(4)).execute(context);
     }
 }

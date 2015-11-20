@@ -17,12 +17,13 @@
 package com.consol.citrus.actions;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +32,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	
     private ExecutePLSQLAction executePLSQLAction;
     
-    private JdbcTemplate jdbcTemplate = EasyMock.createMock(JdbcTemplate.class);
+    private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     
     @BeforeMethod
     public void setUp() {
@@ -60,15 +61,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
 	    
 	    reset(jdbcTemplate);
-	    
-	    jdbcTemplate.execute(controlStatement);
-	    expectLastCall().once();
-	    
-	    replay(jdbcTemplate);
-	    
 	    executePLSQLAction.execute(context);
-	    
-	    verify(jdbcTemplate);
+	    verify(jdbcTemplate).execute(controlStatement);
 	}
 	
 	@Test
@@ -92,15 +86,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute(controlStatement);
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
         executePLSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute(controlStatement);
     }
 	
 	@Test
@@ -116,17 +103,12 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute(controlStatement);
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
+
         executePLSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+
+        verify(jdbcTemplate).execute(controlStatement);
     }
-	
+
 	@Test
     public void testPLSQLExecutionWithInlineScriptVariableSupport() {
 	    context.setVariable("myText", "Hello World!");
@@ -151,15 +133,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute(controlStatement);
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
         executePLSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute(controlStatement);
     }
 	
 	@Test
@@ -178,15 +153,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute(controlStatement);
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
         executePLSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute(controlStatement);
     }
 	
 	@Test
@@ -219,15 +187,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute(controlStatement);
-        expectLastCall().times(2);
-        
-        replay(jdbcTemplate);
-        
         executePLSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+        verify(jdbcTemplate, times(2)).execute(controlStatement);
     }
 	
 	@Test
@@ -243,14 +204,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute(controlStatement);
-        expectLastCall().times(2);
-        
-        replay(jdbcTemplate);
-        
         executePLSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+        verify(jdbcTemplate, times(2)).execute(controlStatement);
     }
 }

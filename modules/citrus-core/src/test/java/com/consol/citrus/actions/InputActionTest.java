@@ -17,29 +17,28 @@
 package com.consol.citrus.actions;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class InputActionTest extends AbstractTestNGUnitTest {
 
-    private BufferedReader inputReader = EasyMock.createMock(BufferedReader.class);
+    private BufferedReader inputReader = Mockito.mock(BufferedReader.class);
 
     @Test
     public void testInput() throws IOException {
         reset(inputReader);
 
-        expect(inputReader.readLine()).andReturn("yes").once();
-
-        replay(inputReader);
+        when(inputReader.readLine()).thenReturn("yes");
 
         InputAction input = initializeInputAction();
         input.setMessage("Is that correct?");
@@ -48,14 +47,11 @@ public class InputActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(context.getVariable("userinput"), "yes");
 
-        verify(inputReader);
     }
 
     @Test
 	public void testExistingInputVariable() {
         reset(inputReader);
-
-        replay(inputReader);
 
 	    context.setVariable("userinput", "yes");
 	    
@@ -66,17 +62,14 @@ public class InputActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(context.getVariable("userinput"), "yes");
 
-        verify(inputReader);
 	}
 	
 	@Test
     public void testValidAnswers() throws IOException {
         reset(inputReader);
 
-        expect(inputReader.readLine()).andReturn("i dont know").once();
-        expect(inputReader.readLine()).andReturn("no").once();
-
-        replay(inputReader);
+        when(inputReader.readLine()).thenReturn("i dont know");
+        when(inputReader.readLine()).thenReturn("no");
 
         InputAction input = initializeInputAction();
         input.setValidAnswers("yes/no");
@@ -86,7 +79,6 @@ public class InputActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(context.getVariable("userinput"), "no");
 
-        verify(inputReader);
     }
 
     private InputAction initializeInputAction() {

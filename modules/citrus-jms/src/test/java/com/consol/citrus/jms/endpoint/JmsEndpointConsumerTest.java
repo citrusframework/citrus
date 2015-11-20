@@ -21,7 +21,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,21 +30,21 @@ import javax.jms.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
-    private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
-    private Connection connection = EasyMock.createMock(Connection.class);
-    private Session session = EasyMock.createMock(Session.class);
-    private Destination destination = EasyMock.createMock(Destination.class);
-    private Queue destinationQueue = EasyMock.createMock(Queue.class);
-    private MessageConsumer messageConsumer = EasyMock.createMock(MessageConsumer.class);
+    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private Connection connection = Mockito.mock(Connection.class);
+    private Session session = Mockito.mock(Session.class);
+    private Destination destination = Mockito.mock(Destination.class);
+    private Queue destinationQueue = Mockito.mock(Queue.class);
+    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
     
-    private JmsTemplate jmsTemplate = EasyMock.createMock(JmsTemplate.class);
+    private JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
 
     @Test
     public void testReceiveMessageWithJmsTemplate() {
@@ -56,19 +56,13 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         reset(jmsTemplate, connectionFactory, destination);
 
-        jmsTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
-        
-        expect(jmsTemplate.receive()).andReturn(new TextMessageImpl(controlMessage.getPayload(String.class), controlHeaders));
+        when(jmsTemplate.getDefaultDestination()).thenReturn(destination);
+        when(jmsTemplate.receive()).thenReturn(new TextMessageImpl(controlMessage.getPayload(String.class), controlHeaders));
 
-        replay(jmsTemplate, connectionFactory, destination);
-        
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
 
-        verify(jmsTemplate, connectionFactory, destination);
+        verify(jmsTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -84,24 +78,19 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createConsumer(destination, null)).andReturn(messageConsumer).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        expect(messageConsumer.receive(5000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
+
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        verify(connection).start();
     }
     
     @Test
@@ -117,26 +106,19 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createQueue("myDestination")).andReturn(destinationQueue).once();
-        
-        expect(session.createConsumer(destinationQueue, null)).andReturn(messageConsumer).once();
-        
-        expect(messageConsumer.receive(5000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(session.createQueue("myDestination")).thenReturn(destinationQueue);
+        when(session.createConsumer(destinationQueue, null)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        verify(connection).start();
     }
     
     @Test
@@ -148,24 +130,20 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createConsumer(destination, null)).andReturn(messageConsumer).once();
+        when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
         
-        expect(messageConsumer.receive(5000L)).andReturn(null).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(messageConsumer.receive(5000L)).thenReturn(null);
+
         try {
             endpoint.createConsumer().receive(context);
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving JMS message on"));
+            verify(connection).start();
             return;
         }
         
@@ -187,24 +165,18 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createConsumer(destination, null)).andReturn(messageConsumer).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        expect(messageConsumer.receive(10000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(10000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        verify(connection).start();
     }
 
     @Test
@@ -223,26 +195,20 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createConsumer(destination, null)).andReturn(messageConsumer).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        expect(messageConsumer.receive(5000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         Assert.assertNotNull(receivedMessage.getHeader("Operation"));
         Assert.assertTrue(receivedMessage.getHeader("Operation").equals("sayHello"));
-        
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        verify(connection).start();
     }
     
     @Test
@@ -258,24 +224,18 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createConsumer(destination, "Operation = 'sayHello'")).andReturn(messageConsumer).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        expect(messageConsumer.receive(5000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(session.createConsumer(destination, "Operation = 'sayHello'")).thenReturn(messageConsumer);
+        when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
+
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        verify(connection).start();
     }
     
     @Test
@@ -292,23 +252,17 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        expect(session.getTransacted()).andReturn(false).once();
-        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+        when(session.getTransacted()).thenReturn(false);
+        when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
         
-        expect(session.createConsumer(destination, "Operation = 'sayHello'")).andReturn(messageConsumer).once();
-        
-        connection.start();
-        expectLastCall().once();
-        
-        expect(messageConsumer.receive(10000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
-        
+        when(session.createConsumer(destination, "Operation = 'sayHello'")).thenReturn(messageConsumer);
+        when(messageConsumer.receive(10000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
+
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        verify(connection).start();
     }
 }

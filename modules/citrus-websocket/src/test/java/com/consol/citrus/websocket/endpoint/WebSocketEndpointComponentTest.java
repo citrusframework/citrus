@@ -18,7 +18,7 @@ package com.consol.citrus.websocket.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * @since 2.3
  */
 public class WebSocketEndpointComponentTest {
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
 
     @BeforeClass

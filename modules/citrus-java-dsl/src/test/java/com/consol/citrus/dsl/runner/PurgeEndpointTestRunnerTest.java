@@ -29,14 +29,14 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -44,31 +44,29 @@ import static org.easymock.EasyMock.*;
  */
 public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint1 = EasyMock.createMock(Endpoint.class);
-    private Endpoint endpoint2 = EasyMock.createMock(Endpoint.class);
-    private Endpoint endpoint3 = EasyMock.createMock(Endpoint.class);
-    private Endpoint endpoint4 = EasyMock.createMock(Endpoint.class);
+    private Endpoint endpoint1 = Mockito.mock(Endpoint.class);
+    private Endpoint endpoint2 = Mockito.mock(Endpoint.class);
+    private Endpoint endpoint3 = Mockito.mock(Endpoint.class);
+    private Endpoint endpoint4 = Mockito.mock(Endpoint.class);
 
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private SelectiveConsumer selectiveConsumer = EasyMock.createMock(SelectiveConsumer.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
 
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testPurgeEndpointsBuilderWithEndpoints() {
         reset(endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
 
-        expect(endpoint1.getName()).andReturn("e1").atLeastOnce();
-        expect(endpoint2.getName()).andReturn("e2").atLeastOnce();
-        expect(endpoint3.getName()).andReturn("e3").atLeastOnce();
+        when(endpoint1.getName()).thenReturn("e1");
+        when(endpoint2.getName()).thenReturn("e2");
+        when(endpoint3.getName()).thenReturn("e3");
 
-        expect(endpoint1.createConsumer()).andReturn(consumer).once();
-        expect(endpoint2.createConsumer()).andReturn(consumer).once();
-        expect(endpoint3.createConsumer()).andReturn(consumer).once();
+        when(endpoint1.createConsumer()).thenReturn(consumer);
+        when(endpoint2.createConsumer()).thenReturn(consumer);
+        when(endpoint3.createConsumer()).thenReturn(consumer);
 
-        expect(consumer.receive(anyObject(TestContext.class), eq(100L))).andThrow(new ActionTimeoutException()).times(3);
-
-        replay(endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
+        doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -94,7 +92,6 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageSelector().size(), 0);
         Assert.assertNull(action.getMessageSelectorString());
 
-        verify(endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
 
     }
     
@@ -102,30 +99,28 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
     public void testPurgeEndpointBuilderWithNames() {
         reset(applicationContextMock, endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        expect(endpoint1.getName()).andReturn("e1").atLeastOnce();
-        expect(endpoint2.getName()).andReturn("e2").atLeastOnce();
-        expect(endpoint3.getName()).andReturn("e3").atLeastOnce();
-        expect(endpoint4.getName()).andReturn("e4").atLeastOnce();
+        when(endpoint1.getName()).thenReturn("e1");
+        when(endpoint2.getName()).thenReturn("e2");
+        when(endpoint3.getName()).thenReturn("e3");
+        when(endpoint4.getName()).thenReturn("e4");
 
-        expect(endpoint1.createConsumer()).andReturn(selectiveConsumer).once();
-        expect(endpoint2.createConsumer()).andReturn(consumer).once();
-        expect(endpoint3.createConsumer()).andReturn(selectiveConsumer).once();
-        expect(endpoint4.createConsumer()).andReturn(consumer).once();
+        when(endpoint1.createConsumer()).thenReturn(selectiveConsumer);
+        when(endpoint2.createConsumer()).thenReturn(consumer);
+        when(endpoint3.createConsumer()).thenReturn(selectiveConsumer);
+        when(endpoint4.createConsumer()).thenReturn(consumer);
 
-        expect(applicationContextMock.getBean("e1", Endpoint.class)).andReturn(endpoint1).once();
-        expect(applicationContextMock.getBean("e2", Endpoint.class)).andReturn(endpoint2).once();
-        expect(applicationContextMock.getBean("e3", Endpoint.class)).andReturn(endpoint3).once();
-        expect(applicationContextMock.getBean("e4", Endpoint.class)).andReturn(endpoint4).once();
+        when(applicationContextMock.getBean("e1", Endpoint.class)).thenReturn(endpoint1);
+        when(applicationContextMock.getBean("e2", Endpoint.class)).thenReturn(endpoint2);
+        when(applicationContextMock.getBean("e3", Endpoint.class)).thenReturn(endpoint3);
+        when(applicationContextMock.getBean("e4", Endpoint.class)).thenReturn(endpoint4);
 
-        expect(consumer.receive(anyObject(TestContext.class), eq(100L))).andThrow(new ActionTimeoutException()).times(2);
-        expect(selectiveConsumer.receive(eq("operation = 'sayHello'"), anyObject(TestContext.class), eq(100L))).andThrow(new ActionTimeoutException()).times(2);
-
-        replay(applicationContextMock, endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
+        doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
+        doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive(eq("operation = 'sayHello'"), any(TestContext.class), eq(100L));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -152,25 +147,22 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageSelector().size(), 0);
         Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
 
-        verify(applicationContextMock, endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
     }
 
     @Test
     public void testCustomEndpointResolver() {
         reset(applicationContextMock, endpoint1, consumer, selectiveConsumer);
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        expect(endpoint1.getName()).andReturn("e1").atLeastOnce();
-        expect(endpoint1.createConsumer()).andReturn(consumer).once();
+        when(endpoint1.getName()).thenReturn("e1");
+        when(endpoint1.createConsumer()).thenReturn(consumer);
 
-        expect(applicationContextMock.getBean("e1", Endpoint.class)).andReturn(endpoint1).once();
-        expect(consumer.receive(anyObject(TestContext.class), eq(100L))).andThrow(new ActionTimeoutException()).once();
-
-        replay(applicationContextMock, endpoint1, consumer, selectiveConsumer);
+        when(applicationContextMock.getBean("e1", Endpoint.class)).thenReturn(endpoint1);
+        doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -195,6 +187,5 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(action.getBeanFactory());
         Assert.assertEquals(action.getBeanFactory(), applicationContextMock);
 
-        verify(applicationContextMock, endpoint1, consumer, selectiveConsumer);
     }
 }

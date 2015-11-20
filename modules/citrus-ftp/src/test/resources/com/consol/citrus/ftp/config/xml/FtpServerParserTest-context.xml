@@ -26,11 +26,11 @@
                       user-manager-properties="classpath:ftp.server.properties"
                       port="22222"/>
 
-  <bean id="apacheFtpServer" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="apacheFtpServer" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.ftpserver.FtpServer"/>
   </bean>
 
-  <bean id="userManager" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="userManager" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.ftpserver.ftplet.UserManager"/>
   </bean>
 

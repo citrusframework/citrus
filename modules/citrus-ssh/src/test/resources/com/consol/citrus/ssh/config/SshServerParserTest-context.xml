@@ -22,11 +22,11 @@
                      auto-start="false"
                      endpoint-adapter="sshServerAdapter"/>
 
-  <bean id="sshMessageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.ssh.message.SshMessageConverter"/>
   </bean>
 
-  <bean id="sshServerAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="sshServerAdapter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
   </bean>
 

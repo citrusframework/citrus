@@ -21,10 +21,11 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
-import org.springframework.messaging.*;
+import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,18 +33,18 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
-    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
+    private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
     
-    private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
+    private PollableChannel channel = Mockito.mock(PollableChannel.class);
 
-    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
+    private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -59,19 +60,14 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
         
         reset(messagingTemplate, channel);
-        
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel);
-        
+
+        when(messagingTemplate.receive(channel)).thenReturn(message);
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
-        verify(messagingTemplate, channel);
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -91,21 +87,16 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         reset(messagingTemplate, channel, channelResolver);
         
-        expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
-        
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel, channelResolver);
-        
+        when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
+
+        when(messagingTemplate.receive(channel)).thenReturn(message);
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
 
-        verify(messagingTemplate, channel, channelResolver);
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -123,20 +114,14 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
         
         reset(messagingTemplate, channel);
-        
-        messagingTemplate.setReceiveTimeout(10000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel);
-        
+        when(messagingTemplate.receive(channel)).thenReturn(message);
+
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
 
-        verify(messagingTemplate, channel);
+        verify(messagingTemplate).setReceiveTimeout(10000L);
     }
     
     @Test
@@ -154,20 +139,14 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
         
         reset(messagingTemplate, channel);
-        
-        messagingTemplate.setReceiveTimeout(25000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel);
-        
+        when(messagingTemplate.receive(channel)).thenReturn(message);
+
         Message receivedMessage = endpoint.createConsumer().receive(context, 25000L);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
 
-        verify(messagingTemplate, channel);
+        verify(messagingTemplate).setReceiveTimeout(25000L);
     }
     
     @Test
@@ -178,22 +157,16 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
         
         reset(messagingTemplate, channel);
-        
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(null).once();
-        
-        replay(messagingTemplate, channel);
-        
+        when(messagingTemplate.receive(channel)).thenReturn(null);
+
         try {
             endpoint.createConsumer().receive(context);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
         }
-        
-        verify(messagingTemplate, channel);
+
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -212,15 +185,13 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
             Assert.assertNotNull(e.getMessage());
         }
         
-        MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
+        MessageSelectingQueueChannel queueChannel = Mockito.mock(MessageSelectingQueueChannel.class);
         org.springframework.messaging.Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
         reset(queueChannel);
         
-        expect(queueChannel.receive(anyObject(HeaderMatchingMessageSelector.class)))
-                            .andReturn(message).once();
+        when(queueChannel.receive(any(HeaderMatchingMessageSelector.class)))
+                            .thenReturn(message);
         
-        replay(queueChannel);
-
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
         
@@ -228,7 +199,6 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
 
-        verify(queueChannel);
     }
     
     @Test
@@ -236,15 +206,13 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         ChannelEndpoint endpoint = new ChannelEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         
-        MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
+        MessageSelectingQueueChannel queueChannel = Mockito.mock(MessageSelectingQueueChannel.class);
         
         reset(queueChannel);
         
-        expect(queueChannel.receive(anyObject(HeaderMatchingMessageSelector.class), eq(1500L)))
-                            .andReturn(null).once(); // force retry
+        when(queueChannel.receive(any(HeaderMatchingMessageSelector.class), eq(1500L)))
+                            .thenReturn(null); // force retry
         
-        replay(queueChannel);
-
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
         
         try {
@@ -253,7 +221,6 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
         }
-        
-        verify(queueChannel);
+
     }
 }

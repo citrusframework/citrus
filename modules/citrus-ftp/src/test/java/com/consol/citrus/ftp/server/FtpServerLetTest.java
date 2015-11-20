@@ -20,14 +20,16 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.ftp.message.FtpMessage;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.*;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.apache.tools.ant.taskdefs.Java;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -35,9 +37,9 @@ import static org.easymock.EasyMock.*;
  */
 public class FtpServerLetTest {
 
-    private EndpointAdapter endpointAdapter = EasyMock.createMock(EndpointAdapter.class);
-    private FtpSession ftpSession = EasyMock.createMock(FtpSession.class);
-    private FtpRequest ftpRequest = EasyMock.createMock(FtpRequest.class);
+    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private FtpSession ftpSession = Mockito.mock(FtpSession.class);
+    private FtpRequest ftpRequest = Mockito.mock(FtpRequest.class);
 
     private FtpServerFtpLet ftpLet = new FtpServerFtpLet(endpointAdapter);
 
@@ -46,13 +48,13 @@ public class FtpServerLetTest {
 
         reset(endpointAdapter, ftpSession, ftpRequest);
 
-        expect(ftpRequest.getCommand()).andReturn(FTPCmd.MKD.getCommand()).once();
-        expect(ftpRequest.getArgument()).andReturn("testDir").once();
+        when(ftpRequest.getCommand()).thenReturn(FTPCmd.MKD.getCommand());
+        when(ftpRequest.getArgument()).thenReturn("testDir");
 
-        expect(endpointAdapter.handleMessage(anyObject(FtpMessage.class))).andAnswer(new IAnswer<FtpMessage>() {
+        doAnswer(new Answer<FtpMessage>() {
             @Override
-            public FtpMessage answer() throws Throwable {
-                FtpMessage ftpMessage = (FtpMessage) getCurrentArguments()[0];
+            public FtpMessage answer(InvocationOnMock invocation) throws Throwable {
+                FtpMessage ftpMessage = (FtpMessage) invocation.getArguments()[0];
 
                 Assert.assertEquals(ftpMessage.getPayload(String.class), FTPCmd.MKD.getCommand());
 
@@ -63,15 +65,12 @@ public class FtpServerLetTest {
 
                 return new FtpMessage(FTPCmd.MKD, "testDir").replyCode(200).replyString("OK");
             }
-        });
-
-        replay(endpointAdapter, ftpSession, ftpRequest);
+        }).when(endpointAdapter).handleMessage(any(FtpMessage.class));
 
         FtpletResult result = ftpLet.beforeCommand(ftpSession, ftpRequest);
 
         Assert.assertEquals(result, FtpletResult.DEFAULT);
 
-        verify(endpointAdapter, ftpSession, ftpRequest);
     }
 
 }

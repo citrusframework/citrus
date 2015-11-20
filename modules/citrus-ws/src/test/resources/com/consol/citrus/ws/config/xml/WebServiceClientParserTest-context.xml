@@ -41,19 +41,19 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 
-  <bean id="endpointResolver" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
   </bean>
 
-  <bean id="soapMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="soapMessageFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
   </bean>
 
-  <bean id="wsTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="wsTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
   </bean>
 
@@ -63,11 +63,11 @@
     </constructor-arg>
   </bean>
 
-  <bean id="wsMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="wsMessageSender" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.transport.WebServiceMessageSender"/>
   </bean>
 
-  <bean id="singleInterceptor" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="singleInterceptor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
   </bean>
 
@@ -76,10 +76,10 @@
     <ref bean="interceptor2"/>
   </util:list>
 
-  <bean id="interceptor1" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="interceptor1" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
   </bean>
-  <bean id="interceptor2" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="interceptor2" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
   </bean>
 

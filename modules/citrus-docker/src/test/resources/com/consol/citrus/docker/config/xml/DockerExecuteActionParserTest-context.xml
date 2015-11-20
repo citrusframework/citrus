@@ -57,7 +57,7 @@
         </actions>
     </testcase>
     
-    <spring:bean id="myDockerClient" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myDockerClient" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
     </spring:bean>
     

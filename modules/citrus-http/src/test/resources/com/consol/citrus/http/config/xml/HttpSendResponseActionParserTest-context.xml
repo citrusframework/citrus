@@ -33,11 +33,11 @@
       </actions>
     </testcase>
     
-    <spring:bean id="httpServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="httpServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.http.server.HttpServer"/>
     </spring:bean>
 
-    <spring:bean id="testActor" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="com.consol.citrus.TestActor"/>
     </spring:bean>
     

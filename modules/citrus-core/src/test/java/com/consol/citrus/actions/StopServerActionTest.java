@@ -16,15 +16,14 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mockito;
+import org.testng.annotations.Test;
 
 import java.util.*;
 
-import org.easymock.EasyMock;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,67 +39,54 @@ public class StopServerActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSingleServer() {
-        Server server = EasyMock.createMock(Server.class);
+        Server server = Mockito.mock(Server.class);
         
         reset(server);
-        
-        server.stop();
-        expectLastCall().once();
-        
-        expect(server.getName()).andReturn("MyServer");
-        
-        replay(server);
-        
+
+        when(server.getName()).thenReturn("MyServer");
+
         StopServerAction stopServer = new StopServerAction();
         stopServer.setServer(server);
-        
+
         stopServer.execute(context);
+        verify(server).stop();
     }
     
     @Test
     public void testServerListSingleton() {
-        Server server = EasyMock.createMock(Server.class);
+        Server server = Mockito.mock(Server.class);
         
         reset(server);
-        
-        server.stop();
-        expectLastCall().once();
-        
-        expect(server.getName()).andReturn("MyServer");
-        
-        replay(server);
-        
+
+        when(server.getName()).thenReturn("MyServer");
+
         StopServerAction stopServer = new StopServerAction();
         stopServer.setServerList(Collections.singletonList(server));
-        
+
         stopServer.execute(context);
+        verify(server).stop();
     }
     
     @Test
     public void testServerList() {
-        Server server1 = EasyMock.createMock(Server.class);
-        Server server2 = EasyMock.createMock(Server.class);
+        Server server1 = Mockito.mock(Server.class);
+        Server server2 = Mockito.mock(Server.class);
         
         reset(server1, server2);
-        
-        server1.stop();
-        expectLastCall().once();
-        
-        server2.stop();
-        expectLastCall().once();
-        
-        expect(server1.getName()).andReturn("MyServer1");
-        expect(server2.getName()).andReturn("MyServer2");
-        
-        replay(server1, server2);
-        
+
+        when(server1.getName()).thenReturn("MyServer1");
+        when(server2.getName()).thenReturn("MyServer2");
+
         StopServerAction stopServer = new StopServerAction();
         List<Server> serverList = new ArrayList<Server>();
         serverList.add(server1);
         serverList.add(server2);
-        
+
         stopServer.setServerList(serverList);
-        
+
         stopServer.execute(context);
+
+        verify(server1).stop();
+        verify(server2).stop();
     }
 }

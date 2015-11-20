@@ -28,15 +28,15 @@
         </actions>
     </testcase>
     
-    <spring:bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.jms.ConnectionFactory"/>
     </spring:bean>
     
-    <spring:bean id="myConnectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myConnectionFactory" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.jms.ConnectionFactory"/>
     </spring:bean>
     
-    <spring:bean id="myQueue" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myQueue" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.jms.Queue"/>
     </spring:bean>
 </spring:beans>

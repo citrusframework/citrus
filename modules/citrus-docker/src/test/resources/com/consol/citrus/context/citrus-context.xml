@@ -9,7 +9,7 @@
 
   <citrus:schema-repository id="schemaRepository" />
 
-  <bean id="dockerClient" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="dockerClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.github.dockerjava.api.DockerClient"/>
   </bean>
 

@@ -19,45 +19,40 @@ package com.consol.citrus.arquillian.container;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import com.consol.citrus.config.CitrusBaseConfig;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.verify;
+import static org.mockito.Mockito.*;
 
 public class CitrusRemoteConfigurationProducerTest {
 
     private CitrusRemoteConfigurationProducer configurationProducer = new CitrusRemoteConfigurationProducer();
-    private InstanceProducer<CitrusConfiguration> instanceProducer = EasyMock.createMock(InstanceProducer.class);
+    private InstanceProducer<CitrusConfiguration> instanceProducer = Mockito.mock(InstanceProducer.class);
 
     @Test
     public void testConfigure() throws Exception {
         reset(instanceProducer);
 
-        instanceProducer.set(anyObject(CitrusConfiguration.class));
-        expectLastCall().andAnswer(new IAnswer<Void>() {
+        doAnswer(new Answer() {
             @Override
-            public Void answer() throws Throwable {
-                CitrusConfiguration configuration = (CitrusConfiguration) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                CitrusConfiguration configuration = (CitrusConfiguration) invocation.getArguments()[0];
                 Assert.assertEquals(configuration.getCitrusVersion(), "latest");
                 Assert.assertTrue(configuration.isAutoPackage());
                 Assert.assertEquals(configuration.getSuiteName(), "remoteSuite");
                 Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
-
                 return null;
             }
-        });
-
-        replay(instanceProducer);
+        }).when(instanceProducer).set(any(CitrusConfiguration.class));
 
         InjectionHelper.inject(configurationProducer, "configurationInstance", instanceProducer);
         configurationProducer.configure(new BeforeSuite());
 
-        verify(instanceProducer);
 
     }
 }

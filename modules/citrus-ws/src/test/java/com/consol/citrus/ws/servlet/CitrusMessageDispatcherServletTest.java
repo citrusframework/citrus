@@ -25,7 +25,7 @@ import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
 import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.ws.server.WebServiceServer;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
@@ -36,7 +36,8 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -44,7 +45,7 @@ import static org.easymock.EasyMock.*;
  */
 public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
 
-    private WebServiceServer webServiceServer = EasyMock.createMock(WebServiceServer.class);
+    private WebServiceServer webServiceServer = Mockito.mock(WebServiceServer.class);
     private CitrusMessageDispatcherServlet servlet;
 
     @Autowired
@@ -56,23 +57,18 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
     @BeforeClass
     public void setUp() {
         reset(webServiceServer);
-        expect(webServiceServer.getMessageFactoryName()).andReturn(MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME).once();
-        replay(webServiceServer);
-
+        when(webServiceServer.getMessageFactoryName()).thenReturn(MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME);
         servlet = new CitrusMessageDispatcherServlet(webServiceServer);
     }
 
     @Test
     public void testNoBeansInContext() throws Exception {
         reset(webServiceServer);
-        replay(webServiceServer);
-
         GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.refresh();
 
         servlet.initStrategies(applicationContext);
 
-        verify(webServiceServer);
     }
 
     @Test
@@ -83,15 +79,13 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
 
         reset(webServiceServer);
 
-        expect(webServiceServer.getInterceptors()).andReturn(interceptors).once();
-        expect(webServiceServer.getEndpointAdapter()).andReturn(null).once();
-        expect(webServiceServer.getMessageConverter()).andReturn(new SoapMessageConverter()).once();
-        expect(webServiceServer.isHandleMimeHeaders()).andReturn(false).once();
-        expect(webServiceServer.isKeepSoapEnvelope()).andReturn(false).once();
-        expect(webServiceServer.getSoapHeaderNamespace()).andReturn(null).once();
-        expect(webServiceServer.getSoapHeaderPrefix()).andReturn("").once();
-
-        replay(webServiceServer);
+        when(webServiceServer.getInterceptors()).thenReturn(interceptors);
+        when(webServiceServer.getEndpointAdapter()).thenReturn(null);
+        when(webServiceServer.getMessageConverter()).thenReturn(new SoapMessageConverter());
+        when(webServiceServer.isHandleMimeHeaders()).thenReturn(false);
+        when(webServiceServer.isKeepSoapEnvelope()).thenReturn(false);
+        when(webServiceServer.getSoapHeaderNamespace()).thenReturn(null);
+        when(webServiceServer.getSoapHeaderPrefix()).thenReturn("");
 
         servlet.initStrategies(applicationContext);
 
@@ -106,22 +100,19 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertNull(webServiceEndpoint.getDefaultNamespaceUri());
         Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "");
 
-        verify(webServiceServer);
     }
 
     @Test
     public void testConfigureMessageEndpoint() throws Exception {
         reset(webServiceServer);
 
-        expect(webServiceServer.getInterceptors()).andReturn(null).once();
-        expect(webServiceServer.getEndpointAdapter()).andReturn(new TimeoutProducingEndpointAdapter()).once();
-        expect(webServiceServer.getMessageConverter()).andReturn(new WsAddressingMessageConverter(new WsAddressingHeaders())).once();
-        expect(webServiceServer.isHandleMimeHeaders()).andReturn(true).once();
-        expect(webServiceServer.isKeepSoapEnvelope()).andReturn(true).once();
-        expect(webServiceServer.getSoapHeaderNamespace()).andReturn("http://citrusframework.org").times(2);
-        expect(webServiceServer.getSoapHeaderPrefix()).andReturn("CITRUS").times(2);
-
-        replay(webServiceServer);
+        when(webServiceServer.getInterceptors()).thenReturn(null);
+        when(webServiceServer.getEndpointAdapter()).thenReturn(new TimeoutProducingEndpointAdapter());
+        when(webServiceServer.getMessageConverter()).thenReturn(new WsAddressingMessageConverter(new WsAddressingHeaders()));
+        when(webServiceServer.isHandleMimeHeaders()).thenReturn(true);
+        when(webServiceServer.isKeepSoapEnvelope()).thenReturn(true);
+        when(webServiceServer.getSoapHeaderNamespace()).thenReturn("http://citrusframework.org");
+        when(webServiceServer.getSoapHeaderPrefix()).thenReturn("CITRUS");
 
         servlet.initStrategies(applicationContext);
 
@@ -133,6 +124,5 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(webServiceEndpoint.getDefaultNamespaceUri(), "http://citrusframework.org");
         Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "CITRUS");
 
-        verify(webServiceServer);
     }
 }

@@ -17,10 +17,11 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -29,7 +30,7 @@ import static org.testng.Assert.assertTrue;
  * @since 2.4
  */
 public class FileConditionTest {
-    private TestContext contextMock = EasyMock.createMock(TestContext.class);
+    private TestContext contextMock = Mockito.mock(TestContext.class);
 
     @Test
     public void isSatisfiedShouldSucceedWithValidFilename() throws Exception {
@@ -38,12 +39,9 @@ public class FileConditionTest {
         testling.setFilePath(filePath);
 
         reset(contextMock);
-        expect(contextMock.replaceDynamicContentInString(filePath)).andReturn(filePath).anyTimes();
-        replay(contextMock);
-
+        when(contextMock.replaceDynamicContentInString(filePath)).thenReturn(filePath);
         assertTrue(testling.isSatisfied(contextMock));
 
-        verify(contextMock);
     }
 
     @Test
@@ -53,11 +51,8 @@ public class FileConditionTest {
         testling.setFilePath(filePath);
 
         reset(contextMock);
-        expect(contextMock.replaceDynamicContentInString(filePath)).andReturn(filePath).anyTimes();
-        replay(contextMock);
-
+        when(contextMock.replaceDynamicContentInString(filePath)).thenReturn(filePath);
         assertFalse(testling.isSatisfied(contextMock));
 
-        verify(contextMock);
     }
 }

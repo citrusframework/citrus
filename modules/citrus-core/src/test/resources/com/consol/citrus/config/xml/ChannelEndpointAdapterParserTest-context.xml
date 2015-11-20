@@ -15,7 +15,7 @@
                                    fallback-adapter="mockEndpointAdapter"
                                    timeout="10000"/>
 
-    <bean id="mockEndpointAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
     </bean>
 

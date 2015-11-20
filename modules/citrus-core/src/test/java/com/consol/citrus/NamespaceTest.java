@@ -28,23 +28,23 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import org.easymock.EasyMock;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class NamespaceTest extends AbstractTestNGUnitTest {
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
     
     private ReceiveMessageAction receiveMessageBean;
     
@@ -61,9 +61,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testNamespaces() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -71,9 +71,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -96,9 +95,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDifferentNamespacePrefix() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -106,9 +105,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -131,9 +129,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAdditionalNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -141,9 +139,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -166,9 +163,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingNamespaceDeclaration() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -176,9 +173,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -201,9 +197,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespaces() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -211,9 +207,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -236,9 +231,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespacesInExpectedMessage() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -246,9 +241,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -271,9 +265,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespacesInSourceMessage() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -281,9 +275,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -306,9 +299,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -316,9 +309,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -341,9 +333,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testWrongNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -351,9 +343,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -376,9 +367,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -386,9 +377,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -416,9 +406,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -426,9 +416,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -456,9 +445,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMixedNamespaces() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -466,9 +455,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -497,9 +485,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMultipleNamespaces() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -507,9 +495,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -539,9 +526,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespaceError() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -549,9 +536,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -579,9 +565,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceError() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -589,9 +575,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -619,9 +604,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMixedNamespacesError() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -629,9 +614,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -660,9 +644,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMultipleNamespacesError() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -670,9 +654,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -702,9 +685,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectWrongNamespacePrefix() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -712,9 +695,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -744,9 +726,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespaceButNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -754,9 +736,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns0:element>" 
                     + "</ns0:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -786,9 +767,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceButDefaultNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -796,9 +777,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -828,9 +808,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectAdditionalNamespace() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -838,9 +818,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -871,9 +850,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceButNamespaceMissing() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -881,9 +860,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                     + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -913,9 +891,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWithAdditionalNamespacePrefix() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root xmlns='http://citrus/default'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -925,9 +903,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//ns1:root/ns1:element/ns1:sub-elementA", "text-value");
@@ -955,9 +932,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWithDifferentNamespacePrefix() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -967,9 +944,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//pfx:root/pfx:element/pfx:sub-elementA", "text-value");
@@ -997,9 +973,9 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testWrongNamespaceContext() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -1009,9 +985,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:element>" 
                         + "</ns1:root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//pfx:root/ns1:element/pfx:sub-elementA", "text-value");

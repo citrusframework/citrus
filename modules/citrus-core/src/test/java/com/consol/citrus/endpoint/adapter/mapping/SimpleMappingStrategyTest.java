@@ -18,7 +18,7 @@ package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,8 +31,8 @@ import java.util.Map;
  */
 public class SimpleMappingStrategyTest {
 
-    private EndpointAdapter fooEndpointAdapter = EasyMock.createMock(EndpointAdapter.class);
-    private EndpointAdapter barEndpointAdapter = EasyMock.createMock(EndpointAdapter.class);
+    private EndpointAdapter fooEndpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private EndpointAdapter barEndpointAdapter = Mockito.mock(EndpointAdapter.class);
 
     @Test
     public void testGetEndpointAdapter() throws Exception {

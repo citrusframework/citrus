@@ -24,17 +24,17 @@ import com.consol.citrus.arquillian.enricher.CitrusRemoteInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import com.consol.citrus.arquillian.lifecycle.CitrusRemoteLifecycleHandler;
-import org.easymock.EasyMock;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.shrinkwrap.api.*;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.mockito.Mockito;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class CitrusArchiveAppenderTest {
 
@@ -50,10 +50,8 @@ public class CitrusArchiveAppenderTest {
     @Test
     public void testBuildArchive() throws Exception {
         CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
-        Instance<CitrusConfiguration> configurationInstance = EasyMock.createMock(Instance.class);
-        expect(configurationInstance.get()).andReturn(configuration).once();
-
-        replay(configurationInstance);
+        Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
+        when(configurationInstance.get()).thenReturn(configuration);
 
         InjectionHelper.inject(archiveAppender, "configurationInstance", configurationInstance);
 
@@ -67,8 +65,6 @@ public class CitrusArchiveAppenderTest {
         }
 
         Assert.assertTrue(archive.contains("/" + CitrusExtensionConstants.CITRUS_REMOTE_PROPERTIES));
-
-        verify(configurationInstance);
     }
 
     private ArchivePath getArchivePath(Class type) {

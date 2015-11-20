@@ -18,7 +18,7 @@ package com.consol.citrus.ws.message;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -28,24 +28,23 @@ import javax.activation.DataSource;
 import java.io.*;
 import java.nio.charset.Charset;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class SoapAttachmentTest {
 
-    private Attachment attachment = EasyMock.createMock(Attachment.class);
+    private Attachment attachment = Mockito.mock(Attachment.class);
 
     @Test
     public void testFromAttachment() throws Exception {
         reset(attachment);
 
-        expect(attachment.getContentId()).andReturn("mail").once();
-        expect(attachment.getContentType()).andReturn("text/plain").times(2);
-        expect(attachment.getInputStream()).andReturn(new StaticTextDataSource("This is mail text content!", "text/plain", "UTF-8", "mail").getInputStream()).once();
-
-        replay(attachment);
+        when(attachment.getContentId()).thenReturn("mail");
+        when(attachment.getContentType()).thenReturn("text/plain");
+        when(attachment.getInputStream()).thenReturn(new StaticTextDataSource("This is mail text content!", "text/plain", "UTF-8", "mail").getInputStream());
 
         SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
@@ -56,19 +55,16 @@ public class SoapAttachmentTest {
         Assert.assertNotNull(soapAttachment.getDataHandler());
         Assert.assertEquals(soapAttachment.getSize(), 26L);
 
-        verify(attachment);
     }
 
     @Test
     public void testFromBinaryAttachment() throws Exception {
         reset(attachment);
 
-        expect(attachment.getContentId()).andReturn("img").once();
-        expect(attachment.getContentType()).andReturn("application/octet-stream").times(2);
+        when(attachment.getContentId()).thenReturn("img");
+        when(attachment.getContentType()).thenReturn("application/octet-stream");
 
-        expect(attachment.getDataHandler()).andReturn(new DataHandler(new StaticTextDataSource("This is img text content!", "application/octet-stream", "UTF-8", "img")));
-
-        replay(attachment);
+        when(attachment.getDataHandler()).thenReturn(new DataHandler(new StaticTextDataSource("This is img text content!", "application/octet-stream", "UTF-8", "img")));
 
         SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
@@ -85,7 +81,6 @@ public class SoapAttachmentTest {
         soapAttachment.setEncodingType(SoapAttachment.ENCODING_HEX_BINARY);
         Assert.assertEquals(soapAttachment.getContent(), Hex.encodeHexString("This is img text content!".getBytes(Charset.forName("UTF-8"))).toUpperCase());
 
-        verify(attachment);
     }
 
     @Test

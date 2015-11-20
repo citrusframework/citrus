@@ -28,26 +28,23 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
-import org.easymock.EasyMock;
+import com.consol.citrus.validation.xml.*;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
     
     private ReceiveMessageAction receiveMessageBean;
     
@@ -64,9 +61,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -76,9 +73,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-elementA", "text-value");
@@ -99,9 +95,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -111,9 +107,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-elementA", "");
@@ -134,9 +129,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -146,9 +141,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-elementA.attribute", "A");
@@ -169,9 +163,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWrongExpectedElement() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -181,9 +175,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-element-wrong", "text-value");
@@ -205,9 +198,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWrongExpectedValue() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -217,9 +210,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-elementA", "text-value-wrong");
@@ -240,9 +232,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributesWrongExpectedValue() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -252,9 +244,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-elementA.attribute", "wrong-value");
@@ -275,9 +266,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -287,9 +278,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("root.element.sub-elementA.attribute-wrong", "A");
@@ -310,9 +300,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -322,9 +312,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -354,9 +343,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsUsingEmptyString() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -366,9 +355,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -398,9 +386,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsAndValidate() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -410,9 +398,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
@@ -448,9 +435,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -460,9 +447,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -492,9 +478,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsError() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -504,9 +490,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -536,9 +521,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributesError() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -548,9 +533,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -580,9 +564,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributesErrorWrongElement() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -592,9 +576,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -624,9 +607,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -636,9 +619,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -675,9 +657,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -687,10 +669,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         receiveMessageBean.setMessageBuilder(controlMessageBuilder);
@@ -726,9 +707,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsForWrongElement() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -738,9 +719,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -775,9 +755,9 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsForWrongAtribute() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -787,9 +767,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();

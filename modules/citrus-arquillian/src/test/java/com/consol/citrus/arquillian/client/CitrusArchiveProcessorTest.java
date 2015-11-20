@@ -19,13 +19,13 @@ package com.consol.citrus.arquillian.client;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import org.easymock.EasyMock;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.*;
 import org.jboss.shrinkwrap.api.spec.*;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.spec.*;
+import org.mockito.Mockito;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -33,12 +33,12 @@ import org.testng.annotations.*;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class CitrusArchiveProcessorTest {
 
     private CitrusArchiveProcessor archiveProcessor = new CitrusArchiveProcessor();
-    private Instance<CitrusConfiguration> configurationInstance = EasyMock.createMock(Instance.class);
+    private Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
 
     private CitrusConfiguration configuration;
 
@@ -54,8 +54,7 @@ public class CitrusArchiveProcessorTest {
         configuration = CitrusConfiguration.from(new Properties());
 
         reset(configurationInstance);
-        expect(configurationInstance.get()).andReturn(configuration).anyTimes();
-        replay(configurationInstance);
+        when(configurationInstance.get()).thenReturn(configuration);
 
         InjectionHelper.inject(archiveProcessor, "configurationInstance", configurationInstance);
     }
@@ -80,7 +79,6 @@ public class CitrusArchiveProcessorTest {
         archiveProcessor.process(javaArchive, new TestClass(this.getClass()));
         Assert.assertEquals(javaArchive.getContent().size(), 0L);
 
-        verify(configurationInstance);
     }
 
     @Test
@@ -101,7 +99,6 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-vertx-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-java-dsl-.*jar");
 
-        verify(configurationInstance);
     }
 
     @Test
@@ -120,7 +117,6 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-vertx-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-java-dsl-.*jar");
 
-        verify(configurationInstance);
     }
 
     @Test
@@ -137,7 +133,6 @@ public class CitrusArchiveProcessorTest {
         archiveProcessor.process(webArchive, new TestClass(this.getClass()));
         Assert.assertEquals(webArchive.getContent().size(), 0L);
 
-        verify(configurationInstance);
     }
 
     private void verifyArtifact(Archive archive, String expectedFileNamePattern) {

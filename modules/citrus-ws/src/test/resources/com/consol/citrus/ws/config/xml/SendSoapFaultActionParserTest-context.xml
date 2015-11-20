@@ -39,7 +39,7 @@
         </actions>
     </testcase>
     
-    <spring:bean id="soapServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="soapServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.ws.server.WebServiceServer"/>
     </spring:bean>
     

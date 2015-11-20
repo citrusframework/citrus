@@ -19,11 +19,12 @@ package com.consol.citrus.vertx.message;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +32,7 @@ import static org.easymock.EasyMock.*;
  */
 public class VertxMessageConverterTest {
 
-    private org.vertx.java.core.eventbus.Message vertxMessage = EasyMock.createMock(org.vertx.java.core.eventbus.Message.class);
+    private org.vertx.java.core.eventbus.Message vertxMessage = Mockito.mock(org.vertx.java.core.eventbus.Message.class);
 
     private VertxMessageConverter messageConverter = new VertxMessageConverter();
 
@@ -40,11 +41,9 @@ public class VertxMessageConverterTest {
 
         reset(vertxMessage);
 
-        expect(vertxMessage.body()).andReturn("Hello Citrus!").once();
-        expect(vertxMessage.address()).andReturn("hello").once();
-        expect(vertxMessage.replyAddress()).andReturn("answer").once();
-
-        replay(vertxMessage);
+        when(vertxMessage.body()).thenReturn("Hello Citrus!");
+        when(vertxMessage.address()).thenReturn("hello");
+        when(vertxMessage.replyAddress()).thenReturn("answer");
 
         Message message = messageConverter.convertInbound(vertxMessage, new VertxEndpointConfiguration());
 
@@ -52,7 +51,6 @@ public class VertxMessageConverterTest {
         Assert.assertEquals(message.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), "hello");
         Assert.assertEquals(message.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "answer");
 
-        verify(vertxMessage);
     }
 
     @Test

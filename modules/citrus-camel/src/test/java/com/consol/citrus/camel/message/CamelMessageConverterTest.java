@@ -22,7 +22,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultExchange;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,7 +34,7 @@ import java.util.UUID;
  */
 public class CamelMessageConverterTest {
 
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
     private CamelMessageConverter messageConverter = new CamelMessageConverter();
     private CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
 

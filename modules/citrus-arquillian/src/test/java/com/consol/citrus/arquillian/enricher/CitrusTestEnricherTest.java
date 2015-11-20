@@ -22,30 +22,30 @@ import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import org.easymock.EasyMock;
 import org.jboss.arquillian.core.api.Instance;
+import org.mockito.Mockito;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.net.URL;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class CitrusTestEnricherTest {
 
     private CitrusTestEnricher testEnricher = new CitrusTestEnricher();
 
     private Citrus citrusFramework = Citrus.newInstance(ArquillianTestConfig.class);
-    private Instance<Citrus> citrusInstance = EasyMock.createMock(Instance.class);
+    private Instance<Citrus> citrusInstance = Mockito.mock(Instance.class);
 
     @Test
     public void testEnrichTest() throws Exception {
         ArquillianTest testInstance = new ArquillianTest();
 
         reset(citrusInstance);
-        expect(citrusInstance.get()).andReturn(citrusFramework).atLeastOnce();
-        replay(citrusInstance);
+        when(citrusInstance.get()).thenReturn(citrusFramework);
 
         Assert.assertNull(testInstance.getCitrus());
 
@@ -60,14 +60,12 @@ public class CitrusTestEnricherTest {
         Assert.assertNotNull(testInstance.getJmsSyncEndpoint());
         Assert.assertEquals(testInstance.getJmsSyncEndpoint().getName(), "jmsSyncEndpoint");
 
-        verify(citrusInstance);
     }
 
     @Test
     public void testResolveTestMethod() throws Exception {
         reset(citrusInstance);
-        expect(citrusInstance.get()).andReturn(citrusFramework).atLeastOnce();
-        replay(citrusInstance);
+        when(citrusInstance.get()).thenReturn(citrusFramework);
 
         InjectionHelper.inject(testEnricher, "citrusInstance", citrusInstance);
         Object[] resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestDesigner.class));
@@ -105,6 +103,5 @@ public class CitrusTestEnricherTest {
         resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "otherMethod"));
         Assert.assertEquals(resolvedParameter.length, 0L);
 
-        verify(citrusInstance);
     }
 }

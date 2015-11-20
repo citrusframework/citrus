@@ -26,18 +26,19 @@ import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.TemplateBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
     
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
     
     @Test
     public void testTemplateBuilder() {
@@ -51,13 +52,11 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("fooTemplate", Template.class)).thenReturn(rootTemplate);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -84,8 +83,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(container.getActions().size(), 2);
         Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(container.getActions().get(1).getClass(), TraceVariablesAction.class);
-        
-        verify(applicationContextMock);
+
     }
     
     @Test
@@ -99,13 +97,11 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("fooTemplate", Template.class)).thenReturn(rootTemplate);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
@@ -130,7 +126,6 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(container.getParameter().size(), 0L);
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-        
-        verify(applicationContextMock);
+
     }
 }

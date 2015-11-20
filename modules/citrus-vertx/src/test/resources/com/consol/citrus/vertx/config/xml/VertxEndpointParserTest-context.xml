@@ -29,15 +29,15 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <!-- Vert.x instance factory -->
-  <bean id="vertxInstanceFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="vertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
   </bean>
 
-  <bean id="specialVertxInstanceFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="specialVertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
   </bean>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.vertx.message.VertxMessageConverter"/>
   </bean>
 </beans>

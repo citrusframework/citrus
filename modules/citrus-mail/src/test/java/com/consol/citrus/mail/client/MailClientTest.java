@@ -16,13 +16,14 @@
 
 package com.consol.citrus.mail.client;
 
-import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.mail.model.MailMarshaller;
+import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.StringUtils;
@@ -35,7 +36,7 @@ import javax.mail.internet.*;
 import javax.xml.transform.stream.StreamSource;
 import java.util.Properties;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -43,7 +44,7 @@ import static org.easymock.EasyMock.*;
  */
 public class MailClientTest extends AbstractTestNGUnitTest {
 
-    private JavaMailSenderImpl javaMailSender = EasyMock.createMock(JavaMailSenderImpl.class);
+    private JavaMailSenderImpl javaMailSender = Mockito.mock(JavaMailSenderImpl.class);
 
     private MailClient mailClient = new MailClient();
 
@@ -58,12 +59,11 @@ public class MailClientTest extends AbstractTestNGUnitTest {
             new ClassPathResource("text_mail.xml", MailServer.class).getInputStream()));
 
         reset(javaMailSender);
-        expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
-        javaMailSender.send(anyObject(MimeMessage.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
+        when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage(Session.getDefaultInstance(new Properties())));
+        doAnswer(new Answer() {
             @Override
-            public Object answer() throws Throwable {
-                MimeMessage mimeMessage = (MimeMessage) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                MimeMessage mimeMessage = (MimeMessage) invocation.getArguments()[0];
                 Assert.assertEquals(getAddresses(mimeMessage.getFrom()), "foo@mail.com");
                 Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)), "bar@mail.com,copy@mail.com");
                 Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.CC)), "foobar@mail.com");
@@ -74,16 +74,12 @@ public class MailClientTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(mimeMessage.getContentType(), "text/plain");
 
                 Assert.assertEquals(mimeMessage.getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
-
                 return null;
             }
-        }).once();
-
-        replay(javaMailSender);
+        }).when(javaMailSender).send(any(MimeMessage.class));
 
         mailClient.send(new DefaultMessage(mailMessage), context);
 
-        verify(javaMailSender);
     }
 
     @Test
@@ -92,12 +88,11 @@ public class MailClientTest extends AbstractTestNGUnitTest {
                 new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream()));
 
         reset(javaMailSender);
-        expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
-        javaMailSender.send(anyObject(MimeMessage.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
+        when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage(Session.getDefaultInstance(new Properties())));
+        doAnswer(new Answer() {
             @Override
-            public Object answer() throws Throwable {
-                MimeMessage mimeMessage = (MimeMessage) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                MimeMessage mimeMessage = (MimeMessage) invocation.getArguments()[0];
                 Assert.assertEquals(getAddresses(mimeMessage.getFrom()), "foo@mail.com");
                 Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)), "bar@mail.com");
                 Assert.assertEquals(getAddresses(mimeMessage.getReplyTo()), "foo@mail.com");
@@ -118,16 +113,12 @@ public class MailClientTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(StringUtils.trimAllWhitespace(multipart.getBodyPart(1).getContent().toString()), "<html><head></head><body><h1>HTMLAttachment</h1></body></html>");
                 Assert.assertEquals(multipart.getBodyPart(1).getFileName(), "index.html");
                 Assert.assertEquals(multipart.getBodyPart(1).getDisposition(), "attachment");
-
                 return null;
             }
-        }).once();
-
-        replay(javaMailSender);
+        }).when(javaMailSender).send(any(MimeMessage.class));
 
         mailClient.send(new DefaultMessage(mailMessage), context);
 
-        verify(javaMailSender);
     }
 
     private String getAddresses(Address[] addressList) {

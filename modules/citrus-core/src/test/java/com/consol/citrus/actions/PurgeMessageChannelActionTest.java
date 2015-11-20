@@ -17,7 +17,7 @@
 package com.consol.citrus.actions;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.channel.QueueChannel;
@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +40,7 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
     @Qualifier(value="mockChannel")
     private QueueChannel mockChannel;
     
-    private QueueChannel emptyChannel = EasyMock.createMock(QueueChannel.class);
+    private QueueChannel emptyChannel = Mockito.mock(QueueChannel.class);
     
     @Test
     public void testPurgeWithChannelNames() throws Exception {
@@ -57,13 +57,11 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
         
         reset(mockChannel);
         
-        expect(mockChannel.purge((MessageSelector)anyObject())).andReturn(purgedMessages).once();
-        
-        replay(mockChannel);
+        when(mockChannel.purge((MessageSelector)any())).thenReturn(purgedMessages);
+
         
         purgeChannelAction.execute(context);
-        
-        verify(mockChannel);
+
     }
     
 	@SuppressWarnings("unchecked")
@@ -83,14 +81,12 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
         
         reset(mockChannel, emptyChannel);
         
-        expect(mockChannel.purge((MessageSelector)anyObject())).andReturn(purgedMessages).once();
-        expect(emptyChannel.purge((MessageSelector)anyObject())).andReturn(Collections.EMPTY_LIST).once();
-        
-        replay(mockChannel, emptyChannel);
+        when(mockChannel.purge((MessageSelector)any())).thenReturn(purgedMessages);
+        when(emptyChannel.purge((MessageSelector)any())).thenReturn(Collections.EMPTY_LIST);
+
         
         purgeChannelAction.execute(context);
-        
-        verify(mockChannel, emptyChannel);
+
     }
 	
 	@Test
@@ -116,13 +112,11 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
         
         reset(mockChannel);
         
-        expect(mockChannel.purge(messageSelector)).andReturn(purgedMessages).once();
-        
-        replay(mockChannel);
+        when(mockChannel.purge(messageSelector)).thenReturn(purgedMessages);
+
         
         purgeChannelAction.execute(context);
-        
-        verify(mockChannel);
+
     }
 	
 }

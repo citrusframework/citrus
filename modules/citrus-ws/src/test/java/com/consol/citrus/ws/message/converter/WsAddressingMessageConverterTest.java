@@ -21,7 +21,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
@@ -31,7 +31,8 @@ import org.testng.annotations.Test;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -39,9 +40,9 @@ import static org.easymock.EasyMock.*;
  */
 public class WsAddressingMessageConverterTest {
 
-    private SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
-    private SoapBody soapBody = EasyMock.createMock(SoapBody.class);
-    private SoapHeader soapHeader = EasyMock.createMock(SoapHeader.class);
+    private SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
+    private SoapBody soapBody = Mockito.mock(SoapBody.class);
+    private SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
 
     private String requestPayload = "<testMessage>Hello</testMessage>";
 
@@ -61,44 +62,32 @@ public class WsAddressingMessageConverterTest {
         StringResult soapBodyResult = new StringResult();
         StringResult soapHeaderResult = new StringResult();
 
-        SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
+        SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
 
         reset(soapRequest, soapBody, soapHeader, soapHeaderElement);
 
-        expect(soapRequest.getSoapBody()).andReturn(soapBody).once();
-        expect(soapBody.getPayloadResult()).andReturn(soapBodyResult).once();
-        expect(soapRequest.getSoapHeader()).andReturn(soapHeader).times(1);
+        when(soapRequest.getSoapBody()).thenReturn(soapBody);
+        when(soapBody.getPayloadResult()).thenReturn(soapBodyResult);
+        when(soapRequest.getSoapHeader()).thenReturn(soapHeader);
 
-        soapHeader.addNamespaceDeclaration("wsa", "http://www.w3.org/2005/08/addressing");
-        expectLastCall().once();
+        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "To", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "From", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "Action", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "MessageID", "")))).thenReturn(soapHeaderElement);
 
-        expect(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "To", "")))).andReturn(soapHeaderElement).once();
-        expect(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "From", "")))).andReturn(soapHeaderElement).once();
-        expect(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "Action", "")))).andReturn(soapHeaderElement).once();
-        expect(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.w3.org/2005/08/addressing", "MessageID", "")))).andReturn(soapHeaderElement).once();
+        when(soapHeaderElement.getResult()).thenReturn(new StringResult());
 
-        expect(soapHeaderElement.getResult()).andReturn(new StringResult()).once();
-        soapHeaderElement.setText("Test");
-        expectLastCall().once();
-
-        soapHeaderElement.setMustUnderstand(true);
-        expectLastCall().once();
-
-        soapHeaderElement.setText("wsAddressing");
-        expectLastCall().once();
-
-        soapHeaderElement.setText("urn:uuid:aae36050-2853-4ca8-b879-fe366f97c5a1");
-        expectLastCall().once();
-
-        expect(soapHeader.getResult()).andReturn(soapHeaderResult).times(2);
-
-        replay(soapRequest, soapBody, soapHeader, soapHeaderElement);
+        when(soapHeader.getResult()).thenReturn(soapHeaderResult);
 
         messageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration());
 
         Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
         Assert.assertEquals(soapHeaderResult.toString(), "");
 
-        verify(soapRequest, soapBody, soapHeader, soapHeaderElement);
+        verify(soapHeader).addNamespaceDeclaration("wsa", "http://www.w3.org/2005/08/addressing");
+        verify(soapHeaderElement).setText("Test");
+        verify(soapHeaderElement).setMustUnderstand(true);
+        verify(soapHeaderElement).setText("wsAddressing");
+        verify(soapHeaderElement).setText("urn:uuid:aae36050-2853-4ca8-b879-fe366f97c5a1");
     }
 }

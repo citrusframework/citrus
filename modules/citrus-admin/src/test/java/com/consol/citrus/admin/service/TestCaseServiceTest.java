@@ -17,8 +17,9 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.admin.model.*;
-import org.easymock.EasyMock;
+import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.TestCaseData;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,7 +30,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,14 +41,13 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private TestCaseServiceImpl testCaseService;
 
-    private Project project = EasyMock.createMock(Project.class);
+    private Project project = Mockito.mock(Project.class);
 
     @Test
     public void testGetTests() throws IOException {
         reset(project);
-        expect(project.getSrcDirectory()).andReturn(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY).atLeastOnce();
-        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).atLeastOnce();
-        replay(project);
+        when(project.getSrcDirectory()).thenReturn(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY);
+        when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
 
         List<TestCaseData> tests = testCaseService.getTests(project);
 
@@ -69,7 +69,5 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         test = tests.get(3);
         Assert.assertEquals(test.getName(), "FooTest");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
-
-        verify(project);
     }
 }

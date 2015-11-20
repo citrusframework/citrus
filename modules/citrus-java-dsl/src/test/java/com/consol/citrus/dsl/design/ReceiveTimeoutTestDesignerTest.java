@@ -23,14 +23,15 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -38,9 +39,9 @@ import static org.easymock.EasyMock.*;
  */
 public class ReceiveTimeoutTestDesignerTest extends AbstractTestNGUnitTest {
     
-    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
+    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testReceiveTimeoutBuilder() {
@@ -69,11 +70,9 @@ public class ReceiveTimeoutTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveTimeoutBuilderWithEndpointName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -92,7 +91,6 @@ public class ReceiveTimeoutTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive-timeout");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getTimeout(), 500);
-        
-        verify(applicationContextMock);
+
     }
 }

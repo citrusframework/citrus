@@ -21,29 +21,28 @@ import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
 public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
-    private DataSource dataSource = EasyMock.createMock(DataSource.class);
+    private DataSource dataSource = Mockito.mock(DataSource.class);
     
-    private Resource resource = EasyMock.createMock(Resource.class);
-    private File file = EasyMock.createMock(File.class);
+    private Resource resource = Mockito.mock(Resource.class);
+    private File file = Mockito.mock(File.class);
     
-    private SqlResultSetScriptValidator validator = EasyMock.createMock(SqlResultSetScriptValidator.class);
+    private SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
     
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
@@ -58,10 +57,8 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource, file);
-        expect(resource.getFile()).andReturn(file).once();
-        expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
-        replay(resource, file);
-
+        when(resource.getFile()).thenReturn(file);
+        when(file.getAbsolutePath()).thenReturn("classpath:some.file");
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -79,8 +76,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getDataSource(), dataSource);
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");
         Assert.assertNull(action.getValidator());
-        
-        verify(resource, file);
+
     }
     
     @Test
@@ -159,9 +155,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource, file);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
-        replay(resource, file);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -179,8 +173,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
-        
-        verify(resource, file);
+
     }
     
     @Test
@@ -225,9 +218,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource, file);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
-        replay(resource, file);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -245,8 +236,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
-        
-        verify(resource, file);
+
     }
 
     @Test

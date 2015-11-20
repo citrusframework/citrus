@@ -29,14 +29,15 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -44,11 +45,11 @@ import static org.easymock.EasyMock.*;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
-    private SoapAttachmentValidator attachmentValidator = EasyMock.createMock(SoapAttachmentValidator.class);
+    private SoapAttachmentValidator attachmentValidator = Mockito.mock(SoapAttachmentValidator.class);
     
     @Test
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
@@ -69,33 +70,31 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), anyObject(List.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "TestAttachment!");
                 Assert.assertNull(soapAttachment.getContentId());
                 Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), any(List.class));
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
 
     @Test
@@ -120,34 +119,32 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List)anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-16");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List)any());
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
 
     @Test
@@ -181,41 +178,38 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List)anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 2L);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 2L);
 
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World1!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "1stAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
 
-                soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(1);
+                soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(1);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "2ndAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-16");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List)any());
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
-
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
     
     @Test
@@ -239,34 +233,32 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
     
     @Test
@@ -284,21 +276,19 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
     
     @Test
@@ -322,34 +312,32 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
     
     @Test
@@ -375,34 +363,32 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
     
     @Test
@@ -428,33 +414,31 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        });
+        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration, attachmentValidator);
     }
 }

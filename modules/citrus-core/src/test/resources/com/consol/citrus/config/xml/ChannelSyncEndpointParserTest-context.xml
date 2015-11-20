@@ -21,19 +21,19 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 
-  <bean id="messagingTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messagingTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.integration.core.MessagingTemplate"/>
   </bean>
 
-  <bean id="channel" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="channel" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.messaging.PollableChannel"/>
   </bean>
 
-  <bean id="channelResolver" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="channelResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.messaging.core.DestinationResolver"/>
   </bean>
 </beans>

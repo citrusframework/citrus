@@ -27,13 +27,13 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.Info;
 import com.github.dockerjava.api.model.Version;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.UUID;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -41,38 +41,36 @@ import static org.easymock.EasyMock.*;
  */
 public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
 
-    private DockerClient dockerClient = EasyMock.createMock(DockerClient.class);
+    private DockerClient dockerClient = Mockito.mock(DockerClient.class);
 
     @Test
     public void testDockerBuilder() {
-        InfoCmd infoCmd = EasyMock.createMock(InfoCmd.class);
-        PingCmd pingCmd = EasyMock.createMock(PingCmd.class);
-        VersionCmd versionCmd = EasyMock.createMock(VersionCmd.class);
-        CreateContainerCmd createCmd = EasyMock.createMock(CreateContainerCmd.class);
-        InspectContainerCmd inspectCmd = EasyMock.createMock(InspectContainerCmd.class);
+        InfoCmd infoCmd = Mockito.mock(InfoCmd.class);
+        PingCmd pingCmd = Mockito.mock(PingCmd.class);
+        VersionCmd versionCmd = Mockito.mock(VersionCmd.class);
+        CreateContainerCmd createCmd = Mockito.mock(CreateContainerCmd.class);
+        InspectContainerCmd inspectCmd = Mockito.mock(InspectContainerCmd.class);
 
         CreateContainerResponse response = new CreateContainerResponse();
         response.setId(UUID.randomUUID().toString());
 
         reset(dockerClient, infoCmd, pingCmd, versionCmd, createCmd, inspectCmd);
 
-        expect(dockerClient.infoCmd()).andReturn(infoCmd).once();
-        expect(infoCmd.exec()).andReturn(new Info()).once();
+        when(dockerClient.infoCmd()).thenReturn(infoCmd);
+        when(infoCmd.exec()).thenReturn(new Info());
 
-        expect(dockerClient.pingCmd()).andReturn(pingCmd).once();
-        expect(pingCmd.exec()).andReturn(null).once();
+        when(dockerClient.pingCmd()).thenReturn(pingCmd);
+        when(pingCmd.exec()).thenReturn(null);
 
-        expect(dockerClient.versionCmd()).andReturn(versionCmd).once();
-        expect(versionCmd.exec()).andReturn(new Version()).once();
+        when(dockerClient.versionCmd()).thenReturn(versionCmd);
+        when(versionCmd.exec()).thenReturn(new Version());
 
-        expect(dockerClient.createContainerCmd("new_image")).andReturn(createCmd).once();
-        expect(createCmd.withName("my_container")).andReturn(createCmd).once();
-        expect(createCmd.exec()).andReturn(response).once();
+        when(dockerClient.createContainerCmd("new_image")).thenReturn(createCmd);
+        when(createCmd.withName("my_container")).thenReturn(createCmd);
+        when(createCmd.exec()).thenReturn(response);
 
-        expect(dockerClient.inspectContainerCmd("my_container")).andReturn(inspectCmd).once();
-        expect(inspectCmd.exec()).andReturn(new InspectContainerResponse()).once();
-
-        replay(dockerClient, infoCmd, pingCmd, versionCmd, createCmd, inspectCmd);
+        when(dockerClient.inspectContainerCmd("my_container")).thenReturn(inspectCmd);
+        when(inspectCmd.exec()).thenReturn(new InspectContainerResponse());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -152,6 +150,5 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "docker-execute");
         Assert.assertEquals(action.getCommand().getClass(), com.consol.citrus.docker.command.ContainerInspect.class);
 
-        verify(dockerClient, infoCmd, pingCmd, versionCmd, createCmd, inspectCmd);
     }
 }

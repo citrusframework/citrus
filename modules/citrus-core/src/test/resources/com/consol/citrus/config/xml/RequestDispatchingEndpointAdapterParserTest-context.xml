@@ -9,11 +9,11 @@
           mapping-key-extractor="mappingKeyExtractor"
           mapping-strategy="mappingStrategy"/>
 
-  <bean id="mappingKeyExtractor" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="mappingKeyExtractor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor"/>
   </bean>
 
-  <bean id="mappingStrategy" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="mappingStrategy" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.adapter.mapping.EndpointAdapterMappingStrategy"/>
   </bean>
 

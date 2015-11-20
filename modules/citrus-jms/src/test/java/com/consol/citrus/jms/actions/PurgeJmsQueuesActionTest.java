@@ -18,26 +18,26 @@ package com.consol.citrus.jms.actions;
 
 import com.consol.citrus.jms.endpoint.TextMessageImpl;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import javax.jms.*;
 import javax.jms.Queue;
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
 	
-    private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
-    private Connection connection = EasyMock.createMock(Connection.class);
-    private Session session = EasyMock.createMock(Session.class);
-    private MessageConsumer messageConsumer = EasyMock.createMock(MessageConsumer.class);
+    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private Connection connection = Mockito.mock(Connection.class);
+    private Session session = Mockito.mock(Session.class);
+    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
     
-    private Queue queue = EasyMock.createMock(Queue.class);
+    private Queue queue = Mockito.mock(Queue.class);
     
     @Test
     public void testPurgeWithQueueNamesConsumeMessages() throws JMSException {
@@ -53,22 +53,17 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         
         reset(connectionFactory, connection, session, messageConsumer);
         
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        
-        expect(session.createQueue("myQueue")).andReturn(queue).once();
-        
-        expect(session.createConsumer(queue)).andReturn(messageConsumer).once();
-        expect(messageConsumer.receive(100L)).andReturn(jmsRequest).times(2).andReturn(null);
-        
-        replay(connectionFactory, connection, session, messageConsumer);
-        
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(session.createQueue("myQueue")).thenReturn(queue);
+
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(100L)).thenReturn(jmsRequest).thenReturn(null);
+
         purgeQueuesAction.execute(context);
-        
-        verify(connectionFactory, connection, session, messageConsumer);
+        verify(connection).start();
     }
     
 	@Test
@@ -82,22 +77,17 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
 		
 		reset(connectionFactory, connection, session, messageConsumer);
         
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        
-        expect(session.createQueue("myQueue")).andReturn(queue).once();
-        
-        expect(session.createConsumer(queue)).andReturn(messageConsumer).once();
-        expect(messageConsumer.receive(100L)).andReturn(null).once();
-        
-        replay(connectionFactory, connection, session, messageConsumer);
-		
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(session.createQueue("myQueue")).thenReturn(queue);
+
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(100L)).thenReturn(null);
+
 		purgeQueuesAction.execute(context);
-		
-		verify(connectionFactory, connection, session, messageConsumer);
+        verify(connection).start();
 	}
 	
 	@Test
@@ -113,24 +103,19 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         
         reset(connectionFactory, connection, session, messageConsumer);
         
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        
-        expect(session.createQueue("myQueue")).andReturn(queue).once();
-        expect(session.createQueue("anotherQueue")).andReturn(queue).once();
-        expect(session.createQueue("someQueue")).andReturn(queue).once();
-        
-        expect(session.createConsumer(queue)).andReturn(messageConsumer).times(3);
-        expect(messageConsumer.receive(100L)).andReturn(null).times(3);
-        
-        replay(connectionFactory, connection, session, messageConsumer);
-        
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(session.createQueue("myQueue")).thenReturn(queue);
+        when(session.createQueue("anotherQueue")).thenReturn(queue);
+        when(session.createQueue("someQueue")).thenReturn(queue);
+
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(100L)).thenReturn(null);
+
         purgeQueuesAction.execute(context);
-        
-        verify(connectionFactory, connection, session, messageConsumer);
+        verify(connection).start();
     }
 	
 	@Test
@@ -146,21 +131,16 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         
         reset(connectionFactory, connection, session, messageConsumer, queue);
         
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        
-        expect(queue.getQueueName()).andReturn("myQueue").times(3);
-        expect(session.createConsumer(queue)).andReturn(messageConsumer).times(3);
-        expect(messageConsumer.receive(100L)).andReturn(null).times(3);
-        
-        replay(connectionFactory, connection, session, messageConsumer, queue);
-        
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(queue.getQueueName()).thenReturn("myQueue");
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(100L)).thenReturn(null);
+
         purgeQueuesAction.execute(context);
-        
-        verify(connectionFactory, connection, session, messageConsumer, queue);
+        verify(connection).start();
     }
 	@Test
     public void testPurgeWithCustomTimeout() throws JMSException {
@@ -175,21 +155,16 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         
         reset(connectionFactory, connection, session, messageConsumer);
         
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-        
-        expect(session.createQueue("myQueue")).andReturn(queue).once();
-        
-        expect(session.createConsumer(queue)).andReturn(messageConsumer).once();
-        expect(messageConsumer.receive(500L)).andReturn(null).once();
-        
-        replay(connectionFactory, connection, session, messageConsumer);
-        
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(session.createQueue("myQueue")).thenReturn(queue);
+
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(500L)).thenReturn(null);
+
         purgeQueuesAction.execute(context);
-        
-        verify(connectionFactory, connection, session, messageConsumer);
+        verify(connection).start();
     }
 }

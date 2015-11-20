@@ -30,9 +30,9 @@ import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
-import org.easymock.EasyMock;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
@@ -45,17 +45,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
-    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
+    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
 
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    private Resource resource = EasyMock.createMock(Resource.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private Resource resource = Mockito.mock(Resource.class);
 
     private XStreamMarshaller marshaller = new XStreamMarshaller();
 
@@ -170,12 +171,10 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendBuilderWithPayloadModel() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -200,7 +199,6 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
-        verify(applicationContextMock);
     }
 
     @Test
@@ -229,18 +227,15 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
-        verify(applicationContextMock);
     }
 
     @Test
     public void testSendBuilderWithPayloadModelExplicitMarshallerName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean("myMarshaller", Marshaller.class)).thenReturn(marshaller);
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -265,7 +260,6 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
-        verify(applicationContextMock);
     }
     
     @Test
@@ -306,9 +300,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayloadData".getBytes())).once();
-        replay(resource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("somePayloadData".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -324,18 +316,15 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "somePayloadData");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        
-        verify(resource);
+
     }
     
     @Test
     public void testSendBuilderWithEndpointName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -353,8 +342,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
-        
-        verify(applicationContextMock);
+
     }
     
     @Test
@@ -506,10 +494,8 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someHeaderData".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
-        replay(resource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someHeaderData".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("otherHeaderData".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -543,7 +529,6 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(staticMessageBuilder.getHeaderData().get(0), "otherHeaderData");
         Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
 
-        verify(resource);
     }
     
     @Test

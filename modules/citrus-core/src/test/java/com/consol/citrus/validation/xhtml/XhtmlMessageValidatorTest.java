@@ -27,22 +27,22 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
     private ReceiveMessageAction receiveMessageBean;
 
@@ -69,9 +69,9 @@ public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testXhtmlConversion() throws Exception {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">"
                         + "<html>"
@@ -80,9 +80,8 @@ public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
                             + "</body>"
                         + "</html>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -107,9 +106,9 @@ public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testXhtmlValidation() throws Exception {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
@@ -121,9 +120,8 @@ public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
                             + "</body>"
                         + "</html>");
         
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();

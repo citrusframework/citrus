@@ -168,11 +168,11 @@
         </actions>
     </testcase>
     
-    <spring:bean id="myMessageEndpoint" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </spring:bean>
 
-    <spring:bean id="myDataDictionary" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myDataDictionary" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.variable.dictionary.DataDictionary"/>
     </spring:bean>
 </spring:beans>

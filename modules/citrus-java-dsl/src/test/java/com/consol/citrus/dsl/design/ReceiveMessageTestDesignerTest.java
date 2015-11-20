@@ -38,7 +38,7 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
@@ -51,16 +51,17 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
-    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
-    private Resource resource = EasyMock.createMock(Resource.class);
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private Resource resource = Mockito.mock(Resource.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     private XStreamMarshaller marshaller = new XStreamMarshaller();
 
@@ -124,12 +125,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveBuilderWithPayloadModel() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -155,7 +154,6 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        verify(applicationContextMock);
     }
 
     @Test
@@ -189,12 +187,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshallerName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean("myMarshaller", Marshaller.class)).thenReturn(marshaller);
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -220,7 +216,6 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        verify(applicationContextMock);
     }
     
     @Test
@@ -262,9 +257,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayload".getBytes())).once();
-        replay(resource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("somePayload".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -281,18 +274,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "somePayload");
-        
-        verify(resource);
+
     }
     
     @Test
     public void testReceiveBuilderWithEndpointName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -311,8 +301,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        
-        verify(applicationContextMock);
+
     }
     
     @Test
@@ -500,10 +489,8 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someHeaderData".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
-        replay(resource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someHeaderData".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("otherHeaderData".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -532,8 +519,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "otherHeaderData");
-        
-        verify(resource);
+
     }
 
     @Test
@@ -554,10 +540,8 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         };
 
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someHeaderData".getBytes())).once();
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
-        replay(resource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someHeaderData".getBytes()))
+                                       .thenReturn(new ByteArrayInputStream("otherHeaderData".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -589,7 +573,6 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(1), "otherHeaderData");
 
-        verify(resource);
     }
     
     @Test
@@ -631,12 +614,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -665,8 +646,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
-        
-        verify(applicationContextMock);
+
     }
     
     @Test
@@ -729,11 +709,9 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderExtractFromPayload() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -762,18 +740,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
-        verify(applicationContextMock);
     }
 
     @Test
     public void testReceiveBuilderExtractJsonPathFromPayload() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -803,7 +778,6 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
         Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
-        verify(applicationContextMock);
     }
     
     @Test
@@ -840,11 +814,9 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderExtractCombined() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -879,12 +851,11 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
-        verify(applicationContextMock);
     }
     
     @Test
     public void testReceiveBuilderWithValidationCallback() {
-        final ValidationCallback callback = EasyMock.createMock(ValidationCallback.class);
+        final ValidationCallback callback = Mockito.mock(ValidationCallback.class);
         
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
@@ -921,12 +892,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -960,27 +929,24 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert true");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
-        
-        verify(applicationContextMock);
+
     }
     
     @Test
     public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
         
-        File resourceFile = EasyMock.createMock(File.class);
+        File resourceFile = Mockito.mock(File.class);
         
         reset(applicationContextMock, resource, resourceFile);
 
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        expect(resource.getFile()).andReturn(resourceFile).once();
-        expect(resourceFile.getAbsolutePath()).andReturn("/path/to/file/File.groovy").once();
-
-        replay(applicationContextMock, resource, resourceFile);
+        when(resource.getFile()).thenReturn(resourceFile);
+        when(resourceFile.getAbsolutePath()).thenReturn("/path/to/file/File.groovy");
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -1013,8 +979,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
         Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "/path/to/file/File.groovy");
-        
-        verify(applicationContextMock, resource, resourceFile);
+
     }
     
     @Test
@@ -1023,12 +988,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -1068,8 +1031,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData());
         Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadResourcePath());
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
-        
-        verify(applicationContextMock);
+
     }
     
     @Test

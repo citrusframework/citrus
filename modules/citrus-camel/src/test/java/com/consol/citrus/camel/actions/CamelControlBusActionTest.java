@@ -16,19 +16,19 @@
 
 package com.consol.citrus.camel.actions;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
-    private ProducerTemplate producerTemplate = EasyMock.createMock(ProducerTemplate.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
 
     @Test
      public void testControlBusRouteAction() throws Exception {
@@ -41,11 +41,9 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
-
-        replay(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction();
         action.setCamelContext(camelContext);
@@ -54,7 +52,6 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, producerTemplate);
     }
 
     @Test
@@ -68,11 +65,9 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
-
-        replay(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction();
         action.setCamelContext(camelContext);
@@ -82,7 +77,6 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, producerTemplate);
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -96,11 +90,9 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
-
-        replay(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction();
         action.setCamelContext(camelContext);
@@ -110,7 +102,6 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, producerTemplate);
     }
 
     @Test
@@ -124,11 +115,9 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
-
-        replay(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction();
         action.setCamelContext(camelContext);
@@ -136,7 +125,6 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, producerTemplate);
     }
 
     @Test
@@ -150,11 +138,9 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
-        expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
-
-        replay(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction();
         action.setCamelContext(camelContext);
@@ -163,6 +149,5 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext, producerTemplate);
     }
 }

@@ -19,21 +19,20 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
-    private Resource scriptResource = EasyMock.createMock(Resource.class);
-    private Resource scriptTemplate = EasyMock.createMock(Resource.class);
-    private File file = EasyMock.createMock(File.class);
+    private Resource scriptResource = Mockito.mock(Resource.class);
+    private Resource scriptTemplate = Mockito.mock(Resource.class);
+    private File file = Mockito.mock(File.class);
             
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
@@ -46,9 +45,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(scriptResource);
-        expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
-        replay(scriptResource);
-
+        when(scriptResource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -59,8 +56,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
         GroovyAction action = (GroovyAction)test.getActions().get(0);
         Assert.assertEquals(action.getScript(), "someScript");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
-        
-        verify(scriptResource);
+
     }
     
     @Test
@@ -95,10 +91,8 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(scriptTemplate, file);
-        expect(scriptTemplate.getFile()).andReturn(file).once();
-        expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
-        replay(scriptTemplate, file);
-
+        when(scriptTemplate.getFile()).thenReturn(file);
+        when(file.getAbsolutePath()).thenReturn("classpath:some.file");
         builder.configure();
 
         TestCase test = builder.getTestCase();

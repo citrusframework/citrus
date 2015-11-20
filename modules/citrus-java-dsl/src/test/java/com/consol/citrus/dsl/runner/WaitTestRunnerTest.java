@@ -23,28 +23,26 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.WaitActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Martin Maher
  * @since 2.4
  */
 public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
-    private Condition condition = EasyMock.createMock(Condition.class);
+    private Condition condition = Mockito.mock(Condition.class);
 
     @Test
     public void testWaitBuilder() {
         reset(condition);
-        expect(condition.getName()).andReturn("check").atLeastOnce();
-        expect(condition.isSatisfied(anyObject(TestContext.class))).andReturn(Boolean.FALSE).once();
-        expect(condition.isSatisfied(anyObject(TestContext.class))).andReturn(Boolean.TRUE).once();
-        expect(condition.getSuccessMessage(anyObject(TestContext.class))).andReturn("Condition success!").once();
-        replay(condition);
-
+        when(condition.getName()).thenReturn("check");
+        when(condition.isSatisfied(any(TestContext.class))).thenReturn(Boolean.FALSE);
+        when(condition.isSatisfied(any(TestContext.class))).thenReturn(Boolean.TRUE);
+        when(condition.getSuccessMessage(any(TestContext.class))).thenReturn("Condition success!");
         final String seconds = "3";
         final String interval = "500";
 
@@ -70,6 +68,5 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getInterval(), interval);
         Assert.assertEquals(action.getCondition(), condition);
 
-        verify(condition);
     }
 }

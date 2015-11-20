@@ -35,7 +35,7 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
   </bean>
 
@@ -43,23 +43,23 @@
     <ref bean="clientInterceptor"/>
   </util:list>
 
-  <bean id="clientInterceptor" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="clientInterceptor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
   </bean>
 
-  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 
-  <bean id="endpointResolver" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
   </bean>
 
-  <bean id="soapRequestFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="soapRequestFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.http.client.ClientHttpRequestFactory"/>
   </bean>
 
-  <bean id="restTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="restTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.web.client.RestTemplate"/>
   </bean>
 

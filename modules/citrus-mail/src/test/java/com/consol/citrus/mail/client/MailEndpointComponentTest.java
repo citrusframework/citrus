@@ -19,21 +19,22 @@ package com.consol.citrus.mail.client;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.mail.model.MailMarshaller;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class MailEndpointComponentTest {
 
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
-    private MailMarshaller marshaller = EasyMock.createMock(MailMarshaller.class);
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private MailMarshaller marshaller = Mockito.mock(MailMarshaller.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
@@ -75,10 +76,8 @@ public class MailEndpointComponentTest {
         MailEndpointComponent component = new MailEndpointComponent();
 
         reset(applicationContext);
-        expect(applicationContext.containsBean("myMarshaller")).andReturn(true).once();
-        expect(applicationContext.getBean("myMarshaller")).andReturn(marshaller).once();
-        replay(applicationContext);
-
+        when(applicationContext.containsBean("myMarshaller")).thenReturn(true);
+        when(applicationContext.getBean("myMarshaller")).thenReturn(marshaller);
         Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&mailMarshaller=myMarshaller", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
@@ -90,6 +89,5 @@ public class MailEndpointComponentTest {
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMailMarshaller(), marshaller);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
-        verify(applicationContext);
     }
 }

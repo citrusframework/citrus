@@ -23,7 +23,8 @@ import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.model.*;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
-import org.easymock.IArgumentMatcher;
+import org.mockito.ArgumentMatcher;
+import org.mockito.Mockito;
 import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -32,7 +33,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 import static org.testng.AssertJUnit.assertEquals;
 
 /**
@@ -51,7 +52,7 @@ public class SshCommandTest {
 
     @BeforeMethod
     public void setup() {
-        adapter = createMock(EndpointAdapter.class);
+        adapter = Mockito.mock(EndpointAdapter.class);
 
         cmd = new SshCommand(COMMAND, adapter, new SshEndpointConfiguration());
 
@@ -60,7 +61,7 @@ public class SshCommandTest {
         cmd.setErrorStream(stderr);
         cmd.setOutputStream(stdout);
 
-        exitCallback = createMock(ExitCallback.class);
+        exitCallback = Mockito.mock(ExitCallback.class);
         cmd.setExitCallback(exitCallback);
 
         marshaller = new SshMarshaller();
@@ -84,25 +85,21 @@ public class SshCommandTest {
 
     @Test
     public void start() throws IOException {
-        Environment env = createMock(Environment.class);
+        Environment env = Mockito.mock(Environment.class);
         Map<String,String> map = new HashMap<String,String>();
         map.put(Environment.ENV_USER,"roland");
-        expect(env.getEnv()).andReturn(map);
-        replay(env);
-
+        when(env.getEnv()).thenReturn(map);
         prepare("input","output",null,0);
         cmd.start(env);
-        verify(env);
     }
 
     @Test
     public void ioException() throws IOException {
-        InputStream i = createMock(InputStream.class);
-        expect(i.read((byte[]) anyObject())).andThrow(new IOException("No"));
+        InputStream i = Mockito.mock(InputStream.class);
+        doThrow(new IOException("No")).when(i).read((byte[]) any());
         i.close();
 
         exitCallback.onExit(1,"No");
-        replay(i, exitCallback);
         cmd.setInputStream(i);
 
         cmd.run();
@@ -125,12 +122,8 @@ public class SshCommandTest {
         marshaller.marshal(resp, response);
 
         Message respMsg = new DefaultMessage(response.toString());
-        expect(adapter.handleMessage(eqMessage(request.toString()))).andReturn(respMsg);
-        replay(adapter);
-
+        when(adapter.handleMessage(eqMessage(request.toString()))).thenReturn(respMsg);
         exitCallback.onExit(pExitCode);
-        replay(exitCallback);
-
         cmd.setInputStream(new ByteArrayInputStream(pInput.getBytes()));
     }
 
@@ -140,7 +133,7 @@ public class SshCommandTest {
      * @return
      */
     public Message eqMessage(final String expected) {
-        reportMatcher(new IArgumentMatcher() {
+        argThat(new ArgumentMatcher() {
             public boolean matches(Object argument) {
                 Message msg = (Message) argument;
                 String payload = (String) msg.getPayload();

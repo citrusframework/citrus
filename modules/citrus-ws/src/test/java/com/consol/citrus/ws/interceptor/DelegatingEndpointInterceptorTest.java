@@ -18,7 +18,7 @@ package com.consol.citrus.ws.interceptor;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.server.WebServiceEndpoint;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -34,7 +34,8 @@ import org.testng.annotations.Test;
 import javax.xml.namespace.QName;
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -46,11 +47,11 @@ public class DelegatingEndpointInterceptorTest {
     private WebServiceEndpoint webServiceEndpoint = new WebServiceEndpoint();
     private MessageContext messageContext;
 
-    private SmartEndpointInterceptor smartEndpointInterceptorMock = EasyMock.createMock(SmartEndpointInterceptor.class);
-    private EndpointInterceptor endpointInterceptorMock = EasyMock.createMock(EndpointInterceptor.class);
-    private SoapEndpointInterceptor soapEndpointInterceptorMock = EasyMock.createMock(SoapEndpointInterceptor.class);
+    private SmartEndpointInterceptor smartEndpointInterceptorMock = Mockito.mock(SmartEndpointInterceptor.class);
+    private EndpointInterceptor endpointInterceptorMock = Mockito.mock(EndpointInterceptor.class);
+    private SoapEndpointInterceptor soapEndpointInterceptorMock = Mockito.mock(SoapEndpointInterceptor.class);
 
-    private SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
+    private SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
 
     private CitrusRuntimeException ex = new CitrusRuntimeException();
 
@@ -76,26 +77,21 @@ public class DelegatingEndpointInterceptorTest {
 
         reset(endpointInterceptorMock, smartEndpointInterceptorMock);
 
-        expect(smartEndpointInterceptorMock.shouldIntercept(messageContext, webServiceEndpoint)).andReturn(true).times(4);
-        expect(endpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(smartEndpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(endpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(smartEndpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(endpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(smartEndpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).andReturn(true).once();
-        endpointInterceptorMock.afterCompletion(messageContext, webServiceEndpoint, ex);
-        expectLastCall().once();
-        smartEndpointInterceptorMock.afterCompletion(messageContext, webServiceEndpoint, ex);
-        expectLastCall().once();
-
-        replay(endpointInterceptorMock, smartEndpointInterceptorMock);
+        when(smartEndpointInterceptorMock.shouldIntercept(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(endpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(smartEndpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(endpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(smartEndpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(endpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(smartEndpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).thenReturn(true);
 
         Assert.assertTrue(delegatingEndpointInterceptor.handleRequest(messageContext, webServiceEndpoint));
         Assert.assertTrue(delegatingEndpointInterceptor.handleResponse(messageContext, webServiceEndpoint));
         Assert.assertTrue(delegatingEndpointInterceptor.handleFault(messageContext, webServiceEndpoint));
         delegatingEndpointInterceptor.afterCompletion(messageContext, webServiceEndpoint, ex);
 
-        verify(endpointInterceptorMock, smartEndpointInterceptorMock);
+        verify(endpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);
+        verify(smartEndpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);
     }
 
     @Test
@@ -115,22 +111,16 @@ public class DelegatingEndpointInterceptorTest {
 
         reset(endpointInterceptorMock, smartEndpointInterceptorMock, soapEndpointInterceptorMock, soapHeaderElement);
 
-        expect(smartEndpointInterceptorMock.shouldIntercept(messageContext, webServiceEndpoint)).andReturn(false).times(4);
-        expect(endpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(soapEndpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(endpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(soapEndpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(endpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).andReturn(true).once();
-        expect(soapEndpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).andReturn(true).once();
-        endpointInterceptorMock.afterCompletion(messageContext, webServiceEndpoint, ex);
-        expectLastCall().once();
-        soapEndpointInterceptorMock.afterCompletion(messageContext, webServiceEndpoint, ex);
-        expectLastCall().once();
+        when(smartEndpointInterceptorMock.shouldIntercept(messageContext, webServiceEndpoint)).thenReturn(false);
+        when(endpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(soapEndpointInterceptorMock.handleRequest(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(endpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(soapEndpointInterceptorMock.handleResponse(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(endpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).thenReturn(true);
+        when(soapEndpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).thenReturn(true);
 
-        expect(soapHeaderElement.getName()).andReturn(soapHeader).times(2);
-        expect(soapEndpointInterceptorMock.understands(soapHeaderElement)).andReturn(false).once();
-
-        replay(endpointInterceptorMock, smartEndpointInterceptorMock, soapEndpointInterceptorMock, soapHeaderElement);
+        when(soapHeaderElement.getName()).thenReturn(soapHeader);
+        when(soapEndpointInterceptorMock.understands(soapHeaderElement)).thenReturn(false);
 
         Assert.assertTrue(delegatingEndpointInterceptor.handleRequest(messageContext, webServiceEndpoint));
         Assert.assertTrue(delegatingEndpointInterceptor.handleResponse(messageContext, webServiceEndpoint));
@@ -138,6 +128,7 @@ public class DelegatingEndpointInterceptorTest {
         delegatingEndpointInterceptor.afterCompletion(messageContext, webServiceEndpoint, ex);
         Assert.assertTrue(delegatingEndpointInterceptor.understands(soapHeaderElement));
 
-        verify(endpointInterceptorMock, smartEndpointInterceptorMock, soapEndpointInterceptorMock, soapHeaderElement);
+        verify(endpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);
+        verify(soapEndpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);
     }
 }

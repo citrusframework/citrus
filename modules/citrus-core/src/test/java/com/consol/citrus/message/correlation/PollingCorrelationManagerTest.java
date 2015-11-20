@@ -17,15 +17,16 @@
 package com.consol.citrus.message.correlation;
 
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class PollingCorrelationManagerTest {
 
-    private ObjectStore<String> objectStore = EasyMock.createMock(ObjectStore.class);
+    private ObjectStore<String> objectStore = Mockito.mock(ObjectStore.class);
 
     @Test
     public void testFind() throws Exception {
@@ -63,12 +64,9 @@ public class PollingCorrelationManagerTest {
         correlationManager.setObjectStore(objectStore);
 
         reset(objectStore);
-        expect(objectStore.remove("foo")).andReturn(null).times(5).andReturn("bar").once();
-        replay(objectStore);
-
+        when(objectStore.remove("foo")).thenReturn(null).thenReturn("bar");
         Assert.assertEquals(correlationManager.find("foo"), "bar");
 
-        verify(objectStore);
     }
 
     @Test
@@ -81,11 +79,8 @@ public class PollingCorrelationManagerTest {
         correlationManager.setObjectStore(objectStore);
 
         reset(objectStore);
-        expect(objectStore.remove("foo")).andReturn(null).times(4);
-        replay(objectStore);
-
+        when(objectStore.remove("foo")).thenReturn(null);
         Assert.assertNull(correlationManager.find("foo"));
 
-        verify(objectStore);
     }
 }

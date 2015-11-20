@@ -23,7 +23,7 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -31,18 +31,19 @@ import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  * @since 1.3
  */
 public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
-    private Endpoint endpoint1 = EasyMock.createMock(Endpoint.class);
-    private Endpoint endpoint2 = EasyMock.createMock(Endpoint.class);
-    private Endpoint endpoint3 = EasyMock.createMock(Endpoint.class);
+    private Endpoint endpoint1 = Mockito.mock(Endpoint.class);
+    private Endpoint endpoint2 = Mockito.mock(Endpoint.class);
+    private Endpoint endpoint3 = Mockito.mock(Endpoint.class);
     
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testPurgeEndpointsBuilderWithEndpoints() {
@@ -73,11 +74,9 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
     public void testPurgeEndpointBuilderWithNames() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -103,18 +102,15 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
         Assert.assertEquals(action.getMessageSelector().size(), 0);
 
-        verify(applicationContextMock);
     }
 
     @Test
     public void testPurgeEndpointBuilderWithMessageSelector() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -140,18 +136,15 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(action.getMessageSelectorString());
         Assert.assertEquals(action.getMessageSelector().size(), 1);
 
-        verify(applicationContextMock);
     }
     
     @Test
     public void testMissingEndpointResolver() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
@@ -172,7 +165,6 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointNames().toString(), "[e1]");
         Assert.assertNotNull(action.getBeanFactory());
         Assert.assertTrue(action.getBeanFactory() instanceof ApplicationContext);
-        
-        verify(applicationContextMock);
+
     }
 }

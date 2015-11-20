@@ -21,8 +21,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -33,14 +34,14 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class MailServerTest {
 
-    private EndpointAdapter endpointAdapterMock = EasyMock.createMock(EndpointAdapter.class);
+    private EndpointAdapter endpointAdapterMock = Mockito.mock(EndpointAdapter.class);
 
     @Test
     @SuppressWarnings("unchecked")
@@ -50,10 +51,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
@@ -76,15 +77,12 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -95,10 +93,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
@@ -121,15 +119,12 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -140,10 +135,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
@@ -166,15 +161,12 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -185,10 +177,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
 
@@ -203,14 +195,11 @@ public class MailServerTest {
                 return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-response.xml",
                         MailServer.class).getInputStream())));
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         mailServer.setAutoAccept(false);
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -220,9 +209,7 @@ public class MailServerTest {
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
         reset(endpointAdapterMock);
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andReturn(null).once();
-        replay(endpointAdapterMock);
-
+        when(endpointAdapterMock.handleMessage(any(Message.class))).thenReturn(null);
         mailServer.setAutoAccept(false);
         try {
             mailServer.accept("foo@mail.com", "bar@mail.com");
@@ -231,7 +218,6 @@ public class MailServerTest {
             Assert.assertTrue(e.getMessage().startsWith("Did not receive accept response"));
         }
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -241,9 +227,7 @@ public class MailServerTest {
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
         reset(endpointAdapterMock);
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andReturn(new DefaultMessage(99L)).once();
-        replay(endpointAdapterMock);
-
+        when(endpointAdapterMock.handleMessage(any(Message.class))).thenReturn(new DefaultMessage(99L));
         mailServer.setAutoAccept(false);
         try {
             mailServer.accept("foo@mail.com", "bar@mail.com");
@@ -252,7 +236,6 @@ public class MailServerTest {
             Assert.assertTrue(e.getMessage().startsWith("Unable to read accept response"));
         }
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -264,10 +247,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
@@ -290,15 +273,12 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -310,10 +290,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
@@ -336,12 +316,10 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        }).doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
@@ -365,15 +343,12 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -385,10 +360,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
@@ -411,12 +386,10 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        }).doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
@@ -440,15 +413,12 @@ public class MailServerTest {
 
                 return null;
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
 
-        verify(endpointAdapterMock);
     }
 
     @Test
@@ -459,10 +429,10 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+        doAnswer(new Answer<Message>() {
             @Override
-            public Message answer() throws Throwable {
-                Message message = (Message) getCurrentArguments()[0];
+            public Message answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
                 Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
@@ -486,9 +456,7 @@ public class MailServerTest {
                 return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("error-response.xml",
                         MailServer.class).getInputStream())));
             }
-        }).once();
-
-        replay(endpointAdapterMock);
+        }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
 
@@ -501,6 +469,5 @@ public class MailServerTest {
             Assert.assertEquals(e.getErrorResponse(), "443 Failed!");
         }
 
-        verify(endpointAdapterMock);
     }
 }

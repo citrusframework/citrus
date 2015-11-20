@@ -16,68 +16,62 @@
 
 package com.consol.citrus.admin.websocket;
 
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+
 import net.minidev.json.JSONObject;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class WebSocketProcessListenerTest {
 
-    private LoggingWebSocket loggingWebSocket = EasyMock.createMock(LoggingWebSocket.class);
+    private LoggingWebSocket loggingWebSocket = Mockito.mock(LoggingWebSocket.class);
 
     @Test
     public void testTestEventExtraction() throws IOException {
         reset(loggingWebSocket);
 
-        loggingWebSocket.push(anyObject(JSONObject.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                JSONObject event = (JSONObject)getCurrentArguments()[0];
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                JSONObject event = (JSONObject)invocation.getArguments()[0];
 
                 Assert.assertEquals(event.get("progress").toString(), "50");
                 return null;
             }
-        }).once();
-
-        replay(loggingWebSocket);
+        }).when(loggingWebSocket).push(any(JSONObject.class));
 
         WebSocketProcessListener listener = new WebSocketProcessListener();
         listener.setLoggingWebSocket(loggingWebSocket);
 
         listener.onProcessActivity("test", "INFO: TEST STEP 1/2 SUCCESS");
-
-        verify(loggingWebSocket);
     }
 
     @Test
     public void testTestEventExtractionHighNumbers() throws IOException {
         reset(loggingWebSocket);
 
-        loggingWebSocket.push(anyObject(JSONObject.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                JSONObject event = (JSONObject)getCurrentArguments()[0];
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                JSONObject event = (JSONObject)invocation.getArguments()[0];
 
                 Assert.assertEquals(event.get("progress").toString(), "9");
                 return null;
             }
-        }).once();
-
-        replay(loggingWebSocket);
+        }).when(loggingWebSocket).push(any(JSONObject.class));
 
         WebSocketProcessListener listener = new WebSocketProcessListener();
         listener.setLoggingWebSocket(loggingWebSocket);
 
         listener.onProcessActivity("test", "INFO: TEST STEP 20/229 SUCCESS");
-
-        verify(loggingWebSocket);
     }
 }

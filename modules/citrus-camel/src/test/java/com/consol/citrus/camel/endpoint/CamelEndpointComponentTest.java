@@ -20,7 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.camel.CamelContext;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -28,9 +28,8 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -38,8 +37,8 @@ import static org.easymock.EasyMock.verify;
  */
 public class CamelEndpointComponentTest {
 
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
@@ -52,10 +51,8 @@ public class CamelEndpointComponentTest {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(Collections.singletonMap("myCamelContext", camelContext)).times(2);
-        expect(applicationContext.getBean(CamelContext.class)).andReturn(camelContext).times(2);
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:direct:news", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
@@ -72,7 +69,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
-        verify(applicationContext);
     }
 
     @Test
@@ -80,10 +76,8 @@ public class CamelEndpointComponentTest {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(Collections.singletonMap("myCamelContext", camelContext)).times(2);
-        expect(applicationContext.getBean(CamelContext.class)).andReturn(camelContext).times(2);
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:sync:direct:news", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelSyncEndpoint.class);
@@ -100,7 +94,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
-        verify(applicationContext);
     }
 
     @Test
@@ -108,16 +101,14 @@ public class CamelEndpointComponentTest {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         Map<String, CamelContext> camelContextMap = new HashMap<String, CamelContext>();
-        camelContextMap.put("someCamelContext", EasyMock.createMock(CamelContext.class));
+        camelContextMap.put("someCamelContext", Mockito.mock(CamelContext.class));
         camelContextMap.put("myCamelContext", camelContext);
 
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(camelContextMap).once();
-        expect(applicationContext.containsBean("camelContext")).andReturn(false).once();
-        expect(applicationContext.containsBean("myCamelContext")).andReturn(true).once();
-        expect(applicationContext.getBean("myCamelContext")).andReturn(camelContext).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(camelContextMap);
+        when(applicationContext.containsBean("camelContext")).thenReturn(false);
+        when(applicationContext.containsBean("myCamelContext")).thenReturn(true);
+        when(applicationContext.getBean("myCamelContext")).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:direct:news-feed?timeout=10000&camelContext=myCamelContext", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
@@ -126,7 +117,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
-        verify(applicationContext);
     }
 
     @Test
@@ -134,16 +124,14 @@ public class CamelEndpointComponentTest {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
         Map<String, CamelContext> camelContextMap = new HashMap<String, CamelContext>();
-        camelContextMap.put("someCamelContext", EasyMock.createMock(CamelContext.class));
+        camelContextMap.put("someCamelContext", Mockito.mock(CamelContext.class));
         camelContextMap.put("myCamelContext", camelContext);
 
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(camelContextMap).once();
-        expect(applicationContext.containsBean("camelContext")).andReturn(false).once();
-        expect(applicationContext.containsBean("myCamelContext")).andReturn(true).once();
-        expect(applicationContext.getBean("myCamelContext")).andReturn(camelContext).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(camelContextMap);
+        when(applicationContext.containsBean("camelContext")).thenReturn(false);
+        when(applicationContext.containsBean("myCamelContext")).thenReturn(true);
+        when(applicationContext.getBean("myCamelContext")).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:controlbus:route?routeId=news&timeout=10000&camelContext=myCamelContext&action=stats", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
@@ -152,22 +140,18 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
-        verify(applicationContext);
     }
 
     @Test
     public void testInvalidEndpointUri() throws Exception {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
-        reset(applicationContext);
-        replay(applicationContext);
-
         try {
+            reset(applicationContext);
             component.createEndpoint("camel:direct:news?param1=&param2=value2", context);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Invalid parameter"));
-            verify(applicationContext);
         }
 
     }

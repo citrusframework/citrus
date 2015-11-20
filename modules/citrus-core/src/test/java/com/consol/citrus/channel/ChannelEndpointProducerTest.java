@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageDeliveryException;
@@ -28,16 +28,16 @@ import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
 
-    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
-    private MessageChannel channel = EasyMock.createMock(MessageChannel.class);
-    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
+    private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
+    private MessageChannel channel = Mockito.mock(MessageChannel.class);
+    private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -50,15 +50,10 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messagingTemplate, channel);
-        
-        messagingTemplate.send(eq(channel), anyObject(org.springframework.messaging.Message.class));
-        expectLastCall().once();
-        
-        replay(messagingTemplate, channel);
 
         endpoint.createProducer().send(message, context);
-        
-        verify(messagingTemplate, channel);
+
+        verify(messagingTemplate).send(eq(channel), any(org.springframework.messaging.Message.class));
     }
     
     @Test
@@ -75,16 +70,11 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         
         reset(messagingTemplate, channel, channelResolver);
         
-        expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
-        
-        messagingTemplate.send(eq(channel), anyObject(org.springframework.messaging.Message.class));
-        expectLastCall().once();
-        
-        replay(messagingTemplate, channel, channelResolver);
+        when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
 
         endpoint.createProducer().send(message, context);
-        
-        verify(messagingTemplate, channel, channelResolver);
+
+        verify(messagingTemplate).send(eq(channel), any(org.springframework.messaging.Message.class));
     }
     
     @Test
@@ -98,11 +88,8 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messagingTemplate, channel);
-        
-        messagingTemplate.send(eq(channel), anyObject(org.springframework.messaging.Message.class));
-        expectLastCall().andThrow(new MessageDeliveryException("Internal error!")).once();
-        
-        replay(messagingTemplate, channel);
+
+        doThrow(new MessageDeliveryException("Internal error!")).when(messagingTemplate).send(eq(channel), any(org.springframework.messaging.Message.class));
 
         try {
             endpoint.createProducer().send(message, context);
@@ -111,7 +98,6 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
             Assert.assertNotNull(e.getCause());
             Assert.assertEquals(e.getCause().getClass(), MessageDeliveryException.class);
             Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
-            verify(messagingTemplate, channel);
             return;
         }
         

@@ -14,7 +14,7 @@
       </citrus:schemas>
     </citrus:schema-repository>
 
-    <bean id="testSchema" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="testSchema" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="org.springframework.xml.xsd.XsdSchema"/>
     </bean>
 

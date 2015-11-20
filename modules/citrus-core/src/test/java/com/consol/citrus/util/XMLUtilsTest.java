@@ -16,7 +16,8 @@
 
 package com.consol.citrus.util;
 
-import org.easymock.EasyMock;
+
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.*;
@@ -25,7 +26,7 @@ import javax.xml.XMLConstants;
 import java.io.*;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -60,108 +61,99 @@ public class XMLUtilsTest {
 
     @Test
     public void testStripWhitespaceNodes() {
-        Node testNode = EasyMock.createMock(Node.class);
-        Node textNode = EasyMock.createMock(Node.class);
-        Node whiteSpaceNode = EasyMock.createMock(Node.class);
+        Node testNode = Mockito.mock(Node.class);
+        Node textNode = Mockito.mock(Node.class);
+        Node whiteSpaceNode = Mockito.mock(Node.class);
 
         reset(testNode, textNode, whiteSpaceNode);
 
-        expect(testNode.getFirstChild()).andReturn(whiteSpaceNode).once();
-        expect(testNode.getNodeType()).andReturn(Document.ELEMENT_NODE);
-        expect(testNode.removeChild(whiteSpaceNode)).andReturn(testNode).once();
+        when(testNode.getFirstChild()).thenReturn(whiteSpaceNode);
+        when(testNode.getNodeType()).thenReturn(Document.ELEMENT_NODE);
+        when(testNode.removeChild(whiteSpaceNode)).thenReturn(testNode);
 
-        expect(whiteSpaceNode.getNodeType()).andReturn(Document.TEXT_NODE);
-        expect(whiteSpaceNode.getFirstChild()).andReturn(null).once();
-        expect(whiteSpaceNode.getNextSibling()).andReturn(textNode).once();
-        expect(whiteSpaceNode.getNodeValue()).andReturn("").once();
-        expect(whiteSpaceNode.getParentNode()).andReturn(testNode).once();
+        when(whiteSpaceNode.getNodeType()).thenReturn(Document.TEXT_NODE);
+        when(whiteSpaceNode.getFirstChild()).thenReturn(null);
+        when(whiteSpaceNode.getNextSibling()).thenReturn(textNode);
+        when(whiteSpaceNode.getNodeValue()).thenReturn("");
+        when(whiteSpaceNode.getParentNode()).thenReturn(testNode);
 
-        expect(textNode.getNodeType()).andReturn(Document.TEXT_NODE);
-        expect(textNode.getFirstChild()).andReturn(null).once();
-        expect(textNode.getNextSibling()).andReturn(null).once();
-        expect(textNode.getNodeValue()).andReturn("This is a sample text").once();
-
-        replay(testNode, textNode, whiteSpaceNode);
+        when(textNode.getNodeType()).thenReturn(Document.TEXT_NODE);
+        when(textNode.getFirstChild()).thenReturn(null);
+        when(textNode.getNextSibling()).thenReturn(null);
+        when(textNode.getNodeValue()).thenReturn("This is a sample text");
 
         XMLUtils.stripWhitespaceNodes(testNode);
 
-        verify(testNode, textNode, whiteSpaceNode);
     }
 
     @Test
     public void testGetNodePathName() {
-        Document doc = EasyMock.createMock(Document.class);
-        Node testNode = EasyMock.createMock(Node.class);
-        Node childNode1 = EasyMock.createMock(Node.class);
-        Node childNode2 = EasyMock.createMock(Node.class);
-        Node childNode3 = EasyMock.createMock(Node.class);
+        Document doc = Mockito.mock(Document.class);
+        Node testNode = Mockito.mock(Node.class);
+        Node childNode1 = Mockito.mock(Node.class);
+        Node childNode2 = Mockito.mock(Node.class);
+        Node childNode3 = Mockito.mock(Node.class);
 
         reset(doc, testNode, childNode1, childNode2, childNode3);
 
-        expect(doc.getParentNode()).andReturn(null).anyTimes();
+        when(doc.getParentNode()).thenReturn(null);
 
-        expect(testNode.getLocalName()).andReturn("testNode").anyTimes();
-        expect(testNode.getParentNode()).andReturn(doc).anyTimes();
+        when(testNode.getLocalName()).thenReturn("testNode");
+        when(testNode.getParentNode()).thenReturn(doc);
 
-        expect(childNode1.getLocalName()).andReturn("childNode1").anyTimes();
-        expect(childNode1.getParentNode()).andReturn(testNode).anyTimes();
+        when(childNode1.getLocalName()).thenReturn("childNode1");
+        when(childNode1.getParentNode()).thenReturn(testNode);
 
-        expect(childNode2.getLocalName()).andReturn("childNode2").anyTimes();
-        expect(childNode2.getParentNode()).andReturn(testNode).anyTimes();
+        when(childNode2.getLocalName()).thenReturn("childNode2");
+        when(childNode2.getParentNode()).thenReturn(testNode);
 
-        expect(childNode3.getLocalName()).andReturn("childNode3").anyTimes();
-        expect(childNode3.getParentNode()).andReturn(childNode2).anyTimes();
+        when(childNode3.getLocalName()).thenReturn("childNode3");
+        when(childNode3.getParentNode()).thenReturn(childNode2);
 
-        expect(testNode.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
-        expect(childNode1.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
-        expect(childNode2.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
-        expect(childNode3.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
-
-        replay(doc, testNode, childNode1, childNode2, childNode3);
+        when(testNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(childNode1.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(childNode2.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(childNode3.getNodeType()).thenReturn(Node.ELEMENT_NODE);
 
         Assert.assertEquals(XMLUtils.getNodesPathName(testNode), "testNode");
         Assert.assertEquals(XMLUtils.getNodesPathName(childNode1), "testNode.childNode1");
         Assert.assertEquals(XMLUtils.getNodesPathName(childNode3), "testNode.childNode2.childNode3");
 
-        verify(doc, testNode, childNode1, childNode2, childNode3);
     }
 
     @Test
     public void testGetNodePathNameForAttribute() {
-        Document doc = EasyMock.createMock(Document.class);
-        Element testNode = EasyMock.createMock(Element.class);
-        Element childNode1 = EasyMock.createMock(Element.class);
-        Attr attribute1 = EasyMock.createMock(Attr.class);
-        Attr attribute2 = EasyMock.createMock(Attr.class);
+        Document doc = Mockito.mock(Document.class);
+        Element testNode = Mockito.mock(Element.class);
+        Element childNode1 = Mockito.mock(Element.class);
+        Attr attribute1 = Mockito.mock(Attr.class);
+        Attr attribute2 = Mockito.mock(Attr.class);
 
         reset(doc, testNode, childNode1, attribute1, attribute2);
 
-        expect(doc.getParentNode()).andReturn(null).anyTimes();
+        when(doc.getParentNode()).thenReturn(null);
 
-        expect(testNode.getLocalName()).andReturn("testNode").anyTimes();
-        expect(testNode.getParentNode()).andReturn(doc).anyTimes();
+        when(testNode.getLocalName()).thenReturn("testNode");
+        when(testNode.getParentNode()).thenReturn(doc);
 
-        expect(childNode1.getLocalName()).andReturn("childNode1").anyTimes();
-        expect(childNode1.getParentNode()).andReturn(testNode).anyTimes();
+        when(childNode1.getLocalName()).thenReturn("childNode1");
+        when(childNode1.getParentNode()).thenReturn(testNode);
 
-        expect(attribute1.getLocalName()).andReturn("attribute1").anyTimes();
-        expect(attribute1.getOwnerElement()).andReturn(testNode).anyTimes();
+        when(attribute1.getLocalName()).thenReturn("attribute1");
+        when(attribute1.getOwnerElement()).thenReturn(testNode);
 
-        expect(attribute2.getLocalName()).andReturn("attribute2").anyTimes();
-        expect(attribute2.getOwnerElement()).andReturn(childNode1).anyTimes();
+        when(attribute2.getLocalName()).thenReturn("attribute2");
+        when(attribute2.getOwnerElement()).thenReturn(childNode1);
 
-        expect(testNode.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
-        expect(childNode1.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
-        expect(attribute1.getNodeType()).andReturn(Node.ATTRIBUTE_NODE).anyTimes();
-        expect(attribute2.getNodeType()).andReturn(Node.ATTRIBUTE_NODE).anyTimes();
-
-        replay(doc, testNode, childNode1, attribute1, attribute2);
+        when(testNode.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(childNode1.getNodeType()).thenReturn(Node.ELEMENT_NODE);
+        when(attribute1.getNodeType()).thenReturn(Node.ATTRIBUTE_NODE);
+        when(attribute2.getNodeType()).thenReturn(Node.ATTRIBUTE_NODE);
 
         Assert.assertEquals(XMLUtils.getNodesPathName(testNode), "testNode");
         Assert.assertEquals(XMLUtils.getNodesPathName(attribute1), "testNode.attribute1");
         Assert.assertEquals(XMLUtils.getNodesPathName(attribute2), "testNode.childNode1.attribute2");
 
-        verify(doc, testNode, childNode1, attribute1, attribute2);
     }
 
     @Test

@@ -36,15 +36,15 @@
     <citrus-ws:server id="soapServer6"
                             servlet-handler="servletHandler"/>
     
-    <bean id ="connector" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id ="connector" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.eclipse.jetty.server.Connector"/>
     </bean>
     
     <util:list id="connectors">
-        <bean id="connector1" class="org.easymock.EasyMock" factory-method="createMock">
+        <bean id="connector1" class="org.mockito.Mockito" factory-method="mock">
           <constructor-arg value="org.eclipse.jetty.server.Connector"/>
         </bean>
-        <bean id="connector2" class="org.easymock.EasyMock" factory-method="createMock">
+        <bean id="connector2" class="org.mockito.Mockito" factory-method="mock">
             <constructor-arg value="org.eclipse.jetty.server.Connector"/>
         </bean>
     </util:list>
@@ -70,15 +70,15 @@
         </property>
     </bean>
                 
-    <bean id ="servletHandler" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.eclipse.jetty.servlet.ServletHandler"/>
     </bean>
 
-    <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.ws.message.converter.SoapMessageConverter"/>
     </bean>
 
-    <bean id="soap12MessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="soap12MessageFactory" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
     </bean>
 

@@ -21,7 +21,7 @@ import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ExecutePLSQLBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
@@ -30,27 +30,20 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
 public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
-    private JdbcTemplate jdbcTemplate = EasyMock.createMock(JdbcTemplate.class);
-    private Resource sqlResource = EasyMock.createMock(Resource.class);
+    private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
+    private Resource sqlResource = Mockito.mock(Resource.class);
     
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
         reset(jdbcTemplate);
-        jdbcTemplate.execute("TEST_STMT_1");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_2");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_3");
-        expectLastCall().once();
-        replay(jdbcTemplate);
-
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -79,26 +72,20 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute("TEST_STMT_1");
+        verify(jdbcTemplate).execute("TEST_STMT_2");
+        verify(jdbcTemplate).execute("TEST_STMT_3");
     }
-    
+
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
         reset(jdbcTemplate, sqlResource);
-        expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream(("TEST_STMT_1\n" +
+        when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream(("TEST_STMT_1\n" +
                 "/\n" +
                 "TEST_STMT_2\n" +
                 "/\n" +
                 "TEST_STMT_3\n" +
-                "/").getBytes())).once();
-
-        jdbcTemplate.execute("TEST_STMT_1");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_2");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_3");
-        expectLastCall().once();
-        replay(jdbcTemplate, sqlResource);
+                "/").getBytes()));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -112,7 +99,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
                 });
             }
         };
-        
+
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
@@ -131,20 +118,14 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
                 "/"));
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
-        verify(jdbcTemplate, sqlResource);
+        verify(jdbcTemplate).execute("TEST_STMT_1");
+        verify(jdbcTemplate).execute("TEST_STMT_2");
+        verify(jdbcTemplate).execute("TEST_STMT_3");
     }
 
     @Test
     public void testExecutePLSQLBuilderWithSQLResourcePath() throws IOException {
         reset(jdbcTemplate);
-        jdbcTemplate.execute("TEST_STMT_1");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_2");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_3");
-        expectLastCall().once();
-        replay(jdbcTemplate);
-
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -172,18 +153,14 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/dsl/runner/plsql.sql");
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute("TEST_STMT_1");
+        verify(jdbcTemplate).execute("TEST_STMT_2");
+        verify(jdbcTemplate).execute("TEST_STMT_3");
     }
-    
+
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
         reset(jdbcTemplate);
-        jdbcTemplate.execute("TEST_STMT_1");
-        expectLastCall().once();
-        jdbcTemplate.execute("TEST_STMT_2");
-        expectLastCall().once();
-        replay(jdbcTemplate);
-
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -218,6 +195,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
                 "/"));
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute("TEST_STMT_1");
+        verify(jdbcTemplate).execute("TEST_STMT_2");
     }
 }

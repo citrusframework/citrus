@@ -20,37 +20,35 @@ import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.config.CitrusBaseConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.Function;
-import org.easymock.EasyMock;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
+import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class CitrusConfigurationTest {
 
-    private ExtensionDef extension = EasyMock.createMock(ExtensionDef.class);
-    private ArquillianDescriptor descriptor = EasyMock.createMock(ArquillianDescriptor.class);
+    private ExtensionDef extension = Mockito.mock(ExtensionDef.class);
+    private ArquillianDescriptor descriptor = Mockito.mock(ArquillianDescriptor.class);
 
     @Test
     public void testFromArchiveDescriptorMissing() throws Exception {
         reset(descriptor, extension);
 
-        expect(descriptor.getExtensions()).andReturn(Collections.singletonList(extension)).once();
-        expect(extension.getExtensionName()).andReturn("otherExtension").once();
-
-        replay(descriptor, extension);
+        when(descriptor.getExtensions()).thenReturn(Collections.singletonList(extension));
+        when(extension.getExtensionName()).thenReturn("otherExtension");
 
         CitrusConfiguration configuration = CitrusConfiguration.from(descriptor);
 
         Assert.assertNull(configuration.getCitrusVersion());
         Assert.assertTrue(configuration.isAutoPackage());
 
-        verify(descriptor, extension);
     }
 
     @Test
@@ -63,11 +61,9 @@ public class CitrusConfigurationTest {
 
         reset(descriptor, extension);
 
-        expect(descriptor.getExtensions()).andReturn(Collections.singletonList(extension)).once();
-        expect(extension.getExtensionName()).andReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER).once();
-        expect(extension.getExtensionProperties()).andReturn(properties).once();
-
-        replay(descriptor, extension);
+        when(descriptor.getExtensions()).thenReturn(Collections.singletonList(extension));
+        when(extension.getExtensionName()).thenReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER);
+        when(extension.getExtensionProperties()).thenReturn(properties);
 
         CitrusConfiguration configuration = CitrusConfiguration.from(descriptor);
 
@@ -76,7 +72,6 @@ public class CitrusConfigurationTest {
         Assert.assertEquals(configuration.getSuiteName(), "testsuite");
         Assert.assertEquals(configuration.getConfigurationClass(), CitrusCustomConfig.class);
 
-        verify(descriptor, extension);
     }
 
     @Test
@@ -86,11 +81,9 @@ public class CitrusConfigurationTest {
 
         reset(descriptor, extension);
 
-        expect(descriptor.getExtensions()).andReturn(Collections.singletonList(extension)).once();
-        expect(extension.getExtensionName()).andReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER).once();
-        expect(extension.getExtensionProperties()).andReturn(properties).once();
-
-        replay(descriptor, extension);
+        when(descriptor.getExtensions()).thenReturn(Collections.singletonList(extension));
+        when(extension.getExtensionName()).thenReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER);
+        when(extension.getExtensionProperties()).thenReturn(properties);
 
         CitrusConfiguration configuration = CitrusConfiguration.from(descriptor);
 
@@ -99,7 +92,6 @@ public class CitrusConfigurationTest {
         Assert.assertEquals(configuration.getSuiteName(), "citrus-arquillian-suite");
         Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
 
-        verify(descriptor, extension);
     }
 
     @Test
@@ -109,11 +101,9 @@ public class CitrusConfigurationTest {
 
         reset(descriptor, extension);
 
-        expect(descriptor.getExtensions()).andReturn(Collections.singletonList(extension)).once();
-        expect(extension.getExtensionName()).andReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER).once();
-        expect(extension.getExtensionProperties()).andReturn(properties).once();
-
-        replay(descriptor, extension);
+        when(descriptor.getExtensions()).thenReturn(Collections.singletonList(extension));
+        when(extension.getExtensionName()).thenReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER);
+        when(extension.getExtensionProperties()).thenReturn(properties);
 
         CitrusConfiguration configuration = CitrusConfiguration.from(descriptor);
 
@@ -122,7 +112,6 @@ public class CitrusConfigurationTest {
         Assert.assertEquals(configuration.getSuiteName(), "citrus-arquillian-suite");
         Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
 
-        verify(descriptor, extension);
     }
 
     /**

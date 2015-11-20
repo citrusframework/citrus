@@ -19,28 +19,27 @@ package com.consol.citrus.camel.actions;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
 
     @Test
      public void testRemoveRoute() throws Exception {
         reset(camelContext);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        when(camelContext.getName()).thenReturn("camel_context");
 
-        expect(camelContext.getRouteStatus("route_1")).andReturn(ServiceStatus.Stopped).once();
-        expect(camelContext.removeRoute("route_1")).andReturn(true).once();
-
-        replay(camelContext);
+        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+        when(camelContext.removeRoute("route_1")).thenReturn(true);
 
         RemoveCamelRouteAction action = new RemoveCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -48,20 +47,17 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*must be stopped.*")
     public void testRemoveRouteNotStopped() throws Exception {
         reset(camelContext);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        when(camelContext.getName()).thenReturn("camel_context");
 
-        expect(camelContext.getRouteStatus("route_1")).andReturn(ServiceStatus.Stopped).once();
-        expect(camelContext.removeRoute("route_1")).andReturn(true).once();
-        expect(camelContext.getRouteStatus("route_2")).andReturn(ServiceStatus.Started).once();
-
-        replay(camelContext);
+        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+        when(camelContext.removeRoute("route_1")).thenReturn(true);
+        when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Started);
 
         RemoveCamelRouteAction action = new RemoveCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -69,21 +65,19 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testRemoveRouteWithFalseResult() throws Exception {
         reset(camelContext);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        when(camelContext.getName()).thenReturn("camel_context");
 
-        expect(camelContext.getRouteStatus("route_1")).andReturn(ServiceStatus.Stopped).once();
-        expect(camelContext.removeRoute("route_1")).andReturn(true).once();
-        expect(camelContext.getRouteStatus("route_2")).andReturn(ServiceStatus.Stopped).once();
-        expect(camelContext.removeRoute("route_2")).andReturn(false).once();
+        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+        when(camelContext.removeRoute("route_1")).thenReturn(true);
+        when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
+        when(camelContext.removeRoute("route_2")).thenReturn(false);
 
-        replay(camelContext);
 
         RemoveCamelRouteAction action = new RemoveCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -91,21 +85,19 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testRemoveRouteWithException() throws Exception {
         reset(camelContext);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        when(camelContext.getName()).thenReturn("camel_context");
 
-        expect(camelContext.getRouteStatus("route_1")).andReturn(ServiceStatus.Stopped).once();
-        expect(camelContext.removeRoute("route_1")).andReturn(true).once();
-        expect(camelContext.getRouteStatus("route_2")).andReturn(ServiceStatus.Stopped).once();
-        expect(camelContext.removeRoute("route_2")).andThrow(new CamelException("Failed to stop route")).once();
+        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+        when(camelContext.removeRoute("route_1")).thenReturn(true);
+        when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
+        doThrow(new CamelException("Failed to stop route")).when(camelContext).removeRoute("route_2");
 
-        replay(camelContext);
 
         RemoveCamelRouteAction action = new RemoveCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -113,6 +105,5 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext);
     }
 }

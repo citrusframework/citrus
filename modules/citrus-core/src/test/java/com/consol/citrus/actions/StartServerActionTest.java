@@ -16,15 +16,14 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mockito;
+import org.testng.annotations.Test;
 
 import java.util.*;
 
-import org.easymock.EasyMock;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,67 +39,54 @@ public class StartServerActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSingleServer() {
-        Server server = EasyMock.createMock(Server.class);
+        Server server = Mockito.mock(Server.class);
         
         reset(server);
-        
-        server.start();
-        expectLastCall().once();
-        
-        expect(server.getName()).andReturn("MyServer");
-        
-        replay(server);
-        
+
+        when(server.getName()).thenReturn("MyServer");
+
         StartServerAction startServer = new StartServerAction();
         startServer.setServer(server);
-        
+
         startServer.execute(context);
+        verify(server).start();
     }
     
     @Test
     public void testServerListSingleton() {
-        Server server = EasyMock.createMock(Server.class);
+        Server server = Mockito.mock(Server.class);
         
         reset(server);
-        
-        server.start();
-        expectLastCall().once();
-        
-        expect(server.getName()).andReturn("MyServer");
-        
-        replay(server);
-        
+
+        when(server.getName()).thenReturn("MyServer");
+
         StartServerAction startServer = new StartServerAction();
         startServer.setServerList(Collections.singletonList(server));
-        
+
         startServer.execute(context);
+        verify(server).start();
     }
     
     @Test
     public void testServerList() {
-        Server server1 = EasyMock.createMock(Server.class);
-        Server server2 = EasyMock.createMock(Server.class);
+        Server server1 = Mockito.mock(Server.class);
+        Server server2 = Mockito.mock(Server.class);
         
         reset(server1, server2);
-        
-        server1.start();
-        expectLastCall().once();
-        
-        server2.start();
-        expectLastCall().once();
-        
-        expect(server1.getName()).andReturn("MyServer1");
-        expect(server2.getName()).andReturn("MyServer2");
-        
-        replay(server1, server2);
-        
+
+        when(server1.getName()).thenReturn("MyServer1");
+        when(server2.getName()).thenReturn("MyServer2");
+
         StartServerAction startServer = new StartServerAction();
         List<Server> serverList = new ArrayList<Server>();
         serverList.add(server1);
         serverList.add(server2);
-        
+
         startServer.setServerList(serverList);
-        
+
         startServer.execute(context);
+
+        verify(server1).start();
+        verify(server2).start();
     }
 }

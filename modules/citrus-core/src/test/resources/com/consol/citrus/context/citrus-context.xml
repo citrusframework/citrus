@@ -51,19 +51,19 @@
       <citrus:matcher name="customMatcher" ref="validationMatcher"/>
     </citrus:validation-matcher-library>
     
-    <bean id ="validationMatcher" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id ="validationMatcher" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.validation.matcher.ValidationMatcher"/>
     </bean>
     
-    <bean id="mockListener" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockListener" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.report.TestSuiteListener"/>
     </bean>
     
-    <bean id="mockChannel" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockChannel" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
     </bean>
 
-    <bean id="mockEndpoint" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockEndpoint" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </bean>
     

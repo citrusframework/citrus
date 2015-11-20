@@ -32,7 +32,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.server.WebServiceServer;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -43,18 +43,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
-    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
-    private WebServiceServer server = EasyMock.createMock(WebServiceServer.class);
+    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private WebServiceServer server = Mockito.mock(WebServiceServer.class);
 
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    private Resource resource = EasyMock.createMock(Resource.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private Resource resource = Mockito.mock(Resource.class);
     
     private SoapAttachment testAttachment = new SoapAttachment();
     
@@ -183,7 +184,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachmentResource() throws IOException {
-        final Resource attachmentResource = EasyMock.createMock(Resource.class);
+        final Resource attachmentResource = Mockito.mock(Resource.class);
         
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
@@ -196,10 +197,8 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(resource, attachmentResource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayloadData".getBytes())).once();
-        expect(attachmentResource.getInputStream()).andReturn(new ByteArrayInputStream("someAttachmentData".getBytes())).once();
-        replay(resource, attachmentResource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("somePayloadData".getBytes()));
+        when(attachmentResource.getInputStream()).thenReturn(new ByteArrayInputStream("someAttachmentData".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -221,8 +220,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
         Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
-        
-        verify(resource, attachmentResource);
+
     }
 
     @Test
@@ -272,11 +270,9 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveBuilderWithEndpointName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -304,8 +300,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        
-        verify(applicationContextMock);
+
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
@@ -313,11 +308,9 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override

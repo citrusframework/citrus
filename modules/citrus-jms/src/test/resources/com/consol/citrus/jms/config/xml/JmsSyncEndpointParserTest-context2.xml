@@ -31,29 +31,29 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 
   <!-- JMS connection factories -->
-  <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.jms.ConnectionFactory"/>
   </bean>
 
-  <bean id="jmsConnectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="jmsConnectionFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.jms.ConnectionFactory"/>
   </bean>
 
   <!-- JMS Template and queues -->
-  <bean id="jmsQueue" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="jmsQueue" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.jms.Queue"/>
   </bean>
 
-  <bean id="replyQueue" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="replyQueue" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.jms.Queue"/>
   </bean>
 
-  <bean id="jmsTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="jmsTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.jms.core.JmsTemplate"/>
   </bean>
 </beans>

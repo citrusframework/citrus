@@ -23,11 +23,11 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.websocket.message.WebSocketMessageConverter"/>
   </bean>
 
-  <bean id="endpointResolver" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
   </bean>
 

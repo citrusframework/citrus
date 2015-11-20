@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -28,15 +28,15 @@ import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3
  */
 public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
-    private DataSource dataSource = EasyMock.createMock(DataSource.class);
-    private Resource sqlResource = EasyMock.createMock(Resource.class);
+    private DataSource dataSource = Mockito.mock(DataSource.class);
+    private Resource sqlResource = Mockito.mock(Resource.class);
     
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
@@ -76,9 +76,7 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
         };
         
         reset(sqlResource);
-        expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream("testScript".getBytes())).once();
-        replay(sqlResource);
-
+        when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream("testScript".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();

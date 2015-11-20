@@ -18,29 +18,25 @@ package com.consol.citrus.camel.actions;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.*;
-import org.easymock.EasyMock;
+import org.apache.camel.CamelContext;
+import org.apache.camel.CamelException;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
+    private CamelContext camelContext = Mockito.mock(CamelContext.class);
 
     @Test
      public void testStopRoute() throws Exception {
         reset(camelContext);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
-
-        camelContext.stopRoute("route_1");
-        expectLastCall().once();
-
-        replay(camelContext);
+        when(camelContext.getName()).thenReturn("camel_context");
 
         StopCamelRouteAction action = new StopCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -48,22 +44,16 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext);
+        verify(camelContext).stopRoute("route_1");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testStopRouteWithException() throws Exception {
         reset(camelContext);
 
-        expect(camelContext.getName()).andReturn("camel_context").atLeastOnce();
+        when(camelContext.getName()).thenReturn("camel_context");
 
-        camelContext.stopRoute("route_1");
-        expectLastCall().once();
-
-        camelContext.stopRoute("route_2");
-        expectLastCall().andThrow(new CamelException("Failed to stop route")).once();
-
-        replay(camelContext);
+        doThrow(new CamelException("Failed to stop route")).when(camelContext).stopRoute("route_2");
 
         StopCamelRouteAction action = new StopCamelRouteAction();
         action.setCamelContext(camelContext);
@@ -71,6 +61,6 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext);
+        verify(camelContext).stopRoute("route_1");
     }
 }

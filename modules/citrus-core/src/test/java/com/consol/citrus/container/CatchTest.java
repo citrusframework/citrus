@@ -21,12 +21,12 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -74,48 +74,40 @@ public class CatchTest extends AbstractTestNGUnitTest {
     public void testCatchFirstActionFailing() {
         Catch catchAction = new Catch();
         
-        TestAction action = EasyMock.createMock(TestAction.class);
+        TestAction action = Mockito.mock(TestAction.class);
 
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().once();
-        
-        replay(action);
-        
+
         List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(new FailAction());
         actionList.add(action);
-        
+
         catchAction.setActions(actionList);
-        
+
         catchAction.setException(CitrusRuntimeException.class.getName());
-        
+
         catchAction.execute(context);
+        verify(action).execute(context);
     }
     
     @Test
     public void testCatchSomeActionFailing() {
         Catch catchAction = new Catch();
         
-        TestAction action = EasyMock.createMock(TestAction.class);
+        TestAction action = Mockito.mock(TestAction.class);
         
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().times(2);
-        
-        replay(action);
-        
+
         List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(action);
         actionList.add(new FailAction());
         actionList.add(action);
-        
+
         catchAction.setActions(actionList);
-        
+
         catchAction.setException(CitrusRuntimeException.class.getName());
-        
+
         catchAction.execute(context);
+        verify(action, times(2)).execute(context);
     }
 }

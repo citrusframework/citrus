@@ -20,28 +20,26 @@ import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.channel.ChannelEndpointComponent;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class DefaultEndpointFactoryTest {
 
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testResolveDirectEndpoint() throws Exception {
         reset(applicationContext);
-        expect(applicationContext.getBean("myEndpoint", Endpoint.class)).andReturn(EasyMock.createMock(Endpoint.class)).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBean("myEndpoint", Endpoint.class)).thenReturn(Mockito.mock(Endpoint.class));
         TestContext context = new TestContext();
         context.setApplicationContext(applicationContext);
 
@@ -49,16 +47,12 @@ public class DefaultEndpointFactoryTest {
         Endpoint endpoint = factory.create("myEndpoint", context);
 
         Assert.assertNotNull(endpoint);
-
-        verify(applicationContext);
     }
 
     @Test
     public void testResolveChannelEndpoint() throws Exception {
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
         TestContext context = new TestContext();
         context.setApplicationContext(applicationContext);
 
@@ -67,8 +61,6 @@ public class DefaultEndpointFactoryTest {
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channel.name");
-
-        verify(applicationContext);
     }
 
     @Test
@@ -77,9 +69,7 @@ public class DefaultEndpointFactoryTest {
         components.put("custom", new ChannelEndpointComponent());
 
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(components).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(components);
         TestContext context = new TestContext();
         context.setApplicationContext(applicationContext);
 
@@ -88,8 +78,6 @@ public class DefaultEndpointFactoryTest {
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "custom.channel");
-
-        verify(applicationContext);
     }
 
     @Test
@@ -98,9 +86,7 @@ public class DefaultEndpointFactoryTest {
         components.put("jms", new ChannelEndpointComponent());
 
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(components).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(components);
         TestContext context = new TestContext();
         context.setApplicationContext(applicationContext);
 
@@ -109,16 +95,12 @@ public class DefaultEndpointFactoryTest {
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "custom.channel");
-
-        verify(applicationContext);
     }
 
     @Test
     public void testResolveUnknownEndpointComponent() throws Exception {
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
-        replay(applicationContext);
-
+        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
         TestContext context = new TestContext();
         context.setApplicationContext(applicationContext);
 
@@ -128,15 +110,12 @@ public class DefaultEndpointFactoryTest {
             Assert.fail("Missing exception due to unknown endpoint component");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to create endpoint component"));
-            verify(applicationContext);
         }
     }
 
     @Test
     public void testResolveInvalidEndpointUri() throws Exception {
         reset(applicationContext);
-        replay(applicationContext);
-
         TestContext context = new TestContext();
         context.setApplicationContext(applicationContext);
 
@@ -146,7 +125,6 @@ public class DefaultEndpointFactoryTest {
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Invalid endpoint uri"));
-            verify(applicationContext);
         }
     }
 }

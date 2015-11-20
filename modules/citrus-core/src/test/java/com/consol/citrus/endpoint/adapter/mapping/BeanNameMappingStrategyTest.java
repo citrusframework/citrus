@@ -18,22 +18,23 @@ package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class BeanNameMappingStrategyTest {
 
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
-    private EndpointAdapter fooEndpointAdapter = EasyMock.createMock(EndpointAdapter.class);
-    private EndpointAdapter barEndpointAdapter = EasyMock.createMock(EndpointAdapter.class);
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private EndpointAdapter fooEndpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private EndpointAdapter barEndpointAdapter = Mockito.mock(EndpointAdapter.class);
 
     @Test
     public void testGetEndpointAdapter() throws Exception {
@@ -43,11 +44,9 @@ public class BeanNameMappingStrategyTest {
 
         reset(applicationContext);
 
-        expect(applicationContext.getBean("foo", EndpointAdapter.class)).andReturn(fooEndpointAdapter).once();
-        expect(applicationContext.getBean("bar", EndpointAdapter.class)).andReturn(barEndpointAdapter).once();
-        expect(applicationContext.getBean("unknown", EndpointAdapter.class)).andThrow(new NoSuchBeanDefinitionException("unknown")).once();
-
-        replay(applicationContext);
+        when(applicationContext.getBean("foo", EndpointAdapter.class)).thenReturn(fooEndpointAdapter);
+        when(applicationContext.getBean("bar", EndpointAdapter.class)).thenReturn(barEndpointAdapter);
+        doThrow(new NoSuchBeanDefinitionException("unknown")).when(applicationContext).getBean("unknown", EndpointAdapter.class);
 
         Assert.assertEquals(mappingStrategy.getEndpointAdapter("foo"), fooEndpointAdapter);
         Assert.assertEquals(mappingStrategy.getEndpointAdapter("bar"), barEndpointAdapter);
@@ -59,6 +58,5 @@ public class BeanNameMappingStrategyTest {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
         }
 
-        verify(applicationContext);
     }
 }

@@ -18,11 +18,11 @@
                                    use-object-messages="true"
                                    timeout="2500"/>
 
-    <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="javax.jms.ConnectionFactory"/>
     </bean>
 
-    <bean id="mockEndpointAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="mockEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
     </bean>
 

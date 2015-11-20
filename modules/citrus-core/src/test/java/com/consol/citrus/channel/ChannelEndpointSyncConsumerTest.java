@@ -22,8 +22,9 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
@@ -36,21 +37,21 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
-    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
+    private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
     
-    private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
-    private MessageChannel replyChannel = EasyMock.createMock(MessageChannel.class);
+    private PollableChannel channel = Mockito.mock(PollableChannel.class);
+    private MessageChannel replyChannel = Mockito.mock(MessageChannel.class);
 
-    private MessageCorrelator messageCorrelator = EasyMock.createMock(MessageCorrelator.class);
+    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
     
-    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
+    private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -66,27 +67,22 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel, replyChannel);
-        
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel, replyChannel);
+
+        when(messagingTemplate.receive(channel)).thenReturn(message);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
-        
+
         MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
-        
-        verify(messagingTemplate, channel, replyChannel);
+
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -106,28 +102,23 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, channel, replyChannel, channelResolver);
         
-        expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
-        
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel, replyChannel, channelResolver);
+        when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
+
+        when(messagingTemplate.receive(channel)).thenReturn(message);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
-        
+
         MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
-        
-        verify(messagingTemplate, channel, replyChannel, channelResolver);
+
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -137,7 +128,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        BeanFactory factory = EasyMock.createMock(BeanFactory.class);
+        BeanFactory factory = Mockito.mock(BeanFactory.class);
         endpoint.getEndpointConfiguration().setBeanFactory(factory);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -148,25 +139,21 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, channel, replyChannel, factory);
         
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        expect(factory.getBean("replyChannel", MessageChannel.class)).andReturn(replyChannel).once();
-        replay(messagingTemplate, channel, replyChannel, factory);
-
+        when(messagingTemplate.receive(channel)).thenReturn(message);
+        when(factory.getBean("replyChannel", MessageChannel.class)).thenReturn(replyChannel);
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), "replyChannel");
-        
+
         MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
-        
-        verify(messagingTemplate, channel, replyChannel, factory);
+
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -185,26 +172,21 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel, replyChannel);
-        
-        messagingTemplate.setReceiveTimeout(10000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel, replyChannel);
+
+        when(messagingTemplate.receive(channel)).thenReturn(message);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
-        
+
         MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
                 endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
-        
-        verify(messagingTemplate, channel, replyChannel);
+
+        verify(messagingTemplate).setReceiveTimeout(10000L);
     }
     
     @Test
@@ -227,32 +209,27 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, channel, replyChannel, messageCorrelator);
         
-        messagingTemplate.setReceiveTimeout(500L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        expect(messageCorrelator.getCorrelationKey(anyObject(Message.class))).andReturn(MessageHeaders.ID + " = '123456789'").once();
-        expect(messageCorrelator.getCorrelationKeyName(anyObject(String.class))).andReturn("correlationKeyName").once();
+        when(messagingTemplate.receive(channel)).thenReturn(message);
 
-        replay(messagingTemplate, channel, replyChannel, messageCorrelator);
+        when(messageCorrelator.getCorrelationKey(any(Message.class))).thenReturn(MessageHeaders.ID + " = '123456789'");
+        when(messageCorrelator.getCorrelationKeyName(any(String.class))).thenReturn("correlationKeyName");
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
-        
+
         Assert.assertNull(channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout()));
         Assert.assertNull(channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = 'totally_wrong'",
                 endpoint.getEndpointConfiguration().getTimeout()));
-        
+
         MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = '123456789'",
                 endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
-        
-        verify(messagingTemplate, channel, replyChannel, messageCorrelator);
+
+        verify(messagingTemplate).setReceiveTimeout(500L);
     }
     
     @Test
@@ -263,23 +240,19 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         
         reset(messagingTemplate, channel, replyChannel);
         
-        messagingTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(null).once();
-        
-        replay(messagingTemplate, channel, replyChannel);
-        
+        when(messagingTemplate.receive(channel)).thenReturn(null);
+
+
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.receive(context);
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
-            verify(messagingTemplate, channel, replyChannel);
             return;
         }
-        
+
         Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
     
     @Test
@@ -298,24 +271,19 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel, replyChannel);
-        
-        messagingTemplate.setReceiveTimeout(500L);
-        expectLastCall().once();
-        
-        expect(messagingTemplate.receive(channel)).andReturn(message).once();
-        
-        replay(messagingTemplate, channel, replyChannel);
+
+        when(messagingTemplate.receive(channel)).thenReturn(message);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
-        
+
         MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNull(savedReplyChannel);
-        
-        verify(messagingTemplate, channel, replyChannel);
+
+        verify(messagingTemplate).setReceiveTimeout(500L);
     }
 
     @Test
@@ -327,16 +295,11 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, replyChannel);
 
-        messagingTemplate.send(eq(replyChannel), anyObject(org.springframework.messaging.Message.class));
-        expectLastCall().once();
-
-        replay(messagingTemplate, replyChannel);
-
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         channelSyncConsumer.saveReplyMessageChannel(new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel), context);
         channelSyncConsumer.send(message, context);
 
-        verify(messagingTemplate, replyChannel);
+        verify(messagingTemplate).send(eq(replyChannel), any(org.springframework.messaging.Message.class));
     }
 
     @Test
@@ -358,21 +321,18 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, replyChannel);
 
-        messagingTemplate.send(eq(replyChannel), anyObject(org.springframework.messaging.Message.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Assert.assertEquals(((GenericMessage)getCurrentArguments()[1]).getPayload(), message.getPayload());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(((GenericMessage)invocation.getArguments()[1]).getPayload(), message.getPayload());
                 return null;
             }
-        }).once();
-
-        replay(messagingTemplate, replyChannel);
+        }).when(messagingTemplate).send(eq(replyChannel), any(org.springframework.messaging.Message.class));
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         channelSyncConsumer.saveReplyMessageChannel(request, context);
         channelSyncConsumer.send(message, context);
 
-        verify(messagingTemplate, replyChannel);
     }
 
     @Test
@@ -477,10 +437,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, replyChannel);
 
-        messagingTemplate.send(eq(replyChannel), anyObject(org.springframework.messaging.Message.class));
-        expectLastCall().andThrow(new MessageDeliveryException("Internal error!")).once();
-
-        replay(messagingTemplate, replyChannel);
+        doThrow(new MessageDeliveryException("Internal error!")).when(messagingTemplate).send(eq(replyChannel), any(org.springframework.messaging.Message.class));
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
@@ -491,8 +448,6 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
             Assert.assertNotNull(e.getCause());
             Assert.assertEquals(e.getCause().getClass(), MessageDeliveryException.class);
             Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
-            verify(messagingTemplate, replyChannel);
-
             return;
         }
 

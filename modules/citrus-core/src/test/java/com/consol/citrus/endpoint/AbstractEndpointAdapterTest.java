@@ -16,12 +16,14 @@
 
 package com.consol.citrus.endpoint;
 
-import com.consol.citrus.message.*;
-import org.easymock.EasyMock;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -29,7 +31,7 @@ import static org.easymock.EasyMock.*;
 public class AbstractEndpointAdapterTest {
 
     /** Endpoint adapter mock */
-    private EndpointAdapter endpointAdapter = EasyMock.createMock(EndpointAdapter.class);
+    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
 
     @Test
     public void testEndpointAdapter() {
@@ -75,15 +77,12 @@ public class AbstractEndpointAdapterTest {
         Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
         reset(endpointAdapter);
-        expect(endpointAdapter.handleMessage(request)).andReturn(new DefaultMessage("OK")).once();
-        replay(endpointAdapter);
-
+        when(endpointAdapter.handleMessage(request)).thenReturn(new DefaultMessage("OK"));
         abstractEndpointAdapter.setFallbackEndpointAdapter(endpointAdapter);
         Message response = abstractEndpointAdapter.handleMessage(request);
 
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(String.class), "OK");
 
-        verify(endpointAdapter);
     }
 }

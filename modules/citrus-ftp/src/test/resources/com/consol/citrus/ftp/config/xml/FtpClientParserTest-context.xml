@@ -31,11 +31,11 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="clientInterceptors" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="clientInterceptors" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="java.util.List"/>
   </bean>
 
-  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 

@@ -21,11 +21,11 @@
         </actions>
     </testcase>
 
-    <spring:bean id="citrusCamelContext" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="citrusCamelContext" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="org.apache.camel.CamelContext"/>
     </spring:bean>
 
-    <spring:bean id="camelContext" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="camelContext" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="org.apache.camel.CamelContext"/>
     </spring:bean>
     

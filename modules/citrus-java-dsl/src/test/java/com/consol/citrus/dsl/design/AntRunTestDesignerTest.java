@@ -17,13 +17,12 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.actions.AntRunAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.tools.ant.BuildListener;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.actions.AntRunAction;
 
 /**
  * @author Christoph Deppisch
@@ -129,7 +128,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithBuildListener() {
-        final BuildListener buildListener = EasyMock.createMock(BuildListener.class);
+        final BuildListener buildListener = Mockito.mock(BuildListener.class);
         
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override

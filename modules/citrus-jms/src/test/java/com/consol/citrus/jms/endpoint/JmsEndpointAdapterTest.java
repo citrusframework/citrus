@@ -20,7 +20,7 @@ import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -29,20 +29,20 @@ import org.testng.annotations.Test;
 import javax.jms.*;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
 
-    private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
-    private Connection connection = EasyMock.createMock(Connection.class);
-    private Session session = EasyMock.createMock(Session.class);
-    private Destination destination = EasyMock.createMock(Destination.class);
-    private MessageConsumer messageConsumer = EasyMock.createMock(MessageConsumer.class);
-    private MessageProducer messageProducer = EasyMock.createMock(MessageProducer.class);
-    private TemporaryQueue tempReplyQueue = EasyMock.createMock(TemporaryQueue.class);
+    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private Connection connection = Mockito.mock(Connection.class);
+    private Session session = Mockito.mock(Session.class);
+    private Destination destination = Mockito.mock(Destination.class);
+    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
+    private MessageProducer messageProducer = Mockito.mock(MessageProducer.class);
+    private TemporaryQueue tempReplyQueue = Mockito.mock(TemporaryQueue.class);
 
     private JmsEndpointAdapter endpointAdapter;
     private JmsSyncEndpointConfiguration endpointConfiguration;
@@ -67,66 +67,53 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
 
         reset(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
 
-        expect(session.createTemporaryQueue()).andReturn(tempReplyQueue).once();
+        when(session.createTemporaryQueue()).thenReturn(tempReplyQueue);
 
-        expect(session.createConsumer(tempReplyQueue)).andReturn(messageConsumer).once();
-        expect(messageConsumer.receive(anyLong())).andReturn(jmsResponse).once();
+        when(session.createConsumer(tempReplyQueue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(anyLong())).thenReturn(jmsResponse);
 
-        expect(session.createProducer(destination)).andReturn(messageProducer).once();
-        messageProducer.send((TextMessage)anyObject());
-        expectLastCall().once();
+        when(session.createProducer(destination)).thenReturn(messageProducer);
 
-        expect(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).andReturn(
+        when(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).thenReturn(
                 new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<String, Object>()));
 
-        connection.start();
-        expectLastCall().once();
-
-        tempReplyQueue.delete();
-        expectLastCall().once();
-
-        replay(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
         Message response = endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>"));
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(String.class), "<TestResponse>Hello World!</TestResponse>");
 
-        verify(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
+        verify(messageProducer).send((TextMessage)any());
+        verify(connection).start();
+        verify(tempReplyQueue).delete();
+
     }
 
     @Test
     public void testNoResponse() throws JMSException {
         reset(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
 
-        expect(session.createTemporaryQueue()).andReturn(tempReplyQueue).once();
+        when(session.createTemporaryQueue()).thenReturn(tempReplyQueue);
 
-        expect(session.createConsumer(tempReplyQueue)).andReturn(messageConsumer).once();
-        expect(messageConsumer.receive(anyLong())).andReturn(null).once();
+        when(session.createConsumer(tempReplyQueue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(anyLong())).thenReturn(null);
 
-        expect(session.createProducer(destination)).andReturn(messageProducer).once();
-        messageProducer.send((TextMessage)anyObject());
-        expectLastCall().once();
+        when(session.createProducer(destination)).thenReturn(messageProducer);
 
-        expect(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).andReturn(
+        when(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).thenReturn(
                 new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<String, Object>()));
 
-        connection.start();
-        expectLastCall().once();
-
-        tempReplyQueue.delete();
-        expectLastCall().once();
-
-        replay(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
         Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
 
-        verify(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
+        verify(messageProducer).send((TextMessage)any());
+        verify(connection).start();
+        verify(tempReplyQueue).delete();
     }
 
 }

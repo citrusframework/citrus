@@ -24,8 +24,9 @@ import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.*;
 import com.consol.citrus.ws.server.WebServiceEndpoint;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
@@ -46,27 +47,27 @@ import javax.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class WebServiceEndpointTest {
 
-    private MessageContext messageContext = EasyMock.createMock(MessageContext.class);
-    private SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-    private SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-    private SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
-    private org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-    private org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
+    private MessageContext messageContext = Mockito.mock(MessageContext.class);
+    private SoapHeader soapRequestHeader = Mockito.mock(SoapHeader.class);
+    private SoapHeader soapResponseHeader = Mockito.mock(SoapHeader.class);
+    private SoapHeaderElement soapRequestHeaderEntry = Mockito.mock(SoapHeaderElement.class);
+    private org.springframework.ws.soap.SoapMessage soapRequest = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
+    private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
 
-    private SoapEnvelope soapEnvelope = EasyMock.createMock(SoapEnvelope.class);
-    private SoapBody soapBody = EasyMock.createMock(SoapBody.class);
+    private SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);
+    private SoapBody soapBody = Mockito.mock(SoapBody.class);
 
-    private SaajSoapMessage saajSoapRequest = EasyMock.createMock(SaajSoapMessage.class);
+    private SaajSoapMessage saajSoapRequest = Mockito.mock(SaajSoapMessage.class);
 
-    private org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
-    private SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
+    private org.springframework.ws.soap.SoapFault soapFault = Mockito.mock(org.springframework.ws.soap.SoapFault.class);
+    private SoapFaultDetail soapFaultDetail = Mockito.mock(SoapFaultDetail.class);
 
     private String requestPayload = "<TestRequest><Message>Hello World!</Message></TestRequest>";
 
@@ -91,36 +92,34 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn(null).anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn(null);
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
     }
 
     @Test
@@ -150,36 +149,34 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
     }
     
     @Test
@@ -213,38 +210,36 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(soapRequestHeaders.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
         
-        expect(soapRequestHeaderEntry.getName()).andReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus")).once();
-        expect(soapRequestHeaderEntry.getText()).andReturn("sayHello").once();
+        when(soapRequestHeaderEntry.getName()).thenReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus"));
+        when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+
     }
     
     @Test
@@ -281,7 +276,7 @@ public class WebServiceEndpointTest {
             }
         });
         
-        SOAPMessage soapRequestMessage = EasyMock.createMock(SOAPMessage.class);
+        SOAPMessage soapRequestMessage = Mockito.mock(SOAPMessage.class);
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Host", "localhost:8080");
         mimeHeaders.addHeader("Content-Length", "236");
@@ -298,41 +293,39 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
 
-        expect(saajSoapRequest.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(saajSoapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(saajSoapRequest.getSoapAction()).thenReturn("sayHello");
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(saajSoapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(saajSoapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(saajSoapRequest.getSaajMessage()).andReturn(soapRequestMessage).once();
-        expect(soapRequestMessage.getMimeHeaders()).andReturn(mimeHeaders).once();
+        when(saajSoapRequest.getSaajMessage()).thenReturn(soapRequestMessage);
+        when(soapRequestMessage.getMimeHeaders()).thenReturn(mimeHeaders);
 
-        expect(messageContext.getRequest()).andReturn(saajSoapRequest).anyTimes();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(saajSoapRequest);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
 
-        expect(soapEnvelope.getBody()).andReturn(soapBody).times(2);
-        expect(soapBody.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapEnvelope.getBody()).thenReturn(soapBody);
+        when(soapBody.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(soapEnvelope.getHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapEnvelope.getHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(soapRequestHeaders.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
         
-        expect(soapRequestHeaderEntry.getName()).andReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus")).once();
-        expect(soapRequestHeaderEntry.getText()).andReturn("sayHello").once();
+        when(soapRequestHeaderEntry.getName()).thenReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus"));
+        when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
-        
-        replay(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
+
     }
     
     @Test
@@ -364,52 +357,48 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
         
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
-        
-        expect(soapResponseHeader.addHeaderElement((QName)anyObject())).andAnswer(new IAnswer<SoapHeaderElement>() {
-            public SoapHeaderElement answer() throws Throwable {
-                QName headerQName = (QName)EasyMock.getCurrentArguments()[0];
-                
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
+
+        doAnswer(new Answer<SoapHeaderElement>() {
+            @Override
+            public SoapHeaderElement answer(InvocationOnMock invocation) throws Throwable {
+                QName headerQName = (QName)invocation.getArguments()[0];
+
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "citrus");
                 Assert.assertEquals(headerQName.getNamespaceURI(), "http://www.consol.de/citrus");
                 return soapRequestHeaderEntry;
             }
-        }).once();
-        
-        soapRequestHeaderEntry.setText("sayHello");
-        expectLastCall().once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
-        
+        }).when(soapResponseHeader).addHeaderElement((QName)any());
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
+
+        verify(soapRequestHeaderEntry).setText("sayHello");
     }
     
     @Test
@@ -444,51 +433,47 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
         
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
-        
-        expect(soapResponseHeader.addHeaderElement((QName)anyObject())).andAnswer(new IAnswer<SoapHeaderElement>() {
-            public SoapHeaderElement answer() throws Throwable {
-                QName headerQName = (QName)EasyMock.getCurrentArguments()[0];
-                
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
+
+        doAnswer(new Answer<SoapHeaderElement>() {
+            @Override
+            public SoapHeaderElement answer(InvocationOnMock invocation) throws Throwable {
+                QName headerQName = (QName)invocation.getArguments()[0];
+
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "citrus");
                 Assert.assertEquals(headerQName.getNamespaceURI(), "http://www.consol.de/citrus");
                 return soapRequestHeaderEntry;
             }
-        }).once();
-        
-        soapRequestHeaderEntry.setText("sayHello");
-        expectLastCall().once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        }).when(soapResponseHeader).addHeaderElement((QName)any());
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+
+        verify(soapRequestHeaderEntry).setText("sayHello");
     }
     
     @Test
@@ -522,52 +507,48 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
         
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
-        
-        expect(soapResponseHeader.addHeaderElement((QName)anyObject())).andAnswer(new IAnswer<SoapHeaderElement>() {
-            public SoapHeaderElement answer() throws Throwable {
-                QName headerQName = (QName)EasyMock.getCurrentArguments()[0];
-                
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
+
+        doAnswer(new Answer<SoapHeaderElement>() {
+            @Override
+            public SoapHeaderElement answer(InvocationOnMock invocation) throws Throwable {
+                QName headerQName = (QName)invocation.getArguments()[0];
+
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "");
                 Assert.assertEquals(headerQName.getNamespaceURI(), "http://www.consol.de/citrus");
                 return soapRequestHeaderEntry;
             }
-        }).once();
-        
-        soapRequestHeaderEntry.setText("sayHello");
-        expectLastCall().once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        }).when(soapResponseHeader).addHeaderElement((QName)any());
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+
+        verify(soapRequestHeaderEntry, times(2)).setText("sayHello");
     }
     
     @Test(expectedExceptions = SoapHeaderException.class)
@@ -599,52 +580,48 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
         
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
-        
-        expect(soapResponseHeader.addHeaderElement((QName)anyObject())).andAnswer(new IAnswer<SoapHeaderElement>() {
-            public SoapHeaderElement answer() throws Throwable {
-                QName headerQName = (QName)EasyMock.getCurrentArguments()[0];
-                
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
+
+        doAnswer(new Answer<SoapHeaderElement>() {
+            @Override
+            public SoapHeaderElement answer(InvocationOnMock invocation) throws Throwable {
+                QName headerQName = (QName)invocation.getArguments()[0];
+
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "");
                 Assert.assertEquals(headerQName.getNamespaceURI(), "");
                 return soapRequestHeaderEntry;
             }
-        }).once();
-        
-        soapRequestHeaderEntry.setText("sayHello");
-        expectLastCall().once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        }).when(soapResponseHeader).addHeaderElement((QName)any());
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+
+        verify(soapRequestHeaderEntry).setText("sayHello");
     }
     
     @Test
@@ -681,44 +658,42 @@ public class WebServiceEndpointTest {
         StringResult soapResponsePayload = new StringResult();
         
         Set<Attachment> attachments = new HashSet<Attachment>();
-        Attachment attachment = EasyMock.createMock(Attachment.class);
+        Attachment attachment = Mockito.mock(Attachment.class);
         attachments.add(attachment);
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
-        expect(soapRequest.getAttachments()).andReturn(attachments.iterator()).once();
-        expect(attachment.getContentId()).andReturn("myContentId").anyTimes();
-        expect(attachment.getContentType()).andReturn("text/xml").anyTimes();
+        when(soapRequest.getAttachments()).thenReturn(attachments.iterator());
+        when(attachment.getContentId()).thenReturn("myContentId");
+        when(attachment.getContentType()).thenReturn("text/xml");
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
         
-        expect(attachment.getInputStream()).andReturn(new ByteArrayInputStream("AttachmentBody".getBytes())).once();
+        when(attachment.getInputStream()).thenReturn(new ByteArrayInputStream("AttachmentBody".getBytes()));
 
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
+
     }
     
     @Test
@@ -750,46 +725,45 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
         
-        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
-        
-        expect(soapBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
-            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
-                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request, because of unknown error");
+        when(soapResponse.getSoapBody()).thenReturn(soapBody);
+
+        doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
+            @Override
+            public org.springframework.ws.soap.SoapFault answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(invocation.getArguments()[0], "Invalid request, because of unknown error");
 
                 return soapFault;
             }
-        });
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
+        }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
+
     }
     
     @Test
@@ -821,46 +795,44 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
         
-        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
-        
-        expect(soapBody.addClientOrSenderFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
-            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
-                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
+        when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
+        doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
+            @Override
+            public org.springframework.ws.soap.SoapFault answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
                 return soapFault;
             }
-        });
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
+        }).when(soapBody).addClientOrSenderFault((String)any(), (Locale)any());
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
+
     }
     
     @Test
@@ -894,50 +866,49 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
         
-        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
-        
-        expect(soapBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
-            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
-                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
+        when(soapResponse.getSoapBody()).thenReturn(soapBody);
+
+        doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
+            @Override
+            public org.springframework.ws.soap.SoapFault answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
 
                 return soapFault;
             }
-        });
+        }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
         
-        expect(soapFault.addFaultDetail()).andReturn(soapFaultDetail).once();
+        when(soapFault.addFaultDetail()).thenReturn(soapFaultDetail);
         
-        expect(soapFaultDetail.getResult()).andReturn(soapFaultResult).once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
+        when(soapFaultDetail.getResult()).thenReturn(soapFaultResult);
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
+
     }
     
     @Test
@@ -972,50 +943,49 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
         
-        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
-        
-        expect(soapBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
-            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
-                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
+        when(soapResponse.getSoapBody()).thenReturn(soapBody);
+
+        doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
+            @Override
+            public org.springframework.ws.soap.SoapFault answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
 
                 return soapFault;
             }
-        });
+        }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
         
-        expect(soapFault.addFaultDetail()).andReturn(soapFaultDetail).once();
+        when(soapFault.addFaultDetail()).thenReturn(soapFaultDetail);
         
-        expect(soapFaultDetail.getResult()).andReturn(soapFaultResult).times(2);
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
+        when(soapFaultDetail.getResult()).thenReturn(soapFaultResult);
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>");
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
+
     }
     
     @Test
@@ -1048,39 +1018,34 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
-        
-        soapResponse.setSoapAction("answerHello");
-        expectLastCall().once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
-        
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
+        verify(soapResponse).setSoapAction("answerHello");
     }
     
     @Test
@@ -1108,58 +1073,57 @@ public class WebServiceEndpointTest {
             }
         });
 
-        Soap11Body soapResponseBody = EasyMock.createMock(Soap11Body.class);
-        final Soap11Fault soapFault = EasyMock.createMock(Soap11Fault.class);
+        Soap11Body soapResponseBody = Mockito.mock(Soap11Body.class);
+        final Soap11Fault soapFault = Mockito.mock(Soap11Fault.class);
         
         StringResult soapResponsePayload = new StringResult();
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
         
-        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
-        
-        expect(soapResponseBody.addFault((QName)anyObject(), (String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<Soap11Fault>() {
-            public Soap11Fault answer() throws Throwable {
-                QName faultQName = (QName)EasyMock.getCurrentArguments()[0];
-                
+        when(soapResponse.getSoapBody()).thenReturn(soapResponseBody);
+
+        doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
+            @Override
+            public org.springframework.ws.soap.SoapFault answer(InvocationOnMock invocation) throws Throwable {
+                QName faultQName = (QName)invocation.getArguments()[0];
+
                 Assert.assertEquals(faultQName.getLocalPart(), "TEC-1000");
                 Assert.assertEquals(faultQName.getPrefix(), "citrus");
                 Assert.assertEquals(faultQName.getNamespaceURI(), "http://www.consol.de/citrus");
-                Assert.assertEquals(EasyMock.getCurrentArguments()[1], "Invalid request");
-                
+                Assert.assertEquals(invocation.getArguments()[1], "Invalid request");
+
                 return soapFault;
             }
-        });
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        }).when(soapResponseBody).addFault((QName)any(), (String)any(), (Locale)any());
+
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+
     }
     
     @Test
@@ -1187,65 +1151,62 @@ public class WebServiceEndpointTest {
             }
         });
 
-        Soap12Body soapResponseBody = EasyMock.createMock(Soap12Body.class);
-        final Soap12Fault soapFault = EasyMock.createMock(Soap12Fault.class);
+        Soap12Body soapResponseBody = Mockito.mock(Soap12Body.class);
+        final Soap12Fault soapFault = Mockito.mock(Soap12Fault.class);
         
         StringResult soapResponsePayload = new StringResult();
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
         
-        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
+        when(soapResponse.getSoapBody()).thenReturn(soapResponseBody);
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<Soap12Fault>() {
-            public Soap12Fault answer() throws Throwable {
-                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
-                
+        doAnswer(new Answer<Soap12Fault>() {
+            @Override
+            public Soap12Fault answer(InvocationOnMock invocation) throws Throwable {
+                Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
                 return soapFault;
             }
-        });
-        
-        soapFault.addFaultSubcode((QName)anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                QName faultQName = (QName)EasyMock.getCurrentArguments()[0];
-                
+        }).when(soapResponseBody).addServerOrReceiverFault((String)any(), (Locale)any());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                QName faultQName = (QName)invocation.getArguments()[0];
+
                 Assert.assertEquals(faultQName.getLocalPart(), "TEC-1000");
                 Assert.assertEquals(faultQName.getPrefix(), "citrus");
                 Assert.assertEquals(faultQName.getNamespaceURI(), "http://www.consol.de/citrus");
                 return null;
             }
-        }).once();
-        
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
-        
+        }).when(soapFault).addFaultSubcode((QName)any());
+
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
+
     }
     
     @Test
@@ -1269,34 +1230,32 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><SOAP-ENV:Body></SOAP-ENV:Body></SOAP-ENV:Envelope>")).once();
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><SOAP-ENV:Body></SOAP-ENV:Body></SOAP-ENV:Envelope>"));
         
-        expect(soapRequest.getPayloadSource()).andReturn(null).once();
+        when(soapRequest.getPayloadSource()).thenReturn(null);
         
-        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
         
-        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
-        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
-        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
         
-        expect(soapRequest.getSoapAction()).andReturn(null).anyTimes();
+        when(soapRequest.getSoapAction()).thenReturn(null);
         
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
         
-        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+        when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-        
-        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
     }
 
     private String getSoapRequestPayload() {

@@ -21,7 +21,7 @@
                      connection-timeout="5000"
                      known-hosts-path="classpath:com/consol/citrus/ssh/known_hosts"/>
 
-  <bean id="sshMessageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.ssh.message.SshMessageConverter"/>
   </bean>
 

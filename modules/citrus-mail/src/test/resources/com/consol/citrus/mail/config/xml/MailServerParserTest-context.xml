@@ -25,11 +25,11 @@
     <prop key="mail.transport.protocol">smtp</prop>
   </util:properties>
 
-  <bean id="endpointAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="endpointAdapter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
   </bean>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
   </bean>
 

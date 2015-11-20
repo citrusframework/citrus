@@ -24,7 +24,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -34,7 +34,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -44,9 +45,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
     public static final String FAULT_STRING = "Something went wrong";
     public static final String FAULT_CODE = "CITRUS-1000";
 
-    private Endpoint soapEndpoint = EasyMock.createMock(Endpoint.class);
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    private Resource resource = EasyMock.createMock(Resource.class);
+    private Endpoint soapEndpoint = Mockito.mock(Endpoint.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private Resource resource = Mockito.mock(Resource.class);
 
     @Test
     public void testSendSoapFault() {
@@ -83,11 +84,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendSoapFaultByEndpointName() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
@@ -116,7 +115,6 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
         Assert.assertEquals(action.getFaultString(), FAULT_STRING);
 
-        verify(applicationContextMock);
     }
 
     @Test
@@ -132,9 +130,7 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
         };
 
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someDetailData".getBytes())).once();
-        replay(resource);
-
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someDetailData".getBytes()));
         builder.configure();
 
         TestCase test = builder.getTestCase();

@@ -15,22 +15,23 @@
  */
 package com.consol.citrus.xml.schema;
 
-import static org.easymock.EasyMock.*;
+import org.mockito.Mockito;
+import org.springframework.xml.xsd.XsdSchema;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easymock.EasyMock;
-import org.springframework.xml.xsd.XsdSchema;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class TargetNamespaceSchemaMappingStrategyTest {
     
-    private XsdSchema schemaMock = EasyMock.createMock(XsdSchema.class);
+    private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);
     
     @Test
     public void testPositiveMappingWithNamespaces() {
@@ -41,13 +42,11 @@ public class TargetNamespaceSchemaMappingStrategyTest {
 
         reset(schemaMock);
         
-        expect(schemaMock.getTargetNamespace()).andReturn("http://citrusframework.org/schema").anyTimes();
-        
-        replay(schemaMock);
+        when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
+
         
         Assert.assertEquals(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"), schemaMock);
-        
-        verify(schemaMock);
+
     }
     
     @Test
@@ -59,13 +58,11 @@ public class TargetNamespaceSchemaMappingStrategyTest {
 
         reset(schemaMock);
         
-        expect(schemaMock.getTargetNamespace()).andReturn("http://citrusframework.org/schema/foos").anyTimes();
-        
-        replay(schemaMock);
+        when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema/foos");
+
         
         Assert.assertNull(strategy.getSchema(schemas, "http://citrusframework.org/schema", "foo"));
-        
-        verify(schemaMock);
+
     }
     
 }

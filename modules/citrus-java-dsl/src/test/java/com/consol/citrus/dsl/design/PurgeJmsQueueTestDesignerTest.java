@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,11 +31,11 @@ import javax.jms.Queue;
  * @since 1.3
  */
 public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
-    private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
+    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     
-    private Queue queue1 = EasyMock.createMock(Queue.class);
-    private Queue queue2 = EasyMock.createMock(Queue.class);
-    private Queue queue3 = EasyMock.createMock(Queue.class);
+    private Queue queue1 = Mockito.mock(Queue.class);
+    private Queue queue2 = Mockito.mock(Queue.class);
+    private Queue queue3 = Mockito.mock(Queue.class);
     
     @Test
     public void testPurgeJmsQueuesBuilderWithQueueNames() {

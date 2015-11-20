@@ -22,11 +22,11 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.*;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -34,7 +34,7 @@ import static org.easymock.EasyMock.*;
  */
 public class FtpClientTest extends AbstractTestNGUnitTest {
 
-    private FTPClient apacheFtpClient = EasyMock.createMock(FTPClient.class);
+    private FTPClient apacheFtpClient = Mockito.mock(FTPClient.class);
 
     @Test
     public void testLoginLogout() throws Exception {
@@ -43,34 +43,23 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         reset(apacheFtpClient);
 
-        apacheFtpClient.configure(anyObject(FTPClientConfig.class));
-        expectLastCall().once();
+        when(apacheFtpClient.isConnected())
+                .thenReturn(false)
+                .thenReturn(true);
 
-        apacheFtpClient.addProtocolCommandListener(anyObject(ProtocolCommandListener.class));
-        expectLastCall().once();
-
-        expect(apacheFtpClient.isConnected())
-                .andReturn(false).once()
-                .andReturn(true).once();
-
-        apacheFtpClient.connect("localhost", 22222);
-        expectLastCall().once();
-
-        expect(apacheFtpClient.getReplyString()).andReturn("OK").once();
-        expect(apacheFtpClient.getReplyCode()).andReturn(200).once();
-
-        apacheFtpClient.disconnect();
-        expectLastCall().once();
-
-        expect(apacheFtpClient.logout()).andReturn(true).once();
-
-        replay(apacheFtpClient);
+        when(apacheFtpClient.getReplyString()).thenReturn("OK");
+        when(apacheFtpClient.getReplyCode()).thenReturn(200);
+        when(apacheFtpClient.logout()).thenReturn(true);
 
         ftpClient.afterPropertiesSet();
         ftpClient.connectAndLogin();
         ftpClient.destroy();
 
-        verify(apacheFtpClient);
+        verify(apacheFtpClient).configure(any(FTPClientConfig.class));
+        verify(apacheFtpClient).addProtocolCommandListener(any(ProtocolCommandListener.class));
+        verify(apacheFtpClient).connect("localhost", 22222);
+        verify(apacheFtpClient).disconnect();
+
     }
 
     @Test
@@ -80,17 +69,11 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         reset(apacheFtpClient);
 
-        expect(apacheFtpClient.isConnected()).andReturn(false).once();
+        when(apacheFtpClient.isConnected()).thenReturn(false);
+        when(apacheFtpClient.getReplyString()).thenReturn("OK");
+        when(apacheFtpClient.getReplyCode()).thenReturn(200);
 
-        apacheFtpClient.connect("localhost", 22222);
-        expectLastCall().once();
-
-        expect(apacheFtpClient.getReplyString()).andReturn("OK").times(2);
-        expect(apacheFtpClient.getReplyCode()).andReturn(200).once();
-
-        expect(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).andReturn(200).once();
-
-        replay(apacheFtpClient);
+        when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(200);
 
         ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
@@ -105,7 +88,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpReply.getReplyCode(), new Integer(200));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
-        verify(apacheFtpClient);
+        verify(apacheFtpClient).connect("localhost", 22222);
     }
 
     @Test
@@ -119,22 +102,15 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         reset(apacheFtpClient);
 
-        expect(apacheFtpClient.isConnected())
-                .andReturn(false).once()
-                .andReturn(true).once();
+        when(apacheFtpClient.isConnected())
+                .thenReturn(false)
+                .thenReturn(true);
 
-        apacheFtpClient.connect("localhost", 22222);
-        expectLastCall().once();
-
-        expect(apacheFtpClient.login("admin", "consol")).andReturn(true).once();
-
-        expect(apacheFtpClient.getReplyString()).andReturn("OK").times(3);
-        expect(apacheFtpClient.getReplyCode()).andReturn(200).once();
-
-        expect(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).andReturn(200).once();
-        expect(apacheFtpClient.sendCommand(FTPCmd.MKD, "testDir")).andReturn(201).once();
-
-        replay(apacheFtpClient);
+        when(apacheFtpClient.login("admin", "consol")).thenReturn(true);
+        when(apacheFtpClient.getReplyString()).thenReturn("OK");
+        when(apacheFtpClient.getReplyCode()).thenReturn(200);
+        when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(200);
+        when(apacheFtpClient.sendCommand(FTPCmd.MKD, "testDir")).thenReturn(201);
 
         ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
@@ -162,7 +138,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpReply.getReplyCode(), new Integer(201));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
-        verify(apacheFtpClient);
+        verify(apacheFtpClient).connect("localhost", 22222);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
@@ -176,21 +152,15 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         reset(apacheFtpClient);
 
-        expect(apacheFtpClient.isConnected()).andReturn(false).once();
+        when(apacheFtpClient.isConnected()).thenReturn(false);
+        when(apacheFtpClient.getReplyString()).thenReturn("OK");
+        when(apacheFtpClient.getReplyCode()).thenReturn(200);
 
-        apacheFtpClient.connect("localhost", 22222);
-        expectLastCall().once();
-
-        expect(apacheFtpClient.getReplyString()).andReturn("OK").once();
-        expect(apacheFtpClient.getReplyCode()).andReturn(200).once();
-
-        expect(apacheFtpClient.login("admin", "consol")).andReturn(false).once();
-
-        replay(apacheFtpClient);
+        when(apacheFtpClient.login("admin", "consol")).thenReturn(false);
 
         ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
-        verify(apacheFtpClient);
+        verify(apacheFtpClient).connect("localhost", 22222);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
@@ -200,20 +170,14 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         reset(apacheFtpClient);
 
-        expect(apacheFtpClient.isConnected()).andReturn(false).once();
+        when(apacheFtpClient.isConnected()).thenReturn(false);
+        when(apacheFtpClient.getReplyString()).thenReturn("OK");
+        when(apacheFtpClient.getReplyCode()).thenReturn(200);
 
-        apacheFtpClient.connect("localhost", 22222);
-        expectLastCall().once();
-
-        expect(apacheFtpClient.getReplyString()).andReturn("OK").times(2);
-        expect(apacheFtpClient.getReplyCode()).andReturn(200).once();
-
-        expect(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).andReturn(500).once();
-
-        replay(apacheFtpClient);
+        when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(500);
 
         ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
-        verify(apacheFtpClient);
+        verify(apacheFtpClient).connect("localhost", 22222);
     }
 }

@@ -18,11 +18,10 @@ package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.*;
 import com.consol.citrus.ws.message.SoapMessage;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.transform.StringSource;
@@ -35,17 +34,17 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class SoapResponseMessageCallbackTest {
 
-    private org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-    private SoapEnvelope soapEnvelope = EasyMock.createMock(SoapEnvelope.class);
-    private SoapBody soapBody = EasyMock.createMock(SoapBody.class);
-    private SoapHeader soapHeader = EasyMock.createMock(SoapHeader.class);
+    private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
+    private SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);
+    private SoapBody soapBody = Mockito.mock(SoapBody.class);
+    private SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
 
     private String responsePayload = "<testMessage>Hello</testMessage>";
 
@@ -65,19 +64,18 @@ public class SoapResponseMessageCallbackTest {
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
-        expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
-        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
-        expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
-        expect(soapHeader.getSource()).andReturn(null).once();
+        when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(soapResponsePayload));
+        when(soapResponse.getPayloadSource()).thenReturn(new StringSource(responsePayload));
+        when(soapResponse.getSoapHeader()).thenReturn(soapHeader);
+        when(soapEnvelope.getHeader()).thenReturn(soapHeader);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
+        when(soapHeader.getSource()).thenReturn(null);
         
-        expect(soapResponse.getAttachments()).andReturn(soapAttachments.iterator()).once();
+        when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
         
-        expect(soapResponse.getSoapAction()).andReturn("").anyTimes();
-        
-        replay(soapResponse, soapEnvelope, soapBody, soapHeader);
+        when(soapResponse.getSoapAction()).thenReturn("");
+
         
         callback.doWithMessage(soapResponse);
         
@@ -85,8 +83,7 @@ public class SoapResponseMessageCallbackTest {
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
-        
-        verify(soapResponse, soapEnvelope, soapBody, soapHeader);
+
     }
     
     @Test
@@ -98,19 +95,18 @@ public class SoapResponseMessageCallbackTest {
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
         
-        expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
-        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
-        expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
-        expect(soapHeader.getSource()).andReturn(null).once();
+        when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(soapResponsePayload));
+        when(soapResponse.getPayloadSource()).thenReturn(new StringSource(responsePayload));
+        when(soapResponse.getSoapHeader()).thenReturn(soapHeader);
+        when(soapEnvelope.getHeader()).thenReturn(soapHeader);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
+        when(soapHeader.getSource()).thenReturn(null);
         
-        expect(soapResponse.getSoapAction()).andReturn("soapOperation").anyTimes();
+        when(soapResponse.getSoapAction()).thenReturn("soapOperation");
         
-        expect(soapResponse.getAttachments()).andReturn(soapAttachments.iterator()).once();
-        
-        replay(soapResponse, soapEnvelope, soapBody, soapHeader);
+        when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
+
         
         callback.doWithMessage(soapResponse);
         
@@ -118,8 +114,7 @@ public class SoapResponseMessageCallbackTest {
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
-        
-        verify(soapResponse, soapEnvelope, soapBody, soapHeader);
+
     }
     
     @Test
@@ -136,19 +131,18 @@ public class SoapResponseMessageCallbackTest {
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
-        expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
-        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
-        expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
-        expect(soapHeader.getSource()).andReturn(new StringSource(soapHeaderContent)).times(2);
+        when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(soapResponsePayload));
+        when(soapResponse.getPayloadSource()).thenReturn(new StringSource(responsePayload));
+        when(soapResponse.getSoapHeader()).thenReturn(soapHeader);
+        when(soapEnvelope.getHeader()).thenReturn(soapHeader);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
+        when(soapHeader.getSource()).thenReturn(new StringSource(soapHeaderContent));
         
-        expect(soapResponse.getSoapAction()).andReturn("\"\"").anyTimes();
+        when(soapResponse.getSoapAction()).thenReturn("\"\"");
         
-        expect(soapResponse.getAttachments()).andReturn(soapAttachments.iterator()).once();
-        
-        replay(soapResponse, soapEnvelope, soapBody, soapHeader);
+        when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
+
         
         callback.doWithMessage(soapResponse);
         
@@ -157,15 +151,14 @@ public class SoapResponseMessageCallbackTest {
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
         Assert.assertEquals(responseMessage.getHeaderData().get(0), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
-        
-        verify(soapResponse, soapEnvelope, soapBody, soapHeader);
+
     }
     
     @Test
     public void testSoapHeader() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
-        SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
+        SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
         
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         soapHeaders.add(soapHeaderElement);
@@ -174,22 +167,21 @@ public class SoapResponseMessageCallbackTest {
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
 
-        expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
-        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
-        expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
-        expect(soapHeader.getSource()).andReturn(null).once();
+        when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(soapResponsePayload));
+        when(soapResponse.getPayloadSource()).thenReturn(new StringSource(responsePayload));
+        when(soapResponse.getSoapHeader()).thenReturn(soapHeader);
+        when(soapEnvelope.getHeader()).thenReturn(soapHeader);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
+        when(soapHeader.getSource()).thenReturn(null);
         
-        expect(soapHeaderElement.getName()).andReturn(new QName("{http://citrusframework.org}citrus:messageId")).once();
-        expect(soapHeaderElement.getText()).andReturn("123456789").once();
+        when(soapHeaderElement.getName()).thenReturn(new QName("{http://citrusframework.org}citrus:messageId"));
+        when(soapHeaderElement.getText()).thenReturn("123456789");
         
-        expect(soapResponse.getSoapAction()).andReturn("soapOperation").anyTimes();
+        when(soapResponse.getSoapAction()).thenReturn("soapOperation");
         
-        expect(soapResponse.getAttachments()).andReturn(soapAttachments.iterator()).once();
-        
-        replay(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
+        when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
+
         
         callback.doWithMessage(soapResponse);
         
@@ -198,8 +190,7 @@ public class SoapResponseMessageCallbackTest {
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"), "123456789");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
-        
-        verify(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
+
     }
     
     @Test
@@ -217,19 +208,18 @@ public class SoapResponseMessageCallbackTest {
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
-        expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
-        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
-        expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
-        expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
-        expect(soapHeader.getSource()).andReturn(null).once();
+        when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(soapResponsePayload));
+        when(soapResponse.getPayloadSource()).thenReturn(new StringSource(responsePayload));
+        when(soapResponse.getSoapHeader()).thenReturn(soapHeader);
+        when(soapEnvelope.getHeader()).thenReturn(soapHeader);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
+        when(soapHeader.getSource()).thenReturn(null);
         
-        expect(soapResponse.getSoapAction()).andReturn("soapOperation").anyTimes();
+        when(soapResponse.getSoapAction()).thenReturn("soapOperation");
         
-        expect(soapResponse.getAttachments()).andReturn(soapAttachments.iterator()).once();
-        
-        replay(soapResponse, soapEnvelope, soapBody, soapHeader);
+        when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
+
         
         callback.doWithMessage(soapResponse);
         
@@ -245,6 +235,5 @@ public class SoapResponseMessageCallbackTest {
         Assert.assertEquals(soapResponseMessage.getAttachments().get(0).getContentType(), attachment.getContentType());
         Assert.assertEquals(FileUtils.readToString(soapResponseMessage.getAttachments().get(0).getInputStream()), attachment.getContent());
 
-        verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
 }

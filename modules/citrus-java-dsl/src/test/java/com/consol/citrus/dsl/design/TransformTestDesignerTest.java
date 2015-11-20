@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,11 +27,12 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
-	private Resource xmlResource = EasyMock.createMock(Resource.class);
-	private Resource xsltResource = EasyMock.createMock(Resource.class);
+	private Resource xmlResource = Mockito.mock(Resource.class);
+	private Resource xsltResource = Mockito.mock(Resource.class);
 	
 	@Test
 	public void testTransformBuilderWithData() {
@@ -73,10 +74,8 @@ public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
 		};
 		
 		reset(xmlResource, xsltResource);
-        expect(xmlResource.getInputStream()).andReturn(new ByteArrayInputStream("xmlData".getBytes())).once();
-        expect(xsltResource.getInputStream()).andReturn(new ByteArrayInputStream("xsltSource".getBytes())).once();
-        replay(xmlResource, xsltResource);
-
+        when(xmlResource.getInputStream()).thenReturn(new ByteArrayInputStream("xmlData".getBytes()));
+        when(xsltResource.getInputStream()).thenReturn(new ByteArrayInputStream("xsltSource".getBytes()));
 		builder.configure();
 
 		TestCase test = builder.getTestCase();
@@ -89,7 +88,5 @@ public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
 		Assert.assertEquals(action.getXmlData(), "xmlData");
 		Assert.assertEquals(action.getXsltData(), "xsltSource");
 		Assert.assertEquals(action.getTargetVariable(), "result");
-		
-		verify(xmlResource, xsltResource);
 	}
 }

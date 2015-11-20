@@ -26,30 +26,31 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.xml.*;
-import com.consol.citrus.variable.*;
-import org.easymock.EasyMock;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.VariableExtractor;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private SelectiveConsumer consumer = EasyMock.createMock(SelectiveConsumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -70,20 +71,17 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
 		
 		List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
-		
-		verify(endpoint, consumer, endpointConfiguration);
 	}
     
     @Test
@@ -100,20 +98,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -135,20 +131,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -172,20 +166,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -202,20 +194,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -234,20 +224,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -266,20 +254,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -296,20 +282,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -332,20 +316,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 
     @Test
@@ -369,20 +351,17 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -405,20 +384,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -444,14 +421,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -459,7 +434,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -484,14 +458,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -499,7 +471,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -523,14 +494,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -538,7 +507,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -561,20 +529,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -599,20 +565,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -635,13 +599,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -653,7 +616,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
             return;
         }
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -670,13 +632,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -688,7 +649,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
             return;
         }
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -716,13 +676,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -732,7 +691,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("myOperation"));
         Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -752,20 +710,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -786,14 +742,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -801,7 +755,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -822,14 +775,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -837,7 +788,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -858,14 +808,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -873,7 +821,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -898,14 +845,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -913,7 +858,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 
     @Test
@@ -938,14 +882,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
@@ -957,7 +899,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("person"));
         Assert.assertTrue(context.getVariable("person").contains("\"John\""));
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -981,13 +922,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -997,7 +937,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 
     @Test
@@ -1027,14 +966,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
@@ -1043,7 +980,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello,ByeBye");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 
     @Test
@@ -1069,13 +1005,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         validationContext.setSchemaValidation(false);
         
@@ -1087,7 +1022,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1113,13 +1047,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         validationContext.setSchemaValidation(false);
         
@@ -1131,7 +1064,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1157,13 +1089,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         validationContext.setSchemaValidation(false);
         
@@ -1175,7 +1106,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1205,13 +1135,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         validationContext.setSchemaValidation(false);
         
@@ -1223,7 +1152,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 
     @Test
@@ -1246,20 +1174,17 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -1279,23 +1204,17 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
 
-        try {
-            receiveAction.execute(context);
-        } finally {
-            verify(endpoint, consumer, endpointConfiguration);
-        }
+        receiveAction.execute(context);
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -1315,23 +1234,17 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
 
-        try {
-            receiveAction.execute(context);
-        } finally {
-            verify(endpoint, consumer, endpointConfiguration);
-        }
+        receiveAction.execute(context);
     }
     
     @Test
@@ -1350,20 +1263,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(context, 3000L)).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(context, 3000L)).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1385,20 +1296,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(messageSelectorString, context, 5000L)).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(messageSelectorString, context, 5000L)).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1422,20 +1331,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(messageSelectorString, context, 5000L)).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(messageSelectorString, context, 5000L)).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1458,20 +1365,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive("Operation = 'sayHello'", context, 5000L)).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive("Operation = 'sayHello'", context, 5000L)).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1496,20 +1401,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive("Operation = 'sayHello'", context, 5000L)).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive("Operation = 'sayHello'", context, 5000L)).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1523,22 +1426,19 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(null).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(null);
+        when(endpoint.getActor()).thenReturn(null);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Failed to receive message - message is not available");
-            verify(endpoint, consumer, endpointConfiguration);
             return;
         }
         
@@ -1559,20 +1459,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1589,13 +1487,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -1604,7 +1501,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Validation failed: Unable to validate message payload - received message payload was empty, control message payload is not");
-            verify(endpoint, consumer, endpointConfiguration);
             return;
         }
         
@@ -1626,20 +1522,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1655,20 +1549,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1685,13 +1577,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).times(2);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -1717,7 +1608,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(newContext);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1737,12 +1627,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
+        when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -1751,7 +1640,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
     
     @Test
@@ -1769,14 +1657,14 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        expect(endpoint.getActor()).andReturn(disabledActor).times(2);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(endpoint.getActor()).thenReturn(disabledActor)
+                                 .thenReturn(disabledActor)
+                                 .thenReturn(null);
+
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
@@ -1784,6 +1672,5 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
 
-        verify(endpoint, consumer, endpointConfiguration);
     }
 }

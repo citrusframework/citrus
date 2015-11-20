@@ -17,7 +17,7 @@
         </actions>
     </testcase>
     
-    <spring:bean id="testDataSource" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="testDataSource" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.sql.DataSource"/>
     </spring:bean>
     

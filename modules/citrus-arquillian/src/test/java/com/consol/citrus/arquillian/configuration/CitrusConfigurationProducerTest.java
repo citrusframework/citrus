@@ -18,51 +18,47 @@ package com.consol.citrus.arquillian.configuration;
 
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.jboss.arquillian.core.api.InstanceProducer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class CitrusConfigurationProducerTest {
 
     private CitrusConfigurationProducer configurationProducer = new CitrusConfigurationProducer();
 
-    private ExtensionDef extension = EasyMock.createMock(ExtensionDef.class);
-    private ArquillianDescriptor descriptor = EasyMock.createMock(ArquillianDescriptor.class);
-    private InstanceProducer<CitrusConfiguration> instanceProducer = EasyMock.createMock(InstanceProducer.class);
+    private ExtensionDef extension = Mockito.mock(ExtensionDef.class);
+    private ArquillianDescriptor descriptor = Mockito.mock(ArquillianDescriptor.class);
+    private InstanceProducer<CitrusConfiguration> instanceProducer = Mockito.mock(InstanceProducer.class);
 
     @Test
     public void testConfigure() throws Exception {
         reset(descriptor, extension, instanceProducer);
 
-        expect(descriptor.getExtensions()).andReturn(Collections.singletonList(extension)).once();
-        expect(extension.getExtensionName()).andReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER).once();
-        expect(extension.getExtensionProperties()).andReturn(Collections.<String, String>emptyMap()).once();
+        when(descriptor.getExtensions()).thenReturn(Collections.singletonList(extension));
+        when(extension.getExtensionName()).thenReturn(CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER);
+        when(extension.getExtensionProperties()).thenReturn(Collections.<String, String>emptyMap());
 
-        instanceProducer.set(anyObject(CitrusConfiguration.class));
-        expectLastCall().andAnswer(new IAnswer<Void>() {
+        doAnswer(new Answer() {
             @Override
-            public Void answer() throws Throwable {
-                CitrusConfiguration configuration = (CitrusConfiguration) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                CitrusConfiguration configuration = (CitrusConfiguration) invocation.getArguments()[0];
                 Assert.assertNull(configuration.getCitrusVersion());
                 Assert.assertTrue(configuration.isAutoPackage());
-
                 return null;
             }
-        });
-
-        replay(descriptor, extension, instanceProducer);
+        }).when(instanceProducer).set(any(CitrusConfiguration.class));
 
         InjectionHelper.inject(configurationProducer, "configurationInstance", instanceProducer);
         configurationProducer.configure(descriptor);
 
-        verify(descriptor, extension, instanceProducer);
     }
 }

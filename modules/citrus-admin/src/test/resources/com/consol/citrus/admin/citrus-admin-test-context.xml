@@ -10,31 +10,31 @@
     <context:annotation-config/>
 
     <!-- Mocks -->
-    <bean id="configService" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="configService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.admin.service.ConfigurationService"/>
     </bean>
 
-    <bean id="processMonitor" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="processMonitor" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.admin.launcher.ProcessMonitor"/>
     </bean>
 
-    <bean id="loggingWebSocket" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="loggingWebSocket" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.admin.websocket.LoggingWebSocket"/>
     </bean>
 
-    <bean id="webSocketTestListener" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="webSocketTestListener" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketTestListener"/>
     </bean>
 
-    <bean id="webSocketProcessListener" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="webSocketProcessListener" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketProcessListener"/>
     </bean>
 
-    <bean id="webSocketLoggingAppender" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="webSocketLoggingAppender" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketLoggingAppender"/>
     </bean>
 
-    <bean id="appContextHolder" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="appContextHolder" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.admin.executor.ApplicationContextHolder"/>
     </bean>
 

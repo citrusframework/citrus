@@ -22,14 +22,14 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,10 +40,10 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
     @Qualifier(value="mockEndpoint")
     private Endpoint mockEndpoint;
 
-    private Endpoint emptyEndpoint = EasyMock.createMock(Endpoint.class);
+    private Endpoint emptyEndpoint = Mockito.mock(Endpoint.class);
 
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private SelectiveConsumer selectiveConsumer = EasyMock.createMock(SelectiveConsumer.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
 
     @Test
     public void testPurgeWithEndpointNames() throws Exception {
@@ -56,16 +56,12 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
 
         reset(mockEndpoint, consumer, selectiveConsumer);
 
-        expect(mockEndpoint.getName()).andReturn("mockEndpoint").atLeastOnce();
-        expect(mockEndpoint.createConsumer()).andReturn(consumer).once();
-        expect(consumer.receive(context, 100L)).andReturn(new DefaultMessage()).once();
-        expect(consumer.receive(context, 100L)).andThrow(new ActionTimeoutException()).once();
-
-        replay(mockEndpoint, consumer, selectiveConsumer);
+        when(mockEndpoint.getName()).thenReturn("mockEndpoint");
+        when(mockEndpoint.createConsumer()).thenReturn(consumer);
+        when(consumer.receive(context, 100L)).thenReturn(new DefaultMessage());
+        doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
 
         purgeEndpointAction.execute(context);
-
-        verify(mockEndpoint, consumer, selectiveConsumer);
     }
 
 	@SuppressWarnings("unchecked")
@@ -81,20 +77,17 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         
         reset(mockEndpoint, emptyEndpoint, consumer, selectiveConsumer);
 
-        expect(mockEndpoint.getName()).andReturn("mockEndpoint").atLeastOnce();
-        expect(emptyEndpoint.getName()).andReturn("emptyEndpoint").atLeastOnce();
-        expect(mockEndpoint.createConsumer()).andReturn(consumer).once();
-        expect(emptyEndpoint.createConsumer()).andReturn(consumer).once();
+        when(mockEndpoint.getName()).thenReturn("mockEndpoint");
+        when(emptyEndpoint.getName()).thenReturn("emptyEndpoint");
+        when(mockEndpoint.createConsumer()).thenReturn(consumer);
+        when(emptyEndpoint.createConsumer()).thenReturn(consumer);
 
-        expect(consumer.receive(context, 100L)).andReturn(new DefaultMessage()).once();
-        expect(consumer.receive(context, 100L)).andThrow(new ActionTimeoutException()).once();
-        expect(consumer.receive(context, 100L)).andThrow(new ActionTimeoutException()).once();
+        when(consumer.receive(context, 100L)).thenReturn(new DefaultMessage());
+        doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
+        doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
 
-        replay(mockEndpoint, emptyEndpoint, consumer, selectiveConsumer);
         
         purgeEndpointAction.execute(context);
-        
-        verify(mockEndpoint, emptyEndpoint, consumer, selectiveConsumer);
     }
 	
 	@Test
@@ -110,16 +103,12 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         
         reset(mockEndpoint, consumer, selectiveConsumer);
 
-        expect(mockEndpoint.getName()).andReturn("mockEndpoint").atLeastOnce();
-        expect(mockEndpoint.createConsumer()).andReturn(selectiveConsumer).once();
-        expect(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).andReturn(new DefaultMessage()).once();
-        expect(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).andThrow(new ActionTimeoutException()).once();
+        when(mockEndpoint.getName()).thenReturn("mockEndpoint");
+        when(mockEndpoint.createConsumer()).thenReturn(selectiveConsumer);
+        when(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).thenReturn(new DefaultMessage());
+        doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive("operation = 'sayHello'", context, 100L);
 
-        replay(mockEndpoint, consumer, selectiveConsumer);
-        
         purgeEndpointAction.execute(context);
-        
-        verify(mockEndpoint, consumer, selectiveConsumer);
     }
 
     @Test
@@ -135,16 +124,12 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
 
         reset(mockEndpoint, consumer, selectiveConsumer);
 
-        expect(mockEndpoint.getName()).andReturn("mockEndpoint").atLeastOnce();
-        expect(mockEndpoint.createConsumer()).andReturn(selectiveConsumer).once();
-        expect(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).andReturn(new DefaultMessage()).once();
-        expect(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).andThrow(new ActionTimeoutException()).once();
-
-        replay(mockEndpoint, consumer, selectiveConsumer);
+        when(mockEndpoint.getName()).thenReturn("mockEndpoint");
+        when(mockEndpoint.createConsumer()).thenReturn(selectiveConsumer);
+        when(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).thenReturn(new DefaultMessage());
+        doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive("operation = 'sayHello'", context, 100L);
 
         purgeEndpointAction.execute(context);
-
-        verify(mockEndpoint, consumer, selectiveConsumer);
     }
 	
 }

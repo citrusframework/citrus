@@ -24,7 +24,7 @@ import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.testng.Assert;
@@ -34,7 +34,8 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +43,7 @@ import static org.easymock.EasyMock.*;
  */
 public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
-    private HttpServer httpServer = EasyMock.createMock(HttpServer.class);
+    private HttpServer httpServer = Mockito.mock(HttpServer.class);
     private CitrusDispatcherServlet servlet;
 
     @Autowired
@@ -59,14 +60,11 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     @Test
     public void testNoBeansInContext() throws Exception {
         reset(httpServer);
-        replay(httpServer);
-
         GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.refresh();
 
         servlet.initStrategies(applicationContext);
 
-        verify(httpServer);
     }
 
     @Test
@@ -76,11 +74,9 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         reset(httpServer);
 
-        expect(httpServer.getInterceptors()).andReturn(interceptors).once();
-        expect(httpServer.getEndpointAdapter()).andReturn(null).once();
-        expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
-
-        replay(httpServer);
+        when(httpServer.getInterceptors()).thenReturn(interceptors);
+        when(httpServer.getEndpointAdapter()).thenReturn(null);
+        when(httpServer.getMessageConverter()).thenReturn(new HttpMessageConverter());
 
         servlet.initStrategies(applicationContext);
 
@@ -90,18 +86,15 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
 
-        verify(httpServer);
     }
 
     @Test
     public void testConfigureMessageController() throws Exception {
         reset(httpServer);
 
-        expect(httpServer.getInterceptors()).andReturn(null).once();
-        expect(httpServer.getEndpointAdapter()).andReturn(new TimeoutProducingEndpointAdapter()).once();
-        expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
-
-        replay(httpServer);
+        when(httpServer.getInterceptors()).thenReturn(null);
+        when(httpServer.getEndpointAdapter()).thenReturn(new TimeoutProducingEndpointAdapter());
+        when(httpServer.getMessageConverter()).thenReturn(new HttpMessageConverter());
 
         servlet.initStrategies(applicationContext);
 
@@ -110,6 +103,5 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
 
-        verify(httpServer);
     }
 }

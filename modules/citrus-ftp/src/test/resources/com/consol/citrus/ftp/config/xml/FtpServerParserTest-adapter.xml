@@ -68,11 +68,11 @@
                       port="22222"
                       endpoint-adapter="ftpServerAdapter6"/>
 
-  <bean id="ftpServerAdapter6" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="ftpServerAdapter6" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
   </bean>
 
-  <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.jms.ConnectionFactory"/>
   </bean>
 </beans>

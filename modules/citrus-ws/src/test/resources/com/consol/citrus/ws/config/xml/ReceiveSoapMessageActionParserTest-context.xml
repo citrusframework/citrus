@@ -58,11 +58,11 @@
         </actions>
     </testcase>
     
-    <spring:bean id="mySoapServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="mySoapServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.ws.server.WebServiceServer"/>
     </spring:bean>
     
-    <spring:bean id="mySoapAttachmentValidator" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="mySoapAttachmentValidator" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.ws.validation.SoapAttachmentValidator"/>
     </spring:bean>
     

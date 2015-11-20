@@ -22,19 +22,20 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.websocket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.websocket.message.WebSocketMessage;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.web.socket.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
 
-    private WebSocketSession session = EasyMock.createMock(WebSocketSession.class);
-    private WebSocketSession session2 = EasyMock.createMock(WebSocketSession.class);
-    private WebSocketSession session3 = EasyMock.createMock(WebSocketSession.class);
+    private WebSocketSession session = Mockito.mock(WebSocketSession.class);
+    private WebSocketSession session2 = Mockito.mock(WebSocketSession.class);
+    private WebSocketSession session3 = Mockito.mock(WebSocketSession.class);
 
     @Test
     public void testWebSocketEndpoint() throws Exception {
@@ -53,23 +54,20 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
 
         reset(session);
 
-        expect(session.getId()).andReturn("test-socket-1").atLeastOnce();
-        expect(session.isOpen()).andReturn(true).once();
+        when(session.getId()).thenReturn("test-socket-1");
+        when(session.isOpen()).thenReturn(true);
 
-        session.sendMessage(anyObject(org.springframework.web.socket.WebSocketMessage.class));
-        expectLastCall().andAnswer(new IAnswer<Void>() {
+        doAnswer(new Answer() {
             @Override
-            public Void answer() throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
                 Assert.assertTrue(TextMessage.class.isInstance(request));
                 Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
                 Assert.assertTrue(request.isLast());
                 return null;
             }
-        }).once();
-
-        replay(session);
+        }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         handler.afterConnectionEstablished(session);
         handler.handleMessage(session, new TextMessage(requestBody));
@@ -80,7 +78,6 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
 
         webSocketEndpoint.createProducer().send(responseMessage, context);
 
-        verify(session);
     }
 
     @Test
@@ -100,39 +97,35 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
 
         reset(session, session2, session3);
 
-        expect(session.getId()).andReturn("test-socket-1").atLeastOnce();
-        expect(session2.getId()).andReturn("test-socket-2").atLeastOnce();
-        expect(session3.getId()).andReturn("test-socket-3").atLeastOnce();
-        expect(session.isOpen()).andReturn(true).once();
-        expect(session2.isOpen()).andReturn(true).once();
+        when(session.getId()).thenReturn("test-socket-1");
+        when(session2.getId()).thenReturn("test-socket-2");
+        when(session3.getId()).thenReturn("test-socket-3");
+        when(session.isOpen()).thenReturn(true);
+        when(session2.isOpen()).thenReturn(true);
 
-        session.sendMessage(anyObject(org.springframework.web.socket.WebSocketMessage.class));
-        expectLastCall().andAnswer(new IAnswer<Void>() {
+        doAnswer(new Answer() {
             @Override
-            public Void answer() throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
                 Assert.assertTrue(TextMessage.class.isInstance(request));
                 Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
                 Assert.assertTrue(request.isLast());
                 return null;
             }
-        }).once();
+        }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
-        session2.sendMessage(anyObject(org.springframework.web.socket.WebSocketMessage.class));
-        expectLastCall().andAnswer(new IAnswer<Void>() {
+        doAnswer(new Answer() {
             @Override
-            public Void answer() throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
                 Assert.assertTrue(TextMessage.class.isInstance(request));
                 Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
                 Assert.assertTrue(request.isLast());
                 return null;
             }
-        }).once();
-
-        replay(session, session2, session3);
+        }).when(session2).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         handler.afterConnectionEstablished(session);
         handler.afterConnectionEstablished(session2);
@@ -147,7 +140,6 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
 
         webSocketEndpoint.createProducer().send(responseMessage, context);
 
-        verify(session, session2, session3);
     }
 
     @Test
@@ -162,9 +154,7 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setTimeout(1000L);
 
         reset(session);
-        expect(session.getId()).andReturn("test-socket-1").atLeastOnce();
-        replay(session);
-
+        when(session.getId()).thenReturn("test-socket-1");
         handler.afterConnectionEstablished(session);
 
         try {
@@ -174,6 +164,5 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getMessage().contains(endpointUri));
         }
 
-        verify(session);
     }
 }

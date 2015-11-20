@@ -18,16 +18,15 @@ package com.consol.citrus.admin.handlebars;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.github.jknack.handlebars.helper.BlockHelper;
-import com.github.jknack.handlebars.helper.StringHelpers;
 import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -48,23 +47,19 @@ public class HandlebarsHelperPostProcessorTest {
         helperSources.add(helperSourceMock);
         postProcessor.setHelperSources(helperSources);
 
-        HandlebarsViewResolver viewResolver = EasyMock.createMock(HandlebarsViewResolver.class);
+        HandlebarsViewResolver viewResolver = Mockito.mock(HandlebarsViewResolver.class);
 
-        Object otherBean = EasyMock.createMock(Object.class);
+        Object otherBean = Mockito.mock(Object.class);
 
         reset(viewResolver, otherBean);
 
-        expect(viewResolver.registerHelper("foo", helperMock)).andReturn(viewResolver).once();
-        expect(viewResolver.registerHelpers(helperSourceMock)).andReturn(viewResolver).once();
-
-        replay(viewResolver, otherBean);
+        when(viewResolver.registerHelper("foo", helperMock)).thenReturn(viewResolver);
+        when(viewResolver.registerHelpers(helperSourceMock)).thenReturn(viewResolver);
 
         postProcessor.postProcessBeforeInitialization(viewResolver, "handlebarsViewResolver");
         postProcessor.postProcessBeforeInitialization(otherBean, "otherBean");
         postProcessor.postProcessAfterInitialization(viewResolver, "handlebarsViewResolver");
         postProcessor.postProcessAfterInitialization(otherBean, "otherBean");
-
-        verify(viewResolver, otherBean);
     }
 
     /** Helper source mock implementation */

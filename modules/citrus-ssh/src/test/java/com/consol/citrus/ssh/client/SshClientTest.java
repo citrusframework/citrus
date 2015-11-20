@@ -23,7 +23,8 @@ import com.consol.citrus.ssh.model.SshMarshaller;
 import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.jcraft.jsch.*;
-import org.easymock.IArgumentMatcher;
+import org.mockito.ArgumentMatcher;
+import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeMethod;
@@ -31,7 +32,7 @@ import org.testng.annotations.Test;
 
 import java.io.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
@@ -53,7 +54,7 @@ public class SshClientTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() throws JSchException {
-        jsch = createMock(JSch.class);
+        jsch = Mockito.mock(JSch.class);
 
         SshEndpointConfiguration endpointConfiguration = new SshEndpointConfiguration();
         client = new SshClient(endpointConfiguration);
@@ -65,10 +66,10 @@ public class SshClientTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setConnectionTimeout(CONNECTTION_TIMEOUT);
         endpointConfiguration.setCommandTimeout(2 * 60 * 1000);
 
-        session = createMock(Session.class);
-        expect(jsch.getSession("roland","planck",1968)).andReturn(session);
+        session = Mockito.mock(Session.class);
+        when(jsch.getSession("roland","planck",1968)).thenReturn(session);
 
-        channel = createMock(ChannelExec.class);
+        channel = Mockito.mock(ChannelExec.class);
 
         ReflectionTestUtils.setField(client, "jsch", jsch);
 
@@ -84,22 +85,18 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*knownHosts.*")
     public void strictHostCheckingWithoutKnownHosts() throws JSchException {
         strictHostChecking(true, null);
-        replay(jsch,session);
-
         send();
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*blaHosts.*")
     public void strictHostCheckingWithFaultyKnownHosts() throws JSchException {
         strictHostChecking(true, "classpath:/com/consol/citrus/ssh/blaHosts");
-        replay(jsch,session);
         send();
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/does/not/exist.*")
     public void strictHostCheckingWithFaultyKnownHosts2() throws JSchException {
         strictHostChecking(true, "/file/that/does/not/exist");
-        replay(jsch, session);
         send();
     }
 
@@ -114,7 +111,6 @@ public class SshClientTest extends AbstractTestNGUnitTest {
         session.connect();
         prepareChannel(COMMAND, 0);
         disconnect();
-        replay(jsch, session, channel);
         send();
     }
 
@@ -122,9 +118,7 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     public void withUnknownPrivateKey() throws JSchException {
         strictHostChecking(false,null);
         client.getEndpointConfiguration().setPrivateKeyPath("/file/that/does/not/exist");
-        jsch.addIdentity("/file/that/does/not/exist", (String) null);
-        expectLastCall().andThrow(new JSchException("No such file"));
-        replay(jsch, session, channel);
+        doThrow(new JSchException("No such file")).when(jsch).addIdentity("/file/that/does/not/exist", (String) null);
         send();
     }
 
@@ -133,7 +127,6 @@ public class SshClientTest extends AbstractTestNGUnitTest {
         strictHostChecking(false,null);
         client.getEndpointConfiguration().setPrivateKeyPath("classpath:com/consol/citrus/ssh/notthere.key");
         jsch.addIdentity("classpath:com/consol/citrus/ssh/notthere.key",(String) null);
-        replay(jsch, session, channel);
         send();
     }
 
@@ -169,22 +162,22 @@ public class SshClientTest extends AbstractTestNGUnitTest {
 
     private void disconnect() throws JSchException {
         channel.disconnect();
-        expect(session.isConnected()).andReturn(true);
+        when(session.isConnected()).thenReturn(true);
         session.disconnect();
-        expect(session.openChannel("exec")).andReturn(channel);
+        when(session.openChannel("exec")).thenReturn(channel);
     }
 
     private void prepareChannel(String pCommand, int pExitStatus) throws JSchException, IOException {
-        channel.setErrStream((OutputStream) anyObject());
-        channel.setOutputStream((OutputStream) anyObject());
-        channel.setInputStream((InputStream) anyObject());
+        channel.setErrStream((OutputStream) any());
+        channel.setOutputStream((OutputStream) any());
+        channel.setInputStream((InputStream) any());
         channel.setCommand(pCommand);
         channel.connect(CONNECTTION_TIMEOUT);
-        expect(channel.getOutputStream()).andReturn(outStream);
-        expect(channel.isClosed()).andReturn(false);
-        expect(channel.isClosed()).andReturn(true).times(2);
-        expect(channel.getExitStatus()).andReturn(pExitStatus);
-        expect(channel.isConnected()).andReturn(true);
+        when(channel.getOutputStream()).thenReturn(outStream);
+        when(channel.isClosed()).thenReturn(false);
+        when(channel.isClosed()).thenReturn(true);
+        when(channel.getExitStatus()).thenReturn(pExitStatus);
+        when(channel.isConnected()).thenReturn(true);
     }
 
     private Message createMessage(String pCommand, String pInput) {
@@ -207,7 +200,7 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     }
 
     private UserInfo getUserInfo(final String arg) {
-        reportMatcher(new IArgumentMatcher() {
+        argThat(new ArgumentMatcher() {
             public boolean matches(Object argument) {
                 UserInfo info = (UserInfo) argument;
                 assertFalse(info.promptPassphrase("bla"));

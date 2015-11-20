@@ -17,15 +17,15 @@
         </actions>
     </testcase>
     
-    <spring:bean id="myServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.server.Server"/>
     </spring:bean>
 
-    <spring:bean id="myFooServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myFooServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.server.Server"/>
     </spring:bean>
 
-    <spring:bean id="myBarServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="myBarServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.server.Server"/>
     </spring:bean>
     

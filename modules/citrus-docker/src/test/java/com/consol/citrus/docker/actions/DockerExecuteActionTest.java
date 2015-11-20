@@ -26,8 +26,9 @@ import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,23 +36,21 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.util.UUID;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
-    private DockerClient dockerClient = EasyMock.createMock(DockerClient.class);
+    private DockerClient dockerClient = Mockito.mock(DockerClient.class);
 
     @Test
     public void testInfo() throws Exception {
-        InfoCmd command = EasyMock.createMock(InfoCmd.class);
+        InfoCmd command = Mockito.mock(InfoCmd.class);
         com.github.dockerjava.api.model.Info result = new com.github.dockerjava.api.model.Info();
 
         reset(dockerClient, command);
 
-        expect(dockerClient.infoCmd()).andReturn(command).once();
-        expect(command.exec()).andReturn(result).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.infoCmd()).thenReturn(command);
+        when(command.exec()).thenReturn(result);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Info());
@@ -61,19 +60,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getCommandResult(), result);
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testPing() throws Exception {
-        PingCmd command = EasyMock.createMock(PingCmd.class);
+        PingCmd command = Mockito.mock(PingCmd.class);
 
         reset(dockerClient, command);
 
-        expect(dockerClient.pingCmd()).andReturn(command).once();
-        expect(command.exec()).andReturn(null).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.pingCmd()).thenReturn(command);
+        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Ping());
@@ -83,20 +79,17 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testVersion() throws Exception {
-        VersionCmd command = EasyMock.createMock(VersionCmd.class);
+        VersionCmd command = Mockito.mock(VersionCmd.class);
         com.github.dockerjava.api.model.Version result = new com.github.dockerjava.api.model.Version();
 
         reset(dockerClient, command);
 
-        expect(dockerClient.versionCmd()).andReturn(command).once();
-        expect(command.exec()).andReturn(result).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.versionCmd()).thenReturn(command);
+        when(command.exec()).thenReturn(result);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Version());
@@ -106,22 +99,19 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getCommandResult(), result);
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testCreate() throws Exception {
-        CreateContainerCmd command = EasyMock.createMock(CreateContainerCmd.class);
+        CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
         CreateContainerResponse response = new CreateContainerResponse();
         response.setId(UUID.randomUUID().toString());
 
         reset(dockerClient, command);
 
-        expect(dockerClient.createContainerCmd("image_create")).andReturn(command).once();
-        expect(command.withName("my_container")).andReturn(command).once();
-        expect(command.exec()).andReturn(response).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+        when(command.withName("my_container")).thenReturn(command);
+        when(command.exec()).thenReturn(response);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerCreate()
@@ -134,27 +124,24 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCommand().getCommandResult(), response);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testCreateNoName() throws Exception {
-        CreateContainerCmd command = EasyMock.createMock(CreateContainerCmd.class);
-        InspectContainerCmd inspectCommand = EasyMock.createMock(InspectContainerCmd.class);
+        CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+        InspectContainerCmd inspectCommand = Mockito.mock(InspectContainerCmd.class);
 
-        InspectContainerResponse inspectResponse = EasyMock.createMock(InspectContainerResponse.class);
+        InspectContainerResponse inspectResponse = Mockito.mock(InspectContainerResponse.class);
         CreateContainerResponse response = new CreateContainerResponse();
         response.setId(UUID.randomUUID().toString());
 
         reset(dockerClient, command, inspectCommand, inspectResponse);
 
-        expect(dockerClient.createContainerCmd("image_create")).andReturn(command).once();
-        expect(dockerClient.inspectContainerCmd(response.getId())).andReturn(inspectCommand).once();
-        expect(command.exec()).andReturn(response).once();
-        expect(inspectCommand.exec()).andReturn(inspectResponse).once();
-        expect(inspectResponse.getName()).andReturn("/my_container").once();
-
-        replay(dockerClient, command, inspectCommand, inspectResponse);
+        when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+        when(dockerClient.inspectContainerCmd(response.getId())).thenReturn(inspectCommand);
+        when(command.exec()).thenReturn(response);
+        when(inspectCommand.exec()).thenReturn(inspectResponse);
+        when(inspectResponse.getName()).thenReturn("/my_container");
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerCreate()
@@ -167,20 +154,17 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
 
-        verify(dockerClient, command, inspectCommand, inspectResponse);
     }
 
     @Test
     public void testInspectContainer() throws Exception {
-        InspectContainerCmd command = EasyMock.createMock(InspectContainerCmd.class);
+        InspectContainerCmd command = Mockito.mock(InspectContainerCmd.class);
         InspectContainerResponse response = new InspectContainerResponse();
 
         reset(dockerClient, command);
 
-        expect(dockerClient.inspectContainerCmd("container_inspect")).andReturn(command).once();
-        expect(command.exec()).andReturn(response).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.inspectContainerCmd("container_inspect")).thenReturn(command);
+        when(command.exec()).thenReturn(response);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerInspect()
@@ -191,20 +175,17 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getCommandResult(), response);
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testInspectImage() throws Exception {
-        InspectImageCmd command = EasyMock.createMock(InspectImageCmd.class);
+        InspectImageCmd command = Mockito.mock(InspectImageCmd.class);
         InspectImageResponse response = new InspectImageResponse();
 
         reset(dockerClient, command);
 
-        expect(dockerClient.inspectImageCmd("image_inspect")).andReturn(command).once();
-        expect(command.exec()).andReturn(response).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.inspectImageCmd("image_inspect")).thenReturn(command);
+        when(command.exec()).thenReturn(response);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageInspect()
@@ -215,19 +196,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getCommandResult(), response);
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testRemoveContainer() throws Exception {
-        RemoveContainerCmd command = EasyMock.createMock(RemoveContainerCmd.class);
+        RemoveContainerCmd command = Mockito.mock(RemoveContainerCmd.class);
 
         reset(dockerClient, command);
 
-        expect(dockerClient.removeContainerCmd("container_inspect")).andReturn(command).once();
-        expect(command.exec()).andReturn(null).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.removeContainerCmd("container_inspect")).thenReturn(command);
+        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerRemove()
@@ -238,19 +216,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testRemoveImage() throws Exception {
-        RemoveImageCmd command = EasyMock.createMock(RemoveImageCmd.class);
+        RemoveImageCmd command = Mockito.mock(RemoveImageCmd.class);
 
         reset(dockerClient, command);
 
-        expect(dockerClient.removeImageCmd("image_remove")).andReturn(command).once();
-        expect(command.exec()).andReturn(null).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.removeImageCmd("image_remove")).thenReturn(command);
+        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageRemove()
@@ -261,19 +236,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testStartContainer() throws Exception {
-        StartContainerCmd command = EasyMock.createMock(StartContainerCmd.class);
+        StartContainerCmd command = Mockito.mock(StartContainerCmd.class);
 
         reset(dockerClient, command);
 
-        expect(dockerClient.startContainerCmd("container_start")).andReturn(command).once();
-        expect(command.exec()).andReturn(null).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.startContainerCmd("container_start")).thenReturn(command);
+        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerStart()
@@ -284,19 +256,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testStopContainer() throws Exception {
-        StopContainerCmd command = EasyMock.createMock(StopContainerCmd.class);
+        StopContainerCmd command = Mockito.mock(StopContainerCmd.class);
 
         reset(dockerClient, command);
 
-        expect(dockerClient.stopContainerCmd("container_stop")).andReturn(command).once();
-        expect(command.exec()).andReturn(null).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.stopContainerCmd("container_stop")).thenReturn(command);
+        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerStop()
@@ -307,19 +276,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(((ResponseItem)action.getCommand().getCommandResult()).getStatus(), "success");
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testWaitContainer() throws Exception {
-        WaitContainerCmd command = EasyMock.createMock(WaitContainerCmd.class);
+        WaitContainerCmd command = Mockito.mock(WaitContainerCmd.class);
 
         reset(dockerClient, command);
 
-        expect(dockerClient.waitContainerCmd("container_wait")).andReturn(command).once();
-        expect(command.exec()).andReturn(0).once();
-
-        replay(dockerClient, command);
+        when(dockerClient.waitContainerCmd("container_wait")).thenReturn(command);
+        when(command.exec()).thenReturn(0);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerWait()
@@ -330,32 +296,29 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(((ContainerWait.ExitCode)action.getCommand().getCommandResult()).getExitCode(), new Integer(0));
 
-        verify(dockerClient, command);
     }
 
     @Test
     public void testPullImage() throws Exception {
-        PullImageCmd command = EasyMock.createMock(PullImageCmd.class);
-        final PullResponseItem responseItem = EasyMock.createMock(PullResponseItem.class);
+        PullImageCmd command = Mockito.mock(PullImageCmd.class);
+        final PullResponseItem responseItem = Mockito.mock(PullResponseItem.class);
 
         reset(dockerClient, command, responseItem);
 
-        expect(dockerClient.pullImageCmd("image_pull")).andReturn(command).once();
-        expect(responseItem.isPullSuccessIndicated()).andReturn(true).once();
-        expect(command.withTag("image_tag")).andReturn(command).once();
-        expect(command.exec(anyObject(PullImageResultCallback.class))).andAnswer(new IAnswer<PullImageResultCallback>() {
+        when(dockerClient.pullImageCmd("image_pull")).thenReturn(command);
+        when(responseItem.isPullSuccessIndicated()).thenReturn(true);
+        when(command.withTag("image_tag")).thenReturn(command);
+        doAnswer(new Answer<PullImageResultCallback>() {
             @Override
-            public PullImageResultCallback answer() throws Throwable {
-                PullImageResultCallback resultCallback = (PullImageResultCallback) getCurrentArguments()[0];
+            public PullImageResultCallback answer(InvocationOnMock invocation) throws Throwable {
+                PullImageResultCallback resultCallback = (PullImageResultCallback) invocation.getArguments()[0];
 
                 resultCallback.onNext(responseItem);
                 resultCallback.onComplete();
 
                 return resultCallback;
             }
-        }).once();
-
-        replay(dockerClient, command, responseItem);
+        }).when(command).exec(any(PullImageResultCallback.class));
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImagePull()
@@ -367,34 +330,31 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getCommandResult(), responseItem);
 
-        verify(dockerClient, command, responseItem);
     }
 
     @Test
     public void testBuildImage() throws Exception {
-        BuildImageCmd command = EasyMock.createMock(BuildImageCmd.class);
-        final BuildResponseItem responseItem = EasyMock.createMock(BuildResponseItem.class);
+        BuildImageCmd command = Mockito.mock(BuildImageCmd.class);
+        final BuildResponseItem responseItem = Mockito.mock(BuildResponseItem.class);
 
         reset(dockerClient, command, responseItem);
 
-        expect(dockerClient.buildImageCmd()).andReturn(command).once();
-        expect(responseItem.isBuildSuccessIndicated()).andReturn(true).once();
-        expect(responseItem.getImageId()).andReturn("new_image").once();
-        expect(command.withDockerfile(anyObject(File.class))).andReturn(command).once();
-        expect(command.withTag("latest")).andReturn(command).once();
-        expect(command.exec(anyObject(BuildImageResultCallback.class))).andAnswer(new IAnswer<BuildImageResultCallback>() {
+        when(dockerClient.buildImageCmd()).thenReturn(command);
+        when(responseItem.isBuildSuccessIndicated()).thenReturn(true);
+        when(responseItem.getImageId()).thenReturn("new_image");
+        when(command.withDockerfile(any(File.class))).thenReturn(command);
+        when(command.withTag("latest")).thenReturn(command);
+        doAnswer(new Answer<BuildImageResultCallback>() {
             @Override
-            public BuildImageResultCallback answer() throws Throwable {
-                BuildImageResultCallback resultCallback = (BuildImageResultCallback) getCurrentArguments()[0];
+            public BuildImageResultCallback answer(InvocationOnMock invocation) throws Throwable {
+                BuildImageResultCallback resultCallback = (BuildImageResultCallback) invocation.getArguments()[0];
 
                 resultCallback.onNext(responseItem);
                 resultCallback.onComplete();
 
                 return resultCallback;
             }
-        }).once();
-
-        replay(dockerClient, command, responseItem);
+        }).when(command).exec(any(BuildImageResultCallback.class));
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageBuild()
@@ -407,6 +367,5 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCommand().getCommandResult(), responseItem);
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.IMAGE_ID), "new_image");
 
-        verify(dockerClient, command, responseItem);
     }
 }

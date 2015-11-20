@@ -16,18 +16,15 @@
 
 package com.consol.citrus.ws.interceptor;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
-
-import java.util.*;
-
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.xml.namespace.QNameUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -42,8 +39,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         
         SoapHeaderElement header = createHeaderMock("{http://www.consol.com/soap-mustunderstand}UserId");
         Assert.assertTrue(interceptor.understands(header));
-        
-        verify(header);
+
     }
     
     @Test
@@ -54,8 +50,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         
         SoapHeaderElement header = createHeaderMock("{http://www.consol.com/soap-mustunderstand}WrongId");
         Assert.assertFalse(interceptor.understands(header));
-        
-        verify(header);
+
     }
     
     @Test
@@ -66,8 +61,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         
         SoapHeaderElement header = createHeaderMock("{http://www.consol.com/soap-wrong}UserId");
         Assert.assertFalse(interceptor.understands(header));
-        
-        verify(header);
+
     }
     
     @Test
@@ -78,8 +72,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         
         SoapHeaderElement header = createHeaderMock("UserId");
         Assert.assertTrue(interceptor.understands(header));
-        
-        verify(header);
+
     }
     
     @Test
@@ -105,12 +98,11 @@ public class SoapMustUnderstandEndpointInterceptorTest {
      * @return mocked soap header.
      */
     private SoapHeaderElement createHeaderMock(String qNameString) {
-        SoapHeaderElement header = EasyMock.createMock(SoapHeaderElement.class);
+        SoapHeaderElement header = Mockito.mock(SoapHeaderElement.class);
 
         reset(header);
-        expect(header.getName()).andReturn(QNameUtils.parseQNameString(qNameString)).anyTimes();
-        replay(header);
-        
+        when(header.getName()).thenReturn(QNameUtils.parseQNameString(qNameString));
+
         return header; 
     }
 }

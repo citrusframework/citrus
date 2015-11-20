@@ -17,14 +17,15 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Martin Maher
@@ -32,8 +33,8 @@ import static org.easymock.EasyMock.*;
  */
 public class HttpConditionTest {
 
-    private TestContext context = EasyMock.createMock(TestContext.class);
-    private HttpURLConnection connection = EasyMock.createMock(HttpURLConnection.class);
+    private TestContext context = Mockito.mock(TestContext.class);
+    private HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
 
     @Test
     public void isSatisfiedShouldSucceedWithValidUrl() throws Exception {
@@ -42,17 +43,8 @@ public class HttpConditionTest {
         String httpResponseCode = "200";
 
         reset(connection);
-        connection.setConnectTimeout(3000);
-        expectLastCall().once();
 
-        connection.setRequestMethod("HEAD");
-        expectLastCall().once();
-
-        expect(connection.getResponseCode()).andReturn(200).once();
-
-        connection.disconnect();
-        expectLastCall().once();
-        replay(connection);
+        when(connection.getResponseCode()).thenReturn(200);
 
         HttpCondition testling = new HttpCondition() {
             @Override
@@ -68,14 +60,14 @@ public class HttpConditionTest {
         testling.setHttpResponseCode(httpResponseCode);
 
         reset(context);
-        expect(context.resolveDynamicValue(url)).andReturn(url).anyTimes();
-        expect(context.resolveDynamicValue(httpResponseCode)).andReturn(httpResponseCode).anyTimes();
-        expect(context.resolveDynamicValue(timeout)).andReturn(timeout).anyTimes();
-        replay(context);
-
+        when(context.resolveDynamicValue(url)).thenReturn(url);
+        when(context.resolveDynamicValue(httpResponseCode)).thenReturn(httpResponseCode);
+        when(context.resolveDynamicValue(timeout)).thenReturn(timeout);
         Assert.assertTrue(testling.isSatisfied(context));
 
-        verify(connection);
+        verify(connection).setConnectTimeout(3000);
+        verify(connection).setRequestMethod("HEAD");
+        verify(connection).disconnect();
     }
 
     @Test
@@ -89,11 +81,9 @@ public class HttpConditionTest {
         testling.setTimeout(timeout);
 
         reset(context);
-        expect(context.resolveDynamicValue(url)).andReturn(url).anyTimes();
-        expect(context.resolveDynamicValue(httpResponseCode)).andReturn(httpResponseCode).anyTimes();
-        expect(context.resolveDynamicValue(timeout)).andReturn(timeout).anyTimes();
-        replay(context);
-
+        when(context.resolveDynamicValue(url)).thenReturn(url);
+        when(context.resolveDynamicValue(httpResponseCode)).thenReturn(httpResponseCode);
+        when(context.resolveDynamicValue(timeout)).thenReturn(timeout);
         Assert.assertFalse(testling.isSatisfied(context));
     }
 

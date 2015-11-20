@@ -16,19 +16,19 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.easymock.EasyMock;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mockito;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
@@ -37,7 +37,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 	
     private ExecuteSQLAction executeSQLAction;
     
-    private JdbcTemplate jdbcTemplate = EasyMock.createMock(JdbcTemplate.class);
+    private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     
     @BeforeMethod
     public void setUp() {
@@ -55,16 +55,10 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 	    
 	    reset(jdbcTemplate);
 	    
-	    jdbcTemplate.execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
-	    expectLastCall().once();
-	    jdbcTemplate.execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
-        expectLastCall().once();
-        
-	    replay(jdbcTemplate);
-	    
 	    executeSQLAction.execute(context);
-	    
-	    verify(jdbcTemplate);
+
+	    verify(jdbcTemplate).execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
+	    verify(jdbcTemplate).execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
 	}
 	
 	@Test
@@ -73,16 +67,10 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         
         reset(jdbcTemplate);
         
-        jdbcTemplate.execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
-        expectLastCall().once();
-        jdbcTemplate.execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
         executeSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+
+        verify(jdbcTemplate).execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
+        verify(jdbcTemplate).execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
     }
 	
 	@Test
@@ -98,16 +86,10 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         
         reset(jdbcTemplate);
         
-        jdbcTemplate.execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
-        expectLastCall().once();
-        jdbcTemplate.execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
         executeSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+
+        verify(jdbcTemplate).execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
+        verify(jdbcTemplate).execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
     }
 	
 	@Test
@@ -118,17 +100,11 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         executeSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-sql-with-variables.sql");
         
         reset(jdbcTemplate);
-        
-        jdbcTemplate.execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
-        expectLastCall().once();
-        jdbcTemplate.execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
-        expectLastCall().once();
-        
-        replay(jdbcTemplate);
-        
+
         executeSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+
+        verify(jdbcTemplate).execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
+        verify(jdbcTemplate).execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
     }
 	
     @Test
@@ -144,16 +120,10 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         
         reset(jdbcTemplate);
         
-        jdbcTemplate.execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
-        expectLastCall().once();
-        jdbcTemplate.execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
-        expectLastCall().andThrow(new DataAccessException("Something went wrong!") {}).once();
-        
-        replay(jdbcTemplate);
-        
+        doThrow(new DataAccessException("Something went wrong!") {}).when(jdbcTemplate).execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
+
         executeSQLAction.execute(context);
-        
-        verify(jdbcTemplate);
+        verify(jdbcTemplate).execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
     }
 	
     @Test(expectedExceptions = CitrusRuntimeException.class)
@@ -169,13 +139,9 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         
         reset(jdbcTemplate);
         
-        jdbcTemplate.execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
-        expectLastCall().once();
-        jdbcTemplate.execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
-        expectLastCall().andThrow(new DataAccessException("Something went wrong!") {}).once();
-        
-        replay(jdbcTemplate);
-        
+        doThrow(new DataAccessException("Something went wrong!") {}).when(jdbcTemplate).execute("DELETE * FROM CONFIGURATION WHERE VERSION=1");
+
         executeSQLAction.execute(context);
+        verify(jdbcTemplate).execute("DELETE * FROM ERRORS WHERE STATUS='resolved'");
     }
 }

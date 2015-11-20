@@ -34,7 +34,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -43,33 +43,31 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
-    private SelectiveConsumer messageConsumer = EasyMock.createMock(SelectiveConsumer.class);
-    private HttpEndpointConfiguration configuration = EasyMock.createMock(HttpEndpointConfiguration.class);
-    private HttpClient httpClient = EasyMock.createMock(HttpClient.class);
-    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private SelectiveConsumer messageConsumer = Mockito.mock(SelectiveConsumer.class);
+    private HttpEndpointConfiguration configuration = Mockito.mock(HttpEndpointConfiguration.class);
+    private HttpClient httpClient = Mockito.mock(HttpClient.class);
+    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testHttpRequestProperties() {
         reset(httpClient, messageConsumer, configuration);
-        expect(httpClient.createConsumer()).andReturn(messageConsumer).once();
-        expect(httpClient.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(httpClient.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        when(httpClient.createConsumer()).thenReturn(messageConsumer);
+        when(httpClient.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(httpClient.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .method(HttpMethod.GET)
                 .uri("/test")
                 .contextPath("foo")
                 .queryParam("param1", "value1")
-                .queryParam("param2", "value2")).atLeastOnce();
-        replay(httpClient, messageConsumer, configuration);
-
+                .queryParam("param2", "value2"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -108,23 +106,20 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/test");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "param1=value1,param2=value2");
 
-        verify(httpClient, messageConsumer, configuration);
     }
 
     @Test
     public void testHttpResponseProperties() {
         reset(httpClient, messageConsumer, configuration);
-        expect(httpClient.createConsumer()).andReturn(messageConsumer).once();
-        expect(httpClient.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
-        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
-        expect(httpClient.getActor()).andReturn(null).atLeastOnce();
-        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        when(httpClient.createConsumer()).thenReturn(messageConsumer);
+        when(httpClient.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(httpClient.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .method(HttpMethod.GET)
                 .uri("/test")
                 .status(HttpStatus.OK)
-                .version("HTTP/1.1")).atLeastOnce();
-        replay(httpClient, messageConsumer, configuration);
-
+                .version("HTTP/1.1"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -161,19 +156,16 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
 
-        verify(httpClient, messageConsumer, configuration);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testReceiveBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
-        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-        replay(applicationContextMock);
-
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
@@ -199,6 +191,5 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointUri(), "httpClient");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        verify(applicationContextMock);
     }
 }

@@ -22,16 +22,16 @@
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.camel.message.CamelMessageConverter"/>
   </bean>
 
   <!-- Camel context instances -->
-  <bean id="camelContext" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="camelContext" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.camel.CamelContext"/>
   </bean>
 
-  <bean id="specialCamelContext" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="specialCamelContext" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.camel.CamelContext"/>
   </bean>
 </beans>

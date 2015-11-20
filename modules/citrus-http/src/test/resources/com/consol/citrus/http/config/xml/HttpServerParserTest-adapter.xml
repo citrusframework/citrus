@@ -68,11 +68,11 @@
                         port="8086"
                         endpoint-adapter="httpServerAdapter6"/>
 
-    <bean id="httpServerAdapter6" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="httpServerAdapter6" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
     </bean>
 
-    <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="javax.jms.ConnectionFactory"/>
     </bean>
 </beans>

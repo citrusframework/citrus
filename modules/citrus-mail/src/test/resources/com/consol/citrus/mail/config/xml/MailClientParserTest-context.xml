@@ -32,7 +32,7 @@
     <property name="name" value="SampleTestActor"/>
   </bean>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
   </bean>
 

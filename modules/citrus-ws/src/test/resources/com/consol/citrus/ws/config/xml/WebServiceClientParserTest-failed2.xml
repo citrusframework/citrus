@@ -10,11 +10,11 @@
                     web-service-template="wsTemplate"
                     message-sender="wsMessageSender"/>
 
-  <bean id="soapMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="soapMessageFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
   </bean>
 
-  <bean id="wsMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="wsMessageSender" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.transport.WebServiceMessageSender"/>
   </bean>
 </beans>

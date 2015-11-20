@@ -20,43 +20,39 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class IterateTest extends AbstractTestNGUnitTest {
 
-    private TestAction action = EasyMock.createMock(TestAction.class);
+    private TestAction action = Mockito.mock(TestAction.class);
 
     @Test
     public void testIteration() {
         Iterate iterate = new Iterate();
 
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().times(5);
-        
-        replay(action);
-        
+
         iterate.setActions(Collections.singletonList(action));
-        
+
         iterate.setCondition("i lt= 5");
         iterate.setIndexName("i");
-        
+
         iterate.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "5");
 
-        verify(action);
+        verify(action, times(5)).execute(context);
     }
     
     @Test
@@ -64,24 +60,19 @@ public class IterateTest extends AbstractTestNGUnitTest {
         Iterate iterate = new Iterate();
         
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().times(5);
-        
-        replay(action);
 
         iterate.setActions(Collections.singletonList(action));
-        
+
         iterate.setCondition("i lt= 10");
         iterate.setIndexName("i");
         iterate.setStep(2);
-        
+
         iterate.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "9");
 
-        verify(action);
+        verify(action, times(5)).execute(context);
     }
     
     @Test
@@ -89,25 +80,20 @@ public class IterateTest extends AbstractTestNGUnitTest {
         Iterate iterate = new Iterate();
         
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().times(5);
-        
-        replay(action);
 
         iterate.setActions(Collections.singletonList(action));
-        
+
         iterate.setCondition("i lt= 10");
         iterate.setIndexName("i");
         iterate.setStep(2);
         iterate.setStart(2);
-        
+
         iterate.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "10");
 
-        verify(action);
+        verify(action, times(5)).execute(context);
     }
     
     @Test
@@ -115,11 +101,9 @@ public class IterateTest extends AbstractTestNGUnitTest {
         Iterate iterate = new Iterate();
         
         List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
+        TestAction action = Mockito.mock(TestAction.class);
 
         reset(action);
-        replay(action);
-
         actions.add(action);
         iterate.setActions(actions);
         
@@ -129,8 +113,6 @@ public class IterateTest extends AbstractTestNGUnitTest {
         iterate.execute(context);
         
         Assert.assertNull(context.getVariables().get("i"));
-
-        verify(action);
     }
 
     @Test
@@ -148,11 +130,6 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
         reset(action);
 
-        action.execute(context);
-        expectLastCall().times(4);
-
-        replay(action);
-
         actions.add(action);
         actions.add(incrementTestAction);
         iterate.setActions(actions);
@@ -166,7 +143,7 @@ public class IterateTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariables().get("i"));
         Assert.assertEquals(context.getVariable("${i}"), "4");
 
-        verify(action);
+        verify(action, times(4)).execute(context);
     }
 
     @Test
@@ -174,11 +151,6 @@ public class IterateTest extends AbstractTestNGUnitTest {
         Iterate iterate = new Iterate();
 
         reset(action);
-
-        action.execute(context);
-        expectLastCall().times(5);
-
-        replay(action);
 
         iterate.setActions(Collections.singletonList(action));
 
@@ -194,6 +166,6 @@ public class IterateTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "5");
 
-        verify(action);
+        verify(action, times(5)).execute(context);
     }
 }

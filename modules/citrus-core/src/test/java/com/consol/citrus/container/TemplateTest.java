@@ -20,38 +20,33 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 /**
  * @author Christoph Deppisch
  */
 public class TemplateTest extends AbstractTestNGUnitTest {
 
-    private TestAction action = EasyMock.createMock(TestAction.class);
+    private TestAction action = Mockito.mock(TestAction.class);
 
     @Test
     public void testTemplateExecution() {
         Template template = new Template();
 
-
         reset(action);
-        
-        action.execute(context);
-        expectLastCall().once();
-        
-        replay(action);
-        
+
         template.setActions(Collections.singletonList(action));
-        
+
         template.execute(context);
-        
-        verify(action);
+
+        verify(action).execute(context);
     }
     
     @Test

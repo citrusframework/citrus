@@ -20,14 +20,14 @@ import com.consol.citrus.arquillian.configuration.CitrusConfigurationProducer;
 import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
 import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
-import org.easymock.EasyMock;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveAppender;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.when;
 
 public class CitrusExtensionTest {
 
@@ -35,20 +35,17 @@ public class CitrusExtensionTest {
 
     @Test
     public void testRegister() throws Exception {
-        LoadableExtension.ExtensionBuilder extensionBuilder = EasyMock.createMock(LoadableExtension.ExtensionBuilder.class);
+        LoadableExtension.ExtensionBuilder extensionBuilder = Mockito.mock(LoadableExtension.ExtensionBuilder.class);
 
-        expect(extensionBuilder.service(AuxiliaryArchiveAppender.class, CitrusArchiveAppender.class)).andReturn(extensionBuilder);
-        expect(extensionBuilder.service(ApplicationArchiveProcessor.class, CitrusArchiveProcessor.class)).andReturn(extensionBuilder);
+        when(extensionBuilder.service(AuxiliaryArchiveAppender.class, CitrusArchiveAppender.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.service(ApplicationArchiveProcessor.class, CitrusArchiveProcessor.class)).thenReturn(extensionBuilder);
 
-        expect(extensionBuilder.service(TestEnricher.class, CitrusTestEnricher.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusConfigurationProducer.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusInstanceProducer.class)).andReturn(extensionBuilder).once();
-        expect(extensionBuilder.observer(CitrusLifecycleHandler.class)).andReturn(extensionBuilder).once();
-
-        replay(extensionBuilder);
+        when(extensionBuilder.service(TestEnricher.class, CitrusTestEnricher.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.observer(CitrusConfigurationProducer.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.observer(CitrusInstanceProducer.class)).thenReturn(extensionBuilder);
+        when(extensionBuilder.observer(CitrusLifecycleHandler.class)).thenReturn(extensionBuilder);
 
         extension.register(extensionBuilder);
 
-        verify(extensionBuilder);
     }
 }

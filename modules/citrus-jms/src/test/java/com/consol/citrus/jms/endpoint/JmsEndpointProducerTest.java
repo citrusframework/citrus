@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.testng.Assert;
@@ -29,21 +29,21 @@ import org.testng.annotations.Test;
 import javax.jms.*;
 import java.util.HashMap;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
-    private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
-    private Connection connection = EasyMock.createMock(Connection.class);
-    private Session session = EasyMock.createMock(Session.class);
-    private Destination destination = EasyMock.createMock(Destination.class);
-    private Queue destinationQueue = EasyMock.createMock(Queue.class);
-    private MessageProducer messageProducer = EasyMock.createMock(MessageProducer.class);
+    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private Connection connection = Mockito.mock(Connection.class);
+    private Session session = Mockito.mock(Session.class);
+    private Destination destination = Mockito.mock(Destination.class);
+    private Queue destinationQueue = Mockito.mock(Queue.class);
+    private MessageProducer messageProducer = Mockito.mock(MessageProducer.class);
     
-    private JmsTemplate jmsTemplate = EasyMock.createMock(JmsTemplate.class);
+    private JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
     
     @Test
     public void testSendMessageWithJmsTemplate() {
@@ -54,18 +54,13 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
         reset(jmsTemplate, connectionFactory, destination, messageProducer);
 
-        expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
-        
-        jmsTemplate.send(anyObject(MessageCreator.class));
-        expectLastCall().once();
-        
-        replay(jmsTemplate, connectionFactory, destination, messageProducer);
+        when(jmsTemplate.getDefaultDestination()).thenReturn(destination);
 
         endpoint.createProducer().send(message, context);
-        
-        verify(jmsTemplate, connectionFactory, destination, messageProducer);
+
+        verify(jmsTemplate).send(any(MessageCreator.class));
     }
-    
+
     @Test
     public void testSendMessageWithDestination() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
@@ -77,23 +72,19 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
         reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
 
-        expect(session.createProducer(destination)).andReturn(messageProducer).once();
-        messageProducer.send((TextMessage)anyObject());
-        expectLastCall().once();
-        
-        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+        when(session.createProducer(destination)).thenReturn(messageProducer);
+
+        when(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).thenReturn(
                 new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
-        
-        expect(session.getTransacted()).andReturn(false).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
+
+        when(session.getTransacted()).thenReturn(false);
 
         endpoint.createProducer().send(message, context);
-        
-        verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
+
+        verify(messageProducer).send((TextMessage)any());
     }
     
     @Test
@@ -107,25 +98,21 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
         reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
 
-        expect(session.createProducer(destinationQueue)).andReturn(messageProducer).once();
-        messageProducer.send((TextMessage)anyObject());
-        expectLastCall().once();
+        when(session.createProducer(destinationQueue)).thenReturn(messageProducer);
 
-        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+        when(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).thenReturn(
                 new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
-        
-        expect(session.getTransacted()).andReturn(false).once();
-        
-        expect(session.createQueue("myDestination")).andReturn(destinationQueue).once();
-        
-        replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
+
+        when(session.getTransacted()).thenReturn(false);
+
+        when(session.createQueue("myDestination")).thenReturn(destinationQueue);
 
         endpoint.createProducer().send(message, context);
-        
-        verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
+
+        verify(messageProducer).send((TextMessage)any());
     }
     
     @Test

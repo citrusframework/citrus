@@ -29,21 +29,21 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class HeaderValuesTest extends AbstractTestNGUnitTest {
-    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
-    private Consumer consumer = EasyMock.createMock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+    private Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private Consumer consumer = Mockito.mock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
     
     private ReceiveMessageAction receiveMessageBean;
     
@@ -51,9 +51,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValues() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -66,10 +66,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "B")
                         .setHeader("header-valueC", "C");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
 
@@ -99,9 +98,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesComplete() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -114,10 +113,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "B")
                         .setHeader("header-valueC", "C");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
 
@@ -149,9 +147,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesWrongExpectedValue() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -164,10 +162,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "B")
                         .setHeader("header-valueC", "C");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
         
@@ -198,9 +195,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesForWrongElement() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -213,10 +210,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "B")
                         .setHeader("header-valueC", "C");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
         
@@ -247,9 +243,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyHeaderValues() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -262,10 +258,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "")
                         .setHeader("header-valueC", "");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
 
@@ -297,9 +292,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesNullComparison() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -312,10 +307,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "")
                         .setHeader("header-valueC", "");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
 
@@ -347,9 +341,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractHeaderValues() {
         reset(endpoint, consumer, endpointConfiguration);
-        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
-        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
-        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
         
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -362,10 +356,9 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueB", "B")
                         .setHeader("header-valueC", "C");
 
-        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
-        expect(endpoint.getActor()).andReturn(null).anyTimes();
-        replay(endpoint, consumer, endpointConfiguration);
-        
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
+        when(endpoint.getActor()).thenReturn(null);
+
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
 

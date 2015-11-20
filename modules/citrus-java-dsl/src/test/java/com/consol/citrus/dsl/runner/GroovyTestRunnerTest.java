@@ -22,26 +22,25 @@ import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.GroovyActionBuilder;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 
 public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
-    private Resource scriptResource = EasyMock.createMock(Resource.class);
-    private Resource scriptTemplate = EasyMock.createMock(Resource.class);
-    private File file = EasyMock.createMock(File.class);
+    private Resource scriptResource = Mockito.mock(Resource.class);
+    private Resource scriptTemplate = Mockito.mock(Resource.class);
+    private File file = Mockito.mock(File.class);
             
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
         reset(scriptResource);
-        expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("println 'Wow groovy!'".getBytes())).once();
-        replay(scriptResource);
-
+        when(scriptResource.getInputStream()).thenReturn(new ByteArrayInputStream("println 'Wow groovy!'".getBytes()));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -63,8 +62,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         GroovyAction action = (GroovyAction)test.getActions().get(0);
         Assert.assertEquals(action.getScript(), "println 'Wow groovy!'");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
-        
-        verify(scriptResource);
+
     }
     
     @Test
@@ -94,10 +92,8 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
         reset(scriptTemplate, file);
-        expect(scriptTemplate.getFile()).andReturn(file).once();
-        expect(file.getAbsolutePath()).andReturn("classpath:com/consol/citrus/script/script-template.groovy").once();
-        replay(scriptTemplate, file);
-
+        when(scriptTemplate.getFile()).thenReturn(file);
+        when(file.getAbsolutePath()).thenReturn("classpath:com/consol/citrus/script/script-template.groovy");
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {

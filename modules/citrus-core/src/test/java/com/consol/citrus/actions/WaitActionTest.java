@@ -19,11 +19,12 @@ package com.consol.citrus.actions;
 import com.consol.citrus.condition.Condition;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+
 import static org.testng.Assert.fail;
 
 /**
@@ -31,8 +32,8 @@ import static org.testng.Assert.fail;
  * @since 2.4
  */
 public class WaitActionTest {
-    private TestContext contextMock = EasyMock.createMock(TestContext.class);
-    private Condition conditionMock = EasyMock.createMock(Condition.class);
+    private TestContext contextMock = Mockito.mock(TestContext.class);
+    private Condition conditionMock = Mockito.mock(Condition.class);
     private long startTime;
     private long endTime;
 
@@ -45,16 +46,13 @@ public class WaitActionTest {
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
-        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
-        expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.TRUE).once();
-        expect(conditionMock.getSuccessMessage(contextMock)).andReturn("Condition success!").once();
-        replay(contextMock, conditionMock);
-
+        when(conditionMock.getName()).thenReturn("check");
+        when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
+        when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
         startTimer();
         testling.doExecute(contextMock);
         stopTimer();
 
-        verify(contextMock, conditionMock);
         assertConditionExecutedWithinSeconds("1");
     }
 
@@ -67,17 +65,14 @@ public class WaitActionTest {
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
-        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
-        expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.FALSE).times(3);
-        expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.TRUE).once();
-        expect(conditionMock.getSuccessMessage(contextMock)).andReturn("Condition success!").once();
-        replay(contextMock, conditionMock);
-
+        when(conditionMock.getName()).thenReturn("check");
+        when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.FALSE);
+        when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
+        when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
         startTimer();
         testling.doExecute(contextMock);
         stopTimer();
 
-        verify(contextMock, conditionMock);
         assertConditionExecutedWithinSeconds(seconds);
     }
 
@@ -90,16 +85,13 @@ public class WaitActionTest {
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
-        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
-        expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.TRUE).once();
-        expect(conditionMock.getSuccessMessage(contextMock)).andReturn("Condition success!").once();
-        replay(contextMock, conditionMock);
-
+        when(conditionMock.getName()).thenReturn("check");
+        when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
+        when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
         startTimer();
         testling.doExecute(contextMock);
         stopTimer();
 
-        verify(contextMock, conditionMock);
         assertConditionExecutedWithinSeconds(seconds);
     }
 
@@ -112,11 +104,9 @@ public class WaitActionTest {
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
-        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
-        expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.FALSE).times(3);
-        expect(conditionMock.getErrorMessage(contextMock)).andReturn("Condition failed!").once();
-        replay(contextMock, conditionMock);
-
+        when(conditionMock.getName()).thenReturn("check");
+        when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.FALSE);
+        when(conditionMock.getErrorMessage(contextMock)).thenReturn("Condition failed!");
         startTimer();
         try {
             testling.doExecute(contextMock);
@@ -126,7 +116,6 @@ public class WaitActionTest {
         }
         stopTimer();
 
-        verify(contextMock, conditionMock);
         assertConditionExecutedWithinSeconds(seconds);
     }
 
@@ -140,11 +129,9 @@ public class WaitActionTest {
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
-        expect(conditionMock.getName()).andReturn("check").atLeastOnce();
-        expect(conditionMock.isSatisfied(contextMock)).andReturn(Boolean.FALSE).once();
-        expect(conditionMock.getErrorMessage(contextMock)).andReturn("Condition failed!").once();
-        replay(contextMock, conditionMock);
-
+        when(conditionMock.getName()).thenReturn("check");
+        when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.FALSE);
+        when(conditionMock.getErrorMessage(contextMock)).thenReturn("Condition failed!");
         startTimer();
         try {
             testling.doExecute(contextMock);
@@ -154,13 +141,12 @@ public class WaitActionTest {
         }
         stopTimer();
 
-        verify(contextMock, conditionMock);
         assertConditionExecutedWithinSeconds(seconds);
     }
 
     private void prepareContextMock(String waitTime, String interval) {
-        expect(contextMock.replaceDynamicContentInString(waitTime)).andReturn(waitTime).atLeastOnce();
-        expect(contextMock.replaceDynamicContentInString(interval)).andReturn(interval).atLeastOnce();
+        when(contextMock.replaceDynamicContentInString(waitTime)).thenReturn(waitTime);
+        when(contextMock.replaceDynamicContentInString(interval)).thenReturn(interval);
     }
 
     private WaitAction getWaitAction(String waitTimeSeconds, String interval) {

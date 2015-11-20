@@ -20,7 +20,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -43,20 +43,13 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
     @Test
     public void testResolveCustomValidationMatcher() {
         reset(validationMatcher);
-        
-        validationMatcher.validate("field", "value", "value", context);
-        expectLastCall().times(3);
-        
-        validationMatcher.validate("field", "prefix:value", "prefix:value", context);
-        expectLastCall().once();
-        
-        replay(validationMatcher);
-        
+
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@foo:customMatcher('value')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@foo:customMatcher(value)@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${foo:customMatcher('value')}@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "prefix:value", "@foo:customMatcher('prefix:value')@", context);
-        
-        verify(validationMatcher);
+
+        verify(validationMatcher, times(3)).validate("field", "value", "value", context);
+        verify(validationMatcher).validate("field", "prefix:value", "prefix:value", context);
     }
 }

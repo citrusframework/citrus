@@ -26,11 +26,11 @@
         </actions>
     </testcase>
     
-    <spring:bean id="testChannel" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="testChannel" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
     </spring:bean>
     
-    <spring:bean id="testMessageSelector" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="testMessageSelector" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="org.springframework.integration.core.MessageSelector"/>
     </spring:bean>
 </spring:beans>

@@ -21,45 +21,41 @@ import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.easymock.EasyMock;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.jms.*;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
 public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
-    private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
-    private Connection connection = EasyMock.createMock(Connection.class);
-    private Session session = EasyMock.createMock(Session.class);
-    private MessageConsumer messageConsumer = EasyMock.createMock(MessageConsumer.class);
-    private Queue queue1 = EasyMock.createMock(Queue.class);
-    private Queue queue2 = EasyMock.createMock(Queue.class);
-    private Queue queue3 = EasyMock.createMock(Queue.class);
-    private Queue queue4 = EasyMock.createMock(Queue.class);
+    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private Connection connection = Mockito.mock(Connection.class);
+    private Session session = Mockito.mock(Session.class);
+    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
+    private Queue queue1 = Mockito.mock(Queue.class);
+    private Queue queue2 = Mockito.mock(Queue.class);
+    private Queue queue3 = Mockito.mock(Queue.class);
+    private Queue queue4 = Mockito.mock(Queue.class);
 
     @Test
     public void testPurgeJmsQueuesBuilderWithQueueNames() throws JMSException {
         reset(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        expect(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-        expect(session.createConsumer(anyObject(Destination.class))).andReturn(messageConsumer).atLeastOnce();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(session);
+        when(session.createConsumer(any(Destination.class))).thenReturn(messageConsumer);
 
-        expect(session.createQueue("q1")).andReturn(queue1).atLeastOnce();
-        expect(session.createQueue("q2")).andReturn(queue2).atLeastOnce();
-        expect(session.createQueue("q3")).andReturn(queue3).atLeastOnce();
-        expect(session.createQueue("q4")).andReturn(queue4).atLeastOnce();
+        when(session.createQueue("q1")).thenReturn(queue1);
+        when(session.createQueue("q2")).thenReturn(queue2);
+        when(session.createQueue("q3")).thenReturn(queue3);
+        when(session.createQueue("q4")).thenReturn(queue4);
 
-        expect(messageConsumer.receive(200L)).andReturn(null).atLeastOnce();
-
-        replay(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
+        when(messageConsumer.receive(200L)).thenReturn(null);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -90,25 +86,21 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getQueueNames().toString(), "[q1, q2, q3, q4]");
         Assert.assertEquals(action.getQueues().size(), 0);
 
-        verify(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
+        verify(connection).start();
     }
-    
+
     @Test
     public void testPurgeJmsQueuesBuilderWithQueues() throws JMSException {
         reset(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        expect(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-        expect(session.createConsumer(anyObject(Destination.class))).andReturn(messageConsumer).atLeastOnce();
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        when(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(session);
+        when(session.createConsumer(any(Destination.class))).thenReturn(messageConsumer);
 
-        expect(queue1.getQueueName()).andReturn("q1");
-        expect(queue2.getQueueName()).andReturn("q2");
-        expect(queue3.getQueueName()).andReturn("q3");
+        when(queue1.getQueueName()).thenReturn("q1");
+        when(queue2.getQueueName()).thenReturn("q2");
+        when(queue3.getQueueName()).thenReturn("q3");
 
-        expect(messageConsumer.receive(200L)).andReturn(null).atLeastOnce();
-
-        replay(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
+        when(messageConsumer.receive(200L)).thenReturn(null);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
@@ -129,7 +121,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
-          
+
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 200L);
         Assert.assertEquals(action.getSleepTime(), 150L);
@@ -138,7 +130,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getQueues().size(), 3);
         Assert.assertEquals(action.getQueues().toString(), "[" + queue1.toString() + ", " + queue2.toString() + ", " + queue3.toString() + "]");
 
-        verify(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
+        verify(connection).start();
     }
-    
+
 }

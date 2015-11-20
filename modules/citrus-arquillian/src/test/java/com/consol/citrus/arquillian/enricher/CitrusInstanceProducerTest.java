@@ -19,19 +19,20 @@ package com.consol.citrus.arquillian.enricher;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.jboss.arquillian.container.spi.client.container.DeployableContainer;
 import org.jboss.arquillian.container.spi.client.deployment.DeploymentDescription;
 import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Properties;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 public class CitrusInstanceProducerTest {
 
@@ -39,35 +40,31 @@ public class CitrusInstanceProducerTest {
 
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
-    private InstanceProducer<Citrus> instanceProducer = EasyMock.createMock(InstanceProducer.class);
-    private Instance<CitrusConfiguration> configurationInstance = EasyMock.createMock(Instance.class);
+    private InstanceProducer<Citrus> instanceProducer = Mockito.mock(InstanceProducer.class);
+    private Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
 
-    private DeployableContainer container = EasyMock.createMock(DeployableContainer.class);
-    private DeploymentDescription deployment = EasyMock.createMock(DeploymentDescription.class);
+    private DeployableContainer container = Mockito.mock(DeployableContainer.class);
+    private DeploymentDescription deployment = Mockito.mock(DeploymentDescription.class);
 
     @Test
     public void testCreateInstance() throws Exception {
         reset(instanceProducer, configurationInstance, container, deployment);
 
-        expect(configurationInstance.get()).andReturn(configuration).once();
-        expect(deployment.testable()).andReturn(false).once();
+        when(configurationInstance.get()).thenReturn(configuration);
+        when(deployment.testable()).thenReturn(false);
 
-        instanceProducer.set(anyObject(Citrus.class));
-        expectLastCall().andAnswer(new IAnswer<Void>() {
+        doAnswer(new Answer() {
             @Override
-            public Void answer() throws Throwable {
-                Citrus citrus = (Citrus) getCurrentArguments()[0];
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Citrus citrus = (Citrus) invocation.getArguments()[0];
                 Assert.assertNotNull(citrus);
                 return null;
             }
-        });
-
-        replay(instanceProducer, configurationInstance, container, deployment);
+        }).when(instanceProducer).set(any(Citrus.class));
 
         InjectionHelper.inject(citrusInstanceProducer, "citrusInstance", instanceProducer);
         InjectionHelper.inject(citrusInstanceProducer, "configurationInstance", configurationInstance);
         citrusInstanceProducer.beforeDeploy(new BeforeDeploy(container, deployment));
 
-        verify(instanceProducer, configurationInstance, container, deployment);
     }
 }

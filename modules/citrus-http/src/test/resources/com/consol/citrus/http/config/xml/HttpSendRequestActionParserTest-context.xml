@@ -50,11 +50,11 @@
       </actions>
     </testcase>
     
-    <spring:bean id="httpClient" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="httpClient" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
     </spring:bean>
 
-    <spring:bean id="testActor" class="org.easymock.EasyMock" factory-method="createMock">
+    <spring:bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="com.consol.citrus.TestActor"/>
     </spring:bean>
     
