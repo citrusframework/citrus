@@ -39,4 +39,10 @@
     </citrus:schemas>
   </citrus:schema-repository>
 
+  <citrus:schema-repository id="sampleServiceSchemaNamespaceDiffRepository">
+    <citrus:schemas>
+      <citrus:schema id="sampleServiceSchemaNamespaceDiff" location="classpath:com/consol/citrus/schema/SampleServiceWithImportsNamespaceDiff.wsdl" />
+    </citrus:schemas>
+  </citrus:schema-repository>
+
 </beans>
