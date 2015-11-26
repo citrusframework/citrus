@@ -23,8 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.io.*;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.xml.sax.InputSource;
 
 import javax.wsdl.*;
@@ -116,7 +115,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
 
                     if (definition.getTargetNamespace().equals(getTargetNamespace(schema)) && targetXsd == null) {
                         targetXsd = schemaResource;
-                    } else if(targetXsd == null && firstSchemaInWSDL == null) {
+                    } else if (targetXsd == null && firstSchemaInWSDL == null) {
                         firstSchemaInWSDL = schemaResource;
                     }
                 }
@@ -127,9 +126,9 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
 
         if (targetXsd == null) {
             // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
-            if(firstSchemaInWSDL != null) {
+            if (firstSchemaInWSDL != null) {
               targetXsd = firstSchemaInWSDL;
-            } else if(schemaResources.size() > 0) {
+            } else if (!CollectionUtils.isEmpty(schemaResources)) {
               targetXsd = schemaResources.get(0);
             }
         }
