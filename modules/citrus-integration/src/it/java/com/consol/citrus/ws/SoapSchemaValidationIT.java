@@ -28,4 +28,8 @@ public class SoapSchemaValidationIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
     public void SoapSchemaValidationIT() {}
+
+    @Test
+    @CitrusXmlTest
+    public void SoapSchemaValidationNamespaceDiffIT() {}
 }

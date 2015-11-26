@@ -45,6 +45,19 @@ public class WsdlXsdSchemaTest {
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
 
+        Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/SampleService/");
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
+    public void testWsdlSchemaImportsNamespaceDiff() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithImportsNamespaceDiff.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemaResources().size(), 4);
+
+        Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/SampleService/Commands/");
+
         Assert.assertNotNull(wsdl.getSource());
     }
 
