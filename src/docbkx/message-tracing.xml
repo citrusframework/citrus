@@ -7,7 +7,7 @@
     investigations.</para>
     
     <para>Citrus offers an easy way to debug all received messages to the file system. You need to enable some specific loggers and interceptors in the
-    Citrus configuration (citrus-context.xml).</para>
+    Spring application context.</para>
     
     <programlisting>&lt;bean class=&quot;com.consol.citrus.report.MessageTracingTestListener&quot;/&gt;</programlisting>
     
@@ -76,7 +76,7 @@ Received SOAP response:
     &lt;/util:list&gt;</programlisting>
     
     <important>
-        <para>Be aware of adding the Spring <emphasis>util</emphasis> XML namespace to the citrus-context.xml when using the <emphasis>util:list</emphasis> construct.</para>
+        <para>Be aware of adding the Spring <emphasis>util</emphasis> XML namespace to the application context when using the <emphasis>util:list</emphasis> construct.</para>
     </important>
     
 </chapter>

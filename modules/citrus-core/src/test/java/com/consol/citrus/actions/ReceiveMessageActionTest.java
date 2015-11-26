@@ -1602,7 +1602,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(CitrusConstants.DEFAULT_MESSAGE_TYPE);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(Citrus.DEFAULT_MESSAGE_TYPE);
         validationContexts.add(scriptValidationContext);
 
         receiveAction.setValidationContexts(validationContexts);

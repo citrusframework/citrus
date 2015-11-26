@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.model;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.configuration.*;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -47,7 +47,7 @@ public class Project {
     private String name;
     private String description;
     private String version;
-    private String srcDirectory = System.getProperty(PropertyConstants.TEST_SRC_DIRECTORY, CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY);
+    private String srcDirectory = System.getProperty(PropertyConstants.TEST_SRC_DIRECTORY, Citrus.DEFAULT_TEST_SRC_DIRECTORY);
     private final String projectHome;
     private String basePackage = System.getProperty(PropertyConstants.BASE_PACKAGE, "com.consol.citrus");
     private Long testCount;

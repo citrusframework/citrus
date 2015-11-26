@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.matcher;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
@@ -70,8 +70,8 @@ public final class ValidationMatcherUtils {
      * @return
      */
     public static boolean isValidationMatcherExpression(String expression) {
-        return expression.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                expression.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX);
+        return expression.startsWith(Citrus.VALIDATION_MATCHER_PREFIX) &&
+                expression.endsWith(Citrus.VALIDATION_MATCHER_SUFFIX);
     }
     
     /**
@@ -80,8 +80,8 @@ public final class ValidationMatcherUtils {
      * @return
      */
     private static String cutOffValidationMatchersPrefix(String expression) {
-        if (expression.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) && expression.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
-            return expression.substring(CitrusConstants.VALIDATION_MATCHER_PREFIX.length(), expression.length() - CitrusConstants.VALIDATION_MATCHER_SUFFIX.length());
+        if (expression.startsWith(Citrus.VALIDATION_MATCHER_PREFIX) && expression.endsWith(Citrus.VALIDATION_MATCHER_SUFFIX)) {
+            return expression.substring(Citrus.VALIDATION_MATCHER_PREFIX.length(), expression.length() - Citrus.VALIDATION_MATCHER_SUFFIX.length());
         }
 
         return expression;

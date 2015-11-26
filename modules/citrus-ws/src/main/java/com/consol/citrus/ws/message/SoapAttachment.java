@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -96,8 +96,7 @@ public class SoapAttachment implements Attachment, Serializable {
             soapAttachment.setDataHandler(attachment.getDataHandler());
         }
 
-        soapAttachment.setCharsetName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
-                Charset.defaultCharset().displayName()));
+        soapAttachment.setCharsetName(Citrus.CITRUS_FILE_ENCODING);
 
         return soapAttachment;
     }

@@ -54,7 +54,7 @@
         For now the timeout setting completes our first JMS endpoint component definition.</para>
 
         <para>The endpoint needs a JMS connection factory for connecting to a JMS message broker. The connection factory is also added as Spring bean to the Citrus
-        application context (citrus-context.xml).</para>
+          Spring application context.</para>
 
         <programlisting>&lt;bean id=&quot;connectionFactory&quot; 
          class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;

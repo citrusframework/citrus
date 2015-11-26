@@ -16,17 +16,16 @@
 
 package com.consol.citrus.variable;
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +35,7 @@ public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest 
     @Autowired
     private FunctionRegistry functionRegistry;
     
-    @Autowired
+    @Autowired (required = false)
     private GlobalVariables globalVariables;
     
     @Test
@@ -88,7 +87,6 @@ public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest 
     
     @Test
     public void testVariablesSupport() {
-        // global variables are built with spring context, please see citrus-context.xml for details
         Assert.assertNotNull(globalVariables.getVariables().get("globalUserName"));
         Assert.assertEquals(globalVariables.getVariables().get("globalUserName"), "Citrus");
         Assert.assertNotNull(globalVariables.getVariables().get("globalWelcomeText"));
@@ -97,7 +95,6 @@ public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest 
     
     @Test
     public void testFunctionSupport() {
-        // global variables are built with spring context, please see citrus-context.xml for details
         Assert.assertNotNull(globalVariables.getVariables().get("globalDate"));
         Assert.assertEquals(globalVariables.getVariables().get("globalDate"), 
                 "Today is " + new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "!");

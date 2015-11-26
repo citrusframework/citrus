@@ -16,7 +16,7 @@
 
 package com.consol.citrus.doc;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
@@ -45,7 +45,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
 
     private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "doc";
     
-    protected String srcDirectory = CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY;
+    protected String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
     protected String testDocTemplate;
     protected String outputFile;
     

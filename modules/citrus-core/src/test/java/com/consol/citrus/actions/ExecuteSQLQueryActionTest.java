@@ -16,7 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
@@ -528,13 +528,13 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
         List<String> ordertypeValues = new ArrayList<String>();
         ordertypeValues.add("small");
-        ordertypeValues.add(CitrusConstants.IGNORE_PLACEHOLDER);
+        ordertypeValues.add(Citrus.IGNORE_PLACEHOLDER);
         ordertypeValues.add("big");
         
         controlResultSet.put("ORDERTYPE", ordertypeValues);
         
         List<String> statusValues = new ArrayList<String>();
-        statusValues.add(CitrusConstants.IGNORE_PLACEHOLDER);
+        statusValues.add(Citrus.IGNORE_PLACEHOLDER);
         statusValues.add("in_progress");
         statusValues.add("finished");
         controlResultSet.put("STATUS", statusValues);
@@ -582,7 +582,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
         List<String> ordertypeValues = new ArrayList<String>();
         ordertypeValues.add("small");
-        ordertypeValues.add(CitrusConstants.IGNORE_PLACEHOLDER);
+        ordertypeValues.add(Citrus.IGNORE_PLACEHOLDER);
         ordertypeValues.add("big");
         
         controlResultSet.put("ORDERTYPE", ordertypeValues);

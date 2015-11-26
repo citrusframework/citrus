@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mail.model;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -89,7 +89,7 @@ public class BodyPart {
                 return charsetName;
             }
         } else {
-            return System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING, "UTF-8");
+            return Citrus.CITRUS_FILE_ENCODING;
         }
     }
 

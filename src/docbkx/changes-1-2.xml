@@ -159,16 +159,16 @@
             will fail as long as you use the old Spring internal header prefix in the test. Simply remove the header prefix wherever used and your test is up and running again.</para>
         </listitem>
         <listitem>
-          <para><emphasis>Message validator:</emphasis> You need to specify at least one message validator in the citrus-context.xml. Before this was internally a static XML message validator, but now we offer
+          <para><emphasis>Message validator:</emphasis> You need to specify at least one message validator in the Spring application context. Before this was internally a static XML message validator, but now we offer
             different validators for several message formats like XML and JSON. Please see the Java API doc on MessageValidator interface for available implementations. If you just like to
-            keep it as it was before add this bean to the citrus-context.xml:</para>
+            keep it as it was before add this bean to the Spring application context:</para>
 
           <programlisting>&lt;bean id=&quot;xmlMessageValidator&quot; class=&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;/&gt;</programlisting>
         </listitem>
         <listitem>
           <para><emphasis>Test suite:</emphasis> We have eliminated/changed the Citrus test suite logic because it duplicates those test suites defined in TestNG or JUnit. In older versions the tester had to define a
             Citrus test suite in Spring application context in order to execute test actions before/after the test run. Now these tasks before and after the test run are decoupled from a test suite.
-            You define test suites exclusively in TestNG or JUnit. The test actions before/after the test run are seperately defined in citrus-context.xml so you have to change this configuration
+            You define test suites exclusively in TestNG or JUnit. The test actions before/after the test run are separately defined in Spring application context so you have to change this configuration
             in your Citrus project.</para>
           <para>See <xref linkend="testsuite"/> for details on this configuration changes.</para>
         </listitem>

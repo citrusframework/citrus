@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -27,8 +27,8 @@ import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -449,10 +449,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             Assert.isNull(receivedDTD.getPublicId(),
                     ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
                     sourceDTD.getPublicId(), receivedDTD.getPublicId()));
-        } else if (sourceDTD.getPublicId().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+        } else if (sourceDTD.getPublicId().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Document type public id: '" + receivedDTD.getPublicId() +
-                        "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
+                        "' is ignored by placeholder '" + Citrus.IGNORE_PLACEHOLDER + "'");
             }
         } else {
             Assert.isTrue(StringUtils.hasText(receivedDTD.getPublicId()) &&
@@ -465,10 +465,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             Assert.isNull(receivedDTD.getSystemId(),
                     ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
                     sourceDTD.getSystemId(), receivedDTD.getSystemId()));
-        } else if (sourceDTD.getSystemId().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+        } else if (sourceDTD.getSystemId().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Document type system id: '" + receivedDTD.getSystemId() +
-                        "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
+                        "' is ignored by placeholder '" + Citrus.IGNORE_PLACEHOLDER + "'");
             }
         } else {
             Assert.isTrue(StringUtils.hasText(receivedDTD.getSystemId()) &&

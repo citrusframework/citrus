@@ -182,7 +182,7 @@ public void purgeTest() {
     &lt;/citrus:actions&gt;
 &lt;/citrus:before-test&gt;</programlisting>
 
-    <para>Just use this before-test bean in the citrus-context.xml Spring bean application context and the purge channel action is active. Obsolete messages that are
+    <para>Just use this before-test bean in the Spring bean application context and the purge channel action is active. Obsolete messages that are
     waiting on the message channels for consumption are purged before the next test in line is executed.</para>
 
     <tip>

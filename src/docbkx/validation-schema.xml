@@ -32,8 +32,8 @@
         defined by some identifier and a file location for the xsd schema file. Schema definitions can also be referenced by its identifier for usage in several schema repository
         instances.</para>
 
-        <para>By convention the default schema repository component is defined in the Citrus Spring configuration (citrus-context.xml) with the
-        id "schemaRepository". Spring application context is then able to inject the schema repository into all message receiving test actions at runtime.
+        <para>By convention the default schema repository component is defined in the Citrus Spring application context with the
+        id <emphasis>schemaRepository</emphasis>. Spring application context is then able to inject the schema repository into all message receiving test actions at runtime.
         The receiving test action consolidates the repository for a matching schema definition file in order to validate the incoming XML document structure.</para>
         
         <para>The connection between incoming XML messages and xsd schema files in the repository is done by a mapping strategy which we will discuss later in this chapter.
@@ -281,7 +281,7 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
-        <para>The <emphasis>schema-repository</emphasis> attribute refers to a Citrus schema repository component which is defined somewhere in the Spring application context (e.g. citrus-context.xml).</para>
+        <para>The <emphasis>schema-repository</emphasis> attribute refers to a Citrus schema repository component which is defined somewhere in the Spring application context.</para>
         
         <important>
             <para>In case you have several schema repositories in your project do always define a default repository (name=&quot;schemaRepository&quot;). This helps Citrus to always find at least

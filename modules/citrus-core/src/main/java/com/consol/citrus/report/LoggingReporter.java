@@ -133,6 +133,13 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     public void onStart() {
         newLine();
         separator();
+        log.info("       .__  __                       ");
+        log.info("  ____ |__|/  |________ __ __  ______");
+        log.info("_/ ___\\|  \\   __\\_  __ \\  |  \\/  ___/");
+        log.info("\\  \\___|  ||  |  |  | \\/  |  /\\___ \\ ");
+        log.info(" \\___  >__||__|  |__|  |____//____  >");
+        log.info("     \\/                           \\/");
+
         newLine();
         log.info("C I T R U S  T E S T S  " + Citrus.getVersion());
         newLine();

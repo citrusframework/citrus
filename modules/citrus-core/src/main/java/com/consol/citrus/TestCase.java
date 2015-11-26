@@ -106,8 +106,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             }
 
             // add default variables for test
-            context.setVariable(CitrusConstants.TEST_NAME_VARIABLE, getName());
-            context.setVariable(CitrusConstants.TEST_PACKAGE_VARIABLE, getPackageName());
+            context.setVariable(Citrus.TEST_NAME_VARIABLE, getName());
+            context.setVariable(Citrus.TEST_PACKAGE_VARIABLE, getPackageName());
 
             for (Entry<String, Object> paramEntry : parameters.entrySet()) {
                 log.info(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));

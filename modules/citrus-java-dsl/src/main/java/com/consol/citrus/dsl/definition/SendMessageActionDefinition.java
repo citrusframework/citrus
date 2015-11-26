@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
@@ -53,7 +53,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     private final T self;
 
     /** Message type for this action definition */
-    private MessageType messageType = MessageType.valueOf(CitrusConstants.DEFAULT_MESSAGE_TYPE);
+    private MessageType messageType = MessageType.valueOf(Citrus.DEFAULT_MESSAGE_TYPE);
 
     /** Variable extractors filled within this definition */
     private MessageHeaderVariableExtractor headerExtractor;

@@ -92,7 +92,7 @@ public class CitrusWebSocketDispatcherServlet extends CitrusDispatcherServlet {
             urlHandlerMapping.setUrlMap(wsHandlers);
             urlHandlerMapping.postRegisterUrlHandlers(wsHandlers);
         } else {
-            throw new CitrusRuntimeException(String.format("Invalid WebSocket configuration - missing bean. Expected to find bean with name '%s' in citrus-context", URL_HANDLER_MAPPING_BEAN_NAME));
+            throw new CitrusRuntimeException(String.format("Invalid WebSocket configuration - missing bean. Expected to find bean with name '%s' in Spring application context", URL_HANDLER_MAPPING_BEAN_NAME));
         }
     }
 }

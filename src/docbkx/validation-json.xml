@@ -60,7 +60,7 @@
 &lt;/receive&gt;</programlisting>
 
     <para>The message receiving action in our test case specifies a message format type <emphasis>type=&quot;json&quot;</emphasis>. This tells Citrus to look for some message
-    validator implementation capable of validating JSON messages. As we have added the proper message validator to the citrus-context.xml Citrus will pick the right validator 
+    validator implementation capable of validating JSON messages. As we have added the proper message validator to the Spring application context Citrus will pick the right validator
     and JSON message validation is performed on this message. As you can see you we can use the usual test variables and the ignore element syntax here, too. Citrus is able
     to handle different JSON element orders when comparing received and expected JSON object. We can also use JSON arrays and nested objects. The default JSON message validator
     implementation in Citrus is very powerful in comparing JSON objects.</para>
@@ -132,7 +132,7 @@ public void receiveMessageTest() {
     syntax highlighting of our favorite Groovy editor.</para>
 
     <important>
-      <para>Using several message validator implementations at the same time in the citrus-context.xml is also no problem. Citrus automatically searches for all available
+      <para>Using several message validator implementations at the same time in the Spring application context is also no problem. Citrus automatically searches for all available
       message validators applicable for the given message format and executes these validators in sequence. So several message validators can coexist in a Citrus project.</para>
     </important>
 
@@ -155,7 +155,7 @@ public void receiveMessageTest() {
 &lt;/receive&gt;</programlisting>
 
     <para>In this example we use the <emphasis>groovyJsonMessageValidator</emphasis> explicitly in the receive test action. The message validator implementation was added
-      as Spring bean with id <emphasis>groovyJsonMessageValidator</emphasis> to the citrus-context.xml before. Now Citrus will only execute the explicit message validator. Other implementations that might also
+      as Spring bean with id <emphasis>groovyJsonMessageValidator</emphasis> to the Spring application context before. Now Citrus will only execute the explicit message validator. Other implementations that might also
       apply are skipped.</para>
 
     <tip>

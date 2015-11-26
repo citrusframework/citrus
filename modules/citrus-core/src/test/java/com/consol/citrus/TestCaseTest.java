@@ -58,8 +58,8 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.addTestAction(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
-                Assert.assertEquals(context.getVariables().get(CitrusConstants.TEST_NAME_VARIABLE), "MyTestCase");
-                Assert.assertEquals(context.getVariables().get(CitrusConstants.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+                Assert.assertEquals(context.getVariables().get(Citrus.TEST_NAME_VARIABLE), "MyTestCase");
+                Assert.assertEquals(context.getVariables().get(Citrus.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
                 Assert.assertEquals(context.getVariable("${name}"), "Citrus");
                 Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
                 Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");

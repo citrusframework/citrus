@@ -16,7 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.message.MessageType;
@@ -98,7 +98,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         if (messageElement != null) {
             String messageType = messageElement.getAttribute("type");
             if (!StringUtils.hasText(messageType)) {
-                messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
+                messageType = Citrus.DEFAULT_MESSAGE_TYPE;
             } else {
                 builder.addPropertyValue("messageType", messageType);
             }

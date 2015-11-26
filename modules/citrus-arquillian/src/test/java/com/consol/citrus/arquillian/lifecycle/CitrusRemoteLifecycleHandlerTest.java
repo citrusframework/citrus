@@ -19,7 +19,7 @@ package com.consol.citrus.arquillian.lifecycle;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import com.consol.citrus.config.CitrusBaseConfig;
+import com.consol.citrus.config.CitrusSpringConfig;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.test.spi.event.suite.AfterSuite;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
@@ -28,7 +28,8 @@ import org.testng.annotations.Test;
 
 import java.util.Properties;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class CitrusRemoteLifecycleHandlerTest {
@@ -37,7 +38,7 @@ public class CitrusRemoteLifecycleHandlerTest {
 
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
-    private Citrus citrusFramework = Citrus.newInstance(CitrusBaseConfig.class);
+    private Citrus citrusFramework = Citrus.newInstance(CitrusSpringConfig.class);
     private Instance<Citrus> citrusInstance = Mockito.mock(Instance.class);
     private Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
 

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
@@ -198,7 +198,6 @@ public abstract class FileUtils {
      * @return
      */
     private static Charset getDefaultCharset() {
-        return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
-                    Charset.defaultCharset().displayName()));
+        return Charset.forName(Citrus.CITRUS_FILE_ENCODING);
     }
 }

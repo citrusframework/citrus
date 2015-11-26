@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.configuration.PropertyConstants;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.Project;
@@ -76,7 +76,7 @@ public class ProjectService implements InitializingBean {
      * @return the config file or null if no config file exists within the selected project.
      */
     public File getProjectContextConfigFile() {
-        return fileHelper.findFileInPath(new File(project.getProjectHome()), CitrusConstants.DEFAULT_APPLICATION_CONTEXT, true);
+        return fileHelper.findFileInPath(new File(project.getProjectHome()), getDefaultConfigurationFile(), true);
     }
 
     /**
@@ -108,7 +108,7 @@ public class ProjectService implements InitializingBean {
             Assert.isTrue(homeDir.exists());
             Assert.isTrue(new File(homeDir, "src/it").exists());
             Assert.isTrue(new File(homeDir, "src/it/resources").exists());
-            Assert.isTrue(new File(homeDir, "src/it/resources/citrus-context.xml").exists());
+            Assert.isTrue(new File(homeDir, "src/it/resources/" + getDefaultConfigurationFile()).exists());
             Assert.isTrue(new File(homeDir, "src/it/java").exists());
         } catch (IllegalArgumentException e) {
             log.warn("Project home validation failed", e);
@@ -116,6 +116,24 @@ public class ProjectService implements InitializingBean {
         }
 
         return true;
+    }
+
+    /**
+     * Gets file name from path pattern property.
+     * @return
+     */
+    private String getDefaultConfigurationFile() {
+        String configurationFile = Citrus.DEFAULT_APPLICATION_CONTEXT;
+
+        if (configurationFile.startsWith("classpath*:")) {
+            configurationFile = configurationFile.substring("classpath*:".length());
+        }
+
+        if (configurationFile.startsWith("classpath:")) {
+            configurationFile = configurationFile.substring("classpath:".length());
+        }
+
+        return configurationFile;
     }
 
     /**

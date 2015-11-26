@@ -17,7 +17,7 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.channel.ChannelEndpoint;
-import com.consol.citrus.config.CitrusBaseConfig;
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2.3
  */
 @Configuration
-public class ArquillianTestConfig extends CitrusBaseConfig {
+public class ArquillianTestConfig extends CitrusSpringConfig {
 
     @Bean(name = "someEndpoint")
     public Endpoint someEndpoint() {

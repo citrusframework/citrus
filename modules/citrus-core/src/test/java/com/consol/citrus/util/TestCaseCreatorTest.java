@@ -16,7 +16,7 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
@@ -43,10 +43,10 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
 
         creator.createTestCase();
         
-        File javaFile = new File(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
         
-        File xmlFile = new File(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleIT.xml");
+        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
         
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
@@ -73,10 +73,10 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
 
         creator.createTestCase();
         
-        File javaFile = new File(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
         
-        File xmlFile = new File(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleIT.xml");
+        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
         
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
@@ -113,10 +113,10 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     public void testDefaultValues() throws IOException {
         TestCaseCreator.main(new String[] {"-name", "SampleIT"});
         
-        File javaFile = new File(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
         
-        File xmlFile = new File(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleIT.xml");
+        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
         
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));

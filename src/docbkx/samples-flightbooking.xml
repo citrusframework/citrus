@@ -105,7 +105,7 @@ smart.airline.response.queue=Smart.Airline.Response.Queue
 royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         
         <para>What else do we need in our Spring configuration? There are some basic beans that are commonly defined in a Citrus
-        application but I do not want to bore you with these details. So if you want to have a look at the "citrus-context.xml" 
+        application but I do not want to bore you with these details. So if you want to have a look at the Spring application context
         file in the resources folder and see how things are defined there.</para>
         
         <para>We continue with the first airline to be configured the SmartAirline. The SmartAirline is also using JMS to communicate
