@@ -674,6 +674,34 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public TimerBuilder timer() {
+        TimerBuilder builder = new TimerBuilder(this);
+        return builder;
+    }
+
+    @Override
+    public TimerBuilder timer(TestAction... actions) {
+        TimerBuilder builder = new TimerBuilder(this);
+        builder.actions(actions);
+        return builder;
+    }
+
+    @Override
+    public StopTimerAction stopTimer(String timerId) {
+        StopTimerAction action = new StopTimerAction();
+        action.setTimerId(timerId);
+        action(action);
+        return action;
+    }
+
+    @Override
+    public StopTimerAction stopTimers() {
+        StopTimerAction action = new StopTimerAction();
+        action(action);
+        return action;
+    }
+
+    @Override
     public DockerActionBuilder docker() {
         DockerActionBuilder builder = new DockerActionBuilder();
         action(builder);

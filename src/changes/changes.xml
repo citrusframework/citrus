@@ -19,6 +19,9 @@
         <action dev="christophd" type="fix">
           GITHUB-50 allow variable value definition in cdata section
         </action>
+        <action dev="maherm" type="add">
+          CITRUS-24 Timer Action
+        </action>
     </release>
 
     <release version="2.4" date="03.11.2015" description="2.4 release">

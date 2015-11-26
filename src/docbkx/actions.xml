@@ -30,5 +30,6 @@
   <xi:include href='actions-antrun.xml'/>
   <xi:include href='actions-manage-server.xml'/>
   <xi:include href='actions-generic-action.xml'/>
-  
+  <xi:include href='actions-stop-timer.xml'/>
+
 </chapter>
