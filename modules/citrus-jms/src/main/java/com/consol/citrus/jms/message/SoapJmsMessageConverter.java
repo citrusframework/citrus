@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.message;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.message.MessageHeaders;
@@ -33,7 +33,6 @@ import javax.jms.Session;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import java.io.*;
-import java.nio.charset.Charset;
 
 /**
  * Special message converter automatically adds SOAP envelope with proper SOAP header and body elements.
@@ -63,7 +62,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
     public com.consol.citrus.message.Message convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration) {
         try {
             com.consol.citrus.message.Message message = super.convertInbound(jmsMessage, endpointConfiguration);
-            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(getDefaultCharset()));
+            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(Citrus.CITRUS_FILE_ENCODING));
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage(in);
 
             StringResult payload = new StringResult();
@@ -107,13 +106,5 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to write SOAP message content", e);
         }
-    }
-
-    /**
-     * Either gets Citrus default encoding or system default encoding.
-     * @return
-     */
-    private String getDefaultCharset() {
-        return System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING, Charset.defaultCharset().displayName());
     }
 }

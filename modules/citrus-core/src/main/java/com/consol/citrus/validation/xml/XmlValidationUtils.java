@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
@@ -61,10 +61,10 @@ public abstract class XmlValidationUtils {
             return true;
         } else if (source.getFirstChild() != null &&
                 StringUtils.hasText(source.getFirstChild().getNodeValue()) &&
-                source.getFirstChild().getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+                source.getFirstChild().getNodeValue().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" +
-                        CitrusConstants.IGNORE_PLACEHOLDER + "'");
+                        Citrus.IGNORE_PLACEHOLDER + "'");
             }
             return true;
         }
@@ -142,10 +142,10 @@ public abstract class XmlValidationUtils {
 
             return true;
         } else if ((StringUtils.hasText(sourceAttribute.getNodeValue()) &&
-                sourceAttribute.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER))) {
+                sourceAttribute.getNodeValue().trim().equals(Citrus.IGNORE_PLACEHOLDER))) {
             if (log.isDebugEnabled()) {
                 log.debug("Attribute: '" + receivedAttribute.getLocalName() + "' is ignored by placeholder '" +
-                        CitrusConstants.IGNORE_PLACEHOLDER + "'");
+                        Citrus.IGNORE_PLACEHOLDER + "'");
             }
 
             return true;

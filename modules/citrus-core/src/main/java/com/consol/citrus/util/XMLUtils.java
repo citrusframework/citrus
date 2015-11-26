@@ -16,7 +16,7 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.LSResolverImpl;
 import org.slf4j.Logger;
@@ -402,8 +402,8 @@ public final class XMLUtils {
      * @return
      */
     public static Charset getTargetCharset(Document doc) {
-        if (System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING) != null) {
-            return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING));
+        if (System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY) != null) {
+            return Charset.forName(System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY));
         }
 
         if (doc.getInputEncoding() != null) {
@@ -421,8 +421,8 @@ public final class XMLUtils {
      * @return charsetName if supported.
      */
     private static Charset getTargetCharset(String messagePayload) throws UnsupportedEncodingException {
-        if (System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING) != null) {
-            return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING));
+        if (System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY) != null) {
+            return Charset.forName(System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY));
         }
 
         // trim incoming payload

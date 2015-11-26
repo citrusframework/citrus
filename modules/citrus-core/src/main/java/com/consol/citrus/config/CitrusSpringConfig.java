@@ -16,6 +16,14 @@
 
 package com.consol.citrus.config;
 
+import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.endpoint.DefaultEndpointFactory;
+import com.consol.citrus.endpoint.EndpointFactory;
+import com.consol.citrus.functions.FunctionConfig;
+import com.consol.citrus.report.*;
+import com.consol.citrus.validation.MessageValidatorConfig;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
 import org.springframework.context.annotation.*;
 
 /**
@@ -23,7 +31,60 @@ import org.springframework.context.annotation.*;
  * @since 2.0
  */
 @Configuration
-@Import(CitrusBaseConfig.class)
-@ImportResource("classpath:citrus-context.xml")
+@Import({ FunctionConfig.class,
+          ValidationMatcherConfig.class,
+          MessageValidatorConfig.class,
+          CitrusConfigImport.class})
+@ImportResource(locations = "${systemProperties['citrus.spring.application.context']?:classpath*:citrus-context.xml}", reader = CitrusBeanDefinitionReader.class)
 public class CitrusSpringConfig {
+
+    @Bean(name = "testContextFactory")
+    public TestContextFactory getTestContextFactory() {
+        return new TestContextFactory();
+    }
+
+    @Bean(name = "endpointFactory")
+    public EndpointFactory getEndpointFactory() {
+        return new DefaultEndpointFactory();
+    }
+
+    @Bean(name = "messageConstructionInterceptors")
+    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
+        return new MessageConstructionInterceptors();
+    }
+
+    @Bean(name = "loggingReporter")
+    public LoggingReporter getLoggingReporter() {
+        return new LoggingReporter();
+    }
+
+    @Bean(name = "htmlReporter")
+    public HtmlReporter getHtmlReporter() {
+        return new HtmlReporter();
+    }
+
+    @Bean(name = "testListeners")
+    public TestListeners getTestListeners() {
+        return new TestListeners();
+    }
+
+    @Bean(name = "testActionListeners")
+    public TestActionListeners getTestActionListeners() {
+        return new TestActionListeners();
+    }
+
+    @Bean(name = "testSuiteListeners")
+    public TestSuiteListeners getTestSuiteListeners() {
+        return new TestSuiteListeners();
+    }
+
+    @Bean(name = "messageListeners")
+    public MessageListeners getMessageListeners() {
+        return new MessageListeners();
+    }
+
+    @Bean(name = "failureStackTestListener")
+    public FailureStackTestListener getFailureStackTestListener() {
+        return new FailureStackTestListener();
+    }
 }

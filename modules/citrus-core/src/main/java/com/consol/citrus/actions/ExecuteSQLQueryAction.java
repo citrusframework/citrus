@@ -16,7 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
@@ -267,7 +267,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     private void validateSingleValue(String columnName, String controlValue, String resultValue, TestContext context) {
         // check if value is ignored
-        if (controlValue.equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+        if (controlValue.equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Ignoring column value '" + columnName + "(resultValue)'");
             }

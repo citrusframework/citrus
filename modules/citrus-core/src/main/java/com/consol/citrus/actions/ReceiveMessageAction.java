@@ -16,7 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -85,7 +85,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     
     /** The expected message type to arrive in this receive action - this information is needed to find a proper
      * message validator for this message */
-    private String messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
+    private String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);

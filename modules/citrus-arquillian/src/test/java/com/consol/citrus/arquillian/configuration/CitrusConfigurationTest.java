@@ -17,7 +17,7 @@
 package com.consol.citrus.arquillian.configuration;
 
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
-import com.consol.citrus.config.CitrusBaseConfig;
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.Function;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
@@ -29,7 +29,8 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class CitrusConfigurationTest {
@@ -90,7 +91,7 @@ public class CitrusConfigurationTest {
         Assert.assertNull(configuration.getCitrusVersion());
         Assert.assertTrue(configuration.isAutoPackage());
         Assert.assertEquals(configuration.getSuiteName(), "citrus-arquillian-suite");
-        Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
+        Assert.assertEquals(configuration.getConfigurationClass(), CitrusSpringConfig.class);
 
     }
 
@@ -110,14 +111,14 @@ public class CitrusConfigurationTest {
         Assert.assertNull(configuration.getCitrusVersion());
         Assert.assertTrue(configuration.isAutoPackage());
         Assert.assertEquals(configuration.getSuiteName(), "citrus-arquillian-suite");
-        Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
+        Assert.assertEquals(configuration.getConfigurationClass(), CitrusSpringConfig.class);
 
     }
 
     /**
      * Fake custom Citrus configuration.
      */
-    private class CitrusCustomConfig extends CitrusBaseConfig {
+    private class CitrusCustomConfig extends CitrusSpringConfig {
         @Bean
         public Function customFunction() {
             return new Function() {

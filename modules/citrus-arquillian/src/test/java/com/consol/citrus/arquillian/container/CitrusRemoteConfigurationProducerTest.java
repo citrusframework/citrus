@@ -18,7 +18,7 @@ package com.consol.citrus.arquillian.container;
 
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import com.consol.citrus.config.CitrusBaseConfig;
+import com.consol.citrus.config.CitrusSpringConfig;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 import org.mockito.Mockito;
@@ -45,7 +45,7 @@ public class CitrusRemoteConfigurationProducerTest {
                 Assert.assertEquals(configuration.getCitrusVersion(), "latest");
                 Assert.assertTrue(configuration.isAutoPackage());
                 Assert.assertEquals(configuration.getSuiteName(), "remoteSuite");
-                Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
+                Assert.assertEquals(configuration.getConfigurationClass(), CitrusSpringConfig.class);
                 return null;
             }
         }).when(instanceProducer).set(any(CitrusConfiguration.class));

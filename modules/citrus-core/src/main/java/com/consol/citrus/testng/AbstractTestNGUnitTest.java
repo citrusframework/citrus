@@ -16,13 +16,11 @@
 
 package com.consol.citrus.testng;
 
-import com.consol.citrus.config.CitrusSpringUnitTestConfig;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeMethod;
 
 /**
@@ -31,14 +29,17 @@ import org.testng.annotations.BeforeMethod;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = CitrusSpringUnitTestConfig.class)
-public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
     /** Test context */
     protected TestContext context;
 
     /** Factory bean for test context */
     @Autowired
     protected TestContextFactory testContextFactory;
+
+    static {
+        System.setProperty(Citrus.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:com/consol/citrus/context/citrus-unit-context.xml");
+    }
 
     /**
      * Setup test execution.

@@ -17,7 +17,7 @@
     <title>Define test actors</title>
     
     <para>First thing to do is to define one or more test actors in Citrus configuration. A test actor represents a participating party (e.g. interface partner, backend application). We write
-    the test actors into the central citrus-context.xml. We can use a special Citrus Spring XML schema so definitions are quite easy:</para>
+    the test actors into the central Spring application context. We can use a special Citrus Spring XML schema so definitions are quite easy:</para>
     
     <programlisting>&lt;citrus:actor id=&quot;travelagency&quot; name=&quot;TRAVEL_AGENCY&quot;/&gt;
 &lt;citrus:actor id=&quot;royalairline&quot; name=&quot;ROYAL_AIRLINE&quot;/&gt;

@@ -249,7 +249,7 @@ public void receiveMessageTest() {
         
         <tip>
             <para>Instead of this namespace context on validation level you can also have a global namespace context which is valid in all test cases.
-            We just add a bean in the basic citrus-context configuration which defines global namespace mappings.</para>
+            We just add a bean in the basic Spring application context configuration which defines global namespace mappings.</para>
             
             <programlisting>&lt;namespace-context&gt;
     &lt;namespace prefix=&quot;def&quot; uri=&quot;http://www.consol.de/samples/sayHello&quot;/&gt;

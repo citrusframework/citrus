@@ -30,7 +30,7 @@
         even when the test is executed inside the application container.</listitem>
       <listitem>suiteName: This optional setting defines the name of the test suite that is used for the Citrus test run. When using before/after suite functionality in Citrus this setting might be of interest.</listitem>
       <listitem>configurationClass: Full qualified Java class name of customized Citrus Spring bean configuration to use when loading the Citrus Spring application context. As a user you can define a custom configuration class that must
-      be a subclass of <emphasis>com.consol.citrus.config.CitrusBaseConfig</emphasis>. When specified the custom class is loaded otherwise the default <emphasis>com.consol.citrus.config.CitrusBaseConfig</emphasis> is loaded to set up the
+      be a subclass of <emphasis>com.consol.citrus.config.CitrusSpringConfig</emphasis>. When specified the custom class is loaded otherwise the default <emphasis>com.consol.citrus.config.CitrusSpringConfig</emphasis> is loaded to set up the
       Spring application context.</listitem>
     </itemizedlist>
 

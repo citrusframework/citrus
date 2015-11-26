@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.TestCaseData;
 import org.mockito.Mockito;
@@ -46,7 +46,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testGetTests() throws IOException {
         reset(project);
-        when(project.getSrcDirectory()).thenReturn(CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY);
+        when(project.getSrcDirectory()).thenReturn(Citrus.DEFAULT_TEST_SRC_DIRECTORY);
         when(project.getProjectHome()).thenReturn(new ClassPathResource("test-project").getFile().getAbsolutePath());
 
         List<TestCaseData> tests = testCaseService.getTests(project);

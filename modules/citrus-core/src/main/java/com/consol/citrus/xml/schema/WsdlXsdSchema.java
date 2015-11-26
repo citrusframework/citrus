@@ -23,8 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.io.*;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.xml.sax.InputSource;
 
 import javax.wsdl.*;
@@ -94,6 +93,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
         Types types = definition.getTypes();
         List<?> schemaTypes = types.getExtensibilityElements();
         Resource targetXsd = null;
+        Resource firstSchemaInWSDL = null;
         for (Object schemaObject : schemaTypes) {
             if (schemaObject instanceof SchemaImpl) {
                 SchemaImpl schema = (SchemaImpl) schemaObject;
@@ -115,6 +115,8 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
 
                     if (definition.getTargetNamespace().equals(getTargetNamespace(schema)) && targetXsd == null) {
                         targetXsd = schemaResource;
+                    } else if (targetXsd == null && firstSchemaInWSDL == null) {
+                        firstSchemaInWSDL = schemaResource;
                     }
                 }
             } else {
@@ -122,9 +124,13 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
             }
         }
 
-        if (targetXsd == null && schemaResources.size() > 0) {
+        if (targetXsd == null) {
             // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
-            targetXsd = schemaResources.get(0);
+            if (firstSchemaInWSDL != null) {
+              targetXsd = firstSchemaInWSDL;
+            } else if (!CollectionUtils.isEmpty(schemaResources)) {
+              targetXsd = schemaResources.get(0);
+            }
         }
 
         for (Object imports : definition.getImports().values()) {

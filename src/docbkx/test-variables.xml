@@ -45,7 +45,7 @@ variable(&quot;customerId&quot;, &quot;123456789&quot;);</programlisting>
     &lt;citrus:variable name=&quot;userName&quot; value=&quot;TestUser&quot;/&gt;
 &lt;/citrus:global-variables&gt;</programlisting>
 
-    <para>We add the Spring bean component to the <emphasis>'citrus-context.xml'</emphasis> application context file. The component
+    <para>We add the Spring bean component to the application context file. The component
     receives a list of name-value variable elements. You can reference the global variables in your test cases as usual.</para>
 
     <para>Another possibility to set global variables is to load those from external property files. This may give you more powerful

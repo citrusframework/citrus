@@ -16,7 +16,7 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
@@ -47,7 +47,7 @@ public class TestCaseCreator {
     private String targetPackage;
 
     /** Source directory for tests */
-    private String srcDirectory = CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY;
+    private String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
     
     /** Sample XML-Request */
     private String xmlRequest;
@@ -103,7 +103,7 @@ public class TestCaseCreator {
                 .withAuthor(cmd.getOptionValue("author", "Unknown"))
                 .withDescription(cmd.getOptionValue("description", "TODO: Description"))
                 .usePackage(cmd.getOptionValue("package", "com.consol.citrus"))
-                .useSrcDirectory(cmd.getOptionValue("srcdir", CitrusConstants.DEFAULT_TEST_SRC_DIRECTORY))
+                .useSrcDirectory(cmd.getOptionValue("srcdir", Citrus.DEFAULT_TEST_SRC_DIRECTORY))
                 .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "testng")));
             
             creator.createTestCase();

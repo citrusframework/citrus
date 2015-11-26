@@ -16,15 +16,15 @@
 
 package com.consol.citrus.actions;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -61,7 +61,7 @@ public class SendMessageAction extends AbstractTestAction {
 
     /** The message type to send in this action - this information is needed to find proper
      * message construction interceptors for this message */
-    private String messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
+    private String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
 
     /** Optional data dictionary that explicitly modifies message content before sending */
     private DataDictionary dataDictionary;

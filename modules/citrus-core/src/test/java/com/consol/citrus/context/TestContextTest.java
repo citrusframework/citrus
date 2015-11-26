@@ -16,7 +16,7 @@
 
 package com.consol.citrus.context;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.container.StopTimer;
@@ -56,8 +56,8 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         TestContext testContext = createTestContext();
         testcase.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_NAME_VARIABLE), "MyTestCase");
-        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_NAME_VARIABLE), "MyTestCase");
+        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
@@ -72,8 +72,8 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         testContext = createTestContext();
         testcase2.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_NAME_VARIABLE), "MyTestCase2");
-        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_PACKAGE_VARIABLE), "com.consol.citrus");
+        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_NAME_VARIABLE), "MyTestCase2");
+        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_PACKAGE_VARIABLE), "com.consol.citrus");
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));

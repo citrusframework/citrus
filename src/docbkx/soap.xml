@@ -525,7 +525,7 @@ Server: Jetty(7.0.0.pre5)
             is mandatory for the validation. The fault assertion also supports test variable replacement as usual (e.g. fault-code=&quot;{http://www.citrusframework.org/faults}${myFaultCode}&quot;).</para>
 
             <para>The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an
-            instance of a <literal>SoapFaultValitator</literal> that we need to add to the <emphasis>'citrus-context.xml'</emphasis> Spring application context. By default
+            instance of a <literal>SoapFaultValitator</literal> that we need to add to the Spring application context. By default
             Citrus is searching for a bean with the id <emphasis>'soapFaultValidator'</emphasis>.</para>
 
             <programlisting>&lt;bean id=&quot;soapFaultValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;</programlisting>
@@ -602,7 +602,7 @@ Server: Jetty(7.0.0.pre5)
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
 
-            <para>The expected SOAP fault detail content is simply added to the <emphasis>ws:assert</emphasis> action. The <literal>SoapFaultValidator</literal> implementation defined in the <emphasis>citrus-context.xml</emphasis>
+            <para>The expected SOAP fault detail content is simply added to the <emphasis>ws:assert</emphasis> action. The <literal>SoapFaultValidator</literal> implementation defined in the Spring application context
             is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template.
             Citrus provides some default <literal>SoapFaultValidator</literal> implementations. Supported algorithms are pure String comparison (<emphasis>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</emphasis>)
             as well as XML tree walk-through (<emphasis>com.consol.citrus.ws.validation.XmlSoapFaultValidator</emphasis>).</para>
@@ -1130,7 +1130,7 @@ Server: Jetty(7.0.0.pre5)
 
         <important>
             <para>The message id property is automatically generated for each request. If you need to set a static message
-            id you can do so in citrus-context message sender configuration.</para>
+            id you can do so in Spring application context message sender configuration.</para>
         </important>
     </section>
 

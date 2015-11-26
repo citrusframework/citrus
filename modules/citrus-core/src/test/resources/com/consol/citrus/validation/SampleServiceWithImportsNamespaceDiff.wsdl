@@ -2,13 +2,14 @@
 <wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:tns="http://www.citrusframework.org/SampleService/"
+                  xmlns:commands="http://www.citrusframework.org/SampleService/Commands/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                   name="SampleService"
                   targetNamespace="http://www.citrusframework.org/SampleService/">
   <wsdl:types>
-    <xsd:schema targetNamespace="http://www.citrusframework.org/SampleService/"
-                xmlns="http://www.citrusframework.org/SampleService/"
+    <xsd:schema targetNamespace="http://www.citrusframework.org/SampleService/Commands/"
+                xmlns="http://www.citrusframework.org/SampleService/Commands/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:sm="http://www.citrusframework.org/SampleService/Message"
                 xmlns:smr="http://www.citrusframework.org/SampleService/MessageResponse">
@@ -23,10 +24,10 @@
   </wsdl:types>
 
   <wsdl:message name="sampleMessage">
-    <wsdl:part element="tns:sampleMessage" name="parameters"/>
+    <wsdl:part element="commands:sampleMessage" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="sampleMessageResponse">
-    <wsdl:part element="tns:sampleMessageResponse" name="parameters"/>
+    <wsdl:part element="commands:sampleMessageResponse" name="parameters"/>
   </wsdl:message>
 
   <wsdl:portType name="SampleService">

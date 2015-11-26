@@ -33,7 +33,7 @@
 
           Note that usually all jms queues are cleaned at the beginning of the test suite by default.
           It is also possible to clean all queues by default before every test case is started. All these basic
-          configurations are done in the citrus-context.xml, where the test suite itself is configured.
+          configurations are done in the Spring application context, where the test suite itself is configured.
         </description>
         <actions>
             <jms:purge-jms-queues>

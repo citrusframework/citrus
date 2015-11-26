@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.validation;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -45,7 +45,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
         //fault string validation
         if (controlFault.getFaultString() != null &&
                 !controlFault.getFaultString().equals(receivedFault.getFaultString())) {
-            if (controlFault.getFaultString().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+            if (controlFault.getFaultString().equals(Citrus.IGNORE_PLACEHOLDER)) {
                 log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
             } else if (ValidationMatcherUtils.isValidationMatcherExpression(controlFault.getFaultString())) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault string", receivedFault.getFaultString(), controlFault.getFaultString(), context);
@@ -64,8 +64,8 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
         
         //fault actor validation
         if (StringUtils.hasText(controlFault.getFaultActor())) {
-            if (controlFault.getFaultActor().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                    controlFault.getFaultActor().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+            if (controlFault.getFaultActor().startsWith(Citrus.VALIDATION_MATCHER_PREFIX) &&
+                    controlFault.getFaultActor().endsWith(Citrus.VALIDATION_MATCHER_SUFFIX)) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault actor", receivedFault.getFaultActor(), controlFault.getFaultActor(), context);
             } else {
                 Assert.isTrue(controlFault.getFaultActor().equals(receivedFault.getFaultActor()),

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.json;
 
-import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -34,7 +34,8 @@ import net.minidev.json.parser.ParseException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This message validator implementation is able to validate two JSON text objects. The order of JSON entries can differ
@@ -212,10 +213,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @return
      */
     public boolean isIgnored(Map.Entry controlJsonEntry, Object receivedJson, Set<String> ignoreExpressions, ReadContext readContext) {
-        if (controlJsonEntry.getValue().toString().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+        if (controlJsonEntry.getValue().toString().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("JSON entry: '" + controlJsonEntry.getKey() + "' is ignored by placeholder '" +
-                        CitrusConstants.IGNORE_PLACEHOLDER + "'");
+                        Citrus.IGNORE_PLACEHOLDER + "'");
             }
             return true;
         }

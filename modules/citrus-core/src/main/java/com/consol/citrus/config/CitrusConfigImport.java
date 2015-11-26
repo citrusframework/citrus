@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws;
+package com.consol.citrus.config;
 
-import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import org.testng.annotations.Test;
+import com.consol.citrus.Citrus;
+import org.springframework.context.annotation.DeferredImportSelector;
+import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class SoapSchemaValidationIT extends AbstractTestNGCitrusTest {
-    @Test
-    @CitrusXmlTest
-    public void SoapSchemaValidationIT() {}
+public class CitrusConfigImport implements DeferredImportSelector {
 
-    @Test
-    @CitrusXmlTest
-    public void SoapSchemaValidationNamespaceDiffIT() {}
+    @Override
+    public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+        if (StringUtils.hasText(Citrus.DEFAULT_APPLICATION_CONTEXT_CLASS)) {
+            return new String[] { Citrus.DEFAULT_APPLICATION_CONTEXT_CLASS };
+        } else {
+            return new String[] {};
+        }
+    }
 }
