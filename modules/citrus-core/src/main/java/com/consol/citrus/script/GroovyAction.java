@@ -109,7 +109,7 @@ public class GroovyAction extends AbstractTestAction {
                 groovyObject.invokeMethod("run", new Object[] {});
             }
 
-            log.info("Groovy script execution successfully");
+            log.info("Groovy script execution successful");
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {

@@ -62,20 +62,22 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     @Override
     public void send(Message message, final TestContext context) {
-        log.info("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         final String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
         context.onOutboundMessage(message);
 
-        log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        log.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload(),
             new Handler<org.vertx.java.core.eventbus.Message>() {
                 @Override
                 public void handle(org.vertx.java.core.eventbus.Message event) {
-                    log.info("Received synchronous response message on event bus reply address");
+                    log.info("Received synchronous response on Vert.x event bus reply address");
 
                     Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration);
 

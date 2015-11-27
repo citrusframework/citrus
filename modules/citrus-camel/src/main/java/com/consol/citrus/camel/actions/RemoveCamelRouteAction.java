@@ -41,14 +41,13 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
     public void doExecute(TestContext context) {
         for (String routeId : routeIds) {
             try {
-                log.info(String.format("Removing Camel route '%s' from context '%s'", routeId, camelContext.getName()));
 
                 if (!camelContext.getRouteStatus(routeId).isStopped()) {
                     throw new CitrusRuntimeException("Camel routes must be stopped before removal!");
                 }
 
                 if (camelContext.removeRoute(routeId)) {
-                    log.info(String.format("Successfully removed Camel route '%s'", routeId));
+                    log.info(String.format("Removed Camel route '%s' from context '%s'", routeId, camelContext.getName()));
                 } else {
                     throw new CitrusRuntimeException(String.format("Failed to remove Camel route '%s' from context '%s'", routeId, camelContext.getName()));
                 }

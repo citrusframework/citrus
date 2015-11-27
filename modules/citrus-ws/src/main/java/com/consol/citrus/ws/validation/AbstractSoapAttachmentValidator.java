@@ -44,7 +44,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     
     @Override
     public void validateAttachment(SoapMessage soapMessage, List<SoapAttachment> controlAttachments) {
-        log.info("Validating SOAP attachments ...");
+        log.debug("Validating SOAP attachments ...");
 
         for (SoapAttachment controlAttachment : controlAttachments) {
             SoapAttachment attachment = findAttachment(soapMessage, controlAttachment);
@@ -57,7 +57,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
             validateAttachmentContentType(attachment, controlAttachment);
             validateAttachmentContent(attachment, controlAttachment);
 
-            log.info("Validation of SOAP attachment finished successfully: All values OK");
+            log.info("SOAP attachment validation successful: All values OK");
         }
     }
 

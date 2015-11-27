@@ -44,7 +44,9 @@ public class Catch extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        log.debug("Catch container catching exceptions of type " + exception);
+        if (log.isDebugEnabled()) {
+            log.debug("Catch container catching exceptions of type " + exception);
+        }
 
         for (TestAction action: actions) {
             try {

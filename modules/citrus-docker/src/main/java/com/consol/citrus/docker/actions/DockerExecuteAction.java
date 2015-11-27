@@ -73,12 +73,14 @@ public class DockerExecuteAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            log.info(String.format("Executing Docker command '%s", command.getName()));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Executing Docker command '%s'", command.getName()));
+            }
             command.execute(dockerClient, context);
 
             validateCommandResult(command, context);
 
-            log.info(String.format("Successfully executed Docker command '%s", command.getName()));
+            log.info(String.format("Docker command execution successful: '%s'", command.getName()));
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -92,16 +94,20 @@ public class DockerExecuteAction extends AbstractTestAction {
      * @param context
      */
     private void validateCommandResult(DockerCommand command, TestContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("Starting Docker command result validation");
+        }
+
         if (StringUtils.hasText(expectedCommandResult)) {
             if (command.getCommandResult() == null) {
-                throw new ValidationException("Missing command result for validation");
+                throw new ValidationException("Missing Docker command result");
             }
 
             try {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
                 jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, validationContext);
-                log.info("Validation of command result successful - all values OK!");
+                log.info("Docker command result validation successful - all values OK!");
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);
             }

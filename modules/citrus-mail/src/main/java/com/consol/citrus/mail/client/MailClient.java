@@ -64,7 +64,9 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
 
     @Override
     public void send(Message message, TestContext context) {
-        log.info(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+        }
 
         MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
         getEndpointConfiguration().getJavaMailSender().send(mimeMessage.getMimeMessage());
@@ -88,7 +90,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
 
         context.onOutboundMessage(mailMessage);
 
-        log.info(String.format("Message was successfully sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+        log.info(String.format("Mail message was sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
     }
 
     /**

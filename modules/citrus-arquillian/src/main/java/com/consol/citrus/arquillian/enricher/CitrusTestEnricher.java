@@ -60,7 +60,7 @@ public class CitrusTestEnricher implements TestEnricher {
             injectCitrusFramework(testCase);
             injectEndpoints(testCase);
 
-            log.info("Successfully enriched test class with Citrus field resource injection");
+            log.info("Enriched test class with Citrus field resource injection");
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;
@@ -164,7 +164,7 @@ public class CitrusTestEnricher implements TestEnricher {
                 }
             }
 
-            log.info("Successfully enriched method parameters with Citrus method resource injection");
+            log.info("Enriched method parameters with Citrus method resource injection");
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;

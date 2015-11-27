@@ -60,7 +60,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements B
 
     @Override
     public Message handleMessageInternal(Message request) {
-        log.info("Forwarding request to message channel ...");
+        log.debug("Forwarding request to message channel ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;

@@ -52,7 +52,9 @@ public class FtpServerFtpLet implements Ftplet {
 
     @Override
     public void init(FtpletContext ftpletContext) throws FtpException {
-        log.info(String.format("Total FTP logins: %s", ftpletContext.getFtpStatistics().getTotalLoginNumber()));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Total FTP logins: %s", ftpletContext.getFtpStatistics().getTotalLoginNumber()));
+        }
     }
 
     @Override
@@ -64,7 +66,9 @@ public class FtpServerFtpLet implements Ftplet {
     public FtpletResult beforeCommand(FtpSession session, FtpRequest request) throws FtpException, IOException {
         String command = request.getCommand().toUpperCase();
 
-        log.info(String.format("Received FTP command: '%s'", command));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Received FTP command: '%s'", command));
+        }
 
         endpointAdapter.handleMessage(new FtpMessage(FTPCmd.valueOf(command), request.getArgument()));
 
@@ -78,14 +82,18 @@ public class FtpServerFtpLet implements Ftplet {
 
     @Override
     public FtpletResult onConnect(FtpSession session) throws FtpException, IOException {
-        log.info(String.format("Received new FTP connection: '%s'", session.getSessionId()));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Received new FTP connection: '%s'", session.getSessionId()));
+        }
 
         return FtpletResult.DEFAULT;
     }
 
     @Override
     public FtpletResult onDisconnect(FtpSession session) throws FtpException, IOException {
-        log.info(String.format("Closing FTP connection: '%s'", session.getSessionId()));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
+        }
 
         return FtpletResult.DEFAULT;
     }

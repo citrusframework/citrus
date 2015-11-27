@@ -58,7 +58,9 @@ public class JmsProducer implements Producer {
 
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
-        log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Sending JMS message to destination: '" + defaultDestinationName + "'");
+        }
 
         endpointConfiguration.getJmsTemplate().send(new MessageCreator() {
             @Override
@@ -71,7 +73,7 @@ public class JmsProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
+        log.info("Message was sent to JMS destination: '" + defaultDestinationName + "'");
     }
 
     @Override

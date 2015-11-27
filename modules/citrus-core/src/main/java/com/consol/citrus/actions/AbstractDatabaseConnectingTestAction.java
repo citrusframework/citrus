@@ -101,7 +101,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         
         String sqlResource = context.replaceDynamicContentInString(sqlResourcePath);
         try {
-            log.info("Executing SQL file: " + sqlResource);
+            if (log.isDebugEnabled()) {
+                log.debug("Executing SQL file: " + sqlResource);
+            }
             
             reader = new BufferedReader(new InputStreamReader(new PathMatchingResourcePatternResolver().getResource(sqlResource).getInputStream()));
             buffer = new StringBuffer();

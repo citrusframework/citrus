@@ -45,8 +45,12 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer {
 
         testSuiteListener.onFinish();
 
-        log.info("Executing " + actions.size() + " actions after suite");
-        log.info("");
+        log.info("Entering after suite block");
+
+        if (log.isDebugEnabled()) {
+            log.debug("Executing " + actions.size() + " actions after suite");
+            log.debug("");
+        }
 
         for(TestAction action: actions)  {
             try {

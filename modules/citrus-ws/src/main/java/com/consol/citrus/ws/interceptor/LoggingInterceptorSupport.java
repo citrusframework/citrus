@@ -130,7 +130,7 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
      */
     protected void logMessage(String logMessage, String message, boolean incoming) {
         if (messageListener != null) {
-            log.info(logMessage);
+            log.debug(logMessage);
 
             if (incoming) {
                 messageListener.onInboundMessage(new RawMessage(message), null);
@@ -138,7 +138,9 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
                 messageListener.onOutboundMessage(new RawMessage(message), null);
             }
         } else {
-            log.info(logMessage + ":" + System.getProperty("line.separator") + message);
+            if (log.isDebugEnabled()) {
+                log.debug(logMessage + ":" + System.getProperty("line.separator") + message);
+            }
         }
     }
     

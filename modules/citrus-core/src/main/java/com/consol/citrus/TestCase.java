@@ -110,7 +110,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             context.setVariable(Citrus.TEST_PACKAGE_VARIABLE, getPackageName());
 
             for (Entry<String, Object> paramEntry : parameters.entrySet()) {
-                log.info(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
+                }
                 context.setVariable(paramEntry.getKey(), paramEntry.getValue());
             }
 
@@ -229,7 +231,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         try {
             if (!finalActions.isEmpty()) {
-                log.info("Finish test case with actions in finally block");
+                log.debug("Entering finally block in test case");
 
                 /* walk through the finally chain and execute the actions in there */
                 for (TestAction action : finalActions) {

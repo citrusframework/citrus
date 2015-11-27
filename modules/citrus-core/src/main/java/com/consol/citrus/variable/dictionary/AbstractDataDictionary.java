@@ -54,7 +54,11 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
     @Override
     public void afterPropertiesSet() throws Exception {
         if (mappingFile != null) {
-            log.info("Reading data dictionary mapping file " + mappingFile.getFilename());
+
+            if (log.isDebugEnabled()) {
+                log.debug("Reading data dictionary mapping " + mappingFile.getFilename());
+            }
+
             Properties props;
             try {
                 props = PropertiesLoaderUtils.loadProperties(mappingFile);
@@ -65,7 +69,9 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
             for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
                 String key = iter.next().getKey().toString();
 
-                log.info("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));
+                if (log.isDebugEnabled()) {
+                    log.debug("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));
+                }
 
                 if (log.isDebugEnabled() && mappings.containsKey(key)) {
                     log.debug("Overwriting data dictionary mapping " + key + " old value:" + mappings.get(key)
@@ -74,6 +80,8 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
 
                 mappings.put(key, props.getProperty(key));
             }
+
+            log.debug("Loaded data dictionary mapping " + mappingFile.getFilename());
         }
     }
 

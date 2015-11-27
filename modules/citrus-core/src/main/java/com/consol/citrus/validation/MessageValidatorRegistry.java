@@ -66,7 +66,9 @@ public class MessageValidatorRegistry implements InitializingBean {
                     messageType + "', please define a capable message validator for this message type");
         }
 
-        log.info(String.format("Found %s message validators for message type: %s", matchingValidators.size(), messageType));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Found %s message validators for message type: %s", matchingValidators.size(), messageType));
+        }
         
         return matchingValidators;
     }

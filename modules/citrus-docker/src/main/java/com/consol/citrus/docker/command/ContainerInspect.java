@@ -46,7 +46,7 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
 
         setCommandResult(response);
 
-        log.info(response.toString());
+        log.debug(response.toString());
     }
 
     /**

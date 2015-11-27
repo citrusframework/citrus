@@ -64,15 +64,14 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
         String destinationChannelName = getDestinationChannelName();
 
-        log.info("Sending message to channel: '" + destinationChannelName + "'");
-
         if (log.isDebugEnabled()) {
+            log.debug("Sending message to channel: '" + destinationChannelName + "'");
             log.debug("Message to sent is:\n" + message.toString());
         }
 
         endpointConfiguration.getMessagingTemplate().setReceiveTimeout(endpointConfiguration.getTimeout());
 
-        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
+        log.info("Message was sent to channel: '" + destinationChannelName + "'");
 
         org.springframework.messaging.Message replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(),
                 endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration));
@@ -81,7 +80,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
             throw new ActionTimeoutException("Reply timed out after " +
                     endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply channel");
         } else {
-            log.info("Received synchronous response message from reply channel");
+            log.info("Received synchronous response from reply channel");
         }
 
         correlationManager.store(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration));

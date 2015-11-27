@@ -476,7 +476,9 @@ public class TestContext {
         if (messageListeners != null && !messageListeners.isEmpty()) {
             messageListeners.onInboundMessage(receivedMessage, this);
         } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
+            if (log.isDebugEnabled()) {
+                log.debug("Received message:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
+            }
         }
     }
 
@@ -488,7 +490,9 @@ public class TestContext {
         if (messageListeners != null && !messageListeners.isEmpty()) {
             messageListeners.onOutboundMessage(message, this);
         } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("Sent message:" + System.getProperty("line.separator") + message.toString());
+            }
         }
     }
 }

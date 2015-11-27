@@ -38,9 +38,13 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer {
         if (CollectionUtils.isEmpty(actions)) {
             return;
         }
-        
-        log.info("Executing " + actions.size() + " actions before test");
-        log.info("");
+
+        log.info("Entering before test block");
+
+        if (log.isDebugEnabled()) {
+            log.debug("Executing " + actions.size() + " actions before test");
+            log.debug("");
+        }
 
         for(TestAction action: actions)  {
             action.execute(context);

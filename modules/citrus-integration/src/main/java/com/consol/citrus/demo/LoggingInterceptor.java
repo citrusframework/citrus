@@ -30,7 +30,9 @@ public class LoggingInterceptor extends ChannelInterceptorAdapter {
     
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        log.info(channel.toString() + ": " + message.getPayload());
+        if (log.isDebugEnabled()) {
+            log.debug(channel.toString() + ": " + message.getPayload());
+        }
         
         if (message.getPayload() instanceof Throwable) {
             ((Throwable)message.getPayload()).printStackTrace();

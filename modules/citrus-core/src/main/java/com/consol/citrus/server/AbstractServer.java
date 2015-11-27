@@ -83,7 +83,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      * @see com.consol.citrus.server.Server#start()
      */
     public void start() {
-        log.info("Starting server: " + getName() + " ...");
+        if (log.isDebugEnabled()) {
+            log.debug("Starting server: " + getName() + " ...");
+        }
             
         startup();
         
@@ -102,7 +104,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      * @see com.consol.citrus.server.Server#stop()
      */
     public void stop() {
-        log.info("Stopping server: " + getName() + " ...");
+        if (log.isDebugEnabled()) {
+            log.debug("Stopping server: " + getName() + " ...");
+        }
         
         shutdown();
         

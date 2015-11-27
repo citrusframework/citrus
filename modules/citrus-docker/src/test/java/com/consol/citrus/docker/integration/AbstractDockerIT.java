@@ -53,7 +53,7 @@ public class AbstractDockerIT extends AbstractTestNGCitrusTest {
 
             future.get(5000, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
-            log.info("Skipping Docker test execution as no proper Docker environment is available on host system!");
+            log.warn("Skipping Docker test execution as no proper Docker environment is available on host system!");
             return;
         }
 

@@ -38,9 +38,13 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer {
         if (CollectionUtils.isEmpty(actions)) {
             return;
         }
-        
-        log.info("Executing " + actions.size() + " actions after test");
-        log.info("");
+
+        log.info("Entering after test block");
+
+        if (log.isDebugEnabled()) {
+            log.debug("Executing " + actions.size() + " actions after test");
+            log.debug("");
+        }
 
         for(TestAction action: actions)  {
             action.execute(context);

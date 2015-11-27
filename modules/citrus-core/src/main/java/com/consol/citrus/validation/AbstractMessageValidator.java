@@ -59,7 +59,7 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
      * @param validationContext
      */
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, T validationContext) {
-        log.info("Start message validation ...");
+        log.debug("Start message validation ...");
 
         // validate message payload first
         validateMessagePayload(receivedMessage,
@@ -102,7 +102,7 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
                                       T validationContext, TestContext context) throws ValidationException {
         if (CollectionUtils.isEmpty(controlHeaders)) { return; }
 
-        log.info("Start message header validation");
+        log.debug("Start message header validation ...");
 
         for (Map.Entry<String, Object> entry : controlHeaders.entrySet()) {
             String headerName = entry.getKey();
@@ -162,7 +162,7 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
             }
         }
 
-        log.info("Validation of message headers finished successfully: All properties OK");
+        log.info("Message header validation successful: All properties OK");
     }
 
     /**

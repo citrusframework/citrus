@@ -43,6 +43,6 @@ public class Version extends AbstractDockerCommand<com.github.dockerjava.api.mod
         VersionCmd command = dockerClient.getDockerClient().versionCmd();
         setCommandResult(command.exec());
 
-        log.info(getCommandResult().toString());
+        log.debug(getCommandResult().toString());
     }
 }

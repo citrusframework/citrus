@@ -66,7 +66,9 @@ public class TransformAction extends AbstractTestAction {
 	@Override
 	public void doExecute(TestContext context) {
 		try {
-			log.info("Starting XSLT transformation");
+			if (log.isDebugEnabled()) {
+				log.debug("Starting XSLT transformation");
+			}
 			
 			//parse XML document and define XML source for transformation
 			Source xmlSource = null;
@@ -92,18 +94,14 @@ public class TransformAction extends AbstractTestAction {
         				"Cannot transform XSLT document.");
 			}
 			
-			//create transformer
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer(xsltSource);
 			
-			//transform
 			StringResult result = new StringResult();
 			transformer.transform(xmlSource, result);
 			
-			//save result to specified variable
 			context.setVariable(targetVariable, result.toString());
-			
-			log.info("Transformation finished successfully");
+			log.info("Finished XSLT transformation");
 		} catch (IOException e) {
 			throw new CitrusRuntimeException(e);
 		} catch (TransformerConfigurationException e) {

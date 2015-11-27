@@ -91,7 +91,9 @@ public class DefaultEndpointFactory implements EndpointFactory {
 
         synchronized (endpointCache) {
             if (endpointCache.containsKey(cachedEndpointName)) {
-                log.info(String.format("Found cached endpoint for uri '%s'", cachedEndpointName));
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Found cached endpoint for uri '%s'", cachedEndpointName));
+                }
                 return endpointCache.get(cachedEndpointName);
             } else {
                 Endpoint endpoint = component.createEndpoint(endpointUri, context);

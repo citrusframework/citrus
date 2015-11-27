@@ -47,9 +47,8 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     public void doExecute(TestContext context) {
         for (RouteDefinition routeDefinition : routes) {
             try {
-                log.info(String.format("Creating new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
                 camelContext.addRouteDefinition(routeDefinition);
-                log.info(String.format("Successfully created new Camel route '%s'", routeDefinition.getId()));
+                log.info(String.format("Created new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
             } catch (Exception e) {
                 throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
             }

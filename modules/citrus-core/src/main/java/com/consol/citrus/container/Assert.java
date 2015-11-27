@@ -54,13 +54,15 @@ public class Assert extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Assert container asserting exceptions of type " + exception);
+        if (log.isDebugEnabled()) {
+            log.debug("Assert container asserting exceptions of type " + exception);
+        }
 
         try {
             setLastExecutedAction(action);
             action.execute(context);
         } catch (Exception e) {
-            log.info("Validating caught exception ...");
+            log.debug("Validating caught exception ...");
             
             if (!exception.isAssignableFrom(e.getClass())) {
                 throw new ValidationException("Validation failed for asserted exception type - expected: '" + 
@@ -75,9 +77,11 @@ public class Assert extends AbstractActionContainer {
                         message + "' but was: '" + e.getLocalizedMessage() + "'", e);
                 }
             }
-            
-            log.info("Exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
-            log.info("Exception validation successful");
+
+            if (log.isDebugEnabled()) {
+                log.debug("Asserted exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
+            }
+            log.info("Assert exception validation successful: All values OK");
             return;
         }
 

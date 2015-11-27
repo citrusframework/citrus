@@ -74,7 +74,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                 String validationScript = validationContext.getValidationScript(context);
                 
                 if (StringUtils.hasText(validationScript)) {
-                    log.info("Start groovy SQL result set validation");
+                    log.debug("Start groovy SQL result set validation");
 
                     GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
                         public GroovyClassLoader run() {
@@ -93,7 +93,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                     GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
                     ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
                     
-                    log.info("Groovy SQL result set validation finished successfully: All values OK");
+                    log.info("Groovy SQL result set validation successful: All values OK");
                 }
             } catch (CompilationFailedException e) {
                 throw new CitrusRuntimeException(e);

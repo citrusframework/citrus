@@ -60,7 +60,9 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public void send(final Message message, TestContext context) {
-        log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+        }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
@@ -73,7 +75,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration);
-                        log.info("Message was successfully sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+                        log.info("Message was sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
                     }
                 });
 
