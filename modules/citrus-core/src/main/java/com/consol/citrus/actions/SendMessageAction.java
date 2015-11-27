@@ -91,7 +91,7 @@ public class SendMessageAction extends AbstractTestAction {
         
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
         if (forkMode) {
-            log.info("Forking send message action ...");
+            log.debug("Forking message sending action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(new Runnable() {

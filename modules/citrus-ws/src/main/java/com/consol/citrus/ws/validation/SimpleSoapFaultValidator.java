@@ -39,7 +39,7 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
     protected void validateFaultDetailString(String received, String control,
             TestContext context, ValidationContext validationContext) throws ValidationException {
 
-        log.info("Validating SOAP fault detail ...");
+        log.debug("Validating SOAP fault detail ...");
 
         String receivedDetail = StringUtils.trimAllWhitespace(received);
         String controlDetail = StringUtils.trimAllWhitespace(control);
@@ -54,6 +54,6 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
                     controlDetail + "' \n received \n'" + receivedDetail + "'");
         }
 
-        log.info("SOAP fault detail validation successful");
+        log.info("SOAP fault detail validation successful: All values OK");
     }
 }

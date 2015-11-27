@@ -63,7 +63,9 @@ public class Template extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Executing template '" + getName() + "' with " + actions.size() + " embedded actions");
+        if (log.isDebugEnabled()) {
+            log.debug("Executing template '" + getName() + "' with " + actions.size() + " embedded actions");
+        }
 
         TestContext innerContext;
         
@@ -95,9 +97,11 @@ public class Template extends AbstractTestAction {
 			paramValue = VariableUtils.replaceVariablesInString(paramValue, innerContext, false);
             if (context.getFunctionRegistry().isFunction(paramValue)) {
                 paramValue = FunctionUtils.resolveFunction(paramValue, context);
-            } 
+            }
 
-            log.info("Setting parameter for template " + param + "=" + paramValue);
+            if (log.isDebugEnabled()) {
+                log.debug("Setting parameter for template " + param + "=" + paramValue);
+            }
 
             innerContext.setVariable(param, paramValue);
         }

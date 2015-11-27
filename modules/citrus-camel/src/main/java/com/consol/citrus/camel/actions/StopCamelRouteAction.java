@@ -41,9 +41,8 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
     public void doExecute(TestContext context) {
         try {
             for (String routeId : routeIds) {
-                log.info(String.format("Stopping Camel route '%s' on context '%s'", routeId, camelContext.getName()));
                 camelContext.stopRoute(routeId);
-                log.info(String.format("Successfully stopped Camel route '%s'", routeId));
+                log.info(String.format("Stopped Camel route '%s' on context '%s'", routeId, camelContext.getName()));
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to stop Camel routes", e);

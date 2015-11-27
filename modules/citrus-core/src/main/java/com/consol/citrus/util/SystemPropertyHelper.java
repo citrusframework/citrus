@@ -16,11 +16,11 @@
 
 package com.consol.citrus.util;
 
-import java.util.Map.Entry;
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map.Entry;
+import java.util.Properties;
 
 
 /**
@@ -39,7 +39,9 @@ public class SystemPropertyHelper {
      * Constructor using single property name value pair.
      */
     public SystemPropertyHelper(String property, String value) {
-        log.info("Setting system property: '" + property + "'='" + value + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Setting system property: '" + property + "'='" + value + "'");
+        }
         System.setProperty(property, value);
     }
     
@@ -49,7 +51,9 @@ public class SystemPropertyHelper {
      */
     public SystemPropertyHelper(Properties properties) {
         for (Entry<Object, Object> entry : properties.entrySet()) {
-            log.info("Setting system property: '" + entry.getKey() + "'='" + entry.getValue() + "'");
+            if (log.isDebugEnabled()) {
+                log.debug("Setting system property: '" + entry.getKey() + "'='" + entry.getValue() + "'");
+            }
             System.setProperty(entry.getKey().toString(), entry.getValue().toString());
         }
     }

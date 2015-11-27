@@ -162,7 +162,9 @@ public class DefaultTestRunner implements TestRunner {
         testCase.setParameters(parameterNames, parameterValues);
 
         for (int i = 0; i < parameterNames.length; i++) {
-            log.info(String.format("Initializing test parameter '%s' as variable", parameterNames[i]));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Initializing test parameter '%s' as variable", parameterNames[i]));
+            }
             context.setVariable(parameterNames[i], parameterValues[i]);
         }
     }

@@ -55,7 +55,10 @@ public class LoadPropertiesAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         Resource resource = FileUtils.getFileResource(filePath, context);
 
-        log.info("Reading property file " + resource.getFilename());
+        if (log.isDebugEnabled()) {
+            log.debug("Reading property file " + resource.getFilename());
+        }
+
         Properties props;
         try {
             props = PropertiesLoaderUtils.loadProperties(resource);
@@ -66,7 +69,9 @@ public class LoadPropertiesAction extends AbstractTestAction {
         for (Iterator<Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
             String key = iter.next().getKey().toString();
 
-            log.info("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
+            if (log.isDebugEnabled()) {
+                log.debug("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
+            }
 
             if (log.isDebugEnabled() && context.getVariables().containsKey(key)) {
                 log.debug("Overwriting property " + key + " old value:" + context.getVariable(key) 
@@ -75,6 +80,8 @@ public class LoadPropertiesAction extends AbstractTestAction {
 
             context.setVariable(key, context.replaceDynamicContentInString(props.getProperty(key)));
         }
+
+        log.info("Loaded property file " + resource.getFilename());
     }
 
     /**

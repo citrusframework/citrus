@@ -54,7 +54,9 @@ public class ChannelProducer implements Producer {
     public void send(Message message, TestContext context) {
         String destinationChannelName = getDestinationChannelName();
 
-        log.info("Sending message to channel: '" + destinationChannelName + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Sending message to channel: '" + destinationChannelName + "'");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:" + System.getProperty("line.separator") + message.toString());
@@ -67,7 +69,7 @@ public class ChannelProducer implements Producer {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
         }
 
-        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
+        log.info("Message was sent to channel: '" + destinationChannelName + "'");
     }
 
     /**

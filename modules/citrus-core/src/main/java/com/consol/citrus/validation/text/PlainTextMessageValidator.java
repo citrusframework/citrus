@@ -34,7 +34,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     @Override
     public void validateMessagePayload(Message receivedMessage, Message controlMessage,
                                        ValidationContext validationContext, TestContext context) throws ValidationException {
-        log.info("Start plain text message validation");
+        log.debug("Start plain text message validation");
         
         if (log.isDebugEnabled()) {
             log.debug("Received message:\n" + receivedMessage);
@@ -48,7 +48,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             throw new ValidationException("Failed to validate plain text", e);
         }
         
-        log.info("Plain text validation finished successfully: All values OK");
+        log.info("Plain text validation successful: All values OK");
     }
     
     /**

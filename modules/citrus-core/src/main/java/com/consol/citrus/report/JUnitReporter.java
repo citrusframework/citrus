@@ -87,7 +87,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
      */
     public void generateTestResults() {
         try {
-            log.info("Generating JUnit results");
+            log.debug("Generating JUnit test results");
 
             DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
             DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
@@ -143,7 +143,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                 break;
             }
 
-            log.info("JUnit results successfully");
+            log.info("Generated JUnit test results");
             if (log.isDebugEnabled()) {
                 log.debug("OutputFile is: " + outputFile.getFile().getPath());
             }

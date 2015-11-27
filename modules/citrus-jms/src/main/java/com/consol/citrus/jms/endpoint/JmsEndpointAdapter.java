@@ -58,7 +58,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
     protected Message handleMessageInternal(Message request) {
-        log.info("Forwarding request to jms destination ...");
+        log.debug("Forwarding request to jms destination ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;

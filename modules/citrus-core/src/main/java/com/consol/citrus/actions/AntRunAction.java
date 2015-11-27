@@ -107,8 +107,9 @@ public class AntRunAction extends AbstractTestAction {
             consoleLogger.setMessageOutputLevel(Project.MSG_DEBUG);
             
             project.addBuildListener(consoleLogger);
-            
-            log.info("Running ANT build file: " + buildFileResource);
+
+            log.info("Executing ANT build: " + buildFileResource);
+
             if (StringUtils.hasText(targets)) {
                 log.info("Executing ANT targets: " + targets);
                 project.executeTargets(parseTargets());
@@ -122,7 +123,7 @@ public class AntRunAction extends AbstractTestAction {
             throw new CitrusRuntimeException("Failed to read ANT build file", e);
         }
         
-        log.info("ANT build run successful");
+        log.info("Executed ANT build: " + buildFileResource);
     }
 
     /**
@@ -155,7 +156,10 @@ public class AntRunAction extends AbstractTestAction {
                 
                 for (Entry<Object, Object> entry : fileProperties.entrySet()) {
                     String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
-                    log.debug("Set build property from file resource: " + entry.getKey() + "=" + propertyValue);
+
+                    if (log.isDebugEnabled()) {
+                        log.debug("Set build property from file resource: " + entry.getKey() + "=" + propertyValue);
+                    }
                     project.setProperty(entry.getKey().toString(), propertyValue);
                 }
             } catch (IOException e) {

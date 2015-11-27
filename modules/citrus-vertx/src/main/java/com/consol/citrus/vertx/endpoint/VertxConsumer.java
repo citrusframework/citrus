@@ -57,7 +57,9 @@ public class VertxConsumer extends AbstractMessageConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        log.info("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        }
 
         VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();
         vertx.eventBus().registerHandler(endpointConfiguration.getAddress(), vertxMessageHandler);

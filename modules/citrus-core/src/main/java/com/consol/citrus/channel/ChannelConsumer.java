@@ -63,7 +63,9 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             destinationChannelName = getDestinationChannelName();
         }
 
-        log.info("Receiving message from: " + destinationChannelName);
+        if (log.isDebugEnabled()) {
+            log.debug("Receiving message from: " + destinationChannelName);
+        }
 
         Message message;
         if (StringUtils.hasText(selector)) {
@@ -96,6 +98,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
                     + destinationChannelName + "'");
         }
 
+        log.debug("Received message from: " + destinationChannelName);
         return message;
     }
 

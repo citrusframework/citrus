@@ -114,7 +114,7 @@ public class InputAction extends AbstractTestAction {
             }
         }
 
-        log.info("User input is not valid");
+        log.info("User input is not valid - must be one of " + validAnswers);
 
         return false;
     }

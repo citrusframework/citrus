@@ -75,7 +75,9 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Purging message endpoints ...");
+        if (log.isDebugEnabled()) {
+            log.debug("Purging message endpoints ...");
+        }
 
         for (Endpoint endpoint : endpoints) {
             purgeEndpoint(endpoint, context);
@@ -85,7 +87,7 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
             purgeEndpoint(resolveEndpointName(endpointName), context);
         }
 
-        log.info("Message endpoints purged successfully");
+        log.info("Purged message endpoints");
     }
 
     /**
@@ -112,7 +114,9 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
                     message = (receiveTimeout >= 0) ? messageConsumer.receive(context, receiveTimeout) : messageConsumer.receive(context);
                 }
             } catch (ActionTimeoutException e) {
-                log.info("Stop purging due to timeout - " + e.getMessage());
+                if (log.isDebugEnabled()) {
+                    log.debug("Stop purging due to timeout - " + e.getMessage());
+                }
                 break;
             }
 

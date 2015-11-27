@@ -49,8 +49,6 @@ public class StartServerAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Starting up servers");
-
         for (Server actServer : serverList) {
             actServer.start();
             log.info("Started server: " + actServer.getName());

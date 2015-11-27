@@ -16,13 +16,12 @@
 
 package com.consol.citrus.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing shutdown hook thread for server implementations to stop on JVM shutdown.
@@ -46,7 +45,7 @@ public class ServerShutdownThread extends Thread
     @Override
     public void run()
     {
-        log.info("ShutdownThread running ...");
+        log.debug("ShutdownThread running ...");
 
         try {
             for (Server server: servers) {
@@ -75,7 +74,7 @@ public class ServerShutdownThread extends Thread
 
     /**
      * Default Constructor using fields
-     * @param port
+     * @param server
      */
     public ServerShutdownThread(Server server) {
         create();
@@ -85,7 +84,7 @@ public class ServerShutdownThread extends Thread
 
     /**
      * Default Constructor using fields
-     * @param port
+     * @param servers
      */
     public ServerShutdownThread(List<Server> servers) {
         create();

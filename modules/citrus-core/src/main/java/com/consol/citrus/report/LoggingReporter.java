@@ -67,10 +67,13 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         });
 
         newLine();
-        log.info("Number of skipped tests: " + testResults.getSkipped() + " (" + testResults.getSkippedPercentage() + "%)");
-        newLine();
 
         log.info("TOTAL:\t" + (testResults.getFailed() + testResults.getSuccess()));
+
+        if (log.isDebugEnabled()) {
+            log.debug("SKIPPED:\t" + testResults.getSkipped() + " (" + testResults.getSkippedPercentage() + "%)");
+        }
+
         log.info("FAILED:\t" + testResults.getFailed() + " (" + testResults.getFailedPercentage() + "%)");
         log.info("SUCCESS:\t" + testResults.getSuccess() + " (" + testResults.getSuccessPercentage() + "%)");
         newLine();
@@ -90,21 +93,25 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
 
     @Override
     public void onTestSkipped(TestCase test) {
-        newLine();
-        separator();
-        log.info("SKIPPING TEST: " + test.getName());
-        separator();
-        newLine();
+        if (log.isDebugEnabled()) {
+            newLine();
+            separator();
+            log.debug("SKIPPING TEST: " + test.getName());
+            separator();
+            newLine();
+        }
 
         testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
     }
 
     @Override
     public void onTestStart(TestCase test) {
-        newLine();
-        separator();
-        log.info("STARTING TEST " + test.getName() + " <" + test.getPackageName() + ">");
-        newLine();
+        if (log.isDebugEnabled()) {
+            newLine();
+            separator();
+            log.debug("STARTING TEST " + test.getName() + " <" + test.getPackageName() + ">");
+            newLine();
+        }
     }
 
     @Override
@@ -125,7 +132,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     public void onFinish() {
         newLine();
         separator();
-        log.info("AFTER TEST SUITE");
+        log.debug("AFTER TEST SUITE");
         newLine();
     }
 
@@ -145,7 +152,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
 
         separator();
-        log.info("BEFORE TEST SUITE");
+        log.debug("BEFORE TEST SUITE");
         newLine();
     }
 
@@ -183,53 +190,59 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
 
     @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
-        newLine();
-        if (testCase.isTestRunner()) {
-            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
-        } else {
-            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
-        }
+        if (log.isDebugEnabled()) {
+            newLine();
+            if (testCase.isTestRunner()) {
+                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+            } else {
+                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+            }
 
-        if (testAction instanceof TestActionContainer) {
-            log.info("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
-        }
+            if (testAction instanceof TestActionContainer) {
+                log.debug("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
+            }
 
-        if (log.isDebugEnabled() && StringUtils.hasText(testAction.getDescription())) {
-            log.debug("");
-            log.debug(testAction.getDescription());
-            log.debug("");
+            if (StringUtils.hasText(testAction.getDescription())) {
+                log.debug("");
+                log.debug(testAction.getDescription());
+                log.debug("");
+            }
         }
     }
 
     @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
-        newLine();
-        if (testCase.isTestRunner()) {
-            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + " SUCCESS");
-        } else {
-            log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
+        if (log.isDebugEnabled()) {
+            newLine();
+            if (testCase.isTestRunner()) {
+                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + " SUCCESS");
+            } else {
+                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
+            }
         }
     }
 
     @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
-        newLine();
-        if (testCase.isTestRunner()) {
-            log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1));
-        } else {
-            log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+        if (log.isDebugEnabled()) {
+            newLine();
+            if (testCase.isTestRunner()) {
+                log.debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1));
+            } else {
+                log.debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+            }
+            log.debug("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
         }
-        log.info("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
     }
 
     @Override
     public void onInboundMessage(Message message, TestContext context) {
-        inboundMsgLogger.info(message.toString());
+        inboundMsgLogger.debug(message.toString());
     }
 
     @Override
     public void onOutboundMessage(Message message, TestContext context) {
-        outboundMsgLogger.info(message.toString());
+        outboundMsgLogger.debug(message.toString());
     }
 
     /**

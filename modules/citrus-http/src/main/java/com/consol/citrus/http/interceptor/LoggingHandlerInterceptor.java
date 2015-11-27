@@ -84,10 +84,12 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      */
     public void handleRequest(String request) {
         if (messageListener != null) {
-            log.info("Received Http request");
+            log.debug("Received Http request");
             messageListener.onInboundMessage(new RawMessage(request), null);
         } else {
-            log.info("Received Http request:" + NEWLINE + request);
+            if (log.isDebugEnabled()) {
+                log.debug("Received Http request:" + NEWLINE + request);
+            }
         }
     }
     
@@ -97,10 +99,12 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      */
     public void handleResponse(String response) {
         if (messageListener != null) {
-            log.info("Sending Http response");
+            log.debug("Sending Http response");
             messageListener.onOutboundMessage(new RawMessage(response), null);
         } else {
-            log.info("Sending Http response:" + NEWLINE + response);
+            if (log.isDebugEnabled()) {
+                log.debug("Sending Http response:" + NEWLINE + response);
+            }
         }
     }
     

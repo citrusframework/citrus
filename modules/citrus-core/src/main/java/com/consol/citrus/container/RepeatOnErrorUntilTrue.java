@@ -72,7 +72,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
 
         if (exception != null) {
-            log.info("All retries have failed - raising exception " + exception.getClass().getName());
+            log.info("All retries failed - raising exception " + exception.getClass().getName());
             throw exception;
         }
     }

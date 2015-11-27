@@ -47,6 +47,6 @@ public class Sequence extends AbstractActionContainer {
             action.execute(context);
         }
 
-        log.info("Action sequence finished successfully");
+        log.debug("Action sequence finished successfully");
     }
 }

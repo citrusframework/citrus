@@ -74,7 +74,7 @@ public class VertxProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        log.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
     }
 
     /**
@@ -83,10 +83,14 @@ public class VertxProducer implements Producer {
      */
     private void sendOrPublishMessage(Message message) {
         if (endpointConfiguration.isPubSubDomain()) {
-            log.info("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            if (log.isDebugEnabled()) {
+                log.debug("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            }
             vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
         } else {
-            log.info("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            if (log.isDebugEnabled()) {
+                log.debug("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            }
             vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload());
         }
     }

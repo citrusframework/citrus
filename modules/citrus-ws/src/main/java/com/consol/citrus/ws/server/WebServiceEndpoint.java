@@ -84,8 +84,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
         Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
         
         Message requestMessage = endpointConfiguration.getMessageConverter().convertInbound(messageContext.getRequest(), messageContext, endpointConfiguration);
-        
-        log.info("Received SOAP request:\n" + requestMessage.toString());
+
+        if (log.isDebugEnabled()) {
+            log.debug("Received SOAP request:\n" + requestMessage.toString());
+        }
         
         //delegate request processing to endpoint adapter
         Message replyMessage = endpointAdapter.handleMessage(requestMessage);
@@ -95,7 +97,9 @@ public class WebServiceEndpoint implements MessageEndpoint {
         }
         
         if (replyMessage != null && replyMessage.getPayload() != null) {
-            log.info("Sending SOAP response:\n" + replyMessage.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("Sending SOAP response:\n" + replyMessage.toString());
+            }
             
             SoapMessage response = (SoapMessage) messageContext.getResponse();
             
@@ -109,7 +113,9 @@ public class WebServiceEndpoint implements MessageEndpoint {
             addSoapHeaders(response, replyMessage);
             addMimeHeaders(response, replyMessage);
         } else {
-            log.info("No reply message from endpoint adapter '" + endpointAdapter + "'");
+            if (log.isDebugEnabled()) {
+                log.debug("No reply message from endpoint adapter '" + endpointAdapter + "'");
+            }
             log.warn("No SOAP response for calling client");
         }
     }

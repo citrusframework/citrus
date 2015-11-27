@@ -49,8 +49,6 @@ public class StopServerAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Stopping servers");
-
         for (Server actServer : serverList) {
             actServer.stop();
             log.info("Stopped server: " + actServer.getName());

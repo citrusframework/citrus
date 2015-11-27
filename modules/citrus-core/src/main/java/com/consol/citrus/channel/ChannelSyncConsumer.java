@@ -72,9 +72,8 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         MessageChannel replyChannel = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyChannel, "Failed to find reply channel for message correlation key: " + correlationKey);
 
-        log.info("Sending message to reply channel: '" + replyChannel + "'");
-
         if (log.isDebugEnabled()) {
+            log.debug("Sending message to reply channel: '" + replyChannel + "'");
             log.debug("Message to send is:\n" + message.toString());
         }
 
@@ -85,7 +84,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
             throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel + "'", e);
         }
 
-        log.info("Message was successfully sent to reply channel: '" + replyChannel + "'");
+        log.info("Message was sent to reply channel: '" + replyChannel + "'");
     }
 
     /**

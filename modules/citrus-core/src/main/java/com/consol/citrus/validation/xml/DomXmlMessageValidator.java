@@ -83,7 +83,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     @Override
     public void validateMessagePayload(Message receivedMessage, Message controlMessage,
                                        XmlMessageValidationContext validationContext, TestContext context) throws ValidationException {
-        log.info("Start XML message validation");
+        log.debug("Start XML message validation");
 
         try {
             if (validationContext.isSchemaValidationEnabled()) {
@@ -150,7 +150,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 return;
             }
 
-            log.info("Starting XML schema validation ...");
+            log.debug("Starting XML schema validation ...");
 
             XmlValidator validator = null;
             XsdSchemaRepository schemaRepository = null;
@@ -212,9 +212,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             
             SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
-                log.info("Schema of received XML validated OK");
+                log.info("XML schema validation successful: All values OK");
             } else {
-                log.error("Schema validation failed for message:\n" +
+                log.error("XML schema validation failed for message:\n" +
                         XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
                 
                 // Report all parsing errors
@@ -226,7 +226,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 }
                 log.debug(errors.toString());
 
-                throw new ValidationException("Schema validation failed:", results[0]);
+                throw new ValidationException("XML schema validation failed:", results[0]);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
@@ -250,7 +250,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             throw new ValidationException("Unable to validate message namespaces - receive message payload was empty");
         }
 
-        log.info("Start XML namespace validation");
+        log.debug("Start XML namespace validation");
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
 
@@ -273,7 +273,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             "' expected '" + url + "' in reference node " +
                             XMLUtils.getNodesPathName(received.getFirstChild()));
                 } else {
-                    log.info("Validating namespace " + namespace + " value as expected " + url + " - value OK");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Validating namespace " + namespace + " value as expected " + url + " - value OK");
+                    }
                 }
             } else {
                 throw new ValidationException("Missing namespace " + namespace + "(" + url + ") in node " +
@@ -281,7 +283,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         }
 
-        log.info("XML namespace validation finished successfully: All values OK");
+        log.info("XML namespace validation successful: All values OK");
     }
 
     private void doElementNameValidation(Node received, Node source) {
@@ -325,7 +327,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     protected void validateMessageContent(Message receivedMessage, Message controlMessage, XmlMessageValidationContext validationContext,
             TestContext context) {
         if (controlMessage == null || controlMessage.getPayload() == null) {
-            log.info("Skip message payload validation as no control message was defined");
+            log.debug("Skip message payload validation as no control message was defined");
             return;
         }
 
@@ -345,7 +347,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             return;
         }
 
-        log.info("Start XML tree validation ...");
+        log.debug("Start XML tree validation ...");
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
         Document source = XMLUtils.parseMessagePayload(controlMessagePayload);
@@ -371,7 +373,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private void validateXmlHeaderFragment(String receivedHeaderData, String controlHeaderData,
             XmlMessageValidationContext validationContext, TestContext context) {
-        log.info("Start XML header data validation ...");
+        log.debug("Start XML header data validation ...");
 
         Document received = XMLUtils.parseMessagePayload(receivedHeaderData);
         Document source = XMLUtils.parseMessagePayload(controlHeaderData);
@@ -387,7 +389,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         validateXmlTree(received, source, validationContext, 
                 namespaceContextBuilder.buildContext(new DefaultMessage(receivedHeaderData), validationContext.getNamespaces()),
                 context);
-        
     }
 
     /**
@@ -674,7 +675,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param received
      */
     private void doComment(Node received) {
-        log.info("Ignored comment node (" + received.getNodeValue() + ")");
+        if (log.isDebugEnabled()) {
+            log.debug("Ignored comment node (" + received.getNodeValue() + ")");
+        }
     }
 
     /**
@@ -683,7 +686,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param received
      */
     private void doPI(Node received) {
-        log.info("Ignored processing instruction (" + received.getLocalName() + "=" + received.getNodeValue() + ")");
+        if (log.isDebugEnabled()) {
+            log.debug("Ignored processing instruction (" + received.getLocalName() + "=" + received.getNodeValue() + ")");
+        }
     }
 
     /**

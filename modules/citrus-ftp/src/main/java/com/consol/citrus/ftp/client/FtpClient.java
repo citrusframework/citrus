@@ -87,10 +87,9 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(ftpMessage);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
-
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:\n" + ftpMessage.getPayload(String.class));
+            log.debug(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+            log.debug("Message to send:\n" + ftpMessage.getPayload(String.class));
         }
 
         try {
@@ -102,7 +101,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 throw new CitrusRuntimeException(String.format("Failed to send FTP command - reply is: %s:%s", reply, ftpClient.getReplyString()));
             }
 
-            log.info(String.format("FTP message was successfully sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+            log.info(String.format("FTP message was sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
             correlationManager.store(correlationKey, new FtpMessage(ftpMessage.getCommand(), ftpMessage.getArguments())
                     .replyCode(reply)
@@ -121,7 +120,9 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         if (!ftpClient.isConnected()) {
             ftpClient.connect(getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
 
-            log.info("Connected to FTP server: " + ftpClient.getReplyString());
+            if (log.isDebugEnabled()) {
+                log.debug("Connected to FTP server: " + ftpClient.getReplyString());
+            }
 
             int reply = ftpClient.getReplyCode();
 
@@ -129,10 +130,12 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 throw new CitrusRuntimeException("FTP server refused connection.");
             }
 
-            log.info("Successfully opened connection to FTP server");
+            log.info("Opened connection to FTP server");
 
             if (getEndpointConfiguration().getUser() != null) {
-                log.info(String.format("Login as user: '%s'", getEndpointConfiguration().getUser()));
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Login as user: '%s'", getEndpointConfiguration().getUser()));
+                }
                 boolean login = ftpClient.login(getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword());
 
                 if (!login) {
@@ -181,12 +184,16 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
             @Override
             public void protocolCommandSent(ProtocolCommandEvent event) {
-                log.info("Send FTP command: " + event.getCommand());
+                if (log.isDebugEnabled()) {
+                    log.debug("Send FTP command: " + event.getCommand());
+                }
             }
 
             @Override
             public void protocolReplyReceived(ProtocolCommandEvent event) {
-                log.info("Received FTP command reply: " + event.getReplyCode());
+                if (log.isDebugEnabled()) {
+                    log.debug("Received FTP command reply: " + event.getReplyCode());
+                }
             }
         });
     }
@@ -202,7 +209,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 log.warn("Failed to disconnect from FTP server", e);
             }
 
-            log.info("Successfully closed connection to FTP server");
+            log.info("Closed connection to FTP server");
         }
     }
 

@@ -68,7 +68,9 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Purging message channels ...");
+        if (log.isDebugEnabled()) {
+            log.debug("Purging message channels ...");
+        }
         
         for (MessageChannel channel : channels) {
             purgeChannel(channel);
@@ -78,7 +80,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
             purgeChannel(resolveChannelName(channelName));
         }
 
-        log.info("Message channels purged successfully");
+        log.info("Purged message channels");
     }
 
     /**
@@ -89,14 +91,10 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      */
     private void purgeChannel(MessageChannel channel) {
         if (channel instanceof QueueChannel) {
-            if (log.isDebugEnabled()) {
-                log.debug("Try to purge message channel " + ((QueueChannel)channel).getComponentName());
-            }
-            
             List<Message<?>> messages = ((QueueChannel)channel).purge(messageSelector);
             
             if (log.isDebugEnabled()) {
-                log.debug("Purged " + messages.size() + " messages from channel");
+                log.debug("Purged channel " + ((QueueChannel)channel).getComponentName() + " - removed " + messages.size() + " messages");
             }
         }
     }

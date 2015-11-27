@@ -51,7 +51,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
 
-        log.info("Start JSONPath element validation");
+        log.debug("Start JSONPath element validation");
 
         String jsonPathExpression = null;
         try {
@@ -83,7 +83,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 }
             }
 
-            log.info("JSONPath element validation finished successfully: All elements OK");
+            log.info("JSONPath element validation successful: All elements OK");
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         } catch (PathNotFoundException e) {

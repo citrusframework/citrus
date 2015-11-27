@@ -67,7 +67,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher {
             cal.setTime(dateFormat.parse(value));
 
             if (cal.get(Calendar.DAY_OF_WEEK) == Weekday.valueOf(weekday).getConstantValue()) {
-                log.info("Successful weekday validation matcher - All values OK");
+                log.info("Weekday validation matcher successful - All values OK");
             } else {
                 throw new ValidationException(this.getClass().getSimpleName() + " failed for field '" + fieldName + "'" +
                         ". Received invalid week day '" + value + "', expected date to be a '" + weekday + "'");

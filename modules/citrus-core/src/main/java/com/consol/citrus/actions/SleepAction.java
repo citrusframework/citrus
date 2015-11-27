@@ -62,7 +62,7 @@ public class SleepAction extends AbstractTestAction {
 
             Thread.sleep(Long.valueOf(value));
 
-            log.info(String.format("Continue after %s ms", value));
+            log.info(String.format("Returning after %s ms", value));
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }

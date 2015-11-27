@@ -58,9 +58,9 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     @SuppressWarnings("unchecked")
     public void validateMessagePayload(Message receivedMessage, Message controlMessage,
                                        JsonMessageValidationContext validationContext, TestContext context) throws ValidationException {
-        log.info("Start JSON message validation");
-        
+
         if (log.isDebugEnabled()) {
+            log.debug("Start JSON message validation");
             log.debug("Received message:\n" + receivedMessage);
             log.debug("Control message:\n" + controlMessage);
         }
@@ -70,7 +70,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         
         try {
             if (!StringUtils.hasText(controlJsonText)) {
-                log.info("Skip message payload validation as no control message was defined");
+                log.debug("Skip message payload validation as no control message was defined");
                 return;
             } else {
                 Assert.isTrue(StringUtils.hasText(receivedJsonText), "Validation failed - " +
@@ -100,7 +100,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
         
-        log.info("JSON message validation finished successfully: All values OK");
+        log.info("JSON message validation successful: All values OK");
     }
     
     /**

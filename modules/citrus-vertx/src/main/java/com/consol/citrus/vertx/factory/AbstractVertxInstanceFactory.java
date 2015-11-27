@@ -48,15 +48,19 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
             public void handle(AsyncResult<Vertx> event) {
                 vertx[0] = event.result();
                 loading.setResult(Boolean.TRUE);
-                log.info("Vert.x instance successfully started");
+                log.info("Vert.x instance started");
             }
         };
 
         if (endpointConfiguration.getPort() > 0) {
-            log.info(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), endpointConfiguration.getPort()));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), endpointConfiguration.getPort()));
+            }
             VertxFactory.newVertx(endpointConfiguration.getPort(), endpointConfiguration.getHost(), asyncLoadingHandler);
         } else {
-            log.info(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), 0L));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), 0L));
+            }
             VertxFactory.newVertx(0, endpointConfiguration.getHost(), asyncLoadingHandler);
         }
 

@@ -68,10 +68,14 @@ public class SendSoapMessageAction extends SendMessageAction {
                     if (attachment.isMtomInline() && messagePayload.contains(cid)) {
                         byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
                         if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
-                            log.info("Adding inline base64Binary data for attachment: %s", cid);
+                            if (log.isDebugEnabled()) {
+                                log.debug("Adding inline base64Binary data for attachment: %s", cid);
+                            }
                             messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(attachmentBinaryData));
                         } else if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_HEX_BINARY)) {
-                            log.info("Adding inline hexBinary data for attachment: %s", cid);
+                            if (log.isDebugEnabled()) {
+                                log.debug("Adding inline hexBinary data for attachment: %s", cid);
+                            }
                             messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(attachmentBinaryData).toUpperCase());
                         } else {
                             throw new CitrusRuntimeException(String.format("Unsupported encoding type '%s' for SOAP attachment: %s - choose one of %s or %s",

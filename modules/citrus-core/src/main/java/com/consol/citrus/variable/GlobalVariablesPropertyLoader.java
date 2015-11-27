@@ -62,10 +62,9 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
         try {
             if (propertyFilesSet()) {
                 for (String propertyFilePath : propertyFiles) {
-
                     Resource propertyFile = new PathMatchingResourcePatternResolver().getResource(propertyFilePath.trim());
 
-                    log.info("Reading property file " + propertyFile.getFilename());
+                    log.debug("Reading property file " + propertyFile.getFilename());
 
                     // Use input stream as this also allows to read from resources in a JAR file
                     reader = new BufferedReader(new InputStreamReader(propertyFile.getInputStream()));
@@ -91,7 +90,9 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         log.debug("Property value replace dynamic content [ {} ]", value);
                         value = context.replaceDynamicContentInString(value);
 
-                        log.info("Loading property: " + key + "=" + value + " into default variables");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Loading property: " + key + "=" + value + " into default variables");
+                        }
 
                         if (log.isDebugEnabled() && globalVariables.getVariables().containsKey(key)) {
                             log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key)
@@ -102,6 +103,8 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         // we need to keep local context up to date in case of recursive variable usage
                         context.setVariable(key, globalVariables.getVariables().get(key));
                     }
+
+                    log.info("Loaded property file " + propertyFile.getFilename());
                 }
             }
         } catch (IOException e) {

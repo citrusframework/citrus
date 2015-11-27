@@ -45,7 +45,7 @@ public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
         InspectImageResponse response = command.exec();
 
         setCommandResult(response);
-        log.info(response.toString());
+        log.debug(response.toString());
     }
 
     /**

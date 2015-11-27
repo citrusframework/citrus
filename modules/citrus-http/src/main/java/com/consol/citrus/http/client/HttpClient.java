@@ -101,10 +101,9 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             endpointUri = getEndpointConfiguration().getRequestUrl();
         }
 
-        log.info("Sending HTTP message to: '" + endpointUri + "'");
-
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:\n" + httpMessage.getPayload(String.class));
+            log.debug("Sending HTTP message to: '" + endpointUri + "'");
+            log.debug("Message to send:\n" + httpMessage.getPayload(String.class));
         }
 
         HttpMethod method = getEndpointConfiguration().getRequestMethod();
@@ -117,7 +116,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         getEndpointConfiguration().getRestTemplate().setErrorHandler(new InternalResponseErrorHandler(correlationKey));
         ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(endpointUri, method, requestEntity, String.class);
 
-        log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
+        log.info("HTTP message was sent to endpoint: '" + endpointUri + "'");
 
         correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
     }

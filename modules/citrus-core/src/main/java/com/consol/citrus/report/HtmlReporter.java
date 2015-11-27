@@ -83,12 +83,12 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         String report = "";
         final StringBuilder reportDetails = new StringBuilder();
         
-        log.info("Generating HTML test report ...");
-        
+        log.debug("Generating HTML test report");
+
         try {
             final String testDetails = FileUtils.readToString(TEST_DETAIL_TEMPLATE);
             final String unknown = "N/A";
-            
+
             testResults.doWithResults(new TestResults.ResultCallback() {
                 @Override
                 public void doWithResult(TestResult result) {
@@ -124,8 +124,10 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             reportProps.put("test.results", reportDetails.toString());
             reportProps.put("logo.data", getLogoImageData());
             report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(REPORT_TEMPLATE), reportProps);
-            
+
             createReportFile(report);
+
+            log.info("Generated HTML test report");
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to generate HTML test report", e);
         }
@@ -134,7 +136,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     /**
      * Reads citrus logo png image and converts to base64 encoded string for inline HTML image display.
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     private String getLogoImageData() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();

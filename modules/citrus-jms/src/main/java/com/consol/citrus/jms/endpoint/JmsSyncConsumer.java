@@ -81,7 +81,9 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         Destination replyDestination = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
-        log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
+        if (log.isDebugEnabled()) {
+            log.debug("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
+        }
 
         endpointConfiguration.getJmsTemplate().send(replyDestination, new MessageCreator() {
             @Override
@@ -94,7 +96,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
+        log.info("Message was sent to JMS destination: '" + getDestinationName(replyDestination) + "'");
     }
 
     /**

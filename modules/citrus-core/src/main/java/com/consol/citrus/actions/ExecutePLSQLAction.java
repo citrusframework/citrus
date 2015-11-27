@@ -59,11 +59,11 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
                 String stmt = statements.get(i);
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Executing SQL statement: " + stmt);
+                    log.debug("Executing PLSQL statement: " + stmt);
                 }
                 
                 getJdbcTemplate().execute(stmt);
-                log.info("SQL statement execution successful");
+                log.info("PLSQL statement execution successful");
             } catch (DataAccessException e) {
                 if (ignoreErrors) {
                     log.warn("Ignoring error while executing SQL statement: " + e.getMessage());

@@ -6,7 +6,8 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 	 
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
-    
+
+    <bean id="citrusLoggingInterceptor" class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
     <bean id="citrusHandlerInterceptor" class="com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor"/>
     <bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController"/>
 

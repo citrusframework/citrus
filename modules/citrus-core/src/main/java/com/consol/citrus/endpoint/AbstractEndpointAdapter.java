@@ -56,12 +56,12 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
 
         if ((replyMessage == null || replyMessage.getPayload() == null)) {
             if (fallbackEndpointAdapter != null) {
-                log.info("Did not receive reply message - "
-                        + "delegating to fallback endpoint adapter for response generation");
+                log.debug("Did not receive reply message - "
+                        + "delegating to fallback endpoint adapter");
 
                 replyMessage = fallbackEndpointAdapter.handleMessage(request);
             } else {
-                log.info("Did not receive reply message - no response is simulated");
+                log.debug("Did not receive reply message - no response is simulated");
             }
         }
 

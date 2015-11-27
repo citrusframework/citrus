@@ -46,14 +46,12 @@ public class TraceVariablesAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
+        log.info("Trace variables");
+
         Iterator<String> it;
         if (variableNames != null && variableNames.size() > 0) {
-            log.info("Validating variables using custom map:");
-            
             it = variableNames.iterator();
         } else {
-            log.info("Validating all variables in context:");
-            
             it = context.getVariables().keySet().iterator();
         }
 
@@ -61,7 +59,7 @@ public class TraceVariablesAction extends AbstractTestAction {
             String key = it.next();
             String value = context.getVariable(key);
 
-            log.info("Current value of variable " + key + " = " + value);
+            log.info("Variable " + key + " = " + value);
         }
     }
 

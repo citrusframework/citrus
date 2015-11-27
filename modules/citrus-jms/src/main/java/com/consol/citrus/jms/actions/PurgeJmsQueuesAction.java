@@ -70,7 +70,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     @SuppressWarnings("PMD.CloseResource") //suppress since session/connection closed via JmsUtils
     @Override
     public void doExecute(TestContext context) {
-        log.info("Purging JMS queues...");
+        log.debug("Purging JMS queues...");
         
         Connection connection = null;
         Session session = null;
@@ -95,7 +95,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             JmsUtils.closeConnection(connection, true);
         }
 
-        log.info("JMS queues purged successfully");
+        log.info("Purged JMS queues");
     }
 
     /**
