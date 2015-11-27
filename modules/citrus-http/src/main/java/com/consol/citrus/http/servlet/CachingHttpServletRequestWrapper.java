@@ -16,16 +16,20 @@
 
 package com.consol.citrus.http.servlet;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import com.consol.citrus.Citrus;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.util.FileCopyUtils;
+import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Caching wrapper saves request body data to cache when read.
@@ -34,7 +38,7 @@ import org.springframework.util.FileCopyUtils;
 public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /** Cached request data initialized when first read from input stream */
     private byte[] body;
-    
+
     /**
      * Default constructor using initial servlet request.
      * @param request
@@ -42,7 +46,27 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
     public CachingHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
     }
-    
+
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        if (body == null) {
+            return super.getParameterMap();
+        }
+
+        Map<String, String[]> params = new HashMap<>();
+        if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
+            if ("application/x-www-form-urlencoded".equals(getContentType())) {
+                fillParams(params, new String(body, Charset.forName(Citrus.CITRUS_FILE_ENCODING)));
+            } else {
+                return super.getParameterMap();
+            }
+        } else {
+            fillParams(params, getQueryString());
+        }
+
+        return params;
+    }
+
     @Override
     public ServletInputStream getInputStream() throws IOException {
         if (body == null) {
@@ -54,7 +78,27 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
         }
         return new RequestCachingInputStream();
     }
-    
+
+    /**
+     * Adds parameter name value paris extracted from given query string.
+     * @param params
+     * @param queryString
+     */
+    private void fillParams(Map<String, String[]> params, String queryString) {
+        if (StringUtils.hasText(queryString)) {
+            StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
+            while (tokenizer.hasMoreTokens()) {
+                String[] nameValuePair = tokenizer.nextToken().split("=");
+
+                try {
+                    params.put(URLDecoder.decode(nameValuePair[0], Citrus.CITRUS_FILE_ENCODING), new String[] { URLDecoder.decode(nameValuePair[1], Citrus.CITRUS_FILE_ENCODING) });
+                } catch (UnsupportedEncodingException e) {
+                    throw new CitrusRuntimeException(String.format("Failed to decode query param value '%s=%s'", nameValuePair[0], nameValuePair[1]), e);
+                }
+            }
+        }
+    }
+
     /** Input stream uses cached request data */
     private final class RequestCachingInputStream extends ServletInputStream {
         private final ByteArrayInputStream is;
@@ -83,5 +127,5 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
             return is.read();
         }
     }
-    
+
 }

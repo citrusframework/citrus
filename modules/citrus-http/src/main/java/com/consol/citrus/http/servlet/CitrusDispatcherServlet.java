@@ -19,8 +19,7 @@ package com.consol.citrus.http.servlet;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.controller.HttpMessageController;
-import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
-import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
+import com.consol.citrus.http.interceptor.*;
 import com.consol.citrus.http.server.HttpServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
@@ -48,6 +47,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     private HttpServer httpServer;
 
     /** Default bean names used in default configuration */
+    protected static final String LOGGING_INTERCEPTOR_BEAN_NAME = "citrusLoggingInterceptor";
     protected static final String HANDLER_INTERCEPTOR_BEAN_NAME = "citrusHandlerInterceptor";
     protected static final String MESSAGE_CONTROLLER_BEAN_NAME = "citrusHttpMessageController";
 
@@ -75,7 +75,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     protected void configureHandlerInterceptor(ApplicationContext context) {
         if (context.containsBean(HANDLER_INTERCEPTOR_BEAN_NAME)) {
             DelegatingHandlerInterceptor handlerInterceptor = context.getBean(HANDLER_INTERCEPTOR_BEAN_NAME, DelegatingHandlerInterceptor.class);
-            handlerInterceptor.setInterceptors(adaptInterceptors(httpServer.getInterceptors()));
+            handlerInterceptor.setInterceptors(adaptInterceptors(httpServer.getInterceptors(), context));
         }
     }
 
@@ -102,10 +102,16 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     /**
      * Adapts object list to handler interceptors.
      * @param interceptors
+     * @param context
      * @return
      */
-    private List<HandlerInterceptor> adaptInterceptors(List<Object> interceptors) {
+    private List<HandlerInterceptor> adaptInterceptors(List<Object> interceptors, ApplicationContext context) {
         List<HandlerInterceptor> handlerInterceptors = new ArrayList<HandlerInterceptor>();
+
+        if (context.containsBean(LOGGING_INTERCEPTOR_BEAN_NAME)) {
+            LoggingHandlerInterceptor loggingInterceptor = context.getBean(LOGGING_INTERCEPTOR_BEAN_NAME, LoggingHandlerInterceptor.class);
+            handlerInterceptors.add(loggingInterceptor);
+        }
 
         if (interceptors != null) {
             for (Object interceptor : interceptors) {

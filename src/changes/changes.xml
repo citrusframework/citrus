@@ -17,6 +17,8 @@
   <body>
     <release version="2.5" date="15.12.2015" description="2.5 release">
         <action dev="christophd" type="fix">
+          GITHUB-55 x-www-form-urlencoded payload lost
+        </action><action dev="christophd" type="fix">
           GITHUB-50 allow variable value definition in cdata section
         </action>
         <action dev="maherm" type="add">
