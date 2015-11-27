@@ -35,9 +35,11 @@ public class ReadFileResourceFunctionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecute() throws Exception {
+        context.setVariable("filename", "file.txt");
         context.setVariable("user", "Christoph");
 
-        String result = function.execute(Arrays.asList("classpath:com/consol/citrus/functions/file.txt"), context);
+        String path = "classpath:com/consol/citrus/functions/${filename}";
+        String result = function.execute(Arrays.asList(path), context);
 
         Assert.assertTrue(result.startsWith("This is a sample file content!"));
         Assert.assertTrue(result.contains("'Christoph'"));
