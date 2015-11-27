@@ -602,6 +602,27 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="TimerActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:group ref="actionGroup" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="intervalInSeconds" type="xs:string"/>
+        <xs:attribute name="intervalInMilliseconds" type="xs:string"/>
+        <xs:attribute name="delayInSeconds" type="xs:string"/>
+        <xs:attribute name="delayInMilliseconds" type="xs:string"/>
+        <xs:attribute name="repeatCount" type="xs:string"/>
+        <xs:attribute name="fork" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="StopTimerActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="timerId" type="xs:string"/>
+    </xs:complexType>
+
     <xs:complexType name="ActionReferenceActionType">
         <xs:complexContent>
             <xs:extension base="TestActionType">
@@ -788,6 +809,8 @@
             <xs:element ref="repeat-onerror-until-true"/>
             <xs:element ref="conditional"/>
             <xs:element ref="sequential"/>
+            <xs:element ref="timer"/>
+            <xs:element ref="stop-timer"/>
             <xs:element ref="fail"/>
             <xs:element ref="parallel"/>
             <xs:element ref="catch"/>
@@ -863,6 +886,8 @@
     <xs:element name="repeat-onerror-until-true" type="RepeatOnErrorUntilTrueActionType"/>
     <xs:element name="conditional" type="ConditionalActionType"/>
     <xs:element name="sequential" type="SequentialActionType"/>
+    <xs:element name="timer" type="TimerActionType"/>
+    <xs:element name="stop-timer" type="StopTimerActionType"/>
     <xs:element name="action" type="ActionReferenceActionType"/>
     <xs:element name="call-template" type="CallTemplateActionType"/>
     <xs:element name="transform" type="TransformActionType"/>

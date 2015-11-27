@@ -19,15 +19,22 @@ package com.consol.citrus.context;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
+import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.GlobalVariables;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
+
+import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.fail;
 
 /**
  * @author Christoph Deppisch
@@ -167,7 +174,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAddVariables() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("${test1}", "123");
         vars.put("${test2}", "");
         
@@ -181,7 +188,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
     public void testReplaceVariablesInMap() {
         context.getVariables().put("test", "123");
         
-        Map<String, Object> testMap = new HashMap<String, Object>();
+        Map<String, Object> testMap = new HashMap<>();
         testMap.put("plainText", "Hello TestFramework!");
         testMap.put("value", "${test}");
         
@@ -208,7 +215,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
     public void testReplaceVariablesInList() {
         context.getVariables().put("test", "123");
         
-        List<String> testList = new ArrayList<String>();
+        List<String> testList = new ArrayList<>();
         testList.add("Hello TestFramework!");
         testList.add("${test}");
         testList.add("test");
@@ -228,5 +235,27 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.resolveDynamicValue(
                 "citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
         Assert.assertEquals(context.resolveDynamicValue("nonDynamicValue"), "nonDynamicValue");
+    }
+
+    @Test
+    public void testRegisterAndStopTimers() {
+        String timerId = "t1";
+        StopTimer timer = Mockito.mock(StopTimer.class);
+
+        context.registerTimer(timerId, timer);
+
+        try {
+            context.registerTimer(timerId, timer);
+            fail("registering timer with same name more than once should have thrown exception");
+        }
+        catch (Exception e) {
+            // ok
+        }
+
+        Assert.assertTrue(context.stopTimer(timerId));
+        Assert.assertFalse(context.stopTimer("?????"));
+        context.stopTimers();
+
+        verify(timer, times(2)).stopTimer();
     }
 }

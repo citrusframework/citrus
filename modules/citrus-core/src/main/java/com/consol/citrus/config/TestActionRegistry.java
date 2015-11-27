@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public final class TestActionRegistry {
     /** Parser registry as map */
-    private static Map<String, BeanDefinitionParser> parser = new HashMap<String, BeanDefinitionParser>();
+    private static Map<String, BeanDefinitionParser> parser = new HashMap<>();
 
     /**
      * Default constructor.
@@ -69,6 +69,8 @@ public final class TestActionRegistry {
         registerActionParser("start", new StartServerActionParser());
         registerActionParser("stop", new StopServerActionParser());
         registerActionParser("wait", new WaitActionParser());
+        registerActionParser("timer", new TimerParser());
+        registerActionParser("stop-timer", new StopTimerParser());
     }
 
     /**

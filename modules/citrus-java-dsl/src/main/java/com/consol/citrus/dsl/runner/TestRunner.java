@@ -409,6 +409,25 @@ public interface TestRunner extends ApplicationContextAware {
     SequenceBuilder sequential();
 
     /**
+     * Repeat nested test actions based on a timer interval.
+     * @return
+     */
+    TimerBuilder timer();
+
+    /**
+     * Stops timer matching the supplied timerId
+     * @param timerId
+     * @return
+     */
+    StopTimerAction stopTimer(String timerId);
+
+    /**
+     * Stops all timers
+     * @return
+     */
+    StopTimerAction stopTimers();
+
+    /**
      * Run docker command action.
      * @return
      */

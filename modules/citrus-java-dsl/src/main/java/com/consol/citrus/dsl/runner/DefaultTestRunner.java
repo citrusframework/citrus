@@ -477,6 +477,26 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public TimerBuilder timer() {
+        TimerBuilder builder = new TimerBuilder(this);
+        containers.push(builder.build());
+        return builder;
+    }
+
+    @Override
+    public StopTimerAction stopTimer(String timerId) {
+        StopTimerAction action = new StopTimerAction();
+        action.setTimerId(timerId);
+        return run(action);
+    }
+
+    @Override
+    public StopTimerAction stopTimers() {
+        StopTimerAction action = new StopTimerAction();
+        return run(action);
+    }
+
+    @Override
     public DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer) {
         DockerActionBuilder builder = new DockerActionBuilder();
         configurer.configure(builder);

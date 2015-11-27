@@ -108,9 +108,6 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
                 }
 
                 citrus.run(testCase, ctx);
-            } catch (RuntimeException e) {
-                testResult.setThrowable(e);
-                testResult.setStatus(ITestResult.FAILURE);
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -479,6 +476,26 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     @Override
     public SequenceBuilder sequential() {
         return testDesigner.sequential();
+    }
+
+    @Override
+    public TimerBuilder timer() {
+        return testDesigner.timer();
+    }
+
+    @Override
+    public TimerBuilder timer(TestAction... actions) {
+        return testDesigner.timer(actions);
+    }
+
+    @Override
+    public StopTimerAction stopTimer(String timerId) {
+        return testDesigner.stopTimer(timerId);
+    }
+
+    @Override
+    public StopTimerAction stopTimers() {
+        return testDesigner.stopTimers();
     }
 
     @Override

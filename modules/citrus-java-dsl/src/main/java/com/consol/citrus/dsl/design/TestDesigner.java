@@ -576,6 +576,32 @@ public interface TestDesigner extends ApplicationContextAware {
     SequenceBuilder sequential();
 
     /**
+     * Adds a timer container.
+     * @return
+     */
+    TimerBuilder timer();
+
+    /**
+     * Adds a timer container with nested test actions.
+     * @param actions
+     * @return
+     */
+    TimerBuilder timer(TestAction... actions);
+
+    /**
+     * Stops the timer matching the supplied timerId
+     * @param timerId
+     * @return
+     */
+    StopTimerAction stopTimer(String timerId);
+
+    /**
+     * Stops all timers within the current test context
+     * @return
+     */
+    StopTimerAction stopTimers();
+
+    /**
      * Creates a new docker execute action.
      * @return
      */

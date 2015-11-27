@@ -445,6 +445,26 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public TimerBuilder timer(TestAction ... actions) {
+        return testDesigner.timer(actions);
+    }
+
+    @Override
+    public StopTimerAction stopTimer(String timerId) {
+        return testDesigner.stopTimer(timerId);
+    }
+
+    @Override
+    public StopTimerAction stopTimers() {
+        return testDesigner.stopTimers();
+    }
+
+    @Override
+    public TimerBuilder timer() {
+        return testDesigner.timer();
+    }
+
+    @Override
     public DockerActionBuilder docker() {
         return testDesigner.docker();
     }
