@@ -115,7 +115,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         }
 
         if (acceptResponse == null) {
-            throw new CitrusRuntimeException("Unable to read accept response from paylaod: " + response);
+            throw new CitrusRuntimeException("Unable to read accept response from payload: " + response);
         }
 
         return acceptResponse.isAccept();

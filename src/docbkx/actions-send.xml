@@ -239,7 +239,7 @@ public void messagingTest() {
         .payloadModel(new TestRequest("Hello Citrus!"), "myMessageMarshallerBean");
 }</programlisting>
 
-    <para>Now Citrus will marshal the message paylaod with the message marshaller bean named <emphasis>myMessageMarshallerBean</emphasis>.
+    <para>Now Citrus will marshal the message payload with the message marshaller bean named <emphasis>myMessageMarshallerBean</emphasis>.
     This way you can have multiple message marshaller implementations active in your project (XML, JSON, and so on).</para>
 
     <para>Last not least the message can be defined as Citrus message object. Here you can choose one of the different message implementations used in Citrus for SOAP, Http or JMS messages. Or you just use the default message implementation or maybe a custom
