@@ -709,7 +709,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.19</version>
           <configuration>
-            <argLine>${surefireArgLine}</argLine>
             <systemProperties>
               <property>
                 <name>javax.xml.parsers.SAXParserFactory</name>
@@ -743,7 +742,6 @@
                 <goal>verify</goal>
               </goals>
               <configuration>
-                <argLine>${failsafeArgLine}</argLine>
                 <failIfNoTests>false</failIfNoTests>
                 <skipTests>${skip.integration.tests}</skipTests>
               </configuration>
