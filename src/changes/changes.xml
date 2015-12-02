@@ -22,7 +22,7 @@
           GITHUB-50 allow variable value definition in cdata section
         </action>
         <action dev="maherm" type="add">
-          CITRUS-24 Timer Action
+          CITRUS-24 Timer Container and Stop-Timer Action
         </action>
     </release>
 
