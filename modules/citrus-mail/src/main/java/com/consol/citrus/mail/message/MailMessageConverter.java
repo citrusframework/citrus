@@ -348,7 +348,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
         }
 
         if (mailMessage == null) {
-            throw new CitrusRuntimeException("Unable to create proper mail message from paylaod: " + payload);
+            throw new CitrusRuntimeException("Unable to create proper mail message from payload: " + payload);
         }
 
         return mailMessage;
