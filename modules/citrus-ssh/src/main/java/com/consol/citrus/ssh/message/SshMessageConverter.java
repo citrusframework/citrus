@@ -45,7 +45,7 @@ public class SshMessageConverter implements MessageConverter<SshMessage, SshEndp
         }
 
         if (sshMessage == null) {
-            throw new CitrusRuntimeException("Unable to create proper ssh message from paylaod: " + payload);
+            throw new CitrusRuntimeException("Unable to create proper ssh message from payload: " + payload);
         }
 
         return sshMessage;
