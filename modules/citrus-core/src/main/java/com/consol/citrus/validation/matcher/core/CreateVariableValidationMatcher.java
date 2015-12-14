@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 /**
  * Creates new variables from given field. Either uses field name or control value as variable name.
  *
@@ -35,11 +37,11 @@ public class CreateVariableValidationMatcher implements ValidationMatcher {
     private static Logger log = LoggerFactory.getLogger(CreateVariableValidationMatcher.class);
 
     @Override
-    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
         String name = fieldName;
 
-        if (StringUtils.hasText(control)) {
-            name = control;
+        if (controlParameters != null && controlParameters.size() > 0) {
+            name = controlParameters.get(0);
         }
 
         log.info("Setting variable: " + name + " to value: " + value);

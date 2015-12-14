@@ -22,30 +22,33 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
     
 	private DatePatternValidationMatcher matcher = new DatePatternValidationMatcher();
     
     @Test
     public void testValidateSuccess() {
-    	matcher.validate("field", "2011-10-10", "yyyy-MM-dd", context);
-        matcher.validate("field", "10.10.2011", "dd.MM.yyyy", context);
-        matcher.validate("field", "2011-01-01T01:02:03", "yyyy-MM-dd'T'HH:mm:ss", context);
+    	matcher.validate("field", "2011-10-10", Arrays.asList("yyyy-MM-dd"), context);
+        matcher.validate("field", "10.10.2011", Arrays.asList("dd.MM.yyyy"), context);
+        matcher.validate("field", "2011-01-01T01:02:03", Arrays.asList("yyyy-MM-dd'T'HH:mm:ss"), context);
     }
     
     @Test
     public void testValidateError() {
-    	assertException("field", "201110-10", "yy-MM-dd");
+    	assertException("field", "201110-10", Arrays.asList("yy-MM-dd"));
     }
 
-    private void assertException(String fieldName, String value, String control) {
+    private void assertException(String fieldName, String value, List<String> control) {
     	try {
     		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
 			Assert.assertTrue(e.getMessage().contains(value));
-			Assert.assertTrue(e.getMessage().contains(control));
+			Assert.assertTrue(e.getMessage().contains(control.get(0)));
 		}
     }
 }

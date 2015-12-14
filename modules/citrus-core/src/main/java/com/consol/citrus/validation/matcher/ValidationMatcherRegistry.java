@@ -31,7 +31,7 @@ import com.consol.citrus.exceptions.NoSuchValidationMatcherLibraryException;
 public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */
     @Autowired
-    private List<ValidationMatcherLibrary> validationMatcherLibraries = new ArrayList<ValidationMatcherLibrary>();
+    private List<ValidationMatcherLibrary> validationMatcherLibraries = new ArrayList<>();
     
     /**
      * Get library for validationMatcher prefix.
@@ -39,9 +39,11 @@ public class ValidationMatcherRegistry {
      * @return ValidationMatcherLibrary instance
      */
     public ValidationMatcherLibrary getLibraryForPrefix(String validationMatcherPrefix) {
-        for (int i = 0; i < validationMatcherLibraries.size(); i++) {
-            if (((ValidationMatcherLibrary)validationMatcherLibraries.get(i)).getPrefix().equals(validationMatcherPrefix)) {
-                return (ValidationMatcherLibrary)validationMatcherLibraries.get(i);
+        if(validationMatcherLibraries != null) {
+            for (ValidationMatcherLibrary validationMatcherLibrary : validationMatcherLibraries) {
+                if (validationMatcherLibrary.getPrefix().equals(validationMatcherPrefix)) {
+                    return validationMatcherLibrary;
+                }
             }
         }
 

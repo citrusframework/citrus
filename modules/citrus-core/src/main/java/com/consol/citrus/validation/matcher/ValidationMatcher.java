@@ -19,6 +19,8 @@ package com.consol.citrus.validation.matcher;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 
+import java.util.List;
+
 /**
  * General validation matcher interface.
  * 
@@ -31,9 +33,9 @@ public interface ValidationMatcher {
      * 
      * @param fieldName the fieldName for logging purpose.
      * @param value the value to be validated.
-     * @param control the control value.
+     * @param controlParameters the control parameters.
      * @param context
      * @throws ValidationException when validation fails
      */
-    void validate(String fieldName, String value, String control, TestContext context) throws ValidationException;
+    void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException;
 }

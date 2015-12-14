@@ -22,6 +22,7 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -31,7 +32,8 @@ import java.util.regex.PatternSyntaxException;
  */
 public class DatePatternValidationMatcher implements ValidationMatcher {
 
-    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
+		String control = controlParameters.get(0);
     	SimpleDateFormat dateFormat;
     	try {
     		dateFormat = new SimpleDateFormat(control);

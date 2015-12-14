@@ -20,6 +20,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 
+import java.util.List;
+
 /**
  * ValidationMatcher based on Double > Double.
  * 
@@ -27,8 +29,8 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
  */
 public class GreaterThanValidationMatcher implements ValidationMatcher {
 
-    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
-        
+    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
+		String control = controlParameters.get(0);
     	Double dValue;
     	Double dControl;
     	try {

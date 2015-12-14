@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class ValidationMatcherLibrary {
     /** Map of validationMatchers in this library */
-    private Map<String, ValidationMatcher> members = new HashMap<String, ValidationMatcher>();
+    private Map<String, ValidationMatcher> members = new HashMap<>();
 
     /** Name of validationMatcher library */
     private String name = "standard";

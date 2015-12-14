@@ -16,11 +16,18 @@
 
 package com.consol.citrus.validation.matcher;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.fail;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +42,8 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@equalsIgnoreCase('value')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${equalsIgnoreCase('value')}@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${equalsIgnoreCase(value)}@", context);
-        ValidationMatcherUtils.resolveValidationMatcher("field", "John's", "@equalsIgnoreCase('John's')@", context);
+        // TODO CD should this be supported? Perhaps using "\'" to escape quote?
+        // ValidationMatcherUtils.resolveValidationMatcher("field", "John's", "@equalsIgnoreCase('John's')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "", "@equalsIgnoreCase('')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "prefix:value", "@equalsIgnoreCase('prefix:value')@", context);
     }
@@ -49,7 +57,54 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${foo:customMatcher('value')}@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "prefix:value", "@foo:customMatcher('prefix:value')@", context);
 
-        verify(validationMatcher, times(3)).validate("field", "value", "value", context);
-        verify(validationMatcher).validate("field", "prefix:value", "prefix:value", context);
+        verify(validationMatcher, times(3)).validate("field", "value", Arrays.asList("value"), context);
+        verify(validationMatcher).validate("field", "prefix:value", Arrays.asList("prefix:value"), context);
     }
+
+    @Test(dataProvider = "validControlExpressions")
+    public void shouldExtractControlParametersSuccessfully(String controlExpression, List<String> expectedParameters) {
+        ControlExpressionParser expressionParser = ValidationMatcherUtils.getDefaultControlExpressionParser();
+        List<String> extractedParameters = ValidationMatcherUtils.extractControlValues(expressionParser, controlExpression, null);
+
+        Assert.assertEquals(extractedParameters.size(), expectedParameters.size());
+
+        for (int i = 0; i < expectedParameters.size(); i++) {
+            Assert.assertTrue(extractedParameters.size() > i);
+            Assert.assertEquals(extractedParameters.get(i), expectedParameters.get(i));
+        }
+    }
+
+    @DataProvider
+    public Object[][] validControlExpressions() {
+        return new Object[][]{
+                // {control-expression, expected-parameter-1, expected-parameter-2, ..}
+                {"'a'", Arrays.asList("a")},
+                {"'a',", Arrays.asList("a")},
+                {"'a','b'", Arrays.asList("a","b")},
+                {"'a','b',", Arrays.asList("a","b")},
+                {"''", Arrays.asList("")},
+                {"'',", Arrays.asList("")},
+                {"", Arrays.<String>asList()},
+                {null, Arrays.<String>asList()},
+        };
+    }
+
+    @Test(dataProvider = "invalidControlExpressions", expectedExceptions = CitrusRuntimeException.class)
+    public void shouldNotExtractControlParametersSuccessfully(String controlExpression) {
+        ControlExpressionParser expressionParser = ValidationMatcherUtils.getDefaultControlExpressionParser();
+        ValidationMatcherUtils.extractControlValues(expressionParser, controlExpression, null);
+    }
+
+    @DataProvider
+    public Object[][] invalidControlExpressions() {
+        return new Object[][]{
+                {"'"},
+                {"',"},
+                {"'a"},
+                {"'a,"},
+                {"'a','b"},
+                {"'a','b,"},
+        };
+    }
+
 }

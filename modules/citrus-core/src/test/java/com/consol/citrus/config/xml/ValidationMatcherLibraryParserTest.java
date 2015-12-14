@@ -24,6 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -52,7 +53,7 @@ public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(matcherLibraryBean.getMembers().get("end").getClass(), EndsWithValidationMatcher.class);
         Assert.assertEquals(matcherLibraryBean.getMembers().get("custom").getClass(), CustomValidationMatcher.class);
 
-        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", "Hello Citrus!", context);
+        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", Arrays.asList("Hello Citrus!"), context);
 
         matcherLibraryBean = matcherLibraries.get("matcherLib2");
         Assert.assertEquals(matcherLibraryBean.getName(), "matcherLib2");
@@ -61,6 +62,6 @@ public class ValidationMatcherLibraryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(matcherLibraryBean.getMembers().get("isNumber").getClass(), IsNumberValidationMatcher.class);
         Assert.assertEquals(matcherLibraryBean.getMembers().get("custom").getClass(), CustomValidationMatcher.class);
 
-        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", "Hello Citrus!", context);
+        matcherLibraryBean.getMembers().get("custom").validate("field", "Hello Citrus!", Arrays.asList("Hello Citrus!"), context);
     }
 }

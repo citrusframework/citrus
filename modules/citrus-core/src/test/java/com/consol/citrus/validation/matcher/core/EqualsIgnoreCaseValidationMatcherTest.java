@@ -22,33 +22,36 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class EqualsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitTest {
     
     private EqualsIgnoreCaseValidationMatcher matcher = new EqualsIgnoreCaseValidationMatcher();
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "VALUE", "value", context);
-        matcher.validate("field", "VALUE", "VALUE", context);
-        matcher.validate("field", "value", "VALUE", context);
-        matcher.validate("field", "value", "value", context);
-        matcher.validate("field", "$%& value 123", "$%& VALUE 123", context);
-        matcher.validate("field", "/() VALUE @&§", "/() VALUE @&§", context);
+        matcher.validate("field", "VALUE", Arrays.asList("value"), context);
+        matcher.validate("field", "VALUE", Arrays.asList("VALUE"), context);
+        matcher.validate("field", "value", Arrays.asList("VALUE"), context);
+        matcher.validate("field", "value", Arrays.asList("value"), context);
+        matcher.validate("field", "$%& value 123", Arrays.asList("$%& VALUE 123"), context);
+        matcher.validate("field", "/() VALUE @&§", Arrays.asList("/() VALUE @&§"), context);
     }
     
     @Test
     public void testValidateError() {
-    	assertException("field", "VALUE", "VAIUE");
+    	assertException("field", "VALUE", Arrays.asList("VAIUE"));
     }
 
-    private void assertException(String fieldName, String value, String control) {
+    private void assertException(String fieldName, String value, List<String> control) {
     	try {
     		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
 			Assert.assertTrue(e.getMessage().contains(value));
-			Assert.assertTrue(e.getMessage().contains(control));
+			Assert.assertTrue(e.getMessage().contains(control.get(0)));
 		}
     }
 }

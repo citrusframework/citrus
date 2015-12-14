@@ -20,23 +20,25 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 public class CreateVariableValidationMatcherTest extends AbstractTestNGUnitTest {
 
     private CreateVariableValidationMatcher matcher = new CreateVariableValidationMatcher();
 
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "This is a test", "", context);
+        matcher.validate("field", "This is a test", Arrays.<String>asList(), context);
 
         Assert.assertEquals(context.getVariable("field"), "This is a test");
 
-        matcher.validate("field", "This is a 2nd test", "", context);
+        matcher.validate("field", "This is a 2nd test", Arrays.<String>asList(), context);
 
         Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
 
         context.setVariable("foo", "bar");
 
-        matcher.validate("field", "Another test", "foo", context);
+        matcher.validate("field", "Another test", Arrays.asList("foo"), context);
 
         Assert.assertEquals(context.getVariable("field"), "This is a 2nd test");
         Assert.assertEquals(context.getVariable("foo"), "Another test");

@@ -22,34 +22,37 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class LowerThanValidationMatcherTest extends AbstractTestNGUnitTest {
     
 	private GreaterThanValidationMatcher matcher = new GreaterThanValidationMatcher();
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "3", "2", context);
-        matcher.validate("field", "1", "-1", context);
-        matcher.validate("field", "0.000000001", "0", context);
-        matcher.validate("field", "0", "-0.000000001", context);
+        matcher.validate("field", "3", Arrays.asList("2"), context);
+        matcher.validate("field", "1", Arrays.asList("-1"), context);
+        matcher.validate("field", "0.000000001", Arrays.asList("0"), context);
+        matcher.validate("field", "0", Arrays.asList("-0.000000001"), context);
     }
     
     @Test
     public void testValidateError() {
-    	assertException("field", "NaN", "2");
-    	assertException("field", "2", "NaN");
-    	assertException("field", "2.0", "2.0");
-    	assertException("field", "2.0", "2.1");
+    	assertException("field", "NaN", Arrays.asList("2"));
+    	assertException("field", "2", Arrays.asList("NaN"));
+    	assertException("field", "2.0", Arrays.asList("2.0"));
+    	assertException("field", "2.0", Arrays.asList("2.1"));
     }
 
-    private void assertException(String fieldName, String value, String control) {
+    private void assertException(String fieldName, String value, List<String> control) {
     	try {
     		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
 			Assert.assertTrue(e.getMessage().contains(value));
-			Assert.assertTrue(e.getMessage().contains(control));
+			Assert.assertTrue(e.getMessage().contains(control.get(0)));
 		}
     }
 }

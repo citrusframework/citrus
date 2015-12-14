@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.Assert;
 
+import java.util.List;
+
 /**
  * @author Christoph Deppisch
  * @since 2.0
@@ -34,7 +36,7 @@ public class CustomValidationMatcher implements ValidationMatcher {
     private Endpoint endpoint;
 
     @Override
-    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, List<String> control, TestContext context) throws ValidationException {
         Assert.assertNotNull(endpoint);
     }
 }

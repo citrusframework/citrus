@@ -16,10 +16,12 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.testng.Assert.fail;
 
@@ -32,9 +34,9 @@ public class DateRangeValidationMatcherTest {
     DateRangeValidationMatcher testling = new DateRangeValidationMatcher();
 
     @Test(dataProvider = "validateData")
-    public void validateDateRanges(String value, String control, String expectedErrorMessage) {
+    public void validateDateRanges(String value, List<String> params, String expectedErrorMessage) {
         try {
-            testling.validate("xyz", value, control, null);
+            testling.validate("xyz", value, params, null);
             if (expectedErrorMessage != null) {
                 fail("Was expecting exception with error message " + expectedErrorMessage);
             }
@@ -52,42 +54,15 @@ public class DateRangeValidationMatcherTest {
 
         return new Object[][]{
                 // {date-to-validate, control-data, expected-error-message}
-                {"01-12-2015", "'01-12-2015', '31-12-2015', 'dd-MM-yyyy'", noErrorExpected},
-                {"31-12-2015", "'01-12-2015', '31-12-2015', 'dd-MM-yyyy'", noErrorExpected},
-                {"01-12-2015", "'01-12-2015', '01-12-2015', 'dd-MM-yyyy'", noErrorExpected},
-                {"2015.12.01 01:00:00", "'2015.12.01 01:00:00', '2015.12.01 01:00:01', 'yyyy.MM.dd HH:mm:ss'", noErrorExpected},
-                {"2015.12.01 01:00:01", "'2015.12.01 01:00:00', '2015.12.01 01:00:01', 'yyyy.MM.dd HH:mm:ss'", noErrorExpected},
-                {"2015-01-01", "'2015-01-01', '2015-01-01'", noErrorExpected},
-                {"2015-01-01", "'2015-01-02', '2015-01-03'", "not in range"},
-                {"aa-bb-cccc", "'2015-01-02', '2015-01-03'", "Error parsing date"},
+                {"01-12-2015", Arrays.asList("01-12-2015", "31-12-2015","dd-MM-yyyy"), noErrorExpected},
+                {"31-12-2015", Arrays.asList("01-12-2015", "31-12-2015", "dd-MM-yyyy"), noErrorExpected},
+                {"01-12-2015", Arrays.asList("01-12-2015", "01-12-2015", "dd-MM-yyyy"), noErrorExpected},
+                {"2015.12.01 01:00:00", Arrays.asList("2015.12.01 01:00:00", "2015.12.01 01:00:01", "yyyy.MM.dd HH:mm:ss"), noErrorExpected},
+                {"2015.12.01 01:00:01", Arrays.asList("2015.12.01 01:00:00", "2015.12.01 01:00:01", "yyyy.MM.dd HH:mm:ss"), noErrorExpected},
+                {"2015-01-01", Arrays.asList("2015-01-01", "2015-01-01"), noErrorExpected},
+                {"2015-01-01", Arrays.asList("2015-01-02", "2015-01-03"), "not in range"},
+                {"aa-bb-cccc", Arrays.asList("2015-01-02", "2015-01-03"), "Error parsing date"},
         };
-    }
-
-    @Test(dataProvider = "validControlData")
-    public void shouldSucceedExtractingControlData(String control, String expectedDateFrom, String expectedDateTo, String expectedPattern) {
-        String[] controlData = testling.extractControlData(control);
-        Assert.assertEquals(controlData[0], expectedDateFrom);
-        Assert.assertEquals(controlData[1], expectedDateTo);
-        Assert.assertEquals(controlData[2], expectedPattern);
-    }
-
-    @DataProvider
-    public Object[][] validControlData() {
-        return new Object[][]{
-                // {control-data, expected-from-date, expected-to-date, expected-pattern}
-                {"'2015-12-01', '2015-12-31', 'dd-MM-yyyy'", "2015-12-01", "2015-12-31", "dd-MM-yyyy"},
-                {"'2015-12-01', '2015-12-31', ''", "2015-12-01", "2015-12-31", DateRangeValidationMatcher.FALLBACK_DATE_PATTERN},
-                {"'2015-12-01', '2015-12-31', 'EEE, d MMM yyyy HH:mm:ss Z'", "2015-12-01", "2015-12-31", "EEE, d MMM yyyy HH:mm:ss Z"},
-                {"'2015-12-01','2015-12-31','yyyy-MM-dd'", "2015-12-01", "2015-12-31", "yyyy-MM-dd"},
-                {" '2015-12-01'  ,  '2015-12-31'  ,  'yyyy-MM-dd' ", "2015-12-01", "2015-12-31", "yyyy-MM-dd"},
-                {"'2015-12-01', '2015-12-31'", "2015-12-01", "2015-12-31", DateRangeValidationMatcher.FALLBACK_DATE_PATTERN},
-                {"'2015-12-01', '2015-12-31',''", "2015-12-01", "2015-12-31", DateRangeValidationMatcher.FALLBACK_DATE_PATTERN}
-        };
-    }
-
-    @Test(dataProvider = "invalidControlData", expectedExceptions = CitrusRuntimeException.class)
-    public void shouldFailExtractingControlData(String control) {
-        testling.extractControlData(control);
     }
 
     @DataProvider

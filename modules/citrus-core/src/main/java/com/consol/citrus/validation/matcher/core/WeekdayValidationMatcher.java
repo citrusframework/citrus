@@ -18,41 +18,46 @@ package com.consol.citrus.validation.matcher.core;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.matcher.ControlExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 /**
  * Special validation matcher implementation checks that a given date matches an
  * expected weekday.
- *
+ * <p/>
  * Control weekday value is one of these strings: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
- *
+ * <p/>
  * In addition to that user can specify the date format to parse:
  * MONDAY(YYYY-MM-DD)
  *
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class WeekdayValidationMatcher implements ValidationMatcher {
+public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(WeekdayValidationMatcher.class);
+    /**
+     * Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(WeekdayValidationMatcher.class);
 
     @Override
-    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
         SimpleDateFormat dateFormat;
+        String weekday = controlParameters.get(0);
         String formatString = "dd.MM.yyyy";
-        String weekday = control;
 
-        if (control.contains("(")) {
-            formatString = control.substring(control.indexOf("('") + 2, control.length() - 2);
-            weekday = control.substring(0, control.indexOf("('"));
+        if (controlParameters.size() == 2) {
+            // override the default date format
+            formatString = controlParameters.get(1);
         }
 
         try {
@@ -67,7 +72,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher {
             cal.setTime(dateFormat.parse(value));
 
             if (cal.get(Calendar.DAY_OF_WEEK) == Weekday.valueOf(weekday).getConstantValue()) {
-                log.info("Weekday validation matcher successful - All values OK");
+                LOG.info("Weekday validation matcher successful - All values OK");
             } else {
                 throw new ValidationException(this.getClass().getSimpleName() + " failed for field '" + fieldName + "'" +
                         ". Received invalid week day '" + value + "', expected date to be a '" + weekday + "'");
@@ -78,10 +83,23 @@ public class WeekdayValidationMatcher implements ValidationMatcher {
         }
     }
 
+    @Override
+    public List<String> extractControlValues(String controlExpression, Character delimiter) {
+        List<String> parameters = new ArrayList<>();
+
+        if (controlExpression.contains("(")) {
+            parameters.add(controlExpression.substring(0, controlExpression.indexOf("('")));
+            parameters.add(controlExpression.substring(controlExpression.indexOf("('") + 2, controlExpression.length() - 2));
+        } else {
+            parameters.add(controlExpression);
+        }
+        return parameters;
+    }
+
     /**
      * Weekday enumeration links names to Java util Calendar constants.
      */
-    private static enum Weekday {
+    private enum Weekday {
         MONDAY(Calendar.MONDAY),
         TUESDAY(Calendar.TUESDAY),
         WEDNESDAY(Calendar.WEDNESDAY),

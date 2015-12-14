@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.List;
+
 /**
  * Validation matcher receives a XML data and validates it against expected XML with full
  * XML validation support (e.g. ignoring elements, namespace support, ...).
@@ -40,12 +42,13 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
     private ApplicationContext applicationContext;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlValidationMatcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XmlValidationMatcher.class);
     
     /**
       * {@inheritDoc}
       */
-    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
+    public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
+        String control = controlParameters.get(0);
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         xmlMessageValidator.validateMessage(new DefaultMessage(removeCDataElements(value)), new DefaultMessage(control), context, validationContext);
     }
@@ -89,7 +92,7 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
         }
 
         if (xmlMessageValidator == null) {
-            log.warn("No XML message validator found in Spring bean context - setting default validator");
+            LOG.warn("No XML message validator found in Spring bean context - setting default validator");
             xmlMessageValidator = new DomXmlMessageValidator();
             xmlMessageValidator.setApplicationContext(applicationContext);
         }

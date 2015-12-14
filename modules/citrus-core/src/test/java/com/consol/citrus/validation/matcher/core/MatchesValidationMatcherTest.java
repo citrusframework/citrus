@@ -22,32 +22,35 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MatchesValidationMatcherTest extends AbstractTestNGUnitTest {
     
 	private MatchesValidationMatcher matcher = new MatchesValidationMatcher();
     
     @Test
     public void testValidateSuccess() {
-    	matcher.validate("field", "This is a test", ".*", context);
-        matcher.validate("field", "This is a test", "Thi.*", context);
-        matcher.validate("field", "This is a test", ".*test", context);
-        matcher.validate("field", "aaaab", "a*b", context);
+    	matcher.validate("field", "This is a test", Arrays.asList(".*"), context);
+        matcher.validate("field", "This is a test", Arrays.asList("Thi.*"), context);
+        matcher.validate("field", "This is a test", Arrays.asList(".*test"), context);
+        matcher.validate("field", "aaaab", Arrays.asList("a*b"), context);
     }
     
     @Test
     public void testValidateError() {
-    	assertException("field", "a", "[^a]");
-    	assertException("field", "aaaab", "aaab*");
+    	assertException("field", "a", Arrays.asList("[^a]"));
+    	assertException("field", "aaaab", Arrays.asList("aaab*"));
     }
 
-    private void assertException(String fieldName, String value, String control) {
+    private void assertException(String fieldName, String value, List<String> control) {
     	try {
     		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
 			Assert.assertTrue(e.getMessage().contains(value));
-			Assert.assertTrue(e.getMessage().contains(control));
+			Assert.assertTrue(e.getMessage().contains(control.get(0)));
 		}
     }
 }
