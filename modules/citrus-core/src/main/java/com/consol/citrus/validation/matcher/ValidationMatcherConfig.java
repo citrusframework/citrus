@@ -40,6 +40,7 @@ public class ValidationMatcherConfig {
     private final XmlValidationMatcher xmlValidationMatcher = new XmlValidationMatcher();
     private final WeekdayValidationMatcher weekDayValidationMatcher = new WeekdayValidationMatcher();
     private final CreateVariableValidationMatcher createVariablesValidationMatcher = new CreateVariableValidationMatcher();
+    private final DateRangeValidationMatcher dateRangeValidationMatcher = new DateRangeValidationMatcher();
 
     @Bean(name = "validationMatcherRegistry")
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
@@ -71,6 +72,7 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.getMembers().put("matchesXml", xmlValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("isWeekday", weekDayValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("variable", createVariablesValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("dateRange", dateRangeValidationMatcher);
 
         return citrusValidationMatcherLibrary;
     }

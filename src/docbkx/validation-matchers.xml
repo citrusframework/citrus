@@ -228,4 +228,23 @@
 
       <para>This creates a new variable <emphasis>date</emphasis> with the actual element value as variable value.</para>
     </section>
+
+    <section id="validation-matcher-daterange">
+      <title>dateRange()</title>
+
+      <para>The matcher works on date values and checks that a given date is within the expected date range. The user
+        defines the expected date range by specifying a from-date, a to-date and optionally a date format. The matcher
+        fails when the given date lies outside the expected date range.</para>
+
+      <programlisting>&lt;someDate&gt;@dateRange('01-12-2015', '31-12-2015', 'dd-MM-yyyy')@&lt;/someDate&gt;</programlisting>
+
+      <para>Possible valid values would be 'some date' &gt;= '01-12-2015' and 'some date' &lt;= '31-12-2015'</para>
+
+      <para>The date-format is optional and when omitted it is assumed that all dates match the default date format
+        <emphasis>yyyy-MM-dd</emphasis>. When specifying a custom date format use java's date format as a reference for
+        valid date formats. Only dates were used in the example above but we could just as easily used date and time
+        as shown in the example below</para>
+
+      <programlisting>&lt;someDate&gt;@dateRange('2015.12.01 07:00:00', '2015.12.01 19:00:00', 'yyyy.MM.dd HH:mm:ss')@&lt;/someDate&gt;</programlisting>
+    </section>
 </chapter>
