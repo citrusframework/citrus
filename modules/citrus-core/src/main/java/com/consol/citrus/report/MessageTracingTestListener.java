@@ -28,7 +28,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,17 +48,20 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     /** File ending for all message trace files */
     private static final String TRACE_FILE_ENDING = ".msgs";
 
+    /** File ending for all message trace files */
+    private static final Date TEST_EXECUTION_DATE = new Date();
+
     /** Output directory */
     private Resource outputDirectory = new FileSystemResource("logs/trace/messages/");
     
     /** List of messages to trace */
-    private List<String> messages = new ArrayList<String>();
+    private final List<String> messages = new ArrayList<>();
     
     /** Locking object for synchronization */
-    private Object lockObject = new Object();
+    private final Object lockObject = new Object();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageTracingTestListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageTracingTestListener.class);
             
     /**
      * {@inheritDoc}
@@ -77,13 +82,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
             return; // do not write empty message trace file
         }
 
-        BufferedWriter writer = null;
-        
-        try {
-            Resource outputFile = outputDirectory.createRelative(test.getName() + TRACE_FILE_ENDING);
-            
-            writer = new BufferedWriter(new FileWriter(outputFile.getFile()));
-            
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(getTraceFile(test.getName())))) {
             writer.write(separator() + newLine() + newLine());
             
             synchronized (lockObject) {
@@ -96,14 +95,6 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
             writer.flush();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to write message trace to filesystem", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    log.error("Error while closing message trace file writer", e);
-                }
-            }
         }
     }
     
@@ -161,5 +152,28 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     public void setOutputDirectory(Resource outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
-    
+
+
+    /**
+     * Returns the trace file for message tracing. The file name should be unique per test execution run; the test name
+     * and a execution id (the test execution start time) is embedded within the filename. Normally this should suffice
+     * to ensure that the trace filename is unique per test/test-execution.
+     *
+     * @param testName the name of the test to create the trace file for
+     * @return the trace file to use for message tracing
+     */
+    protected File getTraceFile(String testName) {
+        String testExecutionStartTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(TEST_EXECUTION_DATE);
+        String filename = String.format("%s_%s%s", testName, testExecutionStartTime, TRACE_FILE_ENDING);
+        try {
+            Resource traceResource = outputDirectory.createRelative(filename);
+            if(traceResource.exists()) {
+                LOG.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceResource.getFilename()));
+            }
+            return traceResource.getFile();
+        }
+        catch (IOException e) {
+            throw new CitrusRuntimeException("Error creating trace file", e);
+        }
+    }
 }
