@@ -50,6 +50,7 @@
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-admin</module>
+    <module>modules/citrus-zookeeper</module>
   </modules>
 
   <developers>
@@ -598,7 +599,13 @@
         <artifactId>docker-java</artifactId>
         <version>2.1.2</version>
       </dependency>
-      
+
+      <dependency>
+        <groupId>org.apache.zookeeper</groupId>
+        <artifactId>zookeeper</artifactId>
+        <version>3.4.7</version>
+      </dependency>
+
       <!-- Test scoped dependencies -->
       <dependency>
         <groupId>org.apache.activemq</groupId>

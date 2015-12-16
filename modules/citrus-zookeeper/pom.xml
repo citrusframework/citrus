@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>citrus</artifactId>
+    <groupId>com.consol.citrus</groupId>
+    <version>2.5-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-zookeeper</artifactId>
+  <name>citrus-zookeeper</name>
+
+  <properties>
+    <zookeeper.port.listen>21181</zookeeper.port.listen>
+    <zookeeper.port.shutdown>21182</zookeeper.port.shutdown>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>net.revelc.code</groupId>
+        <artifactId>zookeeper-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <configuration>
+          <clientPort>${zookeeper.port.listen}</clientPort>
+          <shutdownString>UniqueShutDownString</shutdownString>
+          <shutdownPort>${zookeeper.port.shutdown}</shutdownPort>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-zookeeper</id>
+            <goals>
+              <goal>start</goal>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.7</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus.model</groupId>
+      <artifactId>citrus-model-zookeeper</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+      <artifactId>jackson-jaxrs-json-provider</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

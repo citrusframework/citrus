@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:zookeeper="http://www.citrusframework.org/schema/zookeeper/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/zookeeper/testcase
+                                  http://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd
+                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="ZooKeeperExecuteIT">
+    <meta-info>
+      <author>Martin Maher</author>
+      <creationdate>2015-09-14</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Martin Maher</last-updated-by>
+      <last-updated-on>2015-09-14T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test zookeeper container command execution with zookeeper client.</description>
+
+    <variables>
+      <variable name="randomString" value="citrus:randomString(10)"></variable>
+    </variables>
+    <actions>
+      <echo>
+        <message>Validate zookeeper API version</message>
+      </echo>
+
+      <zookeeper:info zookeeper-client="zookeeperClient">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {
+                "responseData":{
+                    "state":"@ignore@",
+                    "sessionPwd":"@ignore@",
+                    "sessionTimeout":"@ignore@",
+                    "sessionId":"@ignore@"
+                }
+              }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:info>
+
+      <zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}" acl="OPEN_ACL_UNSAFE" mode="PERSISTENT">
+        <zookeeper:data>Some Data</zookeeper:data>
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {
+                "responseData":{
+                    "path":"/${randomString}"
+                }
+              }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:create>
+
+      <zookeeper:exists zookeeper-client="zookeeperClient" path="/${randomString}">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+            {
+              "responseData":{
+                "aversion":0,
+                "czxid":"@ignore@",
+                "dataLength":9,
+                "numChildren":0,
+                "ctime":"@ignore@",
+                "ephemeralOwner":"@ignore@",
+                "pzxid":"@ignore@",
+                "cversion":0,
+                "mtime":"@ignore@",
+                "version":0,
+                "mzxid":"@ignore@"
+              }
+            }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:exists>
+
+      <zookeeper:getData zookeeper-client="zookeeperClient" path="/${randomString}">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+            {
+              "responseData":{
+                "data":"Some Data"
+              }
+            }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:getData>
+
+      <zookeeper:setData zookeeper-client="zookeeperClient" path="/${randomString}">
+        <zookeeper:data>overwrite data with this</zookeeper:data>
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+            {
+              "responseData":{
+                "aversion":0,
+                "czxid":"@ignore@",
+                "dataLength":24,
+                "numChildren":0,
+                "ctime":"@ignore@",
+                "ephemeralOwner":"@ignore@",
+                "pzxid":"@ignore@",
+                "cversion":0,
+                "mtime":"@ignore@",
+                "version":1,
+                "mzxid":"@ignore@"
+              }
+            }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:setData>
+
+      <zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}/child1" acl="OPEN_ACL_UNSAFE" mode="EPHEMERAL">
+        <zookeeper:data></zookeeper:data>
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {
+                "responseData":{
+                    "path":"/${randomString}/child1"
+                }
+              }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:create>
+
+      <zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}/child2" acl="OPEN_ACL_UNSAFE" mode="EPHEMERAL">
+        <zookeeper:data></zookeeper:data>
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {
+                "responseData":{
+                    "path":"/${randomString}/child2"
+                }
+              }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:create>
+
+      <zookeeper:getChildren zookeeper-client="zookeeperClient" path="/${randomString}">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {
+                "responseData":{
+                    "children":["child1","child2"]
+                }
+              }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:getChildren>
+
+      <zookeeper:delete zookeeper-client="zookeeperClient" path="/${randomString}" version="1">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+            {
+              "responseData":{
+                "path":"/${randomString}",
+                "responseCode":-111
+              }
+            }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+      </zookeeper:delete>
+    </actions>
+  </testcase>
+</spring:beans>
