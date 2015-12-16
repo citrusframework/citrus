@@ -48,6 +48,4 @@ public class VertxSyncEndpointParser extends VertxEndpointParser {
     protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
         return VertxSyncEndpointConfiguration.class;
     }
-
-
 }

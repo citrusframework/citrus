@@ -48,6 +48,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     /**
      * Default constructor using endpoint configuration.
      * @param name
+     * @param vertx
      * @param endpointConfiguration
      */
     public VertxSyncConsumer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration) {
