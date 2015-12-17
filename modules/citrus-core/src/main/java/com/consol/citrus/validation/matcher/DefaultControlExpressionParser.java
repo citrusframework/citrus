@@ -23,17 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Default implementation of control expression parser.
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.5
  */
-public class FallbackControlExpressionParser implements ControlExpressionParser {
+public class DefaultControlExpressionParser implements ControlExpressionParser {
+
     @Override
     public List<String> extractControlValues(String controlExpression, Character delimiter) {
         Character useDelimiter = delimiter != null ? delimiter : DEFAULT_DELIMITER;
         List<String> extractedParameters = new ArrayList<>();
+
         if (StringUtils.hasText(controlExpression)) {
             extractParameters(controlExpression, useDelimiter, extractedParameters, 0);
-            if(extractedParameters.size() == 0) {
+            if (extractedParameters.size() == 0) {
                 // if the controlExpression has text but no parameters were extracted, then assume that
                 // the controlExpression itself is the only parameter
                 extractedParameters.add(controlExpression);
@@ -46,6 +49,16 @@ public class FallbackControlExpressionParser implements ControlExpressionParser 
         int startParameter = controlExp.indexOf(delim, searchFrom);
         if (startParameter > -1) {
             int endParameter = controlExp.indexOf(delim, startParameter + 1);
+
+            boolean isEnd = false;
+            while (!isEnd && endParameter > 0 && endParameter < controlExp.length() - 2) {
+                if (controlExp.charAt(endParameter + 1) == ',' || controlExp.charAt(endParameter + 1) == ')') {
+                    isEnd = true;
+                } else {
+                    endParameter = controlExp.indexOf(delim, endParameter + 1);
+                }
+            }
+
             if (endParameter > -1) {
                 String extractedParameter = controlExp.substring(startParameter + 1, endParameter);
                 extractedParameters.add(extractedParameter);

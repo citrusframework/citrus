@@ -18,7 +18,6 @@ package com.consol.citrus.validation.matcher;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 import org.springframework.util.StringUtils;
@@ -63,7 +62,7 @@ public final class ValidationMatcherUtils {
         ValidationMatcher validationMatcher = library.getValidationMatcher(matcherName);
 
         ControlExpressionParser controlExpressionParser = lookupControlExpressionParser(validationMatcher);
-        List<String> params = extractControlValues(controlExpressionParser, matcherValue, null);
+        List<String> params = controlExpressionParser.extractControlValues(matcherValue, null);
         List<String> replacedParams = replaceVariablesAndFunctionsInParameters(params, context);
         validationMatcher.validate(fieldName, fieldValue, replacedParams, context);
     }
@@ -101,19 +100,11 @@ public final class ValidationMatcherUtils {
         return expression;
     }
 
-    public static ControlExpressionParser getDefaultControlExpressionParser() {
-        return new FallbackControlExpressionParser();
-    }
-
-    public static List<String> extractControlValues(final ControlExpressionParser parser, final String controlExpression, final Character delimiter) {
-        return parser.extractControlValues(controlExpression, delimiter);
-    }
-
     private static ControlExpressionParser lookupControlExpressionParser(ValidationMatcher validationMatcher) {
-        if(validationMatcher instanceof ControlExpressionParser) {
+        if (validationMatcher instanceof ControlExpressionParser) {
             return (ControlExpressionParser) validationMatcher;
         }
-        return getDefaultControlExpressionParser();
+        return new DefaultControlExpressionParser();
     }
 
     public static String getParameterListAsString(List<String> parameters) {
