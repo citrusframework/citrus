@@ -118,7 +118,8 @@ public final class Citrus {
     public static final String DEFAULT_APPLICATION_CONTEXT = System.getProperty(DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath*:citrus-context.xml");
 
     /** Default application context class */
-    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty("citrus.spring.java.config");
+    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY = "citrus.spring.java.config";
+    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY);
 
     /** Default test directories */
     public static final String DEFAULT_TEST_SRC_DIRECTORY = "src" + File.separator + "test" + File.separator;
@@ -129,6 +130,9 @@ public final class Citrus {
     /** Prefix/suffix used to identify validation matchers */
     public static final String VALIDATION_MATCHER_PREFIX = "@";
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
+
+    public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
+    private static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.xml,/**/*IT.xml");
 
     /** Default message type used in message validation mechanism */
     public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
@@ -252,6 +256,14 @@ public final class Citrus {
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException(String.format("Unable to find endpoint for name '%s'", name), e);
         }
+    }
+
+    /**
+     * Gets set of file name patterns for XML test files.
+     * @return
+     */
+    public static Set<String> getXmlTestFileNamePattern() {
+        return StringUtils.commaDelimitedListToSet(XML_TEST_FILE_NAME_PATTERN);
     }
 
     /**

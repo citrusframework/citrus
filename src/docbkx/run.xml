@@ -94,7 +94,7 @@ public class SampleIT extends AbstractTestNGCitrusTest {
             <para>packageScan: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate
             test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML
             test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with
-            <emphasis>**/*Test.xml</emphasis> file name pattern.</para>
+            <emphasis>**/*Test.xml</emphasis> and <emphasis>**/*IT.xml</emphasis> file name pattern.</para>
           </listitem>
         </itemizedlist>
 

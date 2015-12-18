@@ -16,6 +16,7 @@
 
 package com.consol.citrus.testng;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.testng.*;
 import org.testng.internal.MethodInstance;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +62,11 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                     String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
                     for (String packageName : packagesToScan) {
                         try {
-                            Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
-                            for (int i = 1; i < fileResources.length; i++) {
-                                interceptedMethods.add(new MethodInstance(method.getMethod()));
+                            for (String fileNamePattern : Citrus.getXmlTestFileNamePattern()) {
+                                Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
+                                for (int i = 1; i < fileResources.length; i++) {
+                                    interceptedMethods.add(new MethodInstance(method.getMethod()));
+                                }
                             }
                         } catch (IOException e) {
                             log.error("Unable to locate file resources for test package '" + packageName + "'", e);

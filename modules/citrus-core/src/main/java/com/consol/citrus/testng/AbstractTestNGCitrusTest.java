@@ -134,13 +134,14 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             String[] testPackages = citrusTestAnnotation.packageScan();
             for (String packageName : testPackages) {
                 try {
-                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + "/**/*Test.xml");
+                    for (String fileNamePattern : Citrus.getXmlTestFileNamePattern()) {
+                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
+                        for (Resource fileResource : fileResources) {
+                            String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                            filePath = filePath.substring(filePath.indexOf(packageName.replace('.', File.separatorChar)));
 
-                    for (Resource fileResource : fileResources) {
-                        String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
-                        filePath = filePath.substring(filePath.indexOf(packageName.replace('.', File.separatorChar)));
-
-                        methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
+                            methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
+                        }
                     }
                 } catch (RuntimeException e) {
                     throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
