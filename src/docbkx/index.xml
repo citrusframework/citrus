@@ -33,6 +33,7 @@
     <xi:include href='test-case.xml'/>
     <xi:include href='test-variables.xml'/>
     <xi:include href='run.xml'/>
+    <xi:include href='configuration.xml'/>
     <xi:include href='endpoints.xml'/>
     <xi:include href='validation.xml'/>
     <xi:include href='xpath.xml'/>

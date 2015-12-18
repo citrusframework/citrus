@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="configuration">
+    <title>Configuration</title>
+
+    <para>You have several options in customizing the Citrus project configuration. Citrus uses default settings that can be overwritten to some extend.
+      As a framework Citrus internally works with the Spring IoC container. So Citrus will start a Spring application context and register several
+      components as Spring beans. You can customize the behavior of these beans and you can add custom settings by setting system properties.</para>
+    
+    <section id="configuration-xml-config">
+        <title>Citrus Spring XML application context</title>
+
+        <para>Citrus starts a Spring application context and adds some default Spring bean components. By default Citrus will load some internal
+          Spring Java config classes defining those bean components. At some point you might add some custom beans to that basic application context. This
+          is why Citrus will search for custom Spring application context files in your project. These are automatically loaded.</para>
+
+        <para>By default Citrus looks for custom XML Spring application context files in this location: <emphasis>classpath*:citrus-context.xml</emphasis>.
+          So you can add a file named <emphasis>citrus-context.xml</emphasis> to your project classpath and Citrus will load all Spring beans automatically.</para>
+
+        <para>The location of this file can be customized by setting a System property <emphasis>citrus.spring.application.context</emphasis>. So you can customize
+          the XML Spring application context file location. The System property is settable with Maven surefire and failsafe plugin for instance or via Java before
+          the Citrus framework gets loaded.</para>
+
+        <para>See the following sample XML configuration which is a normal Spring bean XML configuration:</para>
+
+        <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+  &lt;citrus:schema-repository id=&quot;schemaRepository&quot; /&gt;
+
+&lt;/beans&gt;</programlisting>
+
+      <para>Now you can add some Spring beans and you can use the Citrus XML components such as <emphasis>schema-repository</emphasis> for adding custom beans and components
+        to your Citrus project. Citrus provides several namespaces for custom Spring XML components. These are described in more detail in the respective chapters and sections
+        in this reference guide.</para>
+
+      <tip>
+        <para>You can also use import statements in this Spring application context in order to load other configuration files. So you are free to modularize your configuration
+          in several files that get loaded by Citrus.</para>
+      </tip>
+    </section>
+
+    <section id="configuration-java-config">
+      <title>Citrus Spring Java config</title>
+
+      <para>Using XML Spring application context configuration is the default behavior of Citrus. However some people might prefer pure Java code configuration. You can
+        do that by adding a System property <emphasis>citrus.spring.java.config</emphasis> with a custom Spring Java config class as value.</para>
+
+      <programlisting language="java">System.setProperty("citrus.spring.java.config", MyCustomConfig.class.getName())</programlisting>
+
+      <para>Citrus will load the Spring bean configurations in <emphasis>MyCustomConfig.class</emphasis> as Java config then. See the following example for custom Spring Java configuration:</para>
+
+      <programlisting language="java">import com.consol.citrus.TestCase;
+import com.consol.citrus.report.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MyCustomConfig {
+
+    @Bean(name = "customTestListener")
+    public TestListener customTestListener() {
+        return new PlusMinusTestReporter();
+    }
+
+    private static class PlusMinusTestReporter extends AbstractTestListener implements TestReporter {
+
+        /** Logger */
+        private Logger log = LoggerFactory.getLogger(CustomBeanConfig.class);
+
+        private StringBuilder testReport = new StringBuilder();
+
+        @Override
+        public void onTestSuccess(TestCase test) {
+            testReport.append("+");
+        }
+
+        @Override
+        public void onTestFailure(TestCase test, Throwable cause) {
+            testReport.append("-");
+        }
+
+        @Override
+        public void generateTestResults() {
+            log.info(testReport.toString());
+        }
+
+        @Override
+        public void clearTestResults() {
+            testReport = new StringBuilder();
+        }
+    }
+}</programlisting>
+
+      <para>You can also mix XML and Java configuration so Citrus will load both configuration to the Spring bean application context on startup.</para>
+    </section>
+
+    <section id="configuration-properties">
+      <title>Citrus application properties</title>
+
+      <para>The Citrus framework references some basic System properties that can be overwritten. The properties are loaded from Java System and are also
+        settable via property file. Just add a property file named <emphasis>citrus-application.properties</emphasis> to your project classpath. This property
+        file contains customized settings such as:</para>
+
+      <programlisting>citrus.spring.application.context=classpath*:citrus-custom-context.xml
+citrus.spring.java.config=com.consol.citrus.config.MyCustomConfig
+citrus.file.encoding=UTF-8
+citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml</programlisting>
+
+      <para>Citrus loads these application properties at startup. All properties are also settable with Java System properties. The location of the <emphasis>citrus-application.properties</emphasis>
+        is customizable with the System property <emphasis>citrus.application.config</emphasis>.</para>
+
+      <programlisting language="java">System.setProperty("citrus.application.config", "custom/path/to/citrus-application.properties")</programlisting>
+
+      <para>At the moment you can use these properties for customization:</para>
+
+      <itemizedlist>
+        <listitem><emphasis>citrus.spring.application.context</emphasis>: File location for Spring XML configurations</listitem>
+        <listitem><emphasis>citrus.spring.java.config</emphasis>: Class name for Spring Java config</listitem>
+        <listitem><emphasis>citrus.file.encoding</emphasis>: Default file encoding used in Citrus when reading and writing file content</listitem>
+        <listitem><emphasis>citrus.xml.file.name.pattern</emphasis>: File name patterns used for XML test file package scan</listitem>
+      </itemizedlist>
+    </section>
+</chapter>
