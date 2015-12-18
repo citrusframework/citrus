@@ -104,6 +104,7 @@ public final class CitrusArchiveBuilder {
         camel();
         vertx();
         docker();
+        rmi();
         javaDsl();
 
         return this;
@@ -187,6 +188,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder docker() {
         artifactCoordinates.add(getCoordinates("citrus-docker"));
+        return this;
+    }
+
+    /**
+     * Gets the rmi Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder rmi() {
+        artifactCoordinates.add(getCoordinates("citrus-rmi"));
         return this;
     }
 

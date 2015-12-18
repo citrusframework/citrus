@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                         http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus RMI Integration Testing"/>
+  </citrus:global-variables>
+
+  <!-- Xsd schema resources and definitions -->
+  <citrus:schema-repository id="schemaRepository"/>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
+    <property name="staticMethod" value="java.rmi.registry.LocateRegistry.createRegistry"/>
+    <property name="arguments" value="1099"/>
+  </bean>
+
+  <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+    <route id="newsRoute">
+      <from uri="rmi://localhost:1099/newsService?remoteInterfaces=com.consol.citrus.rmi.remote.NewsService"/>
+      <to uri="log:com.consol.citrus.camel?level=INFO"/>
+      <to uri="bean:newsServiceBean"/>
+    </route>
+
+    <route id="helloRoute">
+      <from uri="direct:hello"/>
+      <to uri="bean:helloServiceClient?method=sayHello"/>
+      <to uri="rmi://localhost:1099/helloService"/>
+    </route>
+
+    <route id="helloCntRoute">
+      <from uri="direct:helloCount"/>
+      <to uri="bean:helloServiceClient?method=getHelloCount"/>
+      <to uri="rmi://localhost:1099/helloService"/>
+      <to uri="log:com.consol.citrus.camel?level=INFO"/>
+    </route>
+  </camelContext>
+
+  <bean id="helloServiceClient" class="com.consol.citrus.rmi.remote.HelloServiceClient"/>
+  <bean id="newsServiceBean" class="com.consol.citrus.rmi.remote.NewsServiceImpl"/>
+
+  <!-- RMI server -->
+  <citrus-rmi:server id="rmiHelloServer"
+                       interface="com.consol.citrus.rmi.remote.HelloService"
+                       binding="helloService"
+                       timeout="10000"
+                       auto-start="true"/>
+
+  <!-- RMI client -->
+  <citrus-rmi:client id="rmiNewsClient"
+                       host="localhost"
+                       port="1099"
+                       binding="newsService"
+                       timeout="10000"/>
+</beans>

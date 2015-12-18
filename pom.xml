@@ -46,6 +46,7 @@
     <module>modules/citrus-camel</module>
     <module>modules/citrus-vertx</module>
     <module>modules/citrus-docker</module>
+    <module>modules/citrus-rmi</module>
     <module>modules/citrus-arquillian</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
@@ -1509,6 +1510,42 @@
                       <directory>modules/citrus-model/model-docker/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-docker-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-rmi-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/rmi/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-rmi/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-rmi-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-rmi-message-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/rmi/message</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-rmi/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-rmi-message*.xsd</include>
                       </includes>
                     </resource>
                   </resources>

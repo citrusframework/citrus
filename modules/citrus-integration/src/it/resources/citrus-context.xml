@@ -10,6 +10,7 @@
            xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
            xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
            xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
+           xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
            xmlns:context="http://www.springframework.org/schema/context"
            xmlns:util="http://www.springframework.org/schema/util"
            xmlns:amq="http://activemq.apache.org/schema/core"
@@ -25,6 +26,7 @@
            http://www.citrusframework.org/schema/mail/config http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd
            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
+           http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
@@ -32,6 +34,12 @@
     <import resource="citrus-schemas-context.xml"/>
 
     <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
+
+    <!-- RMI local service registry -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
+      <property name="staticMethod" value="java.rmi.registry.LocateRegistry.createRegistry"/>
+      <property name="arguments" value="1099"/>
+    </bean>
 
     <!-- Embedded ActiveMQ JMS broker -->
     <amq:broker useJmx="false" persistent="false">
@@ -211,8 +219,25 @@
          destination-name="${jms.queue.http.request.ack}"
          actor="helloServer"/>
 
-    <!-- Camel route example -->
+    <!-- Citrus RMI -->
+    <bean id="helloServiceClient" class="com.consol.citrus.rmi.HelloServiceClient"/>
+    <bean id="newsServiceBean" class="com.consol.citrus.rmi.NewsServiceImpl"/>
 
+    <!-- RMI server -->
+    <citrus-rmi:server id="rmiHelloServer"
+                       interface="com.consol.citrus.rmi.HelloService"
+                       binding="helloService"
+                       timeout="10000"
+                       auto-start="true"/>
+
+    <!-- RMI client -->
+    <citrus-rmi:client id="rmiNewsClient"
+                       host="localhost"
+                       port="1099"
+                       binding="newsService"
+                       timeout="10000"/>
+
+    <!-- Camel route example -->
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
       <route id="sampleInRoute" trace="true">
         <from uri="direct:in-route"/>
@@ -225,6 +250,25 @@
             <to uri="direct:default-route" pattern="InOut" />
           </otherwise>
         </choice>
+      </route>
+
+      <route id="newsRoute">
+        <from uri="rmi://localhost:1099/newsService?remoteInterfaces=com.consol.citrus.rmi.NewsService"/>
+        <to uri="log:com.consol.citrus.camel?level=INFO"/>
+        <to uri="bean:newsServiceBean"/>
+      </route>
+
+      <route id="helloRoute">
+        <from uri="direct:hello"/>
+        <to uri="bean:helloServiceClient?method=sayHello"/>
+        <to uri="rmi://localhost:1099/helloService"/>
+      </route>
+
+      <route id="helloCntRoute">
+        <from uri="direct:helloCount"/>
+        <to uri="bean:helloServiceClient?method=getHelloCount"/>
+        <to uri="rmi://localhost:1099/helloService"/>
+        <to uri="log:com.consol.citrus.camel?level=INFO"/>
       </route>
     </camelContext>
 

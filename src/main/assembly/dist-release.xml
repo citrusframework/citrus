@@ -19,6 +19,7 @@
         <include>com.consol.citrus:citrus-mail</include>
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-docker</include>
+        <include>com.consol.citrus:citrus-rmi</include>
         <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
@@ -32,6 +33,7 @@
         <include>com.consol.citrus.model:citrus-model-mail</include>
         <include>com.consol.citrus.model:citrus-model-camel</include>
         <include>com.consol.citrus.model:citrus-model-docker</include>
+        <include>com.consol.citrus.model:citrus-model-rmi</include>
         <include>com.consol.citrus.model:citrus-model-vertx</include>
         <include>com.consol.citrus.model:citrus-model-ftp</include>
       </includes>
@@ -102,6 +104,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-model/model-docker/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-rmi/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>
@@ -179,6 +188,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-docker/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-rmi/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

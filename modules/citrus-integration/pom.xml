@@ -122,7 +122,6 @@
             <schemaFiles>**/*.xsd</schemaFiles>
           </configuration>
         </plugin>
-
     </plugins>
 
   	<testSourceDirectory>src/it/java</testSourceDirectory>
@@ -135,7 +134,7 @@
         </testResource>
     </testResources>
   </build>
-  
+
   <dependencies>
     <dependency>
         <groupId>com.consol.citrus</groupId>
@@ -179,6 +178,11 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-rmi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-admin</artifactId>
       <version>${project.version}</version>
       <type>war</type>
@@ -204,6 +208,13 @@
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-rmi</artifactId>
+      <version>${apache.camel.version}</version>
+      <scope>test</scope>
     </dependency>
     
     <dependency>
