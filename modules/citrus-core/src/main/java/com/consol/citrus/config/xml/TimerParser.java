@@ -44,10 +44,8 @@ public class TimerParser implements BeanDefinitionParser {
 
         // set condition, which is mandatory
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("id"), "timerId");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("intervalInMilliseconds"), "intervalInMilliseconds");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("intervalInSeconds"), "intervalInSeconds");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("delayInMilliseconds"), "delayInMilliseconds");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("delayInSeconds"), "delayInSeconds");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("interval"), "interval");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("delay"), "delay");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("repeatCount"), "repeatCount");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "fork");
 

@@ -31,8 +31,8 @@ public class TimerTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testTimerBuilder() {
         final String timerId = "testTimer1";
-        final int delayInMilliseconds = 100;
-        final int intervalInMilliseconds = 200;
+        final int delay = 100;
+        final int interval = 200;
         final int repeatCount = 1;
         final boolean fork = false;
 
@@ -41,8 +41,8 @@ public class TimerTestDesignerTest extends AbstractTestNGUnitTest {
             public void configure() {
                 timer()
                         .timerId(timerId)
-                        .delayInMilliseconds(delayInMilliseconds)
-                        .intervalInMilliseconds(intervalInMilliseconds)
+                        .delay(delay)
+                        .interval(interval)
                         .repeatCount(repeatCount)
                         .fork(fork)
                         .actions(echo("hello"));
@@ -57,8 +57,8 @@ public class TimerTestDesignerTest extends AbstractTestNGUnitTest {
 
         Timer action = (Timer) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "timer");
-        Assert.assertEquals(action.getDelayInMilliseconds(), delayInMilliseconds);
-        Assert.assertEquals(action.getIntervalInMilliseconds(), intervalInMilliseconds);
+        Assert.assertEquals(action.getDelay(), delay);
+        Assert.assertEquals(action.getInterval(), interval);
         Assert.assertEquals(action.getRepeatCount(), repeatCount);
         Assert.assertEquals(action.isFork(), fork);
         Assert.assertEquals(action.getActionCount(), 1);

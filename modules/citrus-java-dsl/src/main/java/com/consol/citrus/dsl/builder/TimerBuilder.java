@@ -44,40 +44,20 @@ public class TimerBuilder extends AbstractTestContainerBuilder<Timer> {
     /**
      * Initial delay in milliseconds before first timer event should fire.
      *
-     * @param delayInMilliseconds
+     * @param delay
      */
-    public TimerBuilder delayInMilliseconds(long delayInMilliseconds) {
-        action.setDelayInMilliseconds(delayInMilliseconds);
-        return this;
-    }
-
-    /**
-     * Initial delay in seconds before first timer event should fire.
-     *
-     * @param delayInSeconds
-     */
-    public TimerBuilder delayInSeconds(long delayInSeconds) {
-        action.setDelayInSeconds(delayInSeconds);
+    public TimerBuilder delay(long delay) {
+        action.setDelay(delay);
         return this;
     }
 
     /**
      * Interval in milliseconds between each timer. As soon as the interval has elapsed the next timer event is fired.
      *
-     * @param intervalInMilliseconds
+     * @param interval
      */
-    public TimerBuilder intervalInMilliseconds(long intervalInMilliseconds) {
-        action.setIntervalInMilliseconds(intervalInMilliseconds);
-        return this;
-    }
-
-    /**
-     * Interval in seconds between each timer. As soon as the interval has elapsed the next timer event is fired.
-     *
-     * @param intervalInSeconds
-     */
-    public TimerBuilder intervalInSeconds(long intervalInSeconds) {
-        action.setIntervalInSeconds(intervalInSeconds);
+    public TimerBuilder interval(long interval) {
+        action.setInterval(interval);
         return this;
     }
 

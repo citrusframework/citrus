@@ -117,9 +117,9 @@ public class TimerTest extends AbstractTestNGUnitTest {
         return sleep;
     }
 
-    private Timer createTimerWithNestedAction(int repeatCount, long intervalInMilliseconds, boolean forked, TestAction... action) {
+    private Timer createTimerWithNestedAction(int repeatCount, long interval, boolean forked, TestAction... action) {
         Timer timer = new Timer();
-        timer.setIntervalInMilliseconds(intervalInMilliseconds);
+        timer.setInterval(interval);
         timer.setRepeatCount(repeatCount);
         timer.setFork(forked);
 

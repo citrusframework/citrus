@@ -108,6 +108,9 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
                 }
 
                 citrus.run(testCase, ctx);
+            } catch (RuntimeException e) {
+                testResult.setThrowable(e);
+                testResult.setStatus(ITestResult.FAILURE);
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);

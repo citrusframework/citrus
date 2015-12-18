@@ -34,16 +34,16 @@ public class TimerParserTest extends AbstractActionParserTest<Timer> {
 
         Timer action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimerId(), "timer1");
-        Assert.assertEquals(action.getDelayInMilliseconds(), 5000L);
+        Assert.assertEquals(action.getDelay(), 5000L);
         Assert.assertEquals(action.getRepeatCount(), 1);
-        Assert.assertEquals(action.getIntervalInMilliseconds(), 2000L);
+        Assert.assertEquals(action.getInterval(), 2000L);
         Assert.assertEquals(action.getActionCount(), 1);
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimerId(), "timer2");
-        Assert.assertEquals(action.getDelayInMilliseconds(), 5000L);
+        Assert.assertEquals(action.getDelay(), 500L);
         Assert.assertEquals(action.getRepeatCount(), 2);
-        Assert.assertEquals(action.getIntervalInMilliseconds(), 2000L);
+        Assert.assertEquals(action.getInterval(), 200L);
         Assert.assertEquals(action.getActionCount(), 2);
 
         long defaultDelay = 0L;
@@ -52,9 +52,9 @@ public class TimerParserTest extends AbstractActionParserTest<Timer> {
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getTimerId());
-        Assert.assertEquals(action.getDelayInMilliseconds(), defaultDelay);
+        Assert.assertEquals(action.getDelay(), defaultDelay);
         Assert.assertEquals(action.getRepeatCount(), defaultRepeat);
-        Assert.assertEquals(action.getIntervalInMilliseconds(), defaultInterval);
+        Assert.assertEquals(action.getInterval(), defaultInterval);
         Assert.assertEquals(action.getActionCount(), 1);
     }
 }

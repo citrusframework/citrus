@@ -42,8 +42,8 @@ public class Timer extends AbstractActionContainer implements StopTimer {
 
     protected static final String INDEX_SUFFIX = "-index";
 
-    private long intervalInMilliseconds = 1000L;
-    private long delayInMilliseconds = 0L;
+    private long interval = 1000L;
+    private long delay = 0L;
     private int repeatCount = Integer.MAX_VALUE;
     private boolean fork = false;
     private String timerId;
@@ -74,7 +74,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     private void configureAndRunTimer(final TestContext context) {
         timer = new java.util.Timer(getTimerId(), false);
 
-        registerTimerToEnableStoppingLaterOnUsingStopTimerAction(context);
+        context.registerTimer(getTimerId(), this);
 
         TimerTask timerTask = new TimerTask() {
             int indexCount = 0;
@@ -84,7 +84,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                 try {
                     indexCount++;
                     updateIndexCountInTestContext(context);
-                    log.debug(String.format("Timer event fired (Iteration #%s). Executing nested actions", indexCount));
+                    log.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
 
                     for (TestAction action : actions) {
                         setLastExecutedAction(action);
@@ -113,11 +113,11 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                 stopTimer();
             }
         };
-        timer.scheduleAtFixedRate(timerTask, delayInMilliseconds, intervalInMilliseconds);
+        timer.scheduleAtFixedRate(timerTask, delay, interval);
 
         while (!timerComplete) {
             try {
-                Thread.sleep(intervalInMilliseconds);
+                Thread.sleep(interval);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -128,32 +128,37 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         }
     }
 
-    private void registerTimerToEnableStoppingLaterOnUsingStopTimerAction(TestContext context) {
-        context.registerTimer(getTimerId(), this);
+    public String getTimerId() {
+        if(StringUtils.isEmpty(timerId)) {
+            timerId = "citrus-timer-" + serialNumber();
+        }
+        return timerId;
     }
 
-    public long getIntervalInMilliseconds() {
-        return intervalInMilliseconds;
+    @Override
+    public void stopTimer() {
+        timer.cancel();
+        timerComplete = true;
     }
 
-    public void setIntervalInMilliseconds(long intervalInMilliseconds) {
-        this.intervalInMilliseconds = intervalInMilliseconds;
+    private static int serialNumber() {
+        return nextSerialNumber.getAndIncrement();
     }
 
-    public void setIntervalInSeconds(long intervalInSeconds) {
-        this.intervalInMilliseconds = toMilliseconds(intervalInSeconds);
+    public long getInterval() {
+        return interval;
     }
 
-    public long getDelayInMilliseconds() {
-        return delayInMilliseconds;
+    public void setInterval(long interval) {
+        this.interval = interval;
     }
 
-    public void setDelayInMilliseconds(long delayInMilliseconds) {
-        this.delayInMilliseconds = delayInMilliseconds;
+    public long getDelay() {
+        return delay;
     }
 
-    public void setDelayInSeconds(long delayInSeconds) {
-        this.delayInMilliseconds = toMilliseconds(delayInSeconds);
+    public void setDelay(long delay) {
+        this.delay = delay;
     }
 
     public int getRepeatCount() {
@@ -162,13 +167,6 @@ public class Timer extends AbstractActionContainer implements StopTimer {
 
     public void setRepeatCount(int repeatCount) {
         this.repeatCount = repeatCount;
-    }
-
-    public String getTimerId() {
-        if(StringUtils.isEmpty(timerId)) {
-            timerId = "citrus-timer-" + serialNumber();
-        }
-        return timerId;
     }
 
     public void setTimerId(String timerId) {
@@ -182,20 +180,4 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     public void setFork(boolean fork) {
         this.fork = fork;
     }
-
-    @Override
-    public void stopTimer() {
-        timer.cancel();
-        timerComplete = true;
-    }
-
-    private static int serialNumber() {
-        return nextSerialNumber.getAndIncrement();
-    }
-
-    private static long toMilliseconds(long seconds) {
-        return seconds * 1000;
-    }
-
-
 }

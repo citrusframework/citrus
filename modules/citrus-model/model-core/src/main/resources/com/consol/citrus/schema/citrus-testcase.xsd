@@ -608,10 +608,8 @@
             <xs:group ref="actionGroup" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="id" type="xs:string"/>
-        <xs:attribute name="intervalInSeconds" type="xs:string"/>
-        <xs:attribute name="intervalInMilliseconds" type="xs:string"/>
-        <xs:attribute name="delayInSeconds" type="xs:string"/>
-        <xs:attribute name="delayInMilliseconds" type="xs:string"/>
+        <xs:attribute name="interval" type="xs:string"/>
+        <xs:attribute name="delay" type="xs:string"/>
         <xs:attribute name="repeatCount" type="xs:string"/>
         <xs:attribute name="fork" type="xs:boolean" default="false"/>
     </xs:complexType>

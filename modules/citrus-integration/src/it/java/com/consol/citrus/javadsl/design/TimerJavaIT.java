@@ -30,22 +30,22 @@ public class TimerJavaIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void timerTest() {
         timer()
-                .timerId("forkedTimer")
-                .intervalInMilliseconds(100L)
-                .fork(true)
-                .actions(
-                        echo("I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)"),
-                        sleep(50L)
-                );
+            .timerId("forkedTimer")
+            .interval(100L)
+            .fork(true)
+            .actions(
+                echo("I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)"),
+                sleep(50L)
+            );
 
         timer()
-                .repeatCount(3)
-                .intervalInMilliseconds(100L)
-                .delayInMilliseconds(50L)
-                .actions(
-                        sleep(50L),
-                        echo("I'm going to repeat this message 3 times before the next test actions are executed")
-                );
+            .repeatCount(3)
+            .interval(100L)
+            .delay(50L)
+            .actions(
+                sleep(50L),
+                echo("I'm going to repeat this message 3 times before the next test actions are executed")
+            );
 
         echo("Test almost complete. Make sure all timers running in the background are stopped");
 
