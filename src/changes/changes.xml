@@ -18,11 +18,27 @@
     <release version="2.5" date="15.12.2015" description="2.5 release">
         <action dev="christophd" type="fix">
           GITHUB-55 x-www-form-urlencoded payload lost
-        </action><action dev="christophd" type="fix">
+        </action>
+        <action dev="christophd" type="fix">
           GITHUB-50 allow variable value definition in cdata section
+        </action>
+        <action dev="maherm" type="update">
+          CITRUS-34 Cleanup validation matcher support
+        </action>
+        <action dev="deppisch" type="update">
+          CITRUS-32 Use Mockito instead of EasyMock
+        </action>
+        <action dev="maherm" type="add">
+          CITRUS-31 Date range validation matcher
+        </action>
+        <action dev="deppisch" type="add">
+          CITRUS-29 Read file resource function
         </action>
         <action dev="maherm" type="add">
           CITRUS-24 Timer Container and Stop-Timer Action
+        </action>
+        <action dev="maherm" type="update">
+          CITRUS-23 Optimize Jett-9 startup
         </action>
     </release>
 
