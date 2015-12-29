@@ -213,7 +213,7 @@ public void messagingTest() {
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
     send("helloServiceEndpoint")
-        .payload(new ClasspathResource("com/consol/citrus/messages/TestRequest.xml"));
+        .payload(new ClassPathResource("com/consol/citrus/messages/TestRequest.xml"));
 }</programlisting>
 
     <programlisting language="java">@CitrusTest
