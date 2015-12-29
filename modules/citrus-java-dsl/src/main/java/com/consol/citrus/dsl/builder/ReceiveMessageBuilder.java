@@ -288,17 +288,27 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
     
     /**
-     * Adds script validation by file resource.
+     * Reads validation script file resource and sets content as validation script.
      * @param scriptResource
      * @return
      */
     public T validateScript(Resource scriptResource) {
         try {
-            getScriptValidationContext().setValidationScriptResourcePath(scriptResource.getFile().getAbsolutePath());
+            validateScript(FileUtils.readToString(scriptResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource file", e);
         }
 
+        return self;
+    }
+
+    /**
+     * Adds script validation file resource.
+     * @param fileResourcePath
+     * @return
+     */
+    public T validateScriptResource(String fileResourcePath) {
+        getScriptValidationContext().setValidationScriptResourcePath(fileResourcePath);
         return self;
     }
     

@@ -278,7 +278,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public T validateScript(Resource scriptResource) {
         try {
-            getScriptValidationContext().setValidationScriptResourcePath(scriptResource.getFile().getAbsolutePath());
+            validateScript(FileUtils.readToString(scriptResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource file", e);
         }

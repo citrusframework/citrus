@@ -40,6 +40,7 @@ import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
@@ -936,24 +937,19 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
         
-        File resourceFile = Mockito.mock(File.class);
-        
-        reset(applicationContextMock, resource, resourceFile);
+        reset(applicationContextMock);
 
         when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        when(resource.getFile()).thenReturn(resourceFile);
-        when(resourceFile.getAbsolutePath()).thenReturn("/path/to/file/File.groovy");
-
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
                     .messageType(MessageType.JSON)
-                    .validateScript(resource)
+                    .validateScript(new ClassPathResource("com/consol/citrus/dsl/runner/validation.groovy"))
                     .validator("groovyMessageValidator");
             }
         };
@@ -976,6 +972,50 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
         
+        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
+        Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
+        Assert.assertNull(validationContext.getValidationScriptResourcePath());
+    }
+
+    @Test
+    public void testReceiveBuilderWithValidatonScriptResourcePath() throws IOException {
+        final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
+
+        reset(applicationContextMock);
+
+        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .messageType(MessageType.JSON)
+                        .validateScriptResource("/path/to/file/File.groovy")
+                        .validator("groovyMessageValidator");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getValidator(), validator);
+
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
         Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "/path/to/file/File.groovy");
