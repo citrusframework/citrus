@@ -19,13 +19,12 @@ package com.consol.citrus.actions;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.SqlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +51,6 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     
     /** List of SQL statements */
     protected List<String> statements = new ArrayList<>();
-    
-    /** Constant representing SQL comment */
-    protected static final String SQL_COMMENT = "--";
     
     /** This actions explicit test actor */
     private TestActor actor;
@@ -85,85 +81,31 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
             return false;
         }
     }
-    
+
     /**
      * Reads SQL statements from external file resource. File resource can hold several
      * multi-line statements and comments.
-     * 
+     *
      * @param context the current test context.
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context) {
-        BufferedReader reader = null;
-        StringBuffer buffer;
-        
-        List<String> stmts = new ArrayList<>();
-        
-        String sqlResource = context.replaceDynamicContentInString(sqlResourcePath);
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Executing SQL file: " + sqlResource);
-            }
-            
-            reader = new BufferedReader(new InputStreamReader(new PathMatchingResourcePatternResolver().getResource(sqlResource).getInputStream()));
-            buffer = new StringBuffer();
-            
-            String line;
-            while (reader.ready()) {
-                line = reader.readLine();
-    
-                if (line != null && line.trim() != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
-                    if (line.trim().endsWith(getStatemendEndingCharacter())) {
-                        buffer.append(decorateLastScriptLine(line));
-                        String stmt = buffer.toString().trim();
-    
-                        if (log.isDebugEnabled()) {
-                            log.debug("Found statement: " + stmt);
-                        }
-    
-                        stmts.add(context.replaceDynamicContentInString(stmt));
-                        buffer.setLength(0);
-                        buffer = new StringBuffer();
-                    } else {
-                        buffer.append(line);
-                        
-                        //more lines to come for this statement add line break
-                        buffer.append("\n");
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Resource could not be found - filename: " + sqlResource, e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Warning: Error while closing reader instance", e);
-                }
-            }
-        }
-        
-        return stmts;
-    }
-    
-    /**
-     * Gets the SQL statement ending character sequence.
-     * @return
-     */
-    protected String getStatemendEndingCharacter() {
-        return ";";
+        return SqlUtils.createStatementsFromFileResource(new PathMatchingResourcePatternResolver()
+                .getResource(context.replaceDynamicContentInString(sqlResourcePath)));
     }
 
     /**
-     * Subclasses may want to decorate last script line.
-     * @param line the last script line finishing a SQL statement.
-     * @return
+     * Reads SQL statements from external file resource. File resource can hold several
+     * multi-line statements and comments.
+     *
+     * @param context the current test context.
+     * @return list of SQL statements.
      */
-    protected String decorateLastScriptLine(String line) {
-        return line;
+    protected List<String> createStatementsFromFileResource(TestContext context, SqlUtils.LastScriptLineDecorator lineDecorator) {
+        return SqlUtils.createStatementsFromFileResource(new PathMatchingResourcePatternResolver()
+                .getResource(context.replaceDynamicContentInString(sqlResourcePath)), lineDecorator);
     }
-
+    
     /**
      * Gets this action's description.
      * @return the description

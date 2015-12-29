@@ -19,8 +19,6 @@ package com.consol.citrus.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-import java.util.Iterator;
-
 /**
  * Test action execute SQL statements. Use this action when executing
  * database altering statements like UPDATE, INSERT, ALTER, DELETE. Statements are either
@@ -44,23 +42,17 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        String stmt = "";
-
         if (statements.isEmpty()) {
             statements = createStatementsFromFileResource(context);
         }
 
-        Iterator<String> it = statements.iterator();
-        while (it.hasNext())  {
+        for (String stmt : statements)  {
             try {
-                stmt = it.next();
-                stmt = stmt.trim();
+                stmt = context.replaceDynamicContentInString(stmt.trim());
 
                 if (stmt.endsWith(";")) {
                     stmt = stmt.substring(0, stmt.length()-1);
                 }
-
-                stmt = context.replaceDynamicContentInString(stmt);
 
                 if (log.isDebugEnabled()) {
                     log.debug("Executing SQL statement: " + stmt);

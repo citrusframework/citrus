@@ -17,12 +17,11 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.SqlUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -94,11 +93,7 @@ public class ExecuteSQLBuilder extends AbstractTestActionBuilder<ExecuteSQLActio
      * @param sqlResource
      */
 	public ExecuteSQLBuilder sqlResource(Resource sqlResource) {
-		try {
-            action.setSqlResourcePath(sqlResource.getFile().getAbsolutePath());
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read sql resource", e);
-        }
+		statements(SqlUtils.createStatementsFromFileResource(sqlResource));
 		return this;
 	}
 	

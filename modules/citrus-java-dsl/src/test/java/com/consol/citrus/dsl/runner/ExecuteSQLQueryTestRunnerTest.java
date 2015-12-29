@@ -26,6 +26,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
@@ -44,8 +45,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private Resource resource = Mockito.mock(Resource.class);
-    private File file = Mockito.mock(File.class);
-    
+
     private SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
     
     @Test
@@ -53,9 +53,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         List<Map<String, Object>> results = new ArrayList<>();
         results.add(Collections.<String, Object>singletonMap("NAME", "Leonard"));
 
-        reset(jdbcTemplate, resource, file);
-        when(resource.getFile()).thenReturn(file);
-        when(file.getAbsolutePath()).thenReturn("classpath:com/consol/citrus/dsl/runner/query-script.sql");
+        reset(jdbcTemplate);
 
         when(jdbcTemplate.queryForList(anyString())).thenReturn(results)
                                                     .thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "100000")));
@@ -68,7 +66,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
-                                .sqlResource(resource)
+                                .sqlResource(new ClassPathResource("com/consol/citrus/dsl/runner/query-script.sql"))
                                 .validate("NAME", "Leonard")
                                 .validate("CNT_EPISODES", "100000")
                                 .extract("NAME", "actorName");
@@ -100,7 +98,8 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "NAME=actorName");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/dsl/runner/query-script.sql");
+        Assert.assertEquals(action.getStatements().size(), 2);
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertNull(action.getValidator());
 
     }
@@ -206,7 +205,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         List<Map<String, Object>> results = new ArrayList<>();
         results.add(Collections.<String, Object>singletonMap("NAME", "Radj"));
 
-        reset(jdbcTemplate, resource, file);
+        reset(jdbcTemplate, resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[0].NAME == 'Radj'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
@@ -288,7 +287,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         results.add(Collections.<String, Object>singletonMap("NAME", "Howard"));
         results.add(Collections.<String, Object>singletonMap("NAME", "Sheldon"));
 
-        reset(jdbcTemplate, resource, file);
+        reset(jdbcTemplate, resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[1].NAME == 'Howard'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {

@@ -86,7 +86,7 @@ public class GroovyActionDefinition extends AbstractActionDefinition<GroovyActio
      */
 	public GroovyActionDefinition template(Resource scriptTemplate) {
 		try {
-            action.setScriptTemplatePath(scriptTemplate.getFile().getAbsolutePath());
+            action.setScriptTemplate(FileUtils.readToString(scriptTemplate));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script template file", e);
         }

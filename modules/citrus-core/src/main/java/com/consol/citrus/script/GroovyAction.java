@@ -45,13 +45,16 @@ public class GroovyAction extends AbstractTestAction {
 
     /** External script file resource path */
     private String scriptResourcePath;
+
+    /** Script template code */
+    private String scriptTemplate;
     
     /** Static code snippet for basic groovy action implementation */
     private String scriptTemplatePath = "classpath:com/consol/citrus/script/script-template.groovy";
     
     /** Manage automatic groovy template usage */
     private boolean useScriptTemplate = true;
-    
+
     /** Executes a script using the TestContext */
     public interface ScriptExecutor {
         void execute(TestContext context);
@@ -89,10 +92,17 @@ public class GroovyAction extends AbstractTestAction {
 
             // only apply default script template in case we have feature enabled and code is not a class, too
             if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
-                // build new script with surrounding template
-                code = TemplateBasedScriptBuilder.fromTemplateResource(FileUtils.getFileResource(scriptTemplatePath, context))
-                                                 .withCode(code)
-                                                 .build();
+                if (StringUtils.hasText(scriptTemplate)) {
+                    // build new script with surrounding template
+                    code = TemplateBasedScriptBuilder.fromTemplateScript(context.replaceDynamicContentInString(scriptTemplate))
+                            .withCode(code)
+                            .build();
+                } else {
+                    // build new script with surrounding template
+                    code = TemplateBasedScriptBuilder.fromTemplateResource(FileUtils.getFileResource(scriptTemplatePath, context))
+                            .withCode(code)
+                            .build();
+                }
 
                 groovyClass = loader.parseClass(code);
                 groovyObject = (GroovyObject) groovyClass.newInstance();
@@ -157,6 +167,14 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /**
+     * Sets the script template.
+     * @param scriptTemplate
+     */
+    public void setScriptTemplate(String scriptTemplate) {
+        this.scriptTemplate = scriptTemplate;
+    }
+
+    /**
      * Set the script template resource.
      * @param scriptTemplate the scriptTemplate to set
      */
@@ -186,5 +204,13 @@ public class GroovyAction extends AbstractTestAction {
      */
     public String getScriptTemplatePath() {
         return scriptTemplatePath;
+    }
+
+    /**
+     * Gets the script template.
+     * @return
+     */
+    public String getScriptTemplate() {
+        return scriptTemplate;
     }
 }

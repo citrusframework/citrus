@@ -29,8 +29,8 @@ import org.testng.annotations.Test;
 import javax.sql.DataSource;
 import java.io.*;
 
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -40,8 +40,6 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = Mockito.mock(DataSource.class);
     
     private Resource resource = Mockito.mock(Resource.class);
-    private File file = Mockito.mock(File.class);
-    
     private SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
     
     @Test
@@ -56,9 +54,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
             }
         };
         
-        reset(resource, file);
-        when(resource.getFile()).thenReturn(file);
-        when(file.getAbsolutePath()).thenReturn("classpath:some.file");
+        reset(resource);
+        when(resource.getFile()).thenReturn(Mockito.mock(File.class));
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("SELECT * FROM DUAL;".getBytes()));
+
         builder.configure();
 
         TestCase test = builder.getTestCase();
@@ -74,7 +73,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "COLUMN=variable");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().get(0), "SELECT * FROM DUAL;");
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertNull(action.getValidator());
 
     }
@@ -154,7 +155,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
             }
         };
         
-        reset(resource, file);
+        reset(resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
 
@@ -217,7 +218,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
             }
         };
         
-        reset(resource, file);
+        reset(resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
 

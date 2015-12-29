@@ -47,15 +47,6 @@ public class GroovyActionBuilder extends AbstractTestActionBuilder<GroovyAction>
 	}
 
 	/**
-     * Use a script template from file path.
-     * @param scriptTemplatePath the scriptTemplate to set
-     */
-    public GroovyActionBuilder template(String scriptTemplatePath) {
-        action.setScriptTemplatePath(scriptTemplatePath);
-        return this;
-    }
-
-	/**
 	 * Sets the Groovy script to execute.
 	 * @param script
 	 * @return
@@ -78,6 +69,15 @@ public class GroovyActionBuilder extends AbstractTestActionBuilder<GroovyAction>
 		}
 		return this;
 	}
+
+	/**
+	 * Use a script template from file path.
+	 * @param scriptTemplatePath the scriptTemplate to set
+	 */
+	public GroovyActionBuilder template(String scriptTemplatePath) {
+		action.setScriptTemplatePath(scriptTemplatePath);
+		return this;
+	}
 	
 	/**
      * Use a script template resource.
@@ -85,7 +85,7 @@ public class GroovyActionBuilder extends AbstractTestActionBuilder<GroovyAction>
      */
 	public GroovyActionBuilder template(Resource scriptTemplate) {
 		try {
-            action.setScriptTemplatePath(scriptTemplate.getFile().getAbsolutePath());
+            action.setScriptTemplate(FileUtils.readToString(scriptTemplate));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script template file", e);
         }

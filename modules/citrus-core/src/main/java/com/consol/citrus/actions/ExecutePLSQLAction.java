@@ -18,6 +18,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.SqlUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.StringUtils;
 
@@ -39,6 +40,9 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
 
+    /** Special statement endoing character sequence */
+    public static final String PLSQL_STMT_ENDING = "/";
+
     /**
      * Default constructor.
      */
@@ -51,12 +55,22 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         if (StringUtils.hasText(script)) {
             statements = createStatementsFromScript(context);
         } else if (StringUtils.hasText(sqlResourcePath)) {
-            statements = createStatementsFromFileResource(context);
+            statements = createStatementsFromFileResource(context, new SqlUtils.LastScriptLineDecorator() {
+                @Override
+                public String getStatementEndingCharacter() {
+                    return PLSQL_STMT_ENDING;
+                }
+
+                @Override
+                public String decorate(String line) {
+                    return line.trim().substring(0, (line.trim().length() - 1));
+                }
+            });
         }
 
-        for (int i = 0; i < statements.size(); i++) {
+        for (String stmt : statements) {
             try {
-                String stmt = statements.get(i);
+                stmt = context.replaceDynamicContentInString(stmt.trim());
 
                 if (log.isDebugEnabled()) {
                     log.debug("Executing PLSQL statement: " + stmt);
@@ -88,7 +102,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             log.debug("Found inline PLSQL script " + script);
         }
 
-        StringTokenizer tok = new StringTokenizer(script, getStatemendEndingCharacter());
+        StringTokenizer tok = new StringTokenizer(script, PLSQL_STMT_ENDING);
         while (tok.hasMoreTokens()) {
             String next = tok.nextToken().trim();
             if (StringUtils.hasText(next)) {
@@ -97,16 +111,6 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         }
         
         return stmts;
-    }
-
-    @Override
-    protected String getStatemendEndingCharacter() {
-        return "/";
-    }
-    
-    @Override
-    protected String decorateLastScriptLine(String line) {
-        return line.trim().substring(0, (line.trim().length() - 1));
     }
 
     /**

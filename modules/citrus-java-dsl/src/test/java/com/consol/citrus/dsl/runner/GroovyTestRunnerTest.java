@@ -23,6 +23,7 @@ import com.consol.citrus.dsl.builder.GroovyActionBuilder;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,7 +31,6 @@ import org.testng.annotations.Test;
 import java.io.*;
 
 import static org.mockito.Mockito.*;
-
 
 public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     private Resource scriptResource = Mockito.mock(Resource.class);
@@ -91,9 +91,6 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
-        reset(scriptTemplate, file);
-        when(scriptTemplate.getFile()).thenReturn(file);
-        when(file.getAbsolutePath()).thenReturn("classpath:com/consol/citrus/script/script-template.groovy");
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -101,7 +98,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(GroovyActionBuilder builder) {
                         builder.script("context.setVariable('message', 'Groovy!')")
-                                .template(scriptTemplate);
+                                .template(new ClassPathResource("com/consol/citrus/script/script-template.groovy"));
                     }
                 });
             }
@@ -116,7 +113,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)test.getActions().get(0);
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:com/consol/citrus/script/script-template.groovy");
+        Assert.assertNotNull(action.getScriptTemplate());
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
     

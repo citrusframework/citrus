@@ -25,11 +25,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import static org.mockito.Mockito.*;
-
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +40,7 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
     private File file = Mockito.mock(File.class);
     
     @Test
-    public void TestExecuteSQLBuilderWithStatement() {
+    public void testExecuteSQLBuilderWithStatement() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -66,9 +64,9 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
-    
+
     @Test
-    public void TestExecuteSQLBuilderWithResource() throws IOException {
+    public void testExecuteSQLBuilderWithResource() throws IOException {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -77,9 +75,10 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
                     .ignoreErrors(true);
             }
         };
-    
+
         reset(resource, file);
         when(resource.getFile()).thenReturn(file);
+        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("SELECT * FROM DUAL;".getBytes()));
         when(file.getAbsolutePath()).thenReturn("classpath:some.file");
         builder.configure();
 
@@ -91,7 +90,8 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "sql");
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");
+        Assert.assertEquals(action.getStatements().toString(), "[SELECT * FROM DUAL;]");
+        Assert.assertNull(action.getSqlResourcePath());
 
     }
 }

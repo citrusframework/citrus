@@ -28,7 +28,6 @@ import java.io.*;
 
 import static org.mockito.Mockito.*;
 
-
 public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
     private Resource scriptResource = Mockito.mock(Resource.class);
     private Resource scriptTemplate = Mockito.mock(Resource.class);
@@ -92,6 +91,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
         
         reset(scriptTemplate, file);
         when(scriptTemplate.getFile()).thenReturn(file);
+        when(scriptTemplate.getInputStream()).thenReturn(new ByteArrayInputStream("println 'hello'".getBytes()));
         when(file.getAbsolutePath()).thenReturn("classpath:some.file");
         builder.configure();
 
@@ -100,7 +100,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)test.getActions().get(0);
-        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:some.file");
+        Assert.assertEquals(action.getScriptTemplate(), "println 'hello'");
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
     

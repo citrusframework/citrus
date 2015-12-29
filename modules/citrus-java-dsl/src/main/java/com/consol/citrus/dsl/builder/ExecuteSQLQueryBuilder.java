@@ -20,6 +20,7 @@ import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.SqlUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.springframework.core.io.Resource;
@@ -100,11 +101,7 @@ public class ExecuteSQLQueryBuilder extends AbstractTestActionBuilder<ExecuteSQL
      * @param sqlResource
      */
 	public ExecuteSQLQueryBuilder sqlResource(Resource sqlResource) {
-		try {
-            action.setSqlResourcePath(sqlResource.getFile().getAbsolutePath());
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read sql resource", e);
-        }
+        statements(SqlUtils.createStatementsFromFileResource(sqlResource));
 		return this;
 	}
 	

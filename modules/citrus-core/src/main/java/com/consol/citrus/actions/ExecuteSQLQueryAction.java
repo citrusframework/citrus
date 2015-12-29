@@ -82,7 +82,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
             for (String stmt : statements) {
                 validateSqlStatement(stmt);
-                stmt = context.replaceDynamicContentInString(stmt);
+                stmt = context.replaceDynamicContentInString(stmt.trim());
 
                 if (log.isDebugEnabled()) {
                     log.debug("Executing SQL query: " + stmt);
