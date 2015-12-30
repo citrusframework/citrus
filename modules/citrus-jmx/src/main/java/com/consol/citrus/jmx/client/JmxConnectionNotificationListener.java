@@ -26,7 +26,7 @@ import javax.management.remote.JMXConnectionNotification;
 
 /**
  * @author Christoph Deppisch
- * @since 2.4
+ * @since 2.5
  */
 public class JmxConnectionNotificationListener implements NotificationListener {
 

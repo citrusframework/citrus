@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * @author Christoph Deppisch
- * @since 2.4
+ * @since 2.5
  */
 public class JmxMessage extends DefaultMessage {
 

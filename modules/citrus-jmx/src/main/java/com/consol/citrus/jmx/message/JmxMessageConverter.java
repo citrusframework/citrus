@@ -23,7 +23,7 @@ import javax.management.Notification;
 
 /**
  * @author Christoph Deppisch
- * @since 2.4
+ * @since 2.5
  */
 public class JmxMessageConverter implements MessageConverter<Notification, JmxEndpointConfiguration> {
 

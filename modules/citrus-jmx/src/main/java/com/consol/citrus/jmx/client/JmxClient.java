@@ -41,7 +41,7 @@ import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
- * @since 2.4
+ * @since 2.5
  */
 public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 

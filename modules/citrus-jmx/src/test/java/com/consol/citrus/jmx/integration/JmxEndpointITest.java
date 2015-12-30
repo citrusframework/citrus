@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
  * Only execute integration tests if Docker is available on host system.
  *
  * @author Christoph Deppisch
- * @since 2.4
+ * @since 2.5
  */
 @Test
 public class JmxEndpointITest extends AbstractTestNGCitrusTest {
