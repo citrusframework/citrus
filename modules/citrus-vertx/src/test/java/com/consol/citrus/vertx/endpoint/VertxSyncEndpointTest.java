@@ -22,14 +22,13 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.vertx.factory.SingleVertxInstanceFactory;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
+import io.vertx.core.*;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
 
@@ -45,6 +44,7 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
     private EventBus eventBus = Mockito.mock(EventBus.class);
     private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
     private MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
+    private AsyncResult asyncResult = Mockito.mock(AsyncResult.class);
     private io.vertx.core.eventbus.Message messageMock = Mockito.mock(io.vertx.core.eventbus.Message.class);
 
     private SingleVertxInstanceFactory instanceFactory = new SingleVertxInstanceFactory();
@@ -65,14 +65,16 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         Message requestMessage = new DefaultMessage("Hello from Citrus!");
 
-        reset(vertx, eventBus, messageMock);
+        reset(vertx, eventBus, messageMock, asyncResult);
+
+        when(asyncResult.result()).thenReturn(messageMock);
 
         when(vertx.eventBus()).thenReturn(eventBus);
         doAnswer(new Answer<EventBus>() {
             @Override
             public EventBus answer(InvocationOnMock invocation) throws Throwable {
                 Handler handler = (Handler) invocation.getArguments()[2];
-                handler.handle(messageMock);
+                handler.handle(asyncResult);
                 return eventBus;
             }
         }).when(eventBus).send(eq(eventBusAddress), eq(requestMessage.getPayload()), any(Handler.class));
