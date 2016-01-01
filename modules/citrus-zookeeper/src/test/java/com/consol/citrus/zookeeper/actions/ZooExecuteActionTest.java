@@ -17,17 +17,16 @@
 package com.consol.citrus.zookeeper.actions;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
+import com.consol.citrus.zookeeper.client.ZooClient;
 import com.consol.citrus.zookeeper.command.Info;
 import org.apache.zookeeper.ZooKeeper;
 import org.mockito.Mockito;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ZookeeperExecuteActionTest extends AbstractTestNGUnitTest {
+public class ZooExecuteActionTest extends AbstractTestNGUnitTest {
 
     private ZooKeeper zookeeper = Mockito.mock(ZooKeeper.class);
 
@@ -37,9 +36,9 @@ public class ZookeeperExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(zookeeper.getState()).thenReturn(ZooKeeper.States.CONNECTED);
 
-        ZookeeperExecuteAction action = new ZookeeperExecuteAction();
+        ZooExecuteAction action = new ZooExecuteAction();
         action.setCommand(new Info());
-        action.setZookeeperClient(new ZookeeperClient(zookeeper));
+        action.setZookeeperClient(new ZooClient(zookeeper));
 
         action.execute(context);
 

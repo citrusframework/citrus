@@ -20,16 +20,16 @@ package com.consol.citrus.zookeeper.client;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperClientConfig {
+public class ZooClientConfig {
 
     private String id;
     private String url;
     private int timeout;
 
-    public ZookeeperClientConfig() {
+    public ZooClientConfig() {
     }
 
-    public ZookeeperClientConfig(String id, String url, int timeout) {
+    public ZooClientConfig(String id, String url, int timeout) {
         this.id = id;
         this.url = url;
         this.timeout = timeout;
@@ -86,8 +86,8 @@ public class ZookeeperClientConfig {
             return this;
         }
 
-        public ZookeeperClientConfig build() {
-            return new ZookeeperClientConfig(id, url, timeout);
+        public ZooClientConfig build() {
+            return new ZooClientConfig(id, url, timeout);
         }
 
     }

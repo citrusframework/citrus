@@ -7,7 +7,7 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/zookeeper/testcase http://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd">
 
-  <testcase name="ZookeeperExecuteActionParserTest">
+  <testcase name="ZooExecuteActionParserTest">
     <actions>
       <zookeeper:info zookeeper-client="yyyy"/>
     </actions>

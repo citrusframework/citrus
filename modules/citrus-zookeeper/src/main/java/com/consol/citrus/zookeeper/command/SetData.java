@@ -18,22 +18,17 @@ package com.consol.citrus.zookeeper.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
-import org.apache.zookeeper.CreateMode;
+import com.consol.citrus.zookeeper.client.ZooClient;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.ZooDefs;
-import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * @author Martin Maher
  * @since 2.5
  */
-public class SetData extends AbstractZookeeperCommand<ZookeeperResponse> {
+public class SetData extends AbstractZooCommand<ZooResponse> {
 
     /**
      * Logger
@@ -48,8 +43,8 @@ public class SetData extends AbstractZookeeperCommand<ZookeeperResponse> {
     }
 
     @Override
-    public void execute(ZookeeperClient zookeeperClient, TestContext context) {
-        ZookeeperResponse commandResult = new ZookeeperResponse();
+    public void execute(ZooClient zookeeperClient, TestContext context) {
+        ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
         String path = this.getParameter("path", context);

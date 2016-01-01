@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.zookeeper.integration;
+package com.consol.citrus.zookeeper.config.handler;
 
-import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import org.testng.annotations.Test;
+import com.consol.citrus.zookeeper.config.xml.ZooClientParser;
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * Zookeeper integration test using all supported zookeeper actions.
- * A Zookeeper server must be running for this test to succeed. The zookeeper maven
- * plugin can be used for starting and stopping the server on demand.
- *
  * @author Martin Maher
  * @since 2.5
  */
-@Test
-public class ZookeeperExecuteIT extends AbstractTestNGCitrusTest {
+public class CitrusZooConfigNamespaceHandler extends NamespaceHandlerSupport {
 
-    @CitrusXmlTest(name = "ZooKeeperExecuteIT")
-    public void zookeeperInfoTest() {}
+    @Override
+    public void init() {
+        registerBeanDefinitionParser("client", new ZooClientParser());
+    }
 }

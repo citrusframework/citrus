@@ -47,10 +47,10 @@
     <module>modules/citrus-vertx</module>
     <module>modules/citrus-docker</module>
     <module>modules/citrus-arquillian</module>
+    <module>modules/citrus-zookeeper</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-admin</module>
-    <module>modules/citrus-zookeeper</module>
   </modules>
 
   <developers>

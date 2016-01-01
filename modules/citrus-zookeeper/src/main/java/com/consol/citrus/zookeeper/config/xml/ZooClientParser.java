@@ -16,8 +16,8 @@
 
 package com.consol.citrus.zookeeper.config.xml;
 
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
-import com.consol.citrus.zookeeper.client.ZookeeperClientConfig;
+import com.consol.citrus.zookeeper.client.ZooClient;
+import com.consol.citrus.zookeeper.client.ZooClientConfig;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -30,14 +30,14 @@ import org.w3c.dom.Element;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperClientParser implements BeanDefinitionParser {
+public class ZooClientParser implements BeanDefinitionParser {
 
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ZookeeperClient.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ZooClient.class);
 
-        ZookeeperClientConfig.ZooKeeperClientConfigBuilder config = ZookeeperClientConfig.createDefaultConfigBuilder();
+        ZooClientConfig.ZooKeeperClientConfigBuilder config = ZooClientConfig.createDefaultConfigBuilder();
 
         String id = element.getAttribute("id");
         config.withId(id);

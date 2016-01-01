@@ -17,22 +17,22 @@
 package com.consol.citrus.zookeeper.config.handler;
 
 import com.consol.citrus.zookeeper.command.*;
-import com.consol.citrus.zookeeper.config.xml.ZookeeperExecuteActionParser;
+import com.consol.citrus.zookeeper.config.xml.ZooExecuteActionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * @author Martin Maher
  * @since 2.5
  */
-public class CitrusZookeeperTestcaseNamespaceHandler extends NamespaceHandlerSupport {
+public class CitrusZooTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("info", new ZookeeperExecuteActionParser(Info.class));
-        registerBeanDefinitionParser("create", new ZookeeperExecuteActionParser(Create.class));
-        registerBeanDefinitionParser("delete", new ZookeeperExecuteActionParser(Delete.class));
-        registerBeanDefinitionParser("exists", new ZookeeperExecuteActionParser(Exists.class));
-        registerBeanDefinitionParser("getData", new ZookeeperExecuteActionParser(GetData.class));
-        registerBeanDefinitionParser("setData", new ZookeeperExecuteActionParser(SetData.class));
-        registerBeanDefinitionParser("getChildren", new ZookeeperExecuteActionParser(GetChildren.class));
+        registerBeanDefinitionParser("info", new ZooExecuteActionParser(Info.class));
+        registerBeanDefinitionParser("create", new ZooExecuteActionParser(Create.class));
+        registerBeanDefinitionParser("delete", new ZooExecuteActionParser(Delete.class));
+        registerBeanDefinitionParser("exists", new ZooExecuteActionParser(Exists.class));
+        registerBeanDefinitionParser("getData", new ZooExecuteActionParser(GetData.class));
+        registerBeanDefinitionParser("setData", new ZooExecuteActionParser(SetData.class));
+        registerBeanDefinitionParser("getChildren", new ZooExecuteActionParser(GetChildren.class));
     }
 }

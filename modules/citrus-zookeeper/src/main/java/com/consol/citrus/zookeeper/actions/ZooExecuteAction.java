@@ -18,8 +18,8 @@ package com.consol.citrus.zookeeper.actions;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
-import com.consol.citrus.zookeeper.command.ZookeeperCommand;
+import com.consol.citrus.zookeeper.client.ZooClient;
+import com.consol.citrus.zookeeper.command.ZooCommand;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
@@ -39,15 +39,15 @@ import org.springframework.util.StringUtils;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperExecuteAction extends AbstractTestAction {
+public class ZooExecuteAction extends AbstractTestAction {
 
     @Autowired(required = false)
     @Qualifier("zookeeperClient")
     /** Zookeeper client instance  */
-    private ZookeeperClient zookeeperClient = new ZookeeperClient();
+    private ZooClient zookeeperClient = new ZooClient();
 
     /** Zookeeper command to execute */
-    private ZookeeperCommand command;
+    private ZooCommand command;
 
     /** Expected command result for validation */
     private String expectedCommandResult;
@@ -61,12 +61,12 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
     private JsonTextMessageValidator jsonTextMessageValidator;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ZookeeperExecuteAction.class);
+    private static Logger log = LoggerFactory.getLogger(ZooExecuteAction.class);
 
     /**
      * Default constructor.
      */
-    public ZookeeperExecuteAction() {
+    public ZooExecuteAction() {
         setName("zookeeper-execute");
     }
 
@@ -93,7 +93,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * @param command
      * @param context
      */
-    private void validateCommandResult(ZookeeperCommand command, TestContext context) {
+    private void validateCommandResult(ZooCommand command, TestContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Starting Zookeeper command result validation");
         }
@@ -122,7 +122,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * Gets the zookeeper command to execute.
      * @return
      */
-    public ZookeeperCommand getCommand() {
+    public ZooCommand getCommand() {
         return command;
     }
 
@@ -131,7 +131,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * @param command
      * @return
      */
-    public ZookeeperExecuteAction setCommand(ZookeeperCommand command) {
+    public ZooExecuteAction setCommand(ZooCommand command) {
         this.command = command;
         return this;
     }
@@ -140,7 +140,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * Gets the zookeeper client.
      * @return
      */
-    public ZookeeperClient getZookeeperClient() {
+    public ZooClient getZookeeperClient() {
         return zookeeperClient;
     }
 
@@ -148,7 +148,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * Sets the zookeeper client.
      * @param zookeeperClient
      */
-    public ZookeeperExecuteAction setZookeeperClient(ZookeeperClient zookeeperClient) {
+    public ZooExecuteAction setZookeeperClient(ZooClient zookeeperClient) {
         this.zookeeperClient = zookeeperClient;
         return this;
     }
@@ -165,7 +165,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * Sets the expected command result data.
      * @param expectedCommandResult
      */
-    public ZookeeperExecuteAction setExpectedCommandResult(String expectedCommandResult) {
+    public ZooExecuteAction setExpectedCommandResult(String expectedCommandResult) {
         this.expectedCommandResult = expectedCommandResult;
         return this;
     }
@@ -174,7 +174,7 @@ public class ZookeeperExecuteAction extends AbstractTestAction {
      * Sets the JSON object mapper.
      * @param jsonMapper
      */
-    public ZookeeperExecuteAction setJsonMapper(ObjectMapper jsonMapper) {
+    public ZooExecuteAction setJsonMapper(ObjectMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
         return this;
     }

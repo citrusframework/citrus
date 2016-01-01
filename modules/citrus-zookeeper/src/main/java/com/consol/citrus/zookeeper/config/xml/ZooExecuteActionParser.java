@@ -19,8 +19,8 @@ package com.consol.citrus.zookeeper.config.xml;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.zookeeper.actions.ZookeeperExecuteAction;
-import com.consol.citrus.zookeeper.command.ZookeeperCommand;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
+import com.consol.citrus.zookeeper.command.ZooCommand;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -35,23 +35,23 @@ import org.w3c.dom.Node;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperExecuteActionParser implements BeanDefinitionParser {
+public class ZooExecuteActionParser implements BeanDefinitionParser {
 
     /** ZooKeeper command to execute */
-    private Class<? extends ZookeeperCommand> zookeeperCommandClass;
+    private Class<? extends ZooCommand> zookeeperCommandClass;
 
     /**
      * Constructor using zookeeper command.
      * @param commandClass
      */
-    public <T extends ZookeeperCommand> ZookeeperExecuteActionParser(Class<T> commandClass) {
+    public <T extends ZooCommand> ZooExecuteActionParser(Class<T> commandClass) {
         this.zookeeperCommandClass = commandClass;
     }
 
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        ZookeeperCommand command = null;
+        ZooCommand command = null;
         try {
             // TODO MM factory better?
             command = zookeeperCommandClass.newInstance();
@@ -59,7 +59,7 @@ public class ZookeeperExecuteActionParser implements BeanDefinitionParser {
             throw new CitrusRuntimeException(e);
         }
 
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ZookeeperExecuteAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ZooExecuteAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("zookeeper-client"), "zookeeperClient");

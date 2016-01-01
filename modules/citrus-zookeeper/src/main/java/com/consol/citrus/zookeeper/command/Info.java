@@ -17,19 +17,15 @@
 package com.consol.citrus.zookeeper.command;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
-import org.apache.zookeeper.ZooKeeper;
+import com.consol.citrus.zookeeper.client.ZooClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * @author Martin Maher
  * @since 2.5
  */
-public class Info extends AbstractZookeeperCommand<ZookeeperResponse> {
+public class Info extends AbstractZooCommand<ZooResponse> {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Info.class);
@@ -42,8 +38,8 @@ public class Info extends AbstractZookeeperCommand<ZookeeperResponse> {
     }
 
     @Override
-    public void execute(ZookeeperClient zookeeperClient, TestContext context) {
-        ZookeeperResponse commandResult = new ZookeeperResponse();
+    public void execute(ZooClient zookeeperClient, TestContext context) {
+        ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
         String state = zookeeperClient.getZooKeeperClient().getState().name();

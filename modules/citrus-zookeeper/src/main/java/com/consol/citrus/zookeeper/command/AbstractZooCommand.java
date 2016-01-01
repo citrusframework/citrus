@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Martin Maher
  * @since 2.5
  */
-public abstract class AbstractZookeeperCommand<R> implements ZookeeperCommand {
+public abstract class AbstractZooCommand<R> implements ZooCommand {
 
     /** Command name */
     private final String name;
@@ -43,7 +43,7 @@ public abstract class AbstractZookeeperCommand<R> implements ZookeeperCommand {
      * Default constructor initializing the command name.
      * @param name
      */
-    public AbstractZookeeperCommand(String name) {
+    public AbstractZooCommand(String name) {
         this.name = name;
     }
 
@@ -51,8 +51,8 @@ public abstract class AbstractZookeeperCommand<R> implements ZookeeperCommand {
      * Construct default success response for commands without return value.
      * @return
      */
-    protected ZookeeperResponse success() {
-        ZookeeperResponse response = new ZookeeperResponse();
+    protected ZooResponse success() {
+        ZooResponse response = new ZooResponse();
         return response;
     }
 
@@ -114,7 +114,7 @@ public abstract class AbstractZookeeperCommand<R> implements ZookeeperCommand {
      * @param value
      * @return
      */
-    public AbstractZookeeperCommand withParam(String name, String value) {
+    public AbstractZooCommand withParam(String name, String value) {
         parameters.put(name, value);
         return this;
     }
@@ -124,7 +124,7 @@ public abstract class AbstractZookeeperCommand<R> implements ZookeeperCommand {
      * @param callback
      * @return
      */
-    public AbstractZookeeperCommand validateCommandResult(CommandResultCallback<R> callback) {
+    public AbstractZooCommand validateCommandResult(CommandResultCallback<R> callback) {
         this.resultCallback = callback;
         return this;
     }

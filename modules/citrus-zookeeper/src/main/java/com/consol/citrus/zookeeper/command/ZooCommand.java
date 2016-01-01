@@ -17,7 +17,7 @@
 package com.consol.citrus.zookeeper.command;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
+import com.consol.citrus.zookeeper.client.ZooClient;
 
 import java.util.Map;
 
@@ -25,14 +25,14 @@ import java.util.Map;
  * @author Martin Maher
  * @since 2.5
  */
-public interface ZookeeperCommand<R> {
+public interface ZooCommand<R> {
 
     /**
      * Executes command with given zookeeper client and test context.
      * @param zookeeperClient
      * @param context
      */
-    void execute(ZookeeperClient zookeeperClient, TestContext context);
+    void execute(ZooClient zookeeperClient, TestContext context);
 
     /**
      * Gets the ZooKeeper command name.

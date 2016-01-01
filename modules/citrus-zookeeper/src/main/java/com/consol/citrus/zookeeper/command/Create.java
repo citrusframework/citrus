@@ -18,7 +18,7 @@ package com.consol.citrus.zookeeper.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
+import com.consol.citrus.zookeeper.client.ZooClient;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
@@ -32,7 +32,7 @@ import java.util.List;
  * @author Martin Maher
  * @since 2.5
  */
-public class Create extends AbstractZookeeperCommand<ZookeeperResponse> {
+public class Create extends AbstractZooCommand<ZooResponse> {
 
     /**
      * Logger
@@ -47,8 +47,8 @@ public class Create extends AbstractZookeeperCommand<ZookeeperResponse> {
     }
 
     @Override
-    public void execute(ZookeeperClient zookeeperClient, TestContext context) {
-        ZookeeperResponse commandResult = new ZookeeperResponse();
+    public void execute(ZooClient zookeeperClient, TestContext context) {
+        ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
         String data = this.getParameter("data", context);

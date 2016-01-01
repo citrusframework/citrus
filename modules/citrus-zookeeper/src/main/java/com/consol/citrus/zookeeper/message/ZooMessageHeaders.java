@@ -22,12 +22,12 @@ import com.consol.citrus.message.MessageHeaders;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperMessageHeaders {
+public class ZooMessageHeaders {
 
     /**
      * Prevent instantiation.
      */
-    private ZookeeperMessageHeaders() {
+    private ZooMessageHeaders() {
     }
 
     public static final String DOCKER_PREFIX = MessageHeaders.PREFIX + "zookeeper_";

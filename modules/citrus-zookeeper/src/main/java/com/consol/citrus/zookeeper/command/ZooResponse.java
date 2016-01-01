@@ -23,7 +23,7 @@ import java.util.Map;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperResponse {
+public class ZooResponse {
     private Map<String,Object> responseData = new HashMap<>();
 
     public Map<String, Object> getResponseData() {

@@ -17,35 +17,34 @@
 package com.consol.citrus.zookeeper.config.xml;
 
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.consol.citrus.zookeeper.actions.ZookeeperExecuteAction;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
+import com.consol.citrus.zookeeper.client.ZooClient;
 import com.consol.citrus.zookeeper.command.Create;
 import com.consol.citrus.zookeeper.command.Info;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Map;
 
-public class ZookeeperExecuteActionParserTest extends AbstractActionParserTest<ZookeeperExecuteAction> {
+public class ZooExecuteActionParserTest extends AbstractActionParserTest<ZooExecuteAction> {
 
     @Test
     public void testZookeeperExecuteActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(ZookeeperExecuteAction.class, "zookeeper-execute");
+        assertActionClassAndName(ZooExecuteAction.class, "zookeeper-execute");
 
-        ZookeeperExecuteAction action = getNextTestActionFromTest();
+        ZooExecuteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());
         Assert.assertEquals(action.getCommand().getClass(), Info.class);
-        Assert.assertEquals(action.getZookeeperClient(), beanDefinitionContext.getBean("myZookeeperClient", ZookeeperClient.class));
+        Assert.assertEquals(action.getZookeeperClient(), beanDefinitionContext.getBean("myZookeeperClient", ZooClient.class));
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
         Assert.assertEquals(action.getExpectedCommandResult(), "{a:\"some thing\"}");
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());
         Assert.assertEquals(action.getCommand().getClass(), Create.class);
-        Assert.assertEquals(action.getZookeeperClient(), beanDefinitionContext.getBean("myZookeeperClient", ZookeeperClient.class));
+        Assert.assertEquals(action.getZookeeperClient(), beanDefinitionContext.getBean("myZookeeperClient", ZooClient.class));
         Assert.assertEquals(action.getCommand().getParameters().size(), 4);
         assertParametersContainValue(action.getCommand().getParameters(), "path", "/some-path");
         assertParametersContainValue(action.getCommand().getParameters(), "mode", "PERSISTENT");

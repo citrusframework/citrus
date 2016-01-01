@@ -18,9 +18,8 @@ package com.consol.citrus.zookeeper.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.zookeeper.client.ZookeeperClient;
+import com.consol.citrus.zookeeper.client.ZooClient;
 import org.apache.zookeeper.AsyncCallback;
-import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Martin Maher
  * @since 2.5
  */
-public class Delete extends AbstractZookeeperCommand<ZookeeperResponse> {
+public class Delete extends AbstractZooCommand<ZooResponse> {
 
     /**
      * Logger
@@ -43,8 +42,8 @@ public class Delete extends AbstractZookeeperCommand<ZookeeperResponse> {
     }
 
     @Override
-    public void execute(ZookeeperClient zookeeperClient, TestContext context) {
-        ZookeeperResponse commandResult = new ZookeeperResponse();
+    public void execute(ZooClient zookeeperClient, TestContext context) {
+        ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
         String path = this.getParameter("path", context);
@@ -59,7 +58,7 @@ public class Delete extends AbstractZookeeperCommand<ZookeeperResponse> {
         log.debug(getCommandResult().toString());
     }
 
-    private AsyncCallback.VoidCallback getDeleteCallback(final ZookeeperResponse commandResult) {
+    private AsyncCallback.VoidCallback getDeleteCallback(final ZooResponse commandResult) {
         return new AsyncCallback.VoidCallback() {
             @Override
             public void processResult(int responseCode, String path, Object ctx) {
@@ -69,7 +68,7 @@ public class Delete extends AbstractZookeeperCommand<ZookeeperResponse> {
         };
     }
 
-    private void waitAndRecordResponse(final ZookeeperResponse commandResult, final int seconds) throws InterruptedException {
+    private void waitAndRecordResponse(final ZooResponse commandResult, final int seconds) throws InterruptedException {
         int retryAttempts = seconds;
         while (!commandResult.hasResponseData() && retryAttempts > 0) {
             Thread.sleep(1000);

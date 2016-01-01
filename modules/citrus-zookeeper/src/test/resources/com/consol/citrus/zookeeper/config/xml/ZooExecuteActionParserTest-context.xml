@@ -7,7 +7,7 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/zookeeper/testcase http://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd">
 
-    <testcase name="ZookeeperExecuteActionParserTest">
+    <testcase name="ZooExecuteActionParserTest">
         <actions>
             <zookeeper:info zookeeper-client="myZookeeperClient">
                 <zookeeper:expect>
@@ -31,7 +31,7 @@
     </testcase>
     
     <spring:bean id="myZookeeperClient" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.zookeeper.client.ZookeeperClient"/>
+        <spring:constructor-arg value="com.consol.citrus.zookeeper.client.ZooClient"/>
     </spring:bean>
     
 </spring:beans>

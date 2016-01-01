@@ -17,7 +17,6 @@
 package com.consol.citrus.zookeeper.client;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.apache.commons.logging.Log;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -32,21 +31,21 @@ import java.io.IOException;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZookeeperClient {
+public class ZooClient {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ZookeeperClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ZooClient.class);
 
     /** ZooKeeper client */
     private ZooKeeper zookeeper;
 
     /** Zookeeper config */
-    private ZookeeperClientConfig zookeeperConfig;
+    private ZooClientConfig zookeeperConfig;
 
     /**
      * Default constructor.
      */
-    public ZookeeperClient() {
+    public ZooClient() {
         super();
     }
 
@@ -54,7 +53,7 @@ public class ZookeeperClient {
      * Constructor using zookeeper client instance.
      * @param zookeeper
      */
-    public ZookeeperClient(ZooKeeper zookeeper) {
+    public ZooClient(ZooKeeper zookeeper) {
         this();
         this.zookeeper = zookeeper;
     }
@@ -64,7 +63,7 @@ public class ZookeeperClient {
      * @return
      */
     private ZooKeeper createZooKeeperClient() throws IOException {
-        ZookeeperClientConfig config = getZookeeperClientConfig();
+        ZooClientConfig config = getZookeeperClientConfig();
         return new ZooKeeper(config.getUrl(), config.getTimeout(), getConnectionWatcher());
     }
 
@@ -95,9 +94,9 @@ public class ZookeeperClient {
      * Gets the zookeeper client configuration.
      * @return
      */
-    public ZookeeperClientConfig getZookeeperClientConfig() {
+    public ZooClientConfig getZookeeperClientConfig() {
         if (zookeeperConfig == null) {
-            zookeeperConfig = ZookeeperClientConfig.createDefaultConfigBuilder().build();
+            zookeeperConfig = ZooClientConfig.createDefaultConfigBuilder().build();
         }
 
         return zookeeperConfig;
@@ -107,7 +106,7 @@ public class ZookeeperClient {
      * Sets the zookeeper client configuration.
      * @param zookeeperConfig
      */
-    public void setZookeeperClientConfig(ZookeeperClientConfig zookeeperConfig) {
+    public void setZookeeperClientConfig(ZooClientConfig zookeeperConfig) {
         this.zookeeperConfig = zookeeperConfig;
     }
 

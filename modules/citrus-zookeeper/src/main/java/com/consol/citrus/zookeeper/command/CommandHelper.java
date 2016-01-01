@@ -23,7 +23,7 @@ import org.apache.zookeeper.data.Stat;
  * @since 2.5
  */
 public class CommandHelper {
-    public static final void parseStatResponse(ZookeeperResponse commandResult, Stat stat) {
+    public static final void parseStatResponse(ZooResponse commandResult, Stat stat) {
         if(stat == null) {
             return;
         }
