@@ -20,19 +20,19 @@
           message-correlator="messageCorrelator"
           actor="actor"/>
 
-  <bean id="notificationFilter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="notificationFilter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.management.NotificationFilter"/>
   </bean>
 
-  <bean id="actor" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="actor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.TestActor"/>
   </bean>
 
-  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.jmx.message.JmxMessageConverter"/>
   </bean>
 
-  <bean id="messageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+  <bean id="messageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 
