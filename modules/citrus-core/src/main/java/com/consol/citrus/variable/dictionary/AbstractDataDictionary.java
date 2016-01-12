@@ -43,7 +43,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
     private boolean globalScope = true;
 
     /** Known mappings to this dictionary */
-    protected Map<String, String> mappings = new HashMap<String, String>();
+    protected Map<String, String> mappings = new HashMap<>();
 
     /** mapping file resource */
     protected Resource mappingFile;

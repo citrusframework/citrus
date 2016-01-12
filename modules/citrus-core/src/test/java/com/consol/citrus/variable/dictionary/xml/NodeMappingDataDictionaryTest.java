@@ -39,6 +39,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText>No changes</OtherText></TestMessage>");
 
         Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("Something.Else", "NotFound!");
         mappings.put("TestMessage.Text", "Hello!");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
@@ -177,6 +178,23 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
                 "      <value>Hello!</value>" + System.getProperty("line.separator") +
                 "   </Text>" + System.getProperty("line.separator") +
                 "   <OtherText/>" + System.getProperty("line.separator") +
+                "</TestMessage>");
+    }
+
+    @Test
+    public void testTranslateNoResult() {
+        Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText>No changes</OtherText></TestMessage>");
+
+        Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("Something.Else", "NotFound!");
+
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+                "   <Text>Hello World!</Text>" + System.getProperty("line.separator") +
+                "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
     }
 }

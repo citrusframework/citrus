@@ -28,6 +28,7 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPathConstants;
 import java.util.Map;
 
 /**
@@ -51,7 +52,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
         for (Map.Entry<String, String> expressionEntry : mappings.entrySet()) {
             String expression = expressionEntry.getKey();
 
-            Node finding = XPathUtils.evaluateAsNode(node.getOwnerDocument(), expression, buildNamespaceContext(node));
+            Node finding = (Node) XPathUtils.evaluateExpression(node.getOwnerDocument(), expression, buildNamespaceContext(node), XPathConstants.NODE);
 
             if (finding != null && finding.equals(node)) {
                 if (log.isDebugEnabled()) {

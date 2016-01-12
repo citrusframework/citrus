@@ -36,6 +36,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
         Map<String, String> mappings = new HashMap<>();
+        mappings.put("Something.Else", "NotFound");
         mappings.put("TestMessage.Text", "Hello!");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
@@ -146,5 +147,19 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
 
         Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":null}}");
+    }
+
+    @Test
+    public void testTranslateNoResult() {
+        Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
+
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("Something.Else", "NotFound");
+
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
     }
 }
