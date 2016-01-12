@@ -15,7 +15,22 @@
   </properties>
   
   <body>
-    <release version="2.5" date="15.12.2015" description="2.5 release">
+    <release version="2.5" date="15.01.2015" description="2.5 release">
+        <action dev="christophd" type="fix">
+          GITHUB-62 DataDictionary not settable via Java DSL
+        </action>
+        <action dev="christophd" type="fix">
+          GITHUB-61 Global scoped data dictionaries breaking message receipt
+        </action>
+        <action dev="christophd" type="fix">
+          GITHUB-60 ClassPathResource name needs correction in User Guide
+        </action>
+        <action dev="christophd" type="fix">
+          GITHUB-59 Docker action sharing docker command instance
+        </action>
+        <action dev="christophd" type="fix">
+          GITHUB-58 JUnit4CitrusTestDesigner validateScript doesn't work properly
+        </action>
         <action dev="christophd" type="fix">
           GITHUB-55 x-www-form-urlencoded payload lost
         </action>
@@ -25,13 +40,13 @@
         <action dev="maherm" type="update">
           CITRUS-34 Cleanup validation matcher support
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           CITRUS-32 Use Mockito instead of EasyMock
         </action>
         <action dev="maherm" type="add">
           CITRUS-31 Date range validation matcher
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           CITRUS-29 Read file resource function
         </action>
         <action dev="maherm" type="add">
