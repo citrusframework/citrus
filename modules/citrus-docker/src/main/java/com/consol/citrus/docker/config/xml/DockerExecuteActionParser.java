@@ -38,26 +38,26 @@ import org.w3c.dom.Node;
 public class DockerExecuteActionParser implements BeanDefinitionParser {
 
     /** Docker command to execute */
-    private DockerCommand dockerCommand;
-    private DockerCommand imageCommand;
-    private DockerCommand containerCommand;
+    private Class<? extends DockerCommand> commandType;
+    private Class<? extends DockerCommand> imageCommandType;
+    private Class<? extends DockerCommand> containerCommandType;
 
     /**
      * Constructor using docker command variations for image and container.
-     * @param imageCommand
-     * @param containerCommand
+     * @param imageCommandType
+     * @param containerCommandType
      */
-    public DockerExecuteActionParser(DockerCommand imageCommand, DockerCommand containerCommand) {
-        this.imageCommand = imageCommand;
-        this.containerCommand = containerCommand;
+    public DockerExecuteActionParser(Class<? extends DockerCommand> imageCommandType, Class<? extends DockerCommand> containerCommandType) {
+        this.imageCommandType = imageCommandType;
+        this.containerCommandType = containerCommandType;
     }
 
     /**
      * Constructor using docker command.
-     * @param dockerCommand
+     * @param commandType
      */
-    public DockerExecuteActionParser(DockerCommand dockerCommand) {
-        this.dockerCommand = dockerCommand;
+    public DockerExecuteActionParser(Class<? extends DockerCommand> commandType) {
+        this.commandType = commandType;
     }
 
     @Override
@@ -69,8 +69,8 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("docker-client"), "dockerClient");
 
         DockerCommand command;
-        if (dockerCommand != null) {
-            command = dockerCommand;
+        if (commandType != null) {
+            command = createCommand(commandType);
         } else {
             if (element.hasAttribute("image") && element.hasAttribute("container")) {
                 throw new BeanCreationException("Both docker image and docker container are specified for command - " +
@@ -78,9 +78,9 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
             }
 
             if (element.hasAttribute("image")) {
-                command = imageCommand;
+                command = createCommand(imageCommandType);
             } else if (element.hasAttribute("container")) {
-                command = containerCommand;
+                command = createCommand(containerCommandType);
             } else {
                 throw new BeanCreationException("Missing docker image or docker container name attribute for command");
             }
@@ -100,5 +100,18 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
 
         beanDefinition.addPropertyValue("command", command);
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Creates new Docker command instance of given type.
+     * @param commandType
+     * @return
+     */
+    private DockerCommand createCommand(Class<? extends DockerCommand> commandType) {
+        try {
+            return commandType.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new BeanCreationException("Failed to create Docker command of type: " + commandType, e);
+        }
     }
 }

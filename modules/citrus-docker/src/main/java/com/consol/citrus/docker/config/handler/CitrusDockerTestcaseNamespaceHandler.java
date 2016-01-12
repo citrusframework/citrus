@@ -27,16 +27,16 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusDockerTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("info", new DockerExecuteActionParser(new Info()));
-        registerBeanDefinitionParser("ping", new DockerExecuteActionParser(new Ping()));
-        registerBeanDefinitionParser("version", new DockerExecuteActionParser(new Version()));
-        registerBeanDefinitionParser("build", new DockerExecuteActionParser(new ImageBuild()));
-        registerBeanDefinitionParser("pull", new DockerExecuteActionParser(new ImagePull()));
-        registerBeanDefinitionParser("inspect", new DockerExecuteActionParser(new ImageInspect(), new ContainerInspect()));
-        registerBeanDefinitionParser("remove", new DockerExecuteActionParser(new ImageRemove(), new ContainerRemove()));
-        registerBeanDefinitionParser("start", new DockerExecuteActionParser(new ContainerStart()));
-        registerBeanDefinitionParser("stop", new DockerExecuteActionParser(new ContainerStop()));
-        registerBeanDefinitionParser("create", new DockerExecuteActionParser(new ContainerCreate()));
-        registerBeanDefinitionParser("wait", new DockerExecuteActionParser(new ContainerWait()));
+        registerBeanDefinitionParser("info", new DockerExecuteActionParser(Info.class));
+        registerBeanDefinitionParser("ping", new DockerExecuteActionParser(Ping.class));
+        registerBeanDefinitionParser("version", new DockerExecuteActionParser(Version.class));
+        registerBeanDefinitionParser("build", new DockerExecuteActionParser(ImageBuild.class));
+        registerBeanDefinitionParser("pull", new DockerExecuteActionParser(ImagePull.class));
+        registerBeanDefinitionParser("inspect", new DockerExecuteActionParser(ImageInspect.class, ContainerInspect.class));
+        registerBeanDefinitionParser("remove", new DockerExecuteActionParser(ImageRemove.class, ContainerRemove.class));
+        registerBeanDefinitionParser("start", new DockerExecuteActionParser(ContainerStart.class));
+        registerBeanDefinitionParser("stop", new DockerExecuteActionParser(ContainerStop.class));
+        registerBeanDefinitionParser("create", new DockerExecuteActionParser(ContainerCreate.class));
+        registerBeanDefinitionParser("wait", new DockerExecuteActionParser(ContainerWait.class));
     }
 }
