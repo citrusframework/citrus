@@ -35,6 +35,8 @@ import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -1027,7 +1029,99 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
         Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
         Assert.assertEquals(((JsonPathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
+    }
 
+    @Test
+    public void testSendBuilderWithDictionary() {
+        final JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
+        dictionary.getMappings().put("TestRequest.Message", "Hello World!");
+
+        reset(messageEndpoint, messageProducer);
+        when(messageEndpoint.createProducer()).thenReturn(messageProducer);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+                return null;
+            }
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                send(new BuilderSupport<SendMessageBuilder>() {
+                    @Override
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                                .dictionary(dictionary);
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getDataDictionary(), dictionary);
+    }
+
+    @Test
+    public void testSendBuilderWithDictionaryName() {
+        final JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
+        dictionary.getMappings().put("TestRequest.Message", "Hello World!");
+
+        reset(applicationContextMock, messageEndpoint, messageProducer);
+        when(messageEndpoint.createProducer()).thenReturn(messageProducer);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+                return null;
+            }
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(applicationContextMock.getBean("customDictionary", DataDictionary.class)).thenReturn(dictionary);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+            @Override
+            public void execute() {
+                send(new BuilderSupport<SendMessageBuilder>() {
+                    @Override
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                                .dictionary("customDictionary");
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getDataDictionary(), dictionary);
     }
 
 }

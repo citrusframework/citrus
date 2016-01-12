@@ -32,6 +32,7 @@ import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -500,6 +501,30 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         MessageValidator<? extends ValidationContext> validator = applicationContext.getBean(validatorName, MessageValidator.class);
         
         action.setValidator(validator);
+        return self;
+    }
+
+    /**
+     * Sets explicit data dictionary for this receive action.
+     * @param dictionary
+     * @return
+     */
+    public T dictionary(DataDictionary dictionary) {
+        action.setDataDictionary(dictionary);
+        return self;
+    }
+
+    /**
+     * Sets explicit data dictionary by name.
+     * @param dictionaryName
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public T dictionary(String dictionaryName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        DataDictionary dictionary = applicationContext.getBean(dictionaryName, DataDictionary.class);
+
+        action.setDataDictionary(dictionary);
         return self;
     }
     

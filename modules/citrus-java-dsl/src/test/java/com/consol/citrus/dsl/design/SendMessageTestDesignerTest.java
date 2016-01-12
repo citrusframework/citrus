@@ -32,6 +32,8 @@ import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -45,7 +47,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -532,7 +535,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderExtractFromPayload() {
+    public void testSendBuilderExtractFromPayload() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -561,7 +564,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderExtractJsonPathFromPayload() {
+    public void testSendBuilderExtractJsonPathFromPayload() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -591,7 +594,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderExtractFromHeader() {
+    public void testSendBuilderExtractFromHeader() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -673,6 +676,72 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
         Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
         Assert.assertEquals(((JsonPathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
+    }
+
+    @Test
+    public void testSendBuilderWithDictionary() {
+        final DataDictionary dictionary = new NodeMappingDataDictionary();
+
+        reset(applicationContextMock);
+
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                        .dictionary(dictionary);
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getDataDictionary(), dictionary);
+    }
+
+    @Test
+    public void testSendBuilderWithDictionaryName() {
+        final DataDictionary dictionary = new NodeMappingDataDictionary();
+
+        reset(applicationContextMock);
+
+        when(applicationContextMock.getBean("customDictionary", DataDictionary.class)).thenReturn(dictionary);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .payload("TestMessage")
+                        .header("operation", "sayHello")
+                        .dictionary("customDictionary");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getDataDictionary(), dictionary);
     }
 
 }

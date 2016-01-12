@@ -44,6 +44,8 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -59,7 +61,8 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.transform.Source;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -884,7 +887,103 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+    }
 
+    @Test
+    public void testReceiveBuilderWithDictionary() {
+        final DataDictionary dictionary = new NodeMappingDataDictionary();
+
+        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
+
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+            @Override
+            public void execute() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                    @Override
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.PLAINTEXT)
+                                .payload("TestMessage")
+                                .header("operation", "sayHello")
+                                .dictionary(dictionary);
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(action.getDataDictionary(), dictionary);
+
+        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+    }
+
+    @Test
+    public void testReceiveBuilderWithDictionaryName() {
+        final DataDictionary dictionary = new NodeMappingDataDictionary();
+
+        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
+
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean("customDictionary", DataDictionary.class)).thenReturn(dictionary);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
+        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+            @Override
+            public void execute() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                    @Override
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.PLAINTEXT)
+                                .payload("TestMessage")
+                                .header("operation", "sayHello")
+                                .dictionary("customDictionary");
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(action.getDataDictionary(), dictionary);
+
+        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
     }
 
     @Test

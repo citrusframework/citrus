@@ -152,6 +152,7 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     <para>We set the global scope property to <emphasis>false</emphasis> so the dictionary is handled in explicit scope. This means that
     you have to set the data dictionary explicitly in your test actions:</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;myEndpoint&quot;&gt;
   &lt;message data-dictionary=&quot;specialDataDictionary&quot;&gt;
     &lt;payload&gt;
@@ -159,6 +160,14 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</programlisting>
+
+    <para><emphasis>Java DSL designer and runner</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void dictionaryTest() {
+    send(myEndpoint)
+        .payload("&lt;TestMessage&gt;Hello Citrus&quot;/TestMessage&gt;")
+        .dictionary("specialDataDictionary");
+}</programlisting>
 
     <para>The sample above is a sending test action with an explicit data dictionary reference set. Before sending the message the dictionary is asked
     for translation. So all matching message element values will be set by the dictionary accordingly. Other global data dictionaries do also apply for this message

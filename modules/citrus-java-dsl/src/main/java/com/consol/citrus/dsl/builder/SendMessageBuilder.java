@@ -29,6 +29,7 @@ import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -397,6 +398,30 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      */
     public T withApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+        return self;
+    }
+
+    /**
+     * Sets explicit data dictionary for this receive action.
+     * @param dictionary
+     * @return
+     */
+    public T dictionary(DataDictionary dictionary) {
+        action.setDataDictionary(dictionary);
+        return self;
+    }
+
+    /**
+     * Sets explicit data dictionary by name.
+     * @param dictionaryName
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public T dictionary(String dictionaryName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        DataDictionary dictionary = applicationContext.getBean(dictionaryName, DataDictionary.class);
+
+        action.setDataDictionary(dictionary);
         return self;
     }
 
