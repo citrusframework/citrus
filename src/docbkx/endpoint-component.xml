@@ -81,6 +81,9 @@
     ssh:localhost:2200
     ssh://localhost:2200?timeout=10000&amp;strictHostChecking=true&amp;user=foo&amp;password=12345678
 
+    rmi://localhost:1099/someService
+    rmi:localhost/someService&amp;timeout=10000
+
     camel:direct:address
     camel:seda:address
     camel:jms:queue:someQueue?connectionFactory=myConnectionFactory

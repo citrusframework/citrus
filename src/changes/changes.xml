@@ -37,6 +37,9 @@
         <action dev="christophd" type="fix">
           GITHUB-50 allow variable value definition in cdata section
         </action>
+        <action dev="deppisch" type="add">
+          CITRUS-36 RMI support
+        </action>
         <action dev="maherm" type="update">
           CITRUS-34 Cleanup validation matcher support
         </action>
