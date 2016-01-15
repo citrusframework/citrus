@@ -43,6 +43,9 @@ public class RmiEndpointConfiguration extends AbstractPollableEndpointConfigurat
 
     private String method;
 
+    /** RMI registry */
+    private Registry registry;
+
     /** Message converter */
     private RmiMessageConverter messageConverter = new RmiMessageConverter();
 
@@ -61,11 +64,19 @@ public class RmiEndpointConfiguration extends AbstractPollableEndpointConfigurat
      * @throws RemoteException
      */
     public Registry getRegistry() throws RemoteException {
-        if (StringUtils.hasText(host)) {
-            return LocateRegistry.getRegistry(host, port);
-        } else {
-            return LocateRegistry.getRegistry(port);
+        if (registry == null) {
+            if (StringUtils.hasText(host)) {
+                registry = LocateRegistry.getRegistry(host, port);
+            } else {
+                registry = LocateRegistry.getRegistry(port);
+            }
         }
+
+        return registry;
+    }
+
+    public void setRegistry(Registry registry) {
+        this.registry = registry;
     }
 
     public RmiMessageConverter getMessageConverter() {
