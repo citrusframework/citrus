@@ -55,6 +55,7 @@
     <xi:include href='arquillian.xml'/>
     <xi:include href='docker.xml'/>
     <xi:include href='ssh.xml'/>
+    <xi:include href='rmi.xml'/>
     <xi:include href='endpoint-component.xml'/>
     <xi:include href='endpoint-adapter.xml'/>
     <xi:include href='functions.xml'/>
