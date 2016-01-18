@@ -33,6 +33,7 @@
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateType" minOccurs="0"/>
         <xs:element name="extract" type="ExtractType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="zookeeper-client" type="xs:string"/>
@@ -48,6 +49,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="data" type="xs:string"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateType" minOccurs="0"/>
         <xs:element name="extract" type="ExtractType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="zookeeper-client" type="xs:string" use="required"/>
@@ -65,6 +67,7 @@
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateType" minOccurs="0"/>
         <xs:element name="extract" type="ExtractType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="zookeeper-client" type="xs:string" use="required"/>
@@ -95,6 +98,7 @@
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateType" minOccurs="0"/>
         <xs:element name="extract" type="ExtractType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="zookeeper-client" type="xs:string"/>
@@ -111,6 +115,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="data" type="xs:string"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateType" minOccurs="0"/>
         <xs:element name="extract" type="ExtractType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="zookeeper-client" type="xs:string"/>
@@ -127,6 +132,7 @@
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateType" minOccurs="0"/>
         <xs:element name="extract" type="ExtractType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="zookeeper-client" type="xs:string"/>
@@ -160,6 +166,22 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="ValidateType">
+    <xs:annotation>
+      <xs:documentation>Validates data from the json payload, using the expression to reference the data and the value to
+        capture the expected value
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="json-path" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="expression" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="ExtractType">
     <xs:annotation>
       <xs:documentation>Extracts data from the json payload, using the path to reference the data and the variable for
@@ -171,17 +193,6 @@
         <xs:complexType>
           <xs:attribute name="path" type="xs:string" use="required"/>
           <xs:attribute name="variable" type="xs:string" use="required"/>
-          <xs:attribute name="result-type">
-            <xs:simpleType>
-              <xs:restriction base="xs:string">
-                <xs:enumeration value="node"/>
-                <xs:enumeration value="node-set"/>
-                <xs:enumeration value="boolean"/>
-                <xs:enumeration value="string"/>
-                <xs:enumeration value="number"/>
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:attribute>
         </xs:complexType>
       </xs:element>
     </xs:sequence>

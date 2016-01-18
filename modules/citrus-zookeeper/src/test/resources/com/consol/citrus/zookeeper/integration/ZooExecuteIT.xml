@@ -25,6 +25,7 @@
       <variable name="randomString" value="citrus:randomString(10)"></variable>
     </variables>
     <actions>
+
       <echo>
         <message>Validate zookeeper API version</message>
       </echo>
@@ -39,6 +40,29 @@
                     "sessionPwd":"@ignore@",
                     "sessionTimeout":"@ignore@",
                     "sessionId":"@ignore@"
+                }
+              }
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+        <zookeeper:validate>
+          <zookeeper:json-path expression="$.responseData.state" value="CONNECTED" />
+        </zookeeper:validate>
+        <zookeeper:extract>
+          <zookeeper:message path="$.responseData.sessionId" variable="sessionId"/>
+        </zookeeper:extract>
+      </zookeeper:info>
+
+      <zookeeper:info zookeeper-client="zookeeperClient">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {
+                "responseData":{
+                    "state":"@ignore@",
+                    "sessionPwd":"@ignore@",
+                    "sessionTimeout":"@ignore@",
+                    "sessionId":${sessionId}
                 }
               }
             ]]>
@@ -160,7 +184,7 @@
             <![CDATA[
               {
                 "responseData":{
-                    "children":["child2","child1"]
+                    "children":["child1","child2"]
                 }
               }
             ]]>

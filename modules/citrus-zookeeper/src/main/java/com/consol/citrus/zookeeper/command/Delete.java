@@ -46,8 +46,8 @@ public class Delete extends AbstractZooCommand<ZooResponse> {
         ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
-        String path = this.getParameter("path", context);
-        int version = Integer.valueOf(this.getParameter("version", context));
+        String path = this.getParameter(PATH, context);
+        int version = Integer.valueOf(this.getParameter(VERSION, context));
 
         try {
             zookeeperClient.getZooKeeperClient().delete(path, version, getDeleteCallback(commandResult), null);
@@ -58,12 +58,32 @@ public class Delete extends AbstractZooCommand<ZooResponse> {
         log.debug(getCommandResult().toString());
     }
 
+    /**
+     * Sets the path parameter.
+     * @param path
+     * @return
+     */
+    public Delete path(String path) {
+        getParameters().put(PATH, path);
+        return this;
+    }
+
+    /**
+     * Sets the version parameter.
+     * @param version
+     * @return
+     */
+    public Delete version(int version) {
+        getParameters().put(VERSION, version);
+        return this;
+    }
+
     private AsyncCallback.VoidCallback getDeleteCallback(final ZooResponse commandResult) {
         return new AsyncCallback.VoidCallback() {
             @Override
             public void processResult(int responseCode, String path, Object ctx) {
-                commandResult.setResponseParam("responseCode", responseCode);
-                commandResult.setResponseParam("path", path);
+                commandResult.setResponseParam(RESPONSE_CODE, responseCode);
+                commandResult.setResponseParam(PATH, path);
             }
         };
     }

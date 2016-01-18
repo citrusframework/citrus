@@ -51,6 +51,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-zookeeper</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>

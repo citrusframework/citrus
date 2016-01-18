@@ -17,31 +17,44 @@
 package com.consol.citrus.zookeeper.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.util.ValidateMessageParserUtil;
+import com.consol.citrus.config.util.VariableExtractorParserUtil;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.command.ZooCommand;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Bean definition parser for zookeeper client action in test case.
- * 
+ *
  * @author Martin Maher
  * @since 2.5
  */
 public class ZooExecuteActionParser implements BeanDefinitionParser {
 
-    /** ZooKeeper command to execute */
+    /**
+     * ZooKeeper command to execute
+     */
     private Class<? extends ZooCommand> zookeeperCommandClass;
 
     /**
      * Constructor using zookeeper command.
+     *
      * @param commandClass
      */
     public <T extends ZooCommand> ZooExecuteActionParser(Class<T> commandClass) {
@@ -49,11 +62,10 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         ZooCommand command = null;
         try {
-            // TODO MM factory better?
             command = zookeeperCommandClass.newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
             throw new CitrusRuntimeException(e);
@@ -81,15 +93,36 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
             command.getParameters().put("data", DomUtils.getTextValue(data));
         }
 
-        // TODO MM add variable extractor ...
-        // com.consol.citrus.variable.VariableExtractor
-        // com.consol.citrus.actions.ReceiveMessageAction#validateMessage
-        // com.consol.citrus.config.xml.ReceiveMessageActionParser#getVariableExtractors
+        Element validateCmdResult = DomUtils.getChildElementByTagName(element, "validate");
+        if (validateCmdResult != null) {
+            beanDefinition.addPropertyValue("jsonPathMessageValidationContext", getValidationContext(validateCmdResult));
+        }
 
-        // TODO MM add Java-DSL
-        // TODO MM documentation
+        Element extractCmdResult = DomUtils.getChildElementByTagName(element, "extract");
+        if (extractCmdResult != null) {
+            beanDefinition.addPropertyValue("variableExtractors", getVariableExtractors(extractCmdResult));
+        }
 
         beanDefinition.addPropertyValue("command", command);
         return beanDefinition.getBeanDefinition();
+    }
+
+    private List<VariableExtractor> getVariableExtractors(Element extractElement) {
+        List<VariableExtractor> variableExtractors = new ArrayList<>();
+        Map<String, String> extractJsonPath = new HashMap<>();
+        List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
+        VariableExtractorParserUtil.parseMessageElement(messageValueElements, null, extractJsonPath);
+        if (!CollectionUtils.isEmpty(extractJsonPath)) {
+            VariableExtractorParserUtil.addJsonVariableExtractors(variableExtractors, extractJsonPath);
+        }
+        return variableExtractors;
+    }
+
+    private JsonPathMessageValidationContext getValidationContext(Element validateElement) {
+        Map<String, String> validateJsonPathExpressions = new HashMap<>();
+        ValidateMessageParserUtil.parseJsonPathElements(validateElement, validateJsonPathExpressions);
+        JsonPathMessageValidationContext context = new JsonPathMessageValidationContext();
+        context.setJsonPathExpressions(validateJsonPathExpressions);
+        return context;
     }
 }

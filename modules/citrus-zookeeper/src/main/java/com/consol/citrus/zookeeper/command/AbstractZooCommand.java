@@ -18,7 +18,11 @@ package com.consol.citrus.zookeeper.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.variable.VariableExtractor;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +30,16 @@ import java.util.Map;
  * @since 2.5
  */
 public abstract class AbstractZooCommand<R> implements ZooCommand {
+
+
+    public static final String DATA = "data";
+    public static final String PATH = "path";
+    public static final String MODE = "mode";
+    public static final String ACL = "acl";
+    public static final String VERSION = "version";
+
+    public static final String CHILDREN = "children";
+    public static final String RESPONSE_CODE = "responseCode";
 
     /** Command name */
     private final String name;

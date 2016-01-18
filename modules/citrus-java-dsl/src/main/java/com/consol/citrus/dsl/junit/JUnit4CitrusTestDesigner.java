@@ -480,6 +480,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public ZooActionBuilder zoo() {
+        return testDesigner.zoo();
+    }
+
+    @Override
     public TemplateBuilder applyTemplate(String name) {
         return testDesigner.applyTemplate(name);
     }

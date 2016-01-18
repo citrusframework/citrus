@@ -39,6 +39,10 @@ public class Create extends AbstractZooCommand<ZooResponse> {
      */
     private static Logger log = LoggerFactory.getLogger(Create.class);
 
+    public static final String ACL_ALL = "CREATOR_ALL_ACL";
+    public static final String ACL_OPEN = "OPEN_ACL_UNSAFE";
+    public static final String ACL_READ = "READ_ACL_UNSAFE";
+
     /**
      * Default constructor initializing the command name.
      */
@@ -51,10 +55,10 @@ public class Create extends AbstractZooCommand<ZooResponse> {
         ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
-        String data = this.getParameter("data", context);
-        String path = this.getParameter("path", context);
-        String mode = this.getParameter("mode", context);
-        String acl = this.getParameter("acl", context);
+        String data = this.getParameter(DATA, context);
+        String path = this.getParameter(PATH, context);
+        String mode = this.getParameter(MODE, context);
+        String acl = this.getParameter(ACL, context);
 
         String newPath = null;
         try {
@@ -62,8 +66,48 @@ public class Create extends AbstractZooCommand<ZooResponse> {
         } catch (KeeperException | InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }
-        commandResult.setResponseParam("path", newPath);
+        commandResult.setResponseParam(PATH, newPath);
         log.debug(getCommandResult().toString());
+    }
+
+    /**
+     * Sets the data parameter.
+     * @param data
+     * @return
+     */
+    public Create data(String data) {
+        getParameters().put(DATA, data);
+        return this;
+    }
+
+    /**
+     * Sets the path parameter.
+     * @param path
+     * @return
+     */
+    public Create path(String path) {
+        getParameters().put(PATH, path);
+        return this;
+    }
+
+    /**
+     * Sets the mode parameter.
+     * @param mode
+     * @return
+     */
+    public Create mode(String mode) {
+        getParameters().put(MODE, mode);
+        return this;
+    }
+
+    /**
+     * Sets the acl parameter.
+     * @param acl
+     * @return
+     */
+    public Create acl(String acl) {
+        getParameters().put(ACL, acl);
+        return this;
     }
 
     private CreateMode lookupCreateMode(String mode) {
@@ -72,11 +116,11 @@ public class Create extends AbstractZooCommand<ZooResponse> {
 
     private List<ACL> lookupAcl(String acl) {
         switch (acl) {
-            case "CREATOR_ALL_ACL":
+            case ACL_ALL:
                 return ZooDefs.Ids.CREATOR_ALL_ACL;
-            case "OPEN_ACL_UNSAFE":
+            case ACL_OPEN:
                 return ZooDefs.Ids.OPEN_ACL_UNSAFE;
-            case "READ_ACL_UNSAFE":
+            case ACL_READ:
                 return ZooDefs.Ids.READ_ACL_UNSAFE;
             default:
                 throw new CitrusRuntimeException(String.format("ACL '%s' not supported", acl));

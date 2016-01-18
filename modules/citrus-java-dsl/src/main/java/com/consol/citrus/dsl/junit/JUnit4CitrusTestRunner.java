@@ -32,6 +32,7 @@ import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Date;
@@ -353,6 +354,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         return testRunner.camel(configurer);
+    }
+
+    @Override
+    public ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer) {
+        return testRunner.zoo(configurer);
     }
 
     @Override

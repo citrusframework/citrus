@@ -17,6 +17,8 @@
   <properties>
     <citrus.serverPort>19080</citrus.serverPort>
     <citrus.stopPort>19080</citrus.stopPort>
+    <zookeeper.port.listen>21181</zookeeper.port.listen>
+    <zookeeper.port.shutdown>21182</zookeeper.port.shutdown>
   </properties>
 
   <build>
@@ -122,7 +124,32 @@
             <schemaFiles>**/*.xsd</schemaFiles>
           </configuration>
         </plugin>
-
+        <plugin>
+          <groupId>net.revelc.code</groupId>
+          <artifactId>zookeeper-maven-plugin</artifactId>
+          <version>1.0.1</version>
+          <configuration>
+            <clientPort>${zookeeper.port.listen}</clientPort>
+            <shutdownString>UniqueShutDownString</shutdownString>
+            <shutdownPort>${zookeeper.port.shutdown}</shutdownPort>
+          </configuration>
+          <executions>
+            <execution>
+              <id>run-zookeeper</id>
+              <goals>
+                <goal>start</goal>
+                <goal>stop</goal>
+              </goals>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.zookeeper</groupId>
+              <artifactId>zookeeper</artifactId>
+              <version>3.4.7</version>
+            </dependency>
+          </dependencies>
+        </plugin>
     </plugins>
 
   	<testSourceDirectory>src/it/java</testSourceDirectory>
@@ -175,6 +202,11 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-mail</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-zookeeper</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

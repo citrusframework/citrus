@@ -19,13 +19,17 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.util.ValidateMessageParserUtil;
+import com.consol.citrus.config.util.VariableExtractorParserUtil;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.*;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -173,59 +177,26 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @return
      */
     protected List<VariableExtractor> getVariableExtractors(Element element) {
-        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        List<VariableExtractor> variableExtractors = new ArrayList<>();
 
         parseExtractHeaderElements(element, variableExtractors);
-        
-        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> extractXpath = new HashMap<>();
-        Map<String, String> extractJsonPath = new HashMap<>();
-        if (extractElement != null) {
-            List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
-            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
-                Element messageValue = (Element) iter.next();
-                String pathExpression = messageValue.getAttribute("path");
-                
-                //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-                if (messageValue.hasAttribute("result-type")) {
-                    pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
-                }
 
-                if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
-                    extractJsonPath.put(pathExpression, messageValue.getAttribute("variable"));
-                } else {
-                    extractXpath.put(pathExpression, messageValue.getAttribute("variable"));
-                }
-            }
+        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
+        if (extractElement != null) {
+            Map<String, String> extractXpath = new HashMap<>();
+            Map<String, String> extractJsonPath = new HashMap<>();
+
+            List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
+            VariableExtractorParserUtil.parseMessageElement(messageValueElements, extractXpath, extractJsonPath);
 
             if (!CollectionUtils.isEmpty(extractJsonPath)) {
-                JsonPathVariableExtractor payloadVariableExtractor = new JsonPathVariableExtractor();
-                payloadVariableExtractor.setJsonPathExpressions(extractJsonPath);
-
-                variableExtractors.add(payloadVariableExtractor);
+                VariableExtractorParserUtil.addJsonVariableExtractors(variableExtractors, extractJsonPath);
             }
 
             if (!CollectionUtils.isEmpty(extractXpath)) {
-                XpathPayloadVariableExtractor payloadVariableExtractor = new XpathPayloadVariableExtractor();
-                payloadVariableExtractor.setXpathExpressions(extractXpath);
-
-                Map<String, String> namespaces = new HashMap<>();
-                Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-                if (messageElement != null) {
-                    List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-                    if (namespaceElements.size() > 0) {
-                        for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext();) {
-                            Element namespaceElement = (Element) iter.next();
-                            namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
-                        }
-                        payloadVariableExtractor.setNamespaces(namespaces);
-                    }
-                }
-
-                variableExtractors.add(payloadVariableExtractor);
+                VariableExtractorParserUtil.addXpathVariableExtractors(element, variableExtractors, extractXpath);
             }
         }
-        
         return variableExtractors;
     }
 
@@ -488,17 +459,9 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         }
 
         //check for jsonPath validation elements - new style preferred
-        List<?> jsonPathElements = DomUtils.getChildElementsByTagName(validateElement, "json-path");
-        if (jsonPathElements.size() > 0) {
-            for (Iterator<?> jsonPathIterator = jsonPathElements.iterator(); jsonPathIterator.hasNext();) {
-                Element jsonPathElement = (Element) jsonPathIterator.next();
-                String expression = jsonPathElement.getAttribute("expression");
-                if (StringUtils.hasText(expression)) {
-                    validateJsonPathExpressions.put(expression, jsonPathElement.getAttribute("value"));
-                }
-            }
-        }
+        ValidateMessageParserUtil.parseJsonPathElements(validateElement, validateJsonPathExpressions);
     }
+
 
     /**
      * Parse component returning generic bean definition.

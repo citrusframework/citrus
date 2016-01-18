@@ -51,9 +51,6 @@ public class ZooExecuteActionParserTest extends AbstractActionParserTest<ZooExec
         assertParametersContainValue(action.getCommand().getParameters(), "acl", "OPEN_ACL_UNSAFE");
         assertParametersContainValue(action.getCommand().getParameters(), "data", "more data");
         Assert.assertEquals(action.getExpectedCommandResult(), "{b:\"some thing\"}");
-
-        // TODO MM add missing tests for actions Delete, Exists, GetChildren, GetData, SetData
-        // TODO MM add unit tests for each action class Create, Delete, ...
     }
 
     private void assertParametersContainValue(Map parameters, String key, String value) {

@@ -47,9 +47,9 @@ public class SetData extends AbstractZooCommand<ZooResponse> {
         ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
-        String path = this.getParameter("path", context);
-        String data = this.getParameter("data", context);
-        int version = Integer.valueOf(this.getParameter("version", context));
+        String path = this.getParameter(PATH, context);
+        String data = this.getParameter(DATA, context);
+        int version = Integer.valueOf(this.getParameter(VERSION, context));
 
         try {
             Stat stat = zookeeperClient.getZooKeeperClient().setData(path, data.getBytes(), version);
@@ -59,4 +59,35 @@ public class SetData extends AbstractZooCommand<ZooResponse> {
         }
         log.debug(getCommandResult().toString());
     }
+
+    /**
+     * Sets the path parameter.
+     * @param path
+     * @return
+     */
+    public SetData path(String path) {
+        getParameters().put(PATH, path);
+        return this;
+    }
+
+    /**
+     * Sets the data parameter.
+     * @param data
+     * @return
+     */
+    public SetData data(String data) {
+        getParameters().put(DATA, data);
+        return this;
+    }
+
+    /**
+     * Sets the version parameter.
+     * @param version
+     * @return
+     */
+    public SetData version(int version) {
+        getParameters().put(VERSION, version);
+        return this;
+    }
+
 }

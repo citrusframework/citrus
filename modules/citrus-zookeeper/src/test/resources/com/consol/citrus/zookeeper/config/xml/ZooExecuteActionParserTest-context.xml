@@ -14,7 +14,7 @@
                     <zookeeper:result>{a:"some thing"}</zookeeper:result>
                 </zookeeper:expect>
                 <zookeeper:extract>
-                    <zookeeper:message path="$.a" variable="a" result-type="string" />
+                    <zookeeper:message path="$.a" variable="a" />
                 </zookeeper:extract>
             </zookeeper:info>
 

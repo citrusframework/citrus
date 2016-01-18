@@ -47,7 +47,7 @@ public class Exists extends AbstractZooCommand<ZooResponse> {
         ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
-        String path = this.getParameter("path", context);
+        String path = this.getParameter(PATH, context);
 
         try {
             Stat stat = zookeeperClient.getZooKeeperClient().exists(path, false);
@@ -57,4 +57,15 @@ public class Exists extends AbstractZooCommand<ZooResponse> {
         }
         log.debug(getCommandResult().toString());
     }
+
+    /**
+     * Sets the path parameter.
+     * @param path
+     * @return
+     */
+    public Exists path(String path) {
+        getParameters().put(PATH, path);
+        return this;
+    }
+
 }

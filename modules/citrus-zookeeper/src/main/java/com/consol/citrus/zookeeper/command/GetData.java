@@ -46,14 +46,25 @@ public class GetData extends AbstractZooCommand<ZooResponse> {
         ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
-        String path = this.getParameter("path", context);
+        String path = this.getParameter(PATH, context);
 
         try {
             byte[] data = zookeeperClient.getZooKeeperClient().getData(path, false, null);
-            commandResult.setResponseParam("data", new String(data));
+            commandResult.setResponseParam(DATA, new String(data));
         } catch (InterruptedException | KeeperException e) {
             throw new CitrusRuntimeException(e);
         }
         log.debug(getCommandResult().toString());
     }
+
+    /**
+     * Sets the path parameter.
+     * @param path
+     * @return
+     */
+    public GetData path(String path) {
+        getParameters().put(PATH, path);
+        return this;
+    }
+
 }

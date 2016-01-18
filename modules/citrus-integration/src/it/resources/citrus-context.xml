@@ -10,6 +10,7 @@
            xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
            xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
            xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
+           xmlns:citrus-zookeeper="http://www.citrusframework.org/schema/zookeeper/config"
            xmlns:context="http://www.springframework.org/schema/context"
            xmlns:util="http://www.springframework.org/schema/util"
            xmlns:amq="http://activemq.apache.org/schema/core"
@@ -26,7 +27,8 @@
            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+           http://www.citrusframework.org/schema/zookeeper/config http://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config.xsd">
 
     <import resource="classpath:com/consol/citrus/demo/hello-demo-ctx.xml"/>
     <import resource="citrus-schemas-context.xml"/>
@@ -400,7 +402,9 @@
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
-    
+
+    <citrus-zookeeper:client id="zookeeperClient" timeout="2000" url="localhost:21181"/>
+
     <citrus:before-suite id="defaultBeforeSuite">
       <citrus:actions>
         <citrus-test:sql datasource="testDataSource">

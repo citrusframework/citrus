@@ -32,5 +32,5 @@ import org.testng.annotations.Test;
 public class ZooExecuteIT extends AbstractTestNGCitrusTest {
 
     @CitrusXmlTest(name = "ZooExecuteIT")
-    public void zookeeperInfoTest() {}
+    public void zookeeperTest() {}
 }

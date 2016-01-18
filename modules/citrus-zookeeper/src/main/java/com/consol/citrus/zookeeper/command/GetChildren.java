@@ -23,6 +23,7 @@ import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,14 +49,26 @@ public class GetChildren extends AbstractZooCommand<ZooResponse> {
         ZooResponse commandResult = new ZooResponse();
         setCommandResult(commandResult);
 
-        String path = this.getParameter("path", context);
+        String path = this.getParameter(PATH, context);
 
         try {
             List<String> children = zookeeperClient.getZooKeeperClient().getChildren(path, false);
-            commandResult.setResponseParam("children", children);
+            Collections.sort(children);
+            commandResult.setResponseParam(CHILDREN, children);
         } catch (InterruptedException | KeeperException e) {
             throw new CitrusRuntimeException(e);
         }
         log.debug(getCommandResult().toString());
     }
+
+    /**
+     * Sets the path parameter.
+     * @param path
+     * @return
+     */
+    public GetChildren path(String path) {
+        getParameters().put(PATH, path);
+        return this;
+    }
+
 }

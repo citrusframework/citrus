@@ -32,6 +32,7 @@ import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -517,6 +518,13 @@ public class DefaultTestRunner implements TestRunner {
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build()).getDelegate();
+    }
+
+    @Override
+    public ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer) {
+        ZooActionBuilder builder = new ZooActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override

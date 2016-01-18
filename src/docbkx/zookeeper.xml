@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2006-2016 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<chapter id="zookeeper">
+  <title>Zookeeper support</title>
+
+  <para>Citrus provides configuration components and test actions for interaction with Zookeeper. The Citrus zookeeper
+    client component executes Zookeeper commands for interacting with Zookeeper to do things like creating a new node,
+    checking to see if node exists, deleting a node or getting and setting node data. As a user you can execute
+    Zookeeper commands as part of a Citrus test and validate possible command results.
+  </para>
+
+  <para>Before you can interact with a zookeeper server you have to configure the zookeeper client. A sample
+    configuration is provided below describing the configuration options available:
+    TODO MM
+  </para>
+
+  <para>After configuring the zookeeper client connecting to the sever is a piece of cake. Samples of all the
+    operations using both the java and the xml DSL are provided below.
+    TODO MM
+  </para>
+
+  <para>
+    info: Retrieves the cuttent state of the client connection
+    create: Creates a znode in a specified path of the ZooKeeper namespace
+    delete: Deletes a znode from a specified path of the ZooKeeper namespace
+    exists: Checks if a znode exists in the path
+    getChildren: Gets a list of children of a znode
+    getData: Gets the data associated with a znode
+    setData: Sets/writes data into the data field of a znode
+    TODO MM
+  </para>
+
+</chapter>
