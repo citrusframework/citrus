@@ -27,8 +27,8 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class JmxEndpointIT extends AbstractTestNGCitrusTest {
+public class JmxClientIT extends AbstractTestNGCitrusTest {
 
-    @CitrusXmlTest(name = "JmxEndpointIT")
+    @CitrusXmlTest(name = "JmxClientIT")
     public void jmxTest() {}
 }

@@ -38,7 +38,8 @@ public abstract class JmxMessageHeaders {
     public static final String JMX_OBJECT_DOMAIN = JMX_PREFIX + "object_domain";
     public static final String JMX_OBJECT_NAME = JMX_PREFIX + "object_name";
     public static final String JMX_ATTRIBUTE = JMX_PREFIX + "attribute";
-    public static final String JMX_VALUE = JMX_PREFIX + "value";
+    public static final String JMX_ATTRIBUTE_TYPE = JMX_PREFIX + "attribute_type";
+    public static final String JMX_ATTRIBUTE_VALUE = JMX_PREFIX + "attribute_value";
     public static final String JMX_OPERATION = JMX_PREFIX + "operation";
     public static final String JMX_OPERATION_PARAMS = JMX_PREFIX + "operation_params";
 }

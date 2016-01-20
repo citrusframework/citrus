@@ -22,28 +22,28 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
 import com.consol.citrus.jmx.message.JmxMessage;
-import com.consol.citrus.jmx.message.JmxMessageHeaders;
+import com.consol.citrus.jmx.model.ManagedBeanInvocation;
+import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import javax.management.*;
 import javax.management.remote.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.Collections;
-import java.util.Map;
 import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsumer {
+public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsumer, NotificationListener {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmxClient.class);
@@ -51,14 +51,14 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
 
-    /** Connection to the MBean server (local or remote) */
-    private MBeanServerConnection serverConnection;
-
-    /** Network jmx connector */
-    private JMXConnector networkConnector;
-
     /** Saves the network connection id */
     private String connectionId;
+
+    /** MBean object name */
+    private ObjectName objectName;
+
+    /** Optional notification listener */
+    private NotificationListener notificationListener;
 
     /** Scheduler */
     private ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(1);
@@ -87,53 +87,54 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public void send(Message message, TestContext context) {
-        JmxMessage jmxMessage;
-        if (message instanceof JmxMessage) {
-            jmxMessage = (JmxMessage) message;
-        } else {
-            jmxMessage = new JmxMessage(message);
-        }
-
         String correlationKeyName = getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        if (serverConnection == null) {
-            if (getEndpointConfiguration().getServerUrl().equals("platform")) {
-                serverConnection = ManagementFactory.getPlatformMBeanServer();
-            } else {
-                serverConnection = getNetworkConnection(jmxMessage);
-            }
+        MBeanServerConnection serverConnection;
+        if (getEndpointConfiguration().getServerUrl().equals("platform")) {
+            serverConnection = ManagementFactory.getPlatformMBeanServer();
+        } else {
+            serverConnection = getNetworkConnection();
         }
 
-        jmxMessage.setHeader(MessageHeaders.MESSAGE_CORRELATION_KEY, correlationKey);
-        execute(jmxMessage);
-    }
+        if (log.isDebugEnabled()) {
+            log.debug("Sending message to JMX MBeanServer server: '" + getEndpointConfiguration().getServerUrl() + "'");
+            log.debug("Message to send:\n" + message.getPayload(String.class));
+        }
+        context.onOutboundMessage(message);
 
-    private void execute(final JmxMessage jmxMessage) {
-        ObjectName objectName;
+        ManagedBeanInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
         try {
-            if (jmxMessage.getHeader(JmxMessageHeaders.JMX_MBEAN) != null) {
-                objectName = new ObjectName(jmxMessage.getHeader(JmxMessageHeaders.JMX_MBEAN).toString());
+            if (StringUtils.hasText(invocation.getMbean())) {
+                objectName = new ObjectName(invocation.getMbean().toString());
+            } else if (StringUtils.hasText(invocation.getObjectKey())) {
+                objectName = new ObjectName(invocation.getObjectDomain(), invocation.getObjectKey(), invocation.getObjectValue());
             } else {
-                objectName = new ObjectName(jmxMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN).toString(), "name", jmxMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_NAME).toString());
+                objectName = new ObjectName(invocation.getObjectDomain(), "name", invocation.getObjectName());
             }
         } catch (MalformedObjectNameException e) {
             throw new CitrusRuntimeException("Failed to create object name", e);
         }
 
         try {
-            if (jmxMessage.hasOperation()) {
-                serverConnection.invoke(objectName, jmxMessage.getHeader(JmxMessageHeaders.JMX_OPERATION).toString(), new Object[]{}, null);
-            } else if (jmxMessage.hasValue()) {
-                serverConnection.setAttribute(objectName, new Attribute(jmxMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE).toString(), jmxMessage.getHeader(JmxMessageHeaders.JMX_VALUE)));
-            } else if (jmxMessage.hasAttribute()) {
-                Object attributeValue = serverConnection.getAttribute(objectName, jmxMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE).toString());
-                JmxMessage response = new JmxMessage(jmxMessage);
-                response.setPayload(attributeValue);
-                correlationManager.store(jmxMessage.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY).toString(), response);
+            if (StringUtils.hasText(invocation.getOperation())) {
+                serverConnection.invoke(objectName, invocation.getOperation(), invocation.getParamValues(context.getApplicationContext()), null);
+            } else if (invocation.getAttribute() != null) {
+                ManagedBeanInvocation.Attribute attribute = invocation.getAttribute();
+
+                if (StringUtils.hasText(attribute.getValue())) {
+                    serverConnection.setAttribute(objectName, new Attribute(attribute.getName(), invocation.getAttributeValue(context.getApplicationContext())));
+                } else {
+                    Object attributeValue = serverConnection.getAttribute(objectName, attribute.getName());
+                    if (attributeValue != null) {
+                        correlationManager.store(correlationKey, JmxMessage.result(attributeValue));
+                    } else {
+                        correlationManager.store(correlationKey, JmxMessage.result());
+                    }
+                }
             } else {
-                addNotificationListener(objectName, jmxMessage.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY).toString());
+                addNotificationListener(objectName, correlationKey, serverConnection);
             }
         } catch (JMException e) {
             throw new CitrusRuntimeException("Failed to execute MBean operation", e);
@@ -144,18 +145,16 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Establish network connection to remote mBean server.
-     * @param jmxMessage
      * @return
      */
-    private MBeanServerConnection getNetworkConnection(JmxMessage jmxMessage) {
+    private MBeanServerConnection getNetworkConnection() {
         try {
             JMXServiceURL url = new JMXServiceURL(getEndpointConfiguration().getServerUrl());
             String[] creds = {getEndpointConfiguration().getUsername(), getEndpointConfiguration().getPassword()};
-            Map<String, String[]> map = Collections.singletonMap(JMXConnector.CREDENTIALS, creds);
-            networkConnector = JMXConnectorFactory.connect(url, map);
+            JMXConnector networkConnector = JMXConnectorFactory.connect(url, Collections.singletonMap(JMXConnector.CREDENTIALS, creds));
             connectionId = networkConnector.getConnectionId();
 
-            networkConnector.addConnectionNotificationListener(new JmxConnectionNotificationListener(this, jmxMessage), null, null);
+            networkConnector.addConnectionNotificationListener(this, null, null);
             return networkConnector.getMBeanServerConnection();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to connect to network MBean server", e);
@@ -190,20 +189,43 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
         return message;
     }
 
+    @Override
+    public void handleNotification(Notification notification, Object handback) {
+        JMXConnectionNotification connectionNotification = (JMXConnectionNotification) notification;
+        if (connectionNotification.getConnectionId().equals(getConnectionId()) && connectionLost(connectionNotification)) {
+            log.warn("JmxClient lost JMX connection for : {}", getEndpointConfiguration().getServerUrl());
+            if (getEndpointConfiguration().isAutoReconnect()) {
+                scheduleReconnect();
+            }
+        }
+    }
+
+    /**
+     * Finds connection lost type notifications.
+     * @param connectionNotification
+     * @return
+     */
+    private boolean connectionLost(JMXConnectionNotification connectionNotification) {
+        return connectionNotification.getType().equals(JMXConnectionNotification.NOTIFS_LOST)
+                || connectionNotification.getType().equals(JMXConnectionNotification.CLOSED)
+                || connectionNotification.getType().equals(JMXConnectionNotification.FAILED);
+    }
+
     /**
      * Schedules an attempt to re-initialize a lost connection after the reconnect delay
-     * @param jmxMessage
      */
-    public void scheduleReconnect(final JmxMessage jmxMessage) {
+    public void scheduleReconnect() {
         Runnable startRunnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    serverConnection = getNetworkConnection(jmxMessage);
-                    execute(jmxMessage);
+                    MBeanServerConnection serverConnection = getNetworkConnection();
+                    if (notificationListener != null) {
+                        serverConnection.addNotificationListener(objectName, notificationListener, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
+                    }
                 } catch (Exception e) {
                     log.warn("Failed to reconnect to JMX MBean server. {}", e.getMessage());
-                    scheduleReconnect(jmxMessage);
+                    scheduleReconnect();
                 }
             }
         };
@@ -215,15 +237,18 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
      * Add notification listener for response messages.
      * @param objectName
      * @param correlationKey
+     * @param serverConnection
      */
-    private void addNotificationListener(ObjectName objectName, final String correlationKey) {
+    private void addNotificationListener(ObjectName objectName, final String correlationKey, MBeanServerConnection serverConnection) {
         try {
-            serverConnection.addNotificationListener(objectName, new NotificationListener() {
+            notificationListener = new NotificationListener() {
                 @Override
                 public void handleNotification(Notification notification, Object handback) {
-                    correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(notification, getEndpointConfiguration()));
+                    correlationManager.store(correlationKey, new DefaultMessage(notification.getMessage()));
                 }
-            }, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
+            };
+
+            serverConnection.addNotificationListener(objectName, notificationListener, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
         } catch (InstanceNotFoundException e) {
             throw new CitrusRuntimeException("Failed to find object name instance", e);
         } catch (IOException e) {

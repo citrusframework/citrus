@@ -16,11 +16,10 @@
 
 package com.consol.citrus.jmx.message;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jmx.model.*;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-
-import java.util.Hashtable;
-import java.util.Map;
+import org.springframework.xml.transform.StringResult;
 
 /**
  * @author Christoph Deppisch
@@ -28,128 +27,178 @@ import java.util.Map;
  */
 public class JmxMessage extends DefaultMessage {
 
-    /** Complete MBean name*/
-    private String mbean;
+    /** Model objects */
+    private ManagedBeanInvocation mbeanInvocation;
+    private ManagedBeanResult mbeanResult;
 
-    /** MBEan object domain */
-    private String objectDomain;
-    /** MBEan object name */
-    private String objectName;
-
-    private String attributeName;
-    private String value;
-    private String operation;
-
-    /** Optional object properties */
-    private Hashtable<String, String> objectProperties;
+    private JmxMarshaller marshaller = new JmxMarshaller();
 
     /**
-     * Empty constructor initializing with empty message payload.
+     * Prevent traditional instantiation.
      */
-    public JmxMessage() {
-        super();
+    private JmxMessage() { super(); }
+
+    /**
+     * Constructor initializes new service invocation message.
+     * @param mbeanInvocation
+     */
+    private JmxMessage(ManagedBeanInvocation mbeanInvocation) {
+        super(mbeanInvocation);
+        this.mbeanInvocation = mbeanInvocation;
     }
 
     /**
-     * Constructs copy of given message.
-     * @param message
+     * Constructor initializes new service result message.
+     * @param mbeanResult
      */
-    public JmxMessage(Message message) {
-        super(message);
+    private JmxMessage(ManagedBeanResult mbeanResult) {
+        super(mbeanResult);
+        this.mbeanResult = mbeanResult;
+    }
+
+    public static JmxMessage invocation(String mbean) {
+        ManagedBeanInvocation invocation = new ManagedBeanInvocation();
+        invocation.setMbean(mbean);
+
+        return new JmxMessage(invocation);
+    }
+
+    public static JmxMessage invocation(String objectDomain, String objectName) {
+        ManagedBeanInvocation invocation = new ManagedBeanInvocation();
+        invocation.setObjectDomain(objectDomain);
+        invocation.setObjectName(objectName);
+
+        return new JmxMessage(invocation);
+    }
+
+    public static JmxMessage invocation(String objectDomain, String objectKey, String objectValue) {
+        ManagedBeanInvocation invocation = new ManagedBeanInvocation();
+        invocation.setObjectDomain(objectDomain);
+        invocation.setObjectKey(objectKey);
+        invocation.setObjectValue(objectValue);
+
+        return new JmxMessage(invocation);
     }
 
     /**
-     * Default message using message payload.
-     * @param payload
+     * Sets attribute for read operation.
+     * @param name
+     * @return
      */
-    public JmxMessage(Object payload) {
-        super(payload);
+    public JmxMessage attribute(String name) {
+        return attribute(name, null, null);
     }
 
     /**
-     * Default message using message payload and headers.
-     * @param payload
-     * @param headers
-     */
-    public JmxMessage(Object payload, Map<String, Object> headers) {
-        super(payload, headers);
-    }
-
-    /**
-     * Sets the Jmx mbean name.
-     * @param mbean
-     */
-    public JmxMessage mbean(String mbean) {
-        setHeader(JmxMessageHeaders.JMX_MBEAN, mbean);
-        return this;
-    }
-
-    /**
-     * Sets the Jmx objectDomain.
-     * @param objectDomain
-     */
-    public JmxMessage objectDomain(String objectDomain) {
-        setHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN, objectDomain);
-        return this;
-    }
-
-    /**
-     * Sets the Jmx objectName.
-     * @param objectName
-     */
-    public JmxMessage objectName(String objectName) {
-        setHeader(JmxMessageHeaders.JMX_OBJECT_NAME, objectName);
-        return this;
-    }
-
-    /**
-     * Sets the Jmx attribute.
-     * @param attribute
-     */
-    public JmxMessage attribute(String attribute) {
-        setHeader(JmxMessageHeaders.JMX_ATTRIBUTE, attribute);
-        return this;
-    }
-
-    /**
-     * Sets the Jmx value.
+     * Sets attribute for write operation.
+     * @param name
      * @param value
+     * @return
      */
-    public JmxMessage value(String value) {
-        setHeader(JmxMessageHeaders.JMX_VALUE, value);
+    public JmxMessage attribute(String name, Object value) {
+        return attribute(name, value, value.getClass());
+    }
+
+    /**
+     * Sets attribute for write operation with custom value type.
+     * @param name
+     * @param value
+     * @param valueType
+     * @return
+     */
+    public JmxMessage attribute(String name, Object value, Class<?> valueType) {
+        if (mbeanInvocation == null) {
+            throw new CitrusRuntimeException("Invalid access to method argument for RMI message");
+        }
+
+        ManagedBeanInvocation.Attribute attribute = new ManagedBeanInvocation.Attribute();
+        attribute.setName(name);
+        if (value != null) {
+            attribute.setValueObject(value);
+            attribute.setType(valueType.getName());
+        }
+
+        mbeanInvocation.setAttribute(attribute);
         return this;
     }
 
     /**
-     * Sets the Jmx operation.
-     * @param operation
+     * Sets operation for read write access.
+     * @param name
+     * @return
      */
-    public JmxMessage operation(String operation) {
-        setHeader(JmxMessageHeaders.JMX_OPERATION, operation);
+    public JmxMessage operation(String name) {
+        if (mbeanInvocation == null) {
+            throw new CitrusRuntimeException("Invalid access to method argument for RMI message");
+        }
+        mbeanInvocation.setOperation(name);
         return this;
     }
 
     /**
-     * Checks existence of operation header.
+     * Adds operation parameter.
+     * @param arg
      * @return
      */
-    public boolean hasOperation() {
-        return getHeader(JmxMessageHeaders.JMX_OPERATION) != null;
+    public JmxMessage parameter(Object arg) {
+        return parameter(arg, arg.getClass());
     }
 
     /**
-     * Checks existence of attribute header.
+     * Adds operation parameter with custom parameter type.
+     * @param arg
+     * @param argType
      * @return
      */
-    public boolean hasAttribute() {
-        return getHeader(JmxMessageHeaders.JMX_ATTRIBUTE) != null;
+    public JmxMessage parameter(Object arg, Class<?> argType) {
+        if (mbeanInvocation == null) {
+            throw new CitrusRuntimeException("Invalid access to method argument for RMI message");
+        }
+
+        if (mbeanInvocation.getParameter() == null) {
+            mbeanInvocation.setParameter(new ManagedBeanInvocation.Parameter());
+        }
+
+        OperationParam operationParam = new OperationParam();
+        operationParam.setValueObject(arg);
+        operationParam.setType(argType.getName());
+        mbeanInvocation.getParameter().getParameter().add(operationParam);
+        return this;
     }
 
-    /**
-     * Checks existence of value header.
-     * @return
-     */
-    public boolean hasValue() {
-        return getHeader(JmxMessageHeaders.JMX_VALUE) != null;
+    public static JmxMessage result(Object value) {
+        ManagedBeanResult mbeanResult = new ManagedBeanResult();
+        ManagedBeanResult.Object mbeanResultObject = new ManagedBeanResult.Object();
+        mbeanResultObject.setValueObject(value);
+        mbeanResult.setObject(mbeanResultObject);
+
+        return new JmxMessage(mbeanResult);
+    }
+
+    public static JmxMessage result() {
+        return new JmxMessage(new ManagedBeanResult());
+    }
+
+    @Override
+    public <T> T getPayload(Class<T> type) {
+        if (String.class.equals(type)) {
+            return (T) getPayload();
+        } else {
+            return super.getPayload(type);
+        }
+    }
+
+    @Override
+    public Object getPayload() {
+        StringResult payloadResult = new StringResult();
+        if (mbeanInvocation != null) {
+            marshaller.marshal(mbeanInvocation, payloadResult);
+            return payloadResult.toString();
+        } else if (mbeanResult != null) {
+            marshaller.marshal(mbeanResult, payloadResult);
+            return payloadResult.toString();
+        }
+
+        return super.getPayload();
     }
 }

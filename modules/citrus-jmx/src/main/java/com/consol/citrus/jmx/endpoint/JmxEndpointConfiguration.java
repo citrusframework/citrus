@@ -18,6 +18,7 @@ package com.consol.citrus.jmx.endpoint;
 
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
+import com.consol.citrus.jmx.model.JmxMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 
@@ -48,66 +49,157 @@ public class JmxEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** Optional notification handback */
     private Object notificationHandback;
 
+    /** Marshaller converts from XML to JMX mbean invocation objects */
+    private JmxMarshaller marshaller = new JmxMarshaller();
+
     /** Message converter */
     private JmxMessageConverter messageConverter = new JmxMessageConverter();
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
+    /**
+     * Gets the value of the serverUrl property.
+     *
+     * @return the serverUrl
+     */
     public String getServerUrl() {
         return serverUrl;
     }
 
+    /**
+     * Sets the serverUrl property.
+     *
+     * @param serverUrl
+     */
     public void setServerUrl(String serverUrl) {
         this.serverUrl = serverUrl;
     }
 
+    /**
+     * Gets the value of the username property.
+     *
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets the username property.
+     *
+     * @param username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Gets the value of the password property.
+     *
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Sets the password property.
+     *
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Gets the value of the autoReconnect property.
+     *
+     * @return the autoReconnect
+     */
     public boolean isAutoReconnect() {
         return autoReconnect;
     }
 
+    /**
+     * Sets the autoReconnect property.
+     *
+     * @param autoReconnect
+     */
     public void setAutoReconnect(boolean autoReconnect) {
         this.autoReconnect = autoReconnect;
     }
 
+    /**
+     * Gets the value of the delayOnReconnect property.
+     *
+     * @return the delayOnReconnect
+     */
     public long getDelayOnReconnect() {
         return delayOnReconnect;
     }
 
+    /**
+     * Sets the delayOnReconnect property.
+     *
+     * @param delayOnReconnect
+     */
     public void setDelayOnReconnect(long delayOnReconnect) {
         this.delayOnReconnect = delayOnReconnect;
     }
 
+    /**
+     * Gets the value of the notificationFilter property.
+     *
+     * @return the notificationFilter
+     */
     public NotificationFilter getNotificationFilter() {
         return notificationFilter;
     }
 
+    /**
+     * Sets the notificationFilter property.
+     *
+     * @param notificationFilter
+     */
     public void setNotificationFilter(NotificationFilter notificationFilter) {
         this.notificationFilter = notificationFilter;
     }
 
+    /**
+     * Gets the value of the notificationHandback property.
+     *
+     * @return the notificationHandback
+     */
     public Object getNotificationHandback() {
         return notificationHandback;
     }
 
+    /**
+     * Sets the notificationHandback property.
+     *
+     * @param notificationHandback
+     */
     public void setNotificationHandback(Object notificationHandback) {
         this.notificationHandback = notificationHandback;
+    }
+
+    /**
+     * Gets the value of the marshaller property.
+     *
+     * @return the marshaller
+     */
+    public JmxMarshaller getMarshaller() {
+        return marshaller;
+    }
+
+    /**
+     * Sets the marshaller property.
+     *
+     * @param marshaller
+     */
+    public void setMarshaller(JmxMarshaller marshaller) {
+        this.marshaller = marshaller;
     }
 
     /**

@@ -17,27 +17,114 @@
 package com.consol.citrus.jmx.message;
 
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
+import com.consol.citrus.jmx.model.ManagedBeanInvocation;
+import com.consol.citrus.jmx.model.OperationParam;
 import com.consol.citrus.message.*;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.transform.StringResult;
 
-import javax.management.Notification;
+import javax.xml.transform.Source;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxMessageConverter implements MessageConverter<Notification, JmxEndpointConfiguration> {
+public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocation, JmxEndpointConfiguration> {
 
     @Override
-    public Notification convertOutbound(Message internalMessage, JmxEndpointConfiguration endpointConfiguration) {
-        return null;
+    public ManagedBeanInvocation convertOutbound(Message internalMessage, JmxEndpointConfiguration endpointConfiguration) {
+        ManagedBeanInvocation serviceInvocation = getServiceInvocation(internalMessage, endpointConfiguration);
+        convertOutbound(serviceInvocation, internalMessage, endpointConfiguration);
+        return serviceInvocation;
     }
 
     @Override
-    public void convertOutbound(Notification externalMessage, Message internalMessage, JmxEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(ManagedBeanInvocation mBeanInvocation, Message internalMessage, JmxEndpointConfiguration endpointConfiguration) {
+        if (internalMessage.getHeader(JmxMessageHeaders.JMX_MBEAN) != null) {
+            mBeanInvocation.setMbean(internalMessage.getHeader(JmxMessageHeaders.JMX_MBEAN).toString());
+        }
+
+        if (internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION) != null) {
+            mBeanInvocation.setOperation(internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION).toString());
+        }
+
+        if (internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION_PARAMS) != null) {
+            String[] params = StringUtils.commaDelimitedListToStringArray(internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION_PARAMS).toString());
+            for (String param : params) {
+                OperationParam operationParam = new OperationParam();
+                operationParam.setType(String.class.getName());
+                operationParam.setValue(param);
+                mBeanInvocation.getParameter().getParameter().add(operationParam);
+            }
+        }
+
+        if (internalMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE) != null) {
+            ManagedBeanInvocation.Attribute attribute = new ManagedBeanInvocation.Attribute();
+            attribute.setName(internalMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE).toString());
+
+            if (internalMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE_VALUE) != null) {
+                attribute.setValue(internalMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE_VALUE).toString());
+            }
+
+            if (internalMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE_TYPE) != null) {
+                attribute.setType(internalMessage.getHeader(JmxMessageHeaders.JMX_ATTRIBUTE_TYPE).toString());
+            }
+
+            mBeanInvocation.setAttribute(attribute);
+        }
+
+
+        if (internalMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN) != null) {
+            mBeanInvocation.setObjectDomain(internalMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN).toString());
+        }
+
+        if (internalMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_NAME) != null) {
+            mBeanInvocation.setObjectName(internalMessage.getHeader(JmxMessageHeaders.JMX_OBJECT_NAME).toString());
+        }
     }
 
     @Override
-    public Message convertInbound(Notification externalMessage, JmxEndpointConfiguration endpointConfiguration) {
-        return new DefaultMessage(externalMessage.getMessage());
+    public Message convertInbound(ManagedBeanInvocation mBeanInvocation, JmxEndpointConfiguration endpointConfiguration) {
+        StringResult payload = new StringResult();
+        endpointConfiguration.getMarshaller().marshal(mBeanInvocation, payload);
+
+        Message inbound = new DefaultMessage(payload.toString());
+
+        if (mBeanInvocation.getMbean() != null) {
+            inbound.setHeader(JmxMessageHeaders.JMX_MBEAN, mBeanInvocation.getMbean());
+        }
+
+        if (mBeanInvocation.getObjectDomain() != null) {
+            inbound.setHeader(JmxMessageHeaders.JMX_OBJECT_DOMAIN, mBeanInvocation.getObjectDomain());
+            inbound.setHeader(JmxMessageHeaders.JMX_OBJECT_NAME, mBeanInvocation.getObjectName());
+        }
+
+        return inbound;
+    }
+
+    /**
+     * Reads Citrus internal RMI message model object from message payload. Either payload is actually a service invocation object or
+     * XML payload String is unmarshalled to proper object representation.
+     *
+     * @param message
+     * @param endpointConfiguration
+     * @return
+     */
+    private ManagedBeanInvocation getServiceInvocation(Message message, JmxEndpointConfiguration endpointConfiguration) {
+        Object payload = message.getPayload();
+
+        ManagedBeanInvocation serviceInvocation = null;
+        if (payload != null) {
+            if (payload instanceof ManagedBeanInvocation) {
+                serviceInvocation = (ManagedBeanInvocation) payload;
+            } else if (payload != null && StringUtils.hasText(message.getPayload(String.class))) {
+                serviceInvocation = (ManagedBeanInvocation) endpointConfiguration.getMarshaller()
+                        .unmarshal(message.getPayload(Source.class));
+            } else {
+                serviceInvocation = new ManagedBeanInvocation();
+            }
+        }
+
+        return serviceInvocation;
     }
 }
