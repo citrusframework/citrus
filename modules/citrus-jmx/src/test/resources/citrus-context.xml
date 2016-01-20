@@ -20,6 +20,14 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
+  <citrus-jmx:client id="jmxHelloClient"
+                     server-url="platform"/>
+
+  <citrus-jmx:server id="jmxHelloServer"
+                     server-url="platform"
+                     auto-start="true"
+                     mbean-interface="com.consol.citrus.jmx.mbean.HelloBean"/>
+
   <citrus-jmx:client id="jmxClient"/>
 
 </beans>

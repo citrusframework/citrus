@@ -67,20 +67,16 @@ public class ManagedBeanInvocation {
      * Gets the argument types from list of parameter.
      * @return
      */
-    public Class[] getParamTypes() {
-        List<Class> types = new ArrayList<>();
+    public String[] getParamTypes() {
+        List<String> types = new ArrayList<>();
 
         if (parameter != null) {
             for (OperationParam arg : parameter.getParameter()) {
-                try {
-                    types.add(Class.forName(arg.getType()));
-                } catch (ClassNotFoundException e) {
-                    throw new CitrusRuntimeException("Failed to access method argument type", e);
-                }
+                types.add(arg.getType());
             }
         }
 
-        return types.toArray(new Class[types.size()]);
+        return types.toArray(new String[types.size()]);
     }
 
     /**

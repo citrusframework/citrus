@@ -21,14 +21,19 @@ import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.jmx.model.JmxMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import javax.management.NotificationFilter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxEndpointConfiguration extends AbstractPollableEndpointConfiguration {
+public class JmxEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
 
     /** MBean server url, by default connect to platform MBean server */
     private String serverUrl = "platform";
@@ -57,6 +62,12 @@ public class JmxEndpointConfiguration extends AbstractPollableEndpointConfigurat
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
+
+    /** JMX server environment properties */
+    private Map<String, Object> environmentProperties = new HashMap<>();
+
+    /** Spring application context used for method arg object reference evaluation */
+    private ApplicationContext applicationContext;
 
     /**
      * Gets the value of the serverUrl property.
@@ -232,5 +243,32 @@ public class JmxEndpointConfiguration extends AbstractPollableEndpointConfigurat
      */
     public void setMessageConverter(JmxMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the value of the environmentProperties property.
+     *
+     * @return the environmentProperties
+     */
+    public Map<String, Object> getEnvironmentProperties() {
+        return environmentProperties;
+    }
+
+    /**
+     * Sets the environmentProperties property.
+     *
+     * @param environmentProperties
+     */
+    public void setEnvironmentProperties(Map<String, Object> environmentProperties) {
+        this.environmentProperties = environmentProperties;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 }

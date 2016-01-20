@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <citrus-jmx:server id="jmxServer1"
+                     server-url="platform"
+                     mbean-interface="com.consol.citrus.jmx.mbean.HelloBean"/>
+
+  <citrus-jmx:server id="jmxServer2"
+                     server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
+                     mbean-interface="com.consol.citrus.jmx.mbean.NewsBean"
+                     message-converter="messageConverter"
+                     environment-properties="environmentProperties"
+                     timeout="10000"/>
+
+  <citrus-jmx:server id="jmxServer3"
+                     mbean-interface="com.consol.citrus.jmx.mbean.HelloBean"
+                     actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.jmx.message.JmxMessageConverter"/>
+  </bean>
+
+  <util:map id="environmentProperties">
+    <entry key="com.sun.management.jmxremote.authenticate" value="false"/>
+  </util:map>
+</beans>

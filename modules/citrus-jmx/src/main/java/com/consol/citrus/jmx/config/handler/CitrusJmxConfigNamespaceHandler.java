@@ -17,6 +17,7 @@
 package com.consol.citrus.jmx.config.handler;
 
 import com.consol.citrus.jmx.config.xml.JmxClientParser;
+import com.consol.citrus.jmx.config.xml.JmxServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -28,5 +29,6 @@ public class CitrusJmxConfigNamespaceHandler extends NamespaceHandlerSupport {
     @Override
     public void init() {
         registerBeanDefinitionParser("client", new JmxClientParser());
+        registerBeanDefinitionParser("server", new JmxServerParser());
     }
 }
