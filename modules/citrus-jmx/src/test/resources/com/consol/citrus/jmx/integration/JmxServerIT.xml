@@ -71,7 +71,7 @@
         </message>
       </receive>
 
-      <!--echo>
+      <echo>
         <message>Test 2: Receive JMX mbean call return some result object</message>
       </echo>
 
@@ -80,7 +80,7 @@
           <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>com.consol.citrus.jmx.mbean:type=HelloBean</mbean>
-              <attribute name="helloMessage"/>
+              <attribute type="java.lang.String" name="helloMessage"/>
             </mbean-invocation>
           </payload>
         </message>
@@ -91,7 +91,7 @@
           <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>com.consol.citrus.jmx.mbean:type=HelloBean</mbean>
-              <attribute name="helloMessage"/>
+              <attribute type="java.lang.String" name="helloMessage"/>
             </mbean-invocation>
           </payload>
         </message>
@@ -115,7 +115,7 @@
             </mbean-result>
           </payload>
         </message>
-      </receive-->
+      </receive>
 
     </actions>
   </testcase>

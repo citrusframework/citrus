@@ -18,27 +18,21 @@ package com.consol.citrus.jmx.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
-import com.consol.citrus.jmx.model.*;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 import javax.management.*;
 import javax.management.remote.*;
-import javax.xml.transform.Source;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxServer extends AbstractServer implements InvocationHandler {
+public class JmxServer extends AbstractServer {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmxServer.class);
@@ -69,97 +63,8 @@ public class JmxServer extends AbstractServer implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (log.isDebugEnabled()) {
-            log.debug("Received message on JMX server: '" + endpointConfiguration.getServerUrl() + "'");
-        }
-
-        Message response = getEndpointAdapter().handleMessage(endpointConfiguration.getMessageConverter()
-                .convertInbound(createInvocation(proxy, method, args), endpointConfiguration));
-
-        ManagedBeanResult serviceResult = null;
-        if (response != null && response.getPayload() != null) {
-            if (response.getPayload() instanceof ManagedBeanResult) {
-                serviceResult = (ManagedBeanResult) response.getPayload();
-            } else if (response.getPayload() instanceof String) {
-                serviceResult = (ManagedBeanResult) endpointConfiguration.getMarshaller().unmarshal(response.getPayload(Source.class));
-            }
-        }
-
-        if (serviceResult != null) {
-            return serviceResult.getResultObject(endpointConfiguration.getApplicationContext());
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Creates managed bean invocation model object. Based on method arguments and method signature
-     * invocation represents read or write operation.
-     * @param mbean
-     * @param method
-     * @param args
-     * @return
-     */
-    private ManagedBeanInvocation createInvocation(Object mbean, Method method, Object[] args) {
-        ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();
-
-        if (Proxy.isProxyClass(mbean.getClass())) {
-            mbeanInvocation.setMbean(method.getDeclaringClass().getPackage().getName() + ":type=" + method.getDeclaringClass().getSimpleName());
-        } else {
-            mbeanInvocation.setMbean(mbean.getClass().getPackage().getName() + ":type=" + mbean.getClass().getSimpleName());
-        }
-
-        if (method.getName().startsWith("set") || method.getName().startsWith("get")) {
-            ManagedBeanInvocation.Attribute attribute = new ManagedBeanInvocation.Attribute();
-
-            attribute.setName(method.getName().substring(3));
-            if (args != null && args.length > 0) {
-                attribute.setValueObject(args[0]);
-            }
-
-            mbeanInvocation.setAttribute(attribute);
-        } else {
-            mbeanInvocation.setOperation(method.getName());
-
-            if (args != null) {
-                mbeanInvocation.setParameter(new ManagedBeanInvocation.Parameter());
-
-                for (Object arg : args) {
-                    OperationParam operationParam = new OperationParam();
-
-                    operationParam.setValueObject(arg);
-                    if (Map.class.isAssignableFrom(arg.getClass())) {
-                        operationParam.setType(Map.class.getName());
-                    } else if (List.class.isAssignableFrom(arg.getClass())) {
-                        operationParam.setType(List.class.getName());
-                    } else {
-                        operationParam.setType(arg.getClass().getName());
-                    }
-
-                    mbeanInvocation.getParameter().getParameter().add(operationParam);
-                }
-            }
-        }
-
-        return mbeanInvocation;
-    }
-
-    @Override
     public JmxEndpointConfiguration getEndpointConfiguration() {
         return endpointConfiguration;
-    }
-
-    /**
-     * Gets the class loader from remote interfaces.
-     * @return
-     */
-    public ClassLoader getClassLoader() {
-        if (!CollectionUtils.isEmpty(mbeanInterfaces)) {
-            return mbeanInterfaces.get(0).getClassLoader();
-        } else {
-            return this.getClassLoader();
-        }
     }
 
     @Override
@@ -174,9 +79,7 @@ public class JmxServer extends AbstractServer implements InvocationHandler {
             }
 
             for (Class mbeanType : mbeanInterfaces) {
-                Object proxy = Proxy.newProxyInstance(getClassLoader(), new Class[] { mbeanType }, this);
-
-                server.registerMBean(new StandardMBean(proxy, mbeanType), new ObjectName(mbeanType.getPackage().getName(), "type", mbeanType.getSimpleName()));
+                server.registerMBean(new JmxEndpointMBean(mbeanType, endpointConfiguration, getEndpointAdapter()), new ObjectName(mbeanType.getPackage().getName(), "type", mbeanType.getSimpleName()));
 
                 try {
                     server.getObjectInstance(new ObjectName(mbeanType.getPackage().getName(), "type", mbeanType.getSimpleName()));
