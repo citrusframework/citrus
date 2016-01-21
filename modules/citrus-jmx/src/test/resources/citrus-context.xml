@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                         http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Jmx Integration Testing"/>
+  </citrus:global-variables>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <citrus-jmx:client id="jmxHelloClient"
+                     server-url="platform"/>
+
+  <citrus-jmx:server id="jmxHelloServer"
+                     server-url="platform"
+                     auto-start="true">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="news" objectName="name=NewsBean"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
+
+  <citrus-jmx:client id="jmxClient"/>
+
+</beans>

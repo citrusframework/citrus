@@ -49,6 +49,7 @@
     <module>modules/citrus-rmi</module>
     <module>modules/citrus-arquillian</module>
     <module>modules/citrus-java-dsl</module>
+    <module>modules/citrus-jmx</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-admin</module>
   </modules>
