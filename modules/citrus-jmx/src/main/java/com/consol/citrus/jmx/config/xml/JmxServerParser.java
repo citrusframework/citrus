@@ -19,11 +19,17 @@ package com.consol.citrus.jmx.config.xml;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractServerParser;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
+import com.consol.citrus.jmx.model.ManagedBeanDefinition;
 import com.consol.citrus.jmx.server.JmxServer;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -38,8 +44,21 @@ public class JmxServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyReference(configurationBuilder, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("timeout"), "timeout");
 
+        Element mbeansElement = DomUtils.getChildElementByTagName(element, "mbeans");
+        ManagedList mbeans = new ManagedList();
+        if (mbeansElement != null) {
+            List<?> mbeanElement = DomUtils.getChildElementsByTagName(mbeansElement, "mbean");
+            for (Iterator<?> iter = mbeanElement.iterator(); iter.hasNext();) {
+                Element mbean = (Element) iter.next();
+                BeanDefinitionBuilder mbeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(ManagedBeanDefinition.class);
+                BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("type"), "type");
+                BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("objectDomain"), "objectDomain");
+                BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("objectName"), "objectName");
+                mbeans.add(mbeanDefinition.getBeanDefinition());
+            }
 
-        BeanDefinitionParserUtils.setPropertyValue(serverBuilder, element.getAttribute("mbean-interface"), "mbeanInterfaces");
+            serverBuilder.addPropertyValue("mbeans", mbeans);
+        }
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "Configuration";
         BeanDefinitionParserUtils.registerBean(endpointConfigurationId, configurationBuilder.getBeanDefinition(), parserContext, shouldFireEvents());

@@ -25,8 +25,12 @@
 
   <citrus-jmx:server id="jmxHelloServer"
                      server-url="platform"
-                     auto-start="true"
-                     mbean-interface="com.consol.citrus.jmx.mbean.HelloBean"/>
+                     auto-start="true">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="news" objectName="name=NewsBean"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
 
   <citrus-jmx:client id="jmxClient"/>
 

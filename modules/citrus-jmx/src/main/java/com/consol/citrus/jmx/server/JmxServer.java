@@ -18,6 +18,7 @@ package com.consol.citrus.jmx.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
+import com.consol.citrus.jmx.model.ManagedBeanDefinition;
 import com.consol.citrus.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,8 @@ public class JmxServer extends AbstractServer {
     /** Endpoint configuration */
     private final JmxEndpointConfiguration endpointConfiguration;
 
-    /** MBean interfaces this server should bind */
-    private List<Class<?>> mbeanInterfaces;
+    /** MBean definitions this server should expose */
+    private List<ManagedBeanDefinition> mbeans;
 
     /** MBean server instance */
     private MBeanServer server;
@@ -78,16 +79,10 @@ public class JmxServer extends AbstractServer {
                 jmxConnectorServer.start();
             }
 
-            for (Class mbeanType : mbeanInterfaces) {
-                server.registerMBean(new JmxEndpointMBean(mbeanType, endpointConfiguration, getEndpointAdapter()), new ObjectName(mbeanType.getPackage().getName(), "type", mbeanType.getSimpleName()));
-
-                try {
-                    server.getObjectInstance(new ObjectName(mbeanType.getPackage().getName(), "type", mbeanType.getSimpleName()));
-                } catch (InstanceNotFoundException e) {
-                    e.printStackTrace();
-                }
+            for (ManagedBeanDefinition mbean : mbeans) {
+                server.registerMBean(new JmxEndpointMBean(mbean, endpointConfiguration, getEndpointAdapter()), mbean.createObjectName());
             }
-        } catch (IOException |MalformedObjectNameException | NotCompliantMBeanException | InstanceAlreadyExistsException | MBeanRegistrationException e) {
+        } catch (IOException | NotCompliantMBeanException | InstanceAlreadyExistsException | MBeanRegistrationException e) {
             throw new CitrusRuntimeException("Failed to create JMX managed bean on mbean server", e);
         }
     }
@@ -96,8 +91,8 @@ public class JmxServer extends AbstractServer {
     protected void shutdown() {
         if (server != null) {
             try {
-                for (Class mbeanType : mbeanInterfaces) {
-                    server.unregisterMBean(new ObjectName(mbeanType.getPackage().getName(), "type", mbeanType.getSimpleName()));
+                for (ManagedBeanDefinition mbean : mbeans) {
+                    server.unregisterMBean(mbean.createObjectName());
                 }
             } catch (Throwable t) {}
         }
@@ -114,11 +109,11 @@ public class JmxServer extends AbstractServer {
         jmxConnectorServer = null;
     }
 
-    public List<Class<?>> getMbeanInterfaces() {
-        return mbeanInterfaces;
+    public List<ManagedBeanDefinition> getMbeans() {
+        return mbeans;
     }
 
-    public void setMbeanInterfaces(List<Class<?>> mbeanInterfaces) {
-        this.mbeanInterfaces = mbeanInterfaces;
+    public void setMbeans(List<ManagedBeanDefinition> mbeans) {
+        this.mbeans = mbeans;
     }
 }

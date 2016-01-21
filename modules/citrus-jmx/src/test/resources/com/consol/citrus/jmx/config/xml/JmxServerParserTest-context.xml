@@ -10,19 +10,28 @@
                             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <citrus-jmx:server id="jmxServer1"
-                     server-url="platform"
-                     mbean-interface="com.consol.citrus.jmx.mbean.HelloBean"/>
+                     server-url="platform">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
 
   <citrus-jmx:server id="jmxServer2"
                      server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
-                     mbean-interface="com.consol.citrus.jmx.mbean.NewsBean"
                      message-converter="messageConverter"
                      environment-properties="environmentProperties"
-                     timeout="10000"/>
+                     timeout="10000">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="some.other.domain" objectName="name=NewsBean"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
 
   <citrus-jmx:server id="jmxServer3"
-                     mbean-interface="com.consol.citrus.jmx.mbean.HelloBean"
-                     actor="testActor"/>
+                     actor="testActor">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean" objectDomain="hello"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 

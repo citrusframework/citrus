@@ -117,6 +117,69 @@
         </message>
       </receive>
 
+      <echo>
+        <message>Test 3: Identify mbean by its name</message>
+      </echo>
+
+      <send endpoint="jmxHelloClient" fork="true">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>news:name=NewsBean</mbean>
+              <operation>getNews</operation>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>news:name=NewsBean</mbean>
+              <operation>getNews</operation>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="News from JMX!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloClient">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="News from JMX!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test 4: Unknown mbean exception</message>
+      </echo>
+
+      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="Failed to execute MBean operation">
+        <send endpoint="jmxHelloClient">
+          <message>
+            <payload>
+              <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                <mbean>com.consol.citrus.jmx.mbean:type=NewsBean</mbean>
+                <operation>getNews</operation>
+              </mbean-invocation>
+            </payload>
+          </message>
+        </send>
+      </assert>
+
     </actions>
   </testcase>
 </spring:beans>

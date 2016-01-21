@@ -26,9 +26,23 @@
       <xs:documentation>RMI server implementation registers one service in RMI registry and receives messages via RMI invocation.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element name="mbeans">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="mbean" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="type" type="xs:string" use="required"/>
+                  <xs:attribute name="objectDomain" type="xs:string"/>
+                  <xs:attribute name="objectName" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="server-url" type="xs:string" default="platform"/>
-      <xs:attribute name="mbean-interface" type="xs:string" use="required"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>

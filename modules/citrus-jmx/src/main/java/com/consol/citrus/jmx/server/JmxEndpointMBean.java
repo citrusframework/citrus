@@ -52,15 +52,15 @@ public class JmxEndpointMBean extends StandardMBean {
     private final JmxEndpointConfiguration endpointConfiguration;
 
     /** Managed bean interface type */
-    private final Class managedBean;
+    private final ManagedBeanDefinition mbean;
 
     /**
      * Constructor using the managed bean type.
-     * @param managedBean
+     * @param mbean
      */
-    public JmxEndpointMBean(Class managedBean, JmxEndpointConfiguration endpointConfiguration, EndpointAdapter endpointAdapter) throws NotCompliantMBeanException {
-        super(Proxy.newProxyInstance(managedBean.getClassLoader(), new Class[]{ managedBean }, new UnsupportedInvocationHandler()), managedBean);
-        this.managedBean = managedBean;
+    public JmxEndpointMBean(ManagedBeanDefinition mbean, JmxEndpointConfiguration endpointConfiguration, EndpointAdapter endpointAdapter) throws NotCompliantMBeanException {
+        super(Proxy.newProxyInstance(mbean.getType().getClassLoader(), new Class[]{ mbean.getType() }, new UnsupportedInvocationHandler()), mbean.getType());
+        this.mbean = mbean;
         this.endpointConfiguration = endpointConfiguration;
         this.endpointAdapter = endpointAdapter;
     }
@@ -68,7 +68,7 @@ public class JmxEndpointMBean extends StandardMBean {
     @Override
     public Object getAttribute(String name) throws AttributeNotFoundException, MBeanException, ReflectionException {
         ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();
-        mbeanInvocation.setMbean(managedBean.getPackage().getName() + ":type=" + managedBean.getSimpleName());
+        mbeanInvocation.setMbean(mbean.createObjectName().toString());
         ManagedBeanInvocation.Attribute attribute = new ManagedBeanInvocation.Attribute();
         attribute.setName(name);
         mbeanInvocation.setAttribute(attribute);
@@ -79,7 +79,7 @@ public class JmxEndpointMBean extends StandardMBean {
     @Override
     public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
         ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();
-        mbeanInvocation.setMbean(managedBean.getPackage().getName() + ":type=" + managedBean.getSimpleName());
+        mbeanInvocation.setMbean(mbean.createObjectName().toString());
         ManagedBeanInvocation.Attribute mbeanAttribute = new ManagedBeanInvocation.Attribute();
         mbeanAttribute.setName(attribute.getName());
         mbeanAttribute.setValueObject(attribute.getValue());
@@ -125,10 +125,10 @@ public class JmxEndpointMBean extends StandardMBean {
         }
 
         ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();
-        mbeanInvocation.setMbean(managedBean.getPackage().getName() + ":type=" + managedBean.getSimpleName());
+        mbeanInvocation.setMbean(mbean.createObjectName().toString());
         mbeanInvocation.setOperation(actionName);
 
-        if (params != null) {
+        if (params != null && params.length > 0) {
             mbeanInvocation.setParameter(new ManagedBeanInvocation.Parameter());
 
             for (Object arg : params) {
