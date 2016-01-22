@@ -47,9 +47,9 @@
     <module>modules/citrus-vertx</module>
     <module>modules/citrus-docker</module>
     <module>modules/citrus-rmi</module>
+    <module>modules/citrus-jmx</module>
     <module>modules/citrus-arquillian</module>
     <module>modules/citrus-java-dsl</module>
-    <module>modules/citrus-jmx</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-admin</module>
   </modules>
@@ -1547,6 +1547,42 @@
                       <directory>modules/citrus-model/model-rmi/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-rmi-message*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-jmx-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/jmx/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-jmx/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-jmx-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-jmx-message-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/jmx/message</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-jmx/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-jmx-message*.xsd</include>
                       </includes>
                     </resource>
                   </resources>

@@ -20,6 +20,7 @@
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-docker</include>
         <include>com.consol.citrus:citrus-rmi</include>
+        <include>com.consol.citrus:citrus-jmx</include>
         <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
@@ -195,6 +196,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-rmi/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-jmx/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

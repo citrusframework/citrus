@@ -105,6 +105,7 @@ public final class CitrusArchiveBuilder {
         vertx();
         docker();
         rmi();
+        jmx();
         javaDsl();
 
         return this;
@@ -197,6 +198,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder rmi() {
         artifactCoordinates.add(getCoordinates("citrus-rmi"));
+        return this;
+    }
+
+    /**
+     * Gets the jmx Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder jmx() {
+        artifactCoordinates.add(getCoordinates("citrus-jmx"));
         return this;
     }
 
