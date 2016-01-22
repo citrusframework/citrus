@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="JmxDynamicEndpointIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2015-09-14</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-09-14T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test jmx client dynamic endpoints.</description>
+
+    <actions>
+      <echo>
+        <message>Call JMX mbean server</message>
+      </echo>
+
+      <send endpoint="jmx:platform">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>java.lang:type=Memory</mbean>
+              <attribute name="HeapMemoryUsage" inner-path="used"/>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmx:platform">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.Long" value="@greaterThan(1000)@"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

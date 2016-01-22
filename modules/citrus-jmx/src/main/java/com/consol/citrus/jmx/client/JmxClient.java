@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import javax.management.*;
+import javax.management.openmbean.CompositeData;
 import javax.management.remote.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -132,6 +133,19 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
                     serverConnection.setAttribute(objectName, new Attribute(attribute.getName(), invocation.getAttributeValue(context.getApplicationContext())));
                 } else {
                     Object attributeValue = serverConnection.getAttribute(objectName, attribute.getName());
+
+                    if (StringUtils.hasText(attribute.getInnerPath())) {
+                        if (attributeValue instanceof CompositeData) {
+                            if (!((CompositeData) attributeValue).containsKey(attribute.getInnerPath())) {
+                                throw new CitrusRuntimeException("Failed to find inner path attribute value: " + attribute.getInnerPath());
+                            }
+
+                            attributeValue = ((CompositeData) attributeValue).get(attribute.getInnerPath());
+                        } else {
+                            throw new CitrusRuntimeException("Failed to get inner path on attribute value: " + attributeValue);
+                        }
+                    }
+
                     if (attributeValue != null) {
                         correlationManager.store(correlationKey, JmxMessage.result(attributeValue));
                     } else {

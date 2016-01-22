@@ -12,3 +12,4 @@ camel=com.consol.citrus.camel.endpoint.CamelEndpointComponent
 ws=com.consol.citrus.websocket.endpoint.WebSocketEndpointComponent
 websocket=com.consol.citrus.websocket.endpoint.WebSocketEndpointComponent
 rmi=com.consol.citrus.rmi.endpoint.RmiEndpointComponent
+jmx=com.consol.citrus.jmx.endpoint.JmxEndpointComponent

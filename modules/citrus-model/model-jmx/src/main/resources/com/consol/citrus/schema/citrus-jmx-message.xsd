@@ -41,6 +41,7 @@
             <xs:complexType>
               <xs:attribute name="name" type="xs:string"/>
               <xs:attribute name="type" type="xs:string"/>
+              <xs:attribute name="inner-path" type="xs:string"/>
               <xs:attribute name="value" type="xs:string"/>
               <xs:attribute name="ref" type="xs:string"/>
             </xs:complexType>

@@ -47,6 +47,8 @@
     <listitem><emphasis>mail: or smtp:</emphasis> Creates a new mail client for sending a mail mime message to a SMTP server</listitem>
     <listitem><emphasis>camel:</emphasis> Creates a new Apache Camel endpoint for sending and receiving Camel exchanges both to and from Camel routes.</listitem>
     <listitem><emphasis>vertx: or eventbus:</emphasis> Creates a new Vert.x instance sending and receiving messages with the network event bus</listitem>
+    <listitem><emphasis>rmi:</emphasis> Creates a new RMI client instance sending and receiving messages for method invocation on remote interfaces</listitem>
+    <listitem><emphasis>jmx:</emphasis> Creates a new JMX client instance sending and receiving messages to and from a managed bean server.</listitem>
   </itemizedlist>
 
   <para>Depending on the message transport we have to add mandatory parameters to the endpoint uri. In the JMS example we had to specify the destination name. The mandatory parameters are always part of the endpoint uri. Optional
@@ -83,6 +85,9 @@
 
     rmi://localhost:1099/someService
     rmi:localhost/someService&amp;timeout=10000
+
+    jmx:rmi:///jndi/rmi://localhost:1099/someService
+    jmx:platform&amp;timeout=10000
 
     camel:direct:address
     camel:seda:address

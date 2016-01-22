@@ -359,6 +359,8 @@ public class ManagedBeanInvocation {
         protected String value;
         @XmlAttribute(name = "ref")
         protected String ref;
+        @XmlAttribute(name = "inner-path")
+        protected String innerPath;
 
         @XmlTransient
         private java.lang.Object valueObject;
@@ -457,6 +459,30 @@ public class ManagedBeanInvocation {
          */
         public void setRef(String value) {
             this.ref = value;
+        }
+
+        /**
+         * Gets the value of the innerPath property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getInnerPath() {
+            return innerPath;
+        }
+
+        /**
+         * Sets the value of the innerPath property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setInnerPath(String value) {
+            this.innerPath = value;
         }
 
         public java.lang.Object getValueObject() {
