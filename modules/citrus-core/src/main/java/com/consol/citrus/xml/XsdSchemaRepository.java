@@ -99,6 +99,7 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         }
 
         // Add default Citrus message schemas if available on classpath
+        addCitrusSchema("citrus-http-message");
         addCitrusSchema("citrus-mail-message");
         addCitrusSchema("citrus-ftp-message");
         addCitrusSchema("citrus-ssh-message");

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+  <testcase name="FormUrlEncoded_FormData_IT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2015-11-18</creationdate>
+      <status>FINAL</status>
+    </meta-info>
+    
+    <description>This test sends a x-www-form-urlencoded HTML form data content to Http server for validation. The form data is validated with Xml
+      message validation on marshaled form data using a specific x-www-form-urlencoded form validator implementation.</description>
+
+    <variables>
+      <variable name="username" value="test"/>
+      <variable name="password" value="s!cr!t"/>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Send Http client form data request</message>
+      </echo>
+
+      <send endpoint="echoHttpClient" fork="true">
+        <message>
+          <data><![CDATA[password=${password}&username=${username}]]></data>
+        </message>
+        <header>
+          <element name="Content-Type" value="application/x-www-form-urlencoded"/>
+          <element name="citrus_endpoint_uri" value="http://localhost:12080/form-test"/>
+        </header>
+      </send>
+
+      <echo>
+        <message>Receive form data as plain text</message>
+      </echo>
+
+      <receive endpoint="echoHttpServer">
+        <message type="x-www-form-urlencoded" validator="formUrlEncodedMessageValidator">
+          <payload>
+              <form-data xmlns="http://www.citrusframework.org/schema/http/message">
+                <content-type>application/x-www-form-urlencoded</content-type>
+                <action>/form-test</action>
+                <controls>
+                  <control name="password">
+                    <value>${password}</value>
+                  </control>
+                  <control name="username">
+                    <value>${username}</value>
+                  </control>
+                </controls>
+              </form-data>
+          </payload>
+        </message>
+        <header>
+          <element name="citrus_http_method" value="POST"/>
+          <element name="citrus_http_request_uri" value="/form-test"/>
+          <element name="Content-Type" value="application/x-www-form-urlencoded"/>
+        </header>
+      </receive>
+
+      <send endpoint="echoHttpServer">
+        <message>
+          <data></data>
+        </message>
+        <header>
+          <element name="citrus_http_status_code" value="200"/>
+          <element name="citrus_http_reason_phrase" value="OK"/>
+          <element name="Content-Type" value="text/html"/>
+        </header>
+      </send>
+    </actions>
+    
+  </testcase>
+</spring:beans>

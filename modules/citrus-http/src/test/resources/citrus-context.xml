@@ -29,6 +29,8 @@
       <citrus:namespace prefix="hs" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
   </citrus:namespace-context>
 
+  <bean id="formUrlEncodedMessageValidator" class="com.consol.citrus.http.validation.FormUrlEncodedMessageValidator"/>
+
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 

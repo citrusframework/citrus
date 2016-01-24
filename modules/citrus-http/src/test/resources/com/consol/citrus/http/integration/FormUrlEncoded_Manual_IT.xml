@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+  <testcase name="FormUrlEncoded_Manual_IT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2015-11-18</creationdate>
+      <status>FINAL</status>
+    </meta-info>
+    
+    <description>This test sends a x-www-form-urlencoded HTML form data content to Http server for validation. This test is for manual interaction
+      only. Start the test and open a browser pointing to http://localhost:8080. You will get a simple Html page with a form in it. Submit the form data and
+      check that the test has received and validated the data.</description>
+
+    <variables>
+      <variable name="username" value="test"/>
+      <variable name="password" value="s!cr!t"/>
+    </variables>
+
+    <actions>
+      <receive endpoint="echoHttpServer">
+        <message></message>
+        <header>
+          <element name="citrus_http_method" value="GET"/>
+          <element name="citrus_http_request_uri" value="/"/>
+        </header>
+      </receive>
+
+      <send endpoint="echoHttpServer">
+        <message>
+          <resource file="classpath:templates/index.html"/>
+        </message>
+        <header>
+          <element name="citrus_http_status_code" value="200"/>
+          <element name="citrus_http_reason_phrase" value="OK"/>
+          <element name="Content-Type" value="text/html"/>
+        </header>
+      </send>
+
+      <receive endpoint="httpServer">
+        <message type="x-www-form-urlencoded" validator="formUrlEncodedMessageValidator">
+          <payload>
+              <form-data xmlns="http://www.citrusframework.org/schema/http/message">
+                <content-type>application/x-www-form-urlencoded</content-type>
+                <action>/form-test</action>
+                <controls>
+                  <control name="password">
+                    <value>${password}</value>
+                  </control>
+                  <control name="username">
+                    <value>${username}</value>
+                  </control>
+                </controls>
+              </form-data>
+          </payload>
+        </message>
+        <header>
+          <element name="citrus_http_method" value="POST"/>
+          <element name="citrus_http_request_uri" value="/form-test"/>
+          <element name="Content-Type" value="application/x-www-form-urlencoded"/>
+        </header>
+      </receive>
+
+      <send endpoint="httpServer">
+        <message>
+          <resource file="classpath:templates/index.html"/>
+        </message>
+        <header>
+          <element name="citrus_http_status_code" value="200"/>
+          <element name="citrus_http_reason_phrase" value="OK"/>
+          <element name="Content-Type" value="text/html"/>
+        </header>
+      </send>
+    </actions>
+    
+  </testcase>
+</spring:beans>

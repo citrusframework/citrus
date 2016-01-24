@@ -16,6 +16,9 @@
   
   <body>
     <release version="2.5" date="15.01.2015" description="2.5 release">
+        <action dev="christophd" type="add">
+          CITRUS-37 x-www-form-urlencoded message validator
+        </action>
         <action dev="christophd" type="fix">
           GITHUB-62 DataDictionary not settable via Java DSL
         </action>
