@@ -498,6 +498,76 @@ Server: Jetty(7.0.0.pre5)
         On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.</para>
     </section>
 
+    <section id="http-www-form-urlencoded">
+      <title>HTTP form urlencoded data</title>
+
+      <para>HTML form data can be sent to the server using different methods and content types. One of them is a POST method with <emphasis>x-www-form-urlencoded</emphasis> body content. The form data
+      elements are sent to the server using key-value pairs POST data where the form control name is the key and the control data is the url encoded value.</para>
+
+      <para>Form urlencoded form data content could look like this:</para>
+
+      <programlisting>password=s%21cr%21t&amp;username=foo</programlisting>
+
+      <para>A you can see the form data is automatically encoded. In the example above we transmit two form controls <emphasis>password</emphasis> and <emphasis>username</emphasis> with respective values
+      <emphasis>s$cr$t</emphasis> and <emphasis>foo</emphasis>. In case we would validate this form data in Citrus we are able to do this with plaintext message validation.</para>
+
+      <programlisting>&lt;receive endpoint=&quot;httpServer&quot;&gt;
+  &lt;message type=&quot;plaintext&quot;&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        password=s%21cr%21t&amp;username=${username}
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+  &lt;header&gt;
+    &lt;element name=&quot;citrus_http_method&quot; value=&quot;POST&quot;/&gt;
+    &lt;element name=&quot;citrus_http_request_uri&quot; value=&quot;/form-test&quot;/&gt;
+    &lt;element name=&quot;Content-Type&quot; value=&quot;application/x-www-form-urlencoded&quot;/&gt;
+  &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+
+      <para>Obviously validating these key-value pair character sequences can be hard especially when having HTML forms with lots of form controls. This is why Citrus provides a special
+      message validator for <emphasis>x-www-form-urlencoded</emphasis> contents. First of all we have to add <emphasis>citrus-http</emphasis> module as dependency to our project if not done so yet. After
+      that we can add the validator implementation to the list of message validators used in Citrus.</para>
+
+      <programlisting>&lt;citrus:message-validators&gt;
+  &lt;citrus:validator class=&quot;com.consol.citrus.http.validation.FormUrlEncodedMessageValidator&quot;/&gt;
+&lt;/citrus:message-validators&gt;</programlisting>
+
+      <para>Now we are able to receive the urlencoded form data message in a test.</para>
+
+      <programlisting>&lt;receive endpoint=&quot;httpServer&quot;&gt;
+  &lt;message type=&quot;x-www-form-urlencoded&quot;&gt;
+    &lt;payload&gt;
+      &lt;form-data xmlns=&quot;http://www.citrusframework.org/schema/http/message&quot;&gt;
+        &lt;content-type&gt;application/x-www-form-urlencoded&lt;/content-type&gt;
+        &lt;action&gt;/form-test&lt;/action&gt;
+        &lt;controls&gt;
+          &lt;control name=&quot;password&quot;&gt;
+            &lt;value&gt;${password}&lt;/value&gt;
+          &lt;/control&gt;
+          &lt;control name=&quot;username&quot;&gt;
+            &lt;value&gt;${username}&lt;/value&gt;
+          &lt;/control&gt;
+        &lt;/controls&gt;
+      &lt;/form-data&gt;
+    &lt;/payload&gt;
+  &lt;/message&gt;
+  &lt;header&gt;
+    &lt;element name=&quot;citrus_http_method&quot; value=&quot;POST&quot;/&gt;
+    &lt;element name=&quot;citrus_http_request_uri&quot; value=&quot;/form-test&quot;/&gt;
+    &lt;element name=&quot;Content-Type&quot; value=&quot;application/x-www-form-urlencoded&quot;/&gt;
+  &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+
+      <para>We use a special message type <emphasis>x-www-form-urlencoded</emphasis> so the new message validator will take action. The form url encoded message validator
+      is able to handle a special XML representation of the form data. This enables the very powerful XML message validation capabilities of Citrus such as ignoring elements and usage of
+      test variables inline.</para>
+
+      <para>Each form control is translated to a control element with respective name and value properties. The form data is validated in a more comfortable way as the plaintext message
+      validator would be able to offer.</para>
+    </section>
+
     <section id="http-error-handling">
         <title>HTTP error handling</title>
 

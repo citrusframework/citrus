@@ -87,6 +87,7 @@
 
         <para>In the following sections we you will find out what has happened in the past Citrus releases.</para>
 
+        <xi:include href='changes-2-4.xml'/>
         <xi:include href='changes-2-3.xml'/>
         <xi:include href='changes-2-2.xml'/>
         <xi:include href='changes-2-1.xml'/>
