@@ -167,7 +167,7 @@
     <spring.integration.version>4.2.2.RELEASE</spring.integration.version>
     <apache.camel.version>2.16.0</apache.camel.version>
     <activemq.version>5.12.1</activemq.version>
-    <vertx.version>2.1.6</vertx.version>
+    <vertx.version>3.2.0</vertx.version>
     <groovy.version>2.4.5</groovy.version>
     <jetty.version>9.3.6.v20151106</jetty.version>
     <testng.version>6.9.9</testng.version>
@@ -606,7 +606,7 @@
           </exclusion>
         </exclusions>
       </dependency>
-      
+
       <!-- Test scoped dependencies -->
       <dependency>
         <groupId>org.apache.activemq</groupId>

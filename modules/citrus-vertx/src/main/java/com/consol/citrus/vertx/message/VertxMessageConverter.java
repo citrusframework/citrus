@@ -26,11 +26,10 @@ import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class VertxMessageConverter implements MessageConverter<org.vertx.java.core.eventbus.Message, VertxEndpointConfiguration> {
-
+public class VertxMessageConverter implements MessageConverter<io.vertx.core.eventbus.Message, VertxEndpointConfiguration> {
 
     @Override
-    public Message convertInbound(org.vertx.java.core.eventbus.Message vertxMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(io.vertx.core.eventbus.Message vertxMessage, VertxEndpointConfiguration endpointConfiguration) {
         if (vertxMessage == null) {
             return null;
         }
@@ -43,12 +42,12 @@ public class VertxMessageConverter implements MessageConverter<org.vertx.java.co
     }
 
     @Override
-    public org.vertx.java.core.eventbus.Message convertOutbound(Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public io.vertx.core.eventbus.Message convertOutbound(Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
         throw new UnsupportedOperationException("Unable to convert Vert.x outbound message");
     }
 
     @Override
-    public void convertOutbound(org.vertx.java.core.eventbus.Message externalMessage, Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(io.vertx.core.eventbus.Message externalMessage, Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
         throw new UnsupportedOperationException("Unable to convert Vert.x outbound message");
     }
 }

@@ -17,7 +17,7 @@
 package com.consol.citrus.vertx.factory;
 
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
-import org.vertx.java.core.Vertx;
+import io.vertx.core.Vertx;
 
 /**
  * @author Christoph Deppisch

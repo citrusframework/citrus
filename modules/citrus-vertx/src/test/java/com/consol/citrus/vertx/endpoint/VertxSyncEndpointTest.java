@@ -22,15 +22,15 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.vertx.factory.SingleVertxInstanceFactory;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
+import io.vertx.core.*;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.eventbus.EventBus;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.MessageConsumer;
 
 import static org.mockito.Mockito.*;
 
@@ -42,8 +42,10 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
     private Vertx vertx = Mockito.mock(Vertx.class);
     private EventBus eventBus = Mockito.mock(EventBus.class);
+    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
     private MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
-    private org.vertx.java.core.eventbus.Message messageMock = Mockito.mock(org.vertx.java.core.eventbus.Message.class);
+    private AsyncResult asyncResult = Mockito.mock(AsyncResult.class);
+    private io.vertx.core.eventbus.Message messageMock = Mockito.mock(io.vertx.core.eventbus.Message.class);
 
     private SingleVertxInstanceFactory instanceFactory = new SingleVertxInstanceFactory();
 
@@ -63,14 +65,16 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         Message requestMessage = new DefaultMessage("Hello from Citrus!");
 
-        reset(vertx, eventBus, messageMock);
+        reset(vertx, eventBus, messageMock, asyncResult);
+
+        when(asyncResult.result()).thenReturn(messageMock);
 
         when(vertx.eventBus()).thenReturn(eventBus);
         doAnswer(new Answer<EventBus>() {
             @Override
             public EventBus answer(InvocationOnMock invocation) throws Throwable {
                 Handler handler = (Handler) invocation.getArguments()[2];
-                handler.handle(messageMock);
+                handler.handle(asyncResult);
                 return eventBus;
             }
         }).when(eventBus).send(eq(eventBusAddress), eq(requestMessage.getPayload()), any(Handler.class));
@@ -99,23 +103,22 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         Message replyMessage = new DefaultMessage("Hello from Citrus!");
 
-        reset(vertx, eventBus, messageMock);
+        reset(vertx, eventBus, messageConsumer, messageMock);
 
         when(messageMock.body()).thenReturn("Hello from Vertx!");
         when(messageMock.address()).thenReturn(eventBusAddress);
         when(messageMock.replyAddress()).thenReturn("replyAddress");
 
         when(vertx.eventBus()).thenReturn(eventBus);
-        doAnswer(new Answer<EventBus>() {
+        doAnswer(new Answer<MessageConsumer>() {
             @Override
-            public EventBus answer(InvocationOnMock invocation) throws Throwable {
+            public MessageConsumer answer(InvocationOnMock invocation) throws Throwable {
                 Handler handler = (Handler) invocation.getArguments()[1];
                 handler.handle(messageMock);
-                return eventBus;
-            }
-        }).when(eventBus).registerHandler(eq(eventBusAddress), any(Handler.class));
 
-        when(eventBus.unregisterHandler(eq(eventBusAddress), any(Handler.class))).thenReturn(eventBus);
+                return messageConsumer;
+            }
+        }).when(eventBus).consumer(eq(eventBusAddress), any(Handler.class));
 
         when(eventBus.send("replyAddress", replyMessage.getPayload())).thenReturn(eventBus);
 
@@ -126,6 +129,7 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         vertxEndpoint.createProducer().send(replyMessage, context);
 
+        verify(messageConsumer).unregister();
     }
 
     @Test
