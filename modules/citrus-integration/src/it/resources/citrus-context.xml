@@ -11,6 +11,7 @@
            xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
            xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
            xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
+           xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
            xmlns:context="http://www.springframework.org/schema/context"
            xmlns:util="http://www.springframework.org/schema/util"
            xmlns:amq="http://activemq.apache.org/schema/core"
@@ -27,6 +28,7 @@
            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
            http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd
+           http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
@@ -407,6 +409,23 @@
          timeout="5000"/>
                                      
     <citrus:channel id="greetings" capacity="5"/>
+
+    <!-- Citrus JMX -->
+    <!-- JMX server -->
+    <citrus-jmx:server id="jmxServer"
+                       server-url="platform"
+                       timeout="10000"
+                       auto-start="true">
+      <citrus-jmx:mbeans>
+        <citrus-jmx:mbean type="com.consol.citrus.jmx.HelloBean"/>
+        <citrus-jmx:mbean type="com.consol.citrus.jmx.NewsBean" objectDomain="com.consol.citrus.news" objectName="name=News"/>
+      </citrus-jmx:mbeans>
+    </citrus-jmx:server>
+
+    <!-- JMX client -->
+    <citrus-jmx:client id="jmxClient"
+                       server-url="platform"
+                       timeout="10000"/>
 
     <!-- Citrus mail components -->
     <citrus-mail:client id="mailMessageSender"

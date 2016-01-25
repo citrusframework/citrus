@@ -72,6 +72,7 @@
 
     <para>Now that we have setup the client component we can use it in a test case to access a managed bean.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;jmxClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -83,6 +84,14 @@
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxClientTest() {
+    send(jmxClient)
+        .message(JmxMessage.invocation("java.lang:type=Memory")
+            .attribute("Verbose"));
+}</programlisting>
+
     <para>As you can see we just used a normal send action referencing the jmx client component that we have just added. The message payload is a XML representation of the managed bean access. This
     is a special Citrus XML representation. Citrus will convert this XML payload to the actuel managed bean access. In the example above we try to access a managed bean with object name <emphasis>java.lang:type=Memory</emphasis>.
     The object name is defined in JMX specification and consists of a key <emphasis>java.lang:type</emphasis> and a value <emphasis>Memory</emphasis>. So we identify the managed bean on the server by its type.</para>
@@ -90,6 +99,7 @@
     <para>Now that we have access to the managed bean we can read its managed attributes such as <emphasis>Verbose</emphasis>. This is a boolean type attribute so the mbean invocation result will be a respective Boolean object. We
     can validate the managed bean attribute access in a receive action.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;receive endpoint=&quot;jmxClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -100,11 +110,19 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxClientTest() {
+    receive(jmxClient)
+        .message(JmxMessage.result(false));
+}</programlisting>
+
     <para>In the sample above we receive the mbean result and expect a <emphasis>java.lang.Boolean</emphasis> object return value.
     The return value content is also validated within the mbean result payload.</para>
 
     <para>Some managed bean attributes might also be settable for us. So wen can define the attribute access as write operation by specifying a value in the send action payload.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;jmxClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -116,10 +134,19 @@
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxClientTest() {
+    send(jmxClient)
+        .message(JmxMessage.invocation("java.lang:type=Memory")
+            .attribute("Verbose", true));
+}</programlisting>
+
     <para>Now we have write access to the managed attribute <emphasis>Verbose</emphasis>. We do specify the value and its type <emphasis>java.lang.Boolean</emphasis>. This is how we can set attribute values on managed beans.</para>
 
     <para>Last not least we are able to access managed bean operations.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;jmxClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -133,6 +160,15 @@
         &lt;/payload&gt;
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxClientTest() {
+    send(jmxClient)
+        .message(JmxMessage.invocation("com.consol.citrus.jmx.mbean:type=HelloBean")
+            .operation("sayHello")
+            .parameter("Hello JMX!"));
+}</programlisting>
 
     <para>In the example above we access a custom managed bean and invoke its operation <emphasis>sayHello</emphasis>. We are also using operation parameters for the invocation. This should call the managed bean operation and return its result if any as usual.</para>
 
@@ -159,6 +195,7 @@
 
     <para>When clients try to find the managed beans they have to use these object names accordingly. Other object names will be rejected with managed bean not found error. Now we can use the server component in a test case to receive some incoming managed bean access.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;receive endpoint=&quot;jmxServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -173,9 +210,19 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxServerTest() {
+    receive(jmxServer)
+        .message(JmxMessage.invocation("com.consol.citrus.jmx.mbean:type=HelloBean")
+            .operation("sayHello")
+            .parameter("Hello JMX!"));
+}</programlisting>
+
     <para>In this very first example we expect a managed bean access to the bean <emphasis>com.consol.citrus.jmx.mbean:type=HelloBean</emphasis>. We further expect the operation <emphasis>sayHello</emphasis> to be called with respective parameter values. Now we have to define the
     operation result that will be returned to the calling client as operation result.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;jmxServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -186,8 +233,16 @@
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxServerTest() {
+    send(jmxServer)
+        .message(JmxMessage.result("Hello from JMX!"));
+}</programlisting>
+
     <para>The operation returns a String <emphasis>Hello from JMX!</emphasis>. This is how we can expect operation calls on managed beans. Now we already have seen that managed beans also expose attributes. The next example is handling incoming attribute read access.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;receive endpoint=&quot;jmxServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -208,6 +263,17 @@
         &lt;/payload&gt;
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void jmxServerTest() {
+    receive(jmxServer)
+        .message(JmxMessage.invocation("com.consol.citrus.news:name=News")
+            .attribute("newsCount");
+
+    send(jmxServer)
+        .message(JmxMessage.result(100));
+}</programlisting>
 
     <para>The receive action expects read access to the <emphasis>NewsBean</emphasis> attribute <emphasis>newsCount</emphasis> and returns a result object of type <emphasis>java.lang.Integer</emphasis>. This way we can expect all attribute access to our managed beans. Write operations
     will have a attribute value specified.</para>
