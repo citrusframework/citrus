@@ -42,8 +42,22 @@ public class JmxServerParserTest extends AbstractBeanDefinitionParserTest {
         JmxServer jmxServer = endpoints.get("jmxServer1");
         Assert.assertEquals(jmxServer.getEndpointConfiguration().getServerUrl(), "platform");
         Assert.assertEquals(jmxServer.getEndpointConfiguration().getEnvironmentProperties().size(), 0L);
-        Assert.assertEquals(jmxServer.getMbeans().size(), 1L);
+        Assert.assertEquals(jmxServer.getMbeans().size(), 2L);
         Assert.assertEquals(jmxServer.getMbeans().get(0).getType(), HelloBean.class);
+        Assert.assertEquals(jmxServer.getMbeans().get(0).getOperations().size(), 0L);
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getName(), "fooBean");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getOperations().size(), 2L);
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getOperations().get(0).getName(), "fooOperation");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().size(), 2L);
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().get(0).getType(), "java.lang.String");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().get(1).getType(), "java.lang.Integer");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getOperations().get(1).getName(), "barOperation");
+        Assert.assertNull(jmxServer.getMbeans().get(1).getOperations().get(1).getParameter());
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getAttributes().size(), 2L);
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getAttributes().get(0).getName(), "fooAttribute");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getAttributes().get(0).getType(), "java.lang.String");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getAttributes().get(1).getName(), "barAttribute");
+        Assert.assertEquals(jmxServer.getMbeans().get(1).getAttributes().get(1).getType(), "java.lang.Boolean");
         Assert.assertEquals(jmxServer.getEndpointConfiguration().getTimeout(), 5000L);
 
         // 2nd server

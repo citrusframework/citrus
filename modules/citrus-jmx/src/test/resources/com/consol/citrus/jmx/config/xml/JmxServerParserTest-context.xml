@@ -13,6 +13,21 @@
                      server-url="platform">
     <citrus-jmx:mbeans>
       <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
+      <citrus-jmx:mbean name="fooBean">
+        <citrus-jmx:operations>
+          <citrus-jmx:operation name="fooOperation">
+            <citrus-jmx:parameter>
+              <citrus-jmx:param type="java.lang.String"/>
+              <citrus-jmx:param type="java.lang.Integer"/>
+            </citrus-jmx:parameter>
+          </citrus-jmx:operation>
+          <citrus-jmx:operation name="barOperation"/>
+        </citrus-jmx:operations>
+        <citrus-jmx:attributes>
+          <citrus-jmx:attribute name="fooAttribute" type="java.lang.String"/>
+          <citrus-jmx:attribute name="barAttribute" type="java.lang.Boolean"/>
+        </citrus-jmx:attributes>
+      </citrus-jmx:mbean>
     </citrus-jmx:mbeans>
   </citrus-jmx:server>
 

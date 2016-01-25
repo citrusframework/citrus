@@ -39,8 +39,7 @@ import java.util.*;
         "objectKey",
         "objectValue",
         "attribute",
-        "operation",
-        "parameter"
+        "operation"
 })
 @XmlRootElement(name = "mbean-invocation")
 public class ManagedBeanInvocation {
@@ -60,24 +59,7 @@ public class ManagedBeanInvocation {
     protected ManagedBeanInvocation.Attribute attribute;
 
     @XmlElement
-    protected String operation;
-    protected ManagedBeanInvocation.Parameter parameter;
-
-    /**
-     * Gets the argument types from list of parameter.
-     * @return
-     */
-    public String[] getParamTypes() {
-        List<String> types = new ArrayList<>();
-
-        if (parameter != null) {
-            for (OperationParam arg : parameter.getParameter()) {
-                types.add(arg.getType());
-            }
-        }
-
-        return types.toArray(new String[types.size()]);
-    }
+    protected ManagedBeanInvocation.Operation operation;
 
     /**
      * Gets this service result as object casted to target type if necessary.
@@ -135,66 +117,6 @@ public class ManagedBeanInvocation {
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to construct attribute object", e);
         }
-    }
-
-    /**
-     * Gets method parameter as objects. Automatically converts simple types and ready referenced beans.
-     * @return
-     */
-    public Object[] getParamValues(ApplicationContext applicationContext) {
-        List<Object> argValues = new ArrayList<>();
-
-        try {
-            if (parameter != null) {
-                for (OperationParam operationParam : parameter.getParameter()) {
-                    Class argType = Class.forName(operationParam.getType());
-                    Object value = null;
-
-                    if (operationParam.getValueObject() != null) {
-                        value = operationParam.getValueObject();
-                    } else if (operationParam.getValue() != null) {
-                        value = operationParam.getValue();
-                    } else if (StringUtils.hasText(operationParam.getRef()) && applicationContext != null) {
-                        value = applicationContext.getBean(operationParam.getRef());
-                    }
-
-                    if (value == null) {
-                        argValues.add(null);
-                    } else if (argType.isInstance(value) || argType.isAssignableFrom(value.getClass())) {
-                        argValues.add(argType.cast(value));
-                    } else if(Map.class.equals(argType)) {
-                        String mapString = value.toString();
-
-                        Properties props = new Properties();
-                        try {
-                            props.load(new StringReader(mapString.substring(1, mapString.length() - 1).replace(", ", "\n")));
-                        } catch (IOException e) {
-                            throw new CitrusRuntimeException("Failed to reconstruct method argument of type map", e);
-                        }
-                        Map<String, String> map = new LinkedHashMap<>();
-                        for (Map.Entry<Object, Object> entry : props.entrySet()) {
-                            map.put(entry.getKey().toString(), entry.getValue().toString());
-                        }
-
-                        argValues.add(map);
-                    } else {
-                        try {
-                            argValues.add(new SimpleTypeConverter().convertIfNecessary(value, argType));
-                        } catch (ConversionNotSupportedException e) {
-                            if (String.class.equals(argType)) {
-                                argValues.add(value.toString());
-                            }
-
-                            throw e;
-                        }
-                    }
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            throw new CitrusRuntimeException("Failed to construct method arg objects", e);
-        }
-
-        return argValues.toArray(new Object[argValues.size()]);
     }
 
     /**
@@ -292,7 +214,7 @@ public class ManagedBeanInvocation {
      *
      * @return the operation
      */
-    public String getOperation() {
+    public ManagedBeanInvocation.Operation getOperation() {
         return operation;
     }
 
@@ -301,7 +223,7 @@ public class ManagedBeanInvocation {
      *
      * @param operation
      */
-    public void setOperation(String operation) {
+    public void setOperation(ManagedBeanInvocation.Operation operation) {
         this.operation = operation;
     }
 
@@ -321,30 +243,6 @@ public class ManagedBeanInvocation {
      */
     public void setAttribute(ManagedBeanInvocation.Attribute attribute) {
         this.attribute = attribute;
-    }
-
-    /**
-     * Gets the value of the parameter property.
-     *
-     * @return
-     *     possible object is
-     *     {@link ManagedBeanInvocation.Parameter }
-     *
-     */
-    public ManagedBeanInvocation.Parameter getParameter() {
-        return parameter;
-    }
-
-    /**
-     * Sets the value of the parameter property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link ManagedBeanInvocation.Parameter }
-     *
-     */
-    public void setParameter(ManagedBeanInvocation.Parameter value) {
-        this.parameter = value;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -493,6 +391,140 @@ public class ManagedBeanInvocation {
             setType(valueObject.getClass().getName());
             setValue(valueObject.toString());
             this.valueObject = valueObject;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Operation {
+
+        @XmlAttribute(name = "name")
+        protected String name;
+
+        protected ManagedBeanInvocation.Parameter parameter;
+
+        /**
+         * Gets the argument types from list of parameter.
+         * @return
+         */
+        public String[] getParamTypes() {
+            List<String> types = new ArrayList<>();
+
+            if (parameter != null) {
+                for (OperationParam arg : parameter.getParameter()) {
+                    types.add(arg.getType());
+                }
+            }
+
+            return types.toArray(new String[types.size()]);
+        }
+
+        /**
+         * Gets method parameter as objects. Automatically converts simple types and ready referenced beans.
+         * @return
+         */
+        public Object[] getParamValues(ApplicationContext applicationContext) {
+            List<Object> argValues = new ArrayList<>();
+
+            try {
+                if (parameter != null) {
+                    for (OperationParam operationParam : parameter.getParameter()) {
+                        Class argType = Class.forName(operationParam.getType());
+                        Object value = null;
+
+                        if (operationParam.getValueObject() != null) {
+                            value = operationParam.getValueObject();
+                        } else if (operationParam.getValue() != null) {
+                            value = operationParam.getValue();
+                        } else if (StringUtils.hasText(operationParam.getRef()) && applicationContext != null) {
+                            value = applicationContext.getBean(operationParam.getRef());
+                        }
+
+                        if (value == null) {
+                            argValues.add(null);
+                        } else if (argType.isInstance(value) || argType.isAssignableFrom(value.getClass())) {
+                            argValues.add(argType.cast(value));
+                        } else if(Map.class.equals(argType)) {
+                            String mapString = value.toString();
+
+                            Properties props = new Properties();
+                            try {
+                                props.load(new StringReader(mapString.substring(1, mapString.length() - 1).replace(", ", "\n")));
+                            } catch (IOException e) {
+                                throw new CitrusRuntimeException("Failed to reconstruct method argument of type map", e);
+                            }
+                            Map<String, String> map = new LinkedHashMap<>();
+                            for (Map.Entry<Object, Object> entry : props.entrySet()) {
+                                map.put(entry.getKey().toString(), entry.getValue().toString());
+                            }
+
+                            argValues.add(map);
+                        } else {
+                            try {
+                                argValues.add(new SimpleTypeConverter().convertIfNecessary(value, argType));
+                            } catch (ConversionNotSupportedException e) {
+                                if (String.class.equals(argType)) {
+                                    argValues.add(value.toString());
+                                }
+
+                                throw e;
+                            }
+                        }
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+                throw new CitrusRuntimeException("Failed to construct method arg objects", e);
+            }
+
+            return argValues.toArray(new Object[argValues.size()]);
+        }
+
+        /**
+         * Gets the value of the name property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Sets the value of the name property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setName(String value) {
+            this.name = value;
+        }
+
+        /**
+         * Gets the value of the parameter property.
+         *
+         * @return
+         *     possible object is
+         *     {@link ManagedBeanInvocation.Parameter }
+         *
+         */
+        public ManagedBeanInvocation.Parameter getParameter() {
+            return parameter;
+        }
+
+        /**
+         * Sets the value of the parameter property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link ManagedBeanInvocation.Parameter }
+         *
+         */
+        public void setParameter(ManagedBeanInvocation.Parameter value) {
+            this.parameter = value;
         }
     }
 

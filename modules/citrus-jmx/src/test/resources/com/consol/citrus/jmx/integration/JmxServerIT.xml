@@ -28,10 +28,11 @@
           <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>com.consol.citrus.jmx.mbean:type=HelloBean</mbean>
-              <operation>hello</operation>
-              <parameter>
-                <param type="java.lang.String" value="JMX"/>
-              </parameter>
+              <operation name="hello">
+                <parameter>
+                  <param type="java.lang.String" value="JMX"/>
+                </parameter>
+              </operation>
             </mbean-invocation>
           </payload>
         </message>
@@ -42,10 +43,11 @@
           <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>com.consol.citrus.jmx.mbean:type=HelloBean</mbean>
-              <operation>hello</operation>
-              <parameter>
-                <param type="java.lang.String" value="JMX"/>
-              </parameter>
+              <operation name="hello">
+                <parameter>
+                  <param type="java.lang.String" value="JMX"/>
+                </parameter>
+              </operation>
             </mbean-invocation>
           </payload>
         </message>
@@ -126,7 +128,7 @@
           <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>news:name=NewsBean</mbean>
-              <operation>getNews</operation>
+              <operation name="getNews"/>
             </mbean-invocation>
           </payload>
         </message>
@@ -137,7 +139,7 @@
           <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>news:name=NewsBean</mbean>
-              <operation>getNews</operation>
+              <operation name="getNews"/>
             </mbean-invocation>
           </payload>
         </message>
@@ -173,7 +175,7 @@
             <payload>
               <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
                 <mbean>com.consol.citrus.jmx.mbean:type=NewsBean</mbean>
-                <operation>getNews</operation>
+                <operation name="getNews"/>
               </mbean-invocation>
             </payload>
           </message>

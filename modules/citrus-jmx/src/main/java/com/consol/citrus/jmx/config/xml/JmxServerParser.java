@@ -19,7 +19,7 @@ package com.consol.citrus.jmx.config.xml;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractServerParser;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
-import com.consol.citrus.jmx.model.ManagedBeanDefinition;
+import com.consol.citrus.jmx.model.*;
 import com.consol.citrus.jmx.server.JmxServer;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -28,8 +28,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -52,8 +51,52 @@ public class JmxServerParser extends AbstractServerParser {
                 Element mbean = (Element) iter.next();
                 BeanDefinitionBuilder mbeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(ManagedBeanDefinition.class);
                 BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("type"), "type");
+                BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("name"), "name");
                 BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("objectDomain"), "objectDomain");
                 BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("objectName"), "objectName");
+
+                Element operationsElement = DomUtils.getChildElementByTagName(mbean, "operations");
+                if (operationsElement != null) {
+                    List<?> operationElement = DomUtils.getChildElementsByTagName(operationsElement, "operation");
+                    List<ManagedBeanInvocation.Operation> operationList = new ArrayList<>();
+                    for (Iterator<?> operationIter = operationElement.iterator(); operationIter.hasNext(); ) {
+                        Element operation = (Element) operationIter.next();
+
+                        ManagedBeanInvocation.Operation op = new ManagedBeanInvocation.Operation();
+                        op.setName(operation.getAttribute("name"));
+
+                        Element parameterElement = DomUtils.getChildElementByTagName(operation, "parameter");
+                        if (parameterElement != null) {
+                            op.setParameter(new ManagedBeanInvocation.Parameter());
+                            List<?> paramElement = DomUtils.getChildElementsByTagName(parameterElement, "param");
+                            for (Iterator<?> paramIter = paramElement.iterator(); paramIter.hasNext(); ) {
+                                Element param = (Element) paramIter.next();
+                                OperationParam p = new OperationParam();
+                                p.setType(param.getAttribute("type"));
+                                op.getParameter().getParameter().add(p);
+                            }
+                        }
+
+                        operationList.add(op);
+                    }
+                    mbeanDefinition.addPropertyValue("operations", operationList);
+                }
+
+                Element attributesElement = DomUtils.getChildElementByTagName(mbean, "attributes");
+                if (attributesElement != null) {
+                    List<?> attributeElement = DomUtils.getChildElementsByTagName(attributesElement, "attribute");
+                    List<ManagedBeanInvocation.Attribute> attributeList = new ArrayList<>();
+                    for (Iterator<?> attributeIter = attributeElement.iterator(); attributeIter.hasNext(); ) {
+                        Element attribute = (Element) attributeIter.next();
+
+                        ManagedBeanInvocation.Attribute att = new ManagedBeanInvocation.Attribute();
+                        att.setType(attribute.getAttribute("type"));
+                        att.setName(attribute.getAttribute("name"));
+                        attributeList.add(att);
+                    }
+                    mbeanDefinition.addPropertyValue("attributes", attributeList);
+                }
+
                 mbeans.add(mbeanDefinition.getBeanDefinition());
             }
 

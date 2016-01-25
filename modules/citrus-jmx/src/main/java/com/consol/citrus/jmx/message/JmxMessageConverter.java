@@ -45,7 +45,9 @@ public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocati
         }
 
         if (internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION) != null) {
-            mBeanInvocation.setOperation(internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION).toString());
+            ManagedBeanInvocation.Operation operation = new ManagedBeanInvocation.Operation();
+            operation.setName(internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION).toString());
+            mBeanInvocation.setOperation(operation);
         }
 
         if (internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION_PARAMS) != null) {
@@ -54,7 +56,7 @@ public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocati
                 OperationParam operationParam = new OperationParam();
                 operationParam.setType(String.class.getName());
                 operationParam.setValue(param);
-                mBeanInvocation.getParameter().getParameter().add(operationParam);
+                mBeanInvocation.getOperation().getParameter().getParameter().add(operationParam);
             }
         }
 

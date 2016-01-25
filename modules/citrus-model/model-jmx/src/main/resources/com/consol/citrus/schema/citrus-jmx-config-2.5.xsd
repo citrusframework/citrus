@@ -32,7 +32,46 @@
             <xs:sequence>
               <xs:element name="mbean" minOccurs="1" maxOccurs="unbounded">
                 <xs:complexType>
-                  <xs:attribute name="type" type="xs:string" use="required"/>
+                  <xs:sequence>
+                    <xs:element name="operations" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="operation" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="parameter" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name ="param" minOccurs="1" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:attribute name="type" type="xs:string"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="name" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="attributes" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" type="xs:string" use="required"/>
+                              <xs:attribute name="type" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="type" type="xs:string"/>
+                  <xs:attribute name="name" type="xs:string"/>
                   <xs:attribute name="objectDomain" type="xs:string"/>
                   <xs:attribute name="objectName" type="xs:string"/>
                 </xs:complexType>

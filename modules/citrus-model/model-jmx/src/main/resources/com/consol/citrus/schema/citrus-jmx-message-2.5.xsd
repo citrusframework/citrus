@@ -37,7 +37,7 @@
           </xs:sequence>
         </xs:choice>
         <xs:choice>
-          <xs:element name="attribute" minOccurs="0">
+          <xs:element name="attribute">
             <xs:complexType>
               <xs:attribute name="name" type="xs:string"/>
               <xs:attribute name="type" type="xs:string"/>
@@ -46,16 +46,20 @@
               <xs:attribute name="ref" type="xs:string"/>
             </xs:complexType>
           </xs:element>
-          <xs:sequence>
-            <xs:element name="operation" type="xs:string"/>
-            <xs:element name="parameter" minOccurs="0">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name ="param" type="OperationParam" minOccurs="1" maxOccurs="unbounded"/>
-                </xs:sequence>
-              </xs:complexType>
-            </xs:element>
-          </xs:sequence>
+          <xs:element name="operation">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="parameter" minOccurs="0">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name ="param" type="OperationParam" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
         </xs:choice>
       </xs:sequence>
     </xs:complexType>

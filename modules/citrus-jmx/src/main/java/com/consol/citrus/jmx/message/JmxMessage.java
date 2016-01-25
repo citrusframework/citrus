@@ -108,7 +108,7 @@ public class JmxMessage extends DefaultMessage {
      */
     public JmxMessage attribute(String name, Object value, Class<?> valueType) {
         if (mbeanInvocation == null) {
-            throw new CitrusRuntimeException("Invalid access to method argument for RMI message");
+            throw new CitrusRuntimeException("Invalid access to attribute for JMX message");
         }
 
         ManagedBeanInvocation.Attribute attribute = new ManagedBeanInvocation.Attribute();
@@ -129,9 +129,12 @@ public class JmxMessage extends DefaultMessage {
      */
     public JmxMessage operation(String name) {
         if (mbeanInvocation == null) {
-            throw new CitrusRuntimeException("Invalid access to method argument for RMI message");
+            throw new CitrusRuntimeException("Invalid access to operation for JMX message");
         }
-        mbeanInvocation.setOperation(name);
+
+        ManagedBeanInvocation.Operation operation = new ManagedBeanInvocation.Operation();
+        operation.setName(name);
+        mbeanInvocation.setOperation(operation);
         return this;
     }
 
@@ -152,17 +155,21 @@ public class JmxMessage extends DefaultMessage {
      */
     public JmxMessage parameter(Object arg, Class<?> argType) {
         if (mbeanInvocation == null) {
-            throw new CitrusRuntimeException("Invalid access to method argument for RMI message");
+            throw new CitrusRuntimeException("Invalid access to operation parameter for JMX message");
         }
 
-        if (mbeanInvocation.getParameter() == null) {
-            mbeanInvocation.setParameter(new ManagedBeanInvocation.Parameter());
+        if (mbeanInvocation.getOperation() == null) {
+            throw new CitrusRuntimeException("Invalid access to operation parameter before operation was set for JMX message");
+        }
+
+        if (mbeanInvocation.getOperation().getParameter() == null) {
+            mbeanInvocation.getOperation().setParameter(new ManagedBeanInvocation.Parameter());
         }
 
         OperationParam operationParam = new OperationParam();
         operationParam.setValueObject(arg);
         operationParam.setType(argType.getName());
-        mbeanInvocation.getParameter().getParameter().add(operationParam);
+        mbeanInvocation.getOperation().getParameter().getParameter().add(operationParam);
         return this;
     }
 

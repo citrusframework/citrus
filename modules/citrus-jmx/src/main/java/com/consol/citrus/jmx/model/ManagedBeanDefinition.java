@@ -17,10 +17,13 @@
 package com.consol.citrus.jmx.model;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
+import javax.management.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -31,6 +34,206 @@ public class ManagedBeanDefinition {
     private Class type;
     private String objectDomain;
     private String objectName;
+
+    private String name;
+    private String description;
+
+    private List<ManagedBeanInvocation.Operation> operations = new ArrayList<>();
+    private List<ManagedBeanInvocation.Attribute> attributes = new ArrayList<>();
+
+    /**
+     * Constructs proper object name either from given domain and name property or
+     * by evaluating the mbean type class information.
+     *
+     * @return
+     */
+    public ObjectName createObjectName() {
+        try {
+            if (StringUtils.hasText(objectName)) {
+                return new ObjectName(objectDomain + ":" + objectName);
+            }
+
+            if (type != null) {
+                if (StringUtils.hasText(objectDomain)) {
+                    return new ObjectName(objectDomain, "type", type.getSimpleName());
+                }
+
+                return new ObjectName(type.getPackage().getName(), "type", type.getSimpleName());
+            }
+
+            return new ObjectName(objectDomain, "name", name);
+        } catch (MalformedObjectNameException e) {
+            throw new CitrusRuntimeException("Failed to create proper object name for managed bean", e);
+        }
+    }
+
+    /**
+     * Create managed bean info with all constructors, operations, notifications and attributes.
+     * @return
+     */
+    public MBeanInfo createMBeanInfo() {
+        if (type != null) {
+            return new MBeanInfo(type.getSimpleName(), description, getAttributeInfo(), getConstructorInfo(), getOperationInfo(), getNotificationInfo());
+        } else {
+            return new MBeanInfo(name, description, getAttributeInfo(), getConstructorInfo(), getOperationInfo(), getNotificationInfo());
+        }
+    }
+
+    /**
+     * Create notification info.
+     * @return
+     */
+    private MBeanNotificationInfo[] getNotificationInfo() {
+        return new MBeanNotificationInfo[0];
+    }
+
+    /**
+     * Create this managed bean operations info.
+     * @return
+     */
+    private MBeanOperationInfo[] getOperationInfo() {
+        final List<MBeanOperationInfo> infoList = new ArrayList<>();
+
+        if (type != null) {
+            ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
+                @Override
+                public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                    infoList.add(new MBeanOperationInfo(method.toGenericString(), method));
+                }
+            }, new ReflectionUtils.MethodFilter() {
+                @Override
+                public boolean matches(Method method) {
+                    return !method.getName().startsWith("set") && !method.getName().startsWith("get") && !method.getName().startsWith("is");
+                }
+            });
+        } else {
+            for (ManagedBeanInvocation.Operation operation : operations) {
+                List<MBeanParameterInfo> parameterInfo = new ArrayList<>();
+
+                int i = 1;
+                for (OperationParam parameter : operation.getParameter().getParameter()) {
+                    parameterInfo.add(new MBeanParameterInfo("p" + i++, parameter.getType(), "Operation parameter " + i));
+                }
+
+                infoList.add(new MBeanOperationInfo(operation.getName(), "Citrus mbean operation", parameterInfo.toArray(new MBeanParameterInfo[operation.getParameter().getParameter().size()]), String.class.getName(), MBeanOperationInfo.UNKNOWN));
+            }
+        }
+
+        return infoList.toArray(new MBeanOperationInfo[infoList.size()]);
+    }
+
+    /**
+     * Create this managed bean constructor info.
+     * @return
+     */
+    private MBeanConstructorInfo[] getConstructorInfo() {
+        final List<MBeanConstructorInfo> infoList = new ArrayList<>();
+
+        if (type != null) {
+            for (Constructor constructor : type.getConstructors()) {
+                infoList.add(new MBeanConstructorInfo(constructor.toGenericString(), constructor));
+            }
+        }
+
+        return infoList.toArray(new MBeanConstructorInfo[infoList.size()]);
+    }
+
+    /**
+     * Create this managed bean attributes info.
+     * @return
+     */
+    private MBeanAttributeInfo[] getAttributeInfo() {
+        final List<MBeanAttributeInfo> infoList = new ArrayList<>();
+
+        if (type != null) {
+            final List<String> attributes = new ArrayList<>();
+            ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
+                @Override
+                public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                    String attributeName;
+
+                    if (method.getName().startsWith("set") || method.getName().startsWith("get")) {
+                        attributeName = method.getName().substring(3);
+                    } else if (method.getName().startsWith("is")) {
+                        attributeName = method.getName().substring(2);
+                    } else {
+                        attributeName = method.getName();
+                    }
+
+                    if (!attributes.contains(attributeName)) {
+                        infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), method.toGenericString(), true, true, method.getName().startsWith("is")));
+                        attributes.add(attributeName);
+                    }
+                }
+            }, new ReflectionUtils.MethodFilter() {
+                @Override
+                public boolean matches(Method method) {
+                    return method.getName().startsWith("set") || method.getName().startsWith("get") || method.getName().startsWith("is");
+                }
+            });
+        } else {
+            int i = 1;
+            for (ManagedBeanInvocation.Attribute attribute : attributes) {
+                infoList.add(new MBeanAttributeInfo(attribute.getName(), attribute.getType(), "Mbean attribute " + i++, true, true, attribute.getType().equals(Boolean.class.getName())));
+            }
+        }
+
+        return infoList.toArray(new MBeanAttributeInfo[infoList.size()]);
+    }
+
+    /**
+     * Gets the value of the operations property.
+     *
+     * @return the operations
+     */
+    public List<ManagedBeanInvocation.Operation> getOperations() {
+        return operations;
+    }
+
+    /**
+     * Sets the operations property.
+     *
+     * @param operations
+     */
+    public void setOperations(List<ManagedBeanInvocation.Operation> operations) {
+        this.operations = operations;
+    }
+
+    /**
+     * Gets the value of the attributes property.
+     *
+     * @return the attributes
+     */
+    public List<ManagedBeanInvocation.Attribute> getAttributes() {
+        return attributes;
+    }
+
+    /**
+     * Sets the attributes property.
+     *
+     * @param attributes
+     */
+    public void setAttributes(List<ManagedBeanInvocation.Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    /**
+     * Gets the value of the description property.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description property.
+     *
+     * @param description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
      * Gets the value of the type property.
@@ -48,6 +251,24 @@ public class ManagedBeanDefinition {
      */
     public void setType(Class type) {
         this.type = type;
+    }
+
+    /**
+     * Gets the value of the name property.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name property.
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -86,25 +307,4 @@ public class ManagedBeanDefinition {
         this.objectName = objectName;
     }
 
-    /**
-     * Constructs proper object name either from given domain and name property or
-     * by evaluating the mbean type class information.
-     *
-     * @return
-     */
-    public ObjectName createObjectName() {
-        try {
-            if (StringUtils.hasText(objectName)) {
-                return new ObjectName(objectDomain + ":" + objectName);
-            }
-
-            if (StringUtils.hasText(objectDomain)) {
-                return new ObjectName(objectDomain, "type", type.getSimpleName());
-            }
-
-            return new ObjectName(type.getPackage().getName(), "type", type.getSimpleName());
-        } catch (MalformedObjectNameException e) {
-            throw new CitrusRuntimeException("Failed to create proper object name for managed bean", e);
-        }
-    }
 }

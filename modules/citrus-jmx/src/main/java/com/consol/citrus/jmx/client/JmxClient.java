@@ -119,8 +119,8 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
 
         try {
-            if (StringUtils.hasText(invocation.getOperation())) {
-                Object result = serverConnection.invoke(objectName, invocation.getOperation(), invocation.getParamValues(context.getApplicationContext()), invocation.getParamTypes());
+            if (invocation.getOperation() != null) {
+                Object result = serverConnection.invoke(objectName, invocation.getOperation().getName(), invocation.getOperation().getParamValues(context.getApplicationContext()), invocation.getOperation().getParamTypes());
                 if (result != null) {
                     correlationManager.store(correlationKey, JmxMessage.result(result));
                 } else {

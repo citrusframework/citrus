@@ -152,10 +152,11 @@ public void jmxClientTest() {
         &lt;payload&gt;
             &lt;mbean-invocation xmlns=&quot;http://www.citrusframework.org/schema/jmx/message&quot;&gt;
               &lt;mbean&gt;com.consol.citrus.jmx.mbean:type=HelloBean&lt;/mbean&gt;
-              &lt;operation&gt;sayHello&gt;/operation&gt;
+              &lt;operation name=&quot;sayHello&quot;&gt;
                 &gt;parameter&gt;
                   &gt;param type="java.lang.String" value="Hello JMX!"/&gt;
                 &gt;/parameter&gt;
+              &gt;/operation&gt;
             &lt;/mbean-invocation&gt;
         &lt;/payload&gt;
     &lt;/message&gt;
@@ -201,10 +202,11 @@ public void jmxClientTest() {
         &lt;payload&gt;
             &lt;mbean-invocation xmlns=&quot;http://www.citrusframework.org/schema/jmx/message&quot;&gt;
               &lt;mbean&gt;com.consol.citrus.jmx.mbean:type=HelloBean&lt;/mbean&gt;
-              &lt;operation&gt;sayHello&lt;/operation&gt;
-              &gt;parameter&gt;
-                &gt;param type="java.lang.String" value="Hello JMX!"/&gt;
-              &gt;/parameter&gt;
+              &lt;operation name=&quot;sayHello&quot;&gt;
+                &gt;parameter&gt;
+                  &gt;param type="java.lang.String" value="Hello JMX!"/&gt;
+                &gt;/parameter&gt;
+              &lt;/operation&gt;
             &lt;/mbean-invocation&gt;
         &lt;/payload&gt;
     &lt;/message&gt;

@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.management.*;
 import javax.xml.transform.Source;
-import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxEndpointMBean extends StandardMBean {
+public class JmxEndpointMBean implements DynamicMBean {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmxEndpointMBean.class);
@@ -59,7 +58,6 @@ public class JmxEndpointMBean extends StandardMBean {
      * @param mbean
      */
     public JmxEndpointMBean(ManagedBeanDefinition mbean, JmxEndpointConfiguration endpointConfiguration, EndpointAdapter endpointAdapter) throws NotCompliantMBeanException {
-        super(Proxy.newProxyInstance(mbean.getType().getClassLoader(), new Class[]{ mbean.getType() }, new UnsupportedInvocationHandler()), mbean.getType());
         this.mbean = mbean;
         this.endpointConfiguration = endpointConfiguration;
         this.endpointAdapter = endpointAdapter;
@@ -126,10 +124,12 @@ public class JmxEndpointMBean extends StandardMBean {
 
         ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();
         mbeanInvocation.setMbean(mbean.createObjectName().toString());
-        mbeanInvocation.setOperation(actionName);
+
+        ManagedBeanInvocation.Operation operation = new ManagedBeanInvocation.Operation();
+        operation.setName(actionName);
 
         if (params != null && params.length > 0) {
-            mbeanInvocation.setParameter(new ManagedBeanInvocation.Parameter());
+            operation.setParameter(new ManagedBeanInvocation.Parameter());
 
             for (Object arg : params) {
                 OperationParam operationParam = new OperationParam();
@@ -143,11 +143,17 @@ public class JmxEndpointMBean extends StandardMBean {
                     operationParam.setType(arg.getClass().getName());
                 }
 
-                mbeanInvocation.getParameter().getParameter().add(operationParam);
+                operation.getParameter().getParameter().add(operationParam);
             }
         }
+        mbeanInvocation.setOperation(operation);
 
         return handleInvocation(mbeanInvocation);
+    }
+
+    @Override
+    public MBeanInfo getMBeanInfo() {
+        return mbean.createMBeanInfo();
     }
 
     /**
@@ -172,17 +178,6 @@ public class JmxEndpointMBean extends StandardMBean {
             return serviceResult.getResultObject(endpointConfiguration.getApplicationContext());
         } else {
             return null;
-        }
-    }
-
-    /**
-     * Invocation handler that should actually never been called, because object invocation is handled by the surrounding managed bean implementation.
-     * When called this is an error that should be reported to the caller.
-     */
-    private static class UnsupportedInvocationHandler implements InvocationHandler {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            throw new CitrusRuntimeException("Unsupported method call - unexpected call to managed bean proxy instance");
         }
     }
 }
