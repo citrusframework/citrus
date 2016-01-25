@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+			  xmlns:spring="http://www.springframework.org/schema/beans"
+			  xmlns:ws="http://www.citrusframework.org/schema/ws/testcase" 
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+
+	<testcase name="SendSoapMessageWithAttachmentInTemplateITest">
+		<meta-info>
+			<author>Reinhard Steiner</author>
+			<creationdate>2015-10-28</creationdate>
+			<status>FINAL</status>
+		</meta-info>
+        
+		<description>Sending SOAP messages with mtom attachments</description>
+        
+		<variables>
+			<variable name="test" value="This string should not be inserted into binary SOAP attachments"/>
+			<variable name="imageFile" value="classpath:com/consol/citrus/ws/soapImage.txt"/>
+			<variable name="iconFile" value="classpath:com/consol/citrus/ws/soapIcon.txt"/>
+		</variables>
+        
+		<actions>
+
+			<echo>
+				<message>Test: Upload file 1 using upload template, validate that correct file was sent</message>
+			</echo>
+
+			<parallel>
+				<!-- Upload file 1 -->
+				<call-template name="upload-image-file">
+					<parameter name="paramImageFile" value="${imageFile}"/>
+				</call-template>
+                                
+				<sequential>
+					<ws:receive endpoint="testSoapServer">
+						<message schema-validation="false">
+							<data>
+                                <![CDATA[
+                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                        <isbn>1234</isbn>
+                                        <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
+                                        <icon></icon>
+                                    </image:addImage>
+                                ]]>
+							</data>
+						</message>
+						<ws:attachment content-id="IMAGE" content-type="application/octet-stream">
+							<ws:resource file="${imageFile}"/>
+						</ws:attachment>
+					</ws:receive>
+                    
+					<ws:send endpoint="testSoapServer">
+						<message>
+							<data>
+                                <![CDATA[
+                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                                        <success>true</success>
+                                    </image:addImageResponse>
+                                ]]>
+							</data>
+						</message>
+					</ws:send>
+				</sequential>
+			</parallel>
+
+			<echo>
+				<message>Test: Upload file 2 using upload template, validate that correct file was sent</message>
+			</echo>
+
+			<parallel>
+				<!-- Upload file 2 -->
+				<call-template name="upload-image-file">
+					<parameter name="paramImageFile" value="${iconFile}"/>
+				</call-template>
+
+				<sequential>
+					<ws:receive endpoint="testSoapServer">
+						<message schema-validation="false">
+							<data>
+                                <![CDATA[
+                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                        <isbn>1234</isbn>
+                                        <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
+                                        <icon></icon>
+                                    </image:addImage>
+                                ]]>
+							</data>
+						</message>
+						<ws:attachment content-id="IMAGE" content-type="application/octet-stream">
+							<ws:resource file="${iconFile}"/>
+						</ws:attachment>
+					</ws:receive>
+                    
+					<ws:send endpoint="testSoapServer">
+						<message>
+							<data>
+                                <![CDATA[
+                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                                        <success>true</success>
+                                    </image:addImageResponse>
+                                ]]>
+							</data>
+						</message>
+					</ws:send>
+				</sequential>
+			</parallel>
+
+		</actions>
+	</testcase>
+	
+	<!-- Template to upload an image file, parameter {paramImageFile} defines the image -->
+	<template name="upload-image-file" global-context="false">
+		<ws:send endpoint="testWebServiceClient" mtom-enabled="true">
+			<message>
+				<data>
+					<![CDATA[
+						<image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+							<isbn>1234</isbn>
+							<image>cid:IMAGE</image>
+							<icon></icon>
+						</image:addImage>
+					]]>
+				</data>
+			</message>
+			<ws:attachment content-id="IMAGE" content-type="application/octet-stream">
+				<ws:resource file="${paramImageFile}"/>
+			</ws:attachment>
+		</ws:send>
+		
+		<ws:receive endpoint="testWebServiceClient">
+			<message schema-repository="imageServiceSchemaRepository">
+				<data>
+					<![CDATA[
+						<image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+							<success>true</success>
+						</image:addImageResponse>
+					]]>
+				</data>
+			</message>
+		</ws:receive>
+	</template>
+	
+</spring:beans>
