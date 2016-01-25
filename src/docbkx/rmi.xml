@@ -60,6 +60,7 @@
     In addition to that we need to choose the service binding which is the name of the service in the registry. Now we are ready to use
     this client referenced by its id or name in a test case for a message sending action.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;rmiClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -71,12 +72,20 @@
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void rmiClientTest() {
+  send(rmiClient)
+      .message(RmiMessage.invocation(NewsService.class, "getNews"));
+}</programlisting>
+
     <para>We are using the usual Citrus send message action referencing the <emphasis>rmiClient</emphasis> as endpoint. The message payload is
     a special Citrus message that defines the service invocation. We define the <emphasis>remote</emphasis> interface as well as the
     <emphasis>method</emphasis> to call. Citrus RMI client component will be able to interpret this message content and call the service method.</para>
 
     <para>The method return value is receivable for validation using the very same client endpoint.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;receive endpoint=&quot;rmiClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -87,11 +96,19 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void rmiClientTest() {
+    receive(rmiClient)
+        .message(RmiMessage.result("This is news from RMI!"));
+}</programlisting>
+
     <para>In the sample above we receive the service result and expect a <emphasis>java.lang.String</emphasis> object return value.
     The return value content is also validated within the service result payload. </para>
 
     <para>Of course we can also deal with method arguments.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;rmiClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -106,10 +123,18 @@
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
 
+    <programlisting language="java">@CitrusTest
+public void rmiServerTest() {
+    send(rmiClient)
+        .message(RmiMessage.invocation(NewsService.class, "setNews")
+              .argument("This is breaking news!"));
+}</programlisting>
+
     <para>This completes the basic remote service call. Citrus invokes the remote interface method and validates the method return value.
     As a tester you might also face errors and exceptions when calling the remote interface method. You can catch and assert these remote
     exceptions verifying your error scenario.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;assert exception=&quot;java.rmi.RemoteException&quot;&gt;
     &lt;send endpoint=&quot;rmiClient&quot;&gt;
         &lt;message&gt;
@@ -152,6 +177,7 @@
     <para>You have to give Citrus the fully qualified remote interface name so Citrus can bind it to the service registry and handle incoming
     method calls properly. In your test case you can then receive the incoming method calls on the server in order to perform validation steps.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;receive endpoint=&quot;rmiServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -167,6 +193,13 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void rmiServerTest() {
+    receive(rmiServer)
+        .message(RmiMessage.invocation(NewsService.class, "getNews"));
+}</programlisting>
+
     <para>As you can see Citrus converts the incoming service invocation to a special XML representation which is passed as
     message payload to the test. As this is plain XML you can verify the RMI message content as usual using Citrus variables,
     functions and validation matchers.</para>
@@ -174,6 +207,7 @@
     <para>Since we have received the method call we need to provide some return value for the client. As usual we can specify the
     method return value with some XML representation.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;rmiServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -184,10 +218,18 @@
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void rmiServerTest() {
+    send(rmiServer)
+        .message(RmiMessage.result("This is news from RMI!"));
+}</programlisting>
+
     <para>The service result is defined as object with a <emphasis>type</emphasis> and <emphasis>value</emphasis>. The Citrus RMI remote
     interface method will return this value to the calling client. This would complete the successful remote service invocation. At
     this point we also have to think of choosing to raise some remote exception as service outcome.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;rmiServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
@@ -197,6 +239,13 @@
         &lt;/payload&gt;
     &lt;/message&gt;
 &lt;/send&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@CitrusTest
+public void rmiServerTest() {
+    send(rmiServer)
+        .message(RmiMessage.exception("Something went wrong"));
+}</programlisting>
 
     <para>In the example above Citrus will not return some object as service result but raise a <emphasis>java.rmi.RemoteException</emphasis>
     with respective error message as specified in the test case. The calling client will receive the exception accordingly.</para>
