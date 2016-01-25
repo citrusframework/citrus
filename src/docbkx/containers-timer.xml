@@ -36,6 +36,7 @@
         &lt;stop-timer timerId=&quot;forkedTimer&quot; /&gt;
       &lt;/finally&gt;
     &lt;/testcase&gt;</programlisting>
+
   <para><emphasis>Java DSL designer and runner</emphasis></para>
   <programlisting language="java">@CitrusTest
 public void timerTest() {

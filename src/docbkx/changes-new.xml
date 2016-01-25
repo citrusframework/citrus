@@ -2,7 +2,8 @@
 <chapter id="changes-new">
   <title>What's new in Citrus 2.5?!</title>
 
-  <para>We have added lots of new features and improvements with Citrus 2.5. Namely these are new modules for RMI and JMX support, a new x-www-form-urlencoded message validator. Just have a look at the following overview on what has changed.</para>
+  <para>We have added lots of new features and improvements with Citrus 2.5. Namely these are the new modules for RMI and JMX support, a new x-www-form-urlencoded message validator and new functions anc test actions.
+  Just have a look at the following features that made it to the box.</para>
 
   <section id="new-2-5-rmi">
     <title>RMI support</title>
@@ -23,6 +24,27 @@
 
     <para>HTML form data can be transmitted with different methods and content types. One of the most common ways is to use <emphasis>x-www-form-urlencoded</emphasis> form data
     content. As validation can be tricky we have added a special message validator for that. See <xref linkend="http-www-form-urlencoded"/> for details.</para>
+  </section>
+
+  <section id="new-2-5-date-range">
+    <title>Date range validation matcher</title>
+
+    <para>Added a new validation matcher implementation that is able to check that a date value is between a certain date range (from and to) The date range is able to focus on days as well as additional time (hour, minute, second) specifications.
+    See <xref linkend="validation-matcher-daterange"/> for details.</para>
+  </section>
+
+  <section id="new-2-5-file-resource">
+    <title>Read file resource function</title>
+
+    <para>A new function implementation offers you the possibilities to read file resource contents as inline data. The function is called and returns the file content as return value. The file content is then placed right where the function was called e.g. inside
+    of a message paylaod element or as message header value. See <xref linkend="functions-read-file"/> for details.</para>
+  </section>
+
+  <section id="new-2-5-timer">
+    <title>Timer container</title>
+
+    <para>The new timer test action container repeats its execution based on a time expression (e.g. every 5 seconds). With this timer we can repeat test actions with a fixed time delay or constantly execute test actions with time schedule.
+    See <xref linkend="containers-timer"/> and <xref linkend="actions-stop-timer"/> for details.</para>
   </section>
 
   <section id="new-2-5-bugfixes">

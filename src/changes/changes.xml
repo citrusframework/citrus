@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="2.5" date="15.01.2015" description="2.5 release">
+    <release version="2.5" date="25.01.2015" description="2.5 release">
         <action dev="christophd" type="add">
           CITRUS-37 x-www-form-urlencoded message validator
         </action>
@@ -56,10 +56,13 @@
           CITRUS-29 Read file resource function
         </action>
         <action dev="maherm" type="add">
-          CITRUS-24 Timer Container and Stop-Timer Action
+          CITRUS-24 Timer action container
         </action>
         <action dev="maherm" type="update">
           CITRUS-23 Optimize Jett-9 startup
+        </action>
+        <action dev="maherm" type="update">
+          CITRUS-17 Update to Vert.x 3.0
         </action>
     </release>
 
