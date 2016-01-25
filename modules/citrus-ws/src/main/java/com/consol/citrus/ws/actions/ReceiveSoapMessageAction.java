@@ -61,7 +61,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
             }
 
             for (SoapAttachment attachment : attachments) {
-                attachment.resolveDynamicContent(context);
+                attachment.setTestContext(context);
             }
 
             if (!attachments.isEmpty()) {

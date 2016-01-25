@@ -59,7 +59,7 @@ public class SendSoapMessageAction extends SendMessageAction {
         SoapMessage soapMessage = new SoapMessage(message).mtomEnabled(mtomEnabled);
         try {
             for (SoapAttachment attachment : attachments) {
-                attachment.resolveDynamicContent(context);
+                attachment.setTestContext(context);
 
                 if (mtomEnabled) {
                     String messagePayload = soapMessage.getPayload(String.class);
