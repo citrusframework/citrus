@@ -30,11 +30,13 @@ import java.util.*;
  */
 public class ManagedBeanDefinition {
 
+    public static final String OPERATION_DESCRIPTION = "Operation exposed for management";
+    public static final String ATTRIBUTE_DESCRIPTION = "Attribute exposed for management";
     private Class type;
     private String objectDomain;
     private String objectName;
 
-    private String name = "CitrusMBean";
+    private String name = "com.consol.citrus.CitrusMBean";
     private String description;
 
     private List<ManagedBeanInvocation.Operation> operations = new ArrayList<>();
@@ -72,7 +74,7 @@ public class ManagedBeanDefinition {
      */
     public MBeanInfo createMBeanInfo() {
         if (type != null) {
-            return new MBeanInfo(type.getSimpleName(), description, getAttributeInfo(), getConstructorInfo(), getOperationInfo(), getNotificationInfo());
+            return new MBeanInfo(type.getName(), description, getAttributeInfo(), getConstructorInfo(), getOperationInfo(), getNotificationInfo());
         } else {
             return new MBeanInfo(name, description, getAttributeInfo(), getConstructorInfo(), getOperationInfo(), getNotificationInfo());
         }
@@ -97,7 +99,7 @@ public class ManagedBeanDefinition {
             ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
                 @Override
                 public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                    infoList.add(new MBeanOperationInfo(method.toGenericString(), method));
+                    infoList.add(new MBeanOperationInfo(OPERATION_DESCRIPTION, method));
                 }
             }, new ReflectionUtils.MethodFilter() {
                 @Override
@@ -111,10 +113,10 @@ public class ManagedBeanDefinition {
 
                 int i = 1;
                 for (OperationParam parameter : operation.getParameter().getParameter()) {
-                    parameterInfo.add(new MBeanParameterInfo("p" + i++, parameter.getType(), "Operation parameter " + i));
+                    parameterInfo.add(new MBeanParameterInfo("p" + i++, parameter.getType(), "Parameter #" + i));
                 }
 
-                infoList.add(new MBeanOperationInfo(operation.getName(), "Citrus mbean operation", parameterInfo.toArray(new MBeanParameterInfo[operation.getParameter().getParameter().size()]), operation.getReturnType(), MBeanOperationInfo.UNKNOWN));
+                infoList.add(new MBeanOperationInfo(operation.getName(), OPERATION_DESCRIPTION, parameterInfo.toArray(new MBeanParameterInfo[operation.getParameter().getParameter().size()]), operation.getReturnType(), MBeanOperationInfo.UNKNOWN));
             }
         }
 
@@ -161,10 +163,8 @@ public class ManagedBeanDefinition {
                             attributeName = method.getName();
                         }
 
-                        attributeName = attributeName.substring(0, 1).toLowerCase() + attributeName.substring(1);
-
                         if (!attributes.contains(attributeName)) {
-                            infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), method.toGenericString(), true, true, method.getName().startsWith("is")));
+                            infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), ATTRIBUTE_DESCRIPTION, true, true, method.getName().startsWith("is")));
                             attributes.add(attributeName);
                         }
                     }
@@ -178,7 +178,7 @@ public class ManagedBeanDefinition {
                 ReflectionUtils.doWithFields(type, new ReflectionUtils.FieldCallback() {
                     @Override
                     public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                        infoList.add(new MBeanAttributeInfo(field.getName(), field.getType().getName(), field.toGenericString(), true, true, field.getType().equals(Boolean.class)));
+                        infoList.add(new MBeanAttributeInfo(field.getName(), field.getType().getName(), ATTRIBUTE_DESCRIPTION, true, true, field.getType().equals(Boolean.class)));
                     }
                 }, new ReflectionUtils.FieldFilter() {
                     @Override
@@ -190,7 +190,7 @@ public class ManagedBeanDefinition {
         } else {
             int i = 1;
             for (ManagedBeanInvocation.Attribute attribute : attributes) {
-                infoList.add(new MBeanAttributeInfo(attribute.getName(), attribute.getType(), "Mbean attribute " + i++, true, true, attribute.getType().equals(Boolean.class.getName())));
+                infoList.add(new MBeanAttributeInfo(attribute.getName(), attribute.getType(), ATTRIBUTE_DESCRIPTION, true, true, attribute.getType().equals(Boolean.class.getName())));
             }
         }
 
