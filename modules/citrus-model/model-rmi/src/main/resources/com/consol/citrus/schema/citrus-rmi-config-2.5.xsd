@@ -45,9 +45,10 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="server-url" type="xs:string"/>
       <xs:attribute name="host" type="xs:string"/>
       <xs:attribute name="port" type="xs:string"/>
-      <xs:attribute name="binding" type="xs:string" use="required"/>
+      <xs:attribute name="binding" type="xs:string"/>
       <xs:attribute name="method" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>
       <xs:attribute name="message-correlator" type="xs:string"/>

@@ -26,6 +26,7 @@ import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.rmi.endpoint.RmiEndpointConfiguration;
+import com.consol.citrus.rmi.message.RmiMessageHeaders;
 import com.consol.citrus.rmi.model.RmiServiceInvocation;
 import com.consol.citrus.rmi.model.RmiServiceResult;
 import org.slf4j.Logger;
@@ -77,10 +78,11 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
+        String binding = message.getHeader(RmiMessageHeaders.RMI_BINDING) != null ? message.getHeader(RmiMessageHeaders.RMI_BINDING).toString() : getEndpointConfiguration().getBinding();
         try {
             RmiServiceInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
             Registry registry = getEndpointConfiguration().getRegistry();
-            final Remote remoteTarget = registry.lookup(getEndpointConfiguration().getBinding());
+            final Remote remoteTarget = registry.lookup(binding);
 
             final Method[] method = new Method[1];
             if (StringUtils.hasText(invocation.getMethod())) {
@@ -107,7 +109,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Sending message to RMI server: '" + getEndpointConfiguration().getBinding() + "'");
+                log.debug("Sending message to RMI server: '" + binding + "'");
                 log.debug("Message to send:\n" + message.getPayload(String.class));
             }
             context.onOutboundMessage(message);
@@ -127,7 +129,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             Message response = new DefaultMessage(payload.toString());
             correlationManager.store(correlationKey, response);
 
-            log.info("Message was sent to RMI server: '" + getEndpointConfiguration().getBinding() + "'");
+            log.info("Message was sent to RMI server: '" + binding + "'");
             if (result != null) {
                 context.onInboundMessage(response);
             }
@@ -141,7 +143,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to invoke method on remote target, because remote method not accessible", e);
         }
 
-        log.info("Message was sent to RMI server: '" + getEndpointConfiguration().getBinding() + "'");
+        log.info("Message was sent to RMI server: '" + binding + "'");
     }
 
     @Override

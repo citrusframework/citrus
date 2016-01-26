@@ -40,7 +40,7 @@ public class RmiClientParserTest extends AbstractBeanDefinitionParserTest {
         // 1st client
         RmiClient rmiClient = endpoints.get("rmiClient1");
         Assert.assertEquals(rmiClient.getEndpointConfiguration().getMethod(), "sayHello");
-        Assert.assertNull(rmiClient.getEndpointConfiguration().getHost());
+        Assert.assertEquals(rmiClient.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(rmiClient.getEndpointConfiguration().getPort(), Registry.REGISTRY_PORT);
         Assert.assertEquals(rmiClient.getEndpointConfiguration().getBinding(), "helloService");
         Assert.assertEquals(rmiClient.getEndpointConfiguration().getMethod(), "sayHello");

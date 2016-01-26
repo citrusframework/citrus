@@ -36,6 +36,9 @@ import java.rmi.registry.Registry;
  */
 public class RmiEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
 
+    /** Rmi server url */
+    private String serverUrl;
+
     /** Rmi connection parameters */
     private String host;
     private int port = Registry.REGISTRY_PORT;
@@ -73,6 +76,18 @@ public class RmiEndpointConfiguration extends AbstractPollableEndpointConfigurat
         }
 
         return registry;
+    }
+
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
+
+        this.host = RmiEndpointUtils.getHost(serverUrl.substring("rmi://".length()));
+        this.port = RmiEndpointUtils.getPort(serverUrl.substring("rmi://".length()), this);
+        this.binding = RmiEndpointUtils.getBinding(serverUrl.substring("rmi://".length()));
+    }
+
+    public String getServerUrl() {
+        return serverUrl;
     }
 
     public void setRegistry(Registry registry) {

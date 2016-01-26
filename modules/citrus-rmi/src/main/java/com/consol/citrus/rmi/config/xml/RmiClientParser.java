@@ -37,6 +37,7 @@ public class RmiClientParser extends AbstractEndpointParser {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
         new RmiEndpointConfigurationParser().parseEndpointConfiguration(endpointConfiguration, element);
 
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("server-url"), "serverUrl");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("method"), "method");
     }
 

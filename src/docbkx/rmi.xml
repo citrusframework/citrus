@@ -51,14 +51,17 @@
     method arguments. The respective method return value is receivable within the test case for validation. Citrus
     provides a client component for RMI that sends out service invocation calls.</para>
 
-    <programlisting>&lt;citrus-rmi:client id=&quot;rmiClient&quot;
+    <programlisting>&lt;citrus-rmi:client id=&quot;rmiClient1&quot;
       host=&quot;localhost&quot;
       port=&quot;1099&quot;
-      binding=&quot;newsService&quot;/&gt;</programlisting>
+      binding=&quot;newsService&quot;/&gt;
 
-    <para>The client component in the Spring application context receives host and port configuration of a valid RMI service registry.
-    In addition to that we need to choose the service binding which is the name of the service in the registry. Now we are ready to use
-    this client referenced by its id or name in a test case for a message sending action.</para>
+      &lt;citrus-rmi:client id=&quot;rmiClient2&quot;
+        server-url=&quot;rmi://localhost:1099/newsService&quot;/&gt;</programlisting>
+
+    <para>The client component in the Spring application context receives host and port configuration of a valid RMI service registry. Either
+    by specifying a proper server url or by giving host, port and binding properties. The service binding is the name of the service that we would
+    like to address in the registry. Now we are ready to use this client referenced by its id or name in a test case for a message sending action.</para>
 
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;send endpoint=&quot;rmiClient&quot;&gt;

@@ -35,4 +35,5 @@ public abstract class RmiMessageHeaders {
 
     public static final String RMI_METHOD = RMI_PREFIX + "method";
     public static final String RMI_INTERFACE = RMI_PREFIX + "interface";
+    public static final String RMI_BINDING = RMI_PREFIX + "binding";
 }

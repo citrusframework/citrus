@@ -8,7 +8,7 @@
                             http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
 
   <citrus-rmi:client id="rmiClient1"
-                       binding="helloService"
+                       server-url="rmi://localhost:1099/helloService"
                        method="sayHello"/>
 
   <citrus-rmi:client id="rmiClient2"
