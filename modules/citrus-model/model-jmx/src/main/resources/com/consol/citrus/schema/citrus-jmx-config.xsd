@@ -82,7 +82,12 @@
         </xs:element>
       </xs:sequence>
       <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="server-url" type="xs:string" default="platform"/>
+      <xs:attribute name="server-url" type="xs:string"/>
+      <xs:attribute name="host" type="xs:string"/>
+      <xs:attribute name="port" type="xs:string"/>
+      <xs:attribute name="protocol" type="xs:string" default="rmi"/>
+      <xs:attribute name="binding" type="xs:string"/>
+      <xs:attribute name="create-registry" type="xs:boolean"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>

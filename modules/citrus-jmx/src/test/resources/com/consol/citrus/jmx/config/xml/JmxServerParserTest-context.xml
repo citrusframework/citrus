@@ -42,6 +42,11 @@
   </citrus-jmx:server>
 
   <citrus-jmx:server id="jmxServer3"
+                     host="localhost"
+                     port="2099"
+                     protocol="rmi"
+                     binding="jmxrmi"
+                     create-registry="true"
                      actor="testActor">
     <citrus-jmx:mbeans>
       <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean" objectDomain="hello"/>

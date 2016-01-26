@@ -42,6 +42,7 @@ public class JmxServerParserTest extends AbstractBeanDefinitionParserTest {
         JmxServer jmxServer = endpoints.get("jmxServer1");
         Assert.assertEquals(jmxServer.getEndpointConfiguration().getServerUrl(), "platform");
         Assert.assertEquals(jmxServer.getEndpointConfiguration().getEnvironmentProperties().size(), 0L);
+        Assert.assertEquals(jmxServer.isCreateRegistry(), false);
         Assert.assertEquals(jmxServer.getMbeans().size(), 2L);
         Assert.assertEquals(jmxServer.getMbeans().get(0).getType(), HelloBean.class);
         Assert.assertEquals(jmxServer.getMbeans().get(0).getOperations().size(), 0L);
@@ -72,6 +73,13 @@ public class JmxServerParserTest extends AbstractBeanDefinitionParserTest {
         // 3rd server
         jmxServer = endpoints.get("jmxServer3");
         Assert.assertNotNull(jmxServer.getActor());
+        Assert.assertEquals(jmxServer.getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:2099/jmxrmi");
+        Assert.assertEquals(jmxServer.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(jmxServer.getEndpointConfiguration().getPort(), 2099);
+        Assert.assertEquals(jmxServer.getEndpointConfiguration().getProtocol(), "rmi");
+        Assert.assertEquals(jmxServer.getEndpointConfiguration().getBinding(), "jmxrmi");
+        Assert.assertEquals(jmxServer.isCreateRegistry(), true);
+
         Assert.assertEquals(jmxServer.getMbeans().size(), 1L);
         Assert.assertEquals(jmxServer.getMbeans().get(0).getType(), HelloBean.class);
         Assert.assertEquals(jmxServer.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));

@@ -39,6 +39,12 @@ public class JmxServerParser extends AbstractServerParser {
     protected void parseServer(BeanDefinitionBuilder serverBuilder, Element element, ParserContext parserContext) {
         BeanDefinitionBuilder configurationBuilder = BeanDefinitionBuilder.genericBeanDefinition(JmxEndpointConfiguration.class);
         BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("server-url"), "serverUrl");
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("host"), "host");
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("protocol"), "protocol");
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("binding"), "binding");
+
+        BeanDefinitionParserUtils.setPropertyValue(serverBuilder, element.getAttribute("create-registry"), "createRegistry");
         BeanDefinitionParserUtils.setPropertyReference(configurationBuilder, element.getAttribute("environment-properties"), "environmentProperties");
         BeanDefinitionParserUtils.setPropertyReference(configurationBuilder, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("timeout"), "timeout");

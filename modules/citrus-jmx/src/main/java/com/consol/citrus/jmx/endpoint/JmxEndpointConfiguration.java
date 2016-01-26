@@ -24,8 +24,10 @@ import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.StringUtils;
 
 import javax.management.NotificationFilter;
+import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +38,13 @@ import java.util.Map;
 public class JmxEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
 
     /** MBean server url, by default connect to platform MBean server */
-    private String serverUrl = "platform";
+    private String serverUrl;
+
+    /** Host, port and protocol information constructing proper server url */
+    private String protocol = "rmi";
+    private String host = "localhost";
+    private int port = Registry.REGISTRY_PORT;
+    private String binding;
 
     /** User credentials */
     private String username;
@@ -70,12 +78,88 @@ public class JmxEndpointConfiguration extends AbstractPollableEndpointConfigurat
     private ApplicationContext applicationContext;
 
     /**
+     * Gets the value of the protocol property.
+     *
+     * @return the protocol
+     */
+    public String getProtocol() {
+        return protocol;
+    }
+
+    /**
+     * Sets the protocol property.
+     *
+     * @param protocol
+     */
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    /**
+     * Gets the value of the host property.
+     *
+     * @return the host
+     */
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * Sets the host property.
+     *
+     * @param host
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * Gets the value of the port property.
+     *
+     * @return the port
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * Sets the port property.
+     *
+     * @param port
+     */
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    /**
+     * Gets the value of the binding property.
+     *
+     * @return the binding
+     */
+    public String getBinding() {
+        return binding;
+    }
+
+    /**
+     * Sets the binding property.
+     *
+     * @param binding
+     */
+    public void setBinding(String binding) {
+        this.binding = binding;
+    }
+
+    /**
      * Gets the value of the serverUrl property.
      *
      * @return the serverUrl
      */
     public String getServerUrl() {
-        return serverUrl;
+        if (StringUtils.hasText(this.serverUrl)) {
+            return serverUrl;
+        } else {
+            return "service:jmx:" + protocol + ":///jndi/" + protocol + "://" + host + ":" + port + (binding != null ? "/" + binding : "");
+        }
     }
 
     /**

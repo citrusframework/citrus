@@ -27,6 +27,8 @@ import javax.management.*;
 import javax.management.remote.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.List;
 
 /**
@@ -47,6 +49,9 @@ public class JmxServer extends AbstractServer {
     /** MBean server instance */
     private MBeanServer server;
     private JMXConnectorServer jmxConnectorServer;
+
+    /** Should server automatically create service registry */
+    private boolean createRegistry = false;
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -70,6 +75,14 @@ public class JmxServer extends AbstractServer {
 
     @Override
     protected void startup() {
+        if (createRegistry) {
+            try {
+                LocateRegistry.createRegistry(endpointConfiguration.getPort());
+            } catch (RemoteException e) {
+                throw new CitrusRuntimeException("Failed to create RMI registry", e);
+            }
+        }
+
         try {
             if (getEndpointConfiguration().getServerUrl().equals("platform")) {
                 server = ManagementFactory.getPlatformMBeanServer();
@@ -109,11 +122,39 @@ public class JmxServer extends AbstractServer {
         jmxConnectorServer = null;
     }
 
+    /**
+     * Gets the value of the mbeans property.
+     *
+     * @return the mbeans
+     */
     public List<ManagedBeanDefinition> getMbeans() {
         return mbeans;
     }
 
+    /**
+     * Sets the mbeans property.
+     *
+     * @param mbeans
+     */
     public void setMbeans(List<ManagedBeanDefinition> mbeans) {
         this.mbeans = mbeans;
+    }
+
+    /**
+     * Gets the value of the createRegistry property.
+     *
+     * @return the createRegistry
+     */
+    public boolean isCreateRegistry() {
+        return createRegistry;
+    }
+
+    /**
+     * Sets the createRegistry property.
+     *
+     * @param createRegistry
+     */
+    public void setCreateRegistry(boolean createRegistry) {
+        this.createRegistry = createRegistry;
     }
 }
