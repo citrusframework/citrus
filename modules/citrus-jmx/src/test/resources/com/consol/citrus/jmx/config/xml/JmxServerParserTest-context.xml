@@ -13,7 +13,7 @@
                      server-url="platform">
     <citrus-jmx:mbeans>
       <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
-      <citrus-jmx:mbean name="fooBean">
+      <citrus-jmx:mbean name="fooBean" objectDomain="foo.object.domain" objectName="type=FooBean">
         <citrus-jmx:operations>
           <citrus-jmx:operation name="fooOperation">
             <citrus-jmx:parameter>

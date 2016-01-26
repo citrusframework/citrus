@@ -401,6 +401,9 @@ public class ManagedBeanInvocation {
         @XmlAttribute(name = "name")
         protected String name;
 
+        @XmlAttribute(name = "return-type")
+        protected String returnType;
+
         protected ManagedBeanInvocation.Parameter parameter;
 
         /**
@@ -501,6 +504,24 @@ public class ManagedBeanInvocation {
          */
         public void setName(String value) {
             this.name = value;
+        }
+
+        /**
+         * Gets the value of the returnType property.
+         *
+         * @return the returnType
+         */
+        public String getReturnType() {
+            return returnType;
+        }
+
+        /**
+         * Sets the returnType property.
+         *
+         * @param returnType
+         */
+        public void setReturnType(String returnType) {
+            this.returnType = returnType;
         }
 
         /**

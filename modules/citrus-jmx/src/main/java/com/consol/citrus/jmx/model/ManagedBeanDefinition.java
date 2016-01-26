@@ -21,8 +21,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.management.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -35,7 +34,7 @@ public class ManagedBeanDefinition {
     private String objectDomain;
     private String objectName;
 
-    private String name;
+    private String name = "CitrusMBean";
     private String description;
 
     private List<ManagedBeanInvocation.Operation> operations = new ArrayList<>();
@@ -62,7 +61,7 @@ public class ManagedBeanDefinition {
             }
 
             return new ObjectName(objectDomain, "name", name);
-        } catch (MalformedObjectNameException e) {
+        } catch (NullPointerException | MalformedObjectNameException e) {
             throw new CitrusRuntimeException("Failed to create proper object name for managed bean", e);
         }
     }
@@ -103,7 +102,7 @@ public class ManagedBeanDefinition {
             }, new ReflectionUtils.MethodFilter() {
                 @Override
                 public boolean matches(Method method) {
-                    return !method.getName().startsWith("set") && !method.getName().startsWith("get") && !method.getName().startsWith("is");
+                    return method.getDeclaringClass().equals(type) && !method.getName().startsWith("set") && !method.getName().startsWith("get") && !method.getName().startsWith("is");
                 }
             });
         } else {
@@ -115,7 +114,7 @@ public class ManagedBeanDefinition {
                     parameterInfo.add(new MBeanParameterInfo("p" + i++, parameter.getType(), "Operation parameter " + i));
                 }
 
-                infoList.add(new MBeanOperationInfo(operation.getName(), "Citrus mbean operation", parameterInfo.toArray(new MBeanParameterInfo[operation.getParameter().getParameter().size()]), String.class.getName(), MBeanOperationInfo.UNKNOWN));
+                infoList.add(new MBeanOperationInfo(operation.getName(), "Citrus mbean operation", parameterInfo.toArray(new MBeanParameterInfo[operation.getParameter().getParameter().size()]), operation.getReturnType(), MBeanOperationInfo.UNKNOWN));
             }
         }
 
@@ -147,30 +146,47 @@ public class ManagedBeanDefinition {
 
         if (type != null) {
             final List<String> attributes = new ArrayList<>();
-            ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
-                @Override
-                public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                    String attributeName;
 
-                    if (method.getName().startsWith("set") || method.getName().startsWith("get")) {
-                        attributeName = method.getName().substring(3);
-                    } else if (method.getName().startsWith("is")) {
-                        attributeName = method.getName().substring(2);
-                    } else {
-                        attributeName = method.getName();
-                    }
+            if (type.isInterface()) {
+                ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
+                    @Override
+                    public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                        String attributeName;
 
-                    if (!attributes.contains(attributeName)) {
-                        infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), method.toGenericString(), true, true, method.getName().startsWith("is")));
-                        attributes.add(attributeName);
+                        if (method.getName().startsWith("get")) {
+                            attributeName = method.getName().substring(3);
+                        } else if (method.getName().startsWith("is")) {
+                            attributeName = method.getName().substring(2);
+                        } else {
+                            attributeName = method.getName();
+                        }
+
+                        attributeName = attributeName.substring(0, 1).toLowerCase() + attributeName.substring(1);
+
+                        if (!attributes.contains(attributeName)) {
+                            infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), method.toGenericString(), true, true, method.getName().startsWith("is")));
+                            attributes.add(attributeName);
+                        }
                     }
-                }
-            }, new ReflectionUtils.MethodFilter() {
-                @Override
-                public boolean matches(Method method) {
-                    return method.getName().startsWith("set") || method.getName().startsWith("get") || method.getName().startsWith("is");
-                }
-            });
+                }, new ReflectionUtils.MethodFilter() {
+                    @Override
+                    public boolean matches(Method method) {
+                        return method.getDeclaringClass().equals(type) && (method.getName().startsWith("get") || method.getName().startsWith("is"));
+                    }
+                });
+            } else {
+                ReflectionUtils.doWithFields(type, new ReflectionUtils.FieldCallback() {
+                    @Override
+                    public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+                        infoList.add(new MBeanAttributeInfo(field.getName(), field.getType().getName(), field.toGenericString(), true, true, field.getType().equals(Boolean.class)));
+                    }
+                }, new ReflectionUtils.FieldFilter() {
+                    @Override
+                    public boolean matches(Field field) {
+                        return !Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers());
+                    }
+                });
+            }
         } else {
             int i = 1;
             for (ManagedBeanInvocation.Attribute attribute : attributes) {

@@ -179,22 +179,58 @@ public void jmxClientTest() {
   <section id="jmx-server">
     <title>JMX server</title>
 
-    <para>The server side is always a little bit more tricky because we need to simulate custom managed bean access as a server. First of all Citrus provides a server component that specifies the connection properties for clients such as ports and mbean object names.</para>
+    <para>The server side is always a little bit more tricky because we need to simulate custom managed bean access as a server. First of all Citrus provides a server component that specifies the connection properties for clients such as transport protocols,
+    ports and mbean object names. Lets create a new server that accepts incoming requests via RMI on a remote registry <emphasis>localhost:1099</emphasis>.</para>
 
     <programlisting>&lt;citrus-jmx:server id=&quot;jmxServer&quot;
       server-url=&quot;service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi&quot;
-    &lt;citrus-jmx:mbeans>
-        &lt;citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
-        &lt;citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="com.consol.citrus.news" objectName="name=News"/>
-    &lt;/citrus-jmx:mbeans>
-&lt;/citrus-jmx:server></programlisting>
+    &lt;citrus-jmx:mbeans&gt;
+        &lt;citrus-jmx:mbean type=&quot;com.consol.citrus.jmx.mbean.HelloBean&quot;/&gt;
+        &lt;citrus-jmx:mbean type=&quot;com.consol.citrus.jmx.mbean.NewsBean&quot; objectDomain=&quot;com.consol.citrus.news&quot; objectName=&quot;name=News&quot;/&gt;
+    &lt;/citrus-jmx:mbeans&gt;
+&lt;/citrus-jmx:server&gt;</programlisting>
 
-    <para>As usual we define a <emphasis>server-url</emphasis> that controls the JMX connector access to the mbean server. We could also use <emphasis>platform</emphasis> as url in order to use the JVM platform mbean server. In this example above we open a RMI connector
-    for clients using the registry <emphasis>localhost:1099</emphasis> and the service name <emphasis>jmxrmi</emphasis>. Now clients can connect to the Citrus mbean server. As nested configuration elements we also define the managed beans that should be exposed for access.
-    Here two managed bean are added <emphasis>HelloBean</emphasis> and <emphasis>NewsBean</emphasis>. Citrus will use the package name and class name for proper object name construction. So the first managed bean is accessible using the object name
-    <emphasis>com.consol.citrus.jmx.mbean:type=HelloBean</emphasis>. The second managed bean definition uses a custom object domain and name value. So the <emphasis>NewsBean</emphasis> will be accessible with <emphasis>com.consol.citrus.news:name=News</emphasis>.</para>
+    <para>As usual we define a <emphasis>server-url</emphasis> that controls the JMX connector access to the mbean server. In this example above we open a JMX RMI connector for clients using the registry <emphasis>localhost:1099</emphasis> and the service name <emphasis>jmxrmi</emphasis>.
+    We could have also used <emphasis>platform</emphasis> as server-url in order to use the JVM platform mbean server. Now clients can connect to the Citrus mbean server accessing the managed beans.</para>
 
-    <para>When clients try to find the managed beans they have to use these object names accordingly. Other object names will be rejected with managed bean not found error. Now we can use the server component in a test case to receive some incoming managed bean access.</para>
+    <para>We need to define the managed beans that are available in our JMX mbean server. This is done as nested <emphasis>mbean</emphasis> configuration elements. Here the managed bean definitions describe the managed bean with its objectDomain, objectName, operations and attributes.
+    The most convenient way of defining such managed bean definitions is to give a bean type which is the fully qualified class name of the managed bean. Citrus will use the package name and class name for proper objectDomain and objectName construction.</para>
+
+    <para>Lets have a closer look at the irst mbean definition in the example above. So the first managed bean is defined by its class name <emphasis>com.consol.citrus.jmx.mbean.HelloBean</emphasis> and therefore is accessible using the objectName
+    <emphasis>com.consol.citrus.jmx.mbean:type=HelloBean</emphasis>. In addition to that Citrus will read the class information such as available methods, getters and setters for constructing a proper MBeanInfo. In the second managed bean definition in our example we have used additional
+    custom objectDomain and objectName values. So the <emphasis>NewsBean</emphasis> will be accessible with <emphasis>com.consol.citrus.news:name=News</emphasis> on the managed bean server.</para>
+
+    <para>This is how we can define the bindings of managed beans and what clients need to search for when finding and accessing the managed beans on the server. When clients try to find the managed beans they have to use proper objectNames accordingly. ObjectNames that are not defined on the server
+    will be rejected with managed bean not found error.</para>
+
+    <para>But wait one last thought. Right now we have to use the qualified class name of the managed bean in the definition. What happens if we do not have access to that or if there is not managed bean interface available at all? Citrus provides a generic managed bean that is able to handle
+    any managed bean interaction. The generic bean implementation needs to know the managed operations and attributes though. So lets define a new generic managed bean on our server:</para>
+
+    <programlisting>&lt;citrus-jmx:server id=&quot;jmxServer&quot;
+server-url=&quot;service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi&quot;
+    &lt;citrus-jmx:mbeans&gt;
+        &lt;citrus-jmx:mbean name=&quot;fooBean&quot; objectDomain=&quot;foo.object.domain&quot; objectName=&quot;type=FooBean&quot;&gt;
+            &lt;citrus-jmx:operations&gt;
+                &lt;citrus-jmx:operation name=&quot;fooOperation&quot;&gt;
+                    &lt;citrus-jmx:parameter&gt;
+                        &lt;citrus-jmx:param type=&quot;java.lang.String&quot;/&gt;
+                        &lt;citrus-jmx:param type=&quot;java.lang.Integer&quot;/&gt;
+                    &lt;/citrus-jmx:parameter&gt;
+                &lt;/citrus-jmx:operation&gt;
+                &lt;citrus-jmx:operation name=&quot;barOperation&quot;/&gt;
+            &lt;/citrus-jmx:operations&gt;
+            &lt;citrus-jmx:attributes&gt;
+                &lt;citrus-jmx:attribute name=&quot;fooAttribute&quot; type=&quot;java.lang.String&quot;/&gt;
+                &lt;citrus-jmx:attribute name=&quot;barAttribute&quot; type=&quot;java.lang.Boolean&quot;/&gt;
+            &lt;/citrus-jmx:attributes&gt;
+        &lt;/citrus-jmx:mbean&gt;
+    &lt;/citrus-jmx:mbeans&gt;
+&lt;/citrus-jmx:server&gt;</programlisting>
+
+    <para>The generic bean definition needs to define all operations and attributes that are available for access. Up to now we are restricted to using Java base types when defining operation parameter and attribute return types. There is actually no way to define more complex return types.
+    Nevertheless Citrus is now able to expose the managed bean for client access without having to know the actual managed bean implementation.</para>
+
+    <para>Now we can use the server component in a test case to receive some incoming managed bean access.</para>
 
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;receive endpoint=&quot;jmxServer&quot;&gt;
