@@ -16,12 +16,12 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
@@ -48,21 +48,18 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     /** Test builder delegate */
     private DefaultTestRunner testRunner;
 
-    /**
-     * Initialize test case and variables. Must be done with each test run.
-     */
-    public void init() {
-        testRunner = new DefaultTestRunner(applicationContext);
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
-    }
-
     @Override
     protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
         if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
-            init();
-            name(frameworkMethod.getTestName());
-            packageName(frameworkMethod.getPackageName());
+            if (citrus == null) {
+                citrus = Citrus.newInstance(applicationContext);
+            }
+
+            TestContext ctx = prepareTestContext(citrus.createTestContext());
+
+            testRunner = new DefaultTestRunner(applicationContext, ctx);
+            testRunner.name(frameworkMethod.getTestName());
+            testRunner.packageName(frameworkMethod.getPackageName());
 
             try {
                 start();
@@ -73,6 +70,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
         } else {
             super.run(frameworkMethod);
         }
+    }
+
+    @Override
+    public TestCase getTestCase() {
+        return testRunner.getTestCase();
     }
 
     @Override
@@ -128,11 +130,6 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public void applyBehavior(com.consol.citrus.dsl.runner.TestBehavior behavior) {
         testRunner.applyBehavior(behavior);
-    }
-
-    @Override
-    public void parameter(String[] parameterNames, Object[] parameterValues) {
-        testRunner.parameter(parameterNames, parameterValues);
     }
 
     @Override

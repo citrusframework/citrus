@@ -70,7 +70,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithMessageInstance() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -100,7 +100,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendBuilderWithObjectMessageInstance() {
         final Message message = new DefaultMessage(new Integer(10)).setHeader("operation", "foo");
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -136,7 +136,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendBuilderWithObjectMessageInstanceAdditionalHeader() {
         final Message message = new DefaultMessage(new Integer(10)).setHeader("operation", "foo");
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -178,7 +178,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -206,7 +206,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithPayloadModelExplicitMarshaller() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -239,7 +239,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         when(applicationContextMock.getBean("myMarshaller", Marshaller.class)).thenReturn(marshaller);
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -267,7 +267,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithPayloadData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -294,7 +294,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithPayloadResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -328,7 +328,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 send("fooMessageEndpoint")
@@ -350,7 +350,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithHeaders() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -381,7 +381,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithHeaderData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -430,7 +430,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithMultipleHeaderData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -483,7 +483,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithHeaderDataResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -536,7 +536,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderExtractFromPayload() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -565,7 +565,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderExtractJsonPathFromPayload() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -595,7 +595,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderExtractFromHeader() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -624,7 +624,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testXpathSupport() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -652,7 +652,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testJsonPathSupport() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -688,7 +688,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -721,7 +721,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 send(messageEndpoint)

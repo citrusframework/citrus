@@ -68,7 +68,7 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
 
         doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 purgeEndpoints(new BuilderSupport<PurgeEndpointsBuilder>() {
@@ -122,7 +122,7 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
         doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive(eq("operation = 'sayHello'"), any(TestContext.class), eq(100L));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 purgeEndpoints(new BuilderSupport<PurgeEndpointsBuilder>() {
@@ -164,7 +164,7 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean("e1", Endpoint.class)).thenReturn(endpoint1);
         doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 purgeEndpoints(new BuilderSupport<PurgeEndpointsBuilder>() {

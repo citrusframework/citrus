@@ -57,7 +57,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(jdbcTemplate.queryForList(anyString())).thenReturn(results)
                                                     .thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "100000")));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("episodeId", "citrus:randomNumber(5)");
@@ -75,7 +75,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("NAME"));
         Assert.assertNotNull(context.getVariable("actorName"));
         Assert.assertNotNull(context.getVariable("CNT_EPISODES"));
@@ -113,7 +113,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "9999")));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
@@ -130,7 +130,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("NAME"));
         Assert.assertNotNull(context.getVariable("CNT_EPISODES"));
         Assert.assertNotNull(context.getVariable("cntEpisodes"));
@@ -167,7 +167,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
@@ -208,7 +208,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate, resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[0].NAME == 'Radj'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
@@ -248,7 +248,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
@@ -290,7 +290,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate, resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[1].NAME == 'Howard'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
@@ -331,7 +331,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate, validator);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 query(new BuilderSupport<ExecuteSQLQueryBuilder>() {

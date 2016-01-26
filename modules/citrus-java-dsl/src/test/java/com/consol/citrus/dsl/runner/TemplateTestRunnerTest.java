@@ -58,7 +58,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 applyTemplate(new BuilderSupport<TemplateBuilder>() {
@@ -103,7 +103,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 applyTemplate(new BuilderSupport<TemplateBuilder>() {

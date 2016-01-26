@@ -73,7 +73,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
@@ -109,6 +109,9 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultByEndpointName() {
+        TestContext context = applicationContext.getBean(TestContext.class);
+        context.setApplicationContext(applicationContextMock);
+
         reset(applicationContextMock, soapEndpoint, messageProducer);
         when(soapEndpoint.createProducer()).thenReturn(messageProducer);
         when(soapEndpoint.getActor()).thenReturn(null);
@@ -122,12 +125,12 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
         when(applicationContextMock.getBean("soapEndpoint", Endpoint.class)).thenReturn(soapEndpoint);
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
@@ -179,7 +182,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream(ERROR_DETAIL.getBytes()));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
@@ -231,7 +234,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
@@ -282,7 +285,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
@@ -335,7 +338,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {

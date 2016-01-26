@@ -36,7 +36,7 @@ public class TimerTestDesignerTest extends AbstractTestNGUnitTest {
         final int repeatCount = 1;
         final boolean fork = false;
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 timer()

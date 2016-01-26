@@ -26,7 +26,7 @@ public class CreateVariablesTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateVariablesBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 createVariable("foo", "bar");

@@ -57,7 +57,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(messageConsumer.receive(200L)).thenReturn(null);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
@@ -102,7 +102,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(messageConsumer.receive(200L)).thenReturn(null);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {

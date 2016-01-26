@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testConditionalBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 conditional(echo("${var}")).when("${var} = 5");
@@ -48,7 +48,7 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 conditional().when("${var} = 5").actions(echo("${var}"));
@@ -69,7 +69,7 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderConditionExpression() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 conditional().when(new ConditionExpression() {

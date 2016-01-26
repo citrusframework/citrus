@@ -67,7 +67,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 send(new BuilderSupport<SendMessageBuilder>() {
@@ -138,7 +138,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 send(new BuilderSupport<SendMessageBuilder>() {
@@ -186,7 +186,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 send(new BuilderSupport<SendMessageBuilder>() {
@@ -235,7 +235,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 send(new BuilderSupport<SendMessageBuilder>() {
@@ -278,7 +278,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 send(new BuilderSupport<SendMessageBuilder>() {

@@ -94,7 +94,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("<Message>Hello</Message>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -127,7 +127,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("Foo").setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -176,7 +176,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -217,7 +217,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -263,7 +263,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         when(applicationContextMock.getBean("myMarshaller", Marshaller.class)).thenReturn(marshaller);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -303,7 +303,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -345,7 +345,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "foo"));
 
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -377,6 +377,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithEndpointName() {
+        TestContext context = applicationContext.getBean(TestContext.class);
+        context.setApplicationContext(applicationContextMock);
+
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -386,12 +389,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
         when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -423,7 +426,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -460,7 +463,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello")
                         .setHeader("foo", "bar"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -525,7 +528,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -591,7 +594,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "foo")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -667,7 +670,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -737,7 +740,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -807,7 +810,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -857,7 +860,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -905,7 +908,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -954,7 +957,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1001,7 +1004,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("operation", "sayHello");
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1041,7 +1044,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(selectiveConsumer.receive(eq("operation = 'sayHello'"), any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1086,7 +1089,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1101,7 +1104,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("text"));
         Assert.assertNotNull(context.getVariable("language"));
         Assert.assertEquals(context.getVariable("text"), "Hello World!");
@@ -1140,7 +1143,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1156,7 +1159,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("text"));
         Assert.assertNotNull(context.getVariable("person"));
         Assert.assertEquals(context.getVariable("text"), "Hello World!");
@@ -1191,7 +1194,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "sayHello")
                         .setHeader("requestId", "123456"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1206,7 +1209,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("operationHeader"));
         Assert.assertNotNull(context.getVariable("id"));
         Assert.assertEquals(context.getVariable("operationHeader"), "sayHello");
@@ -1241,7 +1244,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "sayHello")
                         .setHeader("requestId", "123456"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1258,7 +1261,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("operationHeader"));
         Assert.assertNotNull(context.getVariable("id"));
         Assert.assertEquals(context.getVariable("operationHeader"), "sayHello");
@@ -1301,7 +1304,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1353,7 +1356,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1408,7 +1411,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1462,7 +1465,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1516,7 +1519,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1570,7 +1573,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1616,7 +1619,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1663,7 +1666,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1712,7 +1715,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1740,7 +1743,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1768,7 +1771,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1814,7 +1817,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1876,7 +1879,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(schema.createValidator()).thenReturn(validator);
         when(validator.validate(any(Source.class))).thenReturn(new SAXParseException[] {});
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -1936,7 +1939,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 "          </xs:sequence>\n" +
                 "      </xs:complexType>\n" +
                 "    </xs:element></xs:schema>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {

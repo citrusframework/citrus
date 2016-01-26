@@ -27,7 +27,7 @@ import static org.testng.Assert.assertEquals;
 public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testParallelBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -53,7 +53,7 @@ public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testParallelBuilderNestedContainer() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");

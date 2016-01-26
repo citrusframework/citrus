@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.design;
 
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
+import com.consol.citrus.context.TestContext;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -30,9 +30,10 @@ public class MockTestDesigner extends DefaultTestDesigner {
     /**
      * Constructor using an application context.
      * @param applicationContext
+     * @param context
      */
-    public MockTestDesigner(ApplicationContext applicationContext) {
-        super(applicationContext);
+    public MockTestDesigner(ApplicationContext applicationContext, TestContext context) {
+        super(applicationContext, context);
     }
 
     public void configure() {

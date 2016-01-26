@@ -31,7 +31,7 @@ import static org.testng.Assert.assertTrue;
 public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testAssertBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 assertException(echo("${foo}"))
@@ -58,7 +58,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 assertException()
@@ -86,7 +86,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousActionNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 assertException(new AbstractTestAction() {
@@ -117,7 +117,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 assertException()

@@ -26,7 +26,7 @@ public class TraceVariablesTestRunnerTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testTraceVariablesBuilder() {
-		MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+		MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
 			@Override
 			public void execute() {
 				variable("variable1", "foo");

@@ -37,7 +37,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
         final String interval = "1500";
         final String url = "http://some.path/";
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 waitFor()
@@ -70,7 +70,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
         final String interval = "1500";
         final String filePath = "path/to/some/file.txt";
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 waitFor()

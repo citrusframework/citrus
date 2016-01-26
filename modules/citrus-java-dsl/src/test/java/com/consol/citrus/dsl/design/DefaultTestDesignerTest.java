@@ -20,6 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +47,7 @@ public class DefaultTestDesignerTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, Mockito.mock(TestContext.class)) {
             @Override
             public void configure() {
                 description("This is a Test");

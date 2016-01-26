@@ -53,7 +53,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateCamelRouteBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 camel(new BuilderSupport<CamelRouteActionBuilder>() {
@@ -113,7 +113,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 camel(new BuilderSupport<CamelRouteActionBuilder>() {
@@ -160,7 +160,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Started);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Started);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 camel(new BuilderSupport<CamelRouteActionBuilder>() {
@@ -210,7 +210,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 camel(new BuilderSupport<CamelRouteActionBuilder>() {
@@ -240,7 +240,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         CamelContext defaultContext = applicationContext.getBean(CamelContext.class);
         Assert.assertEquals(defaultContext.getRouteDefinitions().size(), 1);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 camel(new BuilderSupport<CamelRouteActionBuilder>() {
@@ -300,7 +300,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 camel(new BuilderSupport<CamelRouteActionBuilder>() {

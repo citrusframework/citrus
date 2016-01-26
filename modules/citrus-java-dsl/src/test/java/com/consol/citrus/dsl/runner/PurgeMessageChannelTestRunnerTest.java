@@ -39,7 +39,6 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.*;
 
 /**
@@ -66,7 +65,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
         when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
@@ -109,7 +108,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
         when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
@@ -145,7 +144,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         when(channelResolver.resolveDestination("ch1")).thenReturn(channel1);
         when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {

@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testTransformBuilderWithData() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 transform(new BuilderSupport<TransformActionBuilder>() {
@@ -56,7 +56,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("result"));
         Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
 					"<body>%n" +
@@ -79,7 +79,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testTransformBuilderWithResource() throws IOException {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 transform(new BuilderSupport<TransformActionBuilder>() {
@@ -93,7 +93,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-		TestContext context = builder.createTestContext();
+		TestContext context = builder.getTestContext();
 		Assert.assertNotNull(context.getVariable("result"));
 		Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
 					"<body>%n" +

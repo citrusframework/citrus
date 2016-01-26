@@ -37,7 +37,7 @@ public class StartServerTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testStartServerBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 start(testServer);

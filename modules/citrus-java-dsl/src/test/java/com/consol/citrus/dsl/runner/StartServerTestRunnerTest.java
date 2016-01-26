@@ -44,7 +44,7 @@ public class StartServerTestRunnerTest extends AbstractTestNGUnitTest {
         when(server1.getName()).thenReturn("server1");
         when(server2.getName()).thenReturn("server1");
         when(server3.getName()).thenReturn("server1");
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 start(testServer);

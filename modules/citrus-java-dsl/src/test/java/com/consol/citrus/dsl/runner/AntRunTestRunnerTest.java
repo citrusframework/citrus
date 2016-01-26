@@ -36,7 +36,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 antrun(new BuilderSupport<AntRunBuilder>() {
@@ -62,7 +62,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 antrun(new BuilderSupport<AntRunBuilder>() {
@@ -89,7 +89,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 antrun(new BuilderSupport<AntRunBuilder>() {
@@ -120,7 +120,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("checked", true);
@@ -154,7 +154,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         final BuildListener buildListener = Mockito.mock(BuildListener.class);
 
         reset(buildListener);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 antrun(new BuilderSupport<AntRunBuilder>() {

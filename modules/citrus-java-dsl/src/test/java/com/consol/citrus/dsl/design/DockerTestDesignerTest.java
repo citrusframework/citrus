@@ -32,7 +32,7 @@ public class DockerTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testDockerBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 docker().info()

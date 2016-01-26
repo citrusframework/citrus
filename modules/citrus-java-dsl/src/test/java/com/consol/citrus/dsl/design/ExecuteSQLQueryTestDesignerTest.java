@@ -44,7 +44,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -82,7 +82,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLQueryWithStatements() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -116,7 +116,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidationScript() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -146,7 +146,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidationScriptResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -179,7 +179,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyValidationScript() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -209,7 +209,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -242,7 +242,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomScriptValidator() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 query(dataSource)

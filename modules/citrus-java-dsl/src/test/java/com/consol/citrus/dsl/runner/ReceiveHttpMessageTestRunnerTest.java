@@ -68,7 +68,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 .contextPath("foo")
                 .queryParam("param1", "value1")
                 .queryParam("param2", "value2"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -120,7 +120,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 .uri("/test")
                 .status(HttpStatus.OK)
                 .version("HTTP/1.1"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {
@@ -166,7 +166,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receive(new BuilderSupport<ReceiveMessageBuilder>() {

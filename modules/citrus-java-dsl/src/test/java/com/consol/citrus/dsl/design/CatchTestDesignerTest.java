@@ -29,7 +29,7 @@ import static org.testng.Assert.assertEquals;
 public class CatchTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testCatchBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 catchException(echo("${var}"))
@@ -63,7 +63,7 @@ public class CatchTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCatchBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 catchException()

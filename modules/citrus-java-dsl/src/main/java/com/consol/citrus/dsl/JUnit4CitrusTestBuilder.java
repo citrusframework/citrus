@@ -34,6 +34,7 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
@@ -50,30 +51,26 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
     /** Test builder delegate */
     private CitrusTestBuilder testBuilder;
 
-    /**
-     * Initialize test case and variables. Must be done with each test run.
-     */
-    public void init() {
-        testBuilder = new CitrusTestBuilder(applicationContext);
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
-    }
-
     @Override
     protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
-        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
-            init();
-            name(frameworkMethod.getTestName());
-
-            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
-
+        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null || isConfigure(frameworkMethod.getMethod())) {
             if (citrus == null) {
                 citrus = Citrus.newInstance(applicationContext);
             }
 
             TestContext ctx = prepareTestContext(citrus.createTestContext());
-            TestCase testCase = testBuilder.build();
-            citrus.run(testCase, ctx);
+
+            testBuilder = new CitrusTestBuilder(applicationContext);
+            testBuilder.name(frameworkMethod.getTestName());
+            testBuilder.packageName(frameworkMethod.getPackageName());
+
+            if (isConfigure(frameworkMethod.getMethod())) {
+                configure();
+            } else {
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
+            }
+
+            citrus.run(testBuilder.build(), ctx);
         } else {
             super.run(frameworkMethod);
         }
@@ -81,14 +78,8 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
 
     @Override
     protected void executeTest() {
-        init();
-        configure();
-        super.executeTest();
-    }
-
-    @Override
-    public TestCase build() {
-        return testBuilder.build();
+        run(new CitrusJUnit4Runner.CitrusFrameworkMethod(ReflectionUtils.findMethod(this.getClass(), "configure"),
+                this.getClass().getSimpleName(), this.getClass().getPackage().getName()));
     }
 
     /**
@@ -97,6 +88,20 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
      * basic test case properties.
      */
     protected void configure() {
+    }
+
+    /**
+     * Checks if the given method is this designer's configure method.
+     * @param method
+     * @return
+     */
+    private boolean isConfigure(Method method) {
+        return method.getDeclaringClass().equals(this.getClass()) && method.getName().equals("configure");
+    }
+
+    @Override
+    public TestCase build() {
+        return testBuilder.build();
     }
 
     @Override

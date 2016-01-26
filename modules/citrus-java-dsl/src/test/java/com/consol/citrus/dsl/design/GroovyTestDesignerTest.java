@@ -35,7 +35,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
             
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 groovy(scriptResource)
@@ -60,7 +60,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithScript() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -81,7 +81,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -106,7 +106,7 @@ public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplatePath() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")

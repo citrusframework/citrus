@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -42,7 +42,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "2");
 
@@ -61,7 +61,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatBuilderWithConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -78,7 +78,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "5");
 

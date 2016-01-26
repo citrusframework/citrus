@@ -28,7 +28,7 @@ public class InputTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void TestInputBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("answer", "yes");

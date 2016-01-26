@@ -26,7 +26,7 @@ public class StopTimeTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testStopTimeBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 stopTime();

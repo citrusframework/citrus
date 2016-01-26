@@ -53,7 +53,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
 
     @Test
     public void testPurgeChannelsBuilderWithChannels() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -81,7 +81,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -113,7 +113,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 purgeChannels()

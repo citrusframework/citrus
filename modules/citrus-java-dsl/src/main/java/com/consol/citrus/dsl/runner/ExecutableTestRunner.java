@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.dsl.endpoint.Executable;
 import org.springframework.context.ApplicationContext;
 
@@ -30,7 +31,7 @@ public class ExecutableTestRunner extends DefaultTestRunner implements Executabl
      * @param applicationContext
      */
     public ExecutableTestRunner(ApplicationContext applicationContext) {
-        super(applicationContext);
+        super(applicationContext, Citrus.newInstance(applicationContext).createTestContext());
     }
 
     @Override

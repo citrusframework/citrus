@@ -64,25 +64,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
-                    if (citrus == null) {
-                        citrus = Citrus.newInstance(applicationContext);
-                    }
-
-                    TestContext ctx = prepareTestContext(citrus.createTestContext());
-                    TestLoader testLoader = methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size());
-                    TestCase testCase = testLoader.load();
-
-                    if (method.getAnnotation(Test.class) != null &&
-                            StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-                        Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                                ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
-                        if (parameters != null) {
-                            handleTestParameters(testResult.getMethod(), testCase,
-                                parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
-                        }
-                    }
-
-                    citrus.run(testCase, ctx);
+                    run(method, methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size()), testResult.getMethod().getCurrentInvocationCount());
                 } catch (RuntimeException e) {
                     testResult.setThrowable(e);
                     testResult.setStatus(ITestResult.FAILURE);
@@ -96,6 +78,33 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         } else {
             super.run(callBack, testResult);
         }
+    }
+
+    /**
+     * Run method prepares and executes test case.
+     * @param method
+     * @param testLoader
+     * @param invocationCount
+     */
+    protected void run(Method method, TestLoader testLoader, int invocationCount) {
+        if (citrus == null) {
+            citrus = Citrus.newInstance(applicationContext);
+        }
+
+        TestContext ctx = prepareTestContext(citrus.createTestContext());
+        TestCase testCase = testLoader.load();
+
+        if (method.getAnnotation(Test.class) != null &&
+                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
+            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(
+                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+            if (parameters != null) {
+                handleTestParameters(method, testCase,
+                        parameters[invocationCount % parameters.length]);
+            }
+        }
+
+        citrus.run(testCase, ctx);
     }
 
     /**
@@ -181,34 +190,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Executes the test case.
      */
     protected void executeTest() {
-        executeTest(null);
-    }
-
-    /**
-     * Executes the test case.
-     * @param testContext the test context.
-     */
-    protected void executeTest(ITestContext testContext) {
-        if (citrus == null) {
-            citrus = Citrus.newInstance(applicationContext);
-        }
-
-        TestContext ctx = prepareTestContext(citrus.createTestContext());
-        TestCase testCase = getTestCase();
-
         ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
         Method method = testNGMethod.getConstructorOrMethod().getMethod();
-        if (method.getAnnotation(Test.class) != null &&
-                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
-            if (parameters != null) {
-                handleTestParameters(testNGMethod, testCase,
-                        parameters[testNGMethod.getCurrentInvocationCount() % parameters.length]);
-            }
-        }
-
-        citrus.run(testCase, ctx);
+        run(method, createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
     }
 
     /**
@@ -246,18 +230,11 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /**
      * Methods adds optional TestNG parameters as variables to the test case.
      *
-     * @param method the testng method currently executed
+     * @param method the method currently executed
      * @param testCase the constructed Citrus test.
      */
-    protected void handleTestParameters(ITestNGMethod method, TestCase testCase, Object[] parameterValues) {
-        String[] parameterNames = getParameterNames(method);
-
-        if (parameterValues.length != parameterNames.length) {
-            throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length +
-                    " parameter names defined with " + parameterValues.length + " parameter values available");
-        }
-
-        testCase.setParameters(parameterNames, parameterValues);
+    protected void handleTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
+        testCase.setParameters(getParameterNames(method), parameterValues);
     }
 
     /**
@@ -265,10 +242,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param method
      * @return
      */
-    protected String[] getParameterNames(ITestNGMethod method) {
+    protected String[] getParameterNames(Method method) {
         String[] parameterNames;
-        CitrusParameters citrusParameters = method.getConstructorOrMethod().getMethod().getAnnotation(CitrusParameters.class);
-        Parameters testNgParameters = method.getConstructorOrMethod().getMethod().getAnnotation(Parameters.class);
+        CitrusParameters citrusParameters = method.getAnnotation(CitrusParameters.class);
+        Parameters testNgParameters = method.getAnnotation(Parameters.class);
         if (citrusParameters != null) {
             parameterNames = citrusParameters.value();
         } else if (testNgParameters != null) {

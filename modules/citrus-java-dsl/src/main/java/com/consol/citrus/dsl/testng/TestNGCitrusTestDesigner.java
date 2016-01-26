@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.testng;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
@@ -57,57 +58,13 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     /** Test builder delegate */
     private DefaultTestDesigner testDesigner;
 
-    /**
-     * Initialize test case and variables. Must be done with each test run.
-     */
-    public void init() {
-        testDesigner = new DefaultTestDesigner(applicationContext);
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
-    }
-
     @Override
     public void run(final IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
-            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-            init();
-
-            if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                name(citrusTestAnnotation.name());
-            } else {
-                name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            }
-
-            Object[][] parameters = null;
-            if (method.getAnnotation(Test.class) != null &&
-                    StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-                parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                        ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
-            }
-
-            if (parameters != null) {
-                ReflectionUtils.invokeMethod(method, this,
-                        parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
-            } else {
-                ReflectionUtils.invokeMethod(method, this);
-            }
-
             try {
-                if (citrus == null) {
-                    citrus = Citrus.newInstance(applicationContext);
-                }
-
-                TestContext ctx = prepareTestContext(citrus.createTestContext());
-                TestCase testCase = testDesigner.getTestCase();
-
-                if (parameters != null) {
-                    handleTestParameters(testResult.getMethod(), testCase,
-                            parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
-                }
-
-                citrus.run(testCase, ctx);
+                run(method, null, testResult.getMethod().getCurrentInvocationCount());
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -123,10 +80,54 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
-    protected void executeTest(ITestContext testContext) {
-        init();
-        configure();
-        super.executeTest(testContext);
+    protected void run(Method method, TestLoader testLoader, int invocationCount) {
+        if (citrus == null) {
+            citrus = Citrus.newInstance(applicationContext);
+        }
+
+        TestContext ctx = prepareTestContext(citrus.createTestContext());
+
+        testDesigner = new DefaultTestDesigner(applicationContext, ctx);
+        testDesigner.packageName(this.getClass().getPackage().getName());
+
+        if (method.getAnnotation(CitrusTest.class) != null) {
+            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+            if (StringUtils.hasText(citrusTestAnnotation.name())) {
+                testDesigner.name(citrusTestAnnotation.name());
+            } else {
+                testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+            }
+        } else {
+            testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+        }
+
+        Object[][] parameters = null;
+        if (method.getAnnotation(Test.class) != null &&
+                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
+            parameters = (Object[][]) ReflectionUtils.invokeMethod(
+                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+        }
+
+        if (isConfigure(method)) {
+            configure();
+        } else if (parameters != null) {
+            handleTestParameters(method, testDesigner.getTestCase(),
+                    parameters[invocationCount % parameters.length]);
+
+            ReflectionUtils.invokeMethod(method, this,
+                    parameters[invocationCount % parameters.length]);
+        } else {
+            ReflectionUtils.invokeMethod(method, this);
+        }
+
+        citrus.run(testDesigner.getTestCase(), ctx);
+    }
+
+    @Override
+    protected void executeTest() {
+        ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
+        run(ReflectionUtils.findMethod(this.getClass(), "configure"),
+                createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
     }
 
     /**
@@ -135,6 +136,15 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
      * basic test case properties.
      */
     protected void configure() {
+    }
+
+    /**
+     * Checks if the given method is this designer's configure method.
+     * @param method
+     * @return
+     */
+    private boolean isConfigure(Method method) {
+        return method.getDeclaringClass().equals(this.getClass()) && method.getName().equals("configure");
     }
 
     @Override

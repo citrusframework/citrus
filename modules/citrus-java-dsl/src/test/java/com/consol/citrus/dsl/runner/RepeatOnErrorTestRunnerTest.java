@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatOnErrorBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -47,7 +47,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "1");
         Assert.assertNotNull(context.getVariable("k"));
@@ -77,7 +77,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatOnErrorBuilderWithConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -99,7 +99,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "1");
         Assert.assertNotNull(context.getVariable("k"));

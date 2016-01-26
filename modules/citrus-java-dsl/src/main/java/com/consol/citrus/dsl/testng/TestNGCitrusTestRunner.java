@@ -16,17 +16,17 @@
 
 package com.consol.citrus.dsl.testng;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
@@ -57,48 +57,13 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     /** Test builder delegate */
     private DefaultTestRunner testRunner;
 
-    /**
-     * Initialize test case and variables. Must be done with each test run.
-     */
-    public void init() {
-        testRunner = new DefaultTestRunner(applicationContext);
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
-    }
-
     @Override
     public void run(final IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
-            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-            init();
-
-            if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                name(citrusTestAnnotation.name());
-            } else {
-                name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            }
-
-            Object[][] parameters = null;
-            if (method.getAnnotation(Test.class) != null &&
-                    StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-                parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                        ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
-            }
-
             try {
-                start();
-
-                if (parameters != null) {
-                    handleTestParameters(testResult.getMethod(),
-                            parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
-
-                    ReflectionUtils.invokeMethod(method, this,
-                            parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
-                } else {
-                    ReflectionUtils.invokeMethod(method, this);
-                }
+                run(method, null, testResult.getMethod().getCurrentInvocationCount());
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -115,21 +80,64 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
         }
     }
 
-    /**
-     * Methods adds optional TestNG parameters as variables to the test case.
-     *
-     * @param method the testng method currently executed
-     * @param parameterValues
-     */
-    protected void handleTestParameters(ITestNGMethod method, Object[] parameterValues) {
-        String[] parameterNames = getParameterNames(method);
-
-        if (parameterValues.length != parameterNames.length) {
-            throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length +
-                    " parameter names defined with " + parameterValues.length + " parameter values available");
+    @Override
+    protected void run(Method method, TestLoader testLoader, int invocationCount) {
+        if (citrus == null) {
+            citrus = Citrus.newInstance(applicationContext);
         }
 
-        testRunner.parameter(parameterNames, parameterValues);
+        TestContext ctx = prepareTestContext(citrus.createTestContext());
+
+        testRunner = new DefaultTestRunner(applicationContext, ctx);
+        testRunner.packageName(this.getClass().getPackage().getName());
+
+        if (method.getAnnotation(CitrusTest.class) != null) {
+            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+            if (StringUtils.hasText(citrusTestAnnotation.name())) {
+                testRunner.name(citrusTestAnnotation.name());
+            } else {
+                testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+            }
+        }  else {
+            testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+        }
+
+        Object[][] parameters = null;
+        if (method.getAnnotation(Test.class) != null &&
+                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
+            parameters = (Object[][]) ReflectionUtils.invokeMethod(
+                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+        }
+
+        start();
+
+        if (parameters != null) {
+            handleTestParameters(method, testRunner.getTestCase(),
+                    parameters[invocationCount % parameters.length]);
+
+            ReflectionUtils.invokeMethod(method, this,
+                    parameters[invocationCount % parameters.length]);
+        } else {
+            ReflectionUtils.invokeMethod(method, this);
+        }
+    }
+
+    @Override
+    protected void handleTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
+        super.handleTestParameters(method, testCase, parameterValues);
+
+        String[] parameterNames = getParameterNames(method);
+        for (int i = 0; i < parameterNames.length; i++) {
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Initializing test parameter '%s' as variable", parameterNames[i]));
+            }
+            testRunner.getTestContext().setVariable(parameterNames[i], parameterValues[i]);
+        }
+    }
+
+    @Override
+    public TestCase getTestCase() {
+        return testRunner.getTestCase();
     }
 
     @Override
@@ -185,11 +193,6 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     @Override
     public void applyBehavior(com.consol.citrus.dsl.runner.TestBehavior behavior) {
         testRunner.applyBehavior(behavior);
-    }
-
-    @Override
-    public void parameter(String[] parameterNames, Object[] parameterValues) {
-        testRunner.parameter(parameterNames, parameterValues);
     }
 
     @Override

@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testIterateBuilder() {      
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 iterate().index("i")
@@ -41,7 +41,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "4");
 
@@ -60,7 +60,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithAnonymousAction() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 iterate().index("i")
@@ -76,7 +76,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "3");
 
@@ -95,7 +95,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 iterate().startsWith(0)
@@ -110,7 +110,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("i"));
         Assert.assertEquals(context.getVariable("i"), "4");
 

@@ -31,7 +31,7 @@ public class FailTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 fail("This test will fail.");

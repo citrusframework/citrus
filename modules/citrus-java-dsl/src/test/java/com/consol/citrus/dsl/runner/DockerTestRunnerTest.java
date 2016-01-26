@@ -72,7 +72,7 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
         when(dockerClient.inspectContainerCmd("my_container")).thenReturn(inspectCmd);
         when(inspectCmd.exec()).thenReturn(new InspectContainerResponse());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 docker(new BuilderSupport<DockerActionBuilder>() {

@@ -38,7 +38,7 @@ public class JavaTestDesignerTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(4);
         
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 java("com.consol.citrus.dsl.util.JavaTest")
@@ -68,7 +68,7 @@ public class JavaTestDesignerTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 java(EchoAction.class)
@@ -97,7 +97,7 @@ public class JavaTestDesignerTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 java(new EchoAction())

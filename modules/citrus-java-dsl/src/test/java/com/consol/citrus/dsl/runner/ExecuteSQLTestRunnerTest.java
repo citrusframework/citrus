@@ -46,7 +46,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     public void testExecuteSQLBuilderWithStatement() {
         reset(jdbcTemplate);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sql(new BuilderSupport<ExecuteSQLBuilder>() {
@@ -82,7 +82,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     public void testExecuteSQLBuilderWithResource() throws IOException {
         reset(jdbcTemplate);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sql(new BuilderSupport<ExecuteSQLBuilder>() {
@@ -116,7 +116,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteSQLBuilderWithResourcePath() throws IOException {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 sql(new BuilderSupport<ExecuteSQLBuilder>() {

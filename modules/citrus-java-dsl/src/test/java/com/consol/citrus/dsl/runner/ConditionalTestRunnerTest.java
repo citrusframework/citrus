@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testConditionalBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", 5);
@@ -37,7 +37,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("execution"));
         Assert.assertEquals(context.getVariable("execution"), "true");
 
@@ -53,7 +53,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderSkip() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", 0);
@@ -63,7 +63,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNull(context.getVariables().get("execution"));
 
         TestCase test = builder.getTestCase();
@@ -78,7 +78,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", 5);
@@ -93,7 +93,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("execution"));
         Assert.assertEquals(context.getVariable("execution"), "true");
 

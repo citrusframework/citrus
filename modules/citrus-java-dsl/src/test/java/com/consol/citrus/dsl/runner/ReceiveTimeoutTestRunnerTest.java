@@ -62,7 +62,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).when(messageConsumer).receive(any(TestContext.class), eq(250L));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
@@ -91,6 +91,9 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveTimeoutBuilderWithEndpointName() {
+        TestContext context = applicationContext.getBean(TestContext.class);
+        context.setApplicationContext(applicationContextMock);
+
         reset(applicationContextMock, messageEndpoint, messageConsumer);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         doAnswer(new Answer<Message>() {
@@ -101,12 +104,12 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             }
         }).when(messageConsumer).receive(any(TestContext.class), eq(500L));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
         when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
                 receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
@@ -143,7 +146,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             }
         }).when(messageConsumer).receive(any(TestContext.class), eq(250L));
         try {
-            new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
                 @Override
                 public void execute() {
                     receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {

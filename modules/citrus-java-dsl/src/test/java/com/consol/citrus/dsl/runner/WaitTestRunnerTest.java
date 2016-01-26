@@ -46,7 +46,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         final String seconds = "3";
         final String interval = "500";
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 waitFor(new BuilderSupport<WaitActionBuilder>() {

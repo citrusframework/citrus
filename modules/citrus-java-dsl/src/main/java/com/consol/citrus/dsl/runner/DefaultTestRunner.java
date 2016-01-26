@@ -74,11 +74,13 @@ public class DefaultTestRunner implements TestRunner {
     /**
      * Constructor using Spring bean application context.
      * @param applicationContext
+     * @param context
      */
-    public DefaultTestRunner(ApplicationContext applicationContext) {
+    public DefaultTestRunner(ApplicationContext applicationContext, TestContext context) {
         this();
 
         this.applicationContext = applicationContext;
+        this.context = context;
 
         try {
             initialize();
@@ -88,8 +90,6 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     protected void initialize() {
-        createTestContext();
-
         testCase.setTestRunner(true);
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 
@@ -154,18 +154,6 @@ public class DefaultTestRunner implements TestRunner {
         } else {
             context.setVariable(name, value);
             return value;
-        }
-    }
-
-    @Override
-    public void parameter(String[] parameterNames, Object[] parameterValues) {
-        testCase.setParameters(parameterNames, parameterValues);
-
-        for (int i = 0; i < parameterNames.length; i++) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Initializing test parameter '%s' as variable", parameterNames[i]));
-            }
-            context.setVariable(parameterNames[i], parameterValues[i]);
         }
     }
 
@@ -537,15 +525,10 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     /**
-     * Creates new test context from Spring bean application context.
+     * Gets the test context.
      * @return
      */
-    protected TestContext createTestContext() {
-        if (context == null) {
-            context = applicationContext.getBean(TestContext.class);
-            context.setApplicationContext(applicationContext);
-        }
-
+    public TestContext getTestContext() {
         return context;
     }
 
@@ -557,7 +540,8 @@ public class DefaultTestRunner implements TestRunner {
         this.applicationContext = applicationContext;
     }
 
-    protected TestCase getTestCase() {
+    @Override
+    public TestCase getTestCase() {
         return testCase;
     }
 

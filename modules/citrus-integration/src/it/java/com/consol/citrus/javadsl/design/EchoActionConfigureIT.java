@@ -1,7 +1,6 @@
 package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 /**
@@ -15,7 +14,7 @@ public class EchoActionConfigureIT extends TestNGCitrusTestDesigner {
     }
 
     @Test
-    public void echoAction(ITestContext testContext) {
-        executeTest(testContext);
+    public void echoAction() {
+        executeTest();
     }
 }

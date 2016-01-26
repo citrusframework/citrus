@@ -31,7 +31,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -53,7 +53,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -76,7 +76,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -103,7 +103,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -130,7 +130,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = Mockito.mock(BuildListener.class);
         
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")

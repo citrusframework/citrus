@@ -30,7 +30,7 @@ import com.consol.citrus.dsl.endpoint.Executable;
 public class ExecutableTestDesignerComponent extends TestDesignerComponent implements Executable {
     @Override
     public void execute() {
-        execute(createTestContext());
+        execute(getTestContext());
     }
 
     /**
@@ -48,10 +48,15 @@ public class ExecutableTestDesignerComponent extends TestDesignerComponent imple
      * instance themselves in case Spring application context is not present.
      * @return
      */
-    protected TestContext createTestContext() {
-        TestContext context = getApplicationContext().getBean(TestContext.class);
-        context.setApplicationContext(getApplicationContext());
+    @Override
+    public TestContext getTestContext() {
+        if (super.getTestContext() == null) {
+            TestContext context = getApplicationContext().getBean(TestContext.class);
+            context.setApplicationContext(getApplicationContext());
 
-        return context;
+            return context;
+        } else {
+            return super.getTestContext();
+        }
     }
 }

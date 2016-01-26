@@ -17,7 +17,6 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import org.testng.ITestContext;
 import org.testng.annotations.*;
 
 /**
@@ -29,13 +28,13 @@ public class DataProviderIT extends AbstractTestNGCitrusTest {
     @CitrusXmlTest
     @CitrusParameters( "message" )
     @Test(dataProvider = "citrusDataProvider")
-    public void DataProviderIT(ITestContext testContext) {
+    public void DataProviderIT(String message) {
     }
 
     @Parameters( "message" )
     @Test(dataProvider = "citrusDataProvider")
-    public void dataProviderIT(ITestContext testContext) {
-        executeTest(testContext);
+    public void dataProviderIT(String message) {
+        executeTest();
     }
     
     @DataProvider

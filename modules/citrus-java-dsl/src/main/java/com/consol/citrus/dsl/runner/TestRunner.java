@@ -16,8 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.Template;
@@ -36,6 +35,12 @@ import java.util.Date;
  * @since 2.3
  */
 public interface TestRunner extends ApplicationContextAware {
+
+    /**
+     * Builds the test case.
+     * @return
+     */
+    TestCase getTestCase();
 
     /**
      * Set custom test case name.
@@ -458,11 +463,4 @@ public interface TestRunner extends ApplicationContextAware {
      * @return
      */
     FinallySequenceBuilder doFinally();
-
-    /**
-     * Add test parameters to the test.
-     * @param parameterNames
-     * @param parameterValues
-     */
-    void parameter(String[] parameterNames, Object[] parameterValues);
 }

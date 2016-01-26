@@ -30,7 +30,7 @@ public class SleepTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSleepBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sleep(0.5);

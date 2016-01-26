@@ -33,7 +33,7 @@ import static org.testng.Assert.assertTrue;
 public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSequenceBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -58,7 +58,7 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSequenceBuilderWithAnonymousAction() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("var", "foo");

@@ -51,7 +51,7 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateCamelRouteBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 camel().context(camelContext).create(new RouteBuilder(camelContext) {
@@ -105,7 +105,7 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 camel().context(camelContext).start("route_1", "route_2");
@@ -144,7 +144,7 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Started);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Started);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 camel().context(camelContext).stop("route_1", "route_2");
@@ -186,7 +186,7 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
         Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 camel().context(camelContext).remove("route_1", "route_2");
@@ -208,7 +208,7 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testDefaultCamelContextBuilder() {
         CamelContext defaultContext = applicationContext.getBean(CamelContext.class);
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 camel().create(new RouteBuilder() {
@@ -242,7 +242,7 @@ public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCamelControlBusBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 camel().controlBus()

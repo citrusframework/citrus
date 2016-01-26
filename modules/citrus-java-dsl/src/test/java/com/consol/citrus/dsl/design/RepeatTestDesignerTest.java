@@ -27,7 +27,7 @@ import static org.testng.Assert.assertEquals;
 public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatUntilTrueBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 repeat(echo("${var}"), sleep(3000), echo("${var}"))
@@ -54,7 +54,7 @@ public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatUntilTrueBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 repeat()

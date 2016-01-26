@@ -44,7 +44,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
@@ -87,7 +87,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
                 "TEST_STMT_3\n" +
                 "/").getBytes()));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
@@ -126,7 +126,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithSQLResourcePath() throws IOException {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
@@ -161,7 +161,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 plsql(new BuilderSupport<ExecutePLSQLBuilder>() {

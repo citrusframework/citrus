@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testIterateBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 iterate(createVariable("index", "${i}"))
@@ -58,7 +58,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 iterate(createVariable("index", "${i}"))
@@ -86,7 +86,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             /** Logger */
             private Logger log = LoggerFactory.getLogger(IterateTestDesignerTest.class);
 

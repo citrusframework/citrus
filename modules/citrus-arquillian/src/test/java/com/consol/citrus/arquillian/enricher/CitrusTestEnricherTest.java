@@ -59,7 +59,6 @@ public class CitrusTestEnricherTest {
         Assert.assertEquals(testInstance.getSomeEndpoint().getName(), "someEndpoint");
         Assert.assertNotNull(testInstance.getJmsSyncEndpoint());
         Assert.assertEquals(testInstance.getJmsSyncEndpoint().getName(), "jmsSyncEndpoint");
-
     }
 
     @Test
@@ -102,6 +101,5 @@ public class CitrusTestEnricherTest {
 
         resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "otherMethod"));
         Assert.assertEquals(resolvedParameter.length, 0L);
-
     }
 }

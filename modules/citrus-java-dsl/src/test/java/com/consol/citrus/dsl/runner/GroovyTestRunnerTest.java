@@ -41,7 +41,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     public void testGroovyBuilderWithResource() throws IOException {
         reset(scriptResource);
         when(scriptResource.getInputStream()).thenReturn(new ByteArrayInputStream("println 'Wow groovy!'".getBytes()));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 groovy(new BuilderSupport<GroovyActionBuilder>() {
@@ -67,7 +67,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithScript() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 groovy(new BuilderSupport<GroovyActionBuilder>() {
@@ -91,7 +91,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 groovy(new BuilderSupport<GroovyActionBuilder>() {
@@ -104,7 +104,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("message"));
         Assert.assertEquals(context.getVariable("message"), "Groovy!");
 
@@ -119,7 +119,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplatePath() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 groovy(new BuilderSupport<GroovyActionBuilder>() {
@@ -132,7 +132,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("message"));
         Assert.assertEquals(context.getVariable("message"), "Groovy!");
 

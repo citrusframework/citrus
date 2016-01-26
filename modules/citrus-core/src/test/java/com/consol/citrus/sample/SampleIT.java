@@ -29,8 +29,8 @@ public class SampleIT extends AbstractTestNGCitrusTest {
     }
     
     @Test
-    public void sampleIT(ITestContext testContext) {
-        executeTest(testContext);
+    public void sampleIT() {
+        executeTest();
     }
     
     @Override

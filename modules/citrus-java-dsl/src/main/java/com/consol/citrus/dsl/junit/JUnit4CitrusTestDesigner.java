@@ -16,17 +16,12 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestBehavior;
-import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
@@ -39,6 +34,7 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
@@ -54,31 +50,26 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     /** Test builder delegate */
     private DefaultTestDesigner testDesigner;
 
-    /**
-     * Initialize test case and variables. Must be done with each test run.
-     */
-    public void init() {
-        testDesigner = new DefaultTestDesigner(applicationContext);
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
-    }
-
     @Override
     protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
-        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
-            init();
-            name(frameworkMethod.getTestName());
-            packageName(frameworkMethod.getPackageName());
-
-            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
-
+        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null || isConfigure(frameworkMethod.getMethod())) {
             if (citrus == null) {
                 citrus = Citrus.newInstance(applicationContext);
             }
 
             TestContext ctx = prepareTestContext(citrus.createTestContext());
-            TestCase testCase = testDesigner.getTestCase();
-            citrus.run(testCase, ctx);
+
+            testDesigner = new DefaultTestDesigner(applicationContext, ctx);
+            testDesigner.name(frameworkMethod.getTestName());
+            testDesigner.packageName(frameworkMethod.getPackageName());
+
+            if (isConfigure(frameworkMethod.getMethod())) {
+                configure();
+            } else {
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
+            }
+
+            citrus.run(testDesigner.getTestCase(), ctx);
         } else {
             super.run(frameworkMethod);
         }
@@ -86,9 +77,8 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
 
     @Override
     protected void executeTest() {
-        init();
-        configure();
-        super.executeTest();
+        run(new CitrusJUnit4Runner.CitrusFrameworkMethod(ReflectionUtils.findMethod(this.getClass(), "configure"),
+                this.getClass().getSimpleName(), this.getClass().getPackage().getName()));
     }
 
     /**
@@ -97,6 +87,15 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
      * basic test case properties.
      */
     protected void configure() {
+    }
+
+    /**
+     * Checks if the given method is this designer's configure method.
+     * @param method
+     * @return
+     */
+    private boolean isConfigure(Method method) {
+        return method.getDeclaringClass().equals(this.getClass()) && method.getName().equals("configure");
     }
 
     @Override

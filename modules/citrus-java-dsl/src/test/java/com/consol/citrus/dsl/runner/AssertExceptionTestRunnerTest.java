@@ -31,7 +31,7 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertDefaultExceptionBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 assertException().when(fail("Error!"));
@@ -52,7 +52,7 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 assertException().exception(CitrusRuntimeException.class)
@@ -77,7 +77,7 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 assertException().exception(CitrusRuntimeException.class)

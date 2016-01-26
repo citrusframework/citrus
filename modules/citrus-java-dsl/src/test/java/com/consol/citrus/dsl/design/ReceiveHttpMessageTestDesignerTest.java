@@ -50,7 +50,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestProperties() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 receive(httpClient)
@@ -88,7 +88,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpResponseProperties() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 receive(httpClient)
@@ -129,7 +129,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
             @Override
             public void configure() {
                 receive("httpClient")

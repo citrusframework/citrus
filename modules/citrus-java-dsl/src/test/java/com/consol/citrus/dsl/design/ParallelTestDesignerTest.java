@@ -27,7 +27,7 @@ import static org.testng.Assert.assertEquals;
 public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testParallelBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 parallel(echo("${var}"), 
@@ -50,7 +50,7 @@ public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testParallelBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 parallel()

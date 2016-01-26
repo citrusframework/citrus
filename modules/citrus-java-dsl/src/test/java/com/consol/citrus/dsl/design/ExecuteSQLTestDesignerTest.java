@@ -41,7 +41,7 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLBuilderWithStatement() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -67,7 +67,7 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteSQLBuilderWithResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sql(dataSource)

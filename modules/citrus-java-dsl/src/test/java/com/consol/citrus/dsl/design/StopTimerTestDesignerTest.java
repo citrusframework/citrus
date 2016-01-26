@@ -32,7 +32,7 @@ public class StopTimerTestDesignerTest extends AbstractTestNGUnitTest {
     public void testStopTimerBuilder() {
         final String timerId = "timer1";
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 stopTimer(timerId);

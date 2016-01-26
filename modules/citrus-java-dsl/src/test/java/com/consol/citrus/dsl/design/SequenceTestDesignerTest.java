@@ -33,7 +33,7 @@ import static org.testng.Assert.assertTrue;
 public class SequenceTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSequenceBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sequential(echo("${var}"), sleep(5000L));
@@ -54,7 +54,7 @@ public class SequenceTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSequenceBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sequential().actions(echo("${var}"), sleep(5000L));
@@ -75,7 +75,7 @@ public class SequenceTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSequenceBuilderWithAnonymousActionNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sequential(
@@ -113,7 +113,7 @@ public class SequenceTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSequenceBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 sequential().actions(

@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class LoadPropertiesTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testLoadBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 variable("checked", true);
@@ -38,7 +38,7 @@ public class LoadPropertiesTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
-        TestContext context = builder.createTestContext();
+        TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("welcomeText"));
         Assert.assertEquals(context.getVariable("welcomeText"), "Welcome with property file!");
 

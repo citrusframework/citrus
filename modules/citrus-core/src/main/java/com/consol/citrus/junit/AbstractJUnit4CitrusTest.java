@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides 
@@ -64,14 +65,8 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * Execute the test case.
      */
     protected void executeTest() {
-        if (citrus == null) {
-            citrus = Citrus.newInstance(applicationContext);
-        }
-
-        TestContext ctx = prepareTestContext(citrus.createTestContext());
-        TestCase testCase = getTestCase();
-
-        citrus.run(testCase, ctx);
+        run(new CitrusJUnit4Runner.CitrusFrameworkMethod(ReflectionUtils.findMethod(this.getClass(), "executeTest"),
+                this.getClass().getSimpleName(), this.getClass().getPackage().getName()));
     }
 
     /**

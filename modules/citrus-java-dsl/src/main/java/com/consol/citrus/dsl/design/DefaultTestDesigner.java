@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.util.PositionHandle;
@@ -55,6 +56,9 @@ public class DefaultTestDesigner implements TestDesigner {
     /** This builders test case */
     private final TestCase testCase = new TestCase();
 
+    /** This runners test context */
+    private TestContext context;
+
     /** The test variables to set before execution */
     private Map<String, Object> variables= new LinkedHashMap<>();
 
@@ -72,9 +76,12 @@ public class DefaultTestDesigner implements TestDesigner {
     /**
      * Constructor using Spring bean application context.
      * @param applicationContext
+     * @param context
      */
-    public DefaultTestDesigner(ApplicationContext applicationContext) {
+    public DefaultTestDesigner(ApplicationContext applicationContext, TestContext context) {
         this();
+
+        this.context = context;
 
         try {
             if (applicationContext != null) {
@@ -782,6 +789,14 @@ public class DefaultTestDesigner implements TestDesigner {
      */
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Gets the test context.
+     * @return
+     */
+    public TestContext getTestContext() {
+        return context;
     }
 
 }

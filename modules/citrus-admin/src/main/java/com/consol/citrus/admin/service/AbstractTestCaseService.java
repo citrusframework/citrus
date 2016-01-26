@@ -165,7 +165,6 @@ public abstract class AbstractTestCaseService implements TestCaseService {
     }
 
     private TestcaseDefinition getJavaDslTest(TestNGCitrusTestDesigner builder, Method method) {
-        builder.init();
         ReflectionUtils.invokeMethod(method, builder);
 
         TestCase testCase = builder.getTestCase();

@@ -39,7 +39,7 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeJmsQueuesBuilderWithQueueNames() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -68,7 +68,7 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeJmsQueuesBuilderWithQueues() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)

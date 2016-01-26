@@ -27,7 +27,7 @@ public class StopTimeTestDesignerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testStopTimeBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 stopTime("TestId");
