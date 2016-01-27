@@ -19,6 +19,7 @@ package com.consol.citrus.junit;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import org.junit.Test;
 import org.junit.internal.runners.statements.InvokeMethod;
 import org.junit.runners.model.*;
 import org.slf4j.Logger;
@@ -115,6 +116,15 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
         }
 
         return interceptedMethods;
+    }
+
+    @Override
+    protected void validateTestMethods(List<Throwable> errors) {
+        List<FrameworkMethod> methods = getTestClass().getAnnotatedMethods(Test.class);
+
+        for (FrameworkMethod eachTestMethod : methods) {
+            eachTestMethod.validatePublicVoid(false, errors);
+        }
     }
 
     /**

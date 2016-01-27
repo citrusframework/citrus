@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.javadsl.design;
+package com.consol.citrus.junit;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import org.testng.annotations.*;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class TestContextInjectionJavaIT extends TestNGCitrusTestDesigner {
+public class TestContextInjectionJUnit4IT extends JUnit4CitrusTestDesigner {
 
-    @Test @Parameters("context")
+    @Test
     @CitrusTest
-    public void contextInjection(@Optional @CitrusResource TestContext context) {
+    public void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
         echo("${message}");

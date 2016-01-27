@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.javadsl.design;
+package com.consol.citrus.junit;
 
-import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import org.testng.annotations.*;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
+import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2.5
  */
-public class TestContextInjectionJavaIT extends TestNGCitrusTestDesigner {
+public class EchoActionJUnit4RunnerIT extends JUnit4CitrusTestRunner {
 
-    @Test @Parameters("context")
+    @Test
     @CitrusTest
-    public void contextInjection(@Optional @CitrusResource TestContext context) {
-        context.setVariable("message", "Injection worked!");
+    public void echoJavaTest() {
+        variable("time", "citrus:currentDate()");
 
-        echo("${message}");
+        echo("Hello Citrus!");
+
+        echo("CurrentTime is: ${time}");
     }
 }
