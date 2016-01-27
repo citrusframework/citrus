@@ -18,29 +18,24 @@ package com.consol.citrus.dsl.testng;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 import org.testng.*;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -49,65 +44,38 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implements TestDesigner {
+public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDesigner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
-    private DefaultTestDesigner testDesigner;
+    private TestDesigner testDesigner;
 
     @Override
-    public void run(final IHookCallBack callBack, ITestResult testResult) {
-        Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
+    protected TestDesigner createTestDesigner(Method method, TestContext context) {
+        testDesigner = super.createTestDesigner(method, context);
+        return testDesigner;
+    }
 
-        if (method != null && method.getAnnotation(CitrusTest.class) != null) {
-            try {
-                run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
-            } catch (RuntimeException e) {
-                testResult.setThrowable(e);
-                testResult.setStatus(ITestResult.FAILURE);
-            } catch (Exception e) {
-                testResult.setThrowable(e);
-                testResult.setStatus(ITestResult.FAILURE);
-            }
-
-            super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
+    @Override
+    protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
+        if (isConfigure(method)) {
+            configure();
+            citrus.run(testCase, context);
         } else {
-            super.run(callBack, testResult);
+            super.invokeTestMethod(testResult, method, testCase, context, invocationCount);
         }
     }
 
     @Override
-    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
-        if (citrus == null) {
-            citrus = Citrus.newInstance(applicationContext);
-        }
+    protected final boolean isDesignerMethod(Method method) {
+        return true;
+    }
 
-        TestContext ctx = prepareTestContext(citrus.createTestContext());
-
-        testDesigner = new DefaultTestDesigner(applicationContext, ctx);
-        testDesigner.packageName(this.getClass().getPackage().getName());
-
-        if (method.getAnnotation(CitrusTest.class) != null) {
-            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-            if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                testDesigner.name(citrusTestAnnotation.name());
-            } else {
-                testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            }
-        } else {
-            testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-        }
-
-        if (isConfigure(method)) {
-            configure();
-        } else {
-            ReflectionUtils.invokeMethod(method, this,
-                    resolveParameter(testResult, method, testDesigner.getTestCase(), ctx, invocationCount));
-        }
-
-        citrus.run(testDesigner.getTestCase(), ctx);
+    @Override
+    protected final boolean isRunnerMethod(Method method) {
+        return false;
     }
 
     @Override
@@ -538,7 +506,11 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
      * @return
      */
     protected Map<String, Object> getVariables() {
-        return testDesigner.getVariables();
+        if (testDesigner instanceof DefaultTestDesigner) {
+            return ((DefaultTestDesigner) testDesigner).getVariables();
+        } else {
+            return testDesigner.getTestCase().getVariableDefinitions();
+        }
     }
 
 }

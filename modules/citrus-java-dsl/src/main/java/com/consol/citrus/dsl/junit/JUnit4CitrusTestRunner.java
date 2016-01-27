@@ -18,22 +18,21 @@ package com.consol.citrus.dsl.junit;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
-import org.springframework.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -43,34 +42,28 @@ import java.util.Date;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements TestRunner {
+public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunner {
+
+    /** Logger */
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
-    private DefaultTestRunner testRunner;
+    private TestRunner testRunner;
 
     @Override
-    protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
-        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
-            if (citrus == null) {
-                citrus = Citrus.newInstance(applicationContext);
-            }
+    protected TestRunner createTestRunner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
+        testRunner = super.createTestRunner(frameworkMethod, context);
+        return testRunner;
+    }
 
-            TestContext ctx = prepareTestContext(citrus.createTestContext());
+    @Override
+    protected final boolean isDesignerMethod(Method method) {
+        return false;
+    }
 
-            testRunner = new DefaultTestRunner(applicationContext, ctx);
-            testRunner.name(frameworkMethod.getTestName());
-            testRunner.packageName(frameworkMethod.getPackageName());
-
-            try {
-                start();
-                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
-                        resolveParameter(frameworkMethod.getMethod(), testRunner.getTestCase(), ctx));
-            } finally {
-                stop();
-            }
-        } else {
-            super.run(frameworkMethod);
-        }
+    @Override
+    protected final boolean isRunnerMethod(Method method) {
+        return true;
     }
 
     @Override

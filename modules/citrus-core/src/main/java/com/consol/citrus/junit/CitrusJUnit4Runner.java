@@ -137,6 +137,8 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
         private final String testName;
         private final String packageName;
 
+        private Map<String, Object> attributes = new HashMap<>();
+
         /**
          * Returns a new {@code FrameworkMethod} for {@code method}
          *
@@ -162,6 +164,24 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
          */
         public String getPackageName() {
             return packageName;
+        }
+
+        /**
+         * Adds attribute value to framework method.
+         * @param key
+         * @param value
+         */
+        public void setAttribute(String key, Object value) {
+            attributes.put(key, value);
+        }
+
+        /**
+         * Gets attribute value from framework method.
+         * @param key
+         * @return
+         */
+        public Object getAttribute(String key) {
+            return attributes.get(key);
         }
     }
 

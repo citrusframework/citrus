@@ -18,26 +18,18 @@ package com.consol.citrus.dsl.testng;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
-import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
-import org.testng.IHookCallBack;
-import org.testng.ITestResult;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -49,64 +41,28 @@ import java.util.Date;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements TestRunner {
+public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
-    private DefaultTestRunner testRunner;
+    private TestRunner testRunner;
 
     @Override
-    public void run(final IHookCallBack callBack, ITestResult testResult) {
-        Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
-
-        if (method != null && method.getAnnotation(CitrusTest.class) != null) {
-            try {
-                run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
-            } catch (RuntimeException e) {
-                testResult.setThrowable(e);
-                testResult.setStatus(ITestResult.FAILURE);
-            } catch (Exception e) {
-                testResult.setThrowable(e);
-                testResult.setStatus(ITestResult.FAILURE);
-            } finally {
-                testRunner.stop();
-            }
-
-            super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
-        } else {
-            super.run(callBack, testResult);
-        }
+    protected TestRunner createTestRunner(Method method, TestContext context) {
+        testRunner = super.createTestRunner(method, context);
+        return testRunner;
     }
 
     @Override
-    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
-        if (citrus == null) {
-            citrus = Citrus.newInstance(applicationContext);
-        }
+    protected final boolean isDesignerMethod(Method method) {
+        return false;
+    }
 
-        TestContext ctx = prepareTestContext(citrus.createTestContext());
-
-        testRunner = new DefaultTestRunner(applicationContext, ctx);
-        testRunner.packageName(this.getClass().getPackage().getName());
-
-        if (method.getAnnotation(CitrusTest.class) != null) {
-            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-            if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                testRunner.name(citrusTestAnnotation.name());
-            } else {
-                testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            }
-        }  else {
-            testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-        }
-
-        Object[] params = resolveParameter(testResult, method, testRunner.getTestCase(), ctx, invocationCount);
-
-        testRunner.start();
-
-        ReflectionUtils.invokeMethod(method, this, params);
+    @Override
+    protected final boolean isRunnerMethod(Method method) {
+        return true;
     }
 
     @Override

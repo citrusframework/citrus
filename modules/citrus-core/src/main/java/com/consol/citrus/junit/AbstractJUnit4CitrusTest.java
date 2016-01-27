@@ -32,7 +32,6 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 /**
  * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides 
@@ -70,20 +69,20 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * Resolves method arguments supporting TestNG data provider parameters as well as
      * {@link CitrusResource} annotated methods.
      *
-     * @param method
+     * @param frameworkMethod
      * @param testCase
      * @param context
      * @return
      */
-    protected Object[] resolveParameter(Method method, TestCase testCase, TestContext context) {
-        Object[] values = new Object[method.getParameterTypes().length];
-        Class<?>[] parameterTypes = method.getParameterTypes();
+    protected Object[] resolveParameter(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
+        Object[] values = new Object[frameworkMethod.getMethod().getParameterTypes().length];
+        Class<?>[] parameterTypes = frameworkMethod.getMethod().getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
-            final Annotation[] parameterAnnotations = method.getParameterAnnotations()[i];
+            final Annotation[] parameterAnnotations = frameworkMethod.getMethod().getParameterAnnotations()[i];
             Class<?> parameterType = parameterTypes[i];
             for (Annotation annotation : parameterAnnotations) {
                 if (annotation instanceof CitrusResource) {
-                    values[i] = resolveAnnotatedResource(annotation, parameterType, context);
+                    values[i] = resolveAnnotatedResource(frameworkMethod, parameterType, context);
                 }
             }
         }
@@ -94,11 +93,11 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     /**
      * Resolves value for annotated method parameter.
      *
-     * @param annotation
+     * @param frameworkMethod
      * @param parameterType
      * @return
      */
-    protected Object resolveAnnotatedResource(Annotation annotation, Class<?> parameterType, TestContext context) {
+    protected Object resolveAnnotatedResource(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, Class<?> parameterType, TestContext context) {
         if (TestContext.class.isAssignableFrom(parameterType)) {
             return context;
         } else {

@@ -18,17 +18,17 @@ package com.consol.citrus.dsl.junit;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 
@@ -45,35 +45,38 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implements TestDesigner {
+public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDesigner {
+
+    /** Logger */
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
-    private DefaultTestDesigner testDesigner;
+    private TestDesigner testDesigner;
 
     @Override
-    protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
-        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null || isConfigure(frameworkMethod.getMethod())) {
-            if (citrus == null) {
-                citrus = Citrus.newInstance(applicationContext);
-            }
+    protected TestDesigner createTestDesigner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
+        testDesigner = super.createTestDesigner(frameworkMethod, context);
+        return testDesigner;
+    }
 
-            TestContext ctx = prepareTestContext(citrus.createTestContext());
-
-            testDesigner = new DefaultTestDesigner(applicationContext, ctx);
-            testDesigner.name(frameworkMethod.getTestName());
-            testDesigner.packageName(frameworkMethod.getPackageName());
-
-            if (isConfigure(frameworkMethod.getMethod())) {
-                configure();
-            } else {
-                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
-                        resolveParameter(frameworkMethod.getMethod(), testDesigner.getTestCase(), ctx));
-            }
-
-            citrus.run(testDesigner.getTestCase(), ctx);
+    @Override
+    protected void invokeTestMethod(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
+        if (isConfigure(frameworkMethod.getMethod())) {
+            configure();
+            citrus.run(testCase, context);
         } else {
-            super.run(frameworkMethod);
+            super.invokeTestMethod(frameworkMethod, testCase, context);
         }
+    }
+
+    @Override
+    protected final boolean isDesignerMethod(Method method) {
+        return true;
+    }
+
+    @Override
+    protected final boolean isRunnerMethod(Method method) {
+        return false;
     }
 
     @Override
@@ -504,7 +507,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
      * @return
      */
     protected Map<String, Object> getVariables() {
-        return testDesigner.getVariables();
+        if (testDesigner instanceof DefaultTestDesigner) {
+            return ((DefaultTestDesigner) testDesigner).getVariables();
+        } else {
+            return testDesigner.getTestCase().getVariableDefinitions();
+        }
     }
 
 }

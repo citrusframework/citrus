@@ -139,7 +139,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 }
             }
 
-            if (parameterType.equals(ITestContext.class)) {
+            if (parameterType.equals(ITestResult.class)) {
+                values[i] = testResult;
+            } else if (parameterType.equals(ITestContext.class)) {
                 values[i] = testResult.getTestContext();
             }
         }
