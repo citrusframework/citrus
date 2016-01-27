@@ -66,7 +66,8 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
             if (isConfigure(frameworkMethod.getMethod())) {
                 configure();
             } else {
-                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
+                        resolveParameter(frameworkMethod.getMethod(), testDesigner.getTestCase(), ctx));
             }
 
             citrus.run(testDesigner.getTestCase(), ctx);

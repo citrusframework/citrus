@@ -63,7 +63,8 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
 
             try {
                 start();
-                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
+                        resolveParameter(frameworkMethod.getMethod(), testRunner.getTestCase(), ctx));
             } finally {
                 stop();
             }

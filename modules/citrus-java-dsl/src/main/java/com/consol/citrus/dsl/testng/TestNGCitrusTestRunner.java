@@ -36,8 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import org.testng.*;
-import org.testng.annotations.Test;
+import org.testng.IHookCallBack;
+import org.testng.ITestResult;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -63,7 +63,7 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
 
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
             try {
-                run(method, null, testResult.getMethod().getCurrentInvocationCount());
+                run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -71,7 +71,7 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
             } finally {
-                stop();
+                testRunner.stop();
             }
 
             super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
@@ -81,7 +81,7 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
-    protected void run(Method method, TestLoader testLoader, int invocationCount) {
+    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
         if (citrus == null) {
             citrus = Citrus.newInstance(applicationContext);
         }
@@ -102,37 +102,11 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
             testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
         }
 
-        Object[][] parameters = null;
-        if (method.getAnnotation(Test.class) != null &&
-                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-            parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
-        }
+        Object[] params = resolveParameter(testResult, method, testRunner.getTestCase(), ctx, invocationCount);
 
-        start();
+        testRunner.start();
 
-        if (parameters != null) {
-            handleTestParameters(method, testRunner.getTestCase(),
-                    parameters[invocationCount % parameters.length]);
-
-            ReflectionUtils.invokeMethod(method, this,
-                    parameters[invocationCount % parameters.length]);
-        } else {
-            ReflectionUtils.invokeMethod(method, this);
-        }
-    }
-
-    @Override
-    protected void handleTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
-        super.handleTestParameters(method, testCase, parameterValues);
-
-        String[] parameterNames = getParameterNames(method);
-        for (int i = 0; i < parameterNames.length; i++) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Initializing test parameter '%s' as variable", parameterNames[i]));
-            }
-            testRunner.getTestContext().setVariable(parameterNames[i], parameterValues[i]);
-        }
+        ReflectionUtils.invokeMethod(method, this, params);
     }
 
     @Override

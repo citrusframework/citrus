@@ -18,6 +18,7 @@ package com.consol.citrus.testng;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.XmlTestLoader;
@@ -36,6 +37,7 @@ import org.testng.*;
 import org.testng.annotations.*;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -64,7 +66,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
-                    run(method, methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size()), testResult.getMethod().getCurrentInvocationCount());
+                    run(testResult, method, methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size()),
+                            testResult.getMethod().getCurrentInvocationCount());
                 } catch (RuntimeException e) {
                     testResult.setThrowable(e);
                     testResult.setStatus(ITestResult.FAILURE);
@@ -82,11 +85,12 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
     /**
      * Run method prepares and executes test case.
+     * @param testResult
      * @param method
      * @param testLoader
      * @param invocationCount
      */
-    protected void run(Method method, TestLoader testLoader, int invocationCount) {
+    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
         if (citrus == null) {
             citrus = Citrus.newInstance(applicationContext);
         }
@@ -94,17 +98,68 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         TestContext ctx = prepareTestContext(citrus.createTestContext());
         TestCase testCase = testLoader.load();
 
+        resolveParameter(testResult, method, testCase, ctx, invocationCount);
+
+        citrus.run(testCase, ctx);
+    }
+
+    /**
+     * Resolves method arguments supporting TestNG data provider parameters as well as
+     * {@link CitrusResource} annotated methods.
+     *
+     * @param testResult
+     * @param method
+     * @param testCase
+     * @param context
+     * @param invocationCount
+     * @return
+     */
+    protected Object[] resolveParameter(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
         if (method.getAnnotation(Test.class) != null &&
                 StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+            Method dataProvider = ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider());
+            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(dataProvider, this,
+                    resolveParameter(testResult, dataProvider, testCase, context, -1));
             if (parameters != null) {
-                handleTestParameters(method, testCase,
-                        parameters[invocationCount % parameters.length]);
+                Object[] dataProviderParams = parameters[invocationCount % parameters.length];
+                injectTestParameters(method, testCase, dataProviderParams);
+                return dataProviderParams;
             }
         }
 
-        citrus.run(testCase, ctx);
+        Object[] values = new Object[method.getParameterTypes().length];
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            final Annotation[] parameterAnnotations = method.getParameterAnnotations()[i];
+            Class<?> parameterType = parameterTypes[i];
+            for (Annotation annotation : parameterAnnotations) {
+                if (annotation instanceof CitrusResource) {
+                    values[i] = resolveAnnotatedResource(testResult, parameterType, context);
+                    continue;
+                }
+            }
+
+            if (parameterType.equals(ITestContext.class)) {
+                values[i] = testResult.getTestContext();
+            }
+        }
+
+        return values;
+    }
+
+    /**
+     * Resolves value for annotated method parameter.
+     *
+     * @param testResult
+     * @param parameterType
+     * @return
+     */
+    protected Object resolveAnnotatedResource(ITestResult testResult, Class<?> parameterType, TestContext context) {
+        if (TestContext.class.isAssignableFrom(parameterType)) {
+            return context;
+        } else {
+            throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + parameterType);
+        }
     }
 
     /**
@@ -192,7 +247,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     protected void executeTest() {
         ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
         Method method = testNGMethod.getConstructorOrMethod().getMethod();
-        run(method, createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
+        run(Reporter.getCurrentTestResult(), method, createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
     }
 
     /**
@@ -233,7 +288,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param method the method currently executed
      * @param testCase the constructed Citrus test.
      */
-    protected void handleTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
+    protected void injectTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
         testCase.setParameters(getParameterNames(method), parameterValues);
     }
 

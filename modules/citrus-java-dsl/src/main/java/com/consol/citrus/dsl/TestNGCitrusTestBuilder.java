@@ -36,7 +36,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.*;
-import org.testng.annotations.Test;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
@@ -65,7 +64,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
             try {
-                run(method, null, testResult.getMethod().getCurrentInvocationCount());
+                run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -81,7 +80,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     }
 
     @Override
-    protected void run(Method method, TestLoader testLoader, int invocationCount) {
+    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
         if (citrus == null) {
             citrus = Citrus.newInstance(applicationContext);
         }
@@ -102,22 +101,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
             testBuilder.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
         }
 
-        Object[][] parameters = null;
-        if (method.getAnnotation(Test.class) != null &&
-                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-            parameters = (Object[][]) ReflectionUtils.invokeMethod(
-                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
-        }
-
-        if (parameters != null) {
-            handleTestParameters(method, testBuilder.build(),
-                    parameters[invocationCount % parameters.length]);
-
-            ReflectionUtils.invokeMethod(method, this,
-                    parameters[invocationCount % parameters.length]);
-        } else {
-            ReflectionUtils.invokeMethod(method, this);
-        }
+        ReflectionUtils.invokeMethod(method, this, resolveParameter(testResult, method, testBuilder.build(), ctx, invocationCount));
 
         citrus.run(testBuilder.build(), ctx);
     }
@@ -125,7 +109,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     @Override
     protected void executeTest() {
         ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
-        run(ReflectionUtils.findMethod(this.getClass(), "configure"),
+        run(Reporter.getCurrentTestResult(), ReflectionUtils.findMethod(this.getClass(), "configure"),
                 createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
     }
 
