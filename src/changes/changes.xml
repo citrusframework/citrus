@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="2.5" date="25.01.2015" description="2.5 release">
+    <release version="2.5" date="28.01.2015" description="2.5 release">
         <action dev="christophd" type="add">
           CITRUS-37 x-www-form-urlencoded message validator
         </action>

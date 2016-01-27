@@ -77,7 +77,7 @@ script with ANT (ant -p).
 Licensing
 ---------
   
-Copyright 2006-2014 ConSol* Software GmbH.
+Copyright 2006-2016 ConSol* Software GmbH.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

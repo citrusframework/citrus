@@ -39,6 +39,7 @@
         <include>com.consol.citrus.model:citrus-model-camel</include>
         <include>com.consol.citrus.model:citrus-model-docker</include>
         <include>com.consol.citrus.model:citrus-model-rmi</include>
+        <include>com.consol.citrus.model:citrus-model-jmx</include>
         <include>com.consol.citrus.model:citrus-model-vertx</include>
         <include>com.consol.citrus.model:citrus-model-ftp</include>
       </includes>
