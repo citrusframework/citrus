@@ -19,6 +19,13 @@
     With Citrus 2.5 we have added a client and server support for calling and providing managed beans on a mbean server. See <xref linkend="jmx"/> for details.</para>
   </section>
 
+  <section id="new-2-5-resource-injection">
+    <title>Resource injection</title>
+
+    <para>With 2.5 we have added mechanisms for injecting Citrus components to your Java DSL test methods. This is very useful when needing access to the Citrus test context for instance. Also we are able to use new injection of
+    test designer and runner instances in order to support parallel test execution with multiple threads. See the explanations in <xref linkend="testcase-resource-injection"/> and <xref linkend="testcase-context-injection"/>.</para>
+  </section>
+
   <section id="new-2-5-form-urlencoded">
     <title>Http x-www-form-urlencoded message validator</title>
 

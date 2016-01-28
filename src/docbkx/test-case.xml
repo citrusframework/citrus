@@ -243,7 +243,14 @@ public class LoggingTestDesigner extends TestNGCitrusTestDesigner {
   INFO        EchoAction| After loggingService call
   INFO            Citrus| TEST SUCCESS LoggingTest</programlisting>
 
-      <para>Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called <emphasis>test-runner</emphasis> that we deal with in the next section.</para>
+      <para>Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called <emphasis>test-runner</emphasis> that we deal with in the next section.
+      Before we continue we have to mention that the <emphasis>test-designer</emphasis> approach does also work for JUnit. Although we have only seen TestNG sample code in this section everything is working exactly the same way with JUnit framework. Just use the base class
+      <emphasis>com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner</emphasis> instead.</para>
+
+      <important>
+        <para>Neither <emphasis>TestNGCitrusTestDesigner</emphasis> nor <emphasis>JUnit4CitrusTestDesigner</emphasis> implementation is thread safe for parallel test execution. This is simply because the base class is holding state to the current test designer instance in order to delegate method calls to this
+        instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in <xref linkend="testcase-resource-injection"/>.</para>
+      </important>
     </section>
 
     <section id="testcase-java-runner">
@@ -282,7 +289,96 @@ INFO            Citrus| TEST SUCCESS LoggingTest</programlisting>
       <para>In contrary to the test designer the test runner implementation will not build the complete test case before execution. Each test action is executed immediately as it is called with Java DSL builder methods. This creates a more natural way of coding test cases as you are also
       able to use iterations, try catch blocks, finally sections and so on.</para>
 
-      <para>Feel free to choose the base class for <emphasis>test-designer</emphasis> or <emphasis>test-runner</emphasis> as you like. You can also mix those two approaches in your project. Citrus is able to handle both ways of Java DSL code in a project.</para>
+      <para>In the examples here TestNG was used as unit framework. Of course the exact same approach can also apply to JUnit framework. Just use the base class <emphasis>com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner</emphasis> instead. Feel free to choose the base class for
+      <emphasis>test-designer</emphasis> or <emphasis>test-runner</emphasis> as you like. You can also mix those two approaches in your project. Citrus is able to handle both ways of Java DSL code in a project.</para>
+
+      <important>
+        <para>The <emphasis>TestNGCitrusTestRunner</emphasis> and <emphasis>JUnit4CitrusTestRunner</emphasis> implementation is not thread safe for parallel test execution. This is simply because the base class is holding state to the current test runner instance in order to delegate method calls to this
+        instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in <xref linkend="testcase-resource-injection"/>.</para>
+      </important>
+    </section>
+
+    <section id="testcase-resource-injection">
+      <title>Designer/Runner injection</title>
+
+      <para>In the previous sections we have seen the different approaches for test designer and runner implementations. Up to now the decision which implementation to use was made by extending one of the base classes:</para>
+
+      <itemizedlist>
+        <listitem>com.consol.citrus.dsl.testng.TestNGCitrusTestRunner</listitem>
+        <listitem>com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner</listitem>
+        <listitem>com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner</listitem>
+        <listitem>com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner</listitem>
+      </itemizedlist>
+
+      <para>These four classes represent the different designer and runner implementations for TestNG or JUnit. Now Citrus also provides a resource injection mechanism for both designer and runner implementations. The classes using this feature are:</para>
+
+      <itemizedlist>
+        <listitem>com.consol.citrus.dsl.testng.TestNGCitrusTest</listitem>
+        <listitem>com.consol.citrus.dsl.junit.JUnit4CitrusTest</listitem>
+      </itemizedlist>
+
+      <para>So what is the deal with that? It is simple when looking at a first example using resource injection:</para>
+
+      <programlisting language="java">@Test
+public class InjectionTest extends JUnit4CitrusTest {
+
+    @CitrusTest(name = "JUnit4DesignerTest")
+    public void designerTest(@CitrusResource TestDesigner designer) {
+        designer.echo("Now working on designer instance");
+    }
+
+    @CitrusTest(name = "JUnit4RunnerTest")
+    public void runnerTest(@CitrusResource TestRunner runner) {
+        runner.echo("Now working on runner instance");
+    }
+}</programlisting>
+
+      <para>The designer or runner instance is injected as Citrus resource to the test method as parameter. This way we can mix designer and runner in a single test. But this is not the real motivation for the resource injection. The clear advantage of this approach with injected
+      designer and runner instances is support for multi threading. In case you want to execute the Citrus tests in parallel using multiple threads you need to use this approach. This is because the usual designer and runner base classes are not thread safe. This <emphasis>JUnit4CitrusTest</emphasis>
+      base class is because the resources injected are not kept as state in the base class.</para>
+
+      <para>This is our first Citrus resource injection use case. The framework is able to inject other resources, too. Find out more about this in the next sections.</para>
+    </section>
+
+    <section id="testcase-context-injection">
+        <title>Test context injection</title>
+
+        <para>When running a test case in Citrus we make use of basic framework components and capabilities. One of these capabilities is to use test variables, functions and validation matchers.
+          Up to this point we have not learned about these things. They will be described in the upcoming chapters and sections in more detail. Right now I want to talk about resource injection in Citrus.</para>
+
+        <para>All these feature mentioned above are bound to some important Citrus component: the Citrus test context. The test context holds all variables and is able to resolve functions and matchers.
+          In general you as a tester will not need explicit access to this component as the framework is working with it behind the scenes. In case you need some access for advanced operations with the framework Citrus
+          provides a resource injection. Lets have a look at this so things are getting more clear.</para>
+
+        <programlisting language="java">public class ResourceInjectionIT extends JUnit4CitrusTestDesigner {
+
+    @Test
+    @CitrusTest
+    public void resourceInjectionIT(@CitrusResource TestContext context) {
+        context.setVariable("myVariable", "some value");
+        echo("${myVariable}");
+    }
+}</programlisting>
+
+        <para>As you can see we have added a method parameter of type <emphasis>com.consol.citrus.context.TestContext</emphasis> to the test method. The annotation <emphasis>@CitrusResource</emphasis> tells Citrus to inject
+          this parameter with the according instance of the object for this test. Now we have easy access to the context and all its capabilities such as variable management.</para>
+
+        <para>Of course the same approach works with TestNG, too. As TestNG also provides resource injection mechanisms we have to make sure that the different resource injection approaches do not interfere with each other.
+          So we tell TestNG to not inject this parameter by declaring it as <emphasis>@Optional</emphasis> for TestNG. In addition to that we need to introduce the parameter to TestNG with the <emphasis>@Parameters</emphasis>
+          annotation. Otherwise TestNG would complain about not knowing this parameter. The final test method with Citrus resource injection looks like follows:</para>
+
+        <programlisting>public class ResourceInjectionIT extends TestNGCitrusTestDesigner {
+
+    @Test @Parameters("context")
+    @CitrusTest
+    public void resourceInjectionIT(@Optional @CitrusResource TestContext context) {
+        context.setVariable("myVariable", "some value");
+        echo("${myVariable}");
+    }
+}</programlisting>
+
+        <para>Some more annotations needed but the result is the same. We have access to the Citrus test context. Of course you can combine the resource injection for different Citrus components. Just add more some <emphasis>@CitrusResource</emphasis>
+        annotated method parameters to the test method.</para>
     </section>
 
     <section id="testcase-java-behavior">
