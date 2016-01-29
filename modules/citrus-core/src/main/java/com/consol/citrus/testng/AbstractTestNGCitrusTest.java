@@ -240,7 +240,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     @AfterSuite(alwaysRun = true)
     public void afterSuite(ITestContext testContext) {
-        citrus.afterSuite(testContext.getSuite().getName());
+        if (citrus != null) {
+            citrus.afterSuite(testContext.getSuite().getName());
+        }
     }
 
     /**
