@@ -23,12 +23,14 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * Message controller implementation handling all incoming requests by forwarding to a message 
@@ -103,6 +105,14 @@ public class HttpMessageController {
         HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
 
+        Enumeration allHeaders = servletRequest.getHeaderNames();
+        for (String headerName : CollectionUtils.toArray(allHeaders, new String[] {})) {
+            if (request.getHeader(headerName) == null) {
+                String headerValue = servletRequest.getHeader(headerName);
+                request.header(headerName, headerValue != null ? headerValue : "");
+            }
+        }
+
         String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
 
         if (queryParams == null) {
@@ -115,6 +125,7 @@ public class HttpMessageController {
                 .uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
                 .queryParams(queryParams)
+                .version(servletRequest.getProtocol())
                 .method(method);
 
         Message response = endpointAdapter.handleMessage(request);
