@@ -27,6 +27,9 @@
               ]]>
             </http:data>
           </http:body>
+          <http:extract>
+            <http:body variable="userId" path="$.user.id"/>
+          </http:extract>
         </http:receive-response>
 
         <http:receive-response uri="http://localhost:8080/test" actor="testActor"/>

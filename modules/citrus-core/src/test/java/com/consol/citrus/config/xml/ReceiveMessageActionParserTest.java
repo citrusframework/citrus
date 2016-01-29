@@ -62,6 +62,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
+        Assert.assertEquals(action.getVariableExtractors().size(), 0);
 
         // 2nd action
         action = getNextTestActionFromTest();
@@ -126,7 +127,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertNotNull(groovyMessageBuilder.getScriptResourcePath());
         Assert.assertEquals(groovyMessageBuilder.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(groovyMessageBuilder.getScriptData());
-        
+
         // 6th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableExtractors().size(), 2);

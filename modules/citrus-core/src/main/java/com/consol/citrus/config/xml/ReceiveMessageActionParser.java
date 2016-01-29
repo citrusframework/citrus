@@ -181,7 +181,8 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         Map<String, String> extractXpath = new HashMap<>();
         Map<String, String> extractJsonPath = new HashMap<>();
         if (extractElement != null) {
-            List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
+            List<Element> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
+            messageValueElements.addAll(DomUtils.getChildElementsByTagName(extractElement, "body"));
             for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
                 String pathExpression = messageValue.getAttribute("path");

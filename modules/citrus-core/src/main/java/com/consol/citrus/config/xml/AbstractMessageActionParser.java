@@ -26,6 +26,7 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -218,8 +219,10 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             
             MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
             headerVariableExtractor.setHeaderMappings(extractHeaderValues);
-            
-            variableExtractors.add(headerVariableExtractor);
+
+            if (!CollectionUtils.isEmpty(extractHeaderValues)) {
+                variableExtractors.add(headerVariableExtractor);
+            }
         }
     }
 }

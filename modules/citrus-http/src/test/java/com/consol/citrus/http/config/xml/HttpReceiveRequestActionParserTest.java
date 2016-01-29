@@ -24,6 +24,7 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
@@ -53,6 +54,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
         Assert.assertNull(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
+        Assert.assertEquals(action.getVariableExtractors().size(), 0);
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
@@ -89,6 +91,10 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
         Assert.assertNull(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
+
+        Assert.assertEquals(action.getVariableExtractors().size(), 1L);
+        Assert.assertEquals(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().size(), 1L);
+        Assert.assertEquals(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().get("$.user.id"), "userId");
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);

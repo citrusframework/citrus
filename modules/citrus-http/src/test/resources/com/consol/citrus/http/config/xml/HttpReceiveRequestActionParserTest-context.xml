@@ -34,6 +34,9 @@
               </http:data>
             </http:body>
           </http:POST>
+          <http:extract>
+            <http:body variable="userId" path="$.user.id"/>
+          </http:extract>
         </http:receive-request>
 
         <http:receive-request server="httpServer">
