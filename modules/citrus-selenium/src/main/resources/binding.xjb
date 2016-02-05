@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+		  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		  xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+		  version="2.1"
+		  extensionBindingPrefixes="xjc">
+
+	<globalBindings>
+		<javaType
+			name="java.util.Calendar"
+			xmlType="xs:dateTime"
+			parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+			printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+		<javaType
+			name="java.util.Calendar"
+			xmlType="xs:date"
+			parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+			printMethod="javax.xml.bind.DatatypeConverter.printDate" />
+		<xjc:simple />
+	</globalBindings>
+
+	<bindings schemaLocation="com/consol/citrus/schema/citrus-selenium-config.xsd">
+		<schemaBindings>
+			<package name="com.consol.citrus.model.config.selenium"/>
+		</schemaBindings>
+	</bindings>
+
+	<bindings schemaLocation="com/consol/citrus/schema/citrus-selenium-testcase.xsd">
+		<schemaBindings>
+			<package name="com.consol.citrus.model.testcase.selenium"/>
+			<nameXmlTransform>
+				<elementName suffix="Definition" />
+			</nameXmlTransform>
+		</schemaBindings>
+	</bindings>
+
+</bindings>

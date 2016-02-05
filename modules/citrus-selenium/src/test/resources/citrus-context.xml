@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:citrus="http://www.citrusframework.org/schema/config"
+	   xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/selenium/config http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+
+	<context:property-placeholder location="classpath:citrus.properties"
+								  ignore-unresolvable="true"/>
+
+	<citrus:global-variables>
+		<citrus:variable name="project.name" value="Citrus Selenium Web Integration Testing"/>
+	</citrus:global-variables>
+
+	<citrus:validation-matcher-library id="seleniumMatcherLibrary" prefix="web:">
+		<citrus:matcher name="empty" class="com.consol.citrus.validation.matcher.selenium.EmptyValidationMatcher"/>
+		<citrus:matcher name="notEmpty" class="com.consol.citrus.validation.matcher.selenium.NotEmptyValidationMatcher"/>
+		<citrus:matcher name="null" class="com.consol.citrus.validation.matcher.selenium.NullValidationMatcher"/>
+		<citrus:matcher name="notNull" class="com.consol.citrus.validation.matcher.selenium.NotNullValidationMatcher"/>
+	</citrus:validation-matcher-library>
+
+	<!-- Listeners -->
+	<bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+	<!-- HtmlUnit webdriver -->
+	<citrus-selenium:client id="webBrowser" browser-type="HtmlUnit"/>
+
+</beans>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns="http://www.citrusframework.org/schema/selenium/testcase"
+		   xmlns:core="http://www.citrusframework.org/schema/testcase"
+		   targetNamespace="http://www.citrusframework.org/schema/selenium/testcase"
+		   elementFormDefault="qualified"
+		   attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://www.citrusframework.org/schema/testcase"
+			   schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd"/>
+
+	<xs:simpleType name="ByEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="id"/>
+			<xs:enumeration value="className"/>
+			<xs:enumeration value="linkText"/>
+			<xs:enumeration value="cssSelector"/>
+			<xs:enumeration value="name"/>
+			<xs:enumeration value="tagName"/>
+			<xs:enumeration value="xpath"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="WebElementType">
+		<xs:attribute name="byId" type="xs:string"/>
+		<xs:attribute name="byName" type="xs:string"/>
+		<xs:attribute name="byTagName" type="xs:string"/>
+		<xs:attribute name="byCssSelector" type="xs:string"/>
+		<xs:attribute name="byClassName" type="xs:string"/>
+		<xs:attribute name="byXpath" type="xs:string"/>
+		<xs:attribute name="byLinkText" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:simpleType name="ValidationRuleEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Empty"/>
+			<xs:enumeration value="NotEmpty"/>
+			<xs:enumeration value="Equals"/>
+			<xs:enumeration value="Null"/>
+			<xs:enumeration value="NotNull"/>
+			<xs:enumeration value="Contains"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="ValidationType">
+		<xs:attribute name="by" type="ByEnum" use="required"/>
+		<xs:attribute name="select" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="PageValidationType">
+		<xs:attribute name="get" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="WebActionType">
+		<xs:complexContent>
+			<xs:extension base="core:TestActionType">
+				<xs:attribute name="client" type="xs:string" use="required"/>
+				<xs:attribute name="name" type="xs:string"/>
+				<xs:attribute name="url" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ValidateActionType">
+		<xs:complexContent>
+			<xs:extension base="WebActionType">
+				<xs:sequence>
+					<xs:element name="element" type="ValidationType" minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="page" type="PageValidationType" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+				<xs:attribute name="pageName" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="PageActionType">
+		<xs:complexContent>
+			<xs:extension base="WebActionType">
+				<xs:sequence>
+					<xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="name" type="xs:string" use="required"/>
+							<xs:attribute name="value" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="pageName" type="xs:string" use="required"/>
+				<xs:attribute name="action" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="ClickActionType">
+		<xs:complexContent>
+			<xs:extension base="WebActionType">
+				<xs:attribute name="byId" type="xs:string"/>
+				<xs:attribute name="byName" type="xs:string"/>
+				<xs:attribute name="byTagName" type="xs:string"/>
+				<xs:attribute name="byCssSelector" type="xs:string"/>
+				<xs:attribute name="byClassName" type="xs:string"/>
+				<xs:attribute name="byXpath" type="xs:string"/>
+				<xs:attribute name="byLinkText" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="SetInputActionType">
+		<xs:complexContent>
+			<xs:extension base="WebActionType">
+				<xs:sequence>
+					<xs:element name="field" minOccurs="1" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="WebElementType">
+									<xs:attribute name="value" type="xs:string" use="required"/>
+								</xs:extension>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="BrowserActionTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="acceptAlertBox"/>
+			<xs:enumeration value="cancelAlertBox"/>
+			<xs:enumeration value="clearBrowserCache"/>
+			<xs:enumeration value="deleteAllCookies"/>
+			<xs:enumeration value="navigateBack"/>
+			<xs:enumeration value="navigateForward"/>
+			<xs:enumeration value="openNewWindow"/>
+			<xs:enumeration value="refresh"/>
+			<xs:enumeration value="takeScreenshot"/>
+			<xs:enumeration value="gotoPopup"/>
+			<xs:enumeration value="returnFromPopup"/>
+			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="BrowserActionType">
+		<xs:complexContent>
+			<xs:extension base="WebActionType">
+				<xs:attribute name="action" type="BrowserActionTypeEnum" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="PageType">
+		<xs:attribute name="get" type="xs:string" use="required"/>
+		<xs:attribute name="variable" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="ExtractActionType">
+		<xs:complexContent>
+			<xs:extension base="WebActionType">
+				<xs:choice>
+					<xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="WebElementType">
+									<xs:attribute name="variable" type="xs:string" use="required"/>
+								</xs:extension>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="page" type="PageType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:choice>
+				<xs:attribute name="pageName" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="goto" type="WebActionType"/>
+	<xs:element name="start" type="WebActionType"/>
+	<xs:element name="stop" type="WebActionType"/>
+	<xs:element name="clearCache" type="WebActionType"/>
+	<xs:element name="click" type="ClickActionType"/>
+	<xs:element name="setInput" type="SetInputActionType"/>
+	<xs:element name="validate" type="ValidateActionType"/>
+	<xs:element name="page" type="PageActionType"/>
+	<xs:element name="browser" type="BrowserActionType"/>
+	<xs:element name="extract" type="ExtractActionType"/>
+</xs:schema>
