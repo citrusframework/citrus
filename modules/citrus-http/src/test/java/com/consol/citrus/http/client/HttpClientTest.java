@@ -436,4 +436,46 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
             verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
         }
     }
+
+    @Test
+    public void testHttpPatchRequest() {
+        HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
+        HttpClient httpClient = new HttpClient(endpointConfiguration);
+        String requestUrl = "http://localhost:8088/test";
+
+        final String responseBody = "<TestResponse><Message>Hello World!</Message></TestResponse>";
+
+        endpointConfiguration.setRequestMethod(HttpMethod.PATCH);
+        endpointConfiguration.setRequestUrl(requestUrl);
+
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        endpointConfiguration.setRestTemplate(restTemplate);
+
+        reset(restTemplate);
+
+        doAnswer(new Answer<ResponseEntity<String>>() {
+            @Override
+            public ResponseEntity<String> answer(InvocationOnMock invocation) throws Throwable {
+                HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
+
+                Assert.assertEquals(httpRequest.getBody().toString(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+                Assert.assertEquals(httpRequest.getHeaders().size(), 1);
+
+                Assert.assertEquals(httpRequest.getHeaders().getContentType().toString(), "text/plain;charset=UTF-8");
+
+                return new ResponseEntity<String>(responseBody, HttpStatus.OK);
+            }
+        }).when(restTemplate).exchange(eq(requestUrl), eq(HttpMethod.PATCH), any(HttpEntity.class), eq(String.class));
+
+        httpClient.send(requestMessage, context);
+
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
+        Assert.assertEquals(responseMessage.getPayload(), responseBody);
+        Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
+
+        verify(restTemplate).setInterceptors(any(List.class));
+        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
+    }
 }
