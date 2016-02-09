@@ -32,7 +32,7 @@ public class FormMarshaller extends Jaxb2Marshaller {
     public FormMarshaller() {
         setClassesToBeBound(FormData.class, Control.class);
 
-        setSchema(new ClassPathResource("com/consol/citrus/http/citrus-http-message.xsd"));
+        setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-http-message.xsd"));
 
         try {
             afterPropertiesSet();
