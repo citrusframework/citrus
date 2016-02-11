@@ -122,8 +122,8 @@ public class JAXBHelperTest {
 
         Assert.assertNotNull(loadedSchemaRepository);
         Assert.assertEquals(schemaRepository.getId(), loadedSchemaRepository.getId());
-        Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), loadedSchemaRepository.getSchemas().getRevesAndSchemas().size());
-        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), ((SchemaRepositoryDefinition.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema());
-        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), ((SchemaRepositoryDefinition.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema());
+        Assert.assertEquals(schemaRepository.getSchemas().getReferences().size(), loadedSchemaRepository.getSchemas().getReferences().size());
+        Assert.assertEquals(schemaRepository.getSchemas().getReferences().get(0).getSchema(), loadedSchemaRepository.getSchemas().getReferences().get(0).getSchema());
+        Assert.assertEquals(schemaRepository.getSchemas().getReferences().get(1).getSchema(), loadedSchemaRepository.getSchemas().getReferences().get(1).getSchema());
     }
 }

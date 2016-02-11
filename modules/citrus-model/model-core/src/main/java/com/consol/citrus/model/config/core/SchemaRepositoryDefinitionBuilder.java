@@ -58,7 +58,7 @@ public class SchemaRepositoryDefinitionBuilder {
             model.setSchemas(new SchemaRepositoryDefinition.Schemas());
         }
 
-        model.getSchemas().getRevesAndSchemas().add(schema);
+        model.getSchemas().getSchemas().add(schema);
         return this;
     }
 
@@ -72,7 +72,7 @@ public class SchemaRepositoryDefinitionBuilder {
             model.setSchemas(new SchemaRepositoryDefinition.Schemas());
         }
 
-        model.getSchemas().getRevesAndSchemas().add(schema);
+        model.getSchemas().getSchemas().add(schema);
         return this;
     }
 
@@ -82,14 +82,14 @@ public class SchemaRepositoryDefinitionBuilder {
      * @return
      */
     public SchemaRepositoryDefinitionBuilder addSchemaReference(String schemaId) {
-        SchemaRepositoryDefinition.Schemas.Ref schemaRef = new SchemaRepositoryDefinition.Schemas.Ref();
+        SchemaRepositoryDefinition.Schemas.Reference schemaRef = new SchemaRepositoryDefinition.Schemas.Reference();
         schemaRef.setSchema(schemaId);
 
         if(model.getSchemas() == null) {
             model.setSchemas(new SchemaRepositoryDefinition.Schemas());
         }
 
-        model.getSchemas().getRevesAndSchemas().add(schemaRef);
+        model.getSchemas().getReferences().add(schemaRef);
         return this;
     }
 

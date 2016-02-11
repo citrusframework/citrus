@@ -22,8 +22,8 @@
 
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
-      <citrus:ref schema="helloSchema" />
-      <citrus:ref schema="helloSchemaExtended" />
+      <citrus:reference schema="helloSchema" />
+      <citrus:reference schema="helloSchemaExtended" />
     </citrus:schemas>
   </citrus:schema-repository>
 

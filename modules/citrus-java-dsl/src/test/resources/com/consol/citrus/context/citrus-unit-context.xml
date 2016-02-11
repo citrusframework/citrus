@@ -10,7 +10,7 @@
     <!-- Empty test context used in unit tests -->
     <citrus:schema-repository id="customSchemaRepository">
       <citrus:schemas>
-             <citrus:ref schema="testSchema"/>
+             <citrus:reference schema="testSchema"/>
       </citrus:schemas>
     </citrus:schema-repository>
 

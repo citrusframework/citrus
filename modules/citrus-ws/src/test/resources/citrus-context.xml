@@ -27,7 +27,7 @@
 
   <citrus:schema-repository id="schemaRepository">
     <citrus:schemas>
-      <citrus:ref schema="helloSchema" />
+      <citrus:reference schema="helloSchema" />
     </citrus:schemas>
   </citrus:schema-repository>
 
@@ -35,8 +35,8 @@
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
       <citrus:schema id="soap11" location="classpath:schemas/soap-1.1.xsd"/>
-      <citrus:ref schema="helloSchema"/>
-      <citrus:ref schema="helloSchemaExtended"/>
+      <citrus:reference schema="helloSchema"/>
+      <citrus:reference schema="helloSchemaExtended"/>
     </citrus:schemas>
   </citrus:schema-repository>
 

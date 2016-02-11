@@ -63,19 +63,19 @@ public class SchemaRepositoryController {
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepositoryDefinition xsdSchemaRepository) {
-        List<SchemaRepositoryDefinition.Schemas.Ref> schemaRefs = new ArrayList<SchemaRepositoryDefinition.Schemas.Ref>();
-        for (Object schema: xsdSchemaRepository.getSchemas().getRevesAndSchemas()) {
+        List<SchemaRepositoryDefinition.Schemas.Reference> schemaRefs = new ArrayList<>();
+        for (Object schema: xsdSchemaRepository.getSchemas().getReferences()) {
             if (schema instanceof String) {
-                SchemaRepositoryDefinition.Schemas.Ref ref = new SchemaRepositoryDefinition.Schemas.Ref();
+                SchemaRepositoryDefinition.Schemas.Reference ref = new SchemaRepositoryDefinition.Schemas.Reference();
                 ref.setSchema((String) schema);
                 schemaRefs.add(ref);
-            } else if (schema instanceof SchemaRepositoryDefinition.Schemas.Ref) {
-                schemaRefs.add((SchemaRepositoryDefinition.Schemas.Ref) schema);
+            } else if (schema instanceof SchemaRepositoryDefinition.Schemas.Reference) {
+                schemaRefs.add((SchemaRepositoryDefinition.Schemas.Reference) schema);
             }
         }
 
-        xsdSchemaRepository.getSchemas().getRevesAndSchemas().clear();
-        xsdSchemaRepository.getSchemas().getRevesAndSchemas().addAll(schemaRefs);
+        xsdSchemaRepository.getSchemas().getReferences().clear();
+        xsdSchemaRepository.getSchemas().getReferences().addAll(schemaRefs);
 
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchemaRepository);
     }

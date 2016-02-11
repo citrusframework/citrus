@@ -8,10 +8,10 @@
     <citrus:schema-repository id="schemaRepository1">
       <citrus:schemas>
         <citrus:schema id="schema2" location="classpath:com/consol/citrus/validation/test.xsd"/>
-        <citrus:ref schema="schema1"/>
-        <citrus:ref schema="wsdl1"/>
         <citrus:schema id="wsdl2" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
-        <citrus:ref schema="schemaCollection1"/>
+        <citrus:reference schema="schema1"/>
+        <citrus:reference schema="wsdl1"/>
+        <citrus:reference schema="schemaCollection1"/>
       </citrus:schemas>
     </citrus:schema-repository>
 

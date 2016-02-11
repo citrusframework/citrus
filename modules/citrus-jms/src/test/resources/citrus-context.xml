@@ -28,8 +28,8 @@
 
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
-      <citrus:ref schema="soapSchema" />
-      <citrus:ref schema="helloSchema" />
+      <citrus:reference schema="soapSchema" />
+      <citrus:reference schema="helloSchema" />
     </citrus:schemas>
   </citrus:schema-repository>
 

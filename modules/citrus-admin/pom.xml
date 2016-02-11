@@ -342,10 +342,6 @@
                     <value>${project.build.sourceEncoding}</value>
                   </systemProperty>
                   <systemProperty>
-                    <name>file.encoding</name>
-                    <value>${project.build.sourceEncoding}</value>
-                  </systemProperty>
-                  <systemProperty>
                     <name>log4j.configuration</name>
                     <value>log4j.xml</value>
                   </systemProperty>

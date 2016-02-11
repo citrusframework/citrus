@@ -36,7 +36,7 @@
 
     <citrus:schema-repository id="testSchemaRepository2">
         <citrus:schemas>
-            <citrus:ref schema="testSchema1" />
+            <citrus:reference schema="testSchema1" />
         </citrus:schemas>
     </citrus:schema-repository>
 

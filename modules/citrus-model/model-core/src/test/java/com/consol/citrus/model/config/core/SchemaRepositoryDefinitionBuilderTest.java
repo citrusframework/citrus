@@ -35,11 +35,12 @@ public class SchemaRepositoryDefinitionBuilderTest {
 
         Assert.assertNotNull(schemaRepository);
         Assert.assertEquals(schemaRepository.getId(), "schemaRepo");
-        Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), 2);
-        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getId(), "schema1");
-        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getLocation(), "location1");
-        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getId(), "schema2");
-        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getLocation(), "location2");
+        Assert.assertEquals(schemaRepository.getSchemas().getReferences().size(), 0);
+        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().size(), 2);
+        Assert.assertEquals((schemaRepository.getSchemas().getSchemas().get(0)).getId(), "schema1");
+        Assert.assertEquals((schemaRepository.getSchemas().getSchemas().get(0)).getLocation(), "location1");
+        Assert.assertEquals((schemaRepository.getSchemas().getSchemas().get(1)).getId(), "schema2");
+        Assert.assertEquals((schemaRepository.getSchemas().getSchemas().get(1)).getLocation(), "location2");
     }
 
     @Test
@@ -52,8 +53,9 @@ public class SchemaRepositoryDefinitionBuilderTest {
 
         Assert.assertNotNull(schemaRepository);
         Assert.assertEquals(schemaRepository.getId(), "schemaRepo");
-        Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), 2);
-        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), "schema1");
-        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), "schema2");
+        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().size(), 0);
+        Assert.assertEquals(schemaRepository.getSchemas().getReferences().size(), 2);
+        Assert.assertEquals((schemaRepository.getSchemas().getReferences().get(0)).getSchema(), "schema1");
+        Assert.assertEquals((schemaRepository.getSchemas().getReferences().get(1)).getSchema(), "schema2");
     }
 }

@@ -138,14 +138,14 @@
             <xs:sequence>
                 <xs:element name="schemas" minOccurs="0">
                     <xs:complexType>
-                        <xs:choice minOccurs="1" maxOccurs="unbounded">
-                            <xs:element name="ref">
-                                <xs:complexType>
-                                    <xs:attribute name="schema" type="xs:string" use="required" />
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="schema" type="SchemaType"/>
-                        </xs:choice>
+                        <xs:sequence>
+                          <xs:element name="schema" type="SchemaType" minOccurs="0" maxOccurs="unbounded"/>
+                          <xs:element name="reference" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="schema" type="xs:string" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="locations" minOccurs="0">

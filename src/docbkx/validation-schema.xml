@@ -21,7 +21,7 @@
             location=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
         &lt;citrus:schema id=&quot;royalArilineSchema&quot;
             location=&quot;classpath:citrus/flightbooking/RoyalAirlineSchema.xsd&quot;/&gt;
-        &lt;citrus:ref schema=&quot;smartArilineSchema&quot;/&gt;
+        &lt;citrus:reference schema=&quot;smartArilineSchema&quot;/&gt;
     &lt;/citrus:schemas&gt;
 &lt;/citrus:schema-repository&gt;
 
@@ -119,7 +119,7 @@
 
       <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;&gt;
   &lt;citrus:schemas&gt;
-    &lt;citrus:ref schema=&quot;flightbookingSchemaCollection&quot;/&gt;
+    &lt;citrus:reference schema=&quot;flightbookingSchemaCollection&quot;/&gt;
   &lt;/citrus:schemas&gt;
 &lt;/citrus:schema-repository&gt;</programlisting>
     </section>
@@ -179,8 +179,8 @@
             <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;
     schema-mapping-strategy=&quot;schemaMappingStrategy&quot;&gt;
   &lt;citrus:schemas&gt;
-    &lt;citrus:ref schema=&quot;helloSchema&quot;/&gt;
-    &lt;citrus:ref schema=&quot;goodbyeSchema&quot;/&gt;
+    &lt;citrus:reference schema=&quot;helloSchema&quot;/&gt;
+    &lt;citrus:reference schema=&quot;goodbyeSchema&quot;/&gt;
   &lt;/citrus:schemas&gt;
 &lt;/citrus:schema-repository&gt;
 
@@ -214,8 +214,8 @@
             <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;
     schema-mapping-strategy=&quot;schemaMappingStrategy&quot;&gt;
   &lt;citrus:schemas&gt;
-    &lt;citrus:ref schema=&quot;helloSchema&quot;/&gt;
-    &lt;citrus:ref schema=&quot;goodbyeSchema&quot;/&gt;
+    &lt;citrus:reference schema=&quot;helloSchema&quot;/&gt;
+    &lt;citrus:reference schema=&quot;goodbyeSchema&quot;/&gt;
   &lt;/citrus:schemas&gt;
 &lt;/citrus:schema-repository&gt;
 

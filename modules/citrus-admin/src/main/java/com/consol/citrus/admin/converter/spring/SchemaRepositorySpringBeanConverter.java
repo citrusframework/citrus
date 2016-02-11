@@ -73,12 +73,12 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
                             }
                         }
 
-                        repository.getSchemas().getRevesAndSchemas().add(schema);
+                        repository.getSchemas().getSchemas().add(schema);
                     } else if (item instanceof Ref) {
                         Ref ref = (Ref) item;
-                        SchemaRepositoryDefinition.Schemas.Ref schema = new SchemaRepositoryDefinition.Schemas.Ref();
+                        SchemaRepositoryDefinition.Schemas.Reference schema = new SchemaRepositoryDefinition.Schemas.Reference();
                         schema.setSchema(ref.getBean());
-                        repository.getSchemas().getRevesAndSchemas().add(schema);
+                        repository.getSchemas().getReferences().add(schema);
                     }
                 }
             }

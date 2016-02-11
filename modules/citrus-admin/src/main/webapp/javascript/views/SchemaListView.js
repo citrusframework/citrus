@@ -133,7 +133,7 @@
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        $('#repository-edit').html(TemplateManager.template('SchemaRepositoryEditView', {repository: response, schemas: this.filterSchemas(response.schemas.revesAndSchemas)}));
+                        $('#repository-edit').html(TemplateManager.template('SchemaRepositoryEditView', {repository: response, schemas: this.filterSchemas(response.schemas.schemas)}));
 
                         $('#schema-list').hide('slide', function() {
                             $('#repository-edit').show('slide');
@@ -278,7 +278,7 @@
                     schemas.push( $(this).attr('id') );
                 });
 
-                var schemaRepository = { id: serializedForm.id, schemas: { revesAndSchemas: schemas } };
+                var schemaRepository = { id: serializedForm.id, schemas: { schemas: schemas } };
 
                 return JSON.stringify(schemaRepository);
             },
