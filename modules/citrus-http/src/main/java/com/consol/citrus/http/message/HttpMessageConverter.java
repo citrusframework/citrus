@@ -76,7 +76,8 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
     }
 
     private boolean httpMethodSupportsBody(HttpMethod method) {
-        return HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method) || HttpMethod.DELETE.equals(method);
+        return HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)
+                || HttpMethod.DELETE.equals(method) || HttpMethod.PATCH.equals(method);
     }
 
     @Override

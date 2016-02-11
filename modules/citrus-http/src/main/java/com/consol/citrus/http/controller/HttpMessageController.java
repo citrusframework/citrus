@@ -92,6 +92,12 @@ public class HttpMessageController {
     public ResponseEntity<String> handleTraceRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.TRACE, requestEntity);
     }
+
+    @RequestMapping(value= "**", method = { RequestMethod.PATCH })
+    @ResponseBody
+    public ResponseEntity<String> handlePatchRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.PATCH, requestEntity);
+    }
     
     /**
      * Handles requests with endpoint adapter implementation. Previously sets Http request method as header parameter.
