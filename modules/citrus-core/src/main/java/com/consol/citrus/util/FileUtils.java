@@ -158,13 +158,27 @@ public abstract class FileUtils {
 
         /* walk through the directories */
         while (dirs.size() > 0) {
-            File file = dirs.pop();
+            final File file = dirs.pop();
             File[] found = file.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     File tmp = new File(dir.getPath() + File.separator + name);
 
+                    boolean accepted = tmp.isDirectory();
+
+                    for (String fileNamePattern : Citrus.getXmlTestFileNamePattern()) {
+                        if (fileNamePattern.contains("/")) {
+                            fileNamePattern = fileNamePattern.substring(fileNamePattern.lastIndexOf('/') + 1);
+                        }
+
+                        fileNamePattern = fileNamePattern.replace(".", "\\.").replace("*", ".*");
+
+                        if (name.matches(fileNamePattern)) {
+                            accepted = true;
+                        }
+                    }
+
                     /* Only allowing XML files as spring configuration files */
-                    return (name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
+                    return accepted && !name.startsWith("CVS") && !name.startsWith(".svn") && !name.startsWith(".git");
                 }
             });
 
