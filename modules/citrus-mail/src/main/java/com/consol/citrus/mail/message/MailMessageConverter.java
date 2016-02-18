@@ -304,11 +304,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
             reader = new BufferedReader(new StringReader(textBody));
 
             String line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                if (line.trim().equals(".")) {
-                    break;
-                }
-
+            while (line != null && !line.equals(".")) {
                 body.append(line);
                 body.append(System.getProperty("line.separator"));
                 line = reader.readLine();
