@@ -155,7 +155,13 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
         if (payloadElement != null) {
             messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadData(PayloadElementParser.parseMessagePayload(payloadElement));
+
+            List<Element> payload = DomUtils.getChildElements(payloadElement);
+            if (CollectionUtils.isEmpty(payload)) {
+                messageBuilder.setPayloadData("");
+            } else {
+                messageBuilder.setPayloadData(PayloadElementParser.parseMessagePayload(payload.get(0)));
+            }
         }
         
         return messageBuilder;
