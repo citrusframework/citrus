@@ -137,7 +137,7 @@ public class TimerTest extends AbstractTestNGUnitTest {
         try {
             Thread.currentThread().sleep(sleepTime + 1000L);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Interrupted while waiting for forked timer", e);
         }
     }
 

@@ -18,14 +18,14 @@ package com.consol.citrus.admin.launcher;
 
 import com.consol.citrus.admin.launcher.process.ExecuteCommand;
 import org.apache.commons.lang.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Tests the process launcher functionality.
@@ -37,6 +37,9 @@ import java.util.List;
  * @since 2013.01.25
  */
 public class ProcessLauncherTest {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(ProcessLauncherTest.class);
 
     private final static int STARTED = 0;
     private final static int SUCCESS = 1;
@@ -198,7 +201,7 @@ public class ProcessLauncherTest {
 
             public void onProcessFail(String processId, Throwable e) {
                 System.err.println("Failed:" + processId + ", ex:" + e.getLocalizedMessage());
-                e.printStackTrace();
+                log.error("Failed", e);
                 callbacks.set(3, Boolean.TRUE);
             }
 

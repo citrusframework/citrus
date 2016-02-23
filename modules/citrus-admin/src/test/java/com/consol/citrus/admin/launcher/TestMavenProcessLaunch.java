@@ -17,9 +17,9 @@
 package com.consol.citrus.admin.launcher;
 
 import com.consol.citrus.admin.configuration.MavenRunConfiguration;
-import com.consol.citrus.admin.launcher.process.maven.MavenRebuildProjectCommand;
-import com.consol.citrus.admin.launcher.process.maven.MavenRunTestsCommand;
-import com.consol.citrus.admin.launcher.process.maven.MavenRunSingleTestCommand;
+import com.consol.citrus.admin.launcher.process.maven.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +31,9 @@ import java.util.Date;
  * @author Martin.Maher@consol.de
  */
 public class TestMavenProcessLaunch {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(TestMavenProcessLaunch.class);
 
     // adapt this accordingly
     private static final File PROJECT_ROOT_DIR = new File("/Users/christoph/Projekte/Citrus/citrus/modules/citrus-integration");
@@ -88,7 +91,7 @@ public class TestMavenProcessLaunch {
 
             public void onProcessFail(String processId, Throwable e) {
                 System.err.println("Failed:" + processId + ", ex:" + e.getLocalizedMessage());
-                e.printStackTrace();
+                log.error("Failed", e);
             }
 
             public void onProcessOutput(String processId, String output) {

@@ -58,10 +58,10 @@ public class WaitAction extends AbstractTestAction {
     public void doExecute(final TestContext context) {
         Boolean conditionSatisfied = null;
         long timeLeft = getWaitTimeMs(context);
-        long interval = getIntervalMs(context);
+        long intervalMs = getIntervalMs(context);
 
-        if (interval > timeLeft) {
-            interval = timeLeft;
+        if (intervalMs > timeLeft) {
+            intervalMs = timeLeft;
         }
 
         Callable<Boolean> callable = new Callable<Boolean>() {
@@ -72,7 +72,7 @@ public class WaitAction extends AbstractTestAction {
         };
 
         while (timeLeft > 0) {
-            timeLeft -= interval;
+            timeLeft -= intervalMs;
 
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Waiting for condition %s", condition.getName()));
@@ -82,9 +82,9 @@ public class WaitAction extends AbstractTestAction {
             Future<Boolean> future = executor.submit(callable);
             long checkStartTime = System.currentTimeMillis();
             try {
-                conditionSatisfied = future.get(interval, TimeUnit.MILLISECONDS);
+                conditionSatisfied = future.get(intervalMs, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
-                log.debug(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
+                log.warn(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
             }
             executor.shutdown();
 
@@ -93,7 +93,7 @@ public class WaitAction extends AbstractTestAction {
                 return;
             }
 
-            long sleepTime = interval - (System.currentTimeMillis() - checkStartTime);
+            long sleepTime = intervalMs - (System.currentTimeMillis() - checkStartTime);
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime);

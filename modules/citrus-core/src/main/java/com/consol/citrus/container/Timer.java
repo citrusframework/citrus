@@ -119,7 +119,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
             try {
                 Thread.sleep(interval);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn("Interrupted while waiting for timer to complete", e);
             }
         }
 
