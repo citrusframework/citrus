@@ -182,6 +182,7 @@
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
+    <skip.gpg>false</skip.gpg>
   </properties>
 
   <dependencyManagement>
@@ -866,6 +867,7 @@
           <configuration>
             <useAgent>true</useAgent>
             <keyname>christoph.deppisch@consol.de</keyname>
+            <skip>${skip.gpg}</skip>
             <gpgArguments>
               <arg>--allow-weak-digest-algos</arg>
             </gpgArguments>
