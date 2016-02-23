@@ -113,10 +113,10 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     protected void startup() {
         synchronized (serverLock) {
             if (connectors != null && connectors.length > 0) {
-                jettyServer = new Server();
+                jettyServer = connectors[0].getServer();
                 jettyServer.setConnectors(connectors);
             } else if (connector != null) {
-                jettyServer = new Server();
+                jettyServer = connector.getServer();
                 jettyServer.addConnector(connector);
             } else {
                 jettyServer = new Server(port);
