@@ -175,8 +175,6 @@
     <jaxb.version>2.2.11</jaxb.version>
     <jackson.version>2.6.3</jackson.version>
     <arquillian.version>1.1.10.Final</arquillian.version>
-    <sonar.host.url>http://labs-build1.consol.de:9000</sonar.host.url>
-    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
 
@@ -943,9 +941,9 @@
         </plugin>
 
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
+          <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>2.7.1</version>
+          <version>3.0.1</version>
         </plugin>
 
       </plugins>
@@ -1757,7 +1755,7 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.5.201505241946</version>
+            <version>0.7.6.201602180812</version>
             <executions>
               <execution>
                 <id>jacoco-unit-init</id>
@@ -1766,7 +1764,7 @@
                 </goals>
                 <configuration>
                   <propertyName>surefireArgLine</propertyName>
-                  <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+                  <destFile>${build.directory}/coverage-reports/jacoco-unit.exec</destFile>
                 </configuration>
               </execution>
               <execution>
@@ -1776,7 +1774,7 @@
                   <goal>report</goal>
                 </goals>
                 <configuration>
-                  <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                  <dataFile>${build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
                   <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
                 </configuration>
               </execution>
@@ -1788,7 +1786,7 @@
                 <phase>pre-integration-test</phase>
                 <configuration>
                   <propertyName>failsafeArgLine</propertyName>
-                  <destFile>${basedir}/target/coverage-reports/jacoco-it.exec</destFile>
+                  <destFile>${build.directory}/coverage-reports/jacoco-it.exec</destFile>
                 </configuration>
               </execution>
               <execution>
@@ -1798,7 +1796,7 @@
                   <goal>report</goal>
                 </goals>
                 <configuration>
-                  <dataFile>${basedir}/target/coverage-reports/jacoco-it.exec</dataFile>
+                  <dataFile>${build.directory}/coverage-reports/jacoco-it.exec</dataFile>
                   <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                 </configuration>
               </execution>
