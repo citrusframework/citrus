@@ -37,7 +37,7 @@
   <!-- Http message endpoints -->
   <citrus-http:client id="helloHttpClient"
                       request-url="http://localhost:11080/hello"
-                      timeout="1000"/>
+                      timeout="5000"/>
 
   <citrus-http:server id="helloHttpServer"
                       port="11080"
@@ -47,7 +47,7 @@
 
   <citrus-http:client id="echoHttpClient"
                       request-url="http://localhost:12080/echo"
-                      timeout="1000"/>
+                      timeout="5000"/>
 
   <citrus-http:server id="echoHttpServer"
                       port="12080"
