@@ -20,6 +20,9 @@
         CITRUS-41 Citrus main application class
       </action>
       <action dev="christophd" type="fix">
+        GITHUB-78 Dynamic endpoints not working for http DSL
+      </action>
+      <action dev="christophd" type="fix">
         GITHUB-77 Missing 2.5 xsd references in spring.schemas
       </action>
       <action dev="christophd" type="fix">
