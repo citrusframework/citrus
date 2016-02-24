@@ -21,7 +21,7 @@
            attributeFormDefault="unqualified">
 
   <xs:import namespace="http://www.citrusframework.org/schema/testcase"
-             schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-2.4.xsd" />
+             schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-2.5.xsd" />
 
   <xs:element name="description" type="xs:string"/>
 
