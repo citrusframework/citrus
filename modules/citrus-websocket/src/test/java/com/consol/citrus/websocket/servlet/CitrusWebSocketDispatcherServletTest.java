@@ -30,7 +30,6 @@ import com.consol.citrus.websocket.handler.WebSocketUrlHandlerMapping;
 import com.consol.citrus.websocket.server.WebSocketServer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.util.DecoratedObjectFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,7 +148,6 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
 
         when(wsEndpointConfig.getEndpointUri()).thenReturn(endpointUri);
 
-        when(servletContext.getAttribute(DecoratedObjectFactory.ATTR)).thenReturn(null);
         when(servletContext.getContextHandler()).thenReturn(contextHandler);
         when(contextHandler.getServer()).thenReturn(new Server());
 

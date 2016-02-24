@@ -29,6 +29,9 @@
         GITHUB-74 MailServer stops on emtpy line
       </action>
       <action dev="christophd" type="fix">
+        GITHUB-73 Cant mvn install citrus with Java 1.7
+      </action>
+      <action dev="christophd" type="fix">
         GITHUB-70 Message payload lost for Http PATCH method
       </action>
       <action dev="christophd" type="fix">

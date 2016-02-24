@@ -169,7 +169,7 @@
     <activemq.version>5.12.1</activemq.version>
     <vertx.version>3.2.0</vertx.version>
     <groovy.version>2.4.5</groovy.version>
-    <jetty.version>9.3.6.v20151106</jetty.version>
+    <jetty.version>9.2.15.v20160210</jetty.version>
     <testng.version>6.9.9</testng.version>
     <slf4j.version>1.7.13</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
