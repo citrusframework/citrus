@@ -51,8 +51,8 @@
 
   <citrus-http:server id="echoHttpServer"
                       port="12080"
+                      timeout="5000"
                       auto-start="true"
                       root-parent-context="true"
                       resource-base="src/it/resources"/>
-
 </beans>
