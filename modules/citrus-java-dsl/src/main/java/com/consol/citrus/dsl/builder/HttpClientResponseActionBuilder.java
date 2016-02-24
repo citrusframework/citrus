@@ -46,6 +46,19 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         delegate.setDelegate(action);
     }
 
+    /**
+     * Default constructor using http client uri.
+     * @param delegate
+     * @param httpClientUri
+     */
+    public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, String httpClientUri) {
+        super();
+        action.setEndpointUri(httpClientUri);
+        message(httpMessage);
+        messageType(MessageType.XML);
+        delegate.setDelegate(action);
+    }
+
     @Override
     protected void setPayload(String payload) {
         httpMessage.setPayload(payload);

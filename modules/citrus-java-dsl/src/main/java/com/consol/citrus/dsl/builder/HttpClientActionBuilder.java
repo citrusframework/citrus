@@ -36,7 +36,8 @@ public class HttpClientActionBuilder extends AbstractTestActionBuilder<Delegatin
 	private ApplicationContext applicationContext;
 
 	/** Target http client instance */
-	private final Endpoint httpClient;
+	private Endpoint httpClient;
+	private String httpClientUri;
 
 	/**
 	 * Default constructor.
@@ -47,12 +48,27 @@ public class HttpClientActionBuilder extends AbstractTestActionBuilder<Delegatin
 	}
 
 	/**
+	 * Default constructor.
+	 */
+	public HttpClientActionBuilder(DelegatingTestAction<TestAction> action, String httpClientUri) {
+		super(action);
+		this.httpClientUri = httpClientUri;
+	}
+
+	/**
 	 * Generic response builder for expecting response messages on client.
 	 * @return
 	 */
 	public HttpClientResponseActionBuilder response() {
-		HttpClientResponseActionBuilder httpClientResponseActionBuilder = new HttpClientResponseActionBuilder(action, httpClient)
-				.withApplicationContext(applicationContext);
+		HttpClientResponseActionBuilder httpClientResponseActionBuilder;
+        if (httpClient != null) {
+            httpClientResponseActionBuilder = new HttpClientResponseActionBuilder(action, httpClient);
+        } else {
+            httpClientResponseActionBuilder = new HttpClientResponseActionBuilder(action, httpClientUri);
+        }
+
+        httpClientResponseActionBuilder.withApplicationContext(applicationContext);
+
 		return httpClientResponseActionBuilder;
 	}
 
@@ -61,9 +77,16 @@ public class HttpClientActionBuilder extends AbstractTestActionBuilder<Delegatin
 	 * @return
 	 */
 	public HttpClientResponseActionBuilder response(HttpStatus status) {
-		HttpClientResponseActionBuilder httpClientResponseActionBuilder = new HttpClientResponseActionBuilder(action, httpClient)
-				.withApplicationContext(applicationContext)
-				.status(status);
+        HttpClientResponseActionBuilder httpClientResponseActionBuilder;
+        if (httpClient != null) {
+            httpClientResponseActionBuilder = new HttpClientResponseActionBuilder(action, httpClient);
+        } else {
+            httpClientResponseActionBuilder = new HttpClientResponseActionBuilder(action, httpClientUri);
+        }
+
+        httpClientResponseActionBuilder.withApplicationContext(applicationContext);
+        httpClientResponseActionBuilder.status(status);
+
 		return httpClientResponseActionBuilder;
 	}
 
@@ -186,9 +209,15 @@ public class HttpClientActionBuilder extends AbstractTestActionBuilder<Delegatin
 	 * @return
 	 */
 	private HttpClientRequestActionBuilder request(HttpMethod method, String path) {
-		HttpClientRequestActionBuilder httpClientRequestActionBuilder = new HttpClientRequestActionBuilder(action, httpClient)
-				.withApplicationContext(applicationContext)
-				.method(method);
+        HttpClientRequestActionBuilder httpClientRequestActionBuilder;
+        if (httpClient != null) {
+            httpClientRequestActionBuilder = new HttpClientRequestActionBuilder(action, httpClient);
+        } else {
+            httpClientRequestActionBuilder = new HttpClientRequestActionBuilder(action, httpClientUri);
+        }
+
+        httpClientRequestActionBuilder.withApplicationContext(applicationContext);
+        httpClientRequestActionBuilder.method(method);
 
 		if (StringUtils.hasText(path)) {
 			httpClientRequestActionBuilder.path(path);

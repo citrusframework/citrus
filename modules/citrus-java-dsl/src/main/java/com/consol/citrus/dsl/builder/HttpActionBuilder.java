@@ -56,7 +56,7 @@ public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestA
 	 */
 	public HttpClientActionBuilder client(String httpClient) {
 		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-		HttpClientActionBuilder clientAction = new HttpClientActionBuilder(action, applicationContext.getBean(httpClient, Endpoint.class))
+		HttpClientActionBuilder clientAction = new HttpClientActionBuilder(action, httpClient)
 				.withApplicationContext(applicationContext);
 		return clientAction;
 	}
