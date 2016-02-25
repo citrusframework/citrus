@@ -104,7 +104,11 @@ public class ManagedBeanDefinition {
             }, new ReflectionUtils.MethodFilter() {
                 @Override
                 public boolean matches(Method method) {
-                    return method.getDeclaringClass().equals(type) && !method.getName().startsWith("set") && !method.getName().startsWith("get") && !method.getName().startsWith("is");
+                    return method.getDeclaringClass().equals(type)
+                            && !method.getName().startsWith("set")
+                            && !method.getName().startsWith("get")
+                            && !method.getName().startsWith("is")
+                            && !method.getName().startsWith("$jacoco"); // Fix for code coverage
                 }
             });
         } else {
