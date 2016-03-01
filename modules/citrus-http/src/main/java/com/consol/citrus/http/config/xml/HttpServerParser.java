@@ -18,19 +18,11 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractServerParser;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.server.AbstractServer;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Parser for Http server implementation in Citrus http namespace.
@@ -55,24 +47,6 @@ public class HttpServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("security-handler"), "securityHandler");
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
-
-        ManagedList<RuntimeBeanReference> webSocketReferences = new ManagedList<>();
-
-        Element socketsElement = DomUtils.getChildElementByTagName(element, "websockets");
-        if (socketsElement != null) {
-            List<Element> socketElements = DomUtils.getChildElements(socketsElement);
-            for (Element socketElement : socketElements) {
-                if (socketElement.hasAttribute("websocket")){
-                    webSocketReferences.add(new RuntimeBeanReference(socketElement.getAttribute("websocket")));
-                } else {
-                    throw new CitrusRuntimeException("Invalid '<websockets>..</websockets>' configuration - at least one '<websocket ref=\"..\" />' must be defined");
-                }
-            }
-            if (webSocketReferences.size() > 0) {
-                builder.addPropertyValue("webSockets", webSocketReferences);
-            }
-
-        }
     }
 
     @Override
