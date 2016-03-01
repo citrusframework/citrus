@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright 2006-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns="http://nufenen.uptime.local/schema/telnet/config"
+     targetNamespace="http://nufenen.uptime.local/schema/telnet/config"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
+
+    <xs:element name="server">
+        <xs:complexType>
+          <xs:attribute name="id" type="xs:ID" use="required"/>
+          <xs:attribute name="port" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Port to listen to. Default is 23
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="auto-start" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether to start this Telnet server automatically. Default is true. If set to false,
+                a test action is responsible for starting/stopping the server
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+           <xs:attribute name="user" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                User which is allowed to connect.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Password for authenticating the user.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
+          <xs:attribute name="message-converter" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+  <xs:element name="client">
+    <xs:annotation>
+      <xs:documentation>Executes an Telnet client request to a given server</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="host" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Host to connect to for sending an Telnet request. Default is 'localhost'
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="port" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Port to use. Default is 23
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="user" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            User used for connecting to the Telnet server.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Password used for password based authentication.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="prompt" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            alternate prompt instead of #
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="command-timeout" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            Timeout in milliseconds for how long to wait for the Telnet command to complete.
+            Default is 5 minutes.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="connection-timeout" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            Timeout in milliseconds for how long to for a connectiuon to connect.
+            Default is 1 minute.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="actor" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Actor used for switching groups of actions. See the reference documentation
+            for details.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="message-correlator" type="xs:string"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+      <xs:attribute name="polling-interval" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

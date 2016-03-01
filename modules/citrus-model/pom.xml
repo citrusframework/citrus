@@ -28,6 +28,7 @@
     <module>model-docker</module>
     <module>model-rmi</module>
     <module>model-jmx</module>
+    <module>model-telnet</module>
   </modules>
 
   <dependencies>
