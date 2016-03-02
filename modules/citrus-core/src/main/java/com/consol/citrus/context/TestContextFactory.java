@@ -63,6 +63,9 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     private EndpointFactory endpointFactory;
 
     @Autowired
+    private ReferenceResolver referenceResolver;
+
+    @Autowired
     private MessageConstructionInterceptors messageConstructionInterceptors;
 
     @Autowired(required=false)
@@ -132,6 +135,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         context.setMessageListeners(messageListeners);
         context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         context.setEndpointFactory(endpointFactory);
+        context.setReferenceResolver(referenceResolver);
         context.setApplicationContext(applicationContext);
 
         if (namespaceContextBuilder != null) {
@@ -218,6 +222,24 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
      */
     public void setEndpointFactory(EndpointFactory endpointFactory) {
         this.endpointFactory = endpointFactory;
+    }
+
+    /**
+     * Gets the value of the referenceResolver property.
+     *
+     * @return the referenceResolver
+     */
+    public ReferenceResolver getReferenceResolver() {
+        return referenceResolver;
+    }
+
+    /**
+     * Sets the referenceResolver property.
+     *
+     * @param referenceResolver
+     */
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
     /**

@@ -1,0 +1,6 @@
+endpoint.parser.jms=com.consol.citrus.jms.config.annotation.JmsEndpointConfigParser
+endpoint.parser.jms.sync=com.consol.citrus.jms.config.annotation.JmsSyncEndpointConfigParser
+endpoint.parser.http.client=com.consol.citrus.http.config.annotation.HttpClientConfigParser
+endpoint.parser.http.server=com.consol.citrus.http.config.annotation.HttpServerConfigParser
+endpoint.parser.ws.client=com.consol.citrus.ws.config.annotation.WebServiceClientConfigParser
+endpoint.parser.ws.server=com.consol.citrus.ws.config.annotation.WebServiceServerConfigParser

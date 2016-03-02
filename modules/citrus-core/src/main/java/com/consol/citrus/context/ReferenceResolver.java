@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,39 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.annotations;
+package com.consol.citrus.context;
 
-import java.lang.annotation.*;
+import java.util.List;
 
 /**
- * Marks field or parameter for endpoint injection.
  * @author Christoph Deppisch
- * @since 2.3
+ * @since 2.6
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
-public @interface CitrusEndpoint {
+public interface ReferenceResolver {
 
     /**
-     * Endpoint name usually referencing a Spring bean id.
+     * Resolve reference of type.
+     * @param type
+     * @param <T>
      * @return
      */
-    String name() default "";
+    <T> T resolve(Class<T> type);
 
     /**
-     * Endpoint properties.
+     * Resolve reference of type and name.
+     * @param name
+     * @param type
+     * @param <T>
      * @return
      */
-    CitrusEndpointProperty[] properties() default {};
+    <T> T resolve(String name, Class<T> type);
+
+    /**
+     * Resolve references to list of type.
+     * @param name
+     * @param type
+     * @param <T>
+     * @return
+     */
+    <T> List<T> resolve(String[] name, Class<T> type);
 }

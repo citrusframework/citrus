@@ -16,14 +16,16 @@
 
 package com.consol.citrus.junit;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.functions.Functions;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTest;
 import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.jms.config.annotation.JmsEndpointConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,6 +34,13 @@ import org.junit.Test;
  * @since 2.5
  */
 public class ResourceInjectionJUnit4IT extends JUnit4CitrusTest {
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @CitrusEndpoint
+    @JmsEndpointConfig(destinationName = "FOO.test.queue")
+    private Endpoint jmsEndpoint;
 
     @Test
     @CitrusTest
@@ -48,6 +57,9 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusTest {
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
     }
 
     @Test
@@ -65,5 +77,8 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusTest {
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
     }
 }

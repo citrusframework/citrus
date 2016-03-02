@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.testng;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
@@ -93,6 +94,9 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
             testResult.setAttribute(RUNNER_ATTRIBUTE, testRunner);
 
             TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
+
+            CitrusAnnotations.injectCitrusFramework(this, citrus);
+            CitrusAnnotations.injectEndpoints(this, ctx);
 
             invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
         } finally {

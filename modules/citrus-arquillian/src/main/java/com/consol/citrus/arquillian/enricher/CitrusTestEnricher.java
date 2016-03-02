@@ -17,24 +17,21 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.annotations.*;
+import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -57,79 +54,14 @@ public class CitrusTestEnricher implements TestEnricher {
         try {
             log.debug("Starting test class field injection for Citrus resources");
 
-            injectCitrusFramework(testCase);
-            injectEndpoints(testCase);
+            CitrusAnnotations.injectCitrusFramework(testCase, citrusInstance.get());
+            CitrusAnnotations.injectEndpoints(testCase, citrusInstance.get().createTestContext());
 
             log.info("Enriched test class with Citrus field resource injection");
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;
         }
-    }
-
-    /**
-     * Inject Citrus framework instance to the test class fields with {@link CitrusEndpoint} annotation.
-     * @param testCase
-     */
-    private void injectEndpoints(final Object testCase) {
-        ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                log.debug(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
-
-                CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
-                Endpoint endpoint;
-                if (StringUtils.hasText(endpointAnnotation.name())) {
-                    endpoint = citrusInstance.get().getEndpoint(endpointAnnotation.name(), (Class<Endpoint>) field.getType());
-                } else {
-                    endpoint = citrusInstance.get().getEndpoint((Class<Endpoint>) field.getType());
-                }
-
-                ReflectionUtils.setField(field, testCase, endpoint);
-            }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusEndpoint.class) &&
-                        Endpoint.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
-    }
-
-    /**
-     * Inject Citrus framework instance to the test class fields with {@link CitrusFramework} annotation.
-     * @param testCase
-     */
-    private void injectCitrusFramework(final Object testCase) {
-        ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                log.debug(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, testCase, citrusInstance.get());
-            }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusFramework.class) &&
-                        Citrus.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
     }
 
     @Override

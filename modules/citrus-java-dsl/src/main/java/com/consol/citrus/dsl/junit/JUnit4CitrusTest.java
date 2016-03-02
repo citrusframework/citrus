@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.junit;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -64,6 +65,9 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
             }
 
             TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
+
+            CitrusAnnotations.injectCitrusFramework(this, citrus);
+            CitrusAnnotations.injectEndpoints(this, ctx);
 
             invokeTestMethod(frameworkMethod, testCase, ctx);
         } finally {

@@ -16,15 +16,21 @@
 
 package com.consol.citrus.endpoint;
 
+import com.consol.citrus.annotations.CitrusEndpointConfig;
+import com.consol.citrus.config.annotation.*;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,14 +53,40 @@ public class DefaultEndpointFactory implements EndpointFactory {
     /** Default Citrus endpoint components from classpath resource properties */
     private Properties endpointComponentProperties;
 
+    /** Default Citrus endpoint annotation parsers from classpath resource properties */
+    private Properties endpointParserProperties;
+
     /** Endpoint cache for endpoint reuse */
     private Map<String, Endpoint> endpointCache = new ConcurrentHashMap<>();
+
+    @Autowired
+    private ReferenceResolver referenceResolver;
 
     /**
      * Default constructor.
      */
     public DefaultEndpointFactory() {
         loadEndpointComponentProperties();
+        loadEndpointParserProperties();
+    }
+
+    @Override
+    public Endpoint create(String endpointName, Annotation endpointConfig, TestContext context) {
+        String qualifier = endpointConfig.annotationType().getAnnotation(CitrusEndpointConfig.class).qualifier();
+        AnnotationConfigParser parser = getAnnotationParser(context.getApplicationContext()).get(qualifier);
+
+        if (parser == null) {
+            // try to get parser from default Citrus modules
+            parser = resolveDefaultAnnotationParser(qualifier);
+        }
+
+        if (parser == null) {
+            throw new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier));
+        }
+
+        Endpoint endpoint = parser.parse(endpointConfig);
+        endpoint.setName(endpointName);
+        return endpoint;
     }
 
     @Override
@@ -128,6 +160,32 @@ public class DefaultEndpointFactory implements EndpointFactory {
         return null;
     }
 
+    private Map<String, AnnotationConfigParser> getAnnotationParser(ApplicationContext applicationContext) {
+        return applicationContext.getBeansOfType(AnnotationConfigParser.class);
+    }
+
+    private AnnotationConfigParser resolveDefaultAnnotationParser(String qualifier) {
+        String annotationParserClassName = endpointParserProperties.getProperty(qualifier);
+
+        try {
+            if (annotationParserClassName != null) {
+                Class<AnnotationConfigParser> annotationParserClass = (Class<AnnotationConfigParser>) Class.forName(annotationParserClassName);
+                AnnotationConfigParser annotationParser = annotationParserClass.getConstructor(ReferenceResolver.class).newInstance(referenceResolver);
+                return annotationParser;
+            }
+        } catch (ClassNotFoundException e) {
+            log.warn(String.format("Unable to find default Citrus endpoint parser '%s' in classpath", annotationParserClassName), e);
+        } catch (InstantiationException e) {
+            log.warn(String.format("Unable to instantiate Citrus endpoint parser '%s'", annotationParserClassName), e);
+        } catch (IllegalAccessException e) {
+            log.warn(String.format("Unable to access Citrus endpoint parser '%s'", annotationParserClassName), e);
+        } catch (NoSuchMethodException | InvocationTargetException e) {
+            log.warn(String.format("Unable to instantiate Citrus endpoint parser '%s'", annotationParserClassName), e);
+        }
+
+        return null;
+    }
+
     /**
      * Loads property file from classpath holding default endpoint component definitions in Citrus.
      */
@@ -136,6 +194,17 @@ public class DefaultEndpointFactory implements EndpointFactory {
             endpointComponentProperties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("com/consol/citrus/endpoint/endpoint.components"));
         } catch (IOException e) {
             log.warn("Unable to laod default endpoint components from resource '%s'", e);
+        }
+    }
+
+    /**
+     * Loads property file from classpath holding default endpoint annotation parser definitions in Citrus.
+     */
+    private void loadEndpointParserProperties() {
+        try {
+            endpointParserProperties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("com/consol/citrus/endpoint/endpoint.parser"));
+        } catch (IOException e) {
+            log.warn("Unable to laod default endpoint annotation parsers from resource '%s'", e);
         }
     }
 }

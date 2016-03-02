@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.annotations;
+package com.consol.citrus.endpoint;
 
-import java.lang.annotation.*;
+import com.consol.citrus.annotations.CitrusEndpoint;
 
 /**
- * Marks field or parameter for endpoint injection.
+ * Endpoint builder interface. All endpoint builder implementations do implement this interface
+ * in order to build endpoints using a fluent Java API.
+ *
  * @author Christoph Deppisch
- * @since 2.3
+ * @since 2.6
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
-public @interface CitrusEndpoint {
+public interface EndpointBuilder<T extends Endpoint> {
 
     /**
-     * Endpoint name usually referencing a Spring bean id.
+     * Builds the endpoint.
      * @return
      */
-    String name() default "";
+    T build();
 
     /**
-     * Endpoint properties.
+     * Builds the endpoint from given endpoint annotations.
+     * @param endpointAnnotation
      * @return
      */
-    CitrusEndpointProperty[] properties() default {};
+    T build(CitrusEndpoint endpointAnnotation);
 }

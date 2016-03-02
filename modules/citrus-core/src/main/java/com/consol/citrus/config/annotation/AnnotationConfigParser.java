@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.annotations;
+package com.consol.citrus.config.annotation;
 
-import java.lang.annotation.*;
+import com.consol.citrus.endpoint.Endpoint;
+
+import java.lang.annotation.Annotation;
 
 /**
- * Marks field or parameter for endpoint injection.
  * @author Christoph Deppisch
- * @since 2.3
+ * @since 2.6
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
-public @interface CitrusEndpoint {
+public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint> {
 
-    /**
-     * Endpoint name usually referencing a Spring bean id.
-     * @return
-     */
-    String name() default "";
-
-    /**
-     * Endpoint properties.
-     * @return
-     */
-    CitrusEndpointProperty[] properties() default {};
+    T parse(A annotation);
 }

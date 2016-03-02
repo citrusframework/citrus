@@ -65,6 +65,9 @@ public class TestContext {
 
     /** Endpoint factory creates endpoint instances */
     private EndpointFactory endpointFactory;
+
+    /** Bean reference resolver */
+    private ReferenceResolver referenceResolver;
     
     /** Registered message validators */
     private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
@@ -438,6 +441,24 @@ public class TestContext {
      */
     public void setEndpointFactory(EndpointFactory endpointFactory) {
         this.endpointFactory = endpointFactory;
+    }
+
+    /**
+     * Gets the value of the referenceResolver property.
+     *
+     * @return the referenceResolver
+     */
+    public ReferenceResolver getReferenceResolver() {
+        return referenceResolver;
+    }
+
+    /**
+     * Sets the referenceResolver property.
+     *
+     * @param referenceResolver
+     */
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
     /**

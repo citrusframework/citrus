@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config;
 
+import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
@@ -46,6 +48,11 @@ public class CitrusSpringConfig {
     @Bean(name = "endpointFactory")
     public EndpointFactory getEndpointFactory() {
         return new DefaultEndpointFactory();
+    }
+
+    @Bean(name = "referenceResolver")
+    public ReferenceResolver getReferenceResolver() {
+        return new SpringBeanReferenceResolver();
     }
 
     @Bean(name = "messageConstructionInterceptors")
