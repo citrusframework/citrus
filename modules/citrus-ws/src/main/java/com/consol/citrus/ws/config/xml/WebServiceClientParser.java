@@ -36,7 +36,6 @@ import org.w3c.dom.Element;
 public class WebServiceClientParser extends AbstractEndpointParser {
 
     public static final String MESSAGE_SENDER_ATTRIBUTE = "message-sender";
-    public static final String MESSAGE_SENDERS_ATTRIBUTE = "message-senders";
     public static final String REQUEST_URL_ATTRIBUTE = "request-url";
 
     @Override
@@ -46,11 +45,9 @@ public class WebServiceClientParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute(REQUEST_URL_ATTRIBUTE), "defaultUri");
 
         if (element.hasAttribute("web-service-template") && (element.hasAttribute("message-factory") ||
-                element.hasAttribute(MESSAGE_SENDER_ATTRIBUTE) ||
-                element.hasAttribute(MESSAGE_SENDERS_ATTRIBUTE))) {
+                element.hasAttribute(MESSAGE_SENDER_ATTRIBUTE))) {
             parserContext.getReaderContext().error("When providing a 'web-service-template' reference, none of " +
-                    "'message-factory', '" + MESSAGE_SENDER_ATTRIBUTE +
-                    "', or '" + MESSAGE_SENDERS_ATTRIBUTE + "' should be set.", element);
+                    "'message-factory', '" + MESSAGE_SENDER_ATTRIBUTE + "' should be set.", element);
         }
 
         if (!element.hasAttribute(REQUEST_URL_ATTRIBUTE) && !element.hasAttribute("endpoint-resolver")) {
@@ -58,17 +55,11 @@ public class WebServiceClientParser extends AbstractEndpointParser {
                     REQUEST_URL_ATTRIBUTE, "endpoint-resolver"), element);
         }
 
-        if (element.hasAttribute(MESSAGE_SENDER_ATTRIBUTE) && element.hasAttribute(MESSAGE_SENDERS_ATTRIBUTE)) {
-            parserContext.getReaderContext().error(String.format("When '%s' is set, no '%s' attribute should be provided.",
-                    MESSAGE_SENDER_ATTRIBUTE, MESSAGE_SENDERS_ATTRIBUTE), element);
-        }
-
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("web-service-template"), "webServiceTemplate");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-factory"), "messageFactory", "messageFactory");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(MESSAGE_SENDER_ATTRIBUTE), "messageSender");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(MESSAGE_SENDERS_ATTRIBUTE), "messageSenders");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
 
