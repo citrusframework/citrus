@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-telnet="http://nufenen.uptime.local/schema/telnet/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                             http://nufenen.uptime.local/schema/telnet/config http://nufenen.uptime.local/schema/telnet/config/citrus-telnet-config.xsd">
+
+  <citrus-telnet:client id="telnetClient1"
+                     user="citrus"/>
+
+  <citrus-telnet:client id="telnetClient2"
+                     host="dev7"
+                     port="23"
+                     user="foo"
+                     password="bar"
+                     command-timeout="10000"
+                     connection-timeout="5000"/>
+
+</beans>
