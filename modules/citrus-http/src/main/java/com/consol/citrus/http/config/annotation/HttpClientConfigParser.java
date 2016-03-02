@@ -33,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpClientConfig, HttpClient> {
 

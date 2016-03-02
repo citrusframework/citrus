@@ -32,7 +32,7 @@ import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<JmsSyncEndpointConfig, JmsSyncEndpoint> {
 

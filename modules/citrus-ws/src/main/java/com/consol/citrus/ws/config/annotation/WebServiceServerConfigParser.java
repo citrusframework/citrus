@@ -31,7 +31,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser<WebServiceServerConfig, WebServiceServer> {
 

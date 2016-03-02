@@ -21,7 +21,7 @@ import com.consol.citrus.endpoint.EndpointBuilder;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public class AsyncSyncEndpointBuilder<A extends EndpointBuilder<? extends Endpoint>, S extends EndpointBuilder<? extends Endpoint>> {
 

@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 

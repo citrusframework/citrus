@@ -23,7 +23,7 @@ import com.consol.citrus.annotations.CitrusEndpoint;
  * in order to build endpoints using a fluent Java API.
  *
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public interface EndpointBuilder<T extends Endpoint> {
 

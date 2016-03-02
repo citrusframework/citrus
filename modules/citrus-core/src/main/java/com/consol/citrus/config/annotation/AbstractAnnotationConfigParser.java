@@ -23,7 +23,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public abstract class AbstractAnnotationConfigParser<A extends Annotation, T extends Endpoint> implements AnnotationConfigParser<A, T> {
 

@@ -33,7 +33,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.5
  */
 public class WebServiceClientConfigParser extends AbstractAnnotationConfigParser<WebServiceClientConfig, WebServiceClient> {
 
