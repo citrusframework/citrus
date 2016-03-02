@@ -19,7 +19,7 @@
     <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-mail&lt;/artifactId&gt;
-  &lt;version&gt;2.5.1&lt;/version&gt;
+  &lt;version&gt;2.6-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
     <para>As usual Citrus provides a customized mail configuration schema that
