@@ -130,8 +130,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testSQLResource() {
-	    String sql1 = "SELECT ORDERTYPE, STATUS FROM orders WHERE ID=5;";
-        String sql2 = "SELECT NAME, HEIGHT FROM customers WHERE ID=1;";
+	    String sql1 = "SELECT ORDERTYPE, STATUS FROM orders WHERE ID=5";
+        String sql2 = "SELECT NAME, HEIGHT FROM customers WHERE ID=1";
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap1 = new HashMap<String, Object>();
@@ -654,8 +654,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSQLStatementsWithFileResource() {
-        String sql1 = "select ORDERTYPE, STATUS from orders where ID=5;";
-        String sql2 = "select NAME, HEIGHT\nfrom customers\nwhere ID=1;";
+        String sql1 = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql2 = "select NAME, HEIGHT\nfrom customers\nwhere ID=1";
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap1 = new HashMap<String, Object>();

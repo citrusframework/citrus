@@ -84,6 +84,10 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 validateSqlStatement(stmt);
                 stmt = context.replaceDynamicContentInString(stmt.trim());
 
+                if (stmt.endsWith(";")) {
+                    stmt = stmt.substring(0, stmt.length()-1);
+                }
+
                 if (log.isDebugEnabled()) {
                     log.debug("Executing SQL query: " + stmt);
                 }
