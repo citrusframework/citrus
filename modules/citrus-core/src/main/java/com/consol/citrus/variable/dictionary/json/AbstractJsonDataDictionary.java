@@ -46,6 +46,10 @@ public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<
 
     @Override
     protected Message interceptMessage(Message message, String messageType, TestContext context) {
+        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
+            return message;
+        }
+
         JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
 
         try {
