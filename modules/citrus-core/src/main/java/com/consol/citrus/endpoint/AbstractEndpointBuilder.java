@@ -20,6 +20,7 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointProperty;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -112,7 +113,17 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
 
     @Override
     public T build() {
-        return getEndpoint();
+        T endpoint = getEndpoint();
+
+        if (endpoint instanceof InitializingBean) {
+            try {
+                ((InitializingBean) endpoint).afterPropertiesSet();
+            } catch (Exception e) {
+                throw new CitrusRuntimeException("Failed to build endpoint", e);
+            }
+        }
+
+        return endpoint;
     }
 
     /**

@@ -4,3 +4,5 @@ endpoint.parser.http.client=com.consol.citrus.http.config.annotation.HttpClientC
 endpoint.parser.http.server=com.consol.citrus.http.config.annotation.HttpServerConfigParser
 endpoint.parser.ws.client=com.consol.citrus.ws.config.annotation.WebServiceClientConfigParser
 endpoint.parser.ws.server=com.consol.citrus.ws.config.annotation.WebServiceServerConfigParser
+endpoint.parser.mail.client=com.consol.citrus.mail.config.annotation.MailClientConfigParser
+endpoint.parser.mail.server=com.consol.citrus.mail.config.annotation.MailServerConfigParser
