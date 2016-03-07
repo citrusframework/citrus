@@ -20,6 +20,8 @@ import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
+import com.consol.citrus.jmx.client.JmxClientBuilder;
+import com.consol.citrus.jmx.server.JmxServerBuilder;
 import com.consol.citrus.ws.client.WebServiceClientBuilder;
 import com.consol.citrus.ws.server.WebServiceServerBuilder;
 
@@ -58,5 +60,13 @@ public abstract class CitrusEndpoints {
      */
     public static ClientServerEndpointBuilder<WebServiceClientBuilder, WebServiceServerBuilder> soap() {
         return new ClientServerEndpointBuilder<>(new WebServiceClientBuilder(), new WebServiceServerBuilder());
+    }
+
+    /**
+     * Creates new JmxClient or JmxServer builder.
+     * @return
+     */
+    public static ClientServerEndpointBuilder<JmxClientBuilder, JmxServerBuilder> jmx() {
+        return new ClientServerEndpointBuilder<>(new JmxClientBuilder(), new JmxServerBuilder());
     }
 }
