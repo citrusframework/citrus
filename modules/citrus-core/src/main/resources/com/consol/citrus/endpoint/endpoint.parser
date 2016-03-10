@@ -8,3 +8,5 @@ endpoint.parser.mail.client=com.consol.citrus.mail.config.annotation.MailClientC
 endpoint.parser.mail.server=com.consol.citrus.mail.config.annotation.MailServerConfigParser
 endpoint.parser.jmx.client=com.consol.citrus.jmx.config.annotation.JmxClientConfigParser
 endpoint.parser.jmx.server=com.consol.citrus.jmx.config.annotation.JmxServerConfigParser
+endpoint.parser.rmi.client=com.consol.citrus.rmi.config.annotation.RmiClientConfigParser
+endpoint.parser.rmi.server=com.consol.citrus.rmi.config.annotation.RmiServerConfigParser
