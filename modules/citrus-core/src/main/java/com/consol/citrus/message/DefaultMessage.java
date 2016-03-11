@@ -68,10 +68,9 @@ public class DefaultMessage implements Message {
      * @param message
      */
     public DefaultMessage(Message message) {
-        this(message.getPayload(), message.copyHeaders());
+        this(message.getPayload());
 
-        this.headers.put(MessageHeaders.ID, message.getId());
-        this.headers.put(MessageHeaders.TIMESTAMP, message.getHeader(MessageHeaders.TIMESTAMP));
+        this.headers.putAll(message.getHeaders());
 
         for (String data : message.getHeaderData()) {
             addHeaderData(data);
@@ -199,9 +198,7 @@ public class DefaultMessage implements Message {
     }
 
     @Override
-    public Map<String, Object> copyHeaders() {
-        LinkedHashMap copy = new LinkedHashMap(headers.size());
-        copy.putAll(headers);
-        return copy;
+    public Map<String, Object> getHeaders() {
+        return headers;
     }
 }

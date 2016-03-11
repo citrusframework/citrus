@@ -137,7 +137,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
             messageBuilder.setPayloadData(message.getPayload(String.class));
 
             Map<String, Object> headers = new HashMap<String, Object>();
-            for (String headerName : message.copyHeaders().keySet()) {
+            for (String headerName : message.getHeaders().keySet()) {
                 if (!MessageHeaderUtils.isSpringInternalHeader(headerName) &&
                         !headerName.startsWith(MessageHeaders.MESSAGE_PREFIX)) {
                     headers.put(headerName, message.getHeader(headerName));

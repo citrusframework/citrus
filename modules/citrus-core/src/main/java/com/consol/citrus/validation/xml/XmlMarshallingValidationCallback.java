@@ -58,7 +58,7 @@ public abstract class XmlMarshallingValidationCallback<T> extends AbstractValida
     
     @Override
     public void validate(Message message, TestContext context) {
-        validate(unmarshalMessage(message), message.copyHeaders(), context);
+        validate(unmarshalMessage(message), message.getHeaders(), context);
     }
     
     @SuppressWarnings("unchecked")

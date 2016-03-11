@@ -48,7 +48,7 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
 
         Map<String, Object> citrusMessageHeaders = new HashMap<String, Object>();
         if (message.getPayload() instanceof com.consol.citrus.message.Message) {
-            citrusMessageHeaders = ((com.consol.citrus.message.Message) message.getPayload()).copyHeaders();
+            citrusMessageHeaders = ((com.consol.citrus.message.Message) message.getPayload()).getHeaders();
         }
 
         for (Entry<String, String> matchEntry : matchingHeaders.entrySet()) {

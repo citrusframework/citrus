@@ -55,7 +55,7 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
 
     @Override
     public void convertOutbound(javax.jms.Message jmsMessage, Message message, JmsEndpointConfiguration endpointConfiguration) {
-        Map<String, Object> headers = message.copyHeaders();
+        Map<String, Object> headers = message.getHeaders();
 
         if (headers != null) {
             endpointConfiguration.getHeaderMapper().fromHeaders(new MessageHeaders(headers), jmsMessage);

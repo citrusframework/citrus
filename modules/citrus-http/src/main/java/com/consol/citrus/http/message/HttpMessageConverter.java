@@ -42,9 +42,9 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
         }
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        endpointConfiguration.getHeaderMapper().fromHeaders(new org.springframework.messaging.MessageHeaders(httpMessage.copyHeaders()), httpHeaders);
+        endpointConfiguration.getHeaderMapper().fromHeaders(new org.springframework.messaging.MessageHeaders(httpMessage.getHeaders()), httpHeaders);
 
-        Map<String, Object> messageHeaders = httpMessage.copyHeaders();
+        Map<String, Object> messageHeaders = httpMessage.getHeaders();
         for (Map.Entry<String, Object> header : messageHeaders.entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
                     !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
