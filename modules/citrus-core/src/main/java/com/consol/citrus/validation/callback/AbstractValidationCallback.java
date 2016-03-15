@@ -35,7 +35,7 @@ public abstract class AbstractValidationCallback<T> implements ValidationCallbac
     
     @Override
     public void validate(Message message, TestContext context) {
-        validate((T) message.getPayload(), message.copyHeaders(), context);
+        validate((T) message.getPayload(), message.getHeaders(), context);
     }
     
     /**

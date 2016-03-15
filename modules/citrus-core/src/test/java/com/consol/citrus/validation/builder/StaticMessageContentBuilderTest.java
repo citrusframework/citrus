@@ -39,7 +39,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertEquals(message.copyHeaders().size(), testMessage.copyHeaders().size());
+        Assert.assertEquals(message.getHeaders().size(), testMessage.getHeaders().size());
         Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
         Assert.assertEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
     }

@@ -128,11 +128,11 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws IOException 
      */
     private boolean simulateHttpStatusCode(Message replyMessage) throws IOException {
-        if (replyMessage == null || CollectionUtils.isEmpty(replyMessage.copyHeaders())) {
+        if (replyMessage == null || CollectionUtils.isEmpty(replyMessage.getHeaders())) {
             return false;
         }
         
-        for (Entry<String, Object> headerEntry : replyMessage.copyHeaders().entrySet()) {
+        for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (headerEntry.getKey().equalsIgnoreCase(SoapMessageHeaders.HTTP_STATUS_CODE)) {
                 WebServiceConnection connection = TransportContextHolder.getTransportContext().getConnection();
                 
@@ -157,7 +157,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param replyMessage the internal reply message.
      */
     private void addMimeHeaders(SoapMessage response, Message replyMessage) {
-        for (Entry<String, Object> headerEntry : replyMessage.copyHeaders().entrySet()) {
+        for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (headerEntry.getKey().toLowerCase().startsWith(SoapMessageHeaders.HTTP_PREFIX)) {
                 String headerName = headerEntry.getKey().substring(SoapMessageHeaders.HTTP_PREFIX.length());
                 
@@ -197,7 +197,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param replyMessage
      */
     private void addSoapHeaders(SoapMessage response, Message replyMessage) throws TransformerException {
-        for (Entry<String, Object> headerEntry : replyMessage.copyHeaders().entrySet()) {
+        for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey()) ||
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
                 continue;

@@ -55,7 +55,7 @@ public abstract class JsonMappingValidationCallback<T> extends AbstractValidatio
 
     @Override
     public void validate(Message message, TestContext context) {
-        validate(readJson(message), message.copyHeaders(), context);
+        validate(readJson(message), message.getHeaders(), context);
     }
 
     @SuppressWarnings("unchecked")
