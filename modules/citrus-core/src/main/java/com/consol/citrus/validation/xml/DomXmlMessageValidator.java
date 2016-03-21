@@ -417,7 +417,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             case Node.ATTRIBUTE_NODE:
                 throw new IllegalStateException();
             case Node.COMMENT_NODE:
-                doComment(received);
+                validateXmlTree(received.getNextSibling(), source,
+                        validationContext, namespaceContext, context);
                 break;
             case Node.PROCESSING_INSTRUCTION_NODE:
                 doPI(received);
@@ -667,17 +668,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         Assert.isTrue(receivedValue.equals(sourceValue),
                 ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
                         + receivedAttribute.getLocalName() + "'", sourceValue, receivedValue));
-    }
-
-    /**
-     * Handle comment node during validation.
-     *
-     * @param received
-     */
-    private void doComment(Node received) {
-        if (log.isDebugEnabled()) {
-            log.debug("Ignored comment node (" + received.getNodeValue() + ")");
-        }
     }
 
     /**

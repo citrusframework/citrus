@@ -797,6 +797,24 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(message, controlMessage, context, validationContext);
     }
 
+    @Test
+    public void testCommentBeforeRootElement() {
+        Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<!-- some comment -->"
+                + "<root>"
+                + "<element>test</element>"
+                + "</root>");
+
+        Message controlMessage = new DefaultMessage("<root>"
+                + "<element>test</element>"
+                + "</root>");
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessage(message, controlMessage, context, validationContext);
+    }
+
     @Test(expectedExceptions = {ValidationException.class})
     public void testNamespaceQualifiedAttributeValueFails() {
         Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
