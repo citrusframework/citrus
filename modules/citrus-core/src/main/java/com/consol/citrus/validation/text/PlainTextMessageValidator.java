@@ -22,6 +22,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.DefaultMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -42,8 +43,15 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         }
         
         try {
-            validateText(receivedMessage.getPayload(String.class).trim(),
-                    context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
+            String controlValue = context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim());
+            String resultValue = receivedMessage.getPayload(String.class).trim();
+
+            if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
+                ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, controlValue, context);
+                return;
+            } else {
+                validateText(resultValue, controlValue);
+            }
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate plain text", e);
         }
