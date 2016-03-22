@@ -15,6 +15,36 @@
   </properties>
   
   <body>
+    <release version="2.5.2" date="01.04.2015" description="2.5.2 release">
+      <action dev="christophd" type="add">
+        CITRUS-46 Annotation config support for all modules
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-87 Validation matcher support in PlainTextMessageValidator
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-86 XML comments will counted as "normal" child element
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-85 XML comments before root element skip validation
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-84 Custom-Function, unclear Exception-Message
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-83 TestNG DataProvider and CitrusResource injection of TestRunner not working properly
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-82 Multithreaded selectors throw a ConcurrentModificationException
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-80 Empty message payload support in JSON data dictionary
+      </action>
+      <action dev="christophd" type="fix">
+        GITHUB-79 SQL query file resource produces SQLSyntaxError
+      </action>
+    </release>
+
     <release version="2.5.1" date="03.03.2015" description="2.5.1 release">
       <action dev="christophd" type="add">
         CITRUS-46 Annotation config support
