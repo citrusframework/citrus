@@ -13,6 +13,7 @@
   <xi:include href='validation-json.xml'/>
   <xi:include href='validation-xhtml.xml'/>
   <xi:include href='validation-plaintext.xml'/>
+  <xi:include href='validation-binary.xml'/>
 
   <section id="validation-callback">
     <title>Java DSL validation callbacks</title>
@@ -103,6 +104,9 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         <para><emphasis>defaultPlaintextMessageValidator: com.consol.citrus.validation.text.PlainTextMessageValidator</emphasis></para>
       </listitem>
       <listitem>
+        <para><emphasis>defaultBinaryBase64MessageValidator: com.consol.citrus.validation.text.BinaryBase64MessageValidator</emphasis></para>
+      </listitem>
+      <listitem>
         <para><emphasis>defaultXhtmlMessageValidator: com.consol.citrus.validation.xhtml.XhtmlMessageValidator</emphasis></para>
       </listitem>
       <listitem>
@@ -120,6 +124,8 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
     &lt;citrus:validator ref=&quot;defaultXmlMessageValidator&quot;/&gt;
     &lt;citrus:validator ref=&quot;defaultXpathMessageValidator&quot;/&gt;
     &lt;citrus:validator ref=&quot;defaultGroovyXmlMessageValidator&quot;/&gt;
+    &lt;citrus:validator ref=&quot;defaultPlaintextMessageValidator&quot;/&gt;
+    &lt;citrus:validator ref=&quot;defaultBinaryBase64MessageValidator&quot;/&gt;
     &lt;citrus:validator class=&quot;com.consol.citrus.validation.custom.CustomMessageValidator&quot;/&gt;
     &lt;citrus:validator ref=&quot;defaultJsonMessageValidator&quot;/&gt;
     &lt;citrus:validator ref=&quot;defaultJsonPathMessageValidator&quot;/&gt;

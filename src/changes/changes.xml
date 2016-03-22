@@ -17,6 +17,9 @@
   <body>
     <release version="2.5.2" date="01.04.2015" description="2.5.2 release">
       <action dev="christophd" type="add">
+        CITRUS-47 BinaryBase64 message validator
+      </action>
+      <action dev="christophd" type="add">
         CITRUS-46 Annotation config support for all modules
       </action>
       <action dev="christophd" type="fix">
