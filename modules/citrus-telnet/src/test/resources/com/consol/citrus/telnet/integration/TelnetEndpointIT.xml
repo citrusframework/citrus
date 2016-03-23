@@ -31,7 +31,7 @@
       <send endpoint="telnetClient1">
         <message>
           <payload>
-              <telnet-request xmlns="http://nufenen.uptime.local/schema/telnet/message">
+              <telnet-request xmlns="http://www.citrusframework.org/schema/telnet/message">
                 <command>command</command>
               </telnet-request>
            </payload>
@@ -42,7 +42,7 @@
       <receive endpoint="telnetClient1">
         <message>
           <payload>
-              <telnet-response xmlns="http://nufenen.uptime.local/schema/telnet/message">
+              <telnet-response xmlns="http://www.citrusframework.org/schema/telnet/message">
 				<reply />
               </telnet-response>
           </payload>

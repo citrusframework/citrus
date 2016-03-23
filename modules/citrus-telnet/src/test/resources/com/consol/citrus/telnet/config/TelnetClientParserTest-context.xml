@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans  xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:citrus-telnet="http://nufenen.uptime.local/schema/telnet/config"
+        xmlns:citrus-telnet="http://www.citrusframework.org/schema/telnet/config"
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                             http://nufenen.uptime.local/schema/telnet/config http://nufenen.uptime.local/schema/telnet/config/citrus-telnet-config.xsd">
+                             http://www.citrusframework.org/schema/telnet/config http://www.citrusframework.org/schema/telnet/config/citrus-telnet-config.xsd">
 
   <citrus-telnet:client id="telnetClient1"
                      user="citrus"/>

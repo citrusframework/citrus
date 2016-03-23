@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://nufenen.uptime.local/schema/telnet/message", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.citrusframework.org/schema/telnet/message", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.consol.citrus.telnet.model;

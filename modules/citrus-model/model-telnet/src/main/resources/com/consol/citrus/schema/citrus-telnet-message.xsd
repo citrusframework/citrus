@@ -15,8 +15,8 @@
   ~ limitations under the License.
   -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://nufenen.uptime.local/schema/telnet/message"
-           targetNamespace="http://nufenen.uptime.local/schema/telnet/message"
+           xmlns="http://www.citrusframework.org/schema/telnet/message"
+           targetNamespace="http://www.citrusframework.org/schema/telnet/message"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
