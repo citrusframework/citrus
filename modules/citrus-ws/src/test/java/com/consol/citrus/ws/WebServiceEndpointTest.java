@@ -81,7 +81,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
 
                 return responseMessage;
@@ -134,7 +134,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -192,7 +192,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
@@ -265,7 +265,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
@@ -342,7 +342,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -415,7 +415,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -490,7 +490,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -565,7 +565,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -710,7 +710,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -780,7 +780,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -851,7 +851,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -928,7 +928,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -1002,7 +1002,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -1062,7 +1062,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -1140,7 +1140,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
@@ -1218,7 +1218,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
 
                 return responseMessage;

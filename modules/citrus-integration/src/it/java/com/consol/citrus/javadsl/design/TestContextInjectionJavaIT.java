@@ -28,11 +28,28 @@ import org.testng.annotations.*;
  */
 public class TestContextInjectionJavaIT extends TestNGCitrusTestDesigner {
 
-    @Test @Parameters("context")
+    @Test
+    @Parameters("context")
     @CitrusTest
     public void contextInjection(@Optional @CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
         echo("${message}");
     }
+
+    @Test(dataProvider = "testData")
+    @Parameters({ "data", "context" })
+    @CitrusTest
+    public void contextInjectionCombinedWithParameters(String data, @CitrusResource TestContext context) {
+        context.setVariable("message", "Injection worked!");
+
+        echo("${message}");
+        echo("${data}");
+    }
+
+    @DataProvider
+    public Object[][] testData() {
+        return new Object[][] { { "hello", null }, { "bye", null } };
+    }
+
 }

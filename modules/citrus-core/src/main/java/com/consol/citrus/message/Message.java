@@ -68,10 +68,10 @@ public interface Message extends Serializable {
     List<String> getHeaderData();
 
     /**
-     * Gets exact copy of actual message headers.
+     * Gets message headers.
      * @return
      */
-    Map<String, Object> copyHeaders();
+    Map<String, Object> getHeaders();
 
     /**
      * Gets message payload with required type conversion.

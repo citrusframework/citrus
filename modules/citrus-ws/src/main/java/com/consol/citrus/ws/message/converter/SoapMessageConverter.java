@@ -92,7 +92,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         }
 
         // Copy headers into soap-header:
-        for (Entry<String, Object> headerEntry : soapMessage.copyHeaders().entrySet()) {
+        for (Entry<String, Object> headerEntry : soapMessage.getHeaders().entrySet()) {
             if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey())) {
                 continue;
             }

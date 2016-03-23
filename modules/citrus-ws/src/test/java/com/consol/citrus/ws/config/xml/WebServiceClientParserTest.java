@@ -109,7 +109,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
             createApplicationContext("failed1");
             Assert.fail("Missing bean creation exception due to web service template and message factory property set");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(e.getMessage().contains("none of 'message-factory', 'message-sender', or 'message-senders' should be set"), e.getMessage());
+            Assert.assertTrue(e.getMessage().contains("none of 'message-factory', 'message-sender' should be set"), e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
             createApplicationContext("failed2");
             Assert.fail("Missing bean creation exception due to web service template and message sender property set");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(e.getMessage().contains("none of 'message-factory', 'message-sender', or 'message-senders' should be set"), e.getMessage());
+            Assert.assertTrue(e.getMessage().contains("none of 'message-factory', 'message-sender' should be set"), e.getMessage());
         }
     }
 }

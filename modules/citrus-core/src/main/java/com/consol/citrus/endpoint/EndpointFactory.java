@@ -18,6 +18,8 @@ package com.consol.citrus.endpoint;
 
 import com.consol.citrus.context.TestContext;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Endpoint factory tries to get endpoint instance by parsing an endpoint uri. Uri can have parameters
  * that get passed to the endpoint configuration.
@@ -40,4 +42,16 @@ public interface EndpointFactory {
      * @return
      */
     Endpoint create(String endpointUri, TestContext context);
+
+    /**
+     * Finds endpoint by parsing the given endpoint annotation. The test context helps to create endpoints
+     * by providing the Spring application context so registered beans and bean references can be set as
+     * configuration properties.
+     *
+     * @param endpointName
+     * @param endpointConfig
+     * @param context
+     * @return
+     */
+    Endpoint create(String endpointName, Annotation endpointConfig, TestContext context);
 }

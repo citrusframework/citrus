@@ -1,0 +1,12 @@
+endpoint.parser.jms=com.consol.citrus.jms.config.annotation.JmsEndpointConfigParser
+endpoint.parser.jms.sync=com.consol.citrus.jms.config.annotation.JmsSyncEndpointConfigParser
+endpoint.parser.http.client=com.consol.citrus.http.config.annotation.HttpClientConfigParser
+endpoint.parser.http.server=com.consol.citrus.http.config.annotation.HttpServerConfigParser
+endpoint.parser.ws.client=com.consol.citrus.ws.config.annotation.WebServiceClientConfigParser
+endpoint.parser.ws.server=com.consol.citrus.ws.config.annotation.WebServiceServerConfigParser
+endpoint.parser.mail.client=com.consol.citrus.mail.config.annotation.MailClientConfigParser
+endpoint.parser.mail.server=com.consol.citrus.mail.config.annotation.MailServerConfigParser
+endpoint.parser.jmx.client=com.consol.citrus.jmx.config.annotation.JmxClientConfigParser
+endpoint.parser.jmx.server=com.consol.citrus.jmx.config.annotation.JmxServerConfigParser
+endpoint.parser.rmi.client=com.consol.citrus.rmi.config.annotation.RmiClientConfigParser
+endpoint.parser.rmi.server=com.consol.citrus.rmi.config.annotation.RmiServerConfigParser

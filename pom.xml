@@ -175,7 +175,7 @@
     <slf4j.version>1.7.13</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
     <jackson.version>2.6.3</jackson.version>
-    <arquillian.version>1.1.10.Final</arquillian.version>
+    <arquillian.version>1.1.11.Final</arquillian.version>
     <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
 

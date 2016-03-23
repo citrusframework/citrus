@@ -39,6 +39,7 @@ import org.testng.annotations.*;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -115,15 +116,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected Object[] resolveParameter(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
+        Object[] dataProviderParams = null;
         if (method.getAnnotation(Test.class) != null &&
                 StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
             Method dataProvider = ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider());
             Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(dataProvider, this,
                     resolveParameter(testResult, dataProvider, testCase, context, -1));
             if (parameters != null) {
-                Object[] dataProviderParams = parameters[invocationCount % parameters.length];
+                dataProviderParams = parameters[invocationCount % parameters.length];
                 injectTestParameters(method, testCase, dataProviderParams);
-                return dataProviderParams;
             }
         }
 
@@ -143,6 +144,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 values[i] = testResult;
             } else if (parameterType.equals(ITestContext.class)) {
                 values[i] = testResult.getTestContext();
+            } else if (values[i] == null && dataProviderParams != null && i < dataProviderParams.length) {
+                values[i] = dataProviderParams[i];
             }
         }
 
@@ -310,8 +313,11 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         } else if (testNgParameters != null) {
             parameterNames = testNgParameters.value();
         } else {
-            throw new CitrusRuntimeException("Missing parameters annotation, " +
-                    "please provide parameter names with proper annotation when using data provider!");
+            List<String> methodParameterNames = new ArrayList<>();
+            for (Parameter parameter : method.getParameters()) {
+                methodParameterNames.add(parameter.getName());
+            }
+            parameterNames = methodParameterNames.toArray(new String[methodParameterNames.size()]);
         }
 
         return parameterNames;

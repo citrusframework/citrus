@@ -32,4 +32,10 @@ public @interface CitrusEndpoint {
      * @return
      */
     String name() default "";
+
+    /**
+     * Endpoint properties.
+     * @return
+     */
+    CitrusEndpointProperty[] properties() default {};
 }

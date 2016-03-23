@@ -16,15 +16,17 @@
 
 package com.consol.citrus.javadsl.design;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.functions.Functions;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.testng.TestNGCitrusTest;
-import org.testng.*;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.jms.config.annotation.JmsEndpointConfig;
+import org.testng.Assert;
 import org.testng.annotations.*;
 
 /**
@@ -33,7 +35,15 @@ import org.testng.annotations.*;
  */
 public class ResourceInjectionJavaIT extends TestNGCitrusTest {
 
-    @Test @Parameters( { "designer", "context" })
+    @CitrusFramework
+    private Citrus citrus;
+
+    @CitrusEndpoint
+    @JmsEndpointConfig(destinationName = "FOO.test.queue")
+    private Endpoint jmsEndpoint;
+
+    @Test
+    @Parameters( { "designer", "context" })
     @CitrusTest
     public void injectResourceDesigner(@Optional @CitrusResource TestDesigner testDesigner, @Optional @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
@@ -48,9 +58,13 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
     }
 
-    @Test @Parameters( { "runner", "context" })
+    @Test
+    @Parameters( { "runner", "context" })
     @CitrusTest
     public void injectResourceRunner(@Optional @CitrusResource TestRunner testRunner, @Optional @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
@@ -65,5 +79,57 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
+    }
+
+    @Test(dataProvider = "testData")
+    @Parameters( { "data", "designer", "context" })
+    @CitrusTest
+    public void injectResourceDesignerCombinedWithParameter(String data, @CitrusResource TestDesigner testDesigner, @CitrusResource TestContext context) {
+        final String number = Functions.randomNumber(10L, context);
+        context.setVariable("message", "Injection worked!");
+
+        testDesigner.echo("${message}");
+        testDesigner.echo("${data}");
+        testDesigner.createVariable("random", number);
+
+        testDesigner.action(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                Assert.assertEquals(context.getVariable("random"), number);
+            }
+        });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
+    }
+
+    @Test(dataProvider = "testData")
+    @Parameters( { "data", "runner", "context" })
+    @CitrusTest
+    public void injectResourceRunnerCombinedWithParameter(String data, @CitrusResource TestRunner testRunner, @CitrusResource TestContext context) {
+        final String number = Functions.randomNumber(10L, context);
+        context.setVariable("message", "Injection worked!");
+
+        testRunner.echo("${message}");
+        testRunner.echo("${data}");
+        testRunner.createVariable("random", number);
+
+        testRunner.run(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                Assert.assertEquals(context.getVariable("random"), number);
+            }
+        });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
+    }
+
+    @DataProvider
+    public Object[][] testData() {
+        return new Object[][] { { "hello", null, null }, { "bye", null, null } };
     }
 }

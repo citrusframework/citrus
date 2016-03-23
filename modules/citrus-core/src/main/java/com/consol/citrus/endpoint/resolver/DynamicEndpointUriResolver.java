@@ -45,7 +45,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
      * Get the endpoint uri according to message header entry with fallback default uri.
      */
     public String resolveEndpointUri(Message message, String defaultUri) {
-        Map<String, Object> headers = message.copyHeaders();
+        Map<String, Object> headers = message.getHeaders();
 
         String requestUri;
         if (headers.containsKey(ENDPOINT_URI_HEADER_NAME)) {

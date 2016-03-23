@@ -18,7 +18,6 @@ package com.consol.citrus.functions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.variable.VariableUtils;
 import org.springframework.util.StringUtils;
 
@@ -95,10 +94,6 @@ public final class FunctionUtils {
                 }
 
                 final String value = resolveFunction(variableNameBuf.toString(), context);
-                if (value == null) {
-                    throw new NoSuchFunctionException("Function: " +
-                            VariableUtils.cutOffVariablesPrefix(variableNameBuf.toString()) + " could not be found");
-                }
 
                 strBuffer.append(newString.substring(startIndex, searchIndex));
 
@@ -145,6 +140,12 @@ public final class FunctionUtils {
         parameterString = VariableUtils.replaceVariablesInString(parameterString, context, false);
         parameterString = replaceFunctionsInString(parameterString, context);
 
-        return library.getFunction(function).execute(FunctionParameterHelper.getParameterList(parameterString), context);
+        String value = library.getFunction(function).execute(FunctionParameterHelper.getParameterList(parameterString), context);
+
+        if (value == null) {
+            return "";
+        } else {
+            return value;
+        }
     }
 }

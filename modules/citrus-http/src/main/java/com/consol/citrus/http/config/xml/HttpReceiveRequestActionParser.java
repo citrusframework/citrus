@@ -103,7 +103,7 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);
-        Map<String, Object> messageHeaders = httpMessage.copyHeaders();
+        Map<String, Object> messageHeaders = httpMessage.getHeaders();
         messageHeaders.remove(MessageHeaders.ID);
         messageHeaders.remove(MessageHeaders.TIMESTAMP);
         messageBuilder.setMessageHeaders(messageHeaders);

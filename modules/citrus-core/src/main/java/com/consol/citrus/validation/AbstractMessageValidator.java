@@ -68,8 +68,8 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
                 context);
 
         // validate message headers
-        validateMessageHeader(controlMessage.copyHeaders(),
-                receivedMessage.copyHeaders(),
+        validateMessageHeader(controlMessage.getHeaders(),
+                receivedMessage.getHeaders(),
                 validationContext,
                 context);
 

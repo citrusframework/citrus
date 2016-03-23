@@ -77,7 +77,7 @@ public class HttpSendResponseActionParser extends SendMessageActionParser {
 
         Element body = DomUtils.getChildElementByTagName(element, "body");
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);
-        Map<String, Object> messageHeaders = httpMessage.copyHeaders();
+        Map<String, Object> messageHeaders = httpMessage.getHeaders();
         messageHeaders.remove(MessageHeaders.ID);
         messageHeaders.remove(MessageHeaders.TIMESTAMP);
         messageBuilder.setMessageHeaders(messageHeaders);

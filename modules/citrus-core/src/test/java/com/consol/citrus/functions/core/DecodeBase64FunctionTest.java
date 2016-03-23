@@ -30,7 +30,7 @@ import java.util.Collections;
  * @author Christoph Deppisch
  */
 public class DecodeBase64FunctionTest extends AbstractTestNGUnitTest {
-    DecodeBase64Function function = new DecodeBase64Function();
+    private DecodeBase64Function function = new DecodeBase64Function();
     
     @Test
     public void testFunction() {

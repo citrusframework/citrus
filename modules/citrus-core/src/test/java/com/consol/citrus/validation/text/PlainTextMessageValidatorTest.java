@@ -30,12 +30,30 @@ import org.testng.annotations.Test;
  */
 public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
+    private PlainTextMessageValidator validator = new PlainTextMessageValidator();
+
     @Test
     public void testPlainTextValidation() {
-        PlainTextMessageValidator validator = new PlainTextMessageValidator();
-        
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello World!");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+    }
+
+    @Test
+    public void testPlainTextValidationContains() {
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("@contains('World!')@");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testPlainTextValidationContainsError() {
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("@contains('Space!')@");
 
         ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
@@ -43,8 +61,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPlainTextValidationVariableSupport() {
-        PlainTextMessageValidator validator = new PlainTextMessageValidator();
-        
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello ${world}!");
         
@@ -56,8 +72,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPlainTextValidationWrongValue() {
-        PlainTextMessageValidator validator = new PlainTextMessageValidator();
-        
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello Citrus!");
 
