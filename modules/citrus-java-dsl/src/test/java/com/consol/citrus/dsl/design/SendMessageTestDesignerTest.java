@@ -123,12 +123,12 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getMessage().copyHeaders().size(), message.copyHeaders().size());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
         Assert.assertEquals(messageBuilder.getMessage().getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
 
         Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(constructed.copyHeaders().size(), message.copyHeaders().size());
+        Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size());
         Assert.assertEquals(constructed.getHeader("operation"), "foo");
         Assert.assertEquals(constructed.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
     }
@@ -161,12 +161,12 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "new");
-        Assert.assertEquals(messageBuilder.getMessage().copyHeaders().size(), message.copyHeaders().size());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
         Assert.assertEquals(messageBuilder.getMessage().getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
 
         Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(constructed.copyHeaders().size(), message.copyHeaders().size() + 1);
+        Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size() + 1);
         Assert.assertEquals(constructed.getHeader("operation"), "foo");
         Assert.assertEquals(constructed.getHeader("additional"), "new");
     }

@@ -60,7 +60,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         }
         soapFault.faultCode(context.replaceDynamicContentInString(faultCode));
 
-        for (Map.Entry<String, Object> header : soapMessage.copyHeaders().entrySet()) {
+        for (Map.Entry<String, Object> header : soapMessage.getHeaders().entrySet()) {
             if (!header.getKey().equals(MessageHeaders.ID)) {
                 soapFault.setHeader(header.getKey(), header.getValue());
             }

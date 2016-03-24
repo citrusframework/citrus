@@ -95,8 +95,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
             TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
 
-            CitrusAnnotations.injectCitrusFramework(this, citrus);
-            CitrusAnnotations.injectEndpoints(this, ctx);
+            CitrusAnnotations.injectAll(this, citrus, ctx);
 
             invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
         } finally {

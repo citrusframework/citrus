@@ -95,7 +95,7 @@ public class IdGeneratingFunction implements Function {
       </p>
       
       <pre class="prettyprint linenums">&lt;citrus:function-library id=&quot;myCustomFunctionLibrary&quot; prefix=&quot;mcfl:&quot;&gt;
-            &lt;citrus:function name=&quot;generateId&quot;&gt; class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
+            &lt;citrus:function name=&quot;generateId&quot; class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
 &lt;/citrus:function-library&gt;</pre>
 
       <p>
@@ -173,8 +173,8 @@ public class IdGeneratingFunction implements Function {
       </p>
       
       <pre class="prettyprint linenums">&lt;citrus:function-library id=&quot;myCustomFunctionLibrary&quot; prefix=&quot;mcfl:&quot;&gt;
-            &lt;citrus:function name=&quot;generateId&quot;&gt; class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
-            &lt;citrus:function name=&quot;greeting&quot;&gt; ref=&quot;greetingFunction&quot;/&gt;
+            &lt;citrus:function name=&quot;generateId&quot; class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
+            &lt;citrus:function name=&quot;greeting&quot; ref=&quot;greetingFunction&quot;/&gt;
 &lt;/citrus:function-library&gt;
 
 &lt;bean id=&quot;greetingFunction&quot; class=&quot;com.mycompany.citrus.extension.functions.GreetingFunction&quot;/&gt;</pre>

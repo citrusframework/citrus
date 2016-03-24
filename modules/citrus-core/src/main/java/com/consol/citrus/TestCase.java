@@ -375,7 +375,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         }
 
         for (int i = 0; i < parameterNames.length; i++) {
-            this.parameters.put(parameterNames[i], parameterValues[i]);
+            if (parameterValues[i] != null) {
+                this.parameters.put(parameterNames[i], parameterValues[i]);
+            }
         }
     }
 

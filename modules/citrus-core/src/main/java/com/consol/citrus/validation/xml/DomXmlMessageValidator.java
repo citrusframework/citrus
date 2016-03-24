@@ -38,6 +38,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.*;
+import org.springframework.util.xml.DomUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
@@ -411,13 +412,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             case Node.ELEMENT_NODE:
                 doElement(received, source, validationContext, namespaceContext, context);
                 break;
-            case Node.TEXT_NODE: case Node.CDATA_SECTION_NODE:
-                doText(received, source);
-                break;
             case Node.ATTRIBUTE_NODE:
                 throw new IllegalStateException();
             case Node.COMMENT_NODE:
-                doComment(received);
+                validateXmlTree(received.getNextSibling(), source,
+                        validationContext, namespaceContext, context);
                 break;
             case Node.PROCESSING_INSTRUCTION_NODE:
                 doPI(received);
@@ -525,16 +524,18 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             return;
         }
 
+        doText((Element) received, (Element) source);
+
         //work on child nodes
-        NodeList receivedChilds = received.getChildNodes();
-        NodeList sourceChilds = source.getChildNodes();
+        List<Element> receivedChildElements = DomUtils.getChildElements((Element) received);
+        List<Element> sourceChildElements = DomUtils.getChildElements((Element) source);
 
-        Assert.isTrue(receivedChilds.getLength() == sourceChilds.getLength(),
+        Assert.isTrue(receivedChildElements.size() == sourceChildElements.size(),
                 ValidationUtils.buildValueMismatchErrorMessage("Number of child elements not equal for element '"
-                    + received.getLocalName() + "'", sourceChilds.getLength(), receivedChilds.getLength()));
+                    + received.getLocalName() + "'", sourceChildElements.size(), receivedChildElements.size()));
 
-        for(int i = 0; i<receivedChilds.getLength(); i++) {
-            this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i),
+        for (int i = 0; i < receivedChildElements.size(); i++) {
+            this.validateXmlTree(receivedChildElements.get(i), sourceChildElements.get(i),
                     validationContext, namespaceContext, context);
         }
 
@@ -550,28 +551,31 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param received
      * @param source
      */
-    private void doText(Node received, Node source) {
+    private void doText(Element received, Element source) {
         if (log.isDebugEnabled()) {
-            log.debug("Validating node value for element: " + received.getParentNode());
+            log.debug("Validating node value for element: " + received.getLocalName());
         }
 
-        if (received.getNodeValue() != null) {
-            Assert.isTrue(source.getNodeValue() != null,
-                    ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
-                            + received.getParentNode().getLocalName() + "'", null, received.getNodeValue().trim()));
+        String receivedText = DomUtils.getTextValue(received);
+        String sourceText = DomUtils.getTextValue(source);
 
-            Assert.isTrue(received.getNodeValue().trim().equals(source.getNodeValue().trim()),
+        if (receivedText != null) {
+            Assert.isTrue(sourceText != null,
                     ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
-                            + received.getParentNode().getLocalName() + "'", source.getNodeValue().trim(),
-                            received.getNodeValue().trim()));
+                            + received.getLocalName() + "'", null, receivedText.trim()));
+
+            Assert.isTrue(receivedText.trim().equals(sourceText.trim()),
+                    ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
+                            + received.getLocalName() + "'", sourceText.trim(),
+                            receivedText.trim()));
         } else {
-            Assert.isTrue(source.getNodeValue() == null,
+            Assert.isTrue(sourceText == null,
                     ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
-                            + received.getParentNode().getLocalName() + "'", source.getNodeValue().trim(), null));
+                            + received.getLocalName() + "'", sourceText.trim(), null));
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Node value '" + received.getNodeValue().trim() + "': OK");
+            log.debug("Node value '" + receivedText.trim() + "': OK");
         }
     }
 
@@ -667,17 +671,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         Assert.isTrue(receivedValue.equals(sourceValue),
                 ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
                         + receivedAttribute.getLocalName() + "'", sourceValue, receivedValue));
-    }
-
-    /**
-     * Handle comment node during validation.
-     *
-     * @param received
-     */
-    private void doComment(Node received) {
-        if (log.isDebugEnabled()) {
-            log.debug("Ignored comment node (" + received.getNodeValue() + ")");
-        }
     }
 
     /**

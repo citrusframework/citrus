@@ -43,7 +43,7 @@ public class CamelMessageConverter implements MessageConverter<Exchange, CamelEn
     @Override
     public void convertOutbound(Exchange exchange, Message message, CamelEndpointConfiguration endpointConfiguration, TestContext context) {
         org.apache.camel.Message in = exchange.getIn();
-        for (Map.Entry<String, Object> header : message.copyHeaders().entrySet()) {
+        for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
             in.setHeader(header.getKey(), header.getValue());
         }
         in.setBody(message.getPayload());

@@ -39,7 +39,7 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
 
         } else {
             return MessageBuilder.withPayload(internalMessage.getPayload())
-                    .copyHeaders(internalMessage.copyHeaders())
+                    .copyHeaders(internalMessage.getHeaders())
                     .build();
         }
     }

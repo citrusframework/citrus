@@ -113,7 +113,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
      */
     private void buildOutMessage(Exchange exchange, Message message) {
         org.apache.camel.Message reply = exchange.getOut();
-        for (Map.Entry<String, Object> header : message.copyHeaders().entrySet()) {
+        for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX)) {
                 reply.setHeader(header.getKey(), header.getValue());
             }

@@ -46,6 +46,31 @@ public abstract class CitrusAnnotations {
     }
 
     /**
+     * Creates new Citrus instance and injects all supported components and endpoints to target object using annotations.
+     * @param target
+     */
+    public static final void injectAll(final Object target) {
+        injectAll(target, Citrus.newInstance());
+    }
+
+    /**
+     * Creates new Citrus test context and injects all supported components and endpoints to target object using annotations.
+     * @param target
+     */
+    public static final void injectAll(final Object target, final Citrus citrusFramework) {
+        injectAll(target, citrusFramework, citrusFramework.createTestContext());
+    }
+
+    /**
+     * Injects all supported components and endpoints to target object using annotations.
+     * @param target
+     */
+    public static final void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
+        injectCitrusFramework(target, citrusFramework);
+        injectEndpoints(target, context);
+    }
+
+    /**
      * Reads all {@link CitrusEndpoint} and {@link CitrusEndpointConfig} related annotations on target object field declarations and
      * injects proper endpoint instances.
      *

@@ -66,8 +66,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
 
             TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
 
-            CitrusAnnotations.injectCitrusFramework(this, citrus);
-            CitrusAnnotations.injectEndpoints(this, ctx);
+            CitrusAnnotations.injectAll(this, citrus, ctx);
 
             invokeTestMethod(frameworkMethod, testCase, ctx);
         } finally {

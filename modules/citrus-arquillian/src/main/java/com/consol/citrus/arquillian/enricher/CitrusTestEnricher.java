@@ -54,8 +54,7 @@ public class CitrusTestEnricher implements TestEnricher {
         try {
             log.debug("Starting test class field injection for Citrus resources");
 
-            CitrusAnnotations.injectCitrusFramework(testCase, citrusInstance.get());
-            CitrusAnnotations.injectEndpoints(testCase, citrusInstance.get().createTestContext());
+            CitrusAnnotations.injectAll(testCase, citrusInstance.get());
 
             log.info("Enriched test class with Citrus field resource injection");
         } catch (Exception e) {
