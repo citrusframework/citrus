@@ -23,6 +23,9 @@
         CITRUS-46 Annotation config support for all modules
       </action>
       <action dev="christophd" type="fix">
+        GITHUB-89 StringIndexOutOfBoundsException in XMLUtils.getTargetCharset()
+      </action>
+      <action dev="christophd" type="fix">
         GITHUB-87 Validation matcher support in PlainTextMessageValidator
       </action>
       <action dev="christophd" type="fix">

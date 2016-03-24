@@ -430,11 +430,12 @@ public final class XMLUtils {
 
         char doubleQuote = '\"';
         char singleQuote = '\'';
-        // make sure pay load has an XML encoding string
-        if (payload.startsWith("<?xml") && payload.contains("encoding") && payload.contains("?>")) {
+        // make sure payload has an XML encoding string
+        String encodingKey = "encoding";
+        if (payload.startsWith("<?xml") && payload.contains(encodingKey) && payload.contains("?>") && (payload.indexOf(encodingKey) < payload.indexOf("?>"))) {
 
             // extract only encoding part, as otherwise the rest of the complete pay load will be load
-            String encoding = payload.substring(payload.indexOf("encoding") + 8, payload.indexOf("?>"));
+            String encoding = payload.substring(payload.indexOf(encodingKey) + encodingKey.length(), payload.indexOf("?>"));
 
             char quoteChar = doubleQuote;
             int idxDoubleQuote = encoding.indexOf(doubleQuote);

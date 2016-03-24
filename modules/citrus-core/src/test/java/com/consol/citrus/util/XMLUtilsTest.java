@@ -345,6 +345,22 @@ public class XMLUtilsTest {
         doc = XMLUtils.parseMessagePayload("<?xml version='1.0' encoding = 'ISO-8859-1' standalone=\"yes\"?>" +
         		"<testRequest xmlns='http://www.consol.de/test-default'></testRequest>");
         Assert.assertNotNull(doc);
+
+        doc = XMLUtils.parseMessagePayload("<?xml version='1.0'?>" +
+        		"<testRequest xmlns='http://www.consol.de/test-default'></testRequest>");
+        Assert.assertNotNull(doc);
+
+        doc = XMLUtils.parseMessagePayload("<?xml version='1.0'?>" +
+                "<testRequest xmlns='http://www.consol.de/test-default'>encoding</testRequest>");
+        Assert.assertNotNull(doc);
+
+        doc = XMLUtils.parseMessagePayload("<?xml version='1.0' encoding='UTF-8'?>" +
+                "<testRequest xmlns='http://www.consol.de/test-default'><![CDATA[<?xml version='1.0' encoding='some unknown encoding'?><message>Nested</message>]]></testRequest>");
+        Assert.assertNotNull(doc);
+
+        doc = XMLUtils.parseMessagePayload("<?xml version='1.0'?>" +
+                "<testRequest xmlns='http://www.consol.de/test-default'><![CDATA[<?xml version='1.0' encoding='some unknown encoding'?><message>Nested</message>]]></testRequest>");
+        Assert.assertNotNull(doc);
     }
 
     @Test
