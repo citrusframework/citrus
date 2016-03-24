@@ -68,7 +68,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
             log.debug(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
         }
 
-        MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
+        MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         getEndpointConfiguration().getJavaMailSender().send(mimeMessage.getMimeMessage());
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

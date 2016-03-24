@@ -163,7 +163,7 @@ public class JmxEndpointMBean implements DynamicMBean {
      */
     private Object handleInvocation(ManagedBeanInvocation mbeanInvocation) {
         Message response = endpointAdapter.handleMessage(endpointConfiguration.getMessageConverter()
-                .convertInbound(mbeanInvocation, endpointConfiguration));
+                .convertInbound(mbeanInvocation, endpointConfiguration, null));
 
         ManagedBeanResult serviceResult = null;
         if (response != null && response.getPayload() != null) {

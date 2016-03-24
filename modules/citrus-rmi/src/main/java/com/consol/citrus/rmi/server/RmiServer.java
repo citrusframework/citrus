@@ -80,7 +80,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
         }
 
         Message response = getEndpointAdapter().handleMessage(endpointConfiguration.getMessageConverter()
-                .convertInbound(RmiServiceInvocation.create(proxy, method, args), endpointConfiguration));
+                .convertInbound(RmiServiceInvocation.create(proxy, method, args), endpointConfiguration, null));
 
         RmiServiceResult serviceResult = null;
         if (response != null && response.getPayload() != null) {

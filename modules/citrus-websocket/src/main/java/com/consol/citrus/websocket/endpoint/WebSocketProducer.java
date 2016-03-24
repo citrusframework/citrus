@@ -57,7 +57,7 @@ public class WebSocketProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        WebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
+        WebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context);
         if (endpointConfiguration.getHandler().sendMessage(wsMessage)) {
             LOG.info("WebSocket Message was successfully sent");
         }

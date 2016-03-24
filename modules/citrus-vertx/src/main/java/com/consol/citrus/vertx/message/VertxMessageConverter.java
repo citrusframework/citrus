@@ -16,7 +16,9 @@
 
 package com.consol.citrus.vertx.message;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 
 /**
@@ -29,7 +31,7 @@ import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 public class VertxMessageConverter implements MessageConverter<io.vertx.core.eventbus.Message, VertxEndpointConfiguration> {
 
     @Override
-    public Message convertInbound(io.vertx.core.eventbus.Message vertxMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(io.vertx.core.eventbus.Message vertxMessage, VertxEndpointConfiguration endpointConfiguration, TestContext context) {
         if (vertxMessage == null) {
             return null;
         }
@@ -42,12 +44,12 @@ public class VertxMessageConverter implements MessageConverter<io.vertx.core.eve
     }
 
     @Override
-    public io.vertx.core.eventbus.Message convertOutbound(Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public io.vertx.core.eventbus.Message convertOutbound(Message internalMessage, VertxEndpointConfiguration endpointConfiguration, TestContext context) {
         throw new UnsupportedOperationException("Unable to convert Vert.x outbound message");
     }
 
     @Override
-    public void convertOutbound(io.vertx.core.eventbus.Message externalMessage, Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(io.vertx.core.eventbus.Message externalMessage, Message internalMessage, VertxEndpointConfiguration endpointConfiguration, TestContext context) {
         throw new UnsupportedOperationException("Unable to convert Vert.x outbound message");
     }
 }

@@ -64,7 +64,7 @@ public class ChannelProducer implements Producer {
 
         try {
             endpointConfiguration.getMessagingTemplate().send(getDestinationChannel(),
-                    endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration));
+                    endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
         } catch (MessageDeliveryException e) {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
         }

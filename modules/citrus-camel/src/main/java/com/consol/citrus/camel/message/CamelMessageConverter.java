@@ -17,6 +17,7 @@
 package com.consol.citrus.camel.message;
 
 import com.consol.citrus.camel.endpoint.CamelEndpointConfiguration;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.*;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultExchange;
@@ -33,14 +34,14 @@ import java.util.Map;
 public class CamelMessageConverter implements MessageConverter<Exchange, CamelEndpointConfiguration> {
 
     @Override
-    public Exchange convertOutbound(Message message, CamelEndpointConfiguration endpointConfiguration) {
+    public Exchange convertOutbound(Message message, CamelEndpointConfiguration endpointConfiguration, TestContext context) {
         Exchange exchange = new DefaultExchange(endpointConfiguration.getCamelContext());
-        convertOutbound(exchange, message, endpointConfiguration);
+        convertOutbound(exchange, message, endpointConfiguration, context);
         return exchange;
     }
 
     @Override
-    public void convertOutbound(Exchange exchange, Message message, CamelEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(Exchange exchange, Message message, CamelEndpointConfiguration endpointConfiguration, TestContext context) {
         org.apache.camel.Message in = exchange.getIn();
         for (Map.Entry<String, Object> header : message.copyHeaders().entrySet()) {
             in.setHeader(header.getKey(), header.getValue());
@@ -49,7 +50,7 @@ public class CamelMessageConverter implements MessageConverter<Exchange, CamelEn
     }
 
     @Override
-    public Message convertInbound(Exchange exchange, CamelEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(Exchange exchange, CamelEndpointConfiguration endpointConfiguration, TestContext context) {
         if (exchange == null) {
             return null;
         }

@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.*;
@@ -39,7 +40,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Christoph Deppisch
  */
-public class SoapResponseMessageCallbackTest {
+public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
     private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
     private SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);
@@ -57,7 +58,7 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapBody() throws TransformerException, IOException {
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
         
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
@@ -88,7 +89,7 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapAction() throws TransformerException, IOException {
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
         
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
@@ -124,7 +125,7 @@ public class SoapResponseMessageCallbackTest {
                         		"<messageId>123456789</messageId>" + 
                     		"</header>";
         
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
         
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
@@ -156,7 +157,7 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapHeader() throws TransformerException, IOException {
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
         
         SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
         
@@ -200,7 +201,7 @@ public class SoapResponseMessageCallbackTest {
         attachment.setContent("This is a SOAP attachment" + System.getProperty("line.separator") + "with multi-line");
         attachment.setContentType("plain/text");
         
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
         
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();

@@ -72,7 +72,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         log.info("Received message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration);
+        Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration, context);
         context.onInboundMessage(message);
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.message.converter;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
@@ -53,8 +54,8 @@ public class WsAddressingMessageConverter extends SoapMessageConverter {
     }
 
     @Override
-    public void convertOutbound(WebServiceMessage webServiceMessage, Message message, WebServiceEndpointConfiguration endpointConfiguration) {
-        super.convertOutbound(webServiceMessage, message, endpointConfiguration);
+    public void convertOutbound(WebServiceMessage webServiceMessage, Message message, WebServiceEndpointConfiguration endpointConfiguration, TestContext context) {
+        super.convertOutbound(webServiceMessage, message, endpointConfiguration, context);
 
         SoapMessage soapMessage = (SoapMessage) webServiceMessage;
         URI messageId;

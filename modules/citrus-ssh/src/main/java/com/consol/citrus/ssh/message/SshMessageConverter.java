@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ssh.message;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
@@ -31,7 +32,7 @@ import javax.xml.transform.Source;
 public class SshMessageConverter implements MessageConverter<SshMessage, SshEndpointConfiguration> {
 
     @Override
-    public SshMessage convertOutbound(Message internalMessage, SshEndpointConfiguration endpointConfiguration) {
+    public SshMessage convertOutbound(Message internalMessage, SshEndpointConfiguration endpointConfiguration, TestContext context) {
         Object payload = internalMessage.getPayload();
 
         SshMessage sshMessage = null;
@@ -52,11 +53,11 @@ public class SshMessageConverter implements MessageConverter<SshMessage, SshEndp
     }
 
     @Override
-    public void convertOutbound(SshMessage externalMessage, Message internalMessage, SshEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(SshMessage externalMessage, Message internalMessage, SshEndpointConfiguration endpointConfiguration, TestContext context) {
     }
 
     @Override
-    public Message convertInbound(SshMessage externalMessage, SshEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(SshMessage externalMessage, SshEndpointConfiguration endpointConfiguration, TestContext context) {
         StringResult payload = new StringResult();
         endpointConfiguration.getSshMarshaller().marshal(externalMessage, payload);
 

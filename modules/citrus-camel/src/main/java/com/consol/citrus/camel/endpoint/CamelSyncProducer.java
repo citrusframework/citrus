@@ -59,7 +59,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(final Message message, TestContext context) {
+    public void send(final Message message, final TestContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
         }
@@ -74,14 +74,14 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
                 .request(endpointConfiguration.getEndpointUri(), new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
-                        endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration);
+                        endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
                         log.info("Message was sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
                     }
                 });
 
 
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
-        Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
+        Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);
         context.onInboundMessage(replyMessage);
         correlationManager.store(correlationKey, replyMessage);
     }

@@ -74,7 +74,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
         log.info("Message was sent to channel: '" + destinationChannelName + "'");
 
         org.springframework.messaging.Message replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(),
-                endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration));
+                endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
 
         if (replyMessage == null) {
             throw new ActionTimeoutException("Reply timed out after " +
@@ -83,7 +83,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
             log.info("Received synchronous response from reply channel");
         }
 
-        correlationManager.store(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration));
+        correlationManager.store(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration, context));
     }
 
     @Override

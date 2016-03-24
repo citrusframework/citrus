@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.message;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.message.*;
 import org.springframework.http.*;
@@ -33,7 +34,7 @@ import java.util.*;
 public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEndpointConfiguration> {
 
     @Override
-    public HttpEntity convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration) {
+    public HttpEntity convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
         HttpMessage httpMessage;
         if (message instanceof HttpMessage) {
             httpMessage = (HttpMessage) message;
@@ -81,7 +82,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
     }
 
     @Override
-    public HttpMessage convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration) {
+    public HttpMessage convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
         Map<String, Object> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
         HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders));
 
@@ -142,7 +143,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
     }
 
     @Override
-    public void convertOutbound(HttpEntity externalMessage, Message internalMessage, HttpEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(HttpEntity externalMessage, Message internalMessage, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
         throw new UnsupportedOperationException("HttpMessageConverter doe not support predefined HttpEntity objects");
     }
 }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.message.callback;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.springframework.ws.WebServiceMessage;
@@ -33,26 +34,31 @@ import java.io.IOException;
 public class SoapRequestMessageCallback implements WebServiceMessageCallback {
 
     /** The internal message content source */
-    private Message message;
+    private final Message message;
 
     /** Endpoint configuration */
-    private WebServiceEndpointConfiguration endpointConfiguration;
+    private final WebServiceEndpointConfiguration endpointConfiguration;
+
+    /** Test context */
+    private final TestContext context;
     
     /**
      * Constructor using internal message and endpoint configuration as fields.
      *
      * @param message
      * @param endpointConfiguration
+     * @param context
      */
-    public SoapRequestMessageCallback(Message message, WebServiceEndpointConfiguration endpointConfiguration) {
+    public SoapRequestMessageCallback(Message message, WebServiceEndpointConfiguration endpointConfiguration, TestContext context) {
         this.message = message;
         this.endpointConfiguration = endpointConfiguration;
+        this.context = context;
     }
     
     /**
      * Callback method called before request message  is sent.
      */
     public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
-        endpointConfiguration.getMessageConverter().convertOutbound(requestMessage, message, endpointConfiguration);
+        endpointConfiguration.getMessageConverter().convertOutbound(requestMessage, message, endpointConfiguration, context);
     }
 }
