@@ -17,6 +17,12 @@
   <body>
     <release version="2.5.2" date="01.04.2015" description="2.5.2 release">
       <action dev="christophd" type="add">
+        CITRUS-49 Support Json object functions in JsonPath validation
+      </action>
+      <action dev="christophd" type="add">
+        CITRUS-48 Inject test context to message converter methods
+      </action>
+      <action dev="christophd" type="add">
         CITRUS-47 BinaryBase64 message validator
       </action>
       <action dev="christophd" type="add">
