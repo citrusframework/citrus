@@ -16,12 +16,11 @@
 
 package com.consol.citrus.util;
 
-import java.io.IOException;
-import java.util.Properties;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.core.io.Resource;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Utility class supporting property replacement in template files. 
@@ -39,6 +38,7 @@ public final class PropertyUtils {
      * Prevent instantiation.
      */
     private PropertyUtils() {
+        super();
     }
     
     /**

@@ -45,6 +45,7 @@ public abstract class FileUtils {
      * Prevent instantiation.
      */
     private FileUtils() {
+        super();
     }
 
     /**

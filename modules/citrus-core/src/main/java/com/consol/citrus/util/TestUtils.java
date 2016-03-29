@@ -16,10 +16,10 @@
 
 package com.consol.citrus.util;
 
-import java.util.*;
-
-import javax.xml.parsers.SAXParserFactory;
-
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.report.FailureStackElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -27,10 +27,8 @@ import org.springframework.core.io.Resource;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
-import com.consol.citrus.container.TestActionContainer;
-import com.consol.citrus.report.FailureStackElement;
+import javax.xml.parsers.SAXParserFactory;
+import java.util.*;
 
 /**
  * Utility class for test cases providing several utility 
@@ -49,6 +47,7 @@ public abstract class TestUtils {
      * Prevent instantiation.
      */
     private TestUtils() {
+        super();
     }
     
     /**

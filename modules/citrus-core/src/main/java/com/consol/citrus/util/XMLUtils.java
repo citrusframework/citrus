@@ -79,6 +79,7 @@ public final class XMLUtils {
      * Prevent instantiation.
      */
     private XMLUtils() {
+        super();
     }
 
     /**

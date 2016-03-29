@@ -22,6 +22,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -36,7 +37,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     @Qualifier("defaultJsonPathMessageValidator")
     private JsonPathMessageValidator validator;
     private String payload = "{ \"root\": {"
-                    + "\"element\": { \"attributeA\":\"attribute-value\", \"attributeB\": \"attribute-value\", \"sub-element\": \"text-value\" },"
+                    + "\"element\": { \"attributeA\":\"attribute-value\",\"attributeB\":\"attribute-value\",\"sub-element\":\"text-value\" },"
                     + "\"text\": \"text-value\","
                     + "\"number\": 10,"
                     + "\"numbers\": [10, 20, 30, 40],"
@@ -49,12 +50,31 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testValidateMessageElementsWithJsonPathSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..element.sub-element", "text-value"));
-        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$['element']['sub-element']", "text-value"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$['root']['element']['sub-element']", "text-value"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..['sub-element']", "text-value"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..sub-element", "text-value"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.numbers", "[10,20,30,40]"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.person", "{\"name\":\"Penny\"}"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
 
+    @Test
+    public void testValidateMessageElementsWithJsonPathFunctionsSuccessful() {
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..element.keySet()", "[attributeA,sub-element,attributeB]"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.element.keySet()", Arrays.asList("attributeA", "sub-element", "attributeB")));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$['root']['person'].keySet()", "[name]"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.numbers.size()", 4));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.person.size()", 1));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
@@ -71,6 +91,34 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setJsonPathExpressions(validationExpressions);
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
+
+    @Test
+    public void testValidateMessageElementsWithJsonPathFunctionsNotSuccessful() {
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.element.keySet()", "[attributeA, attributeB, attributeC]"));
+        try {
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            Assert.fail("Missing validation exception");
+        } catch (ValidationException e) {}
+
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.element.keySet()", Arrays.asList("attributeA", "attributeB")));
+        try {
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            Assert.fail("Missing validation exception");
+        } catch (ValidationException e) {}
+
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.numbers.size()", 5));
+        try {
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            Assert.fail("Missing validation exception");
+        } catch (ValidationException e) {}
+
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.person.size()", 0));
+        try{
+            validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+            Assert.fail("Missing validation exception");
+        } catch (ValidationException e) {}
     }
 
     @Test(expectedExceptions = {ValidationException.class})

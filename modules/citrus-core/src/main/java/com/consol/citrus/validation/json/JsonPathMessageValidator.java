@@ -64,16 +64,27 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 Object expectedValue = entry.getValue();
                 String actualValue;
 
+                String jsonPathFunction = JsonPathFunctions.DEFAULT_FUNCTION;
+                for (String name : JsonPathFunctions.FUNCTION_NAMES) {
+                    if (jsonPathExpression.endsWith(String.format(".%s()", name))) {
+                        jsonPathFunction = name;
+                        jsonPathExpression = jsonPathExpression.substring(0, jsonPathExpression.length() - String.format(".%s()", name).length());
+                    }
+                }
+
+                Object jsonPathResult;
                 if (JsonPath.isPathDefinite(jsonPathExpression)) {
-                    actualValue = readerContext.read(jsonPathExpression).toString();
+                    jsonPathResult = readerContext.read(jsonPathExpression);
                 } else {
                     JSONArray values = readerContext.read(jsonPathExpression);
                     if (values.size() == 1) {
-                        actualValue = values.get(0).toString();
+                        jsonPathResult = values.get(0);
                     } else {
-                        actualValue = values.toJSONString();
+                        jsonPathResult = values;
                     }
                 }
+
+                actualValue = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
 
                 if (expectedValue instanceof String) {
                     //check if expected value is variable or function (and resolve it, if yes)

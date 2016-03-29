@@ -37,10 +37,17 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class TypeConversionUtils {
+public abstract class TypeConversionUtils {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TypeConversionUtils.class);
+
+    /**
+     * Prevent instantiation.
+     */
+    private TypeConversionUtils() {
+        super();
+    }
 
     /**
      * Converts target object to required type if necessary.
