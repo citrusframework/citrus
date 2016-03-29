@@ -703,7 +703,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> messageElements = new HashMap<String, String>();
+        Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/TestRequest/Message", "Hello World!");
         validationContext.setXpathExpressions(messageElements);
         
@@ -734,7 +734,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> messageElements = new HashMap<String, String>();
+        Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/:TestRequest/:Message", "Hello World!");
         validationContext.setXpathExpressions(messageElements);
         
@@ -767,7 +767,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> messageElements = new HashMap<String, String>();
+        Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
         validationContext.setXpathExpressions(messageElements);
         
@@ -800,7 +800,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> messageElements = new HashMap<String, String>();
+        Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
         validationContext.setXpathExpressions(messageElements);
         
@@ -832,8 +832,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
-        
-        Map<String, String> messageElements = new HashMap<String, String>();
+
+        Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
         validationContext.setXpathExpressions(messageElements);
         
@@ -1164,7 +1164,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..text", "Hello World!");
         jsonPathExpressions.put("$.person.name", "John");
         jsonPathExpressions.put("$.person.surname", "Doe");
@@ -1197,7 +1197,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..text", "Hello Citrus!");
         validationContext.setJsonPathExpressions(jsonPathExpressions);
 
@@ -1227,7 +1227,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         receiveAction.setMessageBuilder(controlMessageBuilder);
 
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.person.age", "50");
         validationContext.setJsonPathExpressions(jsonPathExpressions);
 

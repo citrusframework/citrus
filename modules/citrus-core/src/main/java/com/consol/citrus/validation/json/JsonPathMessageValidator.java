@@ -59,9 +59,9 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
             Object receivedJson = parser.parse(receivedMessage.getPayload(String.class));
             ReadContext readerContext = JsonPath.parse(receivedJson);
 
-            for (Map.Entry<String, String> entry : validationContext.getJsonPathExpressions().entrySet()) {
+            for (Map.Entry<String, Object> entry : validationContext.getJsonPathExpressions().entrySet()) {
                 jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
-                String expectedValue = context.replaceDynamicContentInString(entry.getValue());
+                Object expectedValue = entry.getValue();
                 String actualValue;
 
                 if (JsonPath.isPathDefinite(jsonPathExpression)) {
@@ -73,6 +73,11 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                     } else {
                         actualValue = values.toJSONString();
                     }
+                }
+
+                if (expectedValue instanceof String) {
+                    //check if expected value is variable or function (and resolve it, if yes)
+                    expectedValue = context.replaceDynamicContentInString(String.valueOf(expectedValue));
                 }
 
                 //do the validation of actual and expected value for element

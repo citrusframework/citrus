@@ -332,7 +332,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
         //check for validate elements, these elements can either have script, jsonPath or namespace validation information
         //for now we only handle jsonPath validation
-        Map<String, String> validateJsonPathExpressions = new HashMap<>();
+        Map<String, Object> validateJsonPathExpressions = new HashMap<>();
         List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
         if (validateElements.size() > 0) {
             for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
@@ -426,7 +426,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     private void parseXPathValidationElements(Element messageElement, XpathMessageValidationContext context) {
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle xpath validation
-        Map<String, String> validateXpathExpressions = new HashMap<String, String>();
+        Map<String, Object> validateXpathExpressions = new HashMap<>();
 
         List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
         if (validateElements.size() > 0) {
@@ -445,7 +445,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param validateXpathExpressions
      */
     private void extractXPathValidateExpressions(
-            Element validateElement, Map<String, String> validateXpathExpressions) {
+            Element validateElement, Map<String, Object> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
         if (StringUtils.hasText(pathExpression) && !JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
@@ -481,7 +481,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param validateJsonPathExpressions
      */
     private void extractJsonPathValidateExpressions(
-            Element validateElement, Map<String, String> validateJsonPathExpressions) {
+            Element validateElement, Map<String, Object> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
         if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {

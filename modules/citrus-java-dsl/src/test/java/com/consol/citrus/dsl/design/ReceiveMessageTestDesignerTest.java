@@ -1228,9 +1228,11 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
             public void configure() {
                 receive(messageEndpoint)
                         .messageType(MessageType.JSON)
-                        .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                         .validate("$.person.name", "foo")
-                        .validate("$.text", "Hello World!");
+                        .validate("$.person.active", true)
+                        .validate("$.text", "Hello World!")
+                        .validate("$.index", 5);
             }
         };
 
@@ -1252,9 +1254,11 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 4L);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "foo");
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)

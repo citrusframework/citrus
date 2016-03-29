@@ -1663,7 +1663,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
-                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
@@ -1674,9 +1674,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
-                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate("$.person.name", "John")
-                                .validate("$.text", "Hello World!");
+                                .validate("$.person.active", true)
+                                .validate("$.text", "Hello World!")
+                                .validate("$.index", 5);
                     }
                 });
             }
@@ -1698,9 +1700,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 4L);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "John");
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
 
     }
 

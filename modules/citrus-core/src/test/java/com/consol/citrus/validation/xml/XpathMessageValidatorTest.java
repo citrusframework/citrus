@@ -45,7 +45,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap("//element/sub-element", "text-value"));
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap("//element/sub-element", "text-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -60,7 +60,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
 
-        Map<String, String> validationExpressions = new HashMap<String, String>();
+        Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("//element/@attributeA", "@startsWith('attribute-')@");
         validationExpressions.put("//element/@attributeB", "@endsWith('-value')@");
         validationExpressions.put("//element/sub-element", "@equalsIgnoreCase('TEXT-VALUE')@");
@@ -80,7 +80,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
 
-        Map<String, String> validationExpressions = new HashMap<String, String>();
+        Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("//element/@attributeA", "@startsWith('attribute-')@");
         validationExpressions.put("//element/@attributeB", "@endsWith('-value')@");
         validationExpressions.put("//element/sub-element", "@contains('FAIL')@");
@@ -99,7 +99,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap(
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap(
                 "//element/sub-element", "false-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -114,7 +114,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap(
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap(
                 "root.element.sub-element", "text-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -129,7 +129,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap(
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap(
                 "root.element.sub-element", "@contains('ext-val')@"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -144,7 +144,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap(
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap(
                 "root.element.sub-element", "@contains(false-value)@"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -159,7 +159,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap(
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap(
                 "root.element.sub-element", "false-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -175,7 +175,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         //mix of xpath and dot-notation
-        Map<String, String> validationExpressions = new HashMap<String, String>();
+        Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("//element/sub-element", "text-value");
         validationExpressions.put("root.element.sub-element", "text-value");
         validationContext.setXpathExpressions(validationExpressions);
@@ -193,7 +193,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap("node-set://element/sub-element", "text-value,other-value"));
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap("node-set://element/sub-element", "text-value,other-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -209,7 +209,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
 
-        HashMap<String, String> expressions = new HashMap<>();
+        HashMap<String, Object> expressions = new HashMap<>();
         expressions.put("node-set://element/other-element", "");
         expressions.put("boolean://element/other-element", "false");
         expressions.put("boolean://element/sub-element", "true");
@@ -228,7 +228,7 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.singletonMap("number:count(//element/sub-element[.='text-value'])", "2.0"));
+        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap("number:count(//element/sub-element[.='text-value'])", "2.0"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }

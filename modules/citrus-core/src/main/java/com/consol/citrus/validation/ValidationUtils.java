@@ -18,6 +18,7 @@ package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.Assert;
 
@@ -44,7 +45,7 @@ public abstract class ValidationUtils {
      * @param context
      * @throws com.consol.citrus.exceptions.ValidationException if validation fails
      */
-    public static void validateValues(String actualValue, String expectedValue, String pathExpression, TestContext context)
+    public static void validateValues(String actualValue, Object expectedValue, String pathExpression, TestContext context)
             throws ValidationException {
         try {
             if (actualValue != null) {
@@ -53,19 +54,23 @@ public abstract class ValidationUtils {
                                 "Values not equal for element '" + pathExpression + "'", null, actualValue));
 
                 //check if validation matcher on element is specified
-                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                if (expectedValue instanceof String && ValidationMatcherUtils.isValidationMatcherExpression(String.valueOf(expectedValue))) {
                     ValidationMatcherUtils.resolveValidationMatcher(pathExpression,
                             actualValue,
-                            expectedValue,
+                            String.valueOf(expectedValue),
                             context);
-                }
-                else {
+                } else if (expectedValue instanceof String) {
                     Assert.isTrue(actualValue.equals(expectedValue),
                             ValidationUtils.buildValueMismatchErrorMessage(
                                     "Values not equal for element '" + pathExpression + "'", expectedValue, actualValue));
+                } else {
+                    Object converted = TypeConversionUtils.convertIfNecessary(actualValue, expectedValue.getClass());
+                    Assert.isTrue(converted.equals(expectedValue),
+                            ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not equal for element '" + pathExpression + "'", expectedValue, converted));
                 }
             } else {
-                Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
+                Assert.isTrue(expectedValue == null || String.valueOf(expectedValue).length() == 0,
                         ValidationUtils.buildValueMismatchErrorMessage(
                                 "Values not equal for element '" + pathExpression + "'", expectedValue, null));
             }

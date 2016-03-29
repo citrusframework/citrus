@@ -48,12 +48,12 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testValidateMessageElementsWithJsonPathSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setJsonPathExpressions(Collections.singletonMap("$..element.sub-element", "text-value"));
-        validationContext.setJsonPathExpressions(Collections.singletonMap("$['element']['sub-element']", "text-value"));
-        validationContext.setJsonPathExpressions(Collections.singletonMap("$..['sub-element']", "text-value"));
-        validationContext.setJsonPathExpressions(Collections.singletonMap("$..sub-element", "text-value"));
-        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.numbers", "[10,20,30,40]"));
-        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.person", "{\"name\":\"Penny\"}"));
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..element.sub-element", "text-value"));
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$['element']['sub-element']", "text-value"));
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..['sub-element']", "text-value"));
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$..sub-element", "text-value"));
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.numbers", "[10,20,30,40]"));
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap("$.root.person", "{\"name\":\"Penny\"}"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -62,7 +62,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testValidateMessageElementsWithValidationMatcherSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
 
-        Map<String, String> validationExpressions = new HashMap<String, String>();
+        Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("$..element.attributeA", "@startsWith('attribute-')@");
         validationExpressions.put("$..element.attributeB", "@endsWith('-value')@");
         validationExpressions.put("$..element.sub-element", "@equalsIgnoreCase('TEXT-VALUE')@");
@@ -77,7 +77,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testValidateMessageElementsWithValidationMatcherNotSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
 
-        Map<String, String> validationExpressions = new HashMap<String, String>();
+        Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("$..element.attributeA", "@startsWith('attribute-')@");
         validationExpressions.put("$..element.attributeB", "@endsWith('-value')@");
         validationExpressions.put("$..element.sub-element", "@contains('FAIL')@");
@@ -90,7 +90,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateMessageElementsWithJsonPathNotSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setJsonPathExpressions(Collections.singletonMap(
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap(
                 "$..element.sub-element", "false-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -99,7 +99,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testValidateMessageElementsWithFullPathSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setJsonPathExpressions(Collections.singletonMap(
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap(
                 "$.root.element.sub-element", "text-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -108,7 +108,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateMessageElementsWithFullPathNotSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-        validationContext.setJsonPathExpressions(Collections.singletonMap(
+        validationContext.setJsonPathExpressions(Collections.<String, Object>singletonMap(
                 "$.root.element.sub-element", "false-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -118,7 +118,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testValidateMessageElementsWithMixedNotationsSuccessful() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         //mix of xpath and dot-notation
-        Map<String, String> validationExpressions = new HashMap<String, String>();
+        Map<String, Object> validationExpressions = new HashMap<>();
         validationExpressions.put("$..element.sub-element", "text-value");
         validationExpressions.put("$.root.element.sub-element", "text-value");
         validationContext.setJsonPathExpressions(validationExpressions);

@@ -905,8 +905,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//ns1:root/ns1:element/ns1:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
         
@@ -946,8 +946,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//pfx:root/pfx:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
@@ -987,8 +987,8 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//pfx:root/ns1:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         

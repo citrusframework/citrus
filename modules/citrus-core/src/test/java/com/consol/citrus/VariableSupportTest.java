@@ -76,8 +76,8 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
         
         context.getVariables().put("variable", "text-value");
-        
-        Map<String, String> validateMessageElements = new HashMap<String, String>();
+
+        Map<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA", "${variable}");
         validateMessageElements.put("//sub-elementB", "${variable}");
         
@@ -113,8 +113,8 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         
         context.getVariables().put("variable", "text-value");
         context.getVariables().put("text", "text");
-        
-        Map<String, String> validateMessageElements = new HashMap<String, String>();
+
+        Map<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA", "citrus:concat('text', '-', 'value')");
         validateMessageElements.put("//sub-elementB", "citrus:concat(${text}, '-', 'value')");
         
@@ -150,7 +150,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         
         context.getVariables().put("expression", "//root/element/sub-elementA");
         
-        Map<String, String> validateMessageElements = new HashMap<String, String>();
+        Map<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("${expression}", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -184,8 +184,8 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
         
         context.getVariables().put("variable", "B");
-        
-        Map<String, String> validateMessageElements = new HashMap<String, String>();
+
+        Map<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("citrus:concat('//root/', 'element/sub-elementA')", "text-value");
         validateMessageElements.put("citrus:concat('//sub-element', ${variable})", "text-value");
         

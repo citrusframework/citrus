@@ -75,8 +75,8 @@ public class XPathTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//:element/:sub-elementA[@attribute='A']", "text-value");
         validateMessageElements.put("//:element/:sub-elementB", "text-value");
@@ -117,8 +117,8 @@ public class XPathTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//:element/:sub-elementA[@attribute='A']", "text-value");
         validateMessageElements.put("//:element/:sub-elementB", "text-value");
@@ -159,8 +159,8 @@ public class XPathTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
@@ -197,8 +197,8 @@ public class XPathTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
@@ -240,8 +240,8 @@ public class XPathTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("node://:element/:sub-elementA", "text-value");
         validateMessageElements.put("node://:element/:sub-elementA[@attribute='A']", "text-value");
         validateMessageElements.put("node://:element/:sub-elementB", "text-value");

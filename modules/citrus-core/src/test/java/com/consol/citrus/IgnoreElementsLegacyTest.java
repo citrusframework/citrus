@@ -177,7 +177,7 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         
-        Map<String, String> validateElements = new HashMap<String, String>();
+        Map<String, Object> validateElements = new HashMap<>();
         validateElements.put("root.element.sub-elementA", "wrong value");
         validateElements.put("sub-elementB", "wrong value");
         validationContext.setXpathExpressions(validateElements);

@@ -65,9 +65,9 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
         NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(
                 receivedMessage, validationContext.getNamespaces());
 
-        for (Map.Entry<String, String> entry : validationContext.getXpathExpressions().entrySet()) {
+        for (Map.Entry<String, Object> entry : validationContext.getXpathExpressions().entrySet()) {
             String xPathExpression = entry.getKey();
-            String expectedValue = entry.getValue();
+            Object expectedValue = entry.getValue();
             String actualValue;
 
             xPathExpression = context.replaceDynamicContentInString(xPathExpression);
@@ -103,8 +103,11 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
                 actualValue = getNodeValue(node);
             }
-            //check if expected value is variable or function (and resolve it, if yes)
-            expectedValue = context.replaceDynamicContentInString(expectedValue);
+
+            if (expectedValue instanceof String) {
+                //check if expected value is variable or function (and resolve it, if yes)
+                expectedValue = context.replaceDynamicContentInString(String.valueOf(expectedValue));
+            }
 
             //do the validation of actual and expected value for element
             ValidationUtils.validateValues(actualValue, expectedValue, xPathExpression, context);

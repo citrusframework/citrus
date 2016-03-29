@@ -75,8 +75,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-elementA", "text-value");
         validateMessageElements.put("sub-elementB", "text-value");
         
@@ -110,7 +110,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
         
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-elementA", "");
         validateMessageElements.put("sub-elementB", "");
         
@@ -143,8 +143,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-elementA.attribute", "A");
         validateMessageElements.put("sub-elementB.attribute", "B");
         
@@ -177,8 +177,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-element-wrong", "text-value");
         validateMessageElements.put("sub-element-wrong", "text-value");
         
@@ -212,8 +212,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-elementA", "text-value-wrong");
         validateMessageElements.put("sub-elementB", "text-value-wrong");
         
@@ -246,8 +246,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-elementA.attribute", "wrong-value");
         validateMessageElements.put("sub-elementB.attribute", "wrong-value");
         
@@ -280,8 +280,8 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
-        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+
+        HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         validateMessageElements.put("sub-elementB.attribute-wrong", "B");
         
@@ -419,7 +419,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
         
-        HashMap<String, String> validateElements = new HashMap<String, String>();
+        HashMap<String, Object> validateElements = new HashMap<>();
         validateElements.put("root.element.sub-elementA", "text-value");
         validateElements.put("sub-elementB", "text-value");
         

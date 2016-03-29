@@ -30,14 +30,14 @@ import java.util.Map;
 public class JsonPathMessageValidationContext implements ValidationContext {
 
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> jsonPathExpressions = new HashMap<>();
+    private Map<String, Object> jsonPathExpressions = new HashMap<>();
 
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
      * @return the jsonPathExpressions
      */
-    public Map<String, String> getJsonPathExpressions() {
+    public Map<String, Object> getJsonPathExpressions() {
         return jsonPathExpressions;
     }
 
@@ -45,7 +45,7 @@ public class JsonPathMessageValidationContext implements ValidationContext {
      * Set the control message elements explicitly validated XPath expression validation.
      * @param jsonPathExpressions the jsonPathExpressions to set
      */
-    public void setJsonPathExpressions(Map<String, String> jsonPathExpressions) {
+    public void setJsonPathExpressions(Map<String, Object> jsonPathExpressions) {
         this.jsonPathExpressions = jsonPathExpressions;
     }
 
