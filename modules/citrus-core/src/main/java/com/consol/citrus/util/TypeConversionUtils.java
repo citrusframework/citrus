@@ -55,7 +55,7 @@ public class TypeConversionUtils {
             return type.cast(target);
         }
 
-        if (type.isAssignableFrom(Source.class)) {
+        if (Source.class.isAssignableFrom(type)) {
             if (target.getClass().isAssignableFrom(String.class)) {
                 return (T) new StringSource(String.valueOf(target));
             } else if (target.getClass().isAssignableFrom(Node.class)) {
@@ -69,7 +69,7 @@ public class TypeConversionUtils {
             }
         }
 
-        if (type.isAssignableFrom(Map.class)) {
+        if (Map.class.isAssignableFrom(type)) {
             String mapString = String.valueOf(target);
 
             Properties props = new Properties();
@@ -86,15 +86,17 @@ public class TypeConversionUtils {
             return (T) map;
         }
 
-        if (type.isAssignableFrom(String[].class)) {
-            return (T) StringUtils.commaDelimitedListToStringArray(String.valueOf(target));
+        if (String[].class.isAssignableFrom(type)) {
+            String arrayString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "");
+            return (T) StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString));
         }
 
-        if (type.isAssignableFrom(List.class)) {
-            return (T) Arrays.asList(StringUtils.commaDelimitedListToStringArray(String.valueOf(target)));
+        if (List.class.isAssignableFrom(type)) {
+            String listString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "");
+            return (T) Arrays.asList(StringUtils.commaDelimitedListToStringArray(String.valueOf(listString)));
         }
 
-        if (type.isAssignableFrom(byte[].class) && target instanceof String) {
+        if (byte[].class.isAssignableFrom(type) && target instanceof String) {
             try {
                 return (T) String.valueOf(target).getBytes(Citrus.CITRUS_FILE_ENCODING);
             } catch (UnsupportedEncodingException e) {
