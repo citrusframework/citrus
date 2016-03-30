@@ -25,6 +25,8 @@ import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
 import com.consol.citrus.jmx.client.JmxClientBuilder;
 import com.consol.citrus.jmx.server.JmxServerBuilder;
+import com.consol.citrus.mail.client.MailClientBuilder;
+import com.consol.citrus.mail.server.MailServerBuilder;
 import com.consol.citrus.rmi.client.RmiClientBuilder;
 import com.consol.citrus.rmi.server.RmiServerBuilder;
 import com.consol.citrus.ws.client.WebServiceClientBuilder;
@@ -81,6 +83,14 @@ public abstract class CitrusEndpoints {
      */
     public static ClientServerEndpointBuilder<RmiClientBuilder, RmiServerBuilder> rmi() {
         return new ClientServerEndpointBuilder<>(new RmiClientBuilder(), new RmiServerBuilder());
+    }
+
+    /**
+     * Creates new MailClient or MailServer builder.
+     * @return
+     */
+    public static ClientServerEndpointBuilder<MailClientBuilder, MailServerBuilder> mail() {
+        return new ClientServerEndpointBuilder<>(new MailClientBuilder(), new MailServerBuilder());
     }
 
     /**
