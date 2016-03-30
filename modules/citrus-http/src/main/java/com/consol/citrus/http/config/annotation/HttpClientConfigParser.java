@@ -76,7 +76,6 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
             builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
-
         if (StringUtils.hasText(annotation.endpointResolver())) {
             builder.endpointResolver(getReferenceResolver().resolve(annotation.endpointResolver(), EndpointUriResolver.class));
         }
