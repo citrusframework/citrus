@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,46 +15,46 @@
  */
 package com.consol.citrus.selenium.model;
 
-import java.util.Map;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
- *
  * @author Tamer Erdogan
  */
 public class WebSearchPage implements WebPage {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@FindBy(how = How.NAME, using = "q")
-	WebElement q;
+    @FindBy(how = How.NAME, using = "q")
+    WebElement q;
 
-	@FindBy(how = How.ID, using = "btn")
-	WebElement submit;
+    @FindBy(how = How.ID, using = "btn")
+    WebElement submit;
 
-	@FindBy(how = How.ID_OR_NAME, using = "results")
-	WebElement results;
+    @FindBy(how = How.ID_OR_NAME, using = "results")
+    WebElement results;
 
-	@Override
-	public String getPageUrl() {
-		return "/";
-	}
+    @Override
+    public String getPageUrl() {
+        return "/";
+    }
 
-	public void search(Map<String, String> params) {
-		String query = params.get("query");
-		doSearch(query);
-	}
+    public void search(Map<String, String> params) {
+        String query = params.get("query");
+        doSearch(query);
+    }
 
-	private void doSearch(String query) {
-		q.sendKeys(query);
-		submit.click();
-	}
+    private void doSearch(String query) {
+        q.sendKeys(query);
+        submit.click();
+    }
 
-	public String getSearchResults() {
-		return results.getText();
-	}
+    public String getSearchResults() {
+        return results.getText();
+    }
 }

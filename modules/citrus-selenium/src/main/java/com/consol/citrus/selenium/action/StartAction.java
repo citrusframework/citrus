@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,38 +17,38 @@ package com.consol.citrus.selenium.action;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.springframework.util.StringUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
- *
  * @author Tamer Erdogan
  */
 public class StartAction extends WebAction {
 
-	@Override
-	public void doExecute(TestContext context) {
-		logger.info("Starting the WebClient.");
-		webClient.start();
-		if (StringUtils.hasText(url)) {
-			String convertedUrl = context.replaceDynamicContentInString(url);
-			try {
-				URL pageUrl = new URL(convertedUrl);
-			} catch (MalformedURLException ex) {
-				if (StringUtils.hasText(webClient.getStartUrl())) {
-					String baseUrl = webClient.getStartUrl();
-					String lastChar = baseUrl.substring(baseUrl.length() - 1);
-					if (!lastChar.equals("/")) {
-						baseUrl = baseUrl + "/";
-					}
-					this.url = baseUrl + convertedUrl;
-				} else {
-					throw new CitrusRuntimeException(ex);
-				}
-			}
-		}
+    @Override
+    public void doExecute(TestContext context) {
+        logger.info("Starting the WebClient.");
+        webClient.start();
+        if (StringUtils.hasText(url)) {
+            String convertedUrl = context.replaceDynamicContentInString(url);
+            try {
+                URL pageUrl = new URL(convertedUrl);
+            } catch (MalformedURLException ex) {
+                if (StringUtils.hasText(webClient.getStartUrl())) {
+                    String baseUrl = webClient.getStartUrl();
+                    String lastChar = baseUrl.substring(baseUrl.length() - 1);
+                    if (!lastChar.equals("/")) {
+                        baseUrl = baseUrl + "/";
+                    }
+                    this.url = baseUrl + convertedUrl;
+                } else {
+                    throw new CitrusRuntimeException(ex);
+                }
+            }
+        }
 
-		super.doExecute(context);
-	}
+        super.doExecute(context);
+    }
 }

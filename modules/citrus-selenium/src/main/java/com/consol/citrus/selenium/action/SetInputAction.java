@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,33 @@
 package com.consol.citrus.selenium.action;
 
 import com.consol.citrus.context.TestContext;
-import java.util.Map;
 import org.openqa.selenium.By;
 
+import java.util.Map;
+
 /**
- *
  * @author Tamer Erdogan
  */
 public class SetInputAction extends WebAction {
 
-	private Map<By, String> fields;
+    private Map<By, String> fields;
 
-	@Override
-	public void doExecute(TestContext context) {
-		super.doExecute(context);
-		for (By by : fields.keySet()) {
-			String value = context.replaceDynamicContentInString(fields.get(by));
-			logger.info("setting input field <{}> with value <{}> ", by, value);
-			webClient.setInput(by, value);
-		}
-	}
+    @Override
+    public void doExecute(TestContext context) {
+        super.doExecute(context);
+        for (By by : fields.keySet()) {
+            String value = context.replaceDynamicContentInString(fields.get(by));
+            logger.info("setting input field <{}> with value <{}> ", by, value);
+            webClient.setInput(by, value);
+        }
+    }
 
-	public Map<By, String> getFields() {
-		return fields;
-	}
+    public Map<By, String> getFields() {
+        return fields;
+    }
 
-	public void setFields(Map<By, String> fields) {
-		this.fields = fields;
-	}
+    public void setFields(Map<By, String> fields) {
+        this.fields = fields;
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@ package com.consol.citrus.selenium.action;
 import com.consol.citrus.context.TestContext;
 
 /**
- *
  * @author Tamer Erdogan
  */
 public class ClearCacheAction extends WebAction {
 
-	@Override
-	public void doExecute(TestContext context) {
-		logger.info("Clearing the cache of the WebClient");
-		webClient.clearBrowserCache();
-	}
+    @Override
+    public void doExecute(TestContext context) {
+        logger.info("Clearing the cache of the WebClient");
+        webClient.clearBrowserCache();
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,22 +25,22 @@ import org.openqa.selenium.support.events.WebDriverEventListener;
  */
 public interface WebDriverContainer {
 
-	void addListener(WebDriverEventListener listener);
+    void addListener(WebDriverEventListener listener);
 
-	void clearBrowserCache();
+    void clearBrowserCache();
 
-	void closeWebDriver();
+    void closeWebDriver();
 
-	String getCurrentFrameUrl();
+    String getCurrentFrameUrl();
 
-	String getCurrentUrl();
+    String getCurrentUrl();
 
-	String getPageSource();
+    String getPageSource();
 
-	WebDriver getWebDriver();
+    WebDriver getWebDriver();
 
-	boolean hasWebDriverStarted();
+    boolean hasWebDriverStarted();
 
-	void verifyPage(WebPage page);
+    void verifyPage(WebPage page);
 
 }

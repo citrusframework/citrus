@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,30 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import java.lang.reflect.Method;
 
 /**
- *
  * @author Tamer Erdogan
  */
 public class BrowserAction extends WebAction {
 
-	private String action;
+    private String action;
 
-	@Override
-	public void doExecute(TestContext context) {
-		super.doExecute(context);
-		try {
-			logger.info("Doing the following browser action: {}", action);
-			Method actionMethod = webClient.getClass().getMethod(action);
-			actionMethod.invoke(webClient);
-		} catch (Exception ex) {
-			logger.error(ex.getMessage());
-			throw new CitrusRuntimeException(ex);
-		}
-	}
+    @Override
+    public void doExecute(TestContext context) {
+        super.doExecute(context);
+        try {
+            logger.info("Doing the following browser action: {}", action);
+            Method actionMethod = webClient.getClass().getMethod(action);
+            actionMethod.invoke(webClient);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            throw new CitrusRuntimeException(ex);
+        }
+    }
 
-	public String getAction() {
-		return action;
-	}
+    public String getAction() {
+        return action;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setAction(String action) {
+        this.action = action;
+    }
 }

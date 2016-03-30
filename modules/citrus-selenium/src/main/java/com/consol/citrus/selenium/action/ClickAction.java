@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,25 @@ import com.consol.citrus.context.TestContext;
 import org.openqa.selenium.By;
 
 /**
- *
  * @author Tamer Erdogan
  */
 public class ClickAction extends WebAction {
 
-	private By by;
+    private By by;
 
-	@Override
-	public void doExecute(TestContext context) {
-		super.doExecute(context);
-		logger.info("clicking the element by <{}>", by);
-		webClient.click(by);
-	}
+    @Override
+    public void doExecute(TestContext context) {
+        super.doExecute(context);
+        logger.info("clicking the element by <{}>", by);
+        webClient.click(by);
+    }
 
-	public By getBy() {
-		return by;
-	}
+    public By getBy() {
+        return by;
+    }
 
-	public void setBy(By by) {
-		this.by = by;
-	}
+    public void setBy(By by) {
+        this.by = by;
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,28 +23,27 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
 /**
- *
  * @author Tamer Erdogan
  */
 public class ExamplePage implements WebPage {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@FindBy(how = How.TAG_NAME, using = "h1")
-	WebElement header;
+    @FindBy(how = How.TAG_NAME, using = "h1")
+    WebElement header;
 
-	@Override
-	public String getPageUrl() {
-		return "/";
-	}
+    @Override
+    public String getPageUrl() {
+        return "/";
+    }
 
-	public void hasHeader() {
-		Assert.assertNotNull(header);
-		logger.info(header.getText());
-		Assert.assertEquals("Example Domain", header.getText());
-	}
+    public void hasHeader() {
+        Assert.assertNotNull(header);
+        logger.info(header.getText());
+        Assert.assertEquals("Example Domain", header.getText());
+    }
 
-	public String getHeader() {
-		return header.getText();
-	}
+    public String getHeader() {
+        return header.getText();
+    }
 }
