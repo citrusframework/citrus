@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+			  xmlns:spring="http://www.springframework.org/schema/beans"
+			  xmlns:web="http://www.citrusframework.org/schema/selenium/testcase"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+					http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+					http://www.citrusframework.org/schema/selenium/testcase http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+
+	<testcase name="ExampleITest">
+		<meta-info>
+			<author>Tamer Erdogan</author>
+			<creationdate>2015-10-02</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Tamer Erdogan</last-updated-by>
+			<last-updated-on>2015-09-17T00:00:00</last-updated-on>
+		</meta-info>
+
+		<description>Test www.example.com</description>
+		<variables>
+			<variable name="testVariable"/>
+			<variable name="testLink"/>
+		</variables>
+
+		<actions>
+			<echo>
+				<message>Example Domain Test</message>
+			</echo>
+
+			<web:start client="webBrowser"/>
+
+			<web:goto url="http://www.example.com" client="webBrowser"/>
+
+			<web:goto url="test" client="webBrowser"/>
+
+			<web:validate client="webBrowser">
+				<web:element by="tagName" select="h1" value="@contains('Domain')@" />
+			</web:validate>
+
+			<web:page pageName="ExamplePage" action="hasHeader" client="webBrowser" />
+
+			<!-- validate empty element -->
+			<web:validate client="webBrowser">
+				<web:element by="tagName" select="h2" />
+				<web:element by="xpath" select="//a/@href" value="@contains('www.iana.org')@"/>
+			</web:validate>
+
+			<!-- validate the return value of page method -->
+			<web:validate pageName="ExamplePage" client="webBrowser">
+				<web:page get="Header" value="Example Domain"/>
+			</web:validate>
+
+			<!-- extract variables from html -->
+			<web:extract client="webBrowser">
+				<web:element byTagName="h1" variable="testVariable"/>
+				<web:element byXpath="//a/@href" variable="testLink"/>
+			</web:extract>
+			<echo>
+				<message>
+					${testVariable}
+				</message>
+			</echo>
+			<echo>
+				<message>
+					${testLink}
+				</message>
+			</echo>
+
+			<web:stop client="webBrowser"/>
+		</actions>
+
+		<finally>
+			<web:stop client="webBrowser"/>
+		</finally>
+	</testcase>
+</spring:beans>

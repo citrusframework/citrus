@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns="http://www.citrusframework.org/schema/selenium/config"
+		   targetNamespace="http://www.citrusframework.org/schema/selenium/config"
+		   elementFormDefault="qualified"
+		   attributeFormDefault="unqualified">
+
+	<!-- RADIUS packet types -->
+	<xs:simpleType name="BrowserTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Chrome"/>
+			<xs:enumeration value="Firefox"/>
+			<xs:enumeration value="HtmlUnit"/>
+			<xs:enumeration value="InternetExplorer"/>
+			<xs:enumeration value="Safari"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="client">
+		<xs:annotation>
+			<xs:documentation>WebClient uses Selenium webdriver to simulate browser client.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="browser-type" type="xs:string" use="required"/> <!-- Enumeration of type BrowserTypeEnum -->
+			<xs:attribute name="start-url" type="xs:string"/>
+			<xs:attribute name="enable-javascript" type="xs:boolean"/>
+			<xs:attribute name="model-namespace" type="xs:string"/>
+			<xs:attribute name="selenium-server" type="xs:string"/>
+			<xs:attribute name="error-strategy">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="throwsException"/>
+						<xs:enumeration value="propagateError"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

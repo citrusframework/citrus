@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+			  xmlns:spring="http://www.springframework.org/schema/beans"
+			  xmlns:web="http://www.citrusframework.org/schema/selenium/testcase"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+					http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+					http://www.citrusframework.org/schema/selenium/testcase http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+
+	<testcase name="WebSearchPageITest">
+		<meta-info>
+			<author>Tamer Erdogan</author>
+			<creationdate>2015-10-23</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Tamer Erdogan</last-updated-by>
+			<last-updated-on>2015-10-23T00:00:00</last-updated-on>
+		</meta-info>
+
+		<description>Test www.websearch.com</description>
+
+		<variables>
+			<variable name="queryString" value="vasco data security"/>
+		</variables>
+
+		<actions>
+			<echo>
+				<message>WebSearch Test</message>
+			</echo>
+
+			<web:start client="webBrowser" url="http://www.websearch.com/"/>
+
+			<web:validate client="webBrowser">
+				<web:element by="id" select="form" value="@web:notNull()@"/>
+				<web:element by="id" select="logo" value="WebSearch"/>
+			</web:validate>
+
+			<web:page pageName="WebSearchPage" action="search" client="webBrowser">
+				<web:parameter name="query" value="${queryString}"/>
+			</web:page>
+
+			<web:validate client="webBrowser">
+				<web:element by="id" select="results" value="@web:notEmpty()@"/>
+			</web:validate>
+
+		</actions>
+
+		<finally>
+			<web:stop client="webBrowser"/>
+		</finally>
+	</testcase>
+</spring:beans>

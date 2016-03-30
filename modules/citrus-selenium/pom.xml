@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>citrus</artifactId>
+		<groupId>com.consol.citrus</groupId>
+		<version>2.6-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.consol.citrus</groupId>
+	<artifactId>citrus-selenium</artifactId>
+	<name>citrus-selenium</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.consol.citrus</groupId>
+			<artifactId>citrus-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Selenium -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.47.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<extension>true</extension>
+					<wsdl>false</wsdl>
+					<xmlschema>true</xmlschema>
+					<catalog>src/main/resources/catalog.cat</catalog>
+					<bindingDirectory>src/main/resources</bindingDirectory>
+					<bindingFiles>binding.xjb,citrus-testcase.episode</bindingFiles>
+					<schemaDirectory>src/main/resources</schemaDirectory>
+					<schemaFiles>**/*.xsd</schemaFiles>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
