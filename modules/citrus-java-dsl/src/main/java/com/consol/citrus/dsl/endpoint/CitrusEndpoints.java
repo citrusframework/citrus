@@ -16,6 +16,9 @@
 
 package com.consol.citrus.dsl.endpoint;
 
+import com.consol.citrus.docker.client.DockerClientBuilder;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointBuilder;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
@@ -78,5 +81,19 @@ public abstract class CitrusEndpoints {
      */
     public static ClientServerEndpointBuilder<RmiClientBuilder, RmiServerBuilder> rmi() {
         return new ClientServerEndpointBuilder<>(new RmiClientBuilder(), new RmiServerBuilder());
+    }
+
+    /**
+     * Creates new DockerClient builder.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static ClientServerEndpointBuilder<DockerClientBuilder, DockerClientBuilder> docker() {
+        return new ClientServerEndpointBuilder(new DockerClientBuilder(), new DockerClientBuilder()) {
+            @Override
+            public EndpointBuilder<? extends Endpoint> server() {
+                throw new UnsupportedOperationException("Citrus Docker stack has no support for server implementation");
+            }
+        };
     }
 }

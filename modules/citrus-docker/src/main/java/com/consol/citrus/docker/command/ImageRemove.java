@@ -38,7 +38,7 @@ public class ImageRemove extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        RemoveImageCmd command = dockerClient.getDockerClient().removeImageCmd(getImageId(context));
+        RemoveImageCmd command = dockerClient.getEndpointConfiguration().getDockerClient().removeImageCmd(getImageId(context));
 
         if (hasParameter("force")) {
             command.withForce(Boolean.valueOf(getParameter("force", context)));

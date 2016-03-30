@@ -16,12 +16,12 @@
 
 package com.consol.citrus.docker.actions;
 
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.*;
 import com.consol.citrus.docker.command.Info;
 import com.consol.citrus.docker.command.Version;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
@@ -31,6 +31,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -40,7 +41,14 @@ import static org.mockito.Mockito.*;
 
 public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
-    private DockerClient dockerClient = Mockito.mock(DockerClient.class);
+    private com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
+
+    private DockerClient client = new DockerClient();
+
+    @BeforeClass
+    public void setup() {
+        client.getEndpointConfiguration().setDockerClient(dockerClient);
+    }
 
     @Test
     public void testInfo() throws Exception {
@@ -54,7 +62,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Info());
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -73,7 +81,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Ping());
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -93,7 +101,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Version());
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -117,7 +125,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ContainerCreate()
             .image("image_create")
             .name("my_container"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -146,7 +154,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerCreate()
             .image("image_create"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -169,7 +177,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerInspect()
             .container("container_inspect"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -190,7 +198,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageInspect()
             .image("image_inspect"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -210,7 +218,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerRemove()
             .container("container_inspect"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -230,7 +238,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageRemove()
             .image("image_remove"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -250,7 +258,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerStart()
             .container("container_start"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -270,7 +278,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerStop()
             .container("container_stop"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -290,7 +298,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerWait()
                 .container("container_wait"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -324,7 +332,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ImagePull()
             .image("image_pull")
             .tag("image_tag"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 
@@ -360,7 +368,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         action.setCommand(new ImageBuild()
                 .dockerFile(new ClassPathResource("com/consol/citrus/docker/Dockerfile"))
                 .tag("latest"));
-        action.setDockerClient(new com.consol.citrus.docker.client.DockerClient(dockerClient));
+        action.setDockerClient(client);
 
         action.execute(context);
 

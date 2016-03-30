@@ -37,7 +37,7 @@ public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        final PullImageCmd command = dockerClient.getDockerClient().pullImageCmd(getImageId(context));
+        final PullImageCmd command = dockerClient.getEndpointConfiguration().getDockerClient().pullImageCmd(getImageId(context));
         PullImageResultCallback imageResult = new PullImageResultCallback() {
             @Override
             public void onNext(PullResponseItem item) {

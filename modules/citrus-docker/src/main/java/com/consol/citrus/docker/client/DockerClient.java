@@ -16,9 +16,17 @@
 
 package com.consol.citrus.docker.client;
 
-import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.command.DockerCommand;
+import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
+import com.consol.citrus.messaging.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Docker client uses Java docker client implementation for executing docker commands.
@@ -26,68 +34,93 @@ import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class DockerClient {
+public class DockerClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 
-    /** Docker client configuration */
-    private DockerClientConfig dockerClientConfig;
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(DockerClient.class);
 
-    /** Java docker client */
-    private com.github.dockerjava.api.DockerClient dockerClient;
+    /** Store of reply messages */
+    private CorrelationManager<DockerCommand> correlationManager;
 
     /**
-     * Default constructor.
+     * Default constructor initializing endpoint configuration.
      */
     public DockerClient() {
-        super();
+        this(new DockerEndpointConfiguration());
     }
 
     /**
-     * Constructor using docker client instance.
-     * @param dockerClient
+     * Default constructor using endpoint configuration.
+     * @param endpointConfiguration
      */
-    public DockerClient(com.github.dockerjava.api.DockerClient dockerClient) {
-        this();
-        this.dockerClient = dockerClient;
+    public DockerClient(DockerEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
-    /**
-     * Creates new Docker client instance with configuration.
-     * @return
-     */
-    private com.github.dockerjava.api.DockerClient createDockerClient() {
-        return DockerClientImpl.getInstance(getDockerClientConfig())
-                .withDockerCmdExecFactory(new DockerCmdExecFactoryImpl());
+    @Override
+    public DockerEndpointConfiguration getEndpointConfiguration() {
+        return (DockerEndpointConfiguration) super.getEndpointConfiguration();
     }
 
-    /**
-     * Constructs or gets the docker client implementation.
-     * @return
-     */
-    public com.github.dockerjava.api.DockerClient getDockerClient() {
-        if(dockerClient == null) {
-            dockerClient = createDockerClient();
+    @Override
+    public void send(Message message, TestContext context) {
+        String correlationKeyName = getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName());
+        String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
+        correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Sending Docker request to: '" + getEndpointConfiguration().getDockerClientConfig().getUri() + "'");
         }
 
-        return dockerClient;
+        DockerCommand command = message.getPayload(DockerCommand.class);
+        command.execute(this, context);
+
+        log.info("Docker request was sent to endpoint: '" + getEndpointConfiguration().getDockerClientConfig().getUri() + "'");
+
+        correlationManager.store(correlationKey, command);
+
+        if (command.getResultCallback() != null) {
+            command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
+        }
     }
 
-    /**
-     * Gets the docker client configuration.
-     * @return
-     */
-    public DockerClientConfig getDockerClientConfig() {
-        if (dockerClientConfig == null) {
-            dockerClientConfig = DockerClientConfig.createDefaultConfigBuilder().build();
+    @Override
+    public Message receive(TestContext context) {
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName()), context), context);
+    }
+
+    @Override
+    public Message receive(String selector, TestContext context) {
+        return receive(selector, context, getEndpointConfiguration().getTimeout());
+    }
+
+    @Override
+    public Message receive(TestContext context, long timeout) {
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName()), context), context, timeout);
+    }
+
+    @Override
+    public Message receive(String selector, TestContext context, long timeout) {
+        DockerCommand command = correlationManager.find(selector, timeout);
+
+        if (command == null) {
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from http server");
         }
 
-        return dockerClientConfig;
+        return new DefaultMessage(command.getCommandResult());
     }
 
-    /**
-     * Sets the docker client configuration.
-     * @param dockerClientConfig
-     */
-    public void setDockerClientConfig(DockerClientConfig dockerClientConfig) {
-        this.dockerClientConfig = dockerClientConfig;
+    @Override
+    public Producer createProducer() {
+        return this;
+    }
+
+    @Override
+    public SelectiveConsumer createConsumer() {
+        return this;
     }
 }

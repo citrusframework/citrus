@@ -40,7 +40,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        CreateContainerCmd command = dockerClient.getDockerClient().createContainerCmd(getImageId(context));
+        CreateContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().createContainerCmd(getImageId(context));
 
         if (hasParameter("name")) {
             command.withName(getParameter("name", context));
@@ -135,7 +135,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         setCommandResult(response);
 
         if (!hasParameter("name")) {
-            InspectContainerCmd inspect = dockerClient.getDockerClient().inspectContainerCmd(response.getId());
+            InspectContainerCmd inspect = dockerClient.getEndpointConfiguration().getDockerClient().inspectContainerCmd(response.getId());
             InspectContainerResponse inspectResponse = inspect.exec();
             context.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
         }

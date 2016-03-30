@@ -37,7 +37,7 @@ public class ContainerStop extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        StopContainerCmd command = dockerClient.getDockerClient().stopContainerCmd(getContainerId(context));
+        StopContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().stopContainerCmd(getContainerId(context));
         command.exec();
 
         setCommandResult(success());

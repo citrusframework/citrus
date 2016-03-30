@@ -20,6 +20,7 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointProperty;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.TypeConversionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.ReflectionUtils;
 
@@ -56,59 +57,13 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
         ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(this.getClass(), "name"), this, endpointAnnotation.name());
 
         for (CitrusEndpointProperty endpointProperty : endpointAnnotation.properties()) {
-            Method propertyMethod = ReflectionUtils.findMethod(this.getClass(), "name");
+            Method propertyMethod = ReflectionUtils.findMethod(this.getClass(), endpointProperty.name());
             if (propertyMethod != null) {
-                ReflectionUtils.invokeMethod(propertyMethod, this, getTypedParameterValue(endpointProperty.type(), endpointProperty.value()));
+                ReflectionUtils.invokeMethod(propertyMethod, this, TypeConversionUtils.convertStringToType(endpointProperty.value(), endpointProperty.type()));
             }
         }
 
         return build();
-    }
-
-    /**
-     * Convert parameter value string to required type from setter method argument.
-     * @param fieldType
-     * @param value
-     * @return
-     */
-    private Object getTypedParameterValue(Class<?> fieldType, String value) {
-        if (fieldType.isPrimitive()) {
-            if (fieldType.isAssignableFrom(int.class)) {
-                return Integer.valueOf(value).intValue();
-            } else if (fieldType.isAssignableFrom(short.class)) {
-                return Short.valueOf(value).shortValue();
-            }  else if (fieldType.isAssignableFrom(byte.class)) {
-                return Byte.valueOf(value).byteValue();
-            } else if (fieldType.isAssignableFrom(long.class)) {
-                return Long.valueOf(value).longValue();
-            } else if (fieldType.isAssignableFrom(boolean.class)) {
-                return Boolean.valueOf(value).booleanValue();
-            } else if (fieldType.isAssignableFrom(float.class)) {
-                return Float.valueOf(value).floatValue();
-            } else if (fieldType.isAssignableFrom(double.class)) {
-                return Double.valueOf(value).doubleValue();
-            }
-        } else {
-            if (fieldType.isAssignableFrom(String.class)) {
-                return value;
-            } else if (fieldType.isAssignableFrom(Integer.class)) {
-                return Integer.valueOf(value);
-            } else if (fieldType.isAssignableFrom(Short.class)) {
-                return Short.valueOf(value);
-            }  else if (fieldType.isAssignableFrom(Byte.class)) {
-                return Byte.valueOf(value);
-            }  else if (fieldType.isAssignableFrom(Long.class)) {
-                return Long.valueOf(value);
-            } else if (fieldType.isAssignableFrom(Boolean.class)) {
-                return Boolean.valueOf(value);
-            } else if (fieldType.isAssignableFrom(Float.class)) {
-                return Float.valueOf(value);
-            } else if (fieldType.isAssignableFrom(Double.class)) {
-                return Double.valueOf(value);
-            }
-        }
-
-        throw new CitrusRuntimeException(String.format("Unable to convert parameter '%s' to required type '%s'", value, fieldType.getName()));
     }
 
     @Override

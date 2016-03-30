@@ -10,3 +10,4 @@ endpoint.parser.jmx.client=com.consol.citrus.jmx.config.annotation.JmxClientConf
 endpoint.parser.jmx.server=com.consol.citrus.jmx.config.annotation.JmxServerConfigParser
 endpoint.parser.rmi.client=com.consol.citrus.rmi.config.annotation.RmiClientConfigParser
 endpoint.parser.rmi.server=com.consol.citrus.rmi.config.annotation.RmiServerConfigParser
+endpoint.parser.docker.client=com.consol.citrus.docker.config.annotation.DockerClientConfigParser

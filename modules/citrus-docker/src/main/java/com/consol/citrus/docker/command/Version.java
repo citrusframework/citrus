@@ -40,7 +40,7 @@ public class Version extends AbstractDockerCommand<com.github.dockerjava.api.mod
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        VersionCmd command = dockerClient.getDockerClient().versionCmd();
+        VersionCmd command = dockerClient.getEndpointConfiguration().getDockerClient().versionCmd();
         setCommandResult(command.exec());
 
         log.debug(getCommandResult().toString());

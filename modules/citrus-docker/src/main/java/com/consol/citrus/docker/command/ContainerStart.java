@@ -37,7 +37,7 @@ public class ContainerStart extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        StartContainerCmd command = dockerClient.getDockerClient().startContainerCmd(getContainerId(context));
+        StartContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().startContainerCmd(getContainerId(context));
         command.exec();
 
         setCommandResult(success());

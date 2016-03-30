@@ -38,7 +38,7 @@ public class Ping extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        PingCmd command = dockerClient.getDockerClient().pingCmd();
+        PingCmd command = dockerClient.getEndpointConfiguration().getDockerClient().pingCmd();
         command.exec();
 
         setCommandResult(success());

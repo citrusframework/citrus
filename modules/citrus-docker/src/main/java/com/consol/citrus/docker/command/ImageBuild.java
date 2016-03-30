@@ -43,7 +43,7 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        BuildImageCmd command = dockerClient.getDockerClient().buildImageCmd();
+        BuildImageCmd command = dockerClient.getEndpointConfiguration().getDockerClient().buildImageCmd();
 
         if (hasParameter("no-cache")) {
             command.withNoCache(Boolean.valueOf(getParameter("no-cache", context)));

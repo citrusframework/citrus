@@ -16,11 +16,13 @@
 
 package com.consol.citrus.docker.config.xml;
 
+import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.docker.client.DockerClient;
+import com.consol.citrus.docker.client.DockerEndpointConfiguration;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.github.dockerjava.core.DockerClientConfig;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -30,12 +32,11 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class DockerClientParser implements BeanDefinitionParser {
+public class DockerClientParser extends AbstractEndpointParser {
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(DockerClient.class);
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         DockerClientConfig.DockerClientConfigBuilder config = DockerClientConfig.createDefaultConfigBuilder();
 
@@ -71,9 +72,16 @@ public class DockerClientParser implements BeanDefinitionParser {
             config.withDockerCfgPath(element.getAttribute("config-path"));
         }
 
-        builder.addPropertyValue("dockerClientConfig", config.build());
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
+        endpointConfiguration.addPropertyValue("dockerClientConfig", config.build());
+    }
 
-        return null;
+    @Override
+    protected Class<? extends Endpoint> getEndpointClass() {
+        return DockerClient.class;
+    }
+
+    @Override
+    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
+        return DockerEndpointConfiguration.class;
     }
 }

@@ -37,7 +37,7 @@ public class ContainerWait extends AbstractDockerCommand<ContainerWait.ExitCode>
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        WaitContainerCmd command = dockerClient.getDockerClient().waitContainerCmd(getContainerId(context));
+        WaitContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().waitContainerCmd(getContainerId(context));
         Integer exitCode = command.exec();
 
         setCommandResult(new ExitCode(getContainerId(context), exitCode));

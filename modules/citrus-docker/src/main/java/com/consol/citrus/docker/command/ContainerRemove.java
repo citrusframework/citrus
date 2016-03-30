@@ -37,7 +37,7 @@ public class ContainerRemove extends AbstractDockerCommand<ResponseItem> {
 
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
-        RemoveContainerCmd command = dockerClient.getDockerClient().removeContainerCmd(getContainerId(context));
+        RemoveContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().removeContainerCmd(getContainerId(context));
 
         if (hasParameter("force")) {
             command.withForce(Boolean.valueOf(getParameter("force", context)));
