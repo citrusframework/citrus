@@ -528,6 +528,13 @@
         <version>1.2.3</version>
       </dependency>
 
+      <!-- Citrus Selenium dependencies -->
+      <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>2.52.0</version>
+      </dependency>
+
       <!-- JaxB Bindings (API and implementation) -->
       <dependency>
         <groupId>javax.xml.bind</groupId>
