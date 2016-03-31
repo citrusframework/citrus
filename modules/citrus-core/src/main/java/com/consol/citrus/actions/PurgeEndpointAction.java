@@ -166,10 +166,7 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
         }
     }
 
-    /**
-     * Sets the bean factory for endpoint name resolving.
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }

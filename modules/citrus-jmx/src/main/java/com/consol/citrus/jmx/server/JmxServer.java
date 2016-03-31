@@ -107,7 +107,9 @@ public class JmxServer extends AbstractServer {
                 for (ManagedBeanDefinition mbean : mbeans) {
                     server.unregisterMBean(mbean.createObjectName());
                 }
-            } catch (Throwable t) {}
+            } catch (Exception e) {
+                log.warn("Failed to unregister mBean:" + e.getMessage());
+            }
         }
 
         if (jmxConnectorServer != null) {

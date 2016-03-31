@@ -20,6 +20,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import java.util.Arrays;
+
 /**
  * Custom JsonPath function support for size(), keySet() and toString() operations on Json objects and arrays.
  *
@@ -30,7 +32,7 @@ public class JsonPathFunctions {
 
     public static final String DEFAULT_FUNCTION = "toString";
 
-    public static final String[] FUNCTION_NAMES = {"keySet", "size", DEFAULT_FUNCTION};
+    private static final String[] FUNCTION_NAMES = {"keySet", "size", DEFAULT_FUNCTION};
 
     /**
      * Evaluates function on result. Supported functions are size(), keySet() and toString().
@@ -72,5 +74,13 @@ public class JsonPathFunctions {
         }
 
         throw new CitrusRuntimeException("Unsupported JsonPath function: " + jsonPathFunction);
+    }
+
+    /**
+     * Gets names of supported functions.
+     * @return
+     */
+    public static String[] getSuportedFunctions() {
+        return Arrays.copyOf(FUNCTION_NAMES, FUNCTION_NAMES.length);
     }
 }

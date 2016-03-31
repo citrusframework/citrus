@@ -65,7 +65,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 String actualValue;
 
                 String jsonPathFunction = JsonPathFunctions.DEFAULT_FUNCTION;
-                for (String name : JsonPathFunctions.FUNCTION_NAMES) {
+                for (String name : JsonPathFunctions.getSuportedFunctions()) {
                     if (jsonPathExpression.endsWith(String.format(".%s()", name))) {
                         jsonPathFunction = name;
                         jsonPathExpression = jsonPathExpression.substring(0, jsonPathExpression.length() - String.format(".%s()", name).length());

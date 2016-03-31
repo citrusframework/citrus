@@ -150,13 +150,17 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
         if (registry != null) {
             try {
                 registry.unbind(endpointConfiguration.getBinding());
-            } catch (Throwable ignore) {}
+            } catch (Exception e) {
+                log.warn("Failed to unbind from registry:" + e.getMessage());
+            }
         }
 
         if (proxy != null) {
             try {
                 UnicastRemoteObject.unexportObject(proxy, true);
-            } catch (Throwable ignore) {}
+            } catch (Exception e) {
+                log.warn("Failed to unexport from remote object:" + e.getMessage());
+            }
         }
 
         registry = null;
