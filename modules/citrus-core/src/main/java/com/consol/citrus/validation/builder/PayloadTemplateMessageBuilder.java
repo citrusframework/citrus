@@ -18,7 +18,9 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
+import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
 
@@ -34,19 +36,21 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
     private String payloadData;
     
     /**
-     * Build the control message from
+     * Build the control message from payload file resource or String data.
      */
-    public String buildMessagePayload(TestContext context) {
+    public Object buildMessagePayload(TestContext context, String messageType) {
         try {
-            //construct control message payload
-            String messagePayload = "";
             if (payloadResourcePath != null) {
-                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context)));
+                if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
+                    return FileCopyUtils.copyToByteArray(FileUtils.getFileResource(payloadResourcePath, context).getInputStream());
+                } else {
+                    return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context)));
+                }
             } else if (payloadData != null){
-                messagePayload = context.replaceDynamicContentInString(payloadData);
+                return context.replaceDynamicContentInString(payloadData);
             }
 
-            return messagePayload;
+            return "";
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
         }

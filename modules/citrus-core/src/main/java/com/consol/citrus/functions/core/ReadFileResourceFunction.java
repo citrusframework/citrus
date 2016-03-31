@@ -21,7 +21,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import com.consol.citrus.util.FileUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,8 +45,14 @@ public class ReadFileResourceFunction implements Function {
             throw new InvalidFunctionUsageException("Missing file path function parameter");
         }
 
+        boolean base64 = parameterList.size() > 1 ? Boolean.valueOf(parameterList.get(1)) : false;
+
         try {
-            return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(parameterList.get(0), context)));
+            if (base64) {
+                return Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context).getInputStream()));
+            } else {
+                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(parameterList.get(0), context)));
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read file", e);
         }

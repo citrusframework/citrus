@@ -55,7 +55,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      */
     @Override
     public Message buildMessageContent(TestContext context, String messageType) {
-        Object payload = buildMessagePayload(context);
+        Object payload = buildMessagePayload(context, messageType);
 
         try {
             Message message = new DefaultMessage(payload, buildMessageHeaders(context));
@@ -89,7 +89,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
 
     }
     
-    protected abstract Object buildMessagePayload(TestContext context);
+    protected abstract Object buildMessagePayload(TestContext context, String messageType);
 
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         try {

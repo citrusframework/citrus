@@ -47,7 +47,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
     /**
      * Build the control message from script code.
      */
-    public String buildMessagePayload(TestContext context) {
+    public String buildMessagePayload(TestContext context, String messageType) {
         try {    
             //construct control message payload
             String messagePayload = "";

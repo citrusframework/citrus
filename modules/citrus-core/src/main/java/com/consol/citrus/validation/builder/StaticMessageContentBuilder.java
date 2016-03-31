@@ -49,7 +49,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
                 && getMessageInterceptors().isEmpty()
                 && getDataDictionary() == null) {
             Message constructed = new DefaultMessage(message);
-            constructed.setPayload(buildMessagePayload(context));
+            constructed.setPayload(buildMessagePayload(context, messageType));
 
             Map<String, Object> headers = buildMessageHeaders(context);
             for (Map.Entry<String, Object> header : headers.entrySet()) {
@@ -65,7 +65,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    protected Object buildMessagePayload(TestContext context) {
+    protected Object buildMessagePayload(TestContext context, String messageType) {
         if (message.getPayload() instanceof String) {
             return context.replaceDynamicContentInString(message.getPayload(String.class));
         } else {

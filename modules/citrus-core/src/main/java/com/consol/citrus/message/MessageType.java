@@ -26,6 +26,7 @@ public enum MessageType {
     CSV,
     JSON,
     PLAINTEXT,
+    BINARY,
     BINARY_BASE64,
     MSCONS;
 

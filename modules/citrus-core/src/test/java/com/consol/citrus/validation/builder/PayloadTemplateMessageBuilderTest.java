@@ -19,6 +19,7 @@ package com.consol.citrus.validation.builder;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
@@ -69,7 +70,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessageData");
     }
-    
+
     @Test
     public void testMessageBuilderWithPayloadResourceVariableSupport() {
         messageBuilder = new PayloadTemplateMessageBuilder();
@@ -80,6 +81,17 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
+    }
+
+    @Test
+    public void testMessageBuilderWithPayloadResourceBinary() {
+        messageBuilder = new PayloadTemplateMessageBuilder();
+
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/button.png");
+
+        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.BINARY.name());
+
+        Assert.assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
     }
     
     @Test
