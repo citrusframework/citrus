@@ -247,4 +247,44 @@
 
       <programlisting>&lt;someDate&gt;@dateRange('2015.12.01 07:00:00', '2015.12.01 19:00:00', 'yyyy.MM.dd HH:mm:ss')@&lt;/someDate&gt;</programlisting>
     </section>
+
+    <section id="validation-matcher-hamcrest">
+      <title>assertThat()</title>
+
+      <para>Hamcrest is a very powerful matcher library with extraordinary matcher implementations. You can use Hamcrest matchers also as Citrus validation matcher.</para>
+
+      <programlisting>&lt;someValue&gt;@assertThat(equalTo(foo))@&lt;/someValue&gt;</programlisting>
+
+      <para>In the listing above we are using the <emphasis>equalTo()</emphasis> matcher. All Hamcrest matchers are surrounded by a <emphasis>assertThat</emphasis> expression.
+      You are able to combine several Hamcrest matchers then in order to construct very powerful validation logic. See the following examples on what is possible then:</para>
+
+      <programlisting>&lt;someValue&gt;@assertThat(equalTo(value))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(not(equalTo(other))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(is(not(other))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(not(is(other))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(equalToIgnoringCase(VALUE)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(containsString(lue)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(not(containsString(other))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(startsWith(val)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(endsWith(lue)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(anyOf(startsWith(val), endsWith(lue))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(allOf(startsWith(val), endsWith(lue))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(isEmptyString()@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(not(isEmptyString())@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(isEmptyOrNullString()@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(nullValue()@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(notNullValue()@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(empty()@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(not(empty())@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(greaterThan(4)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(allOf(greaterThan(4), lessThan(6), not(lessThan(5)))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(is(not(greaterThan(5)))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(greaterThanOrEqualTo(5)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(lessThan(5)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(not(lessThan(1))@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(lessThanOrEqualTo(4)@&lt;/someValue&gt;
+&lt;someValue&gt;@assertThat(hasSize(5))@&lt;/someValue&gt;</programlisting>
+
+      <para>Citrus will automatically perform validation matchers on the element value. Only if all matchers are satisfied the validation will pass.</para>
+    </section>
 </chapter>

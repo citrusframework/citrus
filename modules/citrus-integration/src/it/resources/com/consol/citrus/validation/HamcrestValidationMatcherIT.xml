@@ -6,25 +6,18 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
-  <testcase name="DateRangeValidationMatcherIT">
+  <testcase name="HamcrestValidationMatcherIT">
     <meta-info>
-      <author>Martin Maher</author>
+      <author>Christoph Deppisch</author>
       <creationdate>2015-12-14</creationdate>
       <status>FINAL</status>
-      <last-updated-by>Martin Maher</last-updated-by>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
       <last-updated-on>2015-12-14T00:00:00</last-updated-on>
     </meta-info>
 
     <description>
-      Tests the @dateRange()@ validator
+      Tests the @assertThat()@ validator
     </description>
-
-    <variables>
-      <variable name="withinRangeTimestamp" value="2015-01-31"/>
-      <variable name="outsideRangeTimestamp" value="2015-01-28"/>
-      <variable name="rangeFrom" value="2015-01-30"/>
-      <variable name="rangeTo" value="2015-02-01"/>
-    </variables>
 
     <actions>
       <parallel>
@@ -35,7 +28,7 @@
               <http:data>
                 <![CDATA[
                     <testRequestMessage>
-                        <timestamp>${withinRangeTimestamp}</timestamp>
+                        <message>foo</message>
                     </testRequestMessage>
                 ]]>
               </http:data>
@@ -53,7 +46,7 @@
                 <http:data>
                   <![CDATA[
                     <testRequestMessage>
-                        <timestamp>@dateRange('${rangeFrom}','${rangeTo}')@</timestamp>
+                        <message>@assertThat(is(not(equalTo(bar))))@</message>
                     </testRequestMessage>
                   ]]>
                 </http:data>
@@ -73,7 +66,7 @@
               <http:data>
                 <![CDATA[
                   <testResponseMessage>
-                    <timestamp>${outsideRangeTimestamp}</timestamp>
+                    <message>bar</message>
                   </testResponseMessage>
                 ]]>
               </http:data>
@@ -82,20 +75,13 @@
         </sequential>
       </parallel>
 
-      <assert exception="com.consol.citrus.exceptions.ValidationException" message="DateRangeValidationMatcher failed for field 'timestamp'. Date '${outsideRangeTimestamp}' not in range: ${rangeFrom} - ${rangeTo}">
-        <http:receive-response client="httpClient">
-          <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-          <http:body>
-            <http:data>
-              <![CDATA[
-                <testResponseMessage>
-                  <timestamp>@dateRange('${rangeFrom}','${rangeTo}')@</timestamp>
-                </testResponseMessage>
-              ]]>
-            </http:data>
-          </http:body>
-        </http:receive-response>
-      </assert>
+      <http:receive-response client="httpClient">
+        <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
+        <http:body>
+          <http:validate path="/testResponseMessage/message" value="@assertThat(containsString(bar))@"/>
+          <http:validate path="count(//message)" value="@assertThat(greaterThan(0))@" result-type="number"/>
+        </http:body>
+      </http:receive-response>
     </actions>
   </testcase>
 </spring:beans>

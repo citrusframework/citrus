@@ -17,6 +17,7 @@
 package com.consol.citrus.validation.matcher;
 
 import com.consol.citrus.validation.matcher.core.*;
+import com.consol.citrus.validation.matcher.hamcrest.HamcrestValidationMatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,6 +42,7 @@ public class ValidationMatcherConfig {
     private final WeekdayValidationMatcher weekDayValidationMatcher = new WeekdayValidationMatcher();
     private final CreateVariableValidationMatcher createVariablesValidationMatcher = new CreateVariableValidationMatcher();
     private final DateRangeValidationMatcher dateRangeValidationMatcher = new DateRangeValidationMatcher();
+    private final HamcrestValidationMatcher hamcrestValidationMatcher = new HamcrestValidationMatcher();
 
     @Bean(name = "validationMatcherRegistry")
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
@@ -73,6 +75,7 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.getMembers().put("isWeekday", weekDayValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("variable", createVariablesValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("dateRange", dateRangeValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("assertThat", hamcrestValidationMatcher);
 
         return citrusValidationMatcherLibrary;
     }

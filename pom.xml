@@ -288,6 +288,17 @@
         <optional>true</optional>
       </dependency>
 
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <version>1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-library</artifactId>
+        <version>1.3</version>
+      </dependency>
+
       <!-- Spring Framework -->
       <dependency>
         <groupId>org.springframework</groupId>

@@ -17,6 +17,9 @@
   <body>
     <release version="2.5.2" date="01.04.2015" description="2.5.2 release">
       <action dev="christophd" type="add">
+        CITRUS-50 Support Hamcrest matchers
+      </action>
+      <action dev="christophd" type="add">
         CITRUS-49 Support Json object functions in JsonPath validation
       </action>
       <action dev="christophd" type="add">

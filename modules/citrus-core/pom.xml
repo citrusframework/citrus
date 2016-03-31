@@ -100,9 +100,18 @@
     </dependency>
 
     <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+    </dependency>
+
+    <dependency>
 	    <groupId>org.codehaus.groovy</groupId>
 	    <artifactId>groovy</artifactId>
-	</dependency>
+	  </dependency>
     <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-xml</artifactId>
