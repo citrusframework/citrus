@@ -19,6 +19,7 @@ package com.consol.citrus.websocket.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.websocket.client.WebSocketClientEndpointConfiguration;
 
 import java.util.Map;
 

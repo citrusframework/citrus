@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.websocket.client.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.websocket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.websocket.message.WebSocketMessage;
 import org.mockito.Mockito;

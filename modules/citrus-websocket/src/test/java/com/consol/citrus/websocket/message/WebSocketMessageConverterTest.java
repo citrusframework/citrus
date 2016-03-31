@@ -17,7 +17,7 @@
 package com.consol.citrus.websocket.message;
 
 import com.consol.citrus.message.Message;
-import com.consol.citrus.websocket.endpoint.WebSocketClientEndpointConfiguration;
+import com.consol.citrus.websocket.client.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpointConfiguration;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.TextMessage;

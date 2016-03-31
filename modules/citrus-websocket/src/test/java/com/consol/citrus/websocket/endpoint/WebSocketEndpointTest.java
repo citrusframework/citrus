@@ -22,6 +22,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.websocket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.websocket.message.WebSocketMessage;
+import com.consol.citrus.websocket.server.WebSocketServerEndpointConfiguration;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;

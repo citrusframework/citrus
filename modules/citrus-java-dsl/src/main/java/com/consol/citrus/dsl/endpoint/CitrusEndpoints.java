@@ -35,6 +35,8 @@ import com.consol.citrus.ssh.client.SshClientBuilder;
 import com.consol.citrus.ssh.server.SshServerBuilder;
 import com.consol.citrus.vertx.endpoint.VertxEndpointBuilder;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder;
+import com.consol.citrus.websocket.client.WebSocketClientBuilder;
+import com.consol.citrus.websocket.server.WebSocketServerBuilder;
 import com.consol.citrus.ws.client.WebServiceClientBuilder;
 import com.consol.citrus.ws.server.WebServiceServerBuilder;
 
@@ -121,6 +123,14 @@ public abstract class CitrusEndpoints {
      */
     public static AsyncSyncEndpointBuilder<VertxEndpointBuilder, VertxSyncEndpointBuilder> vertx() {
         return new AsyncSyncEndpointBuilder<>(new VertxEndpointBuilder(), new VertxSyncEndpointBuilder());
+    }
+
+    /**
+     * Creates new WebSocketClient or WebSocketServer builder.
+     * @return
+     */
+    public static ClientServerEndpointBuilder<WebSocketClientBuilder, WebSocketServerBuilder> websocket() {
+        return new ClientServerEndpointBuilder<>(new WebSocketClientBuilder(), new WebSocketServerBuilder());
     }
 
     /**

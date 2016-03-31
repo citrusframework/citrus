@@ -21,7 +21,7 @@ import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
-import com.consol.citrus.websocket.endpoint.WebSocketServerEndpointConfiguration;
+import com.consol.citrus.websocket.server.WebSocketServerEndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;

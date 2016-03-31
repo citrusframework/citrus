@@ -95,6 +95,14 @@
     </dependency>
 
     <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-websocket</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
