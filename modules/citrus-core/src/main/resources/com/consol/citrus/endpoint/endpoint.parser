@@ -13,3 +13,5 @@ endpoint.parser.rmi.server=com.consol.citrus.rmi.config.annotation.RmiServerConf
 endpoint.parser.docker.client=com.consol.citrus.docker.config.annotation.DockerClientConfigParser
 endpoint.parser.ftp.client=com.consol.citrus.ftp.config.annotation.FtpClientConfigParser
 endpoint.parser.ftp.server=com.consol.citrus.ftp.config.annotation.FtpServerConfigParser
+endpoint.parser.ssh.client=com.consol.citrus.ssh.config.annotation.SshClientConfigParser
+endpoint.parser.ssh.server=com.consol.citrus.ssh.config.annotation.SshServerConfigParser

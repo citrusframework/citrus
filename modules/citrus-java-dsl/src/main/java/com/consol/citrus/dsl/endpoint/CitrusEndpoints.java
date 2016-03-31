@@ -31,6 +31,8 @@ import com.consol.citrus.mail.client.MailClientBuilder;
 import com.consol.citrus.mail.server.MailServerBuilder;
 import com.consol.citrus.rmi.client.RmiClientBuilder;
 import com.consol.citrus.rmi.server.RmiServerBuilder;
+import com.consol.citrus.ssh.client.SshClientBuilder;
+import com.consol.citrus.ssh.server.SshServerBuilder;
 import com.consol.citrus.ws.client.WebServiceClientBuilder;
 import com.consol.citrus.ws.server.WebServiceServerBuilder;
 
@@ -101,6 +103,14 @@ public abstract class CitrusEndpoints {
      */
     public static ClientServerEndpointBuilder<FtpClientBuilder, FtpServerBuilder> ftp() {
         return new ClientServerEndpointBuilder<>(new FtpClientBuilder(), new FtpServerBuilder());
+    }
+
+    /**
+     * Creates new SshClient or SshServer builder.
+     * @return
+     */
+    public static ClientServerEndpointBuilder<SshClientBuilder, SshServerBuilder> ssh() {
+        return new ClientServerEndpointBuilder<>(new SshClientBuilder(), new SshServerBuilder());
     }
 
     /**
