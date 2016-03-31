@@ -15,3 +15,5 @@ endpoint.parser.ftp.client=com.consol.citrus.ftp.config.annotation.FtpClientConf
 endpoint.parser.ftp.server=com.consol.citrus.ftp.config.annotation.FtpServerConfigParser
 endpoint.parser.ssh.client=com.consol.citrus.ssh.config.annotation.SshClientConfigParser
 endpoint.parser.ssh.server=com.consol.citrus.ssh.config.annotation.SshServerConfigParser
+endpoint.parser.vertx=com.consol.citrus.vertx.config.annotation.VertxEndpointConfigParser
+endpoint.parser.vertx.sync=com.consol.citrus.vertx.config.annotation.VertxSyncEndpointConfigParser

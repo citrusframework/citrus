@@ -33,6 +33,8 @@ import com.consol.citrus.rmi.client.RmiClientBuilder;
 import com.consol.citrus.rmi.server.RmiServerBuilder;
 import com.consol.citrus.ssh.client.SshClientBuilder;
 import com.consol.citrus.ssh.server.SshServerBuilder;
+import com.consol.citrus.vertx.endpoint.VertxEndpointBuilder;
+import com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder;
 import com.consol.citrus.ws.client.WebServiceClientBuilder;
 import com.consol.citrus.ws.server.WebServiceServerBuilder;
 
@@ -111,6 +113,14 @@ public abstract class CitrusEndpoints {
      */
     public static ClientServerEndpointBuilder<SshClientBuilder, SshServerBuilder> ssh() {
         return new ClientServerEndpointBuilder<>(new SshClientBuilder(), new SshServerBuilder());
+    }
+
+    /**
+     * Creates new VertxEndpoint sync or async builder.
+     * @return
+     */
+    public static AsyncSyncEndpointBuilder<VertxEndpointBuilder, VertxSyncEndpointBuilder> vertx() {
+        return new AsyncSyncEndpointBuilder<>(new VertxEndpointBuilder(), new VertxSyncEndpointBuilder());
     }
 
     /**
