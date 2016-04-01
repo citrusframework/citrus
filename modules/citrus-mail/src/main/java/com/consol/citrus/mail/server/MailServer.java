@@ -125,7 +125,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     public void deliver(String from, String recipient, InputStream data) {
         try {
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessage(getSession(), data));
-            Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration());
+            Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration(), null);
             Message response = invokeEndpointAdapter(request);
 
             if (response != null && response.getPayload() != null) {

@@ -85,7 +85,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        SshRequest request = (SshRequest) getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
+        SshRequest request = (SshRequest) getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
 
         if (getEndpointConfiguration().isStrictHostChecking()) {
             setKnownHosts();
@@ -115,7 +115,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
             disconnect();
         }
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
-        Message response = getEndpointConfiguration().getMessageConverter().convertInbound(sshResp, getEndpointConfiguration())
+        Message response = getEndpointConfiguration().getMessageConverter().convertInbound(sshResp, getEndpointConfiguration(), context)
                 .setHeader("user", rUser);
 
         correlationManager.store(correlationKey, response);

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.message.callback;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import org.springframework.ws.WebServiceMessage;
@@ -36,14 +37,19 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
     private Message response;
 
     /** Endpoint configuration */
-    private WebServiceEndpointConfiguration endpointConfiguration;
+    private final WebServiceEndpointConfiguration endpointConfiguration;
+
+    /** Test context */
+    private final TestContext context;
 
     /**
      * Constructor using endpoint configuration.
      * @param endpointConfiguration
+     * @param context
      */
-    public SoapResponseMessageCallback(WebServiceEndpointConfiguration endpointConfiguration) {
+    public SoapResponseMessageCallback(WebServiceEndpointConfiguration endpointConfiguration, TestContext context) {
         this.endpointConfiguration = endpointConfiguration;
+        this.context = context;
     }
 
     /**
@@ -52,7 +58,7 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
      */
     public void doWithMessage(WebServiceMessage responseMessage) throws IOException, TransformerException {
         // convert and set response for later access via getResponse():
-        response = endpointConfiguration.getMessageConverter().convertInbound(responseMessage, endpointConfiguration);
+        response = endpointConfiguration.getMessageConverter().convertInbound(responseMessage, endpointConfiguration, context);
     }
     
     /**

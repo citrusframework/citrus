@@ -16,7 +16,10 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.LinkedHashMap;
@@ -29,7 +32,7 @@ import java.util.Map;
 public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message, ChannelEndpointConfiguration> {
 
     @Override
-    public org.springframework.messaging.Message convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
+    public org.springframework.messaging.Message convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
         if (endpointConfiguration.isUseObjectMessages()) {
             return MessageBuilder.withPayload(internalMessage)
                     .build();
@@ -42,7 +45,7 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
     }
 
     @Override
-    public Message convertInbound(org.springframework.messaging.Message externalMessage, ChannelEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(org.springframework.messaging.Message externalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
         if (externalMessage == null) {
             return null;
         }
@@ -67,6 +70,6 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
     }
 
     @Override
-    public void convertOutbound(org.springframework.messaging.Message externalMessage, Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(org.springframework.messaging.Message externalMessage, Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
     }
 }

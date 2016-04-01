@@ -80,7 +80,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
 
         String binding = message.getHeader(RmiMessageHeaders.RMI_BINDING) != null ? message.getHeader(RmiMessageHeaders.RMI_BINDING).toString() : getEndpointConfiguration().getBinding();
         try {
-            RmiServiceInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
+            RmiServiceInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
             Registry registry = getEndpointConfiguration().getRegistry();
             final Remote remoteTarget = registry.lookup(binding);
 

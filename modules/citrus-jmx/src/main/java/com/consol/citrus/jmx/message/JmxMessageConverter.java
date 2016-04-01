@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jmx.message;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
 import com.consol.citrus.jmx.model.ManagedBeanInvocation;
 import com.consol.citrus.jmx.model.OperationParam;
@@ -32,14 +33,14 @@ import javax.xml.transform.Source;
 public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocation, JmxEndpointConfiguration> {
 
     @Override
-    public ManagedBeanInvocation convertOutbound(Message internalMessage, JmxEndpointConfiguration endpointConfiguration) {
+    public ManagedBeanInvocation convertOutbound(Message internalMessage, JmxEndpointConfiguration endpointConfiguration, TestContext context) {
         ManagedBeanInvocation serviceInvocation = getServiceInvocation(internalMessage, endpointConfiguration);
-        convertOutbound(serviceInvocation, internalMessage, endpointConfiguration);
+        convertOutbound(serviceInvocation, internalMessage, endpointConfiguration, context);
         return serviceInvocation;
     }
 
     @Override
-    public void convertOutbound(ManagedBeanInvocation mBeanInvocation, Message internalMessage, JmxEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(ManagedBeanInvocation mBeanInvocation, Message internalMessage, JmxEndpointConfiguration endpointConfiguration, TestContext context) {
         if (internalMessage.getHeader(JmxMessageHeaders.JMX_MBEAN) != null) {
             mBeanInvocation.setMbean(internalMessage.getHeader(JmxMessageHeaders.JMX_MBEAN).toString());
         }
@@ -86,7 +87,7 @@ public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocati
     }
 
     @Override
-    public Message convertInbound(ManagedBeanInvocation mBeanInvocation, JmxEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(ManagedBeanInvocation mBeanInvocation, JmxEndpointConfiguration endpointConfiguration, TestContext context) {
         StringResult payload = new StringResult();
         endpointConfiguration.getMarshaller().marshal(mBeanInvocation, payload);
 

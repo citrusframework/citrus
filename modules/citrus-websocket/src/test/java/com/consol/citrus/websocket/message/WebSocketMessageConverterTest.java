@@ -17,6 +17,7 @@
 package com.consol.citrus.websocket.message;
 
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.websocket.client.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpointConfiguration;
 import org.springframework.web.socket.BinaryMessage;
@@ -31,7 +32,7 @@ import java.nio.charset.Charset;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class WebSocketMessageConverterTest {
+public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
 
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
 
@@ -40,14 +41,14 @@ public class WebSocketMessageConverterTest {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
 
         WebSocketMessage message = new WebSocketMessage("Hello WebSocket!");
-        org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration);
+        org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
         Assert.assertTrue(TextMessage.class.isInstance(result));
         Assert.assertEquals(((TextMessage) result).getPayload(), "Hello WebSocket!");
         Assert.assertEquals(result.isLast(), true);
 
         message = new WebSocketMessage("Hello WebSocket - stay tuned!").last(false);
-        result = messageConverter.convertOutbound(message, endpointConfiguration);
+        result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
         Assert.assertTrue(TextMessage.class.isInstance(result));
         Assert.assertEquals(((TextMessage) result).getPayload(), "Hello WebSocket - stay tuned!");
@@ -59,7 +60,7 @@ public class WebSocketMessageConverterTest {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
 
         WebSocketMessage message = new WebSocketMessage("Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
-        org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration);
+        org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
         Assert.assertTrue(BinaryMessage.class.isInstance(result));
         Assert.assertEquals(((BinaryMessage) result).getPayload().array(), "Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
@@ -71,14 +72,14 @@ public class WebSocketMessageConverterTest {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
         org.springframework.web.socket.WebSocketMessage externalMessage = new TextMessage("Hello WebSocket!");
 
-        Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration);
+        Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
         Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
         Assert.assertEquals(internal.getPayload(String.class), "Hello WebSocket!");
         Assert.assertEquals(((WebSocketMessage) internal).isLast(), true);
 
         externalMessage = new TextMessage("Hello WebSocket - stay tuned!", false);
-        internal = messageConverter.convertInbound(externalMessage, endpointConfiguration);
+        internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
         Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
         Assert.assertEquals(internal.getPayload(String.class), "Hello WebSocket - stay tuned!");
@@ -90,7 +91,7 @@ public class WebSocketMessageConverterTest {
         WebSocketEndpointConfiguration endpointConfiguration = new WebSocketClientEndpointConfiguration();
         org.springframework.web.socket.WebSocketMessage externalMessage = new BinaryMessage("Hello WebSocket!".getBytes(Charset.forName("UTF-8")));
 
-        Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration);
+        Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
         Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
         Assert.assertEquals(internal.getPayload(ByteBuffer.class).array(), "Hello WebSocket!".getBytes(Charset.forName("UTF-8")));

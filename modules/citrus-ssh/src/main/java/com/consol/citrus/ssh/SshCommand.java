@@ -83,10 +83,10 @@ public class SshCommand implements Command, Runnable {
             String input = FileUtils.readToString(stdin);
             SshRequest sshRequest = new SshRequest(command, input);
 
-            Message response = endpointAdapter.handleMessage(endpointConfiguration.getMessageConverter().convertInbound(sshRequest, endpointConfiguration)
+            Message response = endpointAdapter.handleMessage(endpointConfiguration.getMessageConverter().convertInbound(sshRequest, endpointConfiguration, null)
                     .setHeader("user", user));
 
-            SshResponse sshResponse = (SshResponse) endpointConfiguration.getMessageConverter().convertOutbound(response, endpointConfiguration);
+            SshResponse sshResponse = (SshResponse) endpointConfiguration.getMessageConverter().convertOutbound(response, endpointConfiguration, null);
 
             copyToStream(sshResponse.getStderr(), stderr);
             copyToStream(sshResponse.getStdout(), stdout);

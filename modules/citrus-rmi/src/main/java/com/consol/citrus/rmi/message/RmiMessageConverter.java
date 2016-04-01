@@ -16,6 +16,7 @@
 
 package com.consol.citrus.rmi.message;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.*;
 import com.consol.citrus.rmi.endpoint.RmiEndpointConfiguration;
 import com.consol.citrus.rmi.model.RmiServiceInvocation;
@@ -31,14 +32,14 @@ import javax.xml.transform.Source;
 public class RmiMessageConverter implements MessageConverter<RmiServiceInvocation, RmiEndpointConfiguration> {
 
     @Override
-    public RmiServiceInvocation convertOutbound(Message internalMessage, RmiEndpointConfiguration endpointConfiguration) {
+    public RmiServiceInvocation convertOutbound(Message internalMessage, RmiEndpointConfiguration endpointConfiguration, TestContext context) {
         RmiServiceInvocation serviceInvocation = getServiceInvocation(internalMessage, endpointConfiguration);
-        convertOutbound(serviceInvocation, internalMessage, endpointConfiguration);
+        convertOutbound(serviceInvocation, internalMessage, endpointConfiguration, context);
         return serviceInvocation;
     }
 
     @Override
-    public void convertOutbound(RmiServiceInvocation serviceInvocation, Message internalMessage, RmiEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(RmiServiceInvocation serviceInvocation, Message internalMessage, RmiEndpointConfiguration endpointConfiguration, TestContext context) {
         if (internalMessage.getHeader(RmiMessageHeaders.RMI_METHOD) != null) {
             serviceInvocation.setMethod(internalMessage.getHeader(RmiMessageHeaders.RMI_METHOD).toString());
         } else if (StringUtils.hasText(endpointConfiguration.getMethod())) {
@@ -47,7 +48,7 @@ public class RmiMessageConverter implements MessageConverter<RmiServiceInvocatio
     }
 
     @Override
-    public Message convertInbound(RmiServiceInvocation serviceInvocation, RmiEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(RmiServiceInvocation serviceInvocation, RmiEndpointConfiguration endpointConfiguration, TestContext context) {
         StringResult payload = new StringResult();
         endpointConfiguration.getMarshaller().marshal(serviceInvocation, payload);
 

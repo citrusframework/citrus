@@ -55,7 +55,7 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         LOG.info(String.format("Waiting %s ms for Web Socket message ...", timeout));
 
         WebSocketMessage<?> message = receive(endpointConfiguration, timeout);
-        Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration);
+        Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration, context);
 
         LOG.info("Received Web Socket message");
         context.onInboundMessage(receivedMessage);

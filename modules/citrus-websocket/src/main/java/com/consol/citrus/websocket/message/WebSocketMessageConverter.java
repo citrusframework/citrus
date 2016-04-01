@@ -16,6 +16,7 @@
 
 package com.consol.citrus.websocket.message;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpointConfiguration;
 import com.consol.citrus.message.Message;
@@ -34,7 +35,7 @@ import java.nio.ByteBuffer;
  */
 public class WebSocketMessageConverter implements MessageConverter<org.springframework.web.socket.WebSocketMessage, WebSocketEndpointConfiguration> {
     @Override
-    public org.springframework.web.socket.WebSocketMessage convertOutbound(Message message, WebSocketEndpointConfiguration endpointConfiguration) {
+    public org.springframework.web.socket.WebSocketMessage convertOutbound(Message message, WebSocketEndpointConfiguration endpointConfiguration, TestContext context) {
         WebSocketMessage internalMessage;
         if (message instanceof WebSocketMessage) {
             internalMessage = (WebSocketMessage) message;
@@ -58,16 +59,16 @@ public class WebSocketMessageConverter implements MessageConverter<org.springfra
             }
         }
 
-        convertOutbound(webSocketMessage, internalMessage, endpointConfiguration);
+        convertOutbound(webSocketMessage, internalMessage, endpointConfiguration, context);
         return webSocketMessage;
     }
 
     @Override
-    public void convertOutbound(org.springframework.web.socket.WebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(org.springframework.web.socket.WebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration, TestContext context) {
     }
 
     @Override
-    public Message convertInbound(org.springframework.web.socket.WebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(org.springframework.web.socket.WebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration, TestContext context) {
         return new WebSocketMessage(externalMessage.getPayload())
                         .last(externalMessage.isLast());
     }

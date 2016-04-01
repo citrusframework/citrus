@@ -105,7 +105,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
         context.onOutboundMessage(message);
 
-        ManagedBeanInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
+        ManagedBeanInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         try {
             if (StringUtils.hasText(invocation.getMbean())) {
                 objectName = new ObjectName(invocation.getMbean().toString());

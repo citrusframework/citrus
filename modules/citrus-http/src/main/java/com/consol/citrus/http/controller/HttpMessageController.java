@@ -106,7 +106,7 @@ public class HttpMessageController {
      * @return
      */
     private ResponseEntity<String> handleRequestInternal(HttpMethod method, HttpEntity<String> requestEntity) {
-        HttpMessage request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration);
+        HttpMessage request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration, null);
 
         HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
@@ -149,7 +149,7 @@ public class HttpMessageController {
                 httpResponse.status(HttpStatus.OK);
             }
 
-            responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration);
+            responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
         }
 
         return responseCache;

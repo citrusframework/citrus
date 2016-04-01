@@ -20,6 +20,7 @@ import com.consol.citrus.camel.endpoint.CamelEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultExchange;
 import org.mockito.Mockito;
@@ -32,7 +33,7 @@ import java.util.UUID;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CamelMessageConverterTest {
+public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
     private CamelContext camelContext = Mockito.mock(CamelContext.class);
     private CamelMessageConverter messageConverter = new CamelMessageConverter();
@@ -43,7 +44,7 @@ public class CamelMessageConverterTest {
         Message message = new DefaultMessage("Hello from Citrus!")
                 .setHeader("operation", "sayHello");
 
-        Exchange exchange = messageConverter.convertOutbound(message, endpointConfiguration);
+        Exchange exchange = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
         Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
         Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
@@ -57,7 +58,7 @@ public class CamelMessageConverterTest {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
 
-        messageConverter.convertOutbound(exchange, message, endpointConfiguration);
+        messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
         Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
         Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
@@ -71,7 +72,7 @@ public class CamelMessageConverterTest {
         exchange.getIn().setBody("Hello from Citrus!");
         exchange.getIn().setHeader("operation", "sayHello");
 
-        Message result = messageConverter.convertInbound(exchange, endpointConfiguration);
+        Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
         Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
@@ -92,7 +93,7 @@ public class CamelMessageConverterTest {
         exchange.setProperty("SpecialProperty", "foo");
         exchange.setProperty("VerySpecialProperty", "bar");
 
-        Message result = messageConverter.convertInbound(exchange, endpointConfiguration);
+        Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
         Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
@@ -113,7 +114,7 @@ public class CamelMessageConverterTest {
         exchange.getIn().setHeader("operation", "sayHello");
         exchange.setException(new CitrusRuntimeException("Something went wrong"));
 
-        Message result = messageConverter.convertInbound(exchange, endpointConfiguration);
+        Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
         Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());

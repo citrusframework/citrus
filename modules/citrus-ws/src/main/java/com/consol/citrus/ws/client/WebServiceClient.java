@@ -115,10 +115,10 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                     "' Currently only 'java.lang.String' is supported as payload type.");
         }
 
-        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(soapMessage, getEndpointConfiguration());
+        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(soapMessage, getEndpointConfiguration(), context);
 
-        SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback(getEndpointConfiguration());
-        getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(correlationKey, endpointUri));
+        SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback(getEndpointConfiguration(), context);
+        getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(correlationKey, endpointUri, context));
 
         boolean result;
         // send and receive message
@@ -199,13 +199,17 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         /** The endpoint that was initially invoked */
         private String endpointUri;
 
+        /** Test context */
+        private TestContext context;
+
         /**
          * Default constructor provided with request message
          * associated with this fault resolver and endpoint uri.
          */
-        public InternalFaultMessageResolver(String correlationKey, String endpointUri) {
+        public InternalFaultMessageResolver(String correlationKey, String endpointUri, TestContext context) {
             this.correlationKey = correlationKey;
             this.endpointUri = endpointUri;
+            this.context = context;
         }
 
         /**
@@ -213,7 +217,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
          */
         public void resolveFault(WebServiceMessage webServiceResponse) throws IOException {
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.PROPAGATE)) {
-                SoapResponseMessageCallback callback = new SoapResponseMessageCallback(getEndpointConfiguration());
+                SoapResponseMessageCallback callback = new SoapResponseMessageCallback(getEndpointConfiguration(), context);
                 try {
                     callback.doWithMessage(webServiceResponse);
 

@@ -18,6 +18,7 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class WsAddressingMessageConverterTest {
+public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
     private SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
     private SoapBody soapBody = Mockito.mock(SoapBody.class);
@@ -79,7 +80,7 @@ public class WsAddressingMessageConverterTest {
 
         when(soapHeader.getResult()).thenReturn(soapHeaderResult);
 
-        messageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration());
+        messageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
         Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
         Assert.assertEquals(soapHeaderResult.toString(), "");
