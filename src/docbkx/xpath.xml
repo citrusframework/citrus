@@ -132,7 +132,7 @@ public void receiveMessageTest() {
   &lt;validate&gt;
     &lt;xpath expression=&quot;/TestRequest/Error&quot; value=&quot;false&quot; result-type=&quot;boolean&quot;/&gt;
     &lt;xpath expression=&quot;/TestRequest/Status[.='success']&quot; value=&quot;3&quot; result-type=&quot;number&quot;/&gt;
-    &lt;xpath expression=&quot;/TestRequest/OrderType&quot; value=&quot;single,multi,multi&quot; result-type=&quot;node-set&quot;/&gt;
+    &lt;xpath expression=&quot;/TestRequest/OrderType&quot; value=&quot;[single, multi, multi]&quot; result-type=&quot;node-set&quot;/&gt;
   &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
 
@@ -140,15 +140,42 @@ public void receiveMessageTest() {
       <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
     receive("helloServiceServer")
-        .validate("boolean:/TestRequest/Error", "false")
-        .validate("number:/TestRequest/Status[.='success']", "3")
-        .validate("node-set:/TestRequest/OrderType", "single,multi,multi")
+        .validate("boolean:/TestRequest/Error", false)
+        .validate("number:/TestRequest/Status[.='success']", 3)
+        .validate("node-set:/TestRequest/OrderType", "[single, multi, multi]")
         .header("Operation", "sayHello");
 }</programlisting>
 
       <para>In the example above we use different expression result types. First we want to make sure nor <emphasis>/TestRequest/Error</emphasis> element is present. This can be done with a boolean result type and <emphasis>false</emphasis> value.
       Second we want to validate the number of found elements for the expression <emphasis>/TestRequest/Status[.='success']</emphasis>. The XPath expression evaluates to a node list that results in its list size to be checked. And last not least we
       evaluate to a <emphasis>node-set</emphasis> result type where all values in the node list will be translated to a comma delimited string value.</para>
+
+      <para>Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that XPath expression results are comparable with <emphasis>equalTo</emphasis> operations. We would like to add some more
+      powerful validation such as <emphasis>greaterThan</emphasis>, <emphasis>lessThan</emphasis>, <emphasis>hasSize</emphasis> and much more. Therefore we have introduced Hamcrest validation matcher support in Citrus. Hamcrest is a very poweful matcher
+      library that provides a fantastic set of matcher implementations. Lets see how we can add these in our test case:</para>
+
+<para><emphasis>XML DSL</emphasis></para>
+      <programlisting>&lt;message&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;/TestRequest/Error&quot; value=&quot;@assertThat(anyOf(empty(), nullValue()))@&quot;/&gt;
+    &lt;xpath expression=&quot;/TestRequest/Status[.='success']&quot; value=&quot;@assertThat(greaterThan(0))@&quot; result-type=&quot;number&quot;/&gt;
+    &lt;xpath expression=&quot;/TestRequest/OrderType&quot; value=&quot;@assertThat(hasSize(3))@&quot; result-type=&quot;node-set&quot;/&gt;
+  &lt;/validate&gt;
+&lt;/message&gt;</programlisting>
+
+      <para><emphasis>Java DSL designer</emphasis></para>
+      <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
+    receive("helloServiceServer")
+        .validate("/TestRequest/Error", anyOf(empty(), nullValue()))
+        .validate("number:/TestRequest/Status[.='success']", greaterThan(0))
+        .validate("node-set:/TestRequest/OrderType", hasSize(3))
+        .header("Operation", "sayHello");
+}</programlisting>
+
+      <para>When using the XML DSL we have to use the <emphasis>assertThat</emphasis> validation matcher syntax for defining the Hamcrest matchers. You can combine matcher implementation as seen in the
+        <emphasis>anyOf(empty(), nullValue())</emphasis> expression. When using the Java DSL you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as
+        expected. This is a very powerful validation mechanism as it also works with node-sets containing multiple values as list.</para>
 
       <para>This is how you can add very powerful message element validation in XML using XPath expressions.</para>
 

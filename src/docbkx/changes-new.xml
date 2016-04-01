@@ -5,6 +5,21 @@
   <para>We have added lots of new features and improvements with Citrus 2.5. Namely these are the new modules for RMI and JMX support, a new x-www-form-urlencoded message validator and new functions anc test actions.
   Just have a look at the following features that made it to the box.</para>
 
+  <section id="new-2-5-hamcrest">
+    <title>Hamcrest matcher support</title>
+
+    <para>Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations for message validation purpose. Citrus now supports these matchers coming from Hamcrest library. On the one hand you can
+      use Hamcrest matchers as a Citrus validation matcher as described in <xref linkend="validation-matcher-hamcrest"/>. On the other hand you can use Hamcrest matchers now directly using the Citrus Java DSL. See details for this feature in
+      <xref linkend="json-path-validate"/>.</para>
+  </section>
+
+  <section id="new-2-5-binary_base64">
+    <title>Binary base64 message validator</title>
+
+    <para>There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message
+      payload. See <xref linkend="validation-binary"/> how this is working for you.</para>
+  </section>
+
   <section id="new-2-5-rmi">
     <title>RMI support</title>
 

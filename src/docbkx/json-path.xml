@@ -99,6 +99,7 @@
 
       <para>Lets continue to use JSONPath expressions when validating a receive message in Citrus:</para>
 
+      <para><emphasis>XML DSL</emphasis></para>
       <programlisting>&lt;message type=&quot;json&quot;&gt;
   &lt;validate&gt;
     &lt;json-path expression=&quot;$.user.name&quot; value=&quot;Penny&quot;/&gt;
@@ -110,6 +111,14 @@
   &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
 
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting>receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(&quot;$.user.name&quot;, &quot;Penny&quot;)
+    .validate(&quot;$['user']['name']&quot;, &quot;${userName}&quot;)
+    .validate(&quot;$.user.aliases&quot;, &quot;[&quot;penny&quot;,&quot;jenny&quot;,&quot;nanny&quot;]&quot;)
+    .validate(&quot;$.user[?(@.admin)].password&quot;, &quot;@startsWith('$%00')@&quot;)
+    .validate(&quot;$.user.address[?(@.type='office')]&quot;, &quot;{&quot;city&quot;:&quot;Munich&quot;,&quot;street&quot;:&quot;Company Street&quot;,&quot;type&quot;:&quot;office&quot;}&quot;);</programlisting>
       <para>The above JSONPath expressions will be evaluated when Citrus validates the received message. The expression result is compared to the
       expected value where expectations can be static values as well as test variables and validation matcher expressions. In case a JSONPath expression should not be able
       to find any elements the test case will also fail.</para>
@@ -123,6 +132,48 @@
         data and therefore the XML validation mechanisms do apply by default. With the message type attribute set to <emphasis>json</emphasis> we make sure that Citrus enables JSON specific
         features on the message validation such as JSONPath support.</para>
       </important>
+
+      <para>Now lets get a bit more complex with validation matchers and JSON object functions. Citrus tries to give you the most comfortable validation capabilities when comparing JSON object values and
+      JSON arrays. One first thing you can use is object functions like <emphasis>keySet()</emphasis> or <emphasis>size()</emphasis>. These functionality is not covered by JSONPath out of the bow but added by
+      Citrus. Se the following example on how to use it:</para>
+
+      <para><emphasis>XML DSL</emphasis></para>
+      <programlisting>&lt;message type=&quot;json&quot;&gt;
+  &lt;validate&gt;
+    &lt;json-path expression=&quot;$.user.keySet()&quot; value=&quot;[id,name,admin,projects]&quot;/&gt;
+    &lt;json-path expression=&quot;$.user.aliases.size()&quot; value=&quot;3&quot;/&gt;
+  &lt;/validate&gt;
+&lt;/message&gt;</programlisting>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting>receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(&quot;$.user.keySet()&quot;, &quot;[id,name,admin,projects]&quot;)
+    .validate(&quot;$.user.aliases.size()&quot;, &quot;3&quot;);</programlisting>
+
+
+      <para>The object functions do return special JSON object related properties such as the set of <emphasis>keys</emphasis> for an object or the size of an JSON array.</para>
+
+      <para>Now lets get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives us a very powerful way of validating JSON object elements and arrays. See the following
+      examples that demonstrate how this works:</para>
+
+      <para><emphasis>XML DSL</emphasis></para>
+      <programlisting>&lt;message type=&quot;json&quot;&gt;
+  &lt;validate&gt;
+    &lt;json-path expression=&quot;$.user.keySet()&quot; value=&quot;@assertThat(contains(id,name,admin,projects))@&quot;/&gt;
+    &lt;json-path expression=&quot;$.user.aliases.size()&quot; value=&quot;@assertThat(allOf(greaterThan(0), lessThan(5)))@&quot;/&gt;
+  &lt;/validate&gt;
+&lt;/message&gt;</programlisting>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting>receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(&quot;$.user.keySet()&quot;, contains("id","name","admin","projects"))
+    .validate(&quot;$.user.aliases.size()&quot;, allOf(greaterThan(0), lessThan(5)));</programlisting>
+
+      <para>When using the XML DSL we have to use the <emphasis>assertThat</emphasis> validation matcher syntax for defining the Hamcrest matchers. You can combine matcher implementation as seen in the
+        <emphasis>allOf(greaterThan(0), lessThan(5))</emphasis> expression. When using the Java DSL you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as
+        expected. This is a very powerful validation mechanism as it combines the Hamcrest matcher capabilities with JSON message validation.</para>
     </section>
 
     <section id="json-path-extract">
