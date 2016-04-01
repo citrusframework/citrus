@@ -5,4 +5,5 @@ http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.3.xsd=com/
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.4.xsd=com/consol/citrus/schema/citrus-ftp-config-2.4.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.5.xsd=com/consol/citrus/schema/citrus-ftp-config-2.5.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.5.1.xsd=com/consol/citrus/schema/citrus-ftp-config-2.5.1.xsd
+http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.5.2.xsd=com/consol/citrus/schema/citrus-ftp-config-2.5.2.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd=com/consol/citrus/schema/citrus-ftp-config.xsd
