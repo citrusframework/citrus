@@ -40,6 +40,7 @@ import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
+import org.hamcrest.core.StringContains;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -50,11 +51,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -1231,6 +1235,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
                         .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                         .validate("$.person.name", "foo")
                         .validate("$.person.active", true)
+                        .validate("$.id", containsString("123456789"))
                         .validate("$.text", "Hello World!")
                         .validate("$.index", 5);
             }
@@ -1254,11 +1259,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 4L);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "foo");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.id").getClass(), StringContains.class);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)

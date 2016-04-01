@@ -46,6 +46,7 @@ import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
+import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -66,6 +67,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -1677,6 +1680,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate("$.person.name", "John")
                                 .validate("$.person.active", true)
+                                .validate("$.id", anyOf(containsString("123456789"), nullValue()))
                                 .validate("$.text", "Hello World!")
                                 .validate("$.index", 5);
                     }
@@ -1700,12 +1704,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 4L);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "John");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
-
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.id").getClass(), AnyOf.class);
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)

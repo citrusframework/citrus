@@ -95,12 +95,12 @@ public abstract class TypeConversionUtils {
         }
 
         if (String[].class.isAssignableFrom(type)) {
-            String arrayString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "");
+            String arrayString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
             return (T) StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString));
         }
 
         if (List.class.isAssignableFrom(type)) {
-            String listString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "");
+            String listString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
             return (T) Arrays.asList(StringUtils.commaDelimitedListToStringArray(String.valueOf(listString)));
         }
 

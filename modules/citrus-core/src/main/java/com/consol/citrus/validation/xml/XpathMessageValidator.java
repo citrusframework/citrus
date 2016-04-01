@@ -68,10 +68,10 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
         for (Map.Entry<String, Object> entry : validationContext.getXpathExpressions().entrySet()) {
             String xPathExpression = entry.getKey();
             Object expectedValue = entry.getValue();
-            String actualValue;
 
             xPathExpression = context.replaceDynamicContentInString(xPathExpression);
 
+            Object xPathResult;
             if (XPathUtils.isXPathExpression(xPathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(
                         xPathExpression, XPathExpressionResult.NODE);
@@ -85,7 +85,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
                     continue;
                 }
 
-                actualValue = XPathUtils.evaluate(received,
+                xPathResult = XPathUtils.evaluate(received,
                         xPathExpression,
                         namespaceContext,
                         resultType);
@@ -101,7 +101,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
                     continue;
                 }
 
-                actualValue = getNodeValue(node);
+                xPathResult = getNodeValue(node);
             }
 
             if (expectedValue instanceof String) {
@@ -110,7 +110,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             }
 
             //do the validation of actual and expected value for element
-            ValidationUtils.validateValues(actualValue, expectedValue, xPathExpression, context);
+            ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
 
             if (log.isDebugEnabled()) {
                 log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");

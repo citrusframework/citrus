@@ -61,11 +61,9 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
 
             for (Map.Entry<String, Object> entry : validationContext.getJsonPathExpressions().entrySet()) {
                 jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
-                Object expectedValue = entry.getValue();
-                String actualValue;
 
-                String jsonPathFunction = JsonPathFunctions.DEFAULT_FUNCTION;
-                for (String name : JsonPathFunctions.getSuportedFunctions()) {
+                String jsonPathFunction = null;
+                for (String name : JsonPathFunctions.getSupportedFunctions()) {
                     if (jsonPathExpression.endsWith(String.format(".%s()", name))) {
                         jsonPathFunction = name;
                         jsonPathExpression = jsonPathExpression.substring(0, jsonPathExpression.length() - String.format(".%s()", name).length());
@@ -84,15 +82,18 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                     }
                 }
 
-                actualValue = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
+                if (StringUtils.hasText(jsonPathFunction)) {
+                    jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
+                }
 
+                Object expectedValue = entry.getValue();
                 if (expectedValue instanceof String) {
                     //check if expected value is variable or function (and resolve it, if yes)
                     expectedValue = context.replaceDynamicContentInString(String.valueOf(expectedValue));
                 }
 
                 //do the validation of actual and expected value for element
-                ValidationUtils.validateValues(actualValue, expectedValue, jsonPathExpression, context);
+                ValidationUtils.validateValues(jsonPathResult, expectedValue, jsonPathExpression, context);
 
                 if (log.isDebugEnabled()) {
                     log.debug("Validating element: " + jsonPathExpression + "='" + expectedValue + "': OK.");

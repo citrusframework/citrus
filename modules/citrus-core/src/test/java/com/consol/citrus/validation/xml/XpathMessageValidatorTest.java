@@ -26,6 +26,8 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
+import static org.hamcrest.Matchers.*;
+
 /**
  * @author Christoph Deppisch
  * @since 2.3
@@ -193,8 +195,22 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap("node-set://element/sub-element", "text-value,other-value"));
+        HashMap<String, Object> expressions = new HashMap<>();
+        validationContext.setXpathExpressions(expressions);
 
+        expressions.put("node-set://element/sub-element", "text-value,other-value");
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        expressions.put("node-set://element/sub-element", allOf(hasSize(greaterThan(1)), not(empty())));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        expressions.put("node-set://element/sub-element", "[text-value, other-value]");
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        expressions.put("node-set://element/sub-element", "[text-value,other-value]");
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        expressions.put("node-set://@attribute", "[A, B]");
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        expressions.put("node-set://@attribute", hasSize(2));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        expressions.put("node-set://@attribute", contains("A", "B"));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 

@@ -123,7 +123,7 @@ public abstract class XPathUtils {
      * @param resultType
      * @return
      */
-    public static String evaluate(Node node, String xPathExpression,
+    public static Object evaluate(Node node, String xPathExpression,
             NamespaceContext nsContext, XPathExpressionResult resultType) {
         if (resultType.equals(XPathExpressionResult.NODE)) {
             Node resultNode = evaluateAsNode(node, xPathExpression, nsContext);
@@ -140,7 +140,7 @@ public abstract class XPathUtils {
         } else if (resultType.equals(XPathExpressionResult.NODESET)) {
             NodeList resultNodeList = evaluateAsNodeList(node, xPathExpression, nsContext);
 
-            ArrayList<String> values = new ArrayList<>();
+            List<String> values = new ArrayList<>();
             for (int i = 0; i < resultNodeList.getLength(); i++) {
                 Node resultNode = resultNodeList.item(i);
 
@@ -155,7 +155,7 @@ public abstract class XPathUtils {
                 }
             }
 
-            return StringUtils.arrayToCommaDelimitedString(values.toArray(new String[values.size()]));
+            return values;
         } else if (resultType.equals(XPathExpressionResult.STRING)){
             return evaluateAsString(node, xPathExpression, nsContext);
         } else {
