@@ -13,7 +13,7 @@
     <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-camel&lt;/artifactId&gt;
-  &lt;version&gt;2.5.2&lt;/version&gt;
+  &lt;version&gt;2.6-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
     <para>Citrus provides a special Apache Camel configuration schema that
