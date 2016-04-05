@@ -44,7 +44,7 @@ public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        ClientHttpResponse response = execution.execute(request, body);
+        ClientHttpResponse response = new CachedBodyHttpResponse(execution.execute(request, body));
 
         Map<String, Object> configuration;
         if (request instanceof RestDocConfiguredHttpRequest) {
