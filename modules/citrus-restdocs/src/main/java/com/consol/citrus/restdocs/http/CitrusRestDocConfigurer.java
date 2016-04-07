@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.restdocs;
+package com.consol.citrus.restdocs.http;
 
+import com.consol.citrus.TestCase;
+import com.consol.citrus.report.TestListener;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.*;
-import org.springframework.restdocs.RestDocumentationContext;
-import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.*;
 import org.springframework.restdocs.config.RestDocumentationConfigurer;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ import java.util.Map;
  * @since 2.6
  */
 public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusSnippetConfigurer, CitrusRestDocConfigurer>
-        implements ClientHttpRequestInterceptor {
+        implements ClientHttpRequestInterceptor, TestListener {
 
     private final CitrusSnippetConfigurer snippetConfigurer = new CitrusSnippetConfigurer(this);
 
@@ -56,5 +57,39 @@ public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusS
         Map<String, Object> configuration = new HashMap<>();
         apply(configuration, context);
         return execution.execute(new RestDocConfiguredHttpRequest(request, context, configuration), body);
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public void onTestStart(TestCase test) {
+        if (contextProvider instanceof ManualRestDocumentation) {
+            try {
+                ((ManualRestDocumentation) contextProvider).beforeTest(test.getClass(), test.getName());
+            } catch (IllegalStateException e) {
+                // ignore as someone else has already called before test.
+            }
+        }
+    }
+
+    @Override
+    public void onTestFinish(TestCase test) {
+    }
+
+    @Override
+    public void onTestSuccess(TestCase test) {
+        if (contextProvider instanceof ManualRestDocumentation) {
+            ((ManualRestDocumentation) contextProvider).afterTest();
+        }
+    }
+
+    @Override
+    public void onTestFailure(TestCase test, Throwable cause) {
+        if (contextProvider instanceof ManualRestDocumentation) {
+            ((ManualRestDocumentation) contextProvider).afterTest();
+        }
+    }
+
+    @Override
+    public void onTestSkipped(TestCase test) {
     }
 }

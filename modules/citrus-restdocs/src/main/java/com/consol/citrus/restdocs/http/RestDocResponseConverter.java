@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.restdocs;
+package com.consol.citrus.restdocs.http;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;

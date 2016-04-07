@@ -17,4 +17,4 @@
 /**
  * Core classes for using Spring REST Docs with Citrus.
  */
-package com.consol.citrus.restdocs;
+package com.consol.citrus.restdocs.soap;

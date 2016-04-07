@@ -116,9 +116,36 @@
     <citrus-jms:endpoint id="webServiceResponseSender"
          use-object-messages="true"
          destination-name="${jms.ws.stub.response}"/>
-    
+
+    <bean id="restDocSoapConfiguration" class="com.consol.citrus.restdocs.soap.CitrusRestDocSoapConfigurer">
+      <constructor-arg>
+        <bean class="org.springframework.restdocs.ManualRestDocumentation">
+          <constructor-arg value="test-output/generated-snippets"/>
+        </bean>
+      </constructor-arg>
+    </bean>
+
+    <util:list id="restDocSoapInterceptors">
+      <bean class="com.consol.citrus.restdocs.soap.RestDocSoapClientInterceptor">
+        <constructor-arg>
+          <bean class="org.springframework.restdocs.generate.RestDocumentationGenerator">
+            <constructor-arg value="{class-name}/{method-name}"/>
+            <constructor-arg>
+              <bean class="com.consol.citrus.restdocs.soap.RestDocSoapRequestConverter"/>
+            </constructor-arg>
+            <constructor-arg>
+              <bean class="com.consol.citrus.restdocs.soap.RestDocSoapResponseConverter"/>
+            </constructor-arg>
+            <constructor-arg><list></list></constructor-arg>
+          </bean>
+        </constructor-arg>
+      </bean>
+      <ref bean="restDocSoapConfiguration"/>
+    </util:list>
+
     <citrus-ws:client id="webServiceHelloClient"
          request-url="http://localhost:8071/hello"
+         interceptors="restDocSoapInterceptors"
          message-factory="messageFactory"/>
                               
     <citrus-ws:client id="webServiceFaultClient"
@@ -178,11 +205,38 @@
                       request-url="http://localhost:8074/test"
                       request-method="POST"
                       content-type="text/xml"/>
+
+    <bean id="restDocConfiguration" class="com.consol.citrus.restdocs.http.CitrusRestDocConfigurer">
+      <constructor-arg>
+        <bean class="org.springframework.restdocs.ManualRestDocumentation">
+          <constructor-arg value="test-output/generated-snippets"/>
+        </bean>
+      </constructor-arg>
+    </bean>
+
+    <util:list id="restDocInterceptors">
+      <ref bean="restDocConfiguration"/>
+      <bean class="com.consol.citrus.restdocs.http.RestDocClientInterceptor">
+        <constructor-arg>
+          <bean class="org.springframework.restdocs.generate.RestDocumentationGenerator">
+            <constructor-arg value="{class-name}/{method-name}"/>
+            <constructor-arg>
+              <bean class="com.consol.citrus.restdocs.http.RestDocRequestConverter"/>
+            </constructor-arg>
+            <constructor-arg>
+              <bean class="com.consol.citrus.restdocs.http.RestDocResponseConverter"/>
+            </constructor-arg>
+            <constructor-arg><list></list></constructor-arg>
+          </bean>
+        </constructor-arg>
+      </bean>
+    </util:list>
                         
     <citrus-http:client id="httpClient"
          request-url="http://localhost:8072/test"
          request-method="POST"
          content-type="text/xml"
+         interceptors="restDocInterceptors"
          request-factory="basicAuthClientRequestFactory"
          actor="helloClient"/>
 
@@ -213,6 +267,7 @@
     <citrus-http:client id="httpStandaloneClient"
          request-url="http://localhost:8073/test"
          request-method="POST"
+         interceptors="restDocInterceptors"
          content-type="text/xml"/>
   
     <citrus-jms:endpoint id="httpServerRequestEndpoint" destination-name="${jms.queue.http.request.forward}"/>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.restdocs;
+package com.consol.citrus.restdocs.http;
 
 import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
