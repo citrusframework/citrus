@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2006-2016 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.citrusframework.org/schema/restdocs/config"
+           targetNamespace="http://www.citrusframework.org/schema/restdocs/config"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <xs:element name="documentation">
+    <xs:annotation>
+      <xs:documentation>RestDocs documentation configuration creates proper configurer and interceptor.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="type" type="RestDocType" default="http"/>
+      <xs:attribute name="identifier" type="xs:string" use="required"/>
+      <xs:attribute name="output-directory" type="xs:string" default="test-output/generated-snippets"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="configurer">
+    <xs:annotation>
+      <xs:documentation>RestDocs configurer that initializes the documentation configuration.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="type" type="RestDocType" default="http"/>
+      <xs:attribute name="output-directory" type="xs:string" default="test-output/generated-snippets"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="client-interceptor">
+    <xs:annotation>
+      <xs:documentation>RestDocs client interceptor that generates documentation for client request and response.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="type" type="RestDocType" default="http"/>
+      <xs:attribute name="identifier" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="RestDocType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="http"/>
+      <xs:enumeration value="soap"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

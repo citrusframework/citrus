@@ -56,6 +56,12 @@ public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<Cit
 
     @Override
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+        RestDocumentationContext context = this.contextProvider.beforeOperation();
+        Map<String, Object> configuration = new HashMap<>();
+        apply(configuration, context);
+
+        messageContext.setProperty(RestDocumentationContext.class.getName(), context);
+        messageContext.setProperty(REST_DOC_SOAP_CONFIGURATION, configuration);
         return true;
     }
 
@@ -71,12 +77,6 @@ public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<Cit
 
     @Override
     public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
-        RestDocumentationContext context = this.contextProvider.beforeOperation();
-        Map<String, Object> configuration = new HashMap<>();
-        apply(configuration, context);
-
-        messageContext.setProperty(RestDocumentationContext.class.getName(), context);
-        messageContext.setProperty(REST_DOC_SOAP_CONFIGURATION, configuration);
     }
 
     @Override

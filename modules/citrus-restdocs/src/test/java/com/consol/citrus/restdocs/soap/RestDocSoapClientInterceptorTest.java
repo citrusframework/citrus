@@ -83,7 +83,7 @@ public class RestDocSoapClientInterceptorTest {
     public void testIntercept() throws Exception {
         prepareExecution("http://localhost:8080", "TestRequest", "TestResponse", "soap-default");
 
-        CitrusRestDocsSoapSupport.restDocsConfigurer(restDocumentation).afterCompletion(messageContext, null);
+        CitrusRestDocsSoapSupport.restDocsConfigurer(restDocumentation).handleRequest(messageContext);
         interceptor.afterCompletion(messageContext, null);
 
         assertExpectedSnippetFilesExist("soap-default", "http-request.adoc", "http-response.adoc", "curl-request.adoc");
@@ -93,7 +93,7 @@ public class RestDocSoapClientInterceptorTest {
     public void testInterceptWithConfiguration() throws Exception {
         prepareExecution("http://localhost:8080", "TestRequest", "TestResponse", "soap-markdown");
 
-        CitrusRestDocsSoapSupport.restDocsConfigurer(restDocumentation).snippets().withTemplateFormat(TemplateFormats.markdown()).afterCompletion(messageContext, null);
+        CitrusRestDocsSoapSupport.restDocsConfigurer(restDocumentation).snippets().withTemplateFormat(TemplateFormats.markdown()).handleRequest(messageContext);
         interceptor.afterCompletion(messageContext, null);
 
         assertExpectedSnippetFilesExist("soap-markdown", "http-request.md", "http-response.md", "curl-request.md");

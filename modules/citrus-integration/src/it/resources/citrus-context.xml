@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:citrus="http://www.citrusframework.org/schema/config"
-           xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
-           xmlns:citrus-jms-test="http://www.citrusframework.org/schema/jms/testcase"
-           xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
-           xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
-           xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
-           xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
-           xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
-           xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
-           xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
-           xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
-           xmlns:context="http://www.springframework.org/schema/context"
-           xmlns:util="http://www.springframework.org/schema/util"
-           xmlns:amq="http://activemq.apache.org/schema/core"
-           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
+       xmlns:citrus-jms-test="http://www.citrusframework.org/schema/jms/testcase"
+       xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
+       xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+       xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
+       xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
+       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
@@ -29,6 +30,7 @@
            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
            http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd
            http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd
+           http://www.citrusframework.org/schema/restdocs/config http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
@@ -95,10 +97,12 @@
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
-                                                 
+
+    <citrus-restdocs:documentation id="restDocSoapDocumentation" type="soap" identifier="soap-docs/{method-name}"/>
+
     <citrus-ws:client id="webServiceClient"
          request-url="http://localhost:8071"
-         interceptors="restDocSoapInterceptors"
+         interceptors="restDocSoapDocumentation"
          message-factory="messageFactory"/>
 
     <!-- SOAP test client -->
@@ -118,30 +122,12 @@
          use-object-messages="true"
          destination-name="${jms.ws.stub.response}"/>
 
-    <bean id="restDocSoapConfiguration" class="com.consol.citrus.restdocs.soap.CitrusRestDocSoapConfigurer">
-      <constructor-arg>
-        <bean class="org.springframework.restdocs.ManualRestDocumentation">
-          <constructor-arg value="test-output/generated-snippets"/>
-        </bean>
-      </constructor-arg>
-    </bean>
+    <citrus-restdocs:configurer id="restDocSoapConfigurer" type="soap" output-directory="test-output/generated-snippets"/>
+    <citrus-restdocs:client-interceptor id="restDocSoapClientInterceptor" type="soap" identifier="test-case/{method-name}"/>
 
     <util:list id="restDocSoapInterceptors">
-      <bean class="com.consol.citrus.restdocs.soap.RestDocSoapClientInterceptor">
-        <constructor-arg>
-          <bean class="org.springframework.restdocs.generate.RestDocumentationGenerator">
-            <constructor-arg value="test-case/{method-name}"/>
-            <constructor-arg>
-              <bean class="com.consol.citrus.restdocs.soap.RestDocSoapRequestConverter"/>
-            </constructor-arg>
-            <constructor-arg>
-              <bean class="com.consol.citrus.restdocs.soap.RestDocSoapResponseConverter"/>
-            </constructor-arg>
-            <constructor-arg><list></list></constructor-arg>
-          </bean>
-        </constructor-arg>
-      </bean>
-      <ref bean="restDocSoapConfiguration"/>
+      <ref bean="restDocSoapConfigurer"/>
+      <ref bean="restDocSoapClientInterceptor"/>
     </util:list>
 
     <citrus-ws:client id="webServiceHelloClient"
@@ -207,30 +193,12 @@
                       request-method="POST"
                       content-type="text/xml"/>
 
-    <bean id="restDocConfiguration" class="com.consol.citrus.restdocs.http.CitrusRestDocConfigurer">
-      <constructor-arg>
-        <bean class="org.springframework.restdocs.ManualRestDocumentation">
-          <constructor-arg value="test-output/generated-snippets"/>
-        </bean>
-      </constructor-arg>
-    </bean>
+    <citrus-restdocs:configurer id="restDocConfigurer" output-directory="test-output/generated-snippets"/>
+    <citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="test-case/{method-name}"/>
 
     <util:list id="restDocInterceptors">
-      <ref bean="restDocConfiguration"/>
-      <bean class="com.consol.citrus.restdocs.http.RestDocClientInterceptor">
-        <constructor-arg>
-          <bean class="org.springframework.restdocs.generate.RestDocumentationGenerator">
-            <constructor-arg value="test-case/{method-name}"/>
-            <constructor-arg>
-              <bean class="com.consol.citrus.restdocs.http.RestDocRequestConverter"/>
-            </constructor-arg>
-            <constructor-arg>
-              <bean class="com.consol.citrus.restdocs.http.RestDocResponseConverter"/>
-            </constructor-arg>
-            <constructor-arg><list></list></constructor-arg>
-          </bean>
-        </constructor-arg>
-      </bean>
+      <ref bean="restDocConfigurer"/>
+      <ref bean="restDocClientInterceptor"/>
     </util:list>
                         
     <citrus-http:client id="httpClient"
@@ -265,10 +233,12 @@
       </property>  
     </bean>
 
+    <citrus-restdocs:documentation id="restDocumentation" identifier="rest-docs/{method-name}"/>
+
     <citrus-http:client id="httpStandaloneClient"
          request-url="http://localhost:8073/test"
          request-method="POST"
-         interceptors="restDocInterceptors"
+         interceptors="restDocumentation"
          content-type="text/xml"/>
   
     <citrus-jms:endpoint id="httpServerRequestEndpoint" destination-name="${jms.queue.http.request.forward}"/>
