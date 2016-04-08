@@ -109,4 +109,13 @@ public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<Cit
     @Override
     public void onTestSkipped(TestCase test) {
     }
+
+    /**
+     * Gets the value of the contextProvider property.
+     *
+     * @return the contextProvider
+     */
+    public RestDocumentationContextProvider getContextProvider() {
+        return contextProvider;
+    }
 }

@@ -36,10 +36,14 @@ import java.util.Map;
  */
 public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
 
-    private final RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> generator;
+    private final RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> documentationGenerator;
 
-    public RestDocClientInterceptor(RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> generator) {
-        this.generator = generator;
+    /**
+     * Default constructor with documentation generator.
+     * @param documentationGenerator
+     */
+    public RestDocClientInterceptor(RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> documentationGenerator) {
+        this.documentationGenerator = documentationGenerator;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
             configuration = new HashMap<>();
         }
 
-        this.generator.handle(new CachedBodyHttpRequest(request, body), response, configuration);
+        this.documentationGenerator.handle(new CachedBodyHttpRequest(request, body), response, configuration);
 
         return response;
     }
@@ -67,7 +71,16 @@ public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
      * @return this {@code RestDocClientInterceptor}
      */
     public RestDocClientInterceptor snippets(Snippet... snippets) {
-        this.generator.addSnippets(snippets);
+        this.documentationGenerator.addSnippets(snippets);
         return this;
+    }
+
+    /**
+     * Gets the value of the documentationGenerator property.
+     *
+     * @return the documentationGenerator
+     */
+    public RestDocumentationGenerator<CachedBodyHttpRequest, ClientHttpResponse> getDocumentationGenerator() {
+        return documentationGenerator;
     }
 }

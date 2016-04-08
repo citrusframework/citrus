@@ -33,10 +33,10 @@ import java.util.Map;
  */
 public class RestDocSoapClientInterceptor implements ClientInterceptor {
 
-    private final RestDocumentationGenerator<MessageContext, WebServiceMessage> generator;
+    private final RestDocumentationGenerator<MessageContext, WebServiceMessage> documentationGenerator;
 
-    public RestDocSoapClientInterceptor(RestDocumentationGenerator<MessageContext, WebServiceMessage> generator) {
-        this.generator = generator;
+    public RestDocSoapClientInterceptor(RestDocumentationGenerator<MessageContext, WebServiceMessage> documentationGenerator) {
+        this.documentationGenerator = documentationGenerator;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RestDocSoapClientInterceptor implements ClientInterceptor {
             configuration = new HashMap<>();
         }
 
-        this.generator.handle(messageContext, messageContext.getResponse(), configuration);
+        this.documentationGenerator.handle(messageContext, messageContext.getResponse(), configuration);
     }
 
     /**
@@ -79,7 +79,16 @@ public class RestDocSoapClientInterceptor implements ClientInterceptor {
      * @return this {@code RestDocClientInterceptor}
      */
     public RestDocSoapClientInterceptor snippets(Snippet... snippets) {
-        this.generator.addSnippets(snippets);
+        this.documentationGenerator.addSnippets(snippets);
         return this;
+    }
+
+    /**
+     * Gets the value of the documentationGenerator property.
+     *
+     * @return the documentationGenerator
+     */
+    public RestDocumentationGenerator<MessageContext, WebServiceMessage> getDocumentationGenerator() {
+        return documentationGenerator;
     }
 }

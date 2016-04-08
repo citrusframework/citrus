@@ -93,4 +93,13 @@ public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusS
     @Override
     public void onTestSkipped(TestCase test) {
     }
+
+    /**
+     * Gets the value of the contextProvider property.
+     *
+     * @return the contextProvider
+     */
+    public RestDocumentationContextProvider getContextProvider() {
+        return contextProvider;
+    }
 }
