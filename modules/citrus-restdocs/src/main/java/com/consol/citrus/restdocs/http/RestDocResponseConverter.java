@@ -17,8 +17,6 @@
 package com.consol.citrus.restdocs.http;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.restdocs.operation.*;
 import org.springframework.util.FileCopyUtils;
@@ -31,9 +29,6 @@ import java.io.IOException;
  * @since 2.6
  */
 public class RestDocResponseConverter implements ResponseConverter<ClientHttpResponse> {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RestDocResponseConverter.class);
 
     @Override
     public OperationResponse convert(ClientHttpResponse response) {

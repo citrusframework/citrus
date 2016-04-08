@@ -20,10 +20,13 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.operation.*;
-import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -35,10 +38,10 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class RestDocSoapRequestConverter implements RequestConverter<WebServiceMessage> {
+public class RestDocSoapRequestConverter implements RequestConverter<MessageContext> {
 
     @Override
-    public OperationRequest convert(WebServiceMessage request) {
+    public OperationRequest convert(MessageContext messageContext) {
         try {
             TransportContext transportContext = TransportContextHolder.getTransportContext();
             URI uri;
@@ -49,21 +52,51 @@ public class RestDocSoapRequestConverter implements RequestConverter<WebServiceM
             }
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            request.writeTo(bos);
+            messageContext.getRequest().writeTo(bos);
             return new OperationRequestFactory().create(uri, HttpMethod.POST,
-                    bos.toByteArray(), new HttpHeaders(),
-                    extractParameters(request), extractParts(request));
+                    bos.toByteArray(), extractHeaders(messageContext),
+                    extractParameters(uri, messageContext), extractParts(messageContext));
         } catch (IOException | URISyntaxException e) {
             throw new CitrusRuntimeException("Failed to create Spring restdocs", e);
         }
     }
 
-    private Parameters extractParameters(WebServiceMessage request) {
+    protected HttpHeaders extractHeaders(MessageContext messageContext) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        if (messageContext.getRequest() instanceof SaajSoapMessage) {
+            Map<String, String> mimeHeaders = new HashMap<String, String>();
+            MimeHeaders messageMimeHeaders = ((SaajSoapMessage)messageContext.getRequest()).getSaajMessage().getMimeHeaders();
+
+            if (messageMimeHeaders != null) {
+                Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
+                while (mimeHeaderIterator.hasNext()) {
+                    MimeHeader mimeHeader = (MimeHeader)mimeHeaderIterator.next();
+                    // http headers can have multipile values so headers might occur several times in map
+                    if (mimeHeaders.containsKey(mimeHeader.getName())) {
+                        // header is already present, so concat values to a single comma delimited string
+                        String value = mimeHeaders.get(mimeHeader.getName());
+                        value += ", " + mimeHeader.getValue();
+                        mimeHeaders.put(mimeHeader.getName(), value);
+                    } else {
+                        mimeHeaders.put(mimeHeader.getName(), mimeHeader.getValue());
+                    }
+                }
+
+                for (Map.Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
+                    httpHeaders.add(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
+                }
+            }
+        }
+
+        return httpHeaders;
+    }
+
+    protected Parameters extractParameters(URI uri, MessageContext messageContext) {
         Parameters parameters = new Parameters();
         return parameters;
     }
 
-    private Collection<OperationRequestPart> extractParts(WebServiceMessage request) {
+    protected Collection<OperationRequestPart> extractParts(MessageContext messageContext) throws IOException {
         List<OperationRequestPart> parts = new ArrayList<>();
         return parts;
     }

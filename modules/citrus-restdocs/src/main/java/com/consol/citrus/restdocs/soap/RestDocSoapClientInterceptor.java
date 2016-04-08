@@ -33,9 +33,9 @@ import java.util.Map;
  */
 public class RestDocSoapClientInterceptor implements ClientInterceptor {
 
-    private final RestDocumentationGenerator<WebServiceMessage, WebServiceMessage> generator;
+    private final RestDocumentationGenerator<MessageContext, WebServiceMessage> generator;
 
-    public RestDocSoapClientInterceptor(RestDocumentationGenerator<WebServiceMessage, WebServiceMessage> generator) {
+    public RestDocSoapClientInterceptor(RestDocumentationGenerator<MessageContext, WebServiceMessage> generator) {
         this.generator = generator;
     }
 
@@ -68,7 +68,7 @@ public class RestDocSoapClientInterceptor implements ClientInterceptor {
             configuration = new HashMap<>();
         }
 
-        this.generator.handle(messageContext.getRequest(), messageContext.getResponse(), configuration);
+        this.generator.handle(messageContext, messageContext.getResponse(), configuration);
     }
 
     /**

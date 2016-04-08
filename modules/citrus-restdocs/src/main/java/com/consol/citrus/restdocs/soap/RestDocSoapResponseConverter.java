@@ -17,12 +17,11 @@
 package com.consol.citrus.restdocs.soap;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.operation.*;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.soap.SoapMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,21 +33,29 @@ import java.io.IOException;
  */
 public class RestDocSoapResponseConverter implements ResponseConverter<WebServiceMessage> {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RestDocSoapResponseConverter.class);
-
     @Override
     public OperationResponse convert(WebServiceMessage response) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
             response.writeTo(bos);
 
             return new OperationResponseFactory().create(
-                    HttpStatus.OK, new HttpHeaders(),
+                    extractStatus(response), extractHeaders(response),
                     bos.toByteArray());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create Spring restdocs", e);
         }
+    }
+
+    protected HttpHeaders extractHeaders(WebServiceMessage response) {
+        return new HttpHeaders();
+    }
+
+    protected HttpStatus extractStatus(WebServiceMessage response) {
+        if (response instanceof SoapMessage && ((SoapMessage) response).hasFault()) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return HttpStatus.OK;
     }
 }

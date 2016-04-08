@@ -98,6 +98,7 @@
                                                  
     <citrus-ws:client id="webServiceClient"
          request-url="http://localhost:8071"
+         interceptors="restDocSoapInterceptors"
          message-factory="messageFactory"/>
 
     <!-- SOAP test client -->

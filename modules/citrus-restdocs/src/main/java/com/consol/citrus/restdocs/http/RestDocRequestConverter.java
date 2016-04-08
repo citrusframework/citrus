@@ -35,12 +35,12 @@ public class RestDocRequestConverter implements RequestConverter<CachedBodyHttpR
                 extractParameters(request), extractParts(request));
     }
 
-    private Parameters extractParameters(HttpRequest request) {
+    protected Parameters extractParameters(HttpRequest request) {
         Parameters parameters = new Parameters();
         return parameters;
     }
 
-    private Collection<OperationRequestPart> extractParts(HttpRequest request) {
+    protected Collection<OperationRequestPart> extractParts(HttpRequest request) {
         List<OperationRequestPart> parts = new ArrayList<>();
         return parts;
     }
