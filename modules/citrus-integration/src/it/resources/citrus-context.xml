@@ -129,7 +129,7 @@
       <bean class="com.consol.citrus.restdocs.soap.RestDocSoapClientInterceptor">
         <constructor-arg>
           <bean class="org.springframework.restdocs.generate.RestDocumentationGenerator">
-            <constructor-arg value="{class-name}/{method-name}"/>
+            <constructor-arg value="test-case/{method-name}"/>
             <constructor-arg>
               <bean class="com.consol.citrus.restdocs.soap.RestDocSoapRequestConverter"/>
             </constructor-arg>
@@ -219,7 +219,7 @@
       <bean class="com.consol.citrus.restdocs.http.RestDocClientInterceptor">
         <constructor-arg>
           <bean class="org.springframework.restdocs.generate.RestDocumentationGenerator">
-            <constructor-arg value="{class-name}/{method-name}"/>
+            <constructor-arg value="test-case/{method-name}"/>
             <constructor-arg>
               <bean class="com.consol.citrus.restdocs.http.RestDocRequestConverter"/>
             </constructor-arg>

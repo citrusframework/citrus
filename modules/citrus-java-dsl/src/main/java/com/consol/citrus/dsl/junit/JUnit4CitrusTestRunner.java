@@ -72,6 +72,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
+    public void testClass(Class<?> type) {
+        testRunner.testClass(type);
+    }
+
+    @Override
     public void name(String name) {
         testRunner.name(name);
     }

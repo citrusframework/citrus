@@ -36,6 +36,7 @@ import java.io.File;
 public class XmlTestLoader implements TestLoader {
 
     private TestCase testCase;
+    private Class<?> testClass;
     private String testName;
     private String packageName;
     private ApplicationContext parentContext;
@@ -43,11 +44,13 @@ public class XmlTestLoader implements TestLoader {
 
     /**
      * Default constructor with context file and parent application context field.
+     * @param testClass
      * @param testName
      * @param packageName
      * @param parentContext
      */
-    public XmlTestLoader(String testName, String packageName, ApplicationContext parentContext) {
+    public XmlTestLoader(Class<?> testClass, String testName, String packageName, ApplicationContext parentContext) {
+        this.testClass = testClass;
         this.testName = testName;
         this.packageName = packageName;
         this.parentContext = parentContext;
@@ -60,6 +63,7 @@ public class XmlTestLoader implements TestLoader {
 
             try {
                 testCase = ctx.getBean(testName, TestCase.class);
+                testCase.setTestClass(testClass);
                 testCase.setPackageName(packageName);
             } catch (NoSuchBeanDefinitionException e) {
                 throw parentContext.getBean(TestContextFactory.class).getObject()

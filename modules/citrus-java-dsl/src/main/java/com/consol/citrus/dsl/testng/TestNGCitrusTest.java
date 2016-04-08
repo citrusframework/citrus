@@ -150,6 +150,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
      */
     protected TestDesigner createTestDesigner(Method method, TestContext context) {
         TestDesigner testDesigner = new DefaultTestDesigner(applicationContext, context);
+        testDesigner.testClass(getClass());
         testDesigner.packageName(this.getClass().getPackage().getName());
 
         if (method.getAnnotation(CitrusTest.class) != null) {
@@ -174,6 +175,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
      */
     protected TestRunner createTestRunner(Method method, TestContext context) {
         TestRunner testRunner = new DefaultTestRunner(applicationContext, context);
+        testRunner.testClass(getClass());
         testRunner.packageName(this.getClass().getPackage().getName());
 
         if (method.getAnnotation(CitrusTest.class) != null) {

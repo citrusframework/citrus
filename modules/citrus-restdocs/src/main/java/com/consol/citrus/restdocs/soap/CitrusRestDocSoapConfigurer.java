@@ -18,6 +18,7 @@ package com.consol.citrus.restdocs.soap;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.report.TestListener;
+import com.consol.citrus.restdocs.util.RestDocTestNameFormatter;
 import org.springframework.restdocs.*;
 import org.springframework.restdocs.config.RestDocumentationConfigurer;
 import org.springframework.ws.client.WebServiceClientException;
@@ -83,7 +84,7 @@ public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<Cit
     public void onTestStart(TestCase test) {
         if (contextProvider instanceof ManualRestDocumentation) {
             try {
-                ((ManualRestDocumentation) contextProvider).beforeTest(test.getClass(), test.getName().toLowerCase());
+                ((ManualRestDocumentation) contextProvider).beforeTest(test.getTestClass(), RestDocTestNameFormatter.format(test.getTestClass(), test.getName()));
             } catch (IllegalStateException e) {
                 // ignore as someone else has already called before test.
             }

@@ -69,6 +69,7 @@ public class DefaultTestDesigner implements TestDesigner {
     public DefaultTestDesigner() {
         testCase.setVariableDefinitions(variables);
 
+        testClass(this.getClass());
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
     }
@@ -103,6 +104,11 @@ public class DefaultTestDesigner implements TestDesigner {
         if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
             testCase.setAfterTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray()));
         }
+    }
+
+    @Override
+    public void testClass(Class<?> type) {
+        getTestCase().setTestClass(type);
     }
 
     @Override

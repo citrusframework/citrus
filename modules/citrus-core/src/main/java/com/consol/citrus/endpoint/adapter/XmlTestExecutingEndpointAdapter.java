@@ -95,6 +95,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
 
         try {
             TestCase testCase = ctx.getBean(testName, TestCase.class);
+            testCase.setName(testName);
             testCase.setPackageName(packageName);
             return testCase;
         } catch (NoSuchBeanDefinitionException e) {
