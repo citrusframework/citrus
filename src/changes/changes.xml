@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="2.5.2" date="01.04.2015" description="2.5.2 release">
+    <release version="2.5.2" date="01.04.2016" description="2.5.2 release">
       <action dev="christophd" type="add">
         CITRUS-50 Support Hamcrest matchers
       </action>
@@ -60,7 +60,7 @@
       </action>
     </release>
 
-    <release version="2.5.1" date="03.03.2015" description="2.5.1 release">
+    <release version="2.5.1" date="03.03.2016" description="2.5.1 release">
       <action dev="christophd" type="add">
         CITRUS-46 Annotation config support
       </action>
@@ -96,7 +96,7 @@
       </action>
     </release>
 
-    <release version="2.5" date="28.01.2015" description="2.5 release">
+    <release version="2.5" date="28.01.2016" description="2.5 release">
       <action dev="christophd" type="add">
         CITRUS-39 TestContext injection
       </action>
