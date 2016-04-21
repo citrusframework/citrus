@@ -33,6 +33,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.mockito.Mockito.*;
 
@@ -88,6 +90,7 @@ public class MailServerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testMultipartMessage() throws IOException {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
@@ -105,7 +108,13 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
+
+                // compare the Date as a Date rather than a String, otherwsie this test fails outside of the
+                // "+1" timezone
+                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
+                Assert.assertEquals(actualDate, expectedDateDate);
+
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
@@ -130,6 +139,8 @@ public class MailServerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testBinaryMessage() throws IOException {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
@@ -147,7 +158,13 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
+
+                // compare the Date as a Date rather than a String, otherwsie this test fails outside of the
+                // "+1" timezone
+                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
+                Assert.assertEquals(actualDate, expectedDateDate);
+
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
@@ -284,6 +301,7 @@ public class MailServerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testMultipartMessageSplitting() throws IOException {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
         mailServer.setSplitMultipart(true);
@@ -302,7 +320,13 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
+
+                // compare dates as Date rather than String otherwise this test fails outside
+                // of the "+1" timezone
+                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
+                Assert.assertEquals(actualDate, expectedDateDate);
+
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
 
@@ -328,7 +352,13 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
+
+                // compare dates as Date rather than String otherwise this test fails outside
+                // of the "+1" timezone
+                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
+                Assert.assertEquals(actualDate, expectedDateDate);
+
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/html; charset=utf-8");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
@@ -354,6 +384,7 @@ public class MailServerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testBinaryMessageSplitting() throws IOException {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
         mailServer.setSplitMultipart(true);
@@ -372,7 +403,14 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
+
+
+                // compare dates as Date rather than String otherwise this test fails outside
+                // of the "+1" timezone
+                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
+                Assert.assertEquals(actualDate, expectedDateDate);
+
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
 
@@ -398,7 +436,13 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
+
+                // compare dates as Date rather than String otherwise this test fails outside
+                // of the "+1" timezone
+                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
+                Assert.assertEquals(actualDate, expectedDateDate);
+
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
                 Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
