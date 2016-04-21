@@ -278,7 +278,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(testName, packageName, applicationContext);
+        return new XmlTestLoader(getClass(), testName, packageName, applicationContext);
     }
 
     /**

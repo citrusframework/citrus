@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/restdocs/config http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd">
+
+  <citrus-restdocs:documentation id="documentation1" identifier="docs1/{method-name}"/>
+
+  <citrus-restdocs:documentation id="documentation2"
+                              identifier="docs1/{method-name}"
+                              output-directory="test-output/generated-soap-snippets"
+                              type="soap"/>
+
+</beans>

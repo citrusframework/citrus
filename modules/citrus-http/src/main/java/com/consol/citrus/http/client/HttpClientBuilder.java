@@ -27,6 +27,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -160,6 +161,20 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      */
     public HttpClientBuilder interceptors(List<ClientHttpRequestInterceptor> interceptors) {
         endpoint.getEndpointConfiguration().setClientInterceptors(interceptors);
+        return this;
+    }
+
+    /**
+     * Sets a client single interceptor.
+     * @param interceptor
+     * @return
+     */
+    public HttpClientBuilder interceptor(ClientHttpRequestInterceptor interceptor) {
+        if (endpoint.getEndpointConfiguration().getClientInterceptors() == null) {
+            endpoint.getEndpointConfiguration().setClientInterceptors(new ArrayList<ClientHttpRequestInterceptor>());
+        }
+
+        endpoint.getEndpointConfiguration().getClientInterceptors().add(interceptor);
         return this;
     }
 

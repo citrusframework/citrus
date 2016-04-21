@@ -46,10 +46,13 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Meta-Info */
     private TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
-    
+
+    /** Test class type */
+    private Class<?> testClass = this.getClass();
+
     /** Test package name */
     private String packageName = this.getClass().getPackage().getName();
-    
+
     /** In case test was called with parameters from outside */
     private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
@@ -67,7 +70,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Marks this test case as test runner instance that grows in size step by step as test actions are executed */
     private boolean testRunner = false;
-    
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
 
@@ -361,6 +364,22 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public String getPackageName() {
         return packageName;
+    }
+
+    /**
+     * Set the test class type.
+     * @param type
+     */
+    public void setTestClass(Class<?> type) {
+        this.testClass = type;
+    }
+
+    /**
+     * Gets the value of the testClass property.
+     * @return the testClass
+     */
+    public Class<?> getTestClass() {
+        return testClass;
     }
 
     /**

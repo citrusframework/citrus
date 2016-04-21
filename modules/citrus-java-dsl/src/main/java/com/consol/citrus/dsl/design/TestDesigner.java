@@ -47,6 +47,12 @@ public interface TestDesigner extends ApplicationContextAware {
     TestCase getTestCase();
 
     /**
+     * Set test class.
+     * @param type
+     */
+    void testClass(Class<?> type);
+
+    /**
      * Set custom test case name.
      * @param name
      */

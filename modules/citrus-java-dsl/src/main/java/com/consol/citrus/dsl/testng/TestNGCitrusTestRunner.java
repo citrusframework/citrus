@@ -71,6 +71,11 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    public void testClass(Class<?> type) {
+        testRunner.testClass(type);
+    }
+
+    @Override
     public void name(String name) {
         testRunner.name(name);
     }

@@ -108,6 +108,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    public void testClass(Class<?> type) {
+        testDesigner.testClass(type);
+    }
+
+    @Override
     public void name(String name) {
         testDesigner.name(name);
     }

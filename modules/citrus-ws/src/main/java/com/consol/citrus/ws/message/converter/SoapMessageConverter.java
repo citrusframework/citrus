@@ -411,10 +411,10 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * @throws IOException 
      */
     protected void handleInboundAttachments(org.springframework.ws.soap.SoapMessage soapMessage, SoapMessage message) {
-        Iterator<?> attachments = soapMessage.getAttachments();
+        Iterator<Attachment> attachments = soapMessage.getAttachments();
 
         while (attachments.hasNext()) {
-            Attachment attachment = (Attachment)attachments.next();
+            Attachment attachment = attachments.next();
             SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
             if (log.isDebugEnabled()) {

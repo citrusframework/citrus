@@ -67,6 +67,7 @@ public class DefaultTestRunner implements TestRunner {
 
     /** Default constructor */
     public DefaultTestRunner() {
+        testClass(this.getClass());
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
     }
@@ -100,6 +101,11 @@ public class DefaultTestRunner implements TestRunner {
         if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
             testCase.setAfterTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray()));
         }
+    }
+
+    @Override
+    public void testClass(Class<?> type) {
+        getTestCase().setTestClass(type);
     }
 
     @Override
