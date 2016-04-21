@@ -196,5 +196,19 @@
         <include>*sources.jar</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>modules/citrus-arquillian/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-restdocs/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
   </fileSets>
 </assembly>

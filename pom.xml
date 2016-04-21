@@ -1187,7 +1187,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
             <inherited>false</inherited>
-            <!-- TODO CD the artifact, rather than the path, should be used here -->
             <executions>
               <execution>
                 <id>copy-citrus-core-config-schemas</id>
@@ -1613,6 +1612,24 @@
                       <directory>modules/citrus-model/model-jmx/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-jmx-message*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-restdocs-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/restdocs/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-restdocs/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-restdocs-config*.xsd</include>
                       </includes>
                     </resource>
                   </resources>

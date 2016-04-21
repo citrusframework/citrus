@@ -106,6 +106,7 @@ public final class CitrusArchiveBuilder {
         docker();
         rmi();
         jmx();
+        restdocs();
         javaDsl();
 
         return this;
@@ -207,6 +208,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder jmx() {
         artifactCoordinates.add(getCoordinates("citrus-jmx"));
+        return this;
+    }
+
+    /**
+     * Gets the restdocs Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder restdocs() {
+        artifactCoordinates.add(getCoordinates("citrus-restdocs"));
         return this;
     }
 
