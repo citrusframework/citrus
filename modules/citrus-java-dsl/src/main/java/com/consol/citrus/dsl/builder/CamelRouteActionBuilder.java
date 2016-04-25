@@ -52,6 +52,17 @@ public class CamelRouteActionBuilder extends AbstractTestActionBuilder<Delegatin
 	 * @param camelContext
 	 * @return
 	 */
+	public CamelRouteActionBuilder context(String camelContext) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        this.camelContext = applicationContext.getBean(camelContext, ModelCamelContext.class);
+		return this;
+	}
+
+	/**
+	 * Sets the Camel context to use.
+	 * @param camelContext
+	 * @return
+	 */
 	public CamelRouteActionBuilder context(ModelCamelContext camelContext) {
 		this.camelContext = camelContext;
 		return this;
@@ -63,7 +74,7 @@ public class CamelRouteActionBuilder extends AbstractTestActionBuilder<Delegatin
 	 */
 	public CamelControlBusActionBuilder controlBus() {
 		CamelControlBusAction camelControlBusAction = new CamelControlBusAction();
-		camelControlBusAction.setCamelContext(camelContext);
+		camelControlBusAction.setCamelContext(getCamelContext());
 		action.setDelegate(camelControlBusAction);
 
 		return new CamelControlBusActionBuilder(camelControlBusAction);
@@ -144,7 +155,12 @@ public class CamelRouteActionBuilder extends AbstractTestActionBuilder<Delegatin
 	private ModelCamelContext getCamelContext() {
 		if (camelContext == null) {
 			Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-			camelContext = applicationContext.getBean("citrusCamelContext", ModelCamelContext.class);
+
+            if (applicationContext.containsBean("citrusCamelContext")) {
+                camelContext = applicationContext.getBean("citrusCamelContext", ModelCamelContext.class);
+            } else {
+                camelContext = applicationContext.getBean(ModelCamelContext.class);
+            }
 		}
 
 		return camelContext;
