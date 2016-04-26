@@ -40,11 +40,16 @@ public class FinallyBlockJavaIT extends TestNGCitrusTestDesigner {
 
         sql(dataSource)
             .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')");
-        
-        echo("ORDER creation time: citrus:currentDate('dd.MM.yyyy')");
+
+        query(dataSource)
+            .statement("SELECT CREATION_DATE FROM ORDERS WHERE ORDER_ID='${orderId}'")
+            .extract("CREATION_DATE", "date");
+
+        echo("ORDER creation time: ${date}");
         
         doFinally(
-                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'")
+                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
+                echo("ORDER deletion time: ${date}")
         );
     }
 }
