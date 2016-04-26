@@ -39,19 +39,47 @@ public final class FunctionParameterHelper {
      * @return list of parameters.
      */
     public static List<String> getParameterList(String parameterString) {
-        List<String> parameterList = new ArrayList<String>();
+        List<String> parameterList = new ArrayList<>();
 
         StringTokenizer tok = new StringTokenizer(parameterString, ",");
         while (tok.hasMoreElements()) {
             String param = tok.nextToken().trim();
-
-            if (param.charAt(0) == '\'' && param.charAt(param.length()-1) == '\'') {
-                param = param.substring(1, param.length()-1);
-            }
-
-            parameterList.add(param);
+            parameterList.add(cutOffSingleQuotes(param));
         }
 
-        return parameterList;
+        List<String> postProcessed = new ArrayList<>();
+        for (int i = 0; i < parameterList.size(); i++) {
+            int next = i + 1;
+            if (parameterList.get(i).startsWith("'") && !parameterList.get(i).endsWith("'")
+                    && next < parameterList.size() && parameterList.get(next).endsWith("'")) {
+                if (parameterString.contains(parameterList.get(i) + ", " + parameterList.get(next))) {
+                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + ", " + parameterList.get(next)));
+                } else if (parameterString.contains(parameterList.get(i) + "," + parameterList.get(next))) {
+                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + "," + parameterList.get(next)));
+                } else if (parameterString.contains(parameterList.get(i) + " , " + parameterList.get(next))) {
+                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + " , " + parameterList.get(next)));
+                } else {
+                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + parameterList.get(next)));
+                }
+
+                i++;
+            } else {
+                postProcessed.add(parameterList.get(i));
+            }
+        }
+
+        return postProcessed;
+    }
+
+    private static String cutOffSingleQuotes(String param) {
+        if (param.equals("'")) {
+            return "";
+        }
+
+        if (param.charAt(0) == '\'' && param.charAt(param.length()-1) == '\'') {
+            return param.substring(1, param.length()-1);
+        }
+
+        return param;
     }
 }

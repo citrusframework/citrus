@@ -29,8 +29,8 @@ import java.util.Collections;
 public class EscapeXmlFunctionTest extends AbstractTestNGUnitTest {
     EscapeXmlFunction function = new EscapeXmlFunction();
     
-    private String xmlFragment = "<foo><bar>I like Citrus!</bar></foo>";
-    private String escapedXml = "&lt;foo&gt;&lt;bar&gt;I like Citrus!&lt;/bar&gt;&lt;/foo&gt;";
+    private String xmlFragment = "<foo><bar>Yes, I like Citrus!</bar></foo>";
+    private String escapedXml = "&lt;foo&gt;&lt;bar&gt;Yes, I like Citrus!&lt;/bar&gt;&lt;/foo&gt;";
     
     @Test
     public void testFunction() {
