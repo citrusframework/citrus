@@ -51,8 +51,8 @@ public class ReceiveHttpMessageBuilder extends ReceiveMessageBuilder<ReceiveMess
      * @return self
      */
     public ReceiveHttpMessageBuilder status(HttpStatus status) {
-        header(HttpMessageHeaders.HTTP_STATUS_CODE, String.valueOf(status.value()));
-        header(HttpMessageHeaders.HTTP_REASON_PHRASE, status.getReasonPhrase());
+        header(HttpMessageHeaders.HTTP_STATUS_CODE, status.value());
+        header(HttpMessageHeaders.HTTP_REASON_PHRASE, status.name());
         return this;
     }
 
