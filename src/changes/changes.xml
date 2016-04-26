@@ -19,6 +19,9 @@
       <action dev="christophd" type="fix">
         GITHUB-95 HttpStatus validation broken for BAD_REQUEST status code
       </action>
+      <action dev="christophd" type="fix">
+        GITHUB-94 escapeXml() not working with ',' in sub-XML
+      </action>
     </release>
 
     <release version="2.5.2" date="01.04.2016" description="2.5.2 release">
