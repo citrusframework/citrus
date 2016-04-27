@@ -3,10 +3,12 @@ http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-2.4.xs
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-2.5.xsd=com/consol/citrus/schema/citrus-docker-config-2.5.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-2.5.1.xsd=com/consol/citrus/schema/citrus-docker-config-2.5.1.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-2.5.2.xsd=com/consol/citrus/schema/citrus-docker-config-2.5.2.xsd
+http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-2.6.xsd=com/consol/citrus/schema/citrus-docker-config-2.6.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd=com/consol/citrus/schema/citrus-docker-config.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.3.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.3.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.4.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.4.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.5.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.5.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.5.1.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.5.1.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.5.2.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.5.2.xsd
+http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.6.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.6.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd=com/consol/citrus/schema/citrus-docker-testcase.xsd
