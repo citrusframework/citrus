@@ -160,7 +160,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
      */
     protected List<File> getTestFiles() throws IOException {
         if (testFiles == null) {
-            testFiles = FileUtils.getTestFiles(srcDirectory + "resources" + File.separator);
+            testFiles = FileUtils.findFiles(srcDirectory + "resources" + File.separator, Citrus.getXmlTestFileNamePattern());
         }
         
         return testFiles;

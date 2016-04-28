@@ -134,13 +134,14 @@ public abstract class FileUtils {
     }
 
     /**
-     * Method to retrieve all test defining XML files in given directory.
+     * Method to retrieve all files with given file name pattern in given directory.
      * Hierarchy of folders is supported.
      *
      * @param startDir the directory to hold the files
+     * @param fileNamePatterns the file names to include
      * @return list of test files as filename paths
      */
-    public static List<File> getTestFiles(final String startDir) {
+    public static List<File> findFiles(final String startDir, final Set<String> fileNamePatterns) {
         /* file names to be returned */
         final List<File> files = new ArrayList<File>();
 
@@ -166,7 +167,7 @@ public abstract class FileUtils {
 
                     boolean accepted = tmp.isDirectory();
 
-                    for (String fileNamePattern : Citrus.getXmlTestFileNamePattern()) {
+                    for (String fileNamePattern : fileNamePatterns) {
                         if (fileNamePattern.contains("/")) {
                             fileNamePattern = fileNamePattern.substring(fileNamePattern.lastIndexOf('/') + 1);
                         }

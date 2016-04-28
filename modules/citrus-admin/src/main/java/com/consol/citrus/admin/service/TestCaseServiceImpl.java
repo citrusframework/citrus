@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.admin.configuration.*;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.*;
@@ -66,7 +67,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     public List<TestCaseData> getTests(Project project) {
         List<TestCaseData> tests = new ArrayList<TestCaseData>();
 
-        List<File> testFiles = FileUtils.getTestFiles(getTestDirectory(project));
+        List<File> testFiles = FileUtils.findFiles(getTestDirectory(project), Citrus.getXmlTestFileNamePattern());
         for (File file : testFiles) {
             String testName = FilenameUtils.getBaseName(file.getName());
             String testPackageName = file.getPath().substring(getTestDirectory(project).length(), file.getPath().length() - file.getName().length())
@@ -109,7 +110,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
 
     @Override
     public Long getTestCount(Project project) {
-        Long testCount = Long.valueOf(FileUtils.getTestFiles(getTestDirectory(project)).size());
+        Long testCount = Long.valueOf(FileUtils.findFiles(getTestDirectory(project), Citrus.getXmlTestFileNamePattern()).size());
 
         try {
             Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory(project)) + "**/*.java");

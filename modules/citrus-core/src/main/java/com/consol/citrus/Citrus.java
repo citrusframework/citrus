@@ -129,7 +129,10 @@ public final class Citrus {
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
 
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
-    private static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.xml,/**/*IT.xml");
+    public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.xml,/**/*IT.xml");
+
+    public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
+    public static final String JAVA_TEST_FILE_NAME_PATTERN = System.getProperty(JAVA_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.java,/**/*IT.java");
 
     /** Default message type used in message validation mechanism */
     public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
@@ -225,6 +228,14 @@ public final class Citrus {
      */
     public static Set<String> getXmlTestFileNamePattern() {
         return StringUtils.commaDelimitedListToSet(XML_TEST_FILE_NAME_PATTERN);
+    }
+
+    /**
+     * Gets set of file name patterns for Java test files.
+     * @return
+     */
+    public static Set<String> getJavaTestFileNamePattern() {
+        return StringUtils.commaDelimitedListToSet(JAVA_TEST_FILE_NAME_PATTERN);
     }
 
     /**
