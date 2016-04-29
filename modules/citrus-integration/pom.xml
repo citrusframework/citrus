@@ -12,7 +12,6 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-integration</artifactId>
   <name>citrus-integration</name>
-  <packaging>war</packaging>
 
   <properties>
     <citrus.serverPort>19080</citrus.serverPort>
@@ -21,58 +20,6 @@
 
   <build>
     <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <configuration>
-            <overlays>
-              <overlay>
-                <groupId>com.consol.citrus</groupId>
-                <artifactId>citrus-admin</artifactId>
-                <type>war</type>
-              </overlay>
-              <overlay>
-                <!-- empty groupId/artifactId represents the current build -->
-              </overlay>
-            </overlays>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.eclipse.jetty</groupId>
-          <artifactId>jetty-maven-plugin</artifactId>
-          <configuration>
-            <webAppConfig>
-              <contextPath>/citrus-admin</contextPath>
-            </webAppConfig>
-            <httpConnector>
-              <port>${citrus.serverPort}</port>
-              <idleTimeout>60000</idleTimeout>
-            </httpConnector>
-            <stopPort>${citrus.stopPort}</stopPort>
-            <stopKey>stop</stopKey>
-            <scanIntervalSeconds>5</scanIntervalSeconds>
-            <systemProperties>
-              <systemProperty>
-                <name>file.encoding</name>
-                <value>${project.build.sourceEncoding}</value>
-              </systemProperty>
-              <systemProperty>
-                <name>log4j.configuration</name>
-                <value>log4j.xml</value>
-              </systemProperty>
-              <systemProperty>
-                <name>project.home</name>
-                <value>${basedir}</value>
-              </systemProperty>
-              <systemProperty>
-                <name>test.base.package</name>
-                <value>com.consol.citrus</value>
-              </systemProperty>
-            </systemProperties>
-          </configuration>
-        </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
@@ -195,12 +142,6 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-restdocs</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-admin</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
     </dependency>
 
     <dependency>

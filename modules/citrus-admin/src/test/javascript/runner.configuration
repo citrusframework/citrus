@@ -1,5 +1,0 @@
-paths: {
-  "TemplateManager" : "templates/TemplateManager",
-  "WebSocketHolder" : "socket/WebSocketHolder",
-  "AppRouter" : "router/AppRouter"
-}

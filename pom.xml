@@ -52,7 +52,6 @@
     <module>modules/citrus-restdocs</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
-    <module>modules/citrus-admin</module>
   </modules>
 
   <developers>
