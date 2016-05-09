@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.ftp"/>
       <nameXmlTransform>
-        <elementName prefix="Ftp" suffix="Definition" />
+        <elementName prefix="Ftp" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

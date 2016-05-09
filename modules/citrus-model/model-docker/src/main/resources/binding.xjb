@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.docker"/>
       <nameXmlTransform>
-        <elementName prefix="Docker" suffix="Definition" />
+        <elementName prefix="Docker" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

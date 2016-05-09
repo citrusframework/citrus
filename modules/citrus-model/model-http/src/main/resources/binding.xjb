@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.http"/>
       <nameXmlTransform>
-        <elementName prefix="Http" suffix="Definition" />
+        <elementName prefix="Http" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

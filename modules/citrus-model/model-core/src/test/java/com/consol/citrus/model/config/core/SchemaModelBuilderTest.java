@@ -19,10 +19,10 @@ package com.consol.citrus.model.config.core;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SchemaDefinitionBuilderTest {
+public class SchemaModelBuilderTest {
     @Test
     public void testBuild() throws Exception {
-        SchemaDefinition schema = new SchemaDefinitionBuilder()
+        SchemaModel schema = new SchemaModelBuilder()
                 .withId("schema1")
                 .withLocation("location1")
                 .build();

@@ -23,13 +23,13 @@ import org.testng.annotations.Test;
  * @author Martin.Maher@consol.de
  * @since 1.3.1
  */
-public class SchemaRepositoryDefinitionBuilderTest {
+public class SchemaRepositoryModelBuilderTest {
 
     @Test
     public void testBuildWithSchemas() throws Exception {
-        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinitionBuilder()
+        SchemaRepositoryModel schemaRepository = new SchemaRepositoryModelBuilder()
                 .withId("schemaRepo")
-                .addSchema(new SchemaDefinitionBuilder().withId("schema1").withLocation("location1").build())
+                .addSchema(new SchemaModelBuilder().withId("schema1").withLocation("location1").build())
                 .addSchema("schema2", "location2")
                 .build();
 
@@ -45,7 +45,7 @@ public class SchemaRepositoryDefinitionBuilderTest {
 
     @Test
     public void testBuildWithRefs() throws Exception {
-        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinitionBuilder()
+        SchemaRepositoryModel schemaRepository = new SchemaRepositoryModelBuilder()
                 .withId("schemaRepo")
                 .addSchemaReference("schema1")
                 .addSchemaReference("schema2")

@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.ws"/>
       <nameXmlTransform>
-        <elementName prefix="WebService" suffix="Definition" />
+        <elementName prefix="WebService" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

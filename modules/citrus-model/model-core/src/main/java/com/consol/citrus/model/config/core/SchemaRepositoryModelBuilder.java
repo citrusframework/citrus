@@ -22,15 +22,15 @@ package com.consol.citrus.model.config.core;
  * @author Martin.Maher@consol.de
  * @since 1.3.1
  */
-public class SchemaRepositoryDefinitionBuilder {
+public class SchemaRepositoryModelBuilder {
 
     /** Model object */
-    private SchemaRepositoryDefinition model = new SchemaRepositoryDefinition();
+    private SchemaRepositoryModel model = new SchemaRepositoryModel();
 
     /**
      * Default constructor
      */
-    public SchemaRepositoryDefinitionBuilder() {
+    public SchemaRepositoryModelBuilder() {
     }
 
     /**
@@ -38,7 +38,7 @@ public class SchemaRepositoryDefinitionBuilder {
      * @param id
      * @return
      */
-    public SchemaRepositoryDefinitionBuilder withId(String id) {
+    public SchemaRepositoryModelBuilder withId(String id) {
         model.setId(id);
         return this;
     }
@@ -49,13 +49,13 @@ public class SchemaRepositoryDefinitionBuilder {
      * @param location
      * @return
      */
-    public SchemaRepositoryDefinitionBuilder addSchema(String id, String location) {
-        SchemaDefinition schema = new SchemaDefinition();
+    public SchemaRepositoryModelBuilder addSchema(String id, String location) {
+        SchemaModel schema = new SchemaModel();
         schema.setId(id);
         schema.setLocation(location);
 
         if(model.getSchemas() == null) {
-            model.setSchemas(new SchemaRepositoryDefinition.Schemas());
+            model.setSchemas(new SchemaRepositoryModel.Schemas());
         }
 
         model.getSchemas().getSchemas().add(schema);
@@ -67,9 +67,9 @@ public class SchemaRepositoryDefinitionBuilder {
      * @param schema
      * @return
      */
-    public SchemaRepositoryDefinitionBuilder addSchema(SchemaDefinition schema) {
+    public SchemaRepositoryModelBuilder addSchema(SchemaModel schema) {
         if(model.getSchemas() == null) {
-            model.setSchemas(new SchemaRepositoryDefinition.Schemas());
+            model.setSchemas(new SchemaRepositoryModel.Schemas());
         }
 
         model.getSchemas().getSchemas().add(schema);
@@ -81,12 +81,12 @@ public class SchemaRepositoryDefinitionBuilder {
      * @param schemaId the schema to reference
      * @return
      */
-    public SchemaRepositoryDefinitionBuilder addSchemaReference(String schemaId) {
-        SchemaRepositoryDefinition.Schemas.Reference schemaRef = new SchemaRepositoryDefinition.Schemas.Reference();
+    public SchemaRepositoryModelBuilder addSchemaReference(String schemaId) {
+        SchemaRepositoryModel.Schemas.Reference schemaRef = new SchemaRepositoryModel.Schemas.Reference();
         schemaRef.setSchema(schemaId);
 
         if(model.getSchemas() == null) {
-            model.setSchemas(new SchemaRepositoryDefinition.Schemas());
+            model.setSchemas(new SchemaRepositoryModel.Schemas());
         }
 
         model.getSchemas().getReferences().add(schemaRef);
@@ -97,7 +97,7 @@ public class SchemaRepositoryDefinitionBuilder {
      * Builds the model.
      * @return
      */
-    public SchemaRepositoryDefinition build() {
+    public SchemaRepositoryModel build() {
         return model;
     }
 }

@@ -22,7 +22,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.core"/>
       <nameXmlTransform>
-        <elementName suffix="Definition" />
+        <elementName suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
@@ -31,7 +31,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.testcase.core"/>
       <nameXmlTransform>
-        <elementName suffix="Definition" />
+        <elementName suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
     <bindings node="//xs:complexType[@name='ReceiveActionType']/xs:sequence/xs:element[@name='selector']">

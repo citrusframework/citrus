@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.vertx"/>
       <nameXmlTransform>
-        <elementName prefix="Vertx" suffix="Definition" />
+        <elementName prefix="Vertx" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

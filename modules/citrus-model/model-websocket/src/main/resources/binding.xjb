@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.websocket"/>
       <nameXmlTransform>
-        <elementName prefix="WebSocket" suffix="Definition" />
+        <elementName prefix="WebSocket" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

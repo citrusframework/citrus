@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.mail"/>
       <nameXmlTransform>
-        <elementName prefix="Mail" suffix="Definition" />
+        <elementName prefix="Mail" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.rmi"/>
       <nameXmlTransform>
-        <elementName prefix="Rmi" suffix="Definition" />
+        <elementName prefix="Rmi" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

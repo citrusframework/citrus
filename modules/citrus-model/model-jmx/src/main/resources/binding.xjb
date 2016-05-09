@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.jmx"/>
       <nameXmlTransform>
-        <elementName prefix="Jmx" suffix="Definition" />
+        <elementName prefix="Jmx" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

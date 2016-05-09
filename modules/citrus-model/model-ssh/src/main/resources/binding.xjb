@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.ssh"/>
       <nameXmlTransform>
-        <elementName prefix="Ssh" suffix="Definition" />
+        <elementName prefix="Ssh" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

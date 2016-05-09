@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.camel"/>
       <nameXmlTransform>
-        <elementName prefix="Camel" suffix="Definition" />
+        <elementName prefix="Camel" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
