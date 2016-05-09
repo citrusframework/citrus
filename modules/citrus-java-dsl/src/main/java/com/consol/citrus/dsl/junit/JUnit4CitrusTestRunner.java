@@ -24,6 +24,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.dsl.runner.TestRunnerSimulation;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
@@ -49,6 +50,13 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
 
     /** Test builder delegate */
     private TestRunner testRunner;
+
+    /**
+     * Simulates method execution.
+     */
+    public void simulate(Method method, TestContext context) {
+        testRunner = new TestRunnerSimulation(createTestRunner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase());
+    }
 
     @Override
     protected TestRunner createTestRunner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
