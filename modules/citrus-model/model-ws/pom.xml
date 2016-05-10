@@ -51,6 +51,30 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>remove-duplicate-code</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${project.build.directory}/generated-sources/jaxb/com/consol/citrus/model/testcase/core</directory>
+                  <includes>
+                    <include>*.java</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 </project>
