@@ -39,7 +39,7 @@
           <xmlschema>true</xmlschema>
           <schemaDirectory>src/main/resources</schemaDirectory>
           <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-http-config.xsd</schemaFiles>
+          <schemaFiles>**/citrus-http-config.xsd,**/citrus-http-testcase.xsd</schemaFiles>
         </configuration>
       </plugin>
 
