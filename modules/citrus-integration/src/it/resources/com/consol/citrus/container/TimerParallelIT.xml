@@ -23,28 +23,32 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Error outside timer">
-        <parallel>
-          <timer id="parallelTimer2" interval="100" repeatCount="5">
-            <echo><message>parallelTimer2: Doing iteration # ${parallelTimer2-index}</message></echo>
-          </timer>
-          <sequential>
-            <sleep milliseconds="200" />
-            <fail message="Error outside timer" />
-          </sequential>
-        </parallel>
+        <when>
+          <parallel>
+            <timer id="parallelTimer2" interval="100" repeatCount="5">
+              <echo><message>parallelTimer2: Doing iteration # ${parallelTimer2-index}</message></echo>
+            </timer>
+            <sequential>
+              <sleep milliseconds="200" />
+              <fail message="Error outside timer" />
+            </sequential>
+          </parallel>
+        </when>
       </assert>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Error inside timer">
-        <parallel>
-          <timer id="parallelTimer3" interval="100" repeatCount="5">
-            <echo><message>parallelTimer3: Doing iteration # ${parallelTimer3-index}</message></echo>
-            <fail message="Error inside timer" />
-          </timer>
-          <sequential>
-            <sleep milliseconds="500" />
-          </sequential>
-        </parallel>
+        <when>
+          <parallel>
+            <timer id="parallelTimer3" interval="100" repeatCount="5">
+              <echo><message>parallelTimer3: Doing iteration # ${parallelTimer3-index}</message></echo>
+              <fail message="Error inside timer" />
+            </timer>
+            <sequential>
+              <sleep milliseconds="500" />
+            </sequential>
+          </parallel>
+        </when>
       </assert>
 
     </actions>

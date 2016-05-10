@@ -23,24 +23,26 @@
         <actions>
           <ws:assert fault-code="{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand" 
                      fault-string="One or more mandatory SOAP header blocks not understood">
-            <send endpoint="wsAddressingHelloClient">
-            	<message>
-            		<data>
-            			<![CDATA[
-            				<ns0:HelloStandaloneRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-								<ns0:MessageId>${messageId}</ns0:MessageId>
-								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>User</ns0:User>
-								<ns0:Text>Hello WebServer</ns0:Text>
-							</ns0:HelloStandaloneRequest>
-            			]]>
-            		</data>
-            	</message>
-                <header>
-                    <element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
-                    <element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHello"/>
-                </header>
-            </send>
+						<ws:when>
+								<send endpoint="wsAddressingHelloClient">
+									<message>
+										<data>
+											<![CDATA[
+												<ns0:HelloStandaloneRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+										<ns0:MessageId>${messageId}</ns0:MessageId>
+										<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+										<ns0:User>User</ns0:User>
+										<ns0:Text>Hello WebServer</ns0:Text>
+									</ns0:HelloStandaloneRequest>
+											]]>
+										</data>
+									</message>
+										<header>
+												<element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
+												<element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHello"/>
+										</header>
+								</send>
+						</ws:when>
           </ws:assert>
     	</actions>
     </testcase>

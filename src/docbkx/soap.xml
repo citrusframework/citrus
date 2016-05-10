@@ -508,6 +508,7 @@ Server: Jetty(7.0.0.pre5)
             <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
            fault-actor=&quot;SERVER&quot;&gt;
+  &lt;ws:when&gt;
     &lt;send endpoint=&quot;soapClient&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
@@ -518,6 +519,7 @@ Server: Jetty(7.0.0.pre5)
             &lt;/payload&gt;
         &lt;/message&gt;
     &lt;/send&gt;
+  &lt;/ws:when&gt;
 &lt;/ws:assert&gt;</programlisting>
 
             <para>The special assert action offers several attributes to validate the expected SOAP fault. Namely these are <emphasis>"fault-code"</emphasis>,
@@ -590,16 +592,18 @@ Server: Jetty(7.0.0.pre5)
           &lt;/FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
-    &lt;send endpoint=&quot;soapClient&quot;&gt;
-        &lt;message&gt;
-            &lt;payload&gt;
-                &lt;SoapFaultForcingRequest
-                  xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-                    &lt;Message&gt;This is invalid&lt;/Message&gt;
-                &lt;/SoapFaultForcingRequest&gt;
-            &lt;/payload&gt;
-        &lt;/message&gt;
-    &lt;/send&gt;
+    &lt;ws:when&gt;
+        &lt;send endpoint=&quot;soapClient&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                    &lt;SoapFaultForcingRequest
+                      xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                        &lt;Message&gt;This is invalid&lt;/Message&gt;
+                    &lt;/SoapFaultForcingRequest&gt;
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/ws:when&gt;
 &lt;/ws:assert&gt;</programlisting>
 
             <para>The expected SOAP fault detail content is simply added to the <emphasis>ws:assert</emphasis> action. The <literal>SoapFaultValidator</literal> implementation defined in the Spring application context
@@ -621,9 +625,11 @@ Server: Jetty(7.0.0.pre5)
           &lt;/FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
-    &lt;send endpoint=&quot;soapClient&quot;&gt;
-        [...]
-    &lt;/send&gt;
+    &lt;ws:when&gt;
+        &lt;send endpoint=&quot;soapClient&quot;&gt;
+            [...]
+        &lt;/send&gt;
+    &lt;/ws:when&gt;
 &lt;/ws:assert&gt;</programlisting>
 
             <para>Please see also the Citrus API documentation for available validator implementations and validation algorithms.</para>
@@ -751,9 +757,11 @@ Server: Jetty(7.0.0.pre5)
           &lt;/ErrorDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
-    &lt;send endpoint=&quot;soapClient&quot;&gt;
-        [...]
-    &lt;/send&gt;
+    &lt;ws:when&gt;
+        &lt;send endpoint=&quot;soapClient&quot;&gt;
+            [...]
+        &lt;/send&gt;
+    &lt;/ws:when&gt;
 &lt;/ws:assert&gt;</programlisting>
 
             <para>As you can see we can individually use validation settings for each fault detail. In the example above we disabled schema validation for the first fault detail element.</para>

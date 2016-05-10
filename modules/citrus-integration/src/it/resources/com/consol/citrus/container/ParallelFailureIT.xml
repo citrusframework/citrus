@@ -31,30 +31,34 @@
       <actions>
         <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                 message="Text did not match">
-          <parallel>
-            <echo>
-              <message>Test failure in call template</message>
-            </echo>
+          <when>
+            <parallel>
+              <echo>
+                <message>Test failure in call template</message>
+              </echo>
 
-            <call-template name="textMatchException">
-              <parameter name="text1" value="123"/>
-              <parameter name="text2" value="456"/>
-            </call-template>
-          </parallel>
+              <call-template name="textMatchException">
+                <parameter name="text1" value="123"/>
+                <parameter name="text2" value="456"/>
+              </call-template>
+            </parallel>
+          </when>
         </assert>
 
         <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                 message="@startsWith('Assertion failed')@">
-          <parallel>
-            <echo>
-              <message>Test failure in call template</message>
-            </echo>
+          <when>
+            <parallel>
+              <echo>
+                <message>Test failure in call template</message>
+              </echo>
 
-            <call-template name="textMatchAssertion">
-              <parameter name="text1" value="123"/>
-              <parameter name="text2" value="456"/>
-            </call-template>
-          </parallel>
+              <call-template name="textMatchAssertion">
+                <parameter name="text1" value="123"/>
+                <parameter name="text2" value="456"/>
+              </call-template>
+            </parallel>
+          </when>
         </assert>
       </actions>
     </testcase>

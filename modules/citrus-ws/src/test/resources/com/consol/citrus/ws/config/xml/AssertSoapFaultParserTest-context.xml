@@ -9,16 +9,20 @@
     <testcase name="AssertSoapFaultParserTest">
         <actions>
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1001">
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
 
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1002"
                        fault-string="FaultString">
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
                         
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
@@ -27,18 +31,22 @@
                 <ws:fault-detail>
                   <![CDATA[FaultDetail]]>
                 </ws:fault-detail>
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1004"
                        fault-string="FaultString" 
                        fault-validator="customSoapFaultValidator">
                 <ws:fault-detail file="classpath:com/consol/citrus/ws/actions/test-fault-detail.xml"/>
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
@@ -47,9 +55,11 @@
                 <ws:fault-detail schema-repository="fooSchemaRepository">
                   <![CDATA[FaultDetail]]>
                 </ws:fault-detail>
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
@@ -58,9 +68,11 @@
                 <ws:fault-detail schema="fooSchema">
                   <![CDATA[FaultDetail]]>
                 </ws:fault-detail>
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
@@ -69,9 +81,11 @@
                 <ws:fault-detail schema-validation="false">
                   <![CDATA[FaultDetail]]>
                 </ws:fault-detail>
-                <echo>
-                    <message>Foo</message>
-                </echo>
+                <ws:when>
+                    <echo>
+                        <message>Foo</message>
+                    </echo>
+                </ws:when>
             </ws:assert>
         </actions>
     </testcase>

@@ -24,4 +24,44 @@
     </schemaBindings>
   </bindings>
 
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-ws-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.ws"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+  <bindings schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.core"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+    <bindings node="//xs:complexType[@name='ReceiveActionType']/xs:sequence/xs:element[@name='selector']">
+      <bindings node=".//xs:element[@name='value']">
+        <property name="SelectorValue"/>
+      </bindings>
+    </bindings>
+    <bindings node="//xs:complexType[@name='PurgeEndpointActionType']/xs:sequence/xs:element[@name='selector']">
+      <bindings node=".//xs:element[@name='value']">
+        <property name="SelectorValue"/>
+      </bindings>
+    </bindings>
+    <bindings node="//xs:element[@name='variables']/xs:complexType/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="VariableValue"/>
+    </bindings>
+    <bindings node="//xs:complexType[@name='CreateVariablesActionType']/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="CreateVariableValue"/>
+    </bindings>
+    <bindings node="//xs:element[@name='parameter']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="ParameterValue"/>
+    </bindings>
+    <bindings node="//xs:element[@name='validate']/xs:complexType/xs:sequence/xs:element[@name='values']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="ValidateValue"/>
+    </bindings>
+  </bindings>
+
 </bindings>

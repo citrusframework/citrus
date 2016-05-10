@@ -25,47 +25,53 @@
         <actions>
             <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
                        fault-string="Invalid request">
-            	<send endpoint="webServiceHelloClient">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                    <ns0:Message>This is invalid</ns0:Message>
-                                </ns0:SoapFaultForcingRequest>
-                            ]]>
-                        </data>
-                    </message>
-                </send>
+                <ws:when>
+                    <send endpoint="webServiceHelloClient">
+                        <message>
+                            <data>
+                                <![CDATA[
+                                    <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                        <ns0:Message>This is invalid</ns0:Message>
+                                    </ns0:SoapFaultForcingRequest>
+                                ]]>
+                            </data>
+                        </message>
+                    </send>
+                </ws:when>
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
                        fault-string="@ignore@">
-                <send endpoint="webServiceHelloClient">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                    <ns0:Message>This is invalid</ns0:Message>
-                                </ns0:SoapFaultForcingRequest>
-                            ]]>
-                        </data>
-                    </message>
-                </send>
+                <ws:when>
+                    <send endpoint="webServiceHelloClient">
+                        <message>
+                            <data>
+                                <![CDATA[
+                                    <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                        <ns0:Message>This is invalid</ns0:Message>
+                                    </ns0:SoapFaultForcingRequest>
+                                ]]>
+                            </data>
+                        </message>
+                    </send>
+                </ws:when>
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}${soapFaultCode}" 
                        fault-string="${soapFaultString}">
-                <send endpoint="webServiceHelloClient">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                    <ns0:Message>This is invalid</ns0:Message>
-                                </ns0:SoapFaultForcingRequest>
-                            ]]>
-                        </data>
-                    </message>
-                </send>
+                <ws:when>
+                    <send endpoint="webServiceHelloClient">
+                        <message>
+                            <data>
+                                <![CDATA[
+                                    <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                        <ns0:Message>This is invalid</ns0:Message>
+                                    </ns0:SoapFaultForcingRequest>
+                                ]]>
+                            </data>
+                        </message>
+                    </send>
+                </ws:when>
             </ws:assert>
         </actions>
     </testcase>

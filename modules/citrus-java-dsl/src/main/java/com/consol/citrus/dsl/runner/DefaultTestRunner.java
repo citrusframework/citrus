@@ -548,6 +548,23 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     /**
+     * Sets the test context.
+     * @param context
+     */
+    public void setTestContext(TestContext context) {
+        this.context = context;
+    }
+
+    /**
+     * Gets the value of the applicationContext property.
+     *
+     * @return the applicationContext
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    /**
      * Sets the application context either from ApplicationContextAware injection or from outside.
      * @param applicationContext
      */

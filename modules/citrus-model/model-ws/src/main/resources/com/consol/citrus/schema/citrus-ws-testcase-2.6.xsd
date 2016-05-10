@@ -56,7 +56,13 @@
                             </xs:simpleContent>
                         </xs:complexType>
                     </xs:element>
-                    <xs:group ref="core:actionGroup"/>
+                    <xs:element name="when">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:group ref="core:actionGroup"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
                 </xs:sequence>
                 <xs:attribute name="fault-code" type="xs:string" use="required"/>
                 <xs:attribute name="fault-string" type="xs:string"/>

@@ -814,4 +814,11 @@ public class DefaultTestDesigner implements TestDesigner {
         return context;
     }
 
+    /**
+     * Sets the test context.
+     * @param context
+     */
+    public void setTestContext(TestContext context) {
+        this.context = context;
+    }
 }

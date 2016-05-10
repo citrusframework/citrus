@@ -55,7 +55,7 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
      * Simulates method execution.
      */
     public void simulate(Method method, TestContext context) {
-        testRunner = new TestRunnerSimulation(createTestRunner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase());
+        testRunner = new TestRunnerSimulation(createTestRunner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase(), applicationContext, context);
     }
 
     @Override

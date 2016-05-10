@@ -35,9 +35,11 @@
       </echo>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="@startsWith('Failed to check Http condition')@">
-        <wait milliseconds="300" interval="100">
-          <http url="http://localhost:8080/missing" method="GET" status="200" timeout="100"/>
-        </wait>
+        <when>
+          <wait milliseconds="300" interval="100">
+            <http url="http://localhost:8080/missing" method="GET" status="200" timeout="100"/>
+          </wait>
+        </when>
       </assert>
 
       <echo>
@@ -45,9 +47,11 @@
       </echo>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="@startsWith('Failed to check file condition')@">
-        <wait milliseconds="300" interval="100">
-          <file path="does/not/exist/file.txt"/>
-        </wait>
+        <when>
+          <wait milliseconds="300" interval="100">
+            <file path="does/not/exist/file.txt"/>
+          </wait>
+        </when>
       </assert>
 
     </actions>

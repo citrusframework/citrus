@@ -28,7 +28,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -100,17 +99,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         }
         
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
-        Element action;
-        if (CollectionUtils.isEmpty(faultDetails)) {
-            action = DOMUtil.getFirstChildElement(element);
-        } else {
-            action = DOMUtil.getLastChildElement(element);
-        }
-        
-        if (action != null && action.getTagName().equals("description")) {
-            action = DOMUtil.getNextSiblingElement(action);
-        }
-
+        Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
             

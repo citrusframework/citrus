@@ -57,7 +57,7 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
      * Simulates method execution.
      */
     public void simulate(Method method, TestContext context) {
-        testDesigner = new TestDesignerSimulation(createTestDesigner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase());
+        testDesigner = new TestDesignerSimulation(createTestDesigner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase(), applicationContext, context);
     }
 
     @Override

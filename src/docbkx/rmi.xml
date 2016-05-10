@@ -139,15 +139,17 @@ public void rmiServerTest() {
 
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;assert exception=&quot;java.rmi.RemoteException&quot;&gt;
-    &lt;send endpoint=&quot;rmiClient&quot;&gt;
-        &lt;message&gt;
-            &lt;payload&gt;
-                &lt;service-invocation xmlns=&quot;http://www.citrusframework.org/schema/rmi/message&quot;&gt;
-                    [...]
-                &lt;/service-invocation&gt;
-            &lt;/payload&gt;
-        &lt;/message&gt;
-    &lt;/send&gt;
+    &lt;when&gt;
+        &lt;send endpoint=&quot;rmiClient&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                    &lt;service-invocation xmlns=&quot;http://www.citrusframework.org/schema/rmi/message&quot;&gt;
+                        [...]
+                    &lt;/service-invocation&gt;
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/when&gt;
 &lt;assert/&gt;</programlisting>
 
     <para>We assert the <literal>RemoteException</literal> to be thrown while calling the remote service method. This is how you can handle

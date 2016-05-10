@@ -14,6 +14,14 @@
   <artifactId>citrus-model-ws</artifactId>
   <name>citrus-model-ws</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.consol.citrus.model</groupId>
+      <artifactId>citrus-model-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -39,7 +47,7 @@
           <xmlschema>true</xmlschema>
           <schemaDirectory>src/main/resources</schemaDirectory>
           <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-ws-config.xsd</schemaFiles>
+          <schemaFiles>**/citrus-ws-config.xsd,**/citrus-ws-testcase.xsd</schemaFiles>
         </configuration>
       </plugin>
 

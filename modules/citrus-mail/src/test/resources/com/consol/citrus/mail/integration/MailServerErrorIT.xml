@@ -31,31 +31,33 @@
 
       <parallel>
         <assert exception="org.springframework.mail.MailSendException">
-          <send endpoint="advancedMailClient">
-            <description>
-              Send mail: Citrus -> Citrus SMTP server
-            </description>
-            <message>
-              <data>
-                <![CDATA[
-                  <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
-                    <from>${from}</from>
-                    <to>${to}</to>
-                    <cc></cc>
-                    <bcc></bcc>
-                    <subject>${subject}</subject>
-                    <body>
-                      <contentType>text/plain; charset=utf-8</contentType>
-                      <content>Hello Citrus mail server!</content>
-                    </body>
-                  </mail-message>
-                ]]>
-              </data>
-            </message>
-            <header>
-              <element name="citrus_mail_content_type" value="text/plain"/>
-            </header>
-          </send>
+          <when>
+            <send endpoint="advancedMailClient">
+              <description>
+                Send mail: Citrus -> Citrus SMTP server
+              </description>
+              <message>
+                <data>
+                  <![CDATA[
+                    <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
+                      <from>${from}</from>
+                      <to>${to}</to>
+                      <cc></cc>
+                      <bcc></bcc>
+                      <subject>${subject}</subject>
+                      <body>
+                        <contentType>text/plain; charset=utf-8</contentType>
+                        <content>Hello Citrus mail server!</content>
+                      </body>
+                    </mail-message>
+                  ]]>
+                </data>
+              </message>
+              <header>
+                <element name="citrus_mail_content_type" value="text/plain"/>
+              </header>
+            </send>
+          </when>
         </assert>
 
         <sequential>

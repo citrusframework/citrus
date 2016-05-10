@@ -24,24 +24,26 @@
     <actions>
       <ws:assert fault-code="{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand"
                  fault-string="One or more mandatory SOAP header blocks not understood">
-        <send endpoint="helloWsAddressingSoapClient">
-          <message>
-            <data>
-              <![CDATA[
-                <ns0:HelloStandaloneRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                  <ns0:MessageId>${messageId}</ns0:MessageId>
-                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                  <ns0:User>User</ns0:User>
-                  <ns0:Text>Hello WebServer</ns0:Text>
-                </ns0:HelloStandaloneRequest>
-              ]]>
-            </data>
-          </message>
-            <header>
-              <element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Request" value="HelloRequest"/>
-              <element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Operation" value="sayHello"/>
-            </header>
-        </send>
+        <ws:when>
+            <send endpoint="helloWsAddressingSoapClient">
+              <message>
+                <data>
+                  <![CDATA[
+                    <ns0:HelloStandaloneRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                      <ns0:MessageId>${messageId}</ns0:MessageId>
+                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                      <ns0:User>User</ns0:User>
+                      <ns0:Text>Hello WebServer</ns0:Text>
+                    </ns0:HelloStandaloneRequest>
+                  ]]>
+                </data>
+              </message>
+                <header>
+                  <element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Request" value="HelloRequest"/>
+                  <element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Operation" value="sayHello"/>
+                </header>
+            </send>
+        </ws:when>
       </ws:assert>
     </actions>
   </testcase>

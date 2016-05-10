@@ -605,15 +605,17 @@ Server: Jetty(7.0.0.pre5)
 
         <programlisting>&lt;assert exception=&quot;org.springframework.web.client.HttpClientErrorException&quot;
            message=&quot;403 Forbidden&quot;&gt;
-    &lt;http:send-request client=&quot;httpClient&quot;&gt;
-        &lt;http:body&gt;
-            &lt;http:payload&gt;
-                &lt;testRequestMessage&gt;
-                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                &lt;/testRequestMessage&gt;
-            &lt;/http:payload&gt;
-        &lt;/http:body&gt;
-    &lt;/http:send-request&gt;
+    &lt;when&gt;
+        &lt;http:send-request client=&quot;httpClient&quot;&gt;
+            &lt;http:body&gt;
+                &lt;http:payload&gt;
+                    &lt;testRequestMessage&gt;
+                        &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                    &lt;/testRequestMessage&gt;
+                &lt;/http:payload&gt;
+            &lt;/http:body&gt;
+        &lt;/http:send-request&gt;
+    &lt;/when&gt;
 &lt;/assert&gt;</programlisting>
 
         <para>Both ways of handling HTTP error messages on client side are valid for expecting the server to raise HTTP error codes. Choose the preferred way according to your test project requirements.</para>

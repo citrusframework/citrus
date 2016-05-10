@@ -25,30 +25,34 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
-        <send endpoint="sshClientWithWrongKey">
-          <message>
-            <payload>
-                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
-                  <command>shutdown</command>
-                  <stdin>input</stdin>
-                </ssh-request>
-            </payload>
-          </message>
-        </send>
+        <when>
+          <send endpoint="sshClientWithWrongKey">
+            <message>
+              <payload>
+                  <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
+                    <command>shutdown</command>
+                    <stdin>input</stdin>
+                  </ssh-request>
+              </payload>
+            </message>
+          </send>
+        </when>
       </assert>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
-        <send endpoint="sshClientWithWrongUser">
-          <message>
-            <payload>
-                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
-                  <command>shutdown</command>
-                  <stdin>input</stdin>
-                </ssh-request>
-            </payload>
-          </message>
-        </send>
+        <when>
+          <send endpoint="sshClientWithWrongUser">
+            <message>
+              <payload>
+                  <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
+                    <command>shutdown</command>
+                    <stdin>input</stdin>
+                  </ssh-request>
+              </payload>
+            </message>
+          </send>
+        </when>
       </assert>
 
     </actions>

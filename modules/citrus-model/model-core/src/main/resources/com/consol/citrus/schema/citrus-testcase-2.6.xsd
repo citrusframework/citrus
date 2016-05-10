@@ -525,7 +525,13 @@
     <xs:complexType name="AssertActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
-            <xs:group ref="actionGroup"/>
+            <xs:element name="when">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="actionGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="exception" type="xs:string" use="required"/>
         <xs:attribute name="message" type="xs:string"/>

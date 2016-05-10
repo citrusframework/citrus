@@ -83,18 +83,20 @@
       </parallel>
 
       <assert exception="com.consol.citrus.exceptions.ValidationException" message="DateRangeValidationMatcher failed for field 'timestamp'. Date '${outsideRangeTimestamp}' not in range: ${rangeFrom} - ${rangeTo}">
-        <http:receive-response client="httpClient">
-          <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-          <http:body>
-            <http:data>
-              <![CDATA[
-                <testResponseMessage>
-                  <timestamp>@dateRange('${rangeFrom}','${rangeTo}')@</timestamp>
-                </testResponseMessage>
-              ]]>
-            </http:data>
-          </http:body>
-        </http:receive-response>
+        <when>
+          <http:receive-response client="httpClient">
+            <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
+            <http:body>
+              <http:data>
+                <![CDATA[
+                  <testResponseMessage>
+                    <timestamp>@dateRange('${rangeFrom}','${rangeTo}')@</timestamp>
+                  </testResponseMessage>
+                ]]>
+              </http:data>
+            </http:body>
+          </http:receive-response>
+        </when>
       </assert>
     </actions>
   </testcase>

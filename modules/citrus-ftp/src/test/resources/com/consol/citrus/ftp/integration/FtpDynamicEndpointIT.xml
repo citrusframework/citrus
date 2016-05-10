@@ -27,15 +27,17 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="@contains('530 Access denied')@">
-        <send endpoint="ftp://localhost:22222">
-          <message>
-            <data></data>
-          </message>
-          <header>
-            <element name="citrus_ftp_command" value="PWD"/>
-            <element name="citrus_ftp_arguments" value="test"/>
-          </header>
-        </send>
+        <when>
+          <send endpoint="ftp://localhost:22222">
+            <message>
+              <data></data>
+            </message>
+            <header>
+              <element name="citrus_ftp_command" value="PWD"/>
+              <element name="citrus_ftp_arguments" value="test"/>
+            </header>
+          </send>
+        </when>
       </assert>
 
       <echo>

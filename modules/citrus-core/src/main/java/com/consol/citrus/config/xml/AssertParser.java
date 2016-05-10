@@ -16,18 +16,18 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.container.Assert;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.TestActionRegistry;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.container.Assert;
+import java.util.Map;
 
 /**
  * Bean definition parser for assert action in test case.
@@ -49,11 +49,7 @@ public class AssertParser implements BeanDefinitionParser {
 
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
 
-        Element action = DOMUtil.getFirstChildElement(element);
-        if (action != null && action.getTagName().equals("description")) {
-            action = DOMUtil.getNextSiblingElement(action);
-        }
-
+        Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
             

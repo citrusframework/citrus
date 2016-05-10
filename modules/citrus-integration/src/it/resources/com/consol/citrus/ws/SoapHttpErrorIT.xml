@@ -24,25 +24,27 @@
         <actions>
             <parallel>
               <assert exception="org.springframework.ws.client.WebServiceTransportException" message="Server Error [500]">
-                <ws:send endpoint="webServiceClient">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                    <ns0:MessageId>${messageId}</ns0:MessageId>
-                                    <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                    <ns0:User>${user}</ns0:User>
-                                    <ns0:Text>Hello WebServer</ns0:Text>
-                                </ns0:HelloRequest>
-                            ]]>
-                        </data>
-                    </message>
-                    <header>
-                      <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
-                      <element name="citrus_http_operation" value="sayHello"/>
-                      <element name="citrus_soap_action" value="sayHello"/>
-                    </header>
-                </ws:send>
+                <when>
+                  <ws:send endpoint="webServiceClient">
+                      <message>
+                          <data>
+                              <![CDATA[
+                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                      <ns0:MessageId>${messageId}</ns0:MessageId>
+                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                      <ns0:User>${user}</ns0:User>
+                                      <ns0:Text>Hello WebServer</ns0:Text>
+                                  </ns0:HelloRequest>
+                              ]]>
+                          </data>
+                      </message>
+                      <header>
+                        <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+                        <element name="citrus_http_operation" value="sayHello"/>
+                        <element name="citrus_soap_action" value="sayHello"/>
+                      </header>
+                  </ws:send>
+                </when>
               </assert>
               
               <sequential>

@@ -54,7 +54,7 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
      * Simulates method execution.
      */
     public void simulate(Method method, TestContext context) {
-        testRunner = new TestRunnerSimulation(createTestRunner(method, context).getTestCase());
+        testRunner = new TestRunnerSimulation(createTestRunner(method, context).getTestCase(), applicationContext, context);
     }
 
     @Override

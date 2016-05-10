@@ -9,7 +9,9 @@
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                     message="This went wrong">
                 <description>This action asserts an exception in nested actions</description>
-                <fail message="This went wrong"/>
+                <when>
+                    <fail message="This went wrong"/>
+                </when>
             </assert>
         </actions>
     </testcase>

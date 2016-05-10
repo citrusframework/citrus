@@ -10,9 +10,11 @@
     &lt;actions&gt;
         &lt;assert exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;
                    message=&quot;Unknown variable ${date}&quot;&gt;
-            &lt;echo&gt;
-                &lt;message&gt;Current date is: ${date}&lt;/message&gt;
-            &lt;/echo&gt;
+            &lt;when&gt;
+                &lt;echo&gt;
+                    &lt;message&gt;Current date is: ${date}&lt;/message&gt;
+                &lt;/echo&gt;
+            &lt;/when&gt;
         &lt;/assert&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>

@@ -56,7 +56,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
      * Simulates method execution.
      */
     public void simulate(Method method, TestContext context) {
-        testDesigner = new TestDesignerSimulation(createTestDesigner(method, context).getTestCase());
+        testDesigner = new TestDesignerSimulation(createTestDesigner(method, context).getTestCase(), applicationContext, context);
     }
 
     @Override

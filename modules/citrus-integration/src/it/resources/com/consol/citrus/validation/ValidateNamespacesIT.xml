@@ -125,14 +125,16 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive endpoint="testMessageReceiver" timeout="5000">
-                  <message schema-validation="false">
-                      <validate>
-                          <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
-                          <namespace prefix="missing" value="http://www.consol.de/schemas/missing"/>
-                      </validate>
-                  </message>
-              </receive>
+                <when>
+                  <receive endpoint="testMessageReceiver" timeout="5000">
+                      <message schema-validation="false">
+                          <validate>
+                              <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
+                              <namespace prefix="missing" value="http://www.consol.de/schemas/missing"/>
+                          </validate>
+                      </message>
+                  </receive>
+                </when>
             </assert>
             
             <echo>
@@ -152,13 +154,15 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive endpoint="testMessageReceiver" timeout="5000">
-                  <message schema-validation="false">
-                      <validate>
-                          <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
-                      </validate>
-                  </message>
-              </receive>
+                <when>
+                  <receive endpoint="testMessageReceiver" timeout="5000">
+                      <message schema-validation="false">
+                          <validate>
+                              <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
+                          </validate>
+                      </message>
+                  </receive>
+                </when>
             </assert>
             
             <echo>
@@ -178,13 +182,15 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive endpoint="testMessageReceiver" timeout="5000">
-                  <message schema-validation="false">
-                      <validate>
-                          <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
-                      </validate>
-                  </message>
-              </receive>
+                <when>
+                  <receive endpoint="testMessageReceiver" timeout="5000">
+                      <message schema-validation="false">
+                          <validate>
+                              <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
+                          </validate>
+                      </message>
+                  </receive>
+                </when>
             </assert>
         </actions>
     </testcase>

@@ -133,15 +133,17 @@
     <para>As a tester you can catch and assert these mail exceptions verifying your error scenario.</para>
 
     <programlisting>&lt;assert exception=&quot;org.springframework.mail.MailSendException&quot;&gt;
-    &lt;send endpoint=&quot;simpleMailClient&quot;&gt;
-        &lt;message&gt;
-            &lt;payload&gt;
-                &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
-                    [...]
-                &lt;/mail-message&gt;
-            &lt;/payload&gt;
-        &lt;/message&gt;
-    &lt;/send&gt;
+    &lt;when&gt;
+        &lt;send endpoint=&quot;simpleMailClient&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                    &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
+                        [...]
+                    &lt;/mail-message&gt;
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/when&gt;
 &lt;assert/&gt;</programlisting>
 
     <para>We assert the <literal>MailSendException</literal> from Spring to be thrown while sending the mail message to the SMTP server.

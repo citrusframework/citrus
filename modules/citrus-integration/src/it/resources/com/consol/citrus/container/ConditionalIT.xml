@@ -26,9 +26,11 @@
 
     <actions>
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <conditional expression="${shouldExecute}">
-          <fail message="${failMessage}"/>
-        </conditional>
+        <when>
+          <conditional expression="${shouldExecute}">
+            <fail message="${failMessage}"/>
+          </conditional>
+        </when>
       </assert>
 
       <conditional expression="${shouldNotExecute}">
@@ -36,9 +38,11 @@
       </conditional>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <conditional expression="${number} = 10">
-          <fail message="${failMessage}"/>
-        </conditional>
+        <when>
+          <conditional expression="${number} = 10">
+            <fail message="${failMessage}"/>
+          </conditional>
+        </when>
       </assert>
 
       <conditional expression="${number} lt 10">
@@ -46,9 +50,11 @@
       </conditional>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <conditional expression="${shouldExecute} = true">
-          <fail message="${failMessage}"/>
-        </conditional>
+        <when>
+          <conditional expression="${shouldExecute} = true">
+            <fail message="${failMessage}"/>
+          </conditional>
+        </when>
       </assert>
 
       <conditional expression="${shouldNotExecute} = true">

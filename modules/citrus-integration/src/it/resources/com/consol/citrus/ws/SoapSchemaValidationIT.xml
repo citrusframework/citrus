@@ -96,18 +96,20 @@
 
         <sequential>
           <assert exception="com.consol.citrus.exceptions.ValidationException">
-            <receive endpoint="soapServer">
-              <message schema-repository="sampleServiceSchemaRepository">
-                <data>
-                  <![CDATA[
-                    <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
-                      <command>hello</command>
-                      <message>FOO-wrong</message>
-                    </sample:sampleMessage>
-                  ]]>
-                </data>
-              </message>
-            </receive>
+            <when>
+              <receive endpoint="soapServer">
+                <message schema-repository="sampleServiceSchemaRepository">
+                  <data>
+                    <![CDATA[
+                      <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                        <command>hello</command>
+                        <message>FOO-wrong</message>
+                      </sample:sampleMessage>
+                    ]]>
+                  </data>
+                </message>
+              </receive>
+            </when>
           </assert>
 
           <send endpoint="soapServer">
@@ -126,18 +128,20 @@
       </parallel>
 
       <assert exception="com.consol.citrus.exceptions.ValidationException">
-        <receive endpoint="soapClient">
-          <message schema-repository="sampleServiceSchemaRepository">
-            <data>
-              <![CDATA[
-                <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
-                  <response>success</response>
-                  <message>BAR-wrong</message>
-                </sample:sampleMessageResponse>
-              ]]>
-            </data>
-          </message>
-        </receive>
+        <when>
+          <receive endpoint="soapClient">
+            <message schema-repository="sampleServiceSchemaRepository">
+              <data>
+                <![CDATA[
+                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+                    <response>success</response>
+                    <message>BAR-wrong</message>
+                  </sample:sampleMessageResponse>
+                ]]>
+              </data>
+            </message>
+          </receive>
+        </when>
       </assert>
 
     </actions>

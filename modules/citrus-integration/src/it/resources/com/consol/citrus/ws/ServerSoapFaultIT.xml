@@ -25,20 +25,22 @@
             <parallel>
               <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000" 
                          fault-string="Invalid request">
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>
@@ -90,20 +92,22 @@
               <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000" 
                          fault-string="Invalid request"
                          fault-actor="SERVER">
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>
@@ -166,20 +170,22 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>
@@ -242,20 +248,22 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>
@@ -319,20 +327,22 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>
@@ -396,22 +406,24 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
-              
+
               <sequential>
                   <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
@@ -478,20 +490,22 @@
                         </MessageDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>
@@ -576,20 +590,22 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send endpoint="webServiceClient">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                      <ns0:MessageId>${messageId}</ns0:MessageId>
-                                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                                      <ns0:User>${user}</ns0:User>
-                                      <ns0:Text>Hello WebServer</ns0:Text>
-                                  </ns0:HelloRequest>
-                              ]]>
-                          </data>
-                      </message>
-                  </send>
+                  <ws:when>
+                      <send endpoint="webServiceClient">
+                          <message>
+                              <data>
+                                  <![CDATA[
+                                      <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                          <ns0:MessageId>${messageId}</ns0:MessageId>
+                                          <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                          <ns0:User>${user}</ns0:User>
+                                          <ns0:Text>Hello WebServer</ns0:Text>
+                                      </ns0:HelloRequest>
+                                  ]]>
+                              </data>
+                          </message>
+                      </send>
+                  </ws:when>
               </ws:assert>
               
               <sequential>

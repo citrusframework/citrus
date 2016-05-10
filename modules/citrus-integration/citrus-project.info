@@ -1,6 +1,0 @@
-{
-  "name": "citrus-integration",
-  "version": "1.4.1",
-  "description": "This project contains all Citrus integration tests for modules citrus-core, citrus-jms, citrus-http, citrus-websocket, citrus-ws, citrus-camel, citrus-ssh, citrus-vertx",
-  "basePackage": "com.consol.citrus"
-}

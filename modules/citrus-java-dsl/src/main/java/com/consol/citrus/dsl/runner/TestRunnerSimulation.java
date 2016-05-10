@@ -18,6 +18,8 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseSimulation;
+import com.consol.citrus.context.TestContext;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Christoph Deppisch
@@ -28,8 +30,13 @@ public class TestRunnerSimulation extends DefaultTestRunner {
     /**
      * Default constructor.
      * @param testCase
+     * @param applicationContext
+     * @param context
      */
-    public TestRunnerSimulation(TestCase testCase) {
+    public TestRunnerSimulation(TestCase testCase, ApplicationContext applicationContext, TestContext context) {
         super(new TestCaseSimulation(testCase));
+
+        setApplicationContext(applicationContext);
+        setTestContext(context);
     }
 }

@@ -170,16 +170,18 @@
       </echo>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="Failed to execute MBean operation">
-        <send endpoint="jmxHelloClient">
-          <message>
-            <payload>
-              <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
-                <mbean>com.consol.citrus.jmx.mbean:type=NewsBean</mbean>
-                <operation name="getNews"/>
-              </mbean-invocation>
-            </payload>
-          </message>
-        </send>
+        <when>
+          <send endpoint="jmxHelloClient">
+            <message>
+              <payload>
+                <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                  <mbean>com.consol.citrus.jmx.mbean:type=NewsBean</mbean>
+                  <operation name="getNews"/>
+                </mbean-invocation>
+              </payload>
+            </message>
+          </send>
+        </when>
       </assert>
 
     </actions>

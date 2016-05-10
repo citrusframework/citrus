@@ -28,12 +28,14 @@
       </repeat-onerror-until-true>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <repeat-onerror-until-true auto-sleep="250" condition="i = 3" index="i">
-          <echo>
-            <message>${i}. Versuch: ${message}</message>
-          </echo>
-          <fail />
-        </repeat-onerror-until-true>
+        <when>
+          <repeat-onerror-until-true auto-sleep="250" condition="i = 3" index="i">
+            <echo>
+              <message>${i}. Versuch: ${message}</message>
+            </echo>
+            <fail />
+          </repeat-onerror-until-true>
+        </when>
       </assert>
     </actions>
   </testcase>

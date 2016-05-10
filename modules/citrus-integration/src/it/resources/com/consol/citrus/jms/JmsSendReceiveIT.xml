@@ -210,29 +210,31 @@
       </echo>
 
       <assert exception="com.consol.citrus.exceptions.ActionTimeoutException">
-        <receive endpoint="helloResponseJmsMessageReceiver" timeout="300">
-          <description>
-            Receive second JMS response first: HelloService JmsDemo -> Citrus
-          </description>
-          <selector>
-            <element name="CorrelationId" value="doesNotExist"/>
-          </selector>
-          <message>
-            <data>
-              <![CDATA[
-                <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                  <MessageId>?</MessageId>
-                  <CorrelationId>?</CorrelationId>
-                  <User>HelloService</User>
-                  <Text>Hello ?</Text>
-                </HelloResponse>
-              ]]>
-            </data>
-          </message>
-          <header>
-            <element name="Operation" value="sayHello"/>
-          </header>
-        </receive>
+        <when>
+          <receive endpoint="helloResponseJmsMessageReceiver" timeout="300">
+            <description>
+              Receive second JMS response first: HelloService JmsDemo -> Citrus
+            </description>
+            <selector>
+              <element name="CorrelationId" value="doesNotExist"/>
+            </selector>
+            <message>
+              <data>
+                <![CDATA[
+                  <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                    <MessageId>?</MessageId>
+                    <CorrelationId>?</CorrelationId>
+                    <User>HelloService</User>
+                    <Text>Hello ?</Text>
+                  </HelloResponse>
+                ]]>
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
       </assert>
 
     </actions>

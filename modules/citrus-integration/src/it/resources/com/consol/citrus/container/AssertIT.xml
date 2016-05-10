@@ -23,52 +23,76 @@
         
         <actions>
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-            	<fail message="Fail once"/>
+              <when>
+            	  <fail message="Fail once"/>
+              </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                     message="Fail again">
-            	<fail message="Fail again"/>
+              <when>
+            	  <fail message="Fail again"/>
+              </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                     message="${failMessage}">
-                <fail message="${failMessage}"/>
+                <when>
+                  <fail message="${failMessage}"/>
+                </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                     message="@contains('wrong')@">
-                <fail message="${failMessage}"/>
+                <when>
+                  <fail message="${failMessage}"/>
+                </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <assert exception="java.io.IOException">
-                  <fail message="Fail another time"/>
-              </assert>
+              <when>
+                <assert exception="java.io.IOException">
+                    <when>
+                      <fail message="Fail another time"/>
+                    </when>
+                </assert>
+              </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
-                      message="Fail again">
-                  <fail message="Fail with nice error message"/>
-              </assert>
+              <when>
+                <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
+                        message="Fail again">
+                    <when>
+                      <fail message="Fail with nice error message"/>
+                    </when>
+                </assert>
+              </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-                  <echo>
-                    <message>Nothing fails here</message> 
-                  </echo>
-              </assert>
+              <when>
+                <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
+                  <when>
+                    <echo>
+                      <message>Nothing fails here</message>
+                    </echo>
+                  </when>
+                </assert>
+              </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
-                      message="Must be failing">
-                  <echo>
-                    <message>Nothing fails here either</message> 
-                  </echo>
-              </assert>
+              <when>
+                <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
+                        message="Must be failing">
+                    <when>
+                      <echo>
+                        <message>Nothing fails here either</message>
+                      </echo>
+                    </when>
+                </assert>
+              </when>
             </assert>
         </actions>
     </testcase>

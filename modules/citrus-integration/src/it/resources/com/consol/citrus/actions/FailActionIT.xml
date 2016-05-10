@@ -13,13 +13,19 @@
         
         <actions>
         	<assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-            	<fail message="Failing IT"/>
+              <when>
+                <fail message="Failing IT"/>
+              </when>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-	            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-	            	<sleep milliseconds="500"/>
-	            </assert>
+              <when>
+                <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
+                  <when>
+                    <sleep milliseconds="500"/>
+                  </when>
+                </assert>
+              </when>
             </assert>
         </actions>
     </testcase>

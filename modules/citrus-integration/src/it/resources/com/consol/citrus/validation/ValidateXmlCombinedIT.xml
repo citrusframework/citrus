@@ -96,33 +96,35 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive endpoint="helloResponseReceiver">
-                  <message>
-                      <data>
-                          <![CDATA[
-                              <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                 <MessageId>${messageId}</MessageId>
-                                 <CorrelationId>${correlationId}</CorrelationId>
-                                 <User>Wrong User</User>
-                                 <Text>Hello ${user}</Text>
-                             </HelloResponse>
-                          ]]>
-                      </data>
-                      <validate>
-                          <script type="groovy">
-                              assert root.Text == 'Hello ${user}'
-                          </script>
-                          <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
-                          <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
-                          <xpath expression="/pfx:HelloResponse/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                      </validate>
-                      <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
-                  </message>
-                  <header>
-                      <element name="Operation" value="sayHello"/>
-                      <element name="CorrelationId" value="${correlationId}"/>
-                  </header>
-              </receive>
+                <when>
+                  <receive endpoint="helloResponseReceiver">
+                      <message>
+                          <data>
+                              <![CDATA[
+                                  <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                     <MessageId>${messageId}</MessageId>
+                                     <CorrelationId>${correlationId}</CorrelationId>
+                                     <User>Wrong User</User>
+                                     <Text>Hello ${user}</Text>
+                                 </HelloResponse>
+                              ]]>
+                          </data>
+                          <validate>
+                              <script type="groovy">
+                                  assert root.Text == 'Hello ${user}'
+                              </script>
+                              <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
+                              <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
+                              <xpath expression="/pfx:HelloResponse/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+                          </validate>
+                          <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                      </message>
+                      <header>
+                          <element name="Operation" value="sayHello"/>
+                          <element name="CorrelationId" value="${correlationId}"/>
+                      </header>
+                  </receive>
+                </when>
             </assert>
             
             <echo>
@@ -152,33 +154,35 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-              <receive endpoint="helloResponseReceiver">
-                  <message>
-                      <data>
-                          <![CDATA[
-                              <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                 <MessageId>${messageId}</MessageId>
-                                 <CorrelationId>${correlationId}</CorrelationId>
-                                 <User>HelloService</User>
-                                 <Text>Hello ${user}</Text>
-                             </HelloResponse>
-                          ]]>
-                      </data>
-                      <validate>
-                          <script type="groovy">
-                              assert root.Text == 'Something else'
-                          </script>
-                          <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
-                          <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
-                          <xpath expression="/pfx:HelloResponse/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                      </validate>
-                      <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
-                  </message>
-                  <header>
-                      <element name="Operation" value="sayHello"/>
-                      <element name="CorrelationId" value="${correlationId}"/>
-                  </header>
-              </receive>
+                <when>
+                  <receive endpoint="helloResponseReceiver">
+                      <message>
+                          <data>
+                              <![CDATA[
+                                  <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                     <MessageId>${messageId}</MessageId>
+                                     <CorrelationId>${correlationId}</CorrelationId>
+                                     <User>HelloService</User>
+                                     <Text>Hello ${user}</Text>
+                                 </HelloResponse>
+                              ]]>
+                          </data>
+                          <validate>
+                              <script type="groovy">
+                                  assert root.Text == 'Something else'
+                              </script>
+                              <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
+                              <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
+                              <xpath expression="/pfx:HelloResponse/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+                          </validate>
+                          <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                      </message>
+                      <header>
+                          <element name="Operation" value="sayHello"/>
+                          <element name="CorrelationId" value="${correlationId}"/>
+                      </header>
+                  </receive>
+                </when>
             </assert>
             
             <echo>
@@ -208,33 +212,35 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive endpoint="helloResponseReceiver">
-                  <message>
-                      <data>
-                          <![CDATA[
-                              <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                 <MessageId>${messageId}</MessageId>
-                                 <CorrelationId>${correlationId}</CorrelationId>
-                                 <User>HelloService</User>
-                                 <Text>Hello ${user}</Text>
-                             </HelloResponse>
-                          ]]>
-                      </data>
-                      <validate>
-                          <script type="groovy">
-                              assert root.Text == 'Hello ${user}'
-                          </script>
-                          <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
-                          <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
-                          <xpath expression="/pfx:HelloResponse/pfx:Text" value="Something else"/>
-                      </validate>
-                      <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
-                  </message>
-                  <header>
-                      <element name="Operation" value="sayHello"/>
-                      <element name="CorrelationId" value="${correlationId}"/>
-                  </header>
-              </receive>
+                <when>
+                  <receive endpoint="helloResponseReceiver">
+                      <message>
+                          <data>
+                              <![CDATA[
+                                  <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                     <MessageId>${messageId}</MessageId>
+                                     <CorrelationId>${correlationId}</CorrelationId>
+                                     <User>HelloService</User>
+                                     <Text>Hello ${user}</Text>
+                                 </HelloResponse>
+                              ]]>
+                          </data>
+                          <validate>
+                              <script type="groovy">
+                                  assert root.Text == 'Hello ${user}'
+                              </script>
+                              <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
+                              <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
+                              <xpath expression="/pfx:HelloResponse/pfx:Text" value="Something else"/>
+                          </validate>
+                          <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                      </message>
+                      <header>
+                          <element name="Operation" value="sayHello"/>
+                          <element name="CorrelationId" value="${correlationId}"/>
+                      </header>
+                  </receive>
+                </when>
             </assert>
 
             <echo>
@@ -264,33 +270,35 @@
             </send>
 
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive endpoint="helloResponseReceiver">
-                <message>
-                  <data>
-                    <![CDATA[
-                        <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                           <MessageId>${messageId}</MessageId>
-                           <CorrelationId>${correlationId}</CorrelationId>
-                           <User>HelloService</User>
-                           <Text>Hello ${user}</Text>
-                       </HelloResponse>
-                    ]]>
-                  </data>
-                  <validate>
-                    <script type="groovy">
-                      assert root.Text == 'Hello ${user}'
-                    </script>
-                    <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
-                    <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
-                    <xpath expression="/pfx:HelloResponse/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                  </validate>
-                  <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
-                </message>
-                <header>
-                  <element name="Operation" value="wrongOperation"/>
-                  <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-              </receive>
+                <when>
+                  <receive endpoint="helloResponseReceiver">
+                    <message>
+                      <data>
+                        <![CDATA[
+                            <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>HelloService</User>
+                               <Text>Hello ${user}</Text>
+                           </HelloResponse>
+                        ]]>
+                      </data>
+                      <validate>
+                        <script type="groovy">
+                          assert root.Text == 'Hello ${user}'
+                        </script>
+                        <xpath expression="/pfx:HelloResponse/pfx:MessageId" value="${messageId}"/>
+                        <xpath expression="/pfx:HelloResponse/pfx:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="/pfx:HelloResponse/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+                      </validate>
+                      <namespace prefix="pfx" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                    </message>
+                    <header>
+                      <element name="Operation" value="wrongOperation"/>
+                      <element name="CorrelationId" value="${correlationId}"/>
+                    </header>
+                  </receive>
+                </when>
             </assert>
         </actions>
     </testcase>

@@ -34,28 +34,30 @@
       </parallel>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <parallel>
-          <sleep seconds="1.5"/>
-          <sequential>
-            <sleep milliseconds="1000"/>
-            <fail message="This went wrong too"/>
+        <when>
+          <parallel>
+            <sleep seconds="1.5"/>
+            <sequential>
+              <sleep milliseconds="1000"/>
+              <fail message="This went wrong too"/>
+              <echo>
+                <message>1</message>
+              </echo>
+            </sequential>
+            <fail message="This went wrong"/>
             <echo>
-              <message>1</message>
+              <message>2</message>
             </echo>
-          </sequential>
-          <fail message="This went wrong"/>
-          <echo>
-            <message>2</message>
-          </echo>
-          <echo>
-            <message>3</message>
-          </echo>
-          <iterate condition="i lt= 5" index="i">
             <echo>
-              <message>10</message>
+              <message>3</message>
             </echo>
-          </iterate>
-        </parallel>
+            <iterate condition="i lt= 5" index="i">
+              <echo>
+                <message>10</message>
+              </echo>
+            </iterate>
+          </parallel>
+        </when>
       </assert>
     </actions>
   </testcase>
