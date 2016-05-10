@@ -39,7 +39,7 @@
           <xmlschema>true</xmlschema>
           <schemaDirectory>src/main/resources</schemaDirectory>
           <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-jms-config.xsd</schemaFiles>
+          <schemaFiles>**/citrus-jms-config.xsd,**/citrus-jms-testcase.xsd</schemaFiles>
         </configuration>
       </plugin>
 

@@ -24,4 +24,13 @@
     </schemaBindings>
   </bindings>
 
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-jms-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.jms"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
 </bindings>
