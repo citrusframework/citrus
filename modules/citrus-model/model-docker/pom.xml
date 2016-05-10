@@ -39,7 +39,7 @@
           <xmlschema>true</xmlschema>
           <schemaDirectory>src/main/resources</schemaDirectory>
           <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-docker-config.xsd</schemaFiles>
+          <schemaFiles>**/citrus-docker-config.xsd,**/citrus-docker-testcase.xsd</schemaFiles>
         </configuration>
       </plugin>
 

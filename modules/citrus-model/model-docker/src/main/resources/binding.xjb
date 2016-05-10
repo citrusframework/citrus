@@ -24,4 +24,13 @@
     </schemaBindings>
   </bindings>
 
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-docker-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.docker"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
 </bindings>
