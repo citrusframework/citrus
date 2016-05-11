@@ -15,7 +15,7 @@
     "build" : {
       "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
       "type" : "maven",
-      "properties" : null,
+      "properties" : [ ],
       "testPlugin" : "maven-failsafe-plugin",
       "profiles" : null
     }
