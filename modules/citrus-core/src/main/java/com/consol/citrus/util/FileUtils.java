@@ -76,6 +76,9 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(Resource resource, Charset charset) throws IOException {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
+        }
         return readToString(resource.getInputStream(), charset);
     }
     
@@ -87,10 +90,6 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(InputStream inputStream, Charset charset) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("Reading file resource (encoding is '" + charset.displayName() + "')");
-        }
-
         return new String(FileCopyUtils.copyToByteArray(inputStream), charset);
     }
 
@@ -110,7 +109,7 @@ public abstract class FileUtils {
      */
     public static void writeToFile(String content, File file, Charset charset) {
         if (log.isDebugEnabled()) {
-            log.debug("Writing file resource (encoding is '" + charset.displayName() + "')");
+            log.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
         }
 
         FileOutputStream fos = null;
