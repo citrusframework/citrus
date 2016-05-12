@@ -132,8 +132,8 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:git@github.com:christophd/citrus.git</connection>
-    <developerConnection>scm:git://github.com/christophd/citrus.git</developerConnection>
+    <connection>scm:git:git@github.com:christophd/citrus.git</connection>
+    <developerConnection>scm:git:git@github.com/christophd/citrus.git</developerConnection>
     <url>http://github.com/christophd/citrus.git</url>
   </scm>
 
