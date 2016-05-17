@@ -372,6 +372,7 @@
 &lt;citrus-ws:server id=&quot;soap12Server&quot;
           port=&quot;8080&quot;
           auto-start=&quot;true&quot;
+          root-parent-context=&quot;true&quot;
           message-factory=&quot;soap12MessageFactory&quot;/&gt;</programlisting>
 
       <para>By default Citrus components do connect with a message factory called <emphasis>messageFactory</emphasis> no matter what SOAP version this factory is using.</para>
