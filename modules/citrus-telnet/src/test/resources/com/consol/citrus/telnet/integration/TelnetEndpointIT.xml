@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+    <testcase name="TelnetEndpointIT">
+        <meta-info>
+            <author>Michael Wurmbrand</author>
+            <creationdate>2016-03-01</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Michael Wurmbrand</last-updated-by>
+            <last-updated-on>2016-03-01T16:10:00</last-updated-on>
+        </meta-info>
+
+    <description>
+      Straight forward test for the telnet client.
+
+      This test is for the 'good' case of an Citrus telnet client calling an telnet server.
+    </description>
+
+    <actions>
+      <echo>
+        <message>Contact the telnet server and issue a simple command with sending some standard input</message>
+      </echo>
+          
+      <send endpoint="telnetClient1">
+        <message>
+          <payload>
+              <telnet-request xmlns="http://www.citrusframework.org/schema/telnet/message">
+                <command>command</command>
+              </telnet-request>
+           </payload>
+        </message>
+      </send>
+  
+   
+      <receive endpoint="telnetClient1">
+        <message>
+          <payload>
+              <telnet-response xmlns="http://www.citrusframework.org/schema/telnet/message">
+				<reply />
+              </telnet-response>
+          </payload>
+        </message>
+      </receive>
+    
+    </actions>
+  </testcase>
+</spring:beans>

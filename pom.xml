@@ -50,6 +50,7 @@
     <module>modules/citrus-jmx</module>
     <module>modules/citrus-restdocs</module>
     <module>modules/citrus-arquillian</module>
+    <module>modules/citrus-telnet</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
   </modules>
