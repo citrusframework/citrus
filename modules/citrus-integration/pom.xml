@@ -23,31 +23,27 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-            <configuration> 
-                <junitArtifactName>none:none</junitArtifactName>
-                <excludes>
-                  <exclude>**/junit/*.java</exclude>
-                </excludes>
+            <configuration>
+              <properties>
+                <property>
+                  <name>junit</name>
+                  <value>false</value>
+                </property>
+              </properties>
+              <threadCount>1</threadCount>
             </configuration>
-            <executions>
-              <execution>
-                  <id>junit-tests</id>
-                  <phase>integration-test</phase>
-                  <goals>
-                      <goal>integration-test</goal>
-                  </goals>
-                  <configuration>
-                      <junitArtifactName>junit:junit</junitArtifactName> 
-                      <testNGArtifactName>none:none</testNGArtifactName>
-                      <excludes>
-                        <exclude>none</exclude>
-                      </excludes>
-                      <includes>
-                        <include>**/junit/*.java</include>
-                      </includes>
-                  </configuration>
-              </execution>
-            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.maven.surefire</groupId>
+                <artifactId>surefire-junit47</artifactId>
+                <version>2.19.1</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.maven.surefire</groupId>
+                <artifactId>surefire-testng</artifactId>
+                <version>2.19.1</version>
+              </dependency>
+            </dependencies>
         </plugin>
 
         <plugin>
