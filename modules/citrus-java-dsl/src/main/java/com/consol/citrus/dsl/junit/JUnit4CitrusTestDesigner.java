@@ -21,6 +21,7 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
+import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
@@ -29,6 +30,7 @@ import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 
@@ -45,7 +47,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDesigner {
+public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDesigner, TestSimulator {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -53,10 +55,9 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     /** Test builder delegate */
     private TestDesigner testDesigner;
 
-    /**
-     * Simulates method execution.
-     */
-    public void simulate(Method method, TestContext context) {
+    @Override
+    public void simulate(Method method, TestContext context, ApplicationContext applicationContext) {
+        setApplicationContext(applicationContext);
         testDesigner = new TestDesignerSimulation(createTestDesigner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase(), applicationContext, context);
     }
 

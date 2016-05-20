@@ -21,7 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.*;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.FileCopyUtils;
 
@@ -41,11 +41,21 @@ public abstract class FileUtils {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FileUtils.class);
 
+    /** Simulation mode required for Citrus administration UI when loading test cases from Java DSL */
+    private static boolean simulationMode = false;
+
     /**
      * Prevent instantiation.
      */
     private FileUtils() {
         super();
+    }
+
+    /**
+     * Sets the simulation mode.
+     */
+    public static void setSimulationMode(boolean mode) {
+        simulationMode = mode;
     }
 
     /**
@@ -55,7 +65,7 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(Resource resource) throws IOException {
-        return readToString(resource.getInputStream(), getDefaultCharset());
+        return readToString(resource, getDefaultCharset());
     }
 
     /**
@@ -76,6 +86,16 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(Resource resource, Charset charset) throws IOException {
+        if (simulationMode) {
+            if (resource instanceof ClassPathResource) {
+                return ((ClassPathResource) resource).getPath();
+            } else if (resource instanceof FileSystemResource) {
+                return ((FileSystemResource) resource).getPath();
+            } else {
+                return resource.getFilename();
+            }
+        }
+
         if (log.isDebugEnabled()) {
             log.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
         }

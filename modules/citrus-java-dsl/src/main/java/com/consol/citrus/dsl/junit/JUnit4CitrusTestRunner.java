@@ -25,6 +25,7 @@ import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.runner.TestRunnerSimulation;
+import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
@@ -32,6 +33,7 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -43,7 +45,7 @@ import java.util.Date;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunner {
+public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunner, TestSimulator {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -51,10 +53,9 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     /** Test builder delegate */
     private TestRunner testRunner;
 
-    /**
-     * Simulates method execution.
-     */
-    public void simulate(Method method, TestContext context) {
+    @Override
+    public void simulate(Method method, TestContext context, ApplicationContext applicationContext) {
+        setApplicationContext(applicationContext);
         testRunner = new TestRunnerSimulation(createTestRunner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase(), applicationContext, context);
     }
 

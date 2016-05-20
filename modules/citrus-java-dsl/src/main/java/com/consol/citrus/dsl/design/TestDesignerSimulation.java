@@ -39,4 +39,5 @@ public class TestDesignerSimulation extends DefaultTestDesigner {
         setApplicationContext(applicationContext);
         setTestContext(context);
     }
+
 }
