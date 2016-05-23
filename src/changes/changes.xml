@@ -17,6 +17,9 @@
   <body>
     <release version="2.6" date="01.06.2016" description="2.6 release">
       <action dev="christophd" type="fix">
+        GITHUB-99 Set custom message type in Java DSL
+      </action>
+      <action dev="christophd" type="fix">
         GITHUB-96 Unique particle attribution #cos-nonambig violation in citrus-ws-testcase XSD
       </action>
       <action dev="christophd" type="fix">

@@ -57,7 +57,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     private final T self;
 
     /** Message type for this action builder */
-    private MessageType messageType;
+    private String messageType;
 
     /** Validation context used in this action builder */
     private XmlMessageValidationContext xmlMessageValidationContext = new XmlMessageValidationContext();
@@ -323,20 +323,30 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
 
         return self;
     }
-    
+
     /**
      * Sets a explicit message type for this receive action.
      * @param messageType
      * @return
      */
     public T messageType(MessageType messageType) {
+        messageType(messageType.name());
+        return self;
+    }
+    
+    /**
+     * Sets a explicit message type for this receive action.
+     * @param messageType
+     * @return
+     */
+    public T messageType(String messageType) {
         this.messageType = messageType;
-        action.setMessageType(messageType.toString());
+        action.setMessageType(messageType);
 
-        if (messageType.equals(MessageType.XML)) {
+        if (messageType.equalsIgnoreCase(MessageType.XML.name())) {
             action.getValidationContexts().add(xmlMessageValidationContext);
             action.getValidationContexts().remove(jsonMessageValidationContext);
-        } else if (messageType.equals(MessageType.JSON)) {
+        } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
             action.getValidationContexts().remove(xmlMessageValidationContext);
             action.getValidationContexts().add(jsonMessageValidationContext);
         } else {
@@ -377,7 +387,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T validate(String path, Object controlValue) {
         if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-            if (!messageType.equals(MessageType.JSON)) {
+            if (!messageType.equalsIgnoreCase(MessageType.JSON.name())) {
                 throw new CitrusRuntimeException(String.format("Failed to set JSONPath validation expression on message type '%s' - please use JSON message type", messageType));
             }
 
@@ -395,9 +405,9 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T ignore(String path) {
-        if (messageType.equals(MessageType.XML)) {
+        if (messageType.equalsIgnoreCase(MessageType.XML.name())) {
             xmlMessageValidationContext.getIgnoreExpressions().add(path);
-        } else if (messageType.equals(MessageType.JSON)) {
+        } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
             jsonMessageValidationContext.getIgnoreExpressions().add(path);
         }
         return self;
@@ -755,6 +765,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @param messageType
      */
     protected void setMessageType(MessageType messageType) {
+        this.messageType = messageType.name();
+    }
+
+    /**
+     * Sets the message type.
+     * @param messageType
+     */
+    protected void setMessageType(String messageType) {
         this.messageType = messageType;
     }
 

@@ -53,7 +53,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     private final T self;
 
     /** Message type for this action builder */
-    private MessageType messageType = MessageType.valueOf(Citrus.DEFAULT_MESSAGE_TYPE);
+    private String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
 
     /** Variable extractors filled within this builder */
     private MessageHeaderVariableExtractor headerExtractor;
@@ -266,8 +266,18 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      * @return
      */
     public T messageType(MessageType messageType) {
+        messageType(messageType.name());
+        return self;
+    }
+
+    /**
+     * Sets a explicit message type for this receive action.
+     * @param messageType
+     * @return
+     */
+    public T messageType(String messageType) {
         this.messageType = messageType;
-        action.setMessageType(messageType.toString());
+        action.setMessageType(messageType);
         return self;
     }
 
@@ -432,7 +442,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     public SendSoapMessageBuilder soap() {
         SendSoapMessageAction sendSoapMessageAction = new SendSoapMessageAction();
         sendSoapMessageAction.setActor(action.getActor());
-        sendSoapMessageAction.setMessageType(messageType.toString());
+        sendSoapMessageAction.setMessageType(messageType);
         sendSoapMessageAction.setDescription(action.getDescription());
         sendSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
         sendSoapMessageAction.setEndpoint(action.getEndpoint());
