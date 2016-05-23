@@ -43,11 +43,14 @@
         </executions>
         <configuration>
           <extension>true</extension>
-          <wsdl>false</wsdl>
-          <xmlschema>true</xmlschema>
-          <schemaDirectory>src/main/resources</schemaDirectory>
-          <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-ws-config.xsd,**/citrus-ws-testcase.xsd</schemaFiles>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-ws-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-ws-testcase.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
         </configuration>
       </plugin>
 
