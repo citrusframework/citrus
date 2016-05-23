@@ -166,8 +166,8 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public void applyBehavior(TestBehavior behavior) {
-        testDesigner.applyBehavior(behavior);
+    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        return testDesigner.applyBehavior(behavior);
     }
 
     @Override

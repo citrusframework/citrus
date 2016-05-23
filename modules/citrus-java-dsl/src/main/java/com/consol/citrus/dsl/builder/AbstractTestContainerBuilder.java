@@ -21,7 +21,6 @@ import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 import java.util.List;
 
@@ -71,7 +70,9 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     public TestActionContainer actions(TestAction ... actions) {
         if (runner != null) {
             for (int i = 0; i < actions.length; i++) {
-                if (container.getActions().size() == i) {
+                if (actions[i] instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction) {
+                    continue;
+                } else if (container.getActions().size() == i) {
                     container.addTestAction(actions[i]);
                 } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
                     if (!actions[i].equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
@@ -82,14 +83,12 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
                 }
             }
 
-            if (container.getActions().size() != actions.length) {
-                throw new CitrusRuntimeException("Invalid number of nested test actions for container execution - found unexpected actions");
-            }
-
             return runner.run(container);
         } else {
             for (TestAction action : actions) {
-                if (action instanceof TestActionBuilder<?>) {
+                if (action instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
+                    container.getActions().addAll(((com.consol.citrus.dsl.design.ApplyTestBehaviorAction)action).getActions());
+                } else if (action instanceof TestActionBuilder<?>) {
                     container.addTestAction(((TestActionBuilder<?>) action).build());
                 } else {
                     container.addTestAction(action);

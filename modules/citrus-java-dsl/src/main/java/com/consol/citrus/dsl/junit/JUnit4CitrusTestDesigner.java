@@ -166,8 +166,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public void applyBehavior(TestBehavior behavior) {
-        testDesigner.applyBehavior(behavior);
+    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        return testDesigner.applyBehavior(behavior);
     }
 
     @Override

@@ -165,9 +165,11 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public void applyBehavior(TestBehavior behavior) {
+    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        ApplyTestBehaviorAction action = new ApplyTestBehaviorAction(behavior);
         behavior.setApplicationContext(getApplicationContext());
         behavior.apply(this);
+        return action;
     }
 
     @Override

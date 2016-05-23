@@ -114,7 +114,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param behavior
      */
-    void applyBehavior(TestBehavior behavior);
+    ApplyTestBehaviorAction applyBehavior(TestBehavior behavior);
 
     /**
      * Action creating a new test variable during a test.
