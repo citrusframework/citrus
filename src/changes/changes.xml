@@ -16,6 +16,9 @@
   
   <body>
     <release version="2.6" date="01.06.2016" description="2.6 release">
+      <action dev="christophd" type="fix">
+        GITHUB-101 NoSuchElementException with custom action container in test runner
+      </action>
       <action dev="christophd" type="add">
         CITRUS-53 Spring RestDocs support
       </action>

@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.junit;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
@@ -168,6 +169,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
         return testDesigner.applyBehavior(behavior);
+    }
+
+    @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        return testDesigner.container(container);
     }
 
     @Override

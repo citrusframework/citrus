@@ -50,7 +50,7 @@ public abstract class AbstractExceptionContainerBuilder<T extends TestActionCont
      * @param actions
      * @return
      */
-    public TestActionContainer when(TestAction... actions) {
+    public T when(TestAction... actions) {
         return actions(actions);
     }
 }

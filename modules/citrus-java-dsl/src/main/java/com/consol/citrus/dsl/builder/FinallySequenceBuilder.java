@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
@@ -63,7 +62,7 @@ public class FinallySequenceBuilder extends AbstractTestContainerBuilder<Finally
     }
 
     @Override
-    public TestActionContainer actions(TestAction... actions) {
+    public FinallySequence actions(TestAction... actions) {
         if (runner != null) {
             return super.actions(actions);
         } else {

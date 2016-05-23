@@ -173,6 +173,12 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
+        return containerBuilder;
+    }
+
+    @Override
     public void action(TestAction testAction) {
         List<TestAction> actions = null;
         if (testAction instanceof TestActionContainerBuilder) {

@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.junit;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
@@ -137,6 +138,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     @Override
     public ApplyTestBehaviorAction applyBehavior(com.consol.citrus.dsl.runner.TestBehavior behavior) {
         return testRunner.applyBehavior(behavior);
+    }
+
+    @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        return testRunner.container(container);
     }
 
     @Override

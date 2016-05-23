@@ -208,6 +208,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
+        this.containers.push(containerBuilder.build());
+        return containerBuilder;
+    }
+
+    @Override
     public CreateVariablesAction createVariable(String variableName, String value) {
         CreateVariablesAction action = new CreateVariablesAction();
         action.getVariables().put(variableName, value);

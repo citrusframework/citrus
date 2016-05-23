@@ -38,7 +38,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     protected TestDesigner designer;
 
     /** The action container */
-    protected final TestActionContainer container;
+    protected final T container;
 
     /**
      * Default constructor with test runner and test action.
@@ -67,7 +67,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
      * @param actions
      * @return
      */
-    public TestActionContainer actions(TestAction ... actions) {
+    public T actions(TestAction ... actions) {
         if (runner != null) {
             for (int i = 0; i < actions.length; i++) {
                 if (actions[i] instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction) {

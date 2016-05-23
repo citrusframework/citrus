@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
-import com.consol.citrus.container.Template;
+import com.consol.citrus.container.*;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
@@ -122,6 +122,13 @@ public interface TestRunner extends ApplicationContextAware {
      * @param behavior
      */
     ApplyTestBehaviorAction applyBehavior(TestBehavior behavior);
+
+    /**
+     * Prepare and add a custom container implementation.
+     * @param container
+     * @return
+     */
+    <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container);
 
     /**
      * Action creating a new test variable during a test.

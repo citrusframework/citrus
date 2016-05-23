@@ -34,6 +34,21 @@ public class DelegatingTestAction<T extends TestAction> extends AbstractTestActi
     /** Delegate */
     private T delegate;
 
+    /**
+     * Default constructor.
+     */
+    public DelegatingTestAction() {
+        super();
+    }
+
+    /**
+     * Constructor using the delegate test action.
+     * @param delegate
+     */
+    public DelegatingTestAction(T delegate) {
+        this.delegate = delegate;
+    }
+
     @Override
     public void doExecute(TestContext context) {
         if (delegate != null) {

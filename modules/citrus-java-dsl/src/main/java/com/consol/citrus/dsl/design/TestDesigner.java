@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
@@ -115,6 +116,13 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param behavior
      */
     ApplyTestBehaviorAction applyBehavior(TestBehavior behavior);
+
+    /**
+     * Prepare and add a custom container implementation.
+     * @param container
+     * @return
+     */
+    <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container);
 
     /**
      * Action creating a new test variable during a test.
