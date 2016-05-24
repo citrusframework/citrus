@@ -16,12 +16,8 @@
 
 package com.consol.citrus.dsl.design;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -29,26 +25,16 @@ import java.util.List;
  */
 public class ApplyTestBehaviorAction extends AbstractTestAction {
 
+    private final TestDesigner testDesigner;
     private final TestBehavior testBehavior;
 
-    public ApplyTestBehaviorAction(TestBehavior testBehavior) {
+    public ApplyTestBehaviorAction(TestDesigner testDesigner, TestBehavior testBehavior) {
+        this.testDesigner = testDesigner;
         this.testBehavior = testBehavior;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        throw new IllegalStateException("Test behavior action must not be executed directly");
-    }
-
-    /**
-     * Gets all test actions that were added within this behavior.
-     * @return
-     */
-    public List<TestAction> getActions() {
-        if (testBehavior instanceof AbstractTestBehavior) {
-            return ((AbstractTestBehavior) testBehavior).getActions();
-        }
-
-        return new ArrayList<>();
+        testBehavior.apply(testDesigner);
     }
 }

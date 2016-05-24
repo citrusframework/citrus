@@ -186,9 +186,6 @@ public class DefaultTestRunner implements TestRunner {
                 testCase.getFinalActions().addAll(((FinallySequence) testAction).getActions());
                 return testAction;
             }
-        } else if (testAction instanceof ApplyTestBehaviorAction) {
-            testAction.execute(context);
-            return testAction;
         }
 
         if (!containers.isEmpty()) {
@@ -203,8 +200,10 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        ApplyTestBehaviorAction action = new ApplyTestBehaviorAction(this, behavior);
         behavior.setApplicationContext(applicationContext);
-        return run(new ApplyTestBehaviorAction(this, behavior));
+        action.execute(context);
+        return action;
     }
 
     @Override

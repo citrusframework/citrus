@@ -68,35 +68,39 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
      * @return
      */
     public T actions(TestAction ... actions) {
-        if (runner != null) {
-            for (int i = 0; i < actions.length; i++) {
-                if (actions[i] instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction) {
-                    continue;
-                } else if (container.getActions().size() == i) {
-                    container.addTestAction(actions[i]);
-                } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
-                    if (!actions[i].equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
-                        container.getActions().add(i, ((DelegatingTestAction) actions[i]).getDelegate());
-                    }
-                } else if (!container.getActions().get(i).equals(actions[i])) {
-                    container.getActions().add(i, actions[i]);
+        for (int i = 0; i < actions.length; i++) {
+            if (actions[i] instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction ||
+                    actions[i] instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
+                continue;
+            } else if (container.getActions().size() == i) {
+                container.addTestAction(getAction(actions[i]));
+            } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
+                if (!getAction(actions[i]).equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
+                    container.getActions().add(i, ((DelegatingTestAction) actions[i]).getDelegate());
                 }
+            } else if (!container.getActions().get(i).equals(getAction(actions[i]))) {
+                container.getActions().add(i, getAction(actions[i]));
             }
+        }
 
+        if (runner != null) {
             return runner.run(container);
         } else {
-            for (TestAction action : actions) {
-                if (action instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
-                    container.getActions().addAll(((com.consol.citrus.dsl.design.ApplyTestBehaviorAction)action).getActions());
-                } else if (action instanceof TestActionBuilder<?>) {
-                    container.addTestAction(((TestActionBuilder<?>) action).build());
-                } else {
-                    container.addTestAction(action);
-                }
-            }
-
             designer.action(container);
             return container;
+        }
+    }
+
+    /**
+     * Get action, either through action builder build method or action itself.
+     * @param action
+     * @return
+     */
+    private TestAction getAction(TestAction action) {
+        if (action instanceof TestActionBuilder<?>) {
+            return ((TestActionBuilder<?>) action).build();
+        } else {
+            return action;
         }
     }
 

@@ -80,7 +80,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
                         echo("behavior");
 
                         doFinally(
-                                echo("behaviorFinally")
+                            echo("behaviorFinally")
                         );
                     }
                 });
@@ -144,6 +144,55 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(sequence.getActions().get(2).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)sequence.getActions().get(2)).getMessage(), "after");
+    }
+
+    @Test
+    public void testBehaviorInContainerWithFinally() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                doFinally(
+                    echo("finally")
+                );
+
+                sequential().actions(
+                        echo("test"),
+
+                        applyBehavior(new AbstractTestBehavior() {
+                            @Override
+                            public void apply() {
+                                echo("behavior");
+
+                                doFinally().actions(
+                                    echo("behaviorFinally")
+                                );
+                            }
+                        })
+                );
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+
+        Assert.assertEquals(test.getActions().get(0).getClass(), Sequence.class);
+        Sequence sequence = (Sequence) test.getActions().get(0);
+        Assert.assertEquals(sequence.getActionCount(), 2);
+
+        Assert.assertEquals(sequence.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)sequence.getActions().get(0)).getMessage(), "test");
+
+        Assert.assertEquals(sequence.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)sequence.getActions().get(1)).getMessage(), "behavior");
+
+        Assert.assertEquals(test.getFinalActions().size(), 2);
+        Assert.assertEquals(test.getFinalActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinalActions().get(0)).getMessage(), "finally");
+
+        Assert.assertEquals(test.getFinalActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinalActions().get(1)).getMessage(), "behaviorFinally");
     }
 
     @Test
@@ -229,12 +278,14 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
+                FooBehavior behavior = new FooBehavior();
+
                 sequential().actions(
-                    applyBehavior(new FooBehavior()),
+                    applyBehavior(behavior),
 
                     echo("test"),
 
-                    applyBehavior(new FooBehavior())
+                    applyBehavior(behavior)
                 );
             }
         };

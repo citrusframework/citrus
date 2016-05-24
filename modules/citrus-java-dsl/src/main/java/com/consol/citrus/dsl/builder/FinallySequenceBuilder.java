@@ -16,7 +16,6 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
@@ -59,29 +58,5 @@ public class FinallySequenceBuilder extends AbstractTestContainerBuilder<Finally
      */
     public FinallySequenceBuilder(TestRunner runner) {
         this(runner, new FinallySequence());
-    }
-
-    @Override
-    public FinallySequence actions(TestAction... actions) {
-        if (runner != null) {
-            return super.actions(actions);
-        } else {
-            for (TestAction action : actions) {
-                if (action instanceof TestActionBuilder<?>) {
-                    designer.getTestCase().getActions().remove(((TestActionBuilder<?>) action).build());
-                    designer.getTestCase().getFinalActions().add(((TestActionBuilder<?>) action).build());
-                    container.addTestAction(((TestActionBuilder<?>) action).build());
-                } else if (!action.getClass().isAnonymousClass()) {
-                    designer.getTestCase().getActions().remove(action);
-                    designer.getTestCase().getFinalActions().add(action);
-                    container.addTestAction(action);
-                } else {
-                    designer.getTestCase().getFinalActions().add(action);
-                    container.addTestAction(action);
-                }
-            }
-
-            return container;
-        }
     }
 }

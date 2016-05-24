@@ -18,11 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.builder.FinallySequenceBuilder;
-import com.consol.citrus.dsl.builder.TestActionBuilder;
 import com.consol.citrus.dsl.util.PositionHandle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Abstract Citrus test behavior provides interface method implementations for
@@ -35,9 +31,6 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
 
     /** Target test builder to add actions and variables on */
     private TestDesigner target;
-
-    /** List of actions this behavior added to the test case */
-    private List<TestAction> actions = new ArrayList<>();
 
     /**
      * Subclasses must overwrite this apply building method in order
@@ -58,12 +51,6 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
 
     @Override
     public void action(TestAction testAction) {
-        if (testAction instanceof TestActionBuilder<?>) {
-            actions.add(((TestActionBuilder<?>) testAction).build());
-        } else {
-            actions.add(testAction);
-        }
-
         target.action(testAction);
     }
 
@@ -73,16 +60,12 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
     }
 
     @Override
-    public PositionHandle positionHandle() {
-        return target.positionHandle();
+    public FinallySequenceBuilder doFinally() {
+        return target.doFinally();
     }
 
-    /**
-     * Gets the value of the actions property.
-     *
-     * @return the actions
-     */
-    public List<TestAction> getActions() {
-        return actions;
+    @Override
+    public PositionHandle positionHandle() {
+        return target.positionHandle();
     }
 }

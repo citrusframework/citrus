@@ -22,6 +22,7 @@ import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
+import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -64,6 +65,9 @@ public class DefaultTestDesigner implements TestDesigner {
 
     /** Spring bean application context */
     private ApplicationContext applicationContext;
+
+    /** Optional stack of containers cached for execution */
+    private Stack<AbstractActionContainer> containers = new Stack<>();
 
     /** Default constructor */
     public DefaultTestDesigner() {
@@ -115,6 +119,33 @@ public class DefaultTestDesigner implements TestDesigner {
         }
     }
 
+    /**
+     * Remove nested actions from test case as they should be added to action container.
+     * @param actions
+     */
+    private void removeNestedActions(TestAction... actions) {
+        for (TestAction action : actions) {
+            if (action instanceof TestActionBuilder<?>) {
+                testCase.getActions().remove(((TestActionBuilder<?>) action).build());
+            } else if (!action.getClass().isAnonymousClass()) {
+                if (!testCase.getActions().remove(action)) {
+                    TestAction toBeRemoved = null;
+                    for (TestAction testCaseAction : testCase.getActions()) {
+                        if (testCaseAction instanceof DelegatingTestAction &&
+                                ((DelegatingTestAction) testCaseAction).getDelegate().equals(action)) {
+                            toBeRemoved = testCaseAction;
+                            break;
+                        }
+                    }
+
+                    if (toBeRemoved != null) {
+                        testCase.getActions().remove(toBeRemoved);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void testClass(Class<?> type) {
         getTestCase().setTestClass(type);
@@ -157,28 +188,6 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public CreateVariablesAction createVariable(String variableName, String value) {
-        CreateVariablesAction action = new CreateVariablesAction();
-        action.getVariables().put(variableName, value);
-        action(action);
-        return action;
-    }
-
-    @Override
-    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
-        ApplyTestBehaviorAction action = new ApplyTestBehaviorAction(behavior);
-        behavior.setApplicationContext(getApplicationContext());
-        behavior.apply(this);
-        return action;
-    }
-
-    @Override
-    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
-        AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
-        return containerBuilder;
-    }
-
-    @Override
     public void action(TestAction testAction) {
         List<TestAction> actions = null;
         if (testAction instanceof TestActionContainerBuilder) {
@@ -188,33 +197,54 @@ public class DefaultTestDesigner implements TestDesigner {
         }
 
         if (!CollectionUtils.isEmpty(actions)) {
-            for (TestAction action : actions) {
-                if (action instanceof TestActionBuilder<?>) {
-                    testCase.getActions().remove(((TestActionBuilder<?>) action).build());
-                } else if (!action.getClass().isAnonymousClass()) {
-                    if (!testCase.getActions().remove(action)) {
-                        TestAction toBeRemoved = null;
-                        for (TestAction testCaseAction : testCase.getActions()) {
-                            if (testCaseAction instanceof DelegatingTestAction &&
-                                    ((DelegatingTestAction) testCaseAction).getDelegate().equals(action)) {
-                                toBeRemoved = testCaseAction;
-                                break;
-                            }
-                        }
+            if (containers.lastElement().equals(testAction)) {
+                containers.pop();
+            } else {
+                throw new CitrusRuntimeException("Invalid use of action containers - the container execution is not expected!");
+            }
 
-                        if (toBeRemoved != null) {
-                            testCase.getActions().remove(toBeRemoved);
-                        }
-                    }
-                }
+            if (testAction instanceof FinallySequence) {
+                testCase.getFinalActions().addAll(((FinallySequence) testAction).getActions());
+                return;
             }
         }
 
         if (testAction instanceof TestActionBuilder<?>) {
-            testCase.addTestAction(((TestActionBuilder<?>) testAction).build());
+            if (!containers.isEmpty()) {
+                containers.lastElement().addTestAction(((TestActionBuilder<?>) testAction).build());
+            } else {
+                testCase.addTestAction(((TestActionBuilder<?>) testAction).build());
+            }
         } else {
-            testCase.addTestAction(testAction);
+            if (!containers.isEmpty()) {
+                containers.lastElement().addTestAction(testAction);
+            } else {
+                testCase.addTestAction(testAction);
+            }
         }
+    }
+
+    @Override
+    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        ApplyTestBehaviorAction action = new ApplyTestBehaviorAction(this, behavior);
+        behavior.setApplicationContext(getApplicationContext());
+        action.execute(null);
+        return action;
+    }
+
+    @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
+        this.containers.push(containerBuilder.build());
+        return containerBuilder;
+    }
+
+    @Override
+    public CreateVariablesAction createVariable(String variableName, String value) {
+        CreateVariablesAction action = new CreateVariablesAction();
+        action.getVariables().put(variableName, value);
+        action(action);
+        return action;
     }
 
     @Override
@@ -580,6 +610,8 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public AssertExceptionBuilder assertException(TestAction testAction) {
         AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
+        removeNestedActions(testAction);
+        containers.push(builder.build());
         builder.actions(testAction);
         return builder;
     }
@@ -587,13 +619,17 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public AssertExceptionBuilder assertException() {
         AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public CatchExceptionBuilder catchException(TestAction... actions) {
         CatchExceptionBuilder builder = new CatchExceptionBuilder(this)
                 .exception(CitrusRuntimeException.class.getName());
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -602,12 +638,15 @@ public class DefaultTestDesigner implements TestDesigner {
     public CatchExceptionBuilder catchException() {
         CatchExceptionBuilder builder = new CatchExceptionBuilder(this)
                 .exception(CitrusRuntimeException.class.getName());
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
     public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
         AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        removeNestedActions(testAction);
+        containers.push(builder.build());
         builder.actions(testAction);
 
         if (getApplicationContext().containsBean("soapFaultValidator")) {
@@ -619,6 +658,8 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public AssertSoapFaultBuilder assertSoapFault() {
         AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        containers.push(builder.build());
+
         if (getApplicationContext().containsBean("soapFaultValidator")) {
             builder.validator(getApplicationContext().getBean("soapFaultValidator", SoapFaultValidator.class));
         }
@@ -626,8 +667,11 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    @Deprecated
     public ConditionalBuilder conditional(TestAction... actions) {
         ConditionalBuilder builder = new ConditionalBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -635,12 +679,16 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public ConditionalBuilder conditional() {
         ConditionalBuilder builder = new ConditionalBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public IterateBuilder iterate(TestAction... actions) {
         IterateBuilder builder = new IterateBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -648,12 +696,16 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public IterateBuilder iterate() {
         IterateBuilder builder = new IterateBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public ParallelBuilder parallel(TestAction... actions) {
         ParallelBuilder builder = new ParallelBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -661,12 +713,16 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public ParallelBuilder parallel() {
         ParallelBuilder builder = new ParallelBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public RepeatOnErrorBuilder repeatOnError(TestAction... actions) {
         RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -674,12 +730,16 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public RepeatOnErrorBuilder repeatOnError() {
         RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public RepeatBuilder repeat(TestAction... actions) {
         RepeatBuilder builder = new RepeatBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -687,12 +747,16 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public RepeatBuilder repeat() {
         RepeatBuilder builder = new RepeatBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public SequenceBuilder sequential(TestAction... actions) {
         SequenceBuilder builder = new SequenceBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -700,18 +764,23 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public SequenceBuilder sequential() {
         SequenceBuilder builder = new SequenceBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
     public TimerBuilder timer() {
         TimerBuilder builder = new TimerBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
+    @Deprecated
     public TimerBuilder timer(TestAction... actions) {
         TimerBuilder builder = new TimerBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -765,8 +834,11 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    @Deprecated
     public FinallySequenceBuilder doFinally(TestAction... actions) {
         FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
+        removeNestedActions(actions);
+        containers.push(builder.build());
         builder.actions(actions);
         return builder;
     }
@@ -774,12 +846,17 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public FinallySequenceBuilder doFinally() {
         FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
+        containers.push(builder.build());
         return builder;
     }
 
     @Override
     public PositionHandle positionHandle() {
-        return new PositionHandle(testCase.getActions());
+        if (!containers.isEmpty()) {
+            return new PositionHandle(containers.lastElement().getActions());
+        } else {
+            return new PositionHandle(testCase.getActions());
+        }
     }
 
     /**

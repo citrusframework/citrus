@@ -482,6 +482,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#catchException()}
      */
     CatchExceptionBuilder catchException(TestAction... actions);
 
@@ -510,6 +511,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#conditional()}
      */
     ConditionalBuilder conditional(TestAction... actions);
 
@@ -524,6 +526,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#iterate()}
      */
     IterateBuilder iterate(TestAction... actions);
 
@@ -538,6 +541,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#parallel()}
      */
     ParallelBuilder parallel(TestAction... actions);
 
@@ -552,6 +556,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#repeatOnError()}
      */
     RepeatOnErrorBuilder repeatOnError(TestAction... actions);
 
@@ -566,6 +571,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#repeat()}
      */
     RepeatBuilder repeat(TestAction... actions);
 
@@ -580,6 +586,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#sequential()}
      */
     SequenceBuilder sequential(TestAction... actions);
 
@@ -599,6 +606,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Adds a timer container with nested test actions.
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#timer()}
      */
     TimerBuilder timer(TestAction... actions);
 
@@ -644,6 +652,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Adds sequence of test actions to finally block.
      *
      * @param actions
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#doFinally()}
      */
     FinallySequenceBuilder doFinally(TestAction... actions);
 
