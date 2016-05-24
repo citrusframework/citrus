@@ -63,25 +63,25 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     }
 
     /**
-     * Delegates container execution to container runner or fills container with actions.
+     * Delegates container execution to container runner or fills container with actions that were not added before
+     * when using anonymous test action implementations for instance.
      * @param actions
      * @return
      */
     public T actions(TestAction ... actions) {
         for (int i = 0; i < actions.length; i++) {
             TestAction currentAction = getAction(actions[i]);
-            TestAction containerAction = container.getActions().get(i);
 
             if (currentAction instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction ||
                     currentAction instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
                 continue;
             } else if (container.getActions().size() == i) {
                 container.addTestAction(currentAction);
-            } else if (containerAction instanceof DelegatingTestAction) {
-                if (!currentAction.equals(((DelegatingTestAction)containerAction).getDelegate())) {
+            } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
+                if (!currentAction.equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
                     container.getActions().add(i, currentAction);
                 }
-            } else if (!containerAction.equals(currentAction)) {
+            } else if (!container.getActions().get(i).equals(currentAction)) {
                 container.getActions().add(i, currentAction);
             }
         }
