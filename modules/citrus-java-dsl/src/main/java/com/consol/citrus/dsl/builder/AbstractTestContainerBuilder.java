@@ -69,17 +69,20 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
      */
     public T actions(TestAction ... actions) {
         for (int i = 0; i < actions.length; i++) {
-            if (actions[i] instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction ||
-                    actions[i] instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
+            TestAction currentAction = getAction(actions[i]);
+            TestAction containerAction = container.getActions().get(i);
+
+            if (currentAction instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction ||
+                    currentAction instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
                 continue;
             } else if (container.getActions().size() == i) {
-                container.addTestAction(getAction(actions[i]));
-            } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
-                if (!getAction(actions[i]).equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
-                    container.getActions().add(i, ((DelegatingTestAction) actions[i]).getDelegate());
+                container.addTestAction(currentAction);
+            } else if (containerAction instanceof DelegatingTestAction) {
+                if (!currentAction.equals(((DelegatingTestAction)containerAction).getDelegate())) {
+                    container.getActions().add(i, currentAction);
                 }
-            } else if (!container.getActions().get(i).equals(getAction(actions[i]))) {
-                container.getActions().add(i, getAction(actions[i]));
+            } else if (!containerAction.equals(currentAction)) {
+                container.getActions().add(i, currentAction);
             }
         }
 
