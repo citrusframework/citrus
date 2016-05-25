@@ -23,7 +23,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.simulation.TestSimulator;
-import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.server.Server;
@@ -514,11 +513,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     public FinallySequenceBuilder doFinally() {
         return testDesigner.doFinally();
-    }
-
-    @Override
-    public PositionHandle positionHandle() {
-        return testDesigner.positionHandle();
     }
 
     /**

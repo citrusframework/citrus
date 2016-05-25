@@ -40,7 +40,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      */
     public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpClient) {
         super();
-        action.setEndpoint(httpClient);
+        getAction().setEndpoint(httpClient);
         message(httpMessage);
         messageType(MessageType.XML);
         delegate.setDelegate(action);
@@ -53,7 +53,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      */
     public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, String httpClientUri) {
         super();
-        action.setEndpointUri(httpClientUri);
+        getAction().setEndpointUri(httpClientUri);
         message(httpMessage);
         messageType(MessageType.XML);
         delegate.setDelegate(action);

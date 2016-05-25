@@ -20,7 +20,6 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -661,9 +660,4 @@ public interface TestDesigner extends ApplicationContextAware {
      */
     FinallySequenceBuilder doFinally();
 
-    /**
-     * Gets new position handle of current test action situation.
-     * @return
-     */
-    PositionHandle positionHandle();
 }

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.TestAction;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
@@ -43,6 +45,14 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
     }
 
     /**
+     * Constructor using delegate test action.
+     * @param action
+     */
+    public SendSoapMessageBuilder(DelegatingTestAction<TestAction> action) {
+        super(action);
+    }
+
+    /**
      * Sets special SOAP action message header.
      * @param soapAction
      * @return
@@ -65,7 +75,7 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
         attachment.setContentType(contentType);
         attachment.setContent(content);
 
-        action.getAttachments().add(attachment);
+        getAction().getAttachments().add(attachment);
         return this;
     }
     
@@ -87,7 +97,7 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
             throw new CitrusRuntimeException("Failed to read attachment resource", e);
         }
 
-        action.getAttachments().add(attachment);
+        getAction().getAttachments().add(attachment);
         
         return this;
     }
@@ -98,8 +108,8 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
      * @return
      */
     public SendSoapMessageBuilder charset(String charsetName) {
-        if (!action.getAttachments().isEmpty()) {
-            action.getAttachments().get(action.getAttachments().size() - 1).setCharsetName(charsetName);
+        if (!getAction().getAttachments().isEmpty()) {
+            getAction().getAttachments().get(getAction().getAttachments().size() - 1).setCharsetName(charsetName);
         }
         return this;
     }
@@ -110,7 +120,7 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
      * @return
      */
     public SendSoapMessageBuilder attachment(SoapAttachment attachment) {
-        action.getAttachments().add(attachment);
+        getAction().getAttachments().add(attachment);
         return this;
     }
 
@@ -122,5 +132,10 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
     @Override
     public SendHttpMessageBuilder http() {
         throw new CitrusRuntimeException("Invalid use of http and soap action builder");
+    }
+
+    @Override
+    protected SendSoapMessageAction getAction() {
+        return (SendSoapMessageAction) action.getDelegate();
     }
 }

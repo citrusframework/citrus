@@ -23,7 +23,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.simulation.TestSimulator;
-import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -38,7 +37,8 @@ import org.testng.*;
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -513,11 +513,6 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     @Override
     public FinallySequenceBuilder doFinally() {
         return testDesigner.doFinally();
-    }
-
-    @Override
-    public PositionHandle positionHandle() {
-        return testDesigner.positionHandle();
     }
 
     /**

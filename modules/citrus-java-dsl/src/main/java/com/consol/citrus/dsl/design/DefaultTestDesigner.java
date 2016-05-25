@@ -23,7 +23,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
-import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
@@ -413,7 +412,6 @@ public class DefaultTestDesigner implements TestDesigner {
                 .withApplicationContext(getApplicationContext());
         action(builder);
 
-        builder.position(positionHandle());
         return builder;
     }
 
@@ -426,7 +424,6 @@ public class DefaultTestDesigner implements TestDesigner {
                 .withApplicationContext(getApplicationContext());
         action(builder);
 
-        builder.position(positionHandle());
         return builder;
     }
 
@@ -448,7 +445,6 @@ public class DefaultTestDesigner implements TestDesigner {
                 .withApplicationContext(getApplicationContext());
         action(builder);
 
-        builder.position(positionHandle());
         return builder;
     }
 
@@ -460,7 +456,6 @@ public class DefaultTestDesigner implements TestDesigner {
                 .withApplicationContext(getApplicationContext());
         action(builder);
 
-        builder.position(positionHandle());
         return builder;
     }
 
@@ -848,15 +843,6 @@ public class DefaultTestDesigner implements TestDesigner {
         FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
         containers.push(builder.build());
         return builder;
-    }
-
-    @Override
-    public PositionHandle positionHandle() {
-        if (!containers.isEmpty()) {
-            return new PositionHandle(containers.lastElement().getActions());
-        } else {
-            return new PositionHandle(testCase.getActions());
-        }
     }
 
     /**

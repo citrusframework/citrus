@@ -20,7 +20,6 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Test action delegates execution and other operations to nested test action that can be set once. Delegate is used in Java DSL
@@ -81,10 +80,6 @@ public class DelegatingTestAction<T extends TestAction> extends AbstractTestActi
      * @param delegate
      */
     public void setDelegate(T delegate) {
-        if (this.delegate != null) {
-            throw new CitrusRuntimeException("Invalid test action usage - trying to set test action delegate multiple times");
-        }
-
         this.delegate = delegate;
     }
 

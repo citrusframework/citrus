@@ -316,7 +316,7 @@ public class DefaultTestRunner implements TestRunner {
                 .messageType(MessageType.XML)
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return (ReceiveMessageAction) run(builder.build().getDelegate());
     }
 
     @Override
@@ -324,7 +324,7 @@ public class DefaultTestRunner implements TestRunner {
         SendMessageBuilder<SendMessageAction, SendMessageBuilder> builder = new SendMessageBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return (SendMessageAction) run(builder.build().getDelegate());
     }
 
     @Override
@@ -332,7 +332,7 @@ public class DefaultTestRunner implements TestRunner {
         SendSoapFaultBuilder builder = new SendSoapFaultBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return (SendSoapFaultAction) run(builder.build().getDelegate());
     }
 
     @Override
