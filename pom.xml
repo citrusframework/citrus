@@ -50,6 +50,7 @@
     <module>modules/citrus-jmx</module>
     <module>modules/citrus-restdocs</module>
     <module>modules/citrus-arquillian</module>
+    <module>modules/citrus-cucumber</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
   </modules>
@@ -176,6 +177,7 @@
     <jaxb.version>2.2.11</jaxb.version>
     <jackson.version>2.6.3</jackson.version>
     <arquillian.version>1.1.11.Final</arquillian.version>
+    <cucumber.version>1.2.4</cucumber.version>
     <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
 
@@ -543,6 +545,18 @@
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
         <version>1.2.3</version>
+      </dependency>
+
+      <!-- Cucumber -->
+      <dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>cucumber-java</artifactId>
+        <version>${cucumber.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>cucumber-junit</artifactId>
+        <version>${cucumber.version}</version>
       </dependency>
 
       <!-- JaxB Bindings (API and implementation) -->
