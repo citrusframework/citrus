@@ -20,6 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageHeaders;
@@ -67,9 +68,10 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -103,9 +105,10 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -143,9 +146,10 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getEndpointUri(), "httpClient");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());

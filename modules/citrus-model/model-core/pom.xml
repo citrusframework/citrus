@@ -35,11 +35,15 @@
         </executions>
         <configuration>
           <extension>true</extension>
-          <wsdl>false</wsdl>
-          <xmlschema>true</xmlschema>
-          <schemaDirectory>src/main/resources</schemaDirectory>
-          <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-config.xsd,**/citrus-testcase.xsd</schemaFiles>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-testcase.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
+          <extension>true</extension>
         </configuration>
       </plugin>
 

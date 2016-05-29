@@ -21,7 +21,6 @@ import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     protected TestDesigner designer;
 
     /** The action container */
-    protected final TestActionContainer container;
+    protected final T container;
 
     /**
      * Default constructor with test runner and test action.
@@ -64,40 +63,47 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     }
 
     /**
-     * Delegates container execution to container runner or fills container with actions.
+     * Delegates container execution to container runner or fills container with actions that were not added before
+     * when using anonymous test action implementations for instance.
      * @param actions
      * @return
      */
-    public TestActionContainer actions(TestAction ... actions) {
-        if (runner != null) {
-            for (int i = 0; i < actions.length; i++) {
-                if (container.getActions().size() == i) {
-                    container.addTestAction(actions[i]);
-                } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
-                    if (!actions[i].equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
-                        container.getActions().add(i, ((DelegatingTestAction) actions[i]).getDelegate());
-                    }
-                } else if (!container.getActions().get(i).equals(actions[i])) {
-                    container.getActions().add(i, actions[i]);
+    public T actions(TestAction ... actions) {
+        for (int i = 0; i < actions.length; i++) {
+            TestAction currentAction = getAction(actions[i]);
+
+            if (currentAction instanceof com.consol.citrus.dsl.runner.ApplyTestBehaviorAction ||
+                    currentAction instanceof com.consol.citrus.dsl.design.ApplyTestBehaviorAction) {
+                continue;
+            } else if (container.getActions().size() == i) {
+                container.addTestAction(currentAction);
+            } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
+                if (!currentAction.equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
+                    container.getActions().add(i, currentAction);
                 }
+            } else if (!container.getActions().get(i).equals(currentAction)) {
+                container.getActions().add(i, currentAction);
             }
+        }
 
-            if (container.getActions().size() != actions.length) {
-                throw new CitrusRuntimeException("Invalid number of nested test actions for container execution - found unexpected actions");
-            }
-
+        if (runner != null) {
             return runner.run(container);
         } else {
-            for (TestAction action : actions) {
-                if (action instanceof TestActionBuilder<?>) {
-                    container.addTestAction(((TestActionBuilder<?>) action).build());
-                } else {
-                    container.addTestAction(action);
-                }
-            }
-
             designer.action(container);
             return container;
+        }
+    }
+
+    /**
+     * Get action, either through action builder build method or action itself.
+     * @param action
+     * @return
+     */
+    private TestAction getAction(TestAction action) {
+        if (action instanceof TestActionBuilder<?>) {
+            return ((TestActionBuilder<?>) action).build();
+        } else {
+            return action;
         }
     }
 

@@ -18,8 +18,8 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -114,7 +114,14 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param behavior
      */
-    void applyBehavior(TestBehavior behavior);
+    ApplyTestBehaviorAction applyBehavior(TestBehavior behavior);
+
+    /**
+     * Prepare and add a custom container implementation.
+     * @param container
+     * @return
+     */
+    <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container);
 
     /**
      * Action creating a new test variable during a test.
@@ -474,6 +481,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#catchException()}
      */
     CatchExceptionBuilder catchException(TestAction... actions);
 
@@ -502,6 +510,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#conditional()}
      */
     ConditionalBuilder conditional(TestAction... actions);
 
@@ -516,6 +525,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#iterate()}
      */
     IterateBuilder iterate(TestAction... actions);
 
@@ -530,6 +540,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#parallel()}
      */
     ParallelBuilder parallel(TestAction... actions);
 
@@ -544,6 +555,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#repeatOnError()}
      */
     RepeatOnErrorBuilder repeatOnError(TestAction... actions);
 
@@ -558,6 +570,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#repeat()}
      */
     RepeatBuilder repeat(TestAction... actions);
 
@@ -572,6 +585,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#sequential()}
      */
     SequenceBuilder sequential(TestAction... actions);
 
@@ -591,6 +605,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Adds a timer container with nested test actions.
      * @param actions
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#timer()}
      */
     TimerBuilder timer(TestAction... actions);
 
@@ -636,6 +651,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Adds sequence of test actions to finally block.
      *
      * @param actions
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#doFinally()}
      */
     FinallySequenceBuilder doFinally(TestAction... actions);
 
@@ -644,9 +660,4 @@ public interface TestDesigner extends ApplicationContextAware {
      */
     FinallySequenceBuilder doFinally();
 
-    /**
-     * Gets new position handle of current test action situation.
-     * @return
-     */
-    PositionHandle positionHandle();
 }

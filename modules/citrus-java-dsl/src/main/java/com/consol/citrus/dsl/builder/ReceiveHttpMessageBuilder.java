@@ -16,7 +16,9 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,6 +43,14 @@ public class ReceiveHttpMessageBuilder extends ReceiveMessageBuilder<ReceiveMess
      * @param action
      */
     public ReceiveHttpMessageBuilder(ReceiveMessageAction action) {
+        super(action);
+    }
+
+    /**
+     * Constructor using delegate test action.
+     * @param action
+     */
+    public ReceiveHttpMessageBuilder(DelegatingTestAction<TestAction> action) {
         super(action);
     }
 

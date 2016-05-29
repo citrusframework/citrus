@@ -19,12 +19,12 @@ package com.consol.citrus.dsl.testng;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerSimulation;
+import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
@@ -135,8 +135,13 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
-    public void applyBehavior(com.consol.citrus.dsl.runner.TestBehavior behavior) {
-        testRunner.applyBehavior(behavior);
+    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        return testRunner.applyBehavior(behavior);
+    }
+
+    @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        return testRunner.container(container);
     }
 
     @Override

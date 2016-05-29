@@ -16,7 +16,9 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageHeaders;
@@ -37,6 +39,14 @@ public class SendHttpMessageBuilder extends SendMessageBuilder<SendMessageAction
      * @param action action defined by this definiton
      */
     public SendHttpMessageBuilder(SendMessageAction action) {
+        super(action);
+    }
+
+    /**
+     * Constructor using delegate test action.
+     * @param action
+     */
+    public SendHttpMessageBuilder(DelegatingTestAction<TestAction> action) {
         super(action);
     }
 

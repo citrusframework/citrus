@@ -131,8 +131,4 @@ public class SendSoapFaultBuilder extends SendSoapMessageBuilder {
         return (SendSoapFaultBuilder) super.withApplicationContext(applicationContext);
     }
 
-    @Override
-    public SendSoapFaultAction build() {
-        return (SendSoapFaultAction) super.build();
-    }
 }

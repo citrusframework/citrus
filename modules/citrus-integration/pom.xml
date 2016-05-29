@@ -58,11 +58,14 @@
           </executions>
           <configuration>
             <extension>true</extension>
-            <wsdl>false</wsdl>
-            <xmlschema>true</xmlschema>
-            <schemaDirectory>src/main/resources/com/consol/citrus/demo</schemaDirectory>
-            <bindingDirectory>src/main/resources/com/consol/citrus/demo</bindingDirectory>
-            <schemaFiles>**/*.xsd</schemaFiles>
+            <sourceType>xmlschema</sourceType>
+            <sources>
+              <source>src/main/resources/com/consol/citrus/demo/sayHello.xsd</source>
+              <source>src/main/resources/com/consol/citrus/demo/sayHelloExtended.xsd</source>
+            </sources>
+            <xjbSources>
+              <xjbSource>src/main/resources/com/consol/citrus/demo/binding.xjb</xjbSource>
+            </xjbSources>
           </configuration>
         </plugin>
     </plugins>

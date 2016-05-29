@@ -199,9 +199,18 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public void applyBehavior(TestBehavior behavior) {
+    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+        ApplyTestBehaviorAction action = new ApplyTestBehaviorAction(this, behavior);
         behavior.setApplicationContext(applicationContext);
-        behavior.apply(this);
+        action.execute(context);
+        return action;
+    }
+
+    @Override
+    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+        AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
+        this.containers.push(containerBuilder.build());
+        return containerBuilder;
     }
 
     @Override
@@ -307,7 +316,7 @@ public class DefaultTestRunner implements TestRunner {
                 .messageType(MessageType.XML)
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return (ReceiveMessageAction) run(builder.build().getDelegate());
     }
 
     @Override
@@ -315,7 +324,7 @@ public class DefaultTestRunner implements TestRunner {
         SendMessageBuilder<SendMessageAction, SendMessageBuilder> builder = new SendMessageBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return (SendMessageAction) run(builder.build().getDelegate());
     }
 
     @Override
@@ -323,7 +332,7 @@ public class DefaultTestRunner implements TestRunner {
         SendSoapFaultBuilder builder = new SendSoapFaultBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return (SendSoapFaultAction) run(builder.build().getDelegate());
     }
 
     @Override

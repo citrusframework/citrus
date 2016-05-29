@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.TestBuilder;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
@@ -51,8 +50,6 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
                     prepareExecution(request, (TestRunner) executable);
                 } else if (executable instanceof TestDesigner) {
                     prepareExecution(request, (TestDesigner) executable);
-                } else if (executable instanceof TestBuilder) {
-                    prepareExecution(request, (TestBuilder) executable);
                 }
 
                 executable.execute();
@@ -83,14 +80,5 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
      * @param testDesigner the found test builder.
      */
     protected void prepareExecution(Message request, TestRunner testDesigner) {
-    }
-
-    /**
-     * Prepares the test builder instance before execution. Subclasses may add custom properties to test builder
-     * here.
-     * @param request the triggering request message.
-     * @param testDesigner the found test builder.
-     */
-    protected void prepareExecution(Message request, TestBuilder testDesigner) {
     }
 }
