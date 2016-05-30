@@ -17,7 +17,12 @@
     <citrus:variable name="project.name" value="Citrus Integration Tests"/>
   </citrus:global-variables>
 
-  <!-- JMS endpoint -->
+  <citrus:channel-endpoint id="fooEndpoint"
+                           channel="foo"/>
+
+  <citrus:channel id="foo"/>
+
+  <!-- Channel endpoint -->
   <citrus-camel:sync-endpoint id="echoEndpoint"
                               endpoint-uri="direct:echo" />
 
