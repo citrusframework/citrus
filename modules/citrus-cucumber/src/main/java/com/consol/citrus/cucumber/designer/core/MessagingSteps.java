@@ -27,18 +27,13 @@ import cucumber.api.java.en.*;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class StepDefinition {
+public class MessagingSteps {
 
     @CitrusResource
     private TestDesigner designer;
 
     private SendMessageBuilder sendMessageBuilder;
     private ReceiveMessageBuilder receiveMessageBuilder;
-
-    @Given("^variable ([^\\s]+) is \"([^\"]*)\"$")
-    public void variable(String name, String value) {
-        designer.variable(name, value);
-    }
 
     @When("^<([^>]*)> sends$")
     public void send(String endpoint, String payload) {

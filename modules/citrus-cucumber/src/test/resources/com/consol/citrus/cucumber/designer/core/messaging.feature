@@ -1,4 +1,4 @@
-Feature: Core features
+Feature: Messaging features
 
 Background:
     Given variable text is "Hello"
