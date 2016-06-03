@@ -1824,7 +1824,7 @@
                 </goals>
                 <configuration>
                   <propertyName>surefireArgLine</propertyName>
-                  <destFile>${build.directory}/coverage-reports/jacoco-unit.exec</destFile>
+                  <destFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</destFile>
                 </configuration>
               </execution>
               <execution>
@@ -1834,7 +1834,7 @@
                   <goal>report</goal>
                 </goals>
                 <configuration>
-                  <dataFile>${build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
+                  <dataFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
                   <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
                 </configuration>
               </execution>
@@ -1846,7 +1846,7 @@
                 <phase>pre-integration-test</phase>
                 <configuration>
                   <propertyName>failsafeArgLine</propertyName>
-                  <destFile>${build.directory}/coverage-reports/jacoco-it.exec</destFile>
+                  <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
                 </configuration>
               </execution>
               <execution>
@@ -1856,7 +1856,7 @@
                   <goal>report</goal>
                 </goals>
                 <configuration>
-                  <dataFile>${build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+                  <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
                   <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                 </configuration>
               </execution>
