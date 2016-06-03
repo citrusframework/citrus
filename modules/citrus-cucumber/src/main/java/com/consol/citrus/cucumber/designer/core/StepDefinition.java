@@ -17,7 +17,10 @@
 package com.consol.citrus.cucumber.designer.core;
 
 import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.message.MessageType;
 import cucumber.api.java.en.*;
 
 /**
@@ -29,46 +32,92 @@ public class StepDefinition {
     @CitrusResource
     private TestDesigner designer;
 
-    @Given("^variable (.+)=\"([^\"]*)\"$")
+    private SendMessageBuilder sendMessageBuilder;
+    private ReceiveMessageBuilder receiveMessageBuilder;
+
+    @Given("^variable ([^\\s]+) is \"([^\"]*)\"$")
     public void variable(String name, String value) {
         designer.variable(name, value);
     }
 
+    @When("^<([^>]*)> sends$")
+    public void send(String endpoint, String payload) {
+        sendMessageBuilder = designer.send(endpoint)
+                .payload(payload);
+        receiveMessageBuilder = null;
+    }
+
     @When("^<([^>]*)> sends \"([^\"]*)\"$")
-    public void send(String endpoint, String message) {
-        designer.send(endpoint)
-                .payload(message);
-    }
-
-    @When("^<([^>]*)> receives \"([^\"]*)\" as (.+)$")
-    public void receive(String endpoint, String message, String type) {
-        designer.receive(endpoint)
-                .messageType(type)
-                .payload(message);
-    }
-
-    @When("^<([^>]*)> receives \"([^\"]*)\"$")
-    public void receiveXml(String endpoint, String message) {
-        designer.receive(endpoint)
-                .payload(message);
+    public void sendPayload(String endpoint, String payload) {
+        send(endpoint, payload);
     }
 
     @Then("^<([^>]*)> should send \"([^\"]*)\"$")
-    public void shouldSend(String endpoint, String message) {
-        designer.send(endpoint)
-                .payload(message);
+    public void shouldSend(String endpoint, String payload) {
+        send(endpoint, payload);
+    }
+
+    @Then("^<([^>]*)> should send$")
+    public void shouldSendPayload(String endpoint, String payload) {
+        send(endpoint, payload);
+    }
+
+    @When("^<([^>]*)> receives ([^\\s]+) \"([^\"]*)\"$")
+    public void receive(String endpoint, String type, String payload) {
+        receiveMessageBuilder = designer.receive(endpoint)
+                .messageType(type)
+                .payload(payload);
+        sendMessageBuilder = null;
+    }
+
+    @When("^<([^>]*)> receives \"([^\"]*)\"$")
+    public void receiveXml(String endpoint, String payload) {
+        receive(endpoint, MessageType.XML.name(), payload);
+    }
+
+    @When("^<([^>]*)> receives$")
+    public void receiveXmlPayload(String endpoint, String payload) {
+        receive(endpoint, MessageType.XML.name(), payload);
+    }
+
+    @When("^<([^>]*)> receives ([^\\s]+)$")
+    public void receivePayload(String endpoint, String type, String payload) {
+        receive(endpoint, type, payload);
+    }
+
+    @Then("^<([^>]*)> should receive ([^\\s]+) \"([^\"]*)\"$")
+    public void shouldReceive(String endpoint, String type, String payload) {
+        receive(endpoint, type, payload);
     }
 
     @Then("^<([^>]*)> should receive \"([^\"]*)\"$")
-    public void shouldReceive(String endpoint, String message) {
-        designer.receive(endpoint)
-                .payload(message);
+    public void shouldReceiveXml(String endpoint, String payload) {
+        receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @Then("^<([^>]*)> should receive \"([^\"]*)\" as (.+)$")
-    public void shouldReceive(String endpoint, String message, String type) {
-        designer.receive(endpoint)
-                .messageType(type)
-                .payload(message);
+    @Then("^<([^>]*)> should receive$")
+    public void shouldReceiveXmlPayload(String endpoint, String payload) {
+        receive(endpoint, MessageType.XML.name(), payload);
+    }
+
+    @Then("^<([^>]*)> should receive ([^\\s]+)$")
+    public void shouldReceivePayload(String endpoint, String type, String payload) {
+        receive(endpoint, type, payload);
+    }
+
+    @And("^message header ([^\\s]+) is \"([^\"]*)\"$")
+    public void header(String name, String value) {
+        if (sendMessageBuilder != null) {
+            sendMessageBuilder.header(name, value);
+        }
+
+        if (receiveMessageBuilder != null) {
+            receiveMessageBuilder.header(name, value);
+        }
+    }
+
+    @And("^message header ([^\\s]+) should be \"([^\"]*)\"$")
+    public void headerShouldBe(String name, String value) {
+        header(name, value);
     }
 }
