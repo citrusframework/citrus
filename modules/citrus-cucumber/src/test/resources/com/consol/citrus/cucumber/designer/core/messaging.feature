@@ -1,7 +1,7 @@
 Feature: Messaging features
 
 Background:
-    Given variable text is "Hello"
+  Given variable text is "Hello"
 
   Scenario: Send and receive
     When <fooEndpoint> sends

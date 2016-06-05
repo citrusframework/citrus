@@ -17,11 +17,18 @@
 package com.consol.citrus.cucumber.designer.core;
 
 import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.cucumber.message.MessageCreator;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.*;
 import cucumber.api.java.en.*;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -32,8 +39,33 @@ public class MessagingSteps {
     @CitrusResource
     private TestDesigner designer;
 
+    private List<Object> messageCreators = new ArrayList<>();
+
     private SendMessageBuilder sendMessageBuilder;
     private ReceiveMessageBuilder receiveMessageBuilder;
+
+    @Given("^message creator ([^\\s]+)$")
+    public void messageCreator(String type) {
+        try {
+            messageCreators.add(Class.forName(type).newInstance());
+        } catch (ClassNotFoundException | IllegalAccessException e) {
+            throw new CitrusRuntimeException("Unable to access message creator type: " + type);
+        } catch (InstantiationException e) {
+            throw new CitrusRuntimeException("Unable to create  message creator instance of type: " + type);
+        }
+    }
+
+    @When("^<([^>]*)> sends message <([^>]*)>$")
+    public void sendMessage(String endpoint, String messageName) {
+        sendMessageBuilder = designer.send(endpoint)
+                .message(createMessage(messageName));
+        receiveMessageBuilder = null;
+    }
+
+    @Then("^<([^>]*)> should send message <([^>]*)>$")
+    public void shouldSendMessage(String endpoint, String messageName) {
+        sendMessage(endpoint, messageName);
+    }
 
     @When("^<([^>]*)> sends$")
     public void send(String endpoint, String payload) {
@@ -55,6 +87,18 @@ public class MessagingSteps {
     @Then("^<([^>]*)> should send$")
     public void shouldSendPayload(String endpoint, String payload) {
         send(endpoint, payload);
+    }
+
+    @When("^<([^>]*)> receives message <([^>]*)>$")
+    public void receiveMessage(String endpoint, final String messageName) {
+        receiveMessageBuilder = designer.receive(endpoint)
+                .message(createMessage(messageName));
+        sendMessageBuilder = null;
+    }
+
+    @Then("^<([^>]*)> should receive message <([^>]*)>$")
+    public void shouldReceiveMessage(String endpoint, String messageName) {
+        receiveMessage(endpoint, messageName);
     }
 
     @When("^<([^>]*)> receives ([^\\s]+) \"([^\"]*)\"$")
@@ -114,5 +158,40 @@ public class MessagingSteps {
     @And("^message header ([^\\s]+) should be \"([^\"]*)\"$")
     public void headerShouldBe(String name, String value) {
         header(name, value);
+    }
+
+    /**
+     * Create message by delegating message creation to known message creators that
+     * are able to create message with given name.
+     * @param messageName
+     * @return
+     */
+    private Message createMessage(final String messageName) {
+        final Message[] message = { null };
+        for (final Object messageCreator : messageCreators) {
+            ReflectionUtils.doWithMethods(messageCreator.getClass(), new ReflectionUtils.MethodCallback() {
+                @Override
+                public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                    if (method.getAnnotation(MessageCreator.class).value().equals(messageName)) {
+                        try {
+                            message[0] = (Message) method.invoke(messageCreator);
+                        } catch (InvocationTargetException e) {
+                            throw new CitrusRuntimeException("Unsupported message creator method: " + method.getName());
+                        }
+                    }
+                }
+            }, new ReflectionUtils.MethodFilter() {
+                @Override
+                public boolean matches(Method method) {
+                    return method.getAnnotationsByType(MessageCreator.class).length > 0;
+                }
+            });
+        }
+
+        if (message[0] == null) {
+            throw new CitrusRuntimeException("Unable to find message creator for message: " + messageName);
+        }
+
+        return message[0];
     }
 }
