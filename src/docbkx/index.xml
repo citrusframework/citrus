@@ -57,6 +57,7 @@
     <xi:include href='ssh.xml'/>
     <xi:include href='rmi.xml'/>
     <xi:include href='jmx.xml'/>
+    <xi:include href='cucumber.xml'/>
     <xi:include href='endpoint-component.xml'/>
     <xi:include href='endpoint-adapter.xml'/>
     <xi:include href='functions.xml'/>
