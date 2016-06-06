@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.xml;
+package com.consol.citrus.cucumber.step.xml;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.container.Template;

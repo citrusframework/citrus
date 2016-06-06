@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.core;
+package com.consol.citrus.cucumber.step.core;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.cucumber.message.MessageCreator;
@@ -51,9 +51,9 @@ public class MessagingSteps {
         try {
             messageCreators.add(Class.forName(type).newInstance());
         } catch (ClassNotFoundException | IllegalAccessException e) {
-            throw new CitrusRuntimeException("Unable to access message creator type: " + type);
+            throw new CitrusRuntimeException("Unable to access message creator type: " + type, e);
         } catch (InstantiationException e) {
-            throw new CitrusRuntimeException("Unable to create  message creator instance of type: " + type);
+            throw new CitrusRuntimeException("Unable to create  message creator instance of type: " + type, e);
         }
     }
 
@@ -178,7 +178,7 @@ public class MessagingSteps {
                         try {
                             message[0] = (Message) method.invoke(messageCreator);
                         } catch (InvocationTargetException e) {
-                            throw new CitrusRuntimeException("Unsupported message creator method: " + method.getName());
+                            throw new CitrusRuntimeException("Unsupported message creator method: " + method.getName(), e);
                         }
                     }
                 }

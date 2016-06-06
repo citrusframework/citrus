@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.core;
+package com.consol.citrus.cucumber.step.core;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.dsl.design.TestDesigner;

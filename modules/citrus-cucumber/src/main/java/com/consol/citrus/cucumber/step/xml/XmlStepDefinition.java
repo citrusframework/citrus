@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.xml;
+package com.consol.citrus.cucumber.step.xml;
 
 import com.consol.citrus.cucumber.container.StepTemplate;
 import cucumber.api.java.ObjectFactory;

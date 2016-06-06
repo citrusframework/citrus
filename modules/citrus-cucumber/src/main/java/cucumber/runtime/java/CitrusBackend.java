@@ -19,7 +19,7 @@ package cucumber.runtime.java;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.cucumber.CitrusReporter;
 import com.consol.citrus.cucumber.container.StepTemplate;
-import com.consol.citrus.cucumber.xml.XmlStepDefinition;
+import com.consol.citrus.cucumber.step.xml.XmlStepDefinition;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import cucumber.runtime.*;
 import cucumber.runtime.io.ResourceLoader;
