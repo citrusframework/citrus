@@ -40,13 +40,6 @@ public class StepTemplate extends Template {
     private Pattern pattern;
 
     /**
-     * Default constructor disabling global context.
-     */
-    public StepTemplate() {
-        setGlobalContext(false);
-    }
-
-    /**
      * Gets the value of the pattern property.
      *
      * @return the pattern

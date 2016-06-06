@@ -55,6 +55,11 @@ public class StepTemplateParser implements BeanDefinitionParser {
             builder.addPropertyValue("parameterNames", StringUtils.commaDelimitedListToStringArray(element.getAttribute("parameter-names")));
         }
 
+        String globalContext = element.getAttribute("global-context");
+        if (StringUtils.hasText(globalContext)) {
+            builder.addPropertyValue("globalContext", globalContext);
+        }
+
         ActionContainerParser.doParse(element, parserContext, builder);
 
         String beanName = parserContext.getReaderContext().generateBeanName(builder.getBeanDefinition());

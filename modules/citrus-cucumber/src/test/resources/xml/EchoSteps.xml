@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns:citrus="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://www.citrusframework.org/schema/cucumber/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/cucumber/testcase
+        http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
+
+  <step given="^My name is (.*)$" parameter-names="username">
+    <citrus:create-variables>
+      <citrus:variable name="username" value="${username}"/>
+    </citrus:create-variables>
+  </step>
+
+  <step when="^I say hello.*$">
+    <citrus:send endpoint="echoEndpoint">
+      <citrus:message type="plaintext">
+        <citrus:data>Hello, my name is ${username}!</citrus:data>
+      </citrus:message>
+    </citrus:send>
+  </step>
+
+  <step when="^I say goodbye.*$">
+    <citrus:send endpoint="echoEndpoint">
+      <citrus:message type="plaintext">
+        <citrus:data>Goodbye from ${username}!</citrus:data>
+      </citrus:message>
+    </citrus:send>
+  </step>
+
+  <step then="^the service should return: &quot;([^&quot;]*)&quot;$" parameter-names="body">
+    <citrus:receive endpoint="echoEndpoint">
+      <citrus:message type="plaintext">
+        <citrus:data>You just said: ${body}</citrus:data>
+      </citrus:message>
+    </citrus:receive>
+  </step>
+
+</spring:beans>

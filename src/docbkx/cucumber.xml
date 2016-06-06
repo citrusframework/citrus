@@ -50,8 +50,8 @@
 
         <programlisting>@RunWith(Cucumber.class)
 @CucumberOptions(
-  glue = { "com.consol.citrus.cucumber", "my.company.features" },
-  plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+    glue = { "com.consol.citrus.cucumber", "my.company.features" },
+    plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }</programlisting>
@@ -123,7 +123,83 @@ public class MyFeatureIT {
     <section id="cucumber-xml-steps">
       <title>Cucumber XML steps</title>
 
-      <para>So far we have written some glue code in Java in order to translate.</para>
+      <para>So far we have written glue code in Java in order to translate Gherkin syntax descriptions to test designer actions. Now we want to do the same with just XML configuration. The JUnit Cucumber class should not change. We still use the Cucumber runner implementation
+      with some options specific to Citrus:</para>
 
+
+      <programlisting>@RunWith(Cucumber.class)
+@CucumberOptions(
+    glue = { "com.consol.citrus.cucumber", "my.company.features" },
+    plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+public class MyFeatureIT {
+
+}</programlisting>
+
+      <para>The scenario description is also not changed:</para>
+
+      <programlisting>Feature: Echo service
+
+  Scenario: Say hello
+    Given My name is Citrus
+    When I say hello to the service
+    Then the service should return: "Hello, my name is Citrus!"
+
+  Scenario: Say goodbye
+    Given My name is Citrus
+    When I say goodbye to the service
+    Then the service should return: "Goodbye from Citrus!"</programlisting>
+
+      <para>In the feature package <emphasis>my.company.features</emphasis> we add a new XML file <emphasis>EchiSteps.xml</emphasis> that holds the new XML step definitions:</para>
+
+      <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;spring:beans xmlns:citrus=&quot;http://www.citrusframework.org/schema/testcase&quot;
+      xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xmlns=&quot;http://www.citrusframework.org/schema/cucumber/testcase&quot;
+      xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+                          http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.citrusframework.org/schema/cucumber/testcase
+                          http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd&quot;&gt;
+
+  &lt;step given=&quot;^My name is (.*)$&quot; parameter-names=&quot;username&quot;&gt;
+    &lt;citrus:create-variables&gt;
+      &lt;citrus:variable name=&quot;username&quot; value=&quot;${username}&quot;/&gt;
+    &lt;/citrus:create-variables&gt;
+  &lt;/step&gt;
+
+  &lt;step when=&quot;^I say hello.*$&quot;&gt;
+    &lt;citrus:send endpoint=&quot;echoEndpoint&quot;&gt;
+      &lt;citrus:message type=&quot;plaintext&quot;&gt;
+        &lt;citrus:data&gt;Hello, my name is ${username}!&lt;/citrus:data&gt;
+      &lt;/citrus:message&gt;
+    &lt;/citrus:send&gt;
+  &lt;/step&gt;
+
+  &lt;step when=&quot;^I say goodbye.*$&quot;&gt;
+    &lt;citrus:send endpoint=&quot;echoEndpoint&quot;&gt;
+      &lt;citrus:message type=&quot;plaintext&quot;&gt;
+        &lt;citrus:data&gt;Goodbye from ${username}!&lt;/citrus:data&gt;
+      &lt;/citrus:message&gt;
+    &lt;/citrus:send&gt;
+  &lt;/step&gt;
+
+  &lt;step then=&quot;^the service should return: &amp;quot;([^&amp;quot;]*)&amp;quot;$&quot; parameter-names=&quot;body&quot;&gt;
+    &lt;citrus:receive endpoint=&quot;echoEndpoint&quot;&gt;
+      &lt;citrus:message type=&quot;plaintext&quot;&gt;
+        &lt;citrus:data&gt;You just said: ${body}&lt;/citrus:data&gt;
+      &lt;/citrus:message&gt;
+    &lt;/citrus:receive&gt;
+  &lt;/step&gt;
+
+&lt;/spring:beans&gt;</programlisting>
+
+      <para>The above steps definition is written in pure XML. Citrus will automatically read the step definition and add those to the Cucumber runtime. Following from that the step definitions are
+      executed when matching to the feature story. The XML steps are able to receive parameters from the Gherkin regexp matcher. The paremeters are passed to the step as test variable. The parameter names
+      get declared in the optional attribute <emphasis>parameter-names</emphasis>. In the step definition actions you can use the parameter names as test variables.</para>
+
+      <note>
+        <para>The test variables are visible in all upcoming steps, too. This is because the test variables are global by default. If you need to set local state for a step definition you can use another
+        attribute <emphasis>global-context=false</emphasis> in the step definition. This way all test variables and parameters are only visible in the step definition. Other steps will not see the test variables.</para>
+      </note>
     </section>
 </chapter>

@@ -38,6 +38,7 @@
       <xs:attribute name="when" type="xs:string"/>
       <xs:attribute name="then" type="xs:string"/>
       <xs:attribute name="parameter-names" type="xs:string"/>
+      <xs:attribute name="global-context" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 
