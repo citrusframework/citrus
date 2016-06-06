@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -42,20 +43,17 @@ public class TemplateParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, builder);
 
         String name = element.getAttribute("name");
-
-        if (StringUtils.hasText(name)) {
-            builder.addPropertyValue("name", name);
-        } else {
-            builder.addPropertyValue("name", parserContext.getReaderContext().generateBeanName(builder.getBeanDefinition()));
+        if (!StringUtils.hasText(name)) {
+            throw new BeanCreationException("Must specify proper template name attribute");
         }
+
+        builder.addPropertyValue("name", element.getLocalName() + "(" + element.getAttribute("name") + ")");
 
         String globalContext = element.getAttribute("global-context");
         if (StringUtils.hasText(globalContext)) {
             builder.addPropertyValue("globalContext", globalContext);
         }
-        
-        builder.addPropertyValue("name", element.getLocalName() + "(" + element.getAttribute("name") + ")");
-        
+
         ActionContainerParser.doParse(element, parserContext, builder);
         
         parserContext.getRegistry().registerBeanDefinition(name, builder.getBeanDefinition());

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns:citrus="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://www.citrusframework.org/schema/cucumber/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/cucumber/testcase http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
+
+  <step given="It is my (\d+). birthday" parameter-names="birthday">
+    <citrus:echo>
+      <citrus:message>This is my ${birthday}. birthday</citrus:message>
+    </citrus:echo>
+  </step>
+
+  <step then="I will get best wishes to my (\d+). birthday" parameter-names="birthday">
+    <citrus:echo>
+      <citrus:message>Best wishes to you! It is your ${birthday}. birthday!</citrus:message>
+    </citrus:echo>
+  </step>
+
+  <step when="I go to welcome page">
+    <citrus:echo>
+      <citrus:message>Go to welcome page!</citrus:message>
+    </citrus:echo>
+  </step>
+
+
+</spring:beans>

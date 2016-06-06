@@ -17,10 +17,16 @@
 package cucumber.runtime.java;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.cucumber.CitrusReporter;
+import com.consol.citrus.cucumber.container.StepTemplate;
+import com.consol.citrus.cucumber.xml.XmlStepDefinition;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import cucumber.runtime.*;
 import cucumber.runtime.io.ResourceLoader;
 import cucumber.runtime.snippets.FunctionNameGenerator;
 import gherkin.formatter.model.Step;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -33,16 +39,31 @@ public class CitrusBackend implements Backend {
     /** Citrus instance used by all scenarios */
     private static Citrus citrus = Citrus.newInstance();
 
+    private ResourceLoader resourceLoader;
+
     /**
      * Constructor using resource loader.
      * @param resourceLoader
      */
     public CitrusBackend(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     @Override
     public void loadGlue(Glue glue, List<String> gluePaths) {
-        citrus.beforeSuite("cucumber-suite");
+        citrus.beforeSuite(CitrusReporter.SUITE_NAME);
+
+        for (String gluePath : gluePaths) {
+            ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] { "classpath*:" + gluePath.replaceAll("\\.", "/") + "/**/*Steps.xml" }, true, citrus.getApplicationContext());
+
+            try {
+                for (StepTemplate stepTemplate : ctx.getBeansOfType(StepTemplate.class).values()) {
+                    glue.addStepDefinition(new XmlStepDefinition(stepTemplate, CitrusObjectFactory.instance()));
+                }
+            } catch (IllegalAccessException e) {
+                throw new CitrusRuntimeException("Failed to add XML step definition", e);
+            }
+        }
     }
 
     @Override

@@ -40,7 +40,18 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
     /** Test designer */
     private TestDesigner designer;
 
+    /** Test context */
     private TestContext context;
+
+    /** Static self reference */
+    private static CitrusObjectFactory selfReference;
+
+    /**
+     * Default constructor with static self reference initialization.
+     */
+    public CitrusObjectFactory() {
+        selfReference = this;
+    }
 
     @Override
     public void start() {
@@ -96,5 +107,17 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
                 return false;
             }
         });
+    }
+
+    /**
+     * Static access to self reference.
+     * @return
+     */
+    public static CitrusObjectFactory instance() throws IllegalAccessException {
+        if (selfReference == null) {
+            throw new IllegalAccessException("Illegal access to self reference - not available yet");
+        }
+
+        return selfReference;
     }
 }

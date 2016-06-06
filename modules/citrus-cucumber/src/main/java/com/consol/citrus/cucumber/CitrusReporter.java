@@ -26,9 +26,11 @@ import cucumber.runtime.java.CitrusBackend;
  */
 public class CitrusReporter extends DefaultSummaryPrinter {
 
+    public static final String SUITE_NAME = "cucumber-suite";
+
     @Override
     public void print(Runtime runtime) {
-        CitrusBackend.getCitrus().afterSuite("cucumber-suite");
+        CitrusBackend.getCitrus().afterSuite(SUITE_NAME);
         super.print(runtime);
     }
 }
