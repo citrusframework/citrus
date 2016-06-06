@@ -21,8 +21,6 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +37,8 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusObjectFactory.class);
 
-    /** Test designer and runner */
+    /** Test designer */
     private TestDesigner designer;
-    private TestRunner runner;
 
     private TestContext context;
 
@@ -50,7 +47,6 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
         super.start();
         context = CitrusBackend.getCitrus().createTestContext();
         designer = new DefaultTestDesigner(CitrusBackend.getCitrus().getApplicationContext(), context);
-        runner = new DefaultTestRunner(CitrusBackend.getCitrus().getApplicationContext(), context);
     }
 
     @Override
@@ -82,9 +78,6 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
                 if (TestDesigner.class.isAssignableFrom(type)) {
                     log.debug("Injecting Citrus test designer on method parameter");
                     ReflectionUtils.setField(field, instance, designer);
-                } else if (TestRunner.class.isAssignableFrom(type)) {
-                    log.debug("Injecting Citrus test runner on method parameter");
-                    ReflectionUtils.setField(field, instance, runner);
                 } else {
                     throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
                 }
