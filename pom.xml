@@ -166,7 +166,7 @@
     <spring.version>4.2.3.RELEASE</spring.version>
     <spring.ws.version>2.2.3.RELEASE</spring.ws.version>
     <spring.integration.version>4.2.2.RELEASE</spring.integration.version>
-    <spring.resdocs.version>1.1.0.BUILD-SNAPSHOT</spring.resdocs.version>
+    <spring.restdocs.version>1.1.0.RELEASE</spring.restdocs.version>
     <apache.camel.version>2.16.0</apache.camel.version>
     <activemq.version>5.12.1</activemq.version>
     <vertx.version>3.2.0</vertx.version>
@@ -402,7 +402,7 @@
       <dependency>
         <groupId>org.springframework.restdocs</groupId>
         <artifactId>spring-restdocs-core</artifactId>
-        <version>${spring.resdocs.version}</version>
+        <version>${spring.restdocs.version}</version>
       </dependency>
       
       <dependency>
