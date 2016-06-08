@@ -640,6 +640,12 @@ public interface TestDesigner extends ApplicationContextAware {
     CamelRouteActionBuilder camel();
 
     /**
+     * Creates a new zookeeper execute action.
+     * @return
+     */
+    ZooActionBuilder zoo();
+
+    /**
      * Adds template container with nested test actions.
      *
      * @param name

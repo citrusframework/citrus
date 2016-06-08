@@ -58,7 +58,7 @@ public class DockerExecuteAction extends AbstractTestAction {
     private ObjectMapper jsonMapper = new ObjectMapper();
 
     @Autowired
-    private JsonTextMessageValidator jsonTextMessageValidator;
+    private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DockerExecuteAction.class);

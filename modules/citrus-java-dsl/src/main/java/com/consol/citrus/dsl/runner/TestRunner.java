@@ -26,6 +26,7 @@ import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Date;
@@ -462,6 +463,12 @@ public interface TestRunner extends ApplicationContextAware {
      * @return
      */
     AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer);
+
+    /**
+     * Run zookeeper command action.
+     * @return
+     */
+    ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer);
 
     /**
      * Adds template container with nested test actions.
