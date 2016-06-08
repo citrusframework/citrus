@@ -73,7 +73,6 @@
         <plugin>
           <groupId>net.revelc.code</groupId>
           <artifactId>zookeeper-maven-plugin</artifactId>
-          <version>1.0.1</version>
           <configuration>
             <clientPort>${zookeeper.port.listen}</clientPort>
             <shutdownString>UniqueShutDownString</shutdownString>
@@ -88,13 +87,6 @@
               </goals>
             </execution>
           </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.zookeeper</groupId>
-              <artifactId>zookeeper</artifactId>
-              <version>3.4.7</version>
-            </dependency>
-          </dependencies>
         </plugin>
     </plugins>
 

@@ -20,6 +20,7 @@
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-docker</include>
         <include>com.consol.citrus:citrus-cucumber</include>
+        <include>com.consol.citrus:citrus-zookeeper</include>
         <include>com.consol.citrus:citrus-rmi</include>
         <include>com.consol.citrus:citrus-jmx</include>
         <include>com.consol.citrus:citrus-vertx</include>
@@ -37,6 +38,7 @@
         <include>com.consol.citrus.model:citrus-model-camel</include>
         <include>com.consol.citrus.model:citrus-model-docker</include>
         <include>com.consol.citrus.model:citrus-model-cucumber</include>
+        <include>com.consol.citrus.model:citrus-model-zookeeper</include>
         <include>com.consol.citrus.model:citrus-model-rmi</include>
         <include>com.consol.citrus.model:citrus-model-jmx</include>
         <include>com.consol.citrus.model:citrus-model-vertx</include>
@@ -207,6 +209,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-docker/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-zookeeper/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

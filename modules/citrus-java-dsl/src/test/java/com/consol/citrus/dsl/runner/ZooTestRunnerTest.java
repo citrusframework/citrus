@@ -77,7 +77,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
         //  prepare set-data
         when(zookeeperClientMock.setData(path, data.getBytes(), 0)).thenReturn(statMock);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
                 zoo(new BuilderSupport<ZooActionBuilder>() {

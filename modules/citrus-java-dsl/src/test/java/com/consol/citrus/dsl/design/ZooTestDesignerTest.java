@@ -40,7 +40,7 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         final String acl = "custom-acl";
         final int version = 10;
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
                 zoo().info().validateCommandResult(new com.consol.citrus.zookeeper.command.CommandResultCallback<ZooResponse>() {

@@ -179,6 +179,7 @@
     <jackson.version>2.6.3</jackson.version>
     <arquillian.version>1.1.11.Final</arquillian.version>
     <cucumber.version>1.2.4</cucumber.version>
+    <zookeeper.version>3.4.7</zookeeper.version>
     <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
 
@@ -648,7 +649,17 @@
       <dependency>
         <groupId>org.apache.zookeeper</groupId>
         <artifactId>zookeeper</artifactId>
-        <version>3.4.7</version>
+        <version>${zookeeper.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Test scoped dependencies -->
@@ -989,6 +1000,19 @@
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
           <version>3.0.1</version>
+        </plugin>
+
+        <plugin>
+          <groupId>net.revelc.code</groupId>
+          <artifactId>zookeeper-maven-plugin</artifactId>
+          <version>1.0.1</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.zookeeper</groupId>
+              <artifactId>zookeeper</artifactId>
+              <version>${zookeeper.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
       </plugins>
@@ -1584,6 +1608,42 @@
                       <directory>modules/citrus-model/model-cucumber/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-cucumber-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-zookeeper-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/zookeeper/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-zookeeper/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-zookeeper-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-zookeeper-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/zookeeper/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-zookeeper/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-zookeeper-testcase*.xsd</include>
                       </includes>
                     </resource>
                   </resources>

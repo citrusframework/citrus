@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2006-2014 the original author or authors.
+  ~ Copyright 2006-2016 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,9 +19,6 @@
            targetNamespace="http://www.citrusframework.org/schema/zookeeper/testcase"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
-
-  <xs:import namespace="http://www.citrusframework.org/schema/testcase"
-             schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd" />
 
   <xs:element name="description" type="xs:string"/>
 

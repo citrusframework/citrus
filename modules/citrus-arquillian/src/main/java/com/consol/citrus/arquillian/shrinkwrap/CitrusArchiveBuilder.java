@@ -105,6 +105,7 @@ public final class CitrusArchiveBuilder {
         vertx();
         docker();
         cucumber();
+        zookeeper();
         rmi();
         jmx();
         restdocs();
@@ -191,6 +192,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder docker() {
         artifactCoordinates.add(getCoordinates("citrus-docker"));
+        return this;
+    }
+
+    /**
+     * Gets the zookeeper Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder zookeeper() {
+        artifactCoordinates.add(getCoordinates("citrus-zookeeper"));
         return this;
     }
 

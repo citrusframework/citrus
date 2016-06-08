@@ -19,7 +19,16 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.zookeeper"/>
       <nameXmlTransform>
-        <elementName prefix="Zookeeper" suffix="Definition" />
+        <elementName prefix="Zookeeper" suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-zookeeper-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.zookeeper"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
