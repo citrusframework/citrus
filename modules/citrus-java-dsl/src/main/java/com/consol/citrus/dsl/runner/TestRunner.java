@@ -468,7 +468,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Run zookeeper command action.
      * @return
      */
-    ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer);
+    ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer);
 
     /**
      * Adds template container with nested test actions.

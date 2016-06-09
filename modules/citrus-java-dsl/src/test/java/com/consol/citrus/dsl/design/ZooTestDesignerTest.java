@@ -43,21 +43,21 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                zoo().info().validateCommandResult(new com.consol.citrus.zookeeper.command.CommandResultCallback<ZooResponse>() {
+                zookeeper().info().validateCommandResult(new com.consol.citrus.zookeeper.command.CommandResultCallback<ZooResponse>() {
                     @Override
                     public void doWithCommandResult(ZooResponse result, TestContext context) {
                         Assert.assertNotNull(result);
                     }
                 });
 
-                zoo().create(path, data);
-                zoo().create(path, data).mode(mode).acl(acl);
-                zoo().delete(path);
-                zoo().delete(path).version(version);
-                zoo().exists(path);
-                zoo().getChildren(path);
-                zoo().setData(path, data);
-                zoo().getData(path);
+                zookeeper().create(path, data);
+                zookeeper().create(path, data).mode(mode).acl(acl);
+                zookeeper().delete(path);
+                zookeeper().delete(path).version(version);
+                zookeeper().exists(path);
+                zookeeper().getChildren(path);
+                zookeeper().setData(path, data);
+                zookeeper().getData(path);
             }
         };
 

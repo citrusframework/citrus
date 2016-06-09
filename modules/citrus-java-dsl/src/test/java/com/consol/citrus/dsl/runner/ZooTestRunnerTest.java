@@ -80,7 +80,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -103,7 +103,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -118,7 +118,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -132,7 +132,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -149,7 +149,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -164,7 +164,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -179,7 +179,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                zoo(new BuilderSupport<ZooActionBuilder>() {
+                zookeeper(new BuilderSupport<ZooActionBuilder>() {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))

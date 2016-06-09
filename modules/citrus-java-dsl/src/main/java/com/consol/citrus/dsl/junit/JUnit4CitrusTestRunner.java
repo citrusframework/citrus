@@ -35,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -368,8 +367,8 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer) {
-        return testRunner.zoo(configurer);
+    public ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
+        return testRunner.zookeeper(configurer);
     }
 
     @Override

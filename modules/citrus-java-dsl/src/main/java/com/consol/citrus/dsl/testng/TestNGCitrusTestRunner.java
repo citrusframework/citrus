@@ -366,8 +366,8 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
-    public ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer) {
-        return testRunner.zoo(configurer);
+    public ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
+        return testRunner.zookeeper(configurer);
     }
 
     @Override

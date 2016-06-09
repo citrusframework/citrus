@@ -501,8 +501,8 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public ZooActionBuilder zoo() {
-        return testDesigner.zoo();
+    public ZooActionBuilder zookeeper() {
+        return testDesigner.zookeeper();
     }
 
     @Override

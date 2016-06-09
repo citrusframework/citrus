@@ -533,8 +533,9 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ZooExecuteAction zoo(BuilderSupport<ZooActionBuilder> configurer) {
-        ZooActionBuilder builder = new ZooActionBuilder();
+    public ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
+        ZooActionBuilder builder = new ZooActionBuilder()
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build());
     }

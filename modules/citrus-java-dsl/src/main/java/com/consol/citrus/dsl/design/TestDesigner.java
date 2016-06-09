@@ -643,7 +643,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Creates a new zookeeper execute action.
      * @return
      */
-    ZooActionBuilder zoo();
+    ZooActionBuilder zookeeper();
 
     /**
      * Adds template container with nested test actions.

@@ -21,6 +21,8 @@ import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.client.ZooClient;
 import com.consol.citrus.zookeeper.command.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,8 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
     public static final String DEFAULT_ACL = Create.ACL_OPEN;
     public static final int DEFAULT_VERSION = 0;
 
+    private ApplicationContext applicationContext;
+
     /**
      * Constructor using action field.
      *
@@ -48,7 +52,6 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
      * Default constructor.
      */
     public ZooActionBuilder() {
-        // TODO CD what about spring autowired fields in ZooExecuteAction? When using DSL these are currently ignored
         super(new ZooExecuteAction());
     }
 
@@ -177,6 +180,24 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
             action.setJsonPathMessageValidationContext(validationContext);
         }
         validationContext.getJsonPathExpressions().put(jsonPath, expectedValue);
+        return this;
+    }
+
+    /**
+     * Sets the Spring bean application context.
+     * @param ctx
+     */
+    public ZooActionBuilder withApplicationContext(ApplicationContext ctx) {
+        this.applicationContext = ctx;
+
+        if (applicationContext.containsBean("zookeeperClient")) {
+            action.setZookeeperClient(applicationContext.getBean("zookeeperClient", ZooClient.class));
+        }
+
+        if (applicationContext.containsBean("zookeeperCommandResultMapper")) {
+            action.setJsonMapper(applicationContext.getBean("zookeeperCommandResultMapper", ObjectMapper.class));
+        }
+
         return this;
     }
 
