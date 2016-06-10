@@ -38,7 +38,7 @@ public class GetData extends AbstractZooCommand<ZooResponse> {
      * Default constructor initializing the command name.
      */
     public GetData() {
-        super("zookeeper:getData");
+        super("zookeeper:get");
     }
 
     @Override

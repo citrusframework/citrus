@@ -84,11 +84,11 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .addValidator("$.responseData.state", ZooKeeper.States.CONNECTED.name())
-                                .addVariableExtractor("$.responseData.state","state")
-                                .addVariableExtractor("$.responseData.sessionId","sessionId")
-                                .addVariableExtractor("$.responseData.sessionPwd","sessionPwd")
-                                .addVariableExtractor("$.responseData.sessionTimeout","sessionTimeout")
+                                .validate("$.responseData.state", ZooKeeper.States.CONNECTED.name())
+                                .extract("$.responseData.state","state")
+                                .extract("$.responseData.sessionId","sessionId")
+                                .extract("$.responseData.sessionPwd","sessionPwd")
+                                .extract("$.responseData.sessionTimeout","sessionTimeout")
                                 .info()
                                 .validateCommandResult(new CommandResultCallback<ZooResponse>() {
                                     @Override
@@ -153,7 +153,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .getChildren(path)
+                                .children(path)
                                 .validateCommandResult(new CommandResultCallback<ZooResponse>() {
                                     @Override
                                     public void doWithCommandResult(ZooResponse result, TestContext context) {
@@ -168,7 +168,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .getData(path)
+                                .get(path)
                                 .validateCommandResult(new CommandResultCallback<ZooResponse>() {
                                     @Override
                                     public void doWithCommandResult(ZooResponse result, TestContext context) {
@@ -183,7 +183,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(ZooActionBuilder builder) {
                         builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .setData(path, data)
+                                .set(path, data)
                                 .validateCommandResult(new CommandResultCallback<ZooResponse>() {
                                     @Override
                                     public void doWithCommandResult(ZooResponse result, TestContext context) {

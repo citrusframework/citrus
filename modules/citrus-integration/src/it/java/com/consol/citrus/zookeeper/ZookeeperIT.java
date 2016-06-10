@@ -24,8 +24,6 @@ import com.consol.citrus.zookeeper.command.ZooResponse;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
 /**
  * @author Martin Maher
  * @since 2.5
@@ -39,20 +37,18 @@ public class ZookeeperIT extends TestNGCitrusTestDesigner {
         variable("randomString", "citrus:randomString(10)");
 
         zookeeper()
-            .addValidator("$.responseData.state", "${expectedConnectionState}")
+            .validate("$.responseData.state", "${expectedConnectionState}")
             .info();
 
         zookeeper()
-            .addVariableExtractor("$.responseData.path", "path")
+            .extract("$.responseData.path", "path")
             .create("/${randomString}", "some test data")
             .acl("OPEN_ACL_UNSAFE")
             .mode("PERSISTENT")
             .validateCommandResult(new CommandResultCallback<ZooResponse>() {
                 @Override
                 public void doWithCommandResult(ZooResponse result, TestContext context) {
-                    Map<String, Object> responseData = result.getResponseData();
-                    Assert.assertNotNull(responseData);
-                    Assert.assertTrue(responseData.containsKey("path"));
+                    Assert.assertEquals(result.getResponseData().get("path"), context.replaceDynamicContentInString("/${randomString}"));
                 }
             });
 
@@ -61,9 +57,59 @@ public class ZookeeperIT extends TestNGCitrusTestDesigner {
             .validateCommandResult(new CommandResultCallback<ZooResponse>() {
                 @Override
                 public void doWithCommandResult(ZooResponse result, TestContext context) {
-                    Map<String, Object> responseData = result.getResponseData();
-                    Assert.assertNotNull(responseData);
-                    Assert.assertEquals(responseData.get("version"), 0);
+                    Assert.assertEquals(result.getResponseData().get("version"), 0);
+                }
+            });
+
+        zookeeper()
+            .get("${path}")
+            .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+                @Override
+                public void doWithCommandResult(ZooResponse result, TestContext context) {
+                    Assert.assertEquals(result.getResponseData().get("data"), "some test data");
+                }
+            });
+
+        zookeeper()
+            .set("${path}", "new data");
+
+        zookeeper()
+           .get("${path}")
+           .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+               @Override
+               public void doWithCommandResult(ZooResponse result, TestContext context) {
+                   Assert.assertEquals(result.getResponseData().get("data"), "new data");
+               }
+           });
+
+        zookeeper()
+            .create("/${randomString}/child1", "")
+            .acl("OPEN_ACL_UNSAFE")
+            .mode("PERSISTENT")
+            .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+                @Override
+                public void doWithCommandResult(ZooResponse result, TestContext context) {
+                    Assert.assertEquals(result.getResponseData().get("path"), context.replaceDynamicContentInString("/${randomString}/child1"));
+                }
+            });
+
+        zookeeper()
+            .create("/${randomString}/child2", "")
+            .acl("OPEN_ACL_UNSAFE")
+            .mode("PERSISTENT")
+            .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+                @Override
+                public void doWithCommandResult(ZooResponse result, TestContext context) {
+                    Assert.assertEquals(result.getResponseData().get("path"), context.replaceDynamicContentInString("/${randomString}/child2"));
+                }
+            });
+
+        zookeeper()
+            .children("/${randomString}")
+            .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+                @Override
+                public void doWithCommandResult(ZooResponse result, TestContext context) {
+                    Assert.assertEquals(result.getResponseData().get("children").toString(), "[child1, child2]");
                 }
             });
     }

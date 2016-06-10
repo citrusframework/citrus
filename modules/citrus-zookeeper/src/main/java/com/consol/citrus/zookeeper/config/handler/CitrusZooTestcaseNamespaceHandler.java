@@ -31,8 +31,8 @@ public class CitrusZooTestcaseNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("create", new ZooExecuteActionParser(Create.class));
         registerBeanDefinitionParser("delete", new ZooExecuteActionParser(Delete.class));
         registerBeanDefinitionParser("exists", new ZooExecuteActionParser(Exists.class));
-        registerBeanDefinitionParser("getData", new ZooExecuteActionParser(GetData.class));
-        registerBeanDefinitionParser("setData", new ZooExecuteActionParser(SetData.class));
-        registerBeanDefinitionParser("getChildren", new ZooExecuteActionParser(GetChildren.class));
+        registerBeanDefinitionParser("get", new ZooExecuteActionParser(GetData.class));
+        registerBeanDefinitionParser("set", new ZooExecuteActionParser(SetData.class));
+        registerBeanDefinitionParser("children", new ZooExecuteActionParser(GetChildren.class));
     }
 }

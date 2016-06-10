@@ -100,7 +100,7 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
     /**
      * Adds an exists command.
      */
-    public GetChildren getChildren(String path) {
+    public GetChildren children(String path) {
         GetChildren command = new GetChildren();
         command.path(path);
         action.setCommand(command);
@@ -110,7 +110,7 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
     /**
      * Adds a get-data command.
      */
-    public GetData getData(String path) {
+    public GetData get(String path) {
         GetData command = new GetData();
         command.path(path);
         action.setCommand(command);
@@ -129,7 +129,7 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
     /**
      * Adds a set-data command.
      */
-    public SetData setData(String path, String data) {
+    public SetData set(String path, String data) {
         SetData command = new SetData();
         command.path(path);
         command.data(data);
@@ -157,7 +157,7 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
      * @param variableName the name of the variable to store the extracted value in
      * @return
      */
-    public ZooActionBuilder addVariableExtractor(String jsonPath, String variableName) {
+    public ZooActionBuilder extract(String jsonPath, String variableName) {
         JsonPathVariableExtractor jsonPathVariableExtractor = new JsonPathVariableExtractor();
         Map<String, String> pathVariableMap = new HashMap<>();
         pathVariableMap.put(jsonPath, variableName);
@@ -173,7 +173,7 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
      * @param expectedValue the expected value (or variable to retrieve the expected value from)
      * @return
      */
-    public ZooActionBuilder addValidator(String jsonPath, String expectedValue) {
+    public ZooActionBuilder validate(String jsonPath, String expectedValue) {
         JsonPathMessageValidationContext validationContext = action.getJsonPathMessageValidationContext();
         if(validationContext == null) {
             validationContext = new JsonPathMessageValidationContext();

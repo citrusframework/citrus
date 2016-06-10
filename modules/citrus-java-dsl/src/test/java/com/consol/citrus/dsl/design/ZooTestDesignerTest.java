@@ -55,9 +55,9 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
                 zookeeper().delete(path);
                 zookeeper().delete(path).version(version);
                 zookeeper().exists(path);
-                zookeeper().getChildren(path);
-                zookeeper().setData(path, data);
-                zookeeper().getData(path);
+                zookeeper().children(path);
+                zookeeper().set(path, data);
+                zookeeper().get(path);
             }
         };
 

@@ -39,7 +39,7 @@ public class SetData extends AbstractZooCommand<ZooResponse> {
      * Default constructor initializing the command name.
      */
     public SetData() {
-        super("zookeeper:setData");
+        super("zookeeper:set");
     }
 
     @Override

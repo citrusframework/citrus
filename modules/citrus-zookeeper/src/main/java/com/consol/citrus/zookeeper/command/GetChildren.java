@@ -41,7 +41,7 @@ public class GetChildren extends AbstractZooCommand<ZooResponse> {
      * Default constructor initializing the command name.
      */
     public GetChildren() {
-        super("zookeeper:getChildren");
+        super("zookeeper:children");
     }
 
     @Override

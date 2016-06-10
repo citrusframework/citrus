@@ -109,7 +109,7 @@
         </zookeeper:expect>
       </zookeeper:exists>
 
-      <zookeeper:getData zookeeper-client="zookeeperClient" path="/${randomString}">
+      <zookeeper:get zookeeper-client="zookeeperClient" path="/${randomString}">
         <zookeeper:expect>
           <zookeeper:result>
             <![CDATA[
@@ -121,32 +121,11 @@
             ]]>
           </zookeeper:result>
         </zookeeper:expect>
-      </zookeeper:getData>
+      </zookeeper:get>
 
-      <zookeeper:setData zookeeper-client="zookeeperClient" path="/${randomString}">
+      <zookeeper:set zookeeper-client="zookeeperClient" path="/${randomString}">
         <zookeeper:data>overwrite data with this</zookeeper:data>
-        <zookeeper:expect>
-          <zookeeper:result>
-            <![CDATA[
-            {
-              "responseData":{
-                "aversion":0,
-                "czxid":"@ignore@",
-                "dataLength":24,
-                "numChildren":0,
-                "ctime":"@ignore@",
-                "ephemeralOwner":"@ignore@",
-                "pzxid":"@ignore@",
-                "cversion":0,
-                "mtime":"@ignore@",
-                "version":1,
-                "mzxid":"@ignore@"
-              }
-            }
-            ]]>
-          </zookeeper:result>
-        </zookeeper:expect>
-      </zookeeper:setData>
+      </zookeeper:set>
 
       <zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}/child1" acl="OPEN_ACL_UNSAFE" mode="EPHEMERAL">
         <zookeeper:data></zookeeper:data>
@@ -178,7 +157,7 @@
         </zookeeper:expect>
       </zookeeper:create>
 
-      <zookeeper:getChildren zookeeper-client="zookeeperClient" path="/${randomString}">
+      <zookeeper:children zookeeper-client="zookeeperClient" path="/${randomString}">
         <zookeeper:expect>
           <zookeeper:result>
             <![CDATA[
@@ -190,7 +169,7 @@
             ]]>
           </zookeeper:result>
         </zookeeper:expect>
-      </zookeeper:getChildren>
+      </zookeeper:children>
 
       <zookeeper:delete zookeeper-client="zookeeperClient" path="/${randomString}" version="1">
         <zookeeper:expect>

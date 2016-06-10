@@ -87,7 +87,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="getData">
+  <xs:element name="get">
     <xs:annotation>
       <xs:documentation>Retrieves the data associated with a znode in Zookeeper</xs:documentation>
     </xs:annotation>
@@ -103,7 +103,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="setData">
+  <xs:element name="set">
     <xs:annotation>
       <xs:documentation>Writes data into the data field of a znode in Zookeeper</xs:documentation>
     </xs:annotation>
@@ -121,7 +121,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="getChildren">
+  <xs:element name="children">
     <xs:annotation>
       <xs:documentation>Retrieves the list of children of a znode in Zookeeper</xs:documentation>
     </xs:annotation>
