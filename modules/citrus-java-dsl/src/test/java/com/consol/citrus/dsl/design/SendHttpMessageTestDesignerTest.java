@@ -102,6 +102,36 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
+                http().client(httpClient)
+                        .get()
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate();
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 3L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+    }
+
+    @Test
+    public void testHttpMethodDeprecated() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
                 send(httpClient)
                         .http()
                         .method(HttpMethod.GET)
@@ -130,6 +160,39 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndPath() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                http().client(httpClient)
+                        .get("/test")
+                        .uri("http://localhost:8080/")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate();
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+    }
+
+    @Test
+    public void testHttpRequestUriAndPathDeprecated() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
@@ -163,6 +226,41 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndQueryParams() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                http().client(httpClient)
+                        .get()
+                        .uri("http://localhost:8080/")
+                        .queryParam("param1", "value1")
+                        .queryParam("param2", "value2")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate();
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+    }
+
+    @Test
+    public void testHttpRequestUriAndQueryParamsDeprecated() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {

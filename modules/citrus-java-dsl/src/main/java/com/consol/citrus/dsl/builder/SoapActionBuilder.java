@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,18 @@ package com.consol.citrus.dsl.builder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.http.client.HttpClient;
-import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
- * Action executes http client and server operations.
+ * Action executes soap client and server operations.
  * 
  * @author Christoph Deppisch
- * @since 2.4
+ * @since 2.6
  */
-public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestAction<TestAction>> {
+public class SoapActionBuilder extends AbstractTestActionBuilder<DelegatingTestAction<TestAction>> {
 
 	/** Spring application context */
 	private ApplicationContext applicationContext;
@@ -38,43 +38,43 @@ public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestA
 	/**
 	 * Default constructor.
 	 */
-	public HttpActionBuilder() {
+	public SoapActionBuilder() {
 		super(new DelegatingTestAction<>());
 	}
 
 	/**
-	 * Initiate http client action.
+	 * Initiate soap client action.
 	 */
-	public HttpClientActionBuilder client(HttpClient httpClient) {
-		HttpClientActionBuilder clientAction = new HttpClientActionBuilder(action, httpClient)
+	public SoapClientActionBuilder client(WebServiceClient soapClient) {
+		SoapClientActionBuilder clientAction = new SoapClientActionBuilder(action, soapClient)
 				.withApplicationContext(applicationContext);
 		return clientAction;
 	}
 
 	/**
-	 * Initiate http client action.
+	 * Initiate soap client action.
 	 */
-	public HttpClientActionBuilder client(String httpClient) {
-		HttpClientActionBuilder clientAction = new HttpClientActionBuilder(action, httpClient)
+	public SoapClientActionBuilder client(String soapClient) {
+		SoapClientActionBuilder clientAction = new SoapClientActionBuilder(action, soapClient)
 				.withApplicationContext(applicationContext);
 		return clientAction;
 	}
 
 	/**
-	 * Initiate http server action.
+	 * Initiate soap server action.
 	 */
-	public HttpServerActionBuilder server(HttpServer httpServer) {
-		HttpServerActionBuilder serverAction = new HttpServerActionBuilder(action, httpServer)
+	public SoapServerActionBuilder server(WebServiceServer soapServer) {
+		SoapServerActionBuilder serverAction = new SoapServerActionBuilder(action, soapServer)
 				.withApplicationContext(applicationContext);
 		return serverAction;
 	}
 
 	/**
-	 * Initiate http server action.
+	 * Initiate soap server action.
 	 */
-	public HttpServerActionBuilder server(String httpServer) {
+	public SoapServerActionBuilder server(String soapServer) {
 		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-		HttpServerActionBuilder serverAction = new HttpServerActionBuilder(action, applicationContext.getBean(httpServer, Endpoint.class))
+		SoapServerActionBuilder serverAction = new SoapServerActionBuilder(action, applicationContext.getBean(soapServer, Endpoint.class))
 				.withApplicationContext(applicationContext);
 		return serverAction;
 	}
@@ -83,7 +83,7 @@ public class HttpActionBuilder extends AbstractTestActionBuilder<DelegatingTestA
 	 * Sets the Spring bean application context.
 	 * @param applicationContext
 	 */
-	public HttpActionBuilder withApplicationContext(ApplicationContext applicationContext) {
+	public SoapActionBuilder withApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 		return this;
 	}

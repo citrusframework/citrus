@@ -453,10 +453,16 @@ public interface TestRunner extends ApplicationContextAware {
     DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer);
 
     /**
-     * Run docker command action.
+     * Run http command action.
      * @return
      */
     TestAction http(BuilderSupport<HttpActionBuilder> configurer);
+
+    /**
+     * Run soap command action.
+     * @return
+     */
+    TestAction soap(BuilderSupport<SoapActionBuilder> configurer);
 
     /**
      * Run Camel route actions.

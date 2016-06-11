@@ -54,6 +54,7 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
     }
 
     @Override
+    @Deprecated
     public FinallySequenceBuilder doFinally(TestAction... actions) {
         return target.doFinally(actions);
     }

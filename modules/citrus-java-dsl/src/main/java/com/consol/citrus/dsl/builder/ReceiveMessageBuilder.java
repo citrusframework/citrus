@@ -601,6 +601,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     /**
      * Enable SOAP specific properties on this receiving message action.
      * @return
+     * @deprecated since 2.6 in favor of using {@link SoapActionBuilder}
      */
     public ReceiveSoapMessageBuilder soap() {
         ReceiveSoapMessageAction receiveSoapMessageAction = new ReceiveSoapMessageAction();
@@ -639,6 +640,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     /**
      * Enable HTTP specific properties on this receiving message action.
      * @return
+     * @deprecated since 2.6 in favor of using {@link HttpActionBuilder}
      */
     public ReceiveHttpMessageBuilder http() {
         ReceiveHttpMessageBuilder builder = new ReceiveHttpMessageBuilder(action);

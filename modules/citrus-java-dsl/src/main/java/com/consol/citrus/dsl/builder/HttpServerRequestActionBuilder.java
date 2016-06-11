@@ -72,18 +72,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
     }
 
     /**
-     * Set the endpoint URI for the request. This works only if the HTTP endpoint used
-     * doesn't provide an own endpoint URI resolver.
-     *
-     * @param uri absolute URI to use for the endpoint
-     * @return self
-     */
-    public HttpServerRequestActionBuilder uri(String uri) {
-        httpMessage.uri(uri);
-        return this;
-    }
-
-    /**
      * Adds a query param to the request uri.
      * @param name
      * @param value

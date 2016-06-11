@@ -467,6 +467,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param testAction the nested testAction
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#assertException()}
      */
     AssertExceptionBuilder assertException(TestAction testAction);
 
@@ -496,6 +497,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param testAction
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#assertSoapFault()}
      */
     AssertSoapFaultBuilder assertSoapFault(TestAction testAction);
 
@@ -632,6 +634,11 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      */
     HttpActionBuilder http();
+
+    /**
+     *
+     */
+    SoapActionBuilder soap();
 
     /**
      * Creates a new Camel route action.

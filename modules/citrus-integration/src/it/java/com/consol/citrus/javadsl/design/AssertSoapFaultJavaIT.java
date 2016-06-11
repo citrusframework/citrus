@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class AssertSoapFaultJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void assertSoapFaultActionNested() {
+    public void assertSoapFaultActionNestedDeprecated() {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
 
@@ -35,11 +35,11 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusTestDesigner {
                 send("webServiceHelloClient")
                         .soap()
                         .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:Message>This is invalid</ns0:Message>" +
+                                    "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>")
         ).faultString("Invalid request")
         .faultCode("{http://www.citrusframework.org/faults}TEC-1001");
-        
+
         assertSoapFault(
             send("webServiceHelloClient")
                 .soap()
@@ -48,7 +48,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusTestDesigner {
                         "</ns0:SoapFaultForcingRequest>")
         ).faultString("@ignore@")
         .faultCode("{http://www.citrusframework.org/faults}TEC-1001");
-        
+
         assertSoapFault(
             send("webServiceHelloClient")
                 .soap()
@@ -67,10 +67,46 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusTestDesigner {
         assertSoapFault()
                 .faultString("Invalid request")
                 .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+        .when(soap().client("webServiceHelloClient")
+                        .send()
+                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:Message>This is invalid</ns0:Message>" +
+                                "</ns0:SoapFaultForcingRequest>")
+        );
+
+        assertSoapFault()
+                .faultString("@ignore@")
+                .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+        .when(soap().client("webServiceHelloClient")
+                .send()
+                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            "<ns0:Message>This is invalid</ns0:Message>" +
+                        "</ns0:SoapFaultForcingRequest>")
+        );
+
+        assertSoapFault()
+                .faultString("${soapFaultString}")
+                .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
+        .when(soap().client("webServiceHelloClient")
+                        .send()
+                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:Message>This is invalid</ns0:Message>" +
+                                "</ns0:SoapFaultForcingRequest>")
+        );
+    }
+
+    @CitrusTest
+    public void assertSoapFaultActionDeprecated() {
+        variable("soapFaultCode", "TEC-1001");
+        variable("soapFaultString", "Invalid request");
+
+        assertSoapFault()
+                .faultString("Invalid request")
+                .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
         .when(send("webServiceHelloClient")
                         .soap()
                         .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:Message>This is invalid</ns0:Message>" +
+                                    "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>")
         );
 
@@ -80,7 +116,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusTestDesigner {
         .when(send("webServiceHelloClient")
                 .soap()
                 .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                        "<ns0:Message>This is invalid</ns0:Message>" +
+                            "<ns0:Message>This is invalid</ns0:Message>" +
                         "</ns0:SoapFaultForcingRequest>")
         );
 
@@ -90,7 +126,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusTestDesigner {
         .when(send("webServiceHelloClient")
                         .soap()
                         .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:Message>This is invalid</ns0:Message>" +
+                                    "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>")
         );
     }

@@ -17,8 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -27,9 +26,54 @@ import org.testng.annotations.Test;
  */
 @Test
 public class AssertSoapFaultTestRunnerIT extends TestNGCitrusTestRunner {
-    
+
     @CitrusTest
     public void assertSoapFaultAction() {
+        variable("soapFaultCode", "TEC-1001");
+        variable("soapFaultString", "Invalid request");
+
+        assertSoapFault().faultString("Invalid request")
+                .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+                .when(soap(new BuilderSupport<SoapActionBuilder>() {
+                    @Override
+                    public void configure(SoapActionBuilder builder) {
+                        builder.client("webServiceHelloClient")
+                                .send()
+                                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                        "<ns0:Message>This is invalid</ns0:Message>" +
+                                        "</ns0:SoapFaultForcingRequest>");
+                    }
+                }));
+
+        assertSoapFault().faultString("@ignore@")
+                .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+                .when(soap(new BuilderSupport<SoapActionBuilder>() {
+                    @Override
+                    public void configure(SoapActionBuilder builder) {
+                        builder.client("webServiceHelloClient")
+                                .send()
+                                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                        "<ns0:Message>This is invalid</ns0:Message>" +
+                                        "</ns0:SoapFaultForcingRequest>");
+                    }
+                }));
+
+        assertSoapFault().faultString("${soapFaultString}")
+                .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
+                .when(soap(new BuilderSupport<SoapActionBuilder>() {
+                    @Override
+                    public void configure(SoapActionBuilder builder) {
+                        builder.client("webServiceHelloClient")
+                                .send()
+                                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                        "<ns0:Message>This is invalid</ns0:Message>" +
+                                        "</ns0:SoapFaultForcingRequest>");
+                    }
+                }));
+    }
+
+    @CitrusTest
+    public void assertSoapFaultActionDeprecated() {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         

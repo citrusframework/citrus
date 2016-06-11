@@ -434,6 +434,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     /**
      * Enable SOAP specific properties on this message sending action.
      * @return
+     * @deprecated since 2.6 in favor of using {@link SoapActionBuilder}
      */
     public SendSoapMessageBuilder soap() {
         SendSoapMessageAction sendSoapMessageAction = new SendSoapMessageAction();
@@ -464,6 +465,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      *
      *
      * @return HTTP specific builder.
+     * @deprecated since 2.6 in favor of using {@link HttpActionBuilder}
      */
     public SendHttpMessageBuilder http() {
         SendHttpMessageBuilder builder = new SendHttpMessageBuilder(action);

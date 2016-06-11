@@ -525,6 +525,14 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public TestAction soap(BuilderSupport<SoapActionBuilder> configurer) {
+        SoapActionBuilder builder = new SoapActionBuilder();
+        builder.withApplicationContext(applicationContext);
+        configurer.configure(builder);
+        return run(builder.build()).getDelegate();
+    }
+
+    @Override
     public AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         CamelRouteActionBuilder builder = new CamelRouteActionBuilder();
         builder.withApplicationContext(applicationContext);

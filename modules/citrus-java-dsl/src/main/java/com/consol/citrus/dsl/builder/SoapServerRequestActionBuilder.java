@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,38 +18,52 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
-import com.consol.citrus.ws.message.SoapAttachment;
+import com.consol.citrus.ws.message.*;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 
 /**
- * Special SOAP receive message action builder adds SOAP specific properties.
- * 
  * @author Christoph Deppisch
- * @since 2.3
- * @deprecated since 2.6 in favour of using {@link SoapActionBuilder}
+ * @since 2.6
  */
-public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoapMessageAction, ReceiveSoapMessageBuilder> {
+public class SoapServerRequestActionBuilder extends ReceiveMessageBuilder<ReceiveSoapMessageAction, SoapServerRequestActionBuilder> {
+
+    /** Soap message to send or receive */
+    private SoapMessage soapMessage = new SoapMessage();
 
     /**
-     * Default constructor using action and application context.
-     * @param action
+     * Default constructor using soap client endpoint.
+     * @param delegate
+     * @param soapServer
      */
-    public ReceiveSoapMessageBuilder(ReceiveSoapMessageAction action) {
-        super(action);
+    public SoapServerRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapServer) {
+        super(new ReceiveSoapMessageAction());
+        getAction().setEndpoint(soapServer);
+        message(soapMessage);
+        messageType(MessageType.XML);
+        delegate.setDelegate(getAction());
+    }
+
+    @Override
+    protected void setPayload(String payload) {
+        soapMessage.setPayload(payload);
     }
 
     /**
-     * Constructor using delegate test action.
-     * @param action
+     * Sets special SOAP action message header.
+     * @param soapAction
+     * @return
      */
-    public ReceiveSoapMessageBuilder(DelegatingTestAction<TestAction> action) {
-        super(action);
+    public SoapServerRequestActionBuilder soapAction(String soapAction) {
+        soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
+        return this;
     }
 
     /**
@@ -59,7 +73,7 @@ public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoap
      * @param content
      * @return
      */
-    public ReceiveSoapMessageBuilder attachment(String contentId, String contentType, String content) {
+    public SoapServerRequestActionBuilder attachment(String contentId, String contentType, String content) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
@@ -69,7 +83,7 @@ public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoap
 
         return this;
     }
-    
+
     /**
      * Sets the control attachment with content resource.
      * @param contentId
@@ -77,7 +91,7 @@ public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoap
      * @param contentResource
      * @return
      */
-    public ReceiveSoapMessageBuilder attachment(String contentId, String contentType, Resource contentResource) {
+    public SoapServerRequestActionBuilder attachment(String contentId, String contentType, Resource contentResource) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
@@ -89,28 +103,28 @@ public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoap
         }
 
         getAction().getAttachments().add(attachment);
-        
+
         return this;
     }
-    
+
     /**
      * Sets the charset name for this send action builder's control attachment.
      * @param charsetName
      * @return
      */
-    public ReceiveSoapMessageBuilder charset(String charsetName) {
+    public SoapServerRequestActionBuilder charset(String charsetName) {
         if (!getAction().getAttachments().isEmpty()) {
             getAction().getAttachments().get(getAction().getAttachments().size() - 1).setCharsetName(charsetName);
         }
         return this;
     }
-    
+
     /**
      * Sets the control attachment from Java object instance.
      * @param attachment
      * @return
      */
-    public ReceiveSoapMessageBuilder attachment(SoapAttachment attachment) {
+    public SoapServerRequestActionBuilder attachment(SoapAttachment attachment) {
         getAction().getAttachments().add(attachment);
         return this;
     }
@@ -120,25 +134,33 @@ public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoap
      * @param validator
      * @return
      */
-    public ReceiveSoapMessageBuilder attachmentValidator(SoapAttachmentValidator validator) {
+    public SoapServerRequestActionBuilder attachmentValidator(SoapAttachmentValidator validator) {
         getAction().setAttachmentValidator(validator);
         return this;
     }
-    
-    @Override
-    @Deprecated
-    public ReceiveSoapMessageBuilder soap() {
+
+    /**
+     * Sets the request content type header.
+     * @param contentType
+     * @return
+     */
+    public SoapServerRequestActionBuilder contentType(String contentType) {
+        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Content-Type", contentType);
         return this;
     }
 
-    @Override
-    @Deprecated
-    public ReceiveHttpMessageBuilder http() {
-        throw new CitrusRuntimeException("Invalid use of http and soap action builder");
+    /**
+     * Sets the request accept header.
+     * @param accept
+     * @return
+     */
+    public SoapServerRequestActionBuilder accept(String accept) {
+        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Accept", accept);
+        return this;
     }
 
     @Override
     protected ReceiveSoapMessageAction getAction() {
-        return (ReceiveSoapMessageAction) action.getDelegate();
+        return (ReceiveSoapMessageAction) super.getAction();
     }
 }

@@ -17,9 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -35,6 +33,76 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
+        soap(new BuilderSupport<SoapActionBuilder>() {
+            @Override
+            public void configure(SoapActionBuilder builder) {
+                builder.client("webServiceClient")
+                        .send()
+                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                    "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                    "<ns0:User>${user}</ns0:User>" +
+                                    "<ns0:Text>Hello WebServer</ns0:Text>" +
+                                "</ns0:HelloRequest>")
+                        .header("{http://citrusframework.org/test}Operation", "sayHello")
+                        .fork(true);
+            }
+        });
+        
+        soap(new BuilderSupport<SoapActionBuilder>() {
+            @Override
+            public void configure(SoapActionBuilder builder) {
+                builder.server("webServiceRequestReceiver")
+                        .receive()
+                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                    "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                    "<ns0:User>${user}</ns0:User>" +
+                                    "<ns0:Text>Hello WebServer</ns0:Text>" +
+                                "</ns0:HelloRequest>")
+                        .schemaValidation(false)
+                        .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
+            }
+        });
+            
+        soap(new BuilderSupport<SoapActionBuilder>() {
+            @Override
+            public void configure(SoapActionBuilder builder) {
+                builder.server("webServiceResponseSender")
+                        .send()
+                        .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                    "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                    "<ns0:User>WebServer</ns0:User>" +
+                                    "<ns0:Text>Hello ${user}</ns0:Text>" +
+                                "</ns0:HelloResponse>")
+                        .header("citrus_jms_correlationId", "${internal_correlation_id}");
+            }
+        });
+        
+        soap(new BuilderSupport<SoapActionBuilder>() {
+            @Override
+            public void configure(SoapActionBuilder builder) {
+                builder.client("webServiceClient")
+                        .receive()
+                        .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                    "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                    "<ns0:User>WebServer</ns0:User>" +
+                                    "<ns0:Text>Hello ${user}</ns0:Text>" +
+                                "</ns0:HelloResponse>")
+                        .schemaValidation(false)
+                        .timeout(5000L);
+            }
+        });
+    }
+
+    @CitrusTest
+    public void soapForkModeDeprecated() {
+        variable("correlationId", "citrus:randomNumber(10)");
+        variable("messageId", "citrus:randomNumber(10)");
+        variable("user", "Christoph");
+
         send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
@@ -50,7 +118,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
                         .fork(true);
             }
         });
-        
+
         receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
@@ -65,7 +133,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
                         .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
             }
         });
-            
+
         send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
@@ -79,7 +147,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
                         .header("citrus_jms_correlationId", "${internal_correlation_id}");
             }
         });
-        
+
         receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {

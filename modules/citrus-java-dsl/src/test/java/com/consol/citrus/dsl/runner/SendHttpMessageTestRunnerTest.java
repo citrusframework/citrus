@@ -21,8 +21,8 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.actions.DelegatingTestAction;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
@@ -56,6 +56,74 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFork() {
+        reset(httpClient, messageProducer);
+        when(httpClient.createProducer()).thenReturn(messageProducer);
+        when(httpClient.getActor()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
+                Assert.assertEquals(message.getPayload(String.class), "Foo");
+                return null;
+            }
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                http(new BuilderSupport<HttpActionBuilder>() {
+                    @Override
+                    public void configure(HttpActionBuilder builder) {
+                        builder.client(httpClient)
+                                .get()
+                                .messageType(MessageType.PLAINTEXT)
+                                .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
+                                    .header("additional", "additionalValue");
+                    }
+                });
+
+                http(new BuilderSupport<HttpActionBuilder>() {
+                    @Override
+                    public void configure(HttpActionBuilder builder) {
+                        builder.client(httpClient)
+                                .get()
+                                .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
+                                .messageType(MessageType.PLAINTEXT)
+                                .fork(true);
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 2);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate()));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
+        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "additionalValue");
+
+        Assert.assertFalse(action.isForkMode());
+
+        action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate()).getDelegate());
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        Assert.assertTrue(action.isForkMode());
+    }
+
+    @Test
+    public void testForkDeprecated() {
         reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
@@ -120,11 +188,55 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         Assert.assertTrue(action.isForkMode());
-
     }
 
     @Test
     public void testHttpMethod() {
+        reset(httpClient, messageProducer);
+        when(httpClient.createProducer()).thenReturn(messageProducer);
+        when(httpClient.getActor()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
+                Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+                Assert.assertEquals(message.getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+                return null;
+            }
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                http((new BuilderSupport<HttpActionBuilder>() {
+                    @Override
+                    public void configure(HttpActionBuilder builder) {
+                        builder.client(httpClient)
+                                .get()
+                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+                    }
+                }));
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate());
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 3L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+    }
+
+    @Test
+    public void testHttpMethodDeprecated() {
         reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
@@ -167,11 +279,59 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-
     }
 
     @Test
     public void testHttpRequestUriAndPath() {
+        reset(httpClient, messageProducer);
+        when(httpClient.createProducer()).thenReturn(messageProducer);
+        when(httpClient.getActor()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
+                Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+                Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+                Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+                return null;
+            }
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                http(new BuilderSupport<HttpActionBuilder>() {
+                    @Override
+                    public void configure(HttpActionBuilder builder) {
+                        builder.client(httpClient)
+                                .get("/test")
+                                .uri("http://localhost:8080/")
+                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate());
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+    }
+
+    @Test
+    public void testHttpRequestUriAndPathDeprecated() {
         reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
@@ -217,11 +377,60 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
-
     }
 
     @Test
     public void testHttpRequestUriAndQueryParams() {
+        reset(httpClient, messageProducer);
+        when(httpClient.createProducer()).thenReturn(messageProducer);
+        when(httpClient.getActor()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Message message = (Message) invocation.getArguments()[0];
+                Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+                Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+                Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+                return null;
+            }
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                http(new BuilderSupport<HttpActionBuilder>() {
+                    @Override
+                    public void configure(HttpActionBuilder builder) {
+                        builder.client(httpClient)
+                                .get()
+                                .uri("http://localhost:8080/")
+                                .queryParam("param1", "value1")
+                                .queryParam("param2", "value2")
+                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate());
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+    }
+
+    @Test
+    public void testHttpRequestUriAndQueryParamsDeprecated() {
         reset(httpClient, messageProducer);
         when(httpClient.createProducer()).thenReturn(messageProducer);
         when(httpClient.getActor()).thenReturn(null);
@@ -267,7 +476,6 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
-
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,

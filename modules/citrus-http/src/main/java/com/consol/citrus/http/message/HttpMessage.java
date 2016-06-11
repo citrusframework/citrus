@@ -115,6 +115,7 @@ public class HttpMessage extends DefaultMessage {
      * @param requestUri
      */
     public HttpMessage uri(String requestUri) {
+        setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, requestUri);
         setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, requestUri);
         return this;
     }

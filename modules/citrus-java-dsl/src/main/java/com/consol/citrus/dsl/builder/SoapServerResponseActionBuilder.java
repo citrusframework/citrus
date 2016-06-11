@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,51 +18,42 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
-import com.consol.citrus.ws.message.SoapAttachment;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.message.*;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
 /**
- * Send action builder adding SOAP specific properties like SOAP attachment and
- * fork mode.
- * 
  * @author Christoph Deppisch
- * @since 2.3
- * @deprecated since 2.6 in favour of using {@link SoapActionBuilder}
+ * @since 2.6
  */
-public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAction, SendSoapMessageBuilder> {
+public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoapMessageAction, SoapServerResponseActionBuilder> {
+
+    /** Soap message to send or receive */
+    private SoapMessage soapMessage = new SoapMessage();
 
     /**
-     * Default constructor using action.
-     * @param action
+     * Default constructor using soap client endpoint.
+     * @param delegate
+     * @param soapServer
      */
-    public SendSoapMessageBuilder(SendSoapMessageAction action) {
-        super(action);
+    public SoapServerResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapServer) {
+        super(new SendSoapMessageAction());
+        getAction().setEndpoint(soapServer);
+        message(soapMessage);
+        delegate.setDelegate(getAction());
     }
 
-    /**
-     * Constructor using delegate test action.
-     * @param action
-     */
-    public SendSoapMessageBuilder(DelegatingTestAction<TestAction> action) {
-        super(action);
+    @Override
+    protected void setPayload(String payload) {
+        soapMessage.setPayload(payload);
     }
 
-    /**
-     * Sets special SOAP action message header.
-     * @param soapAction
-     * @return
-     */
-    public SendSoapMessageBuilder soapAction(String soapAction) {
-        header(SoapMessageHeaders.SOAP_ACTION, soapAction);
-        return this;
-    }
-    
     /**
      * Sets the attachment with string content.
      * @param contentId
@@ -70,7 +61,7 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
      * @param content
      * @return
      */
-    public SendSoapMessageBuilder attachment(String contentId, String contentType, String content) {
+    public SoapServerResponseActionBuilder attachment(String contentId, String contentType, String content) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
@@ -79,7 +70,7 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
         getAction().getAttachments().add(attachment);
         return this;
     }
-    
+
     /**
      * Sets the attachment with content resource.
      * @param contentId
@@ -87,11 +78,11 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
      * @param contentResource
      * @return
      */
-    public SendSoapMessageBuilder attachment(String contentId, String contentType, Resource contentResource) {
+    public SoapServerResponseActionBuilder attachment(String contentId, String contentType, Resource contentResource) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
-        
+
         try {
             attachment.setContent(FileUtils.readToString(contentResource));
         } catch (IOException e) {
@@ -99,46 +90,64 @@ public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAc
         }
 
         getAction().getAttachments().add(attachment);
-        
+
         return this;
     }
-    
+
     /**
      * Sets the charset name for this send action builder's attachment.
      * @param charsetName
      * @return
      */
-    public SendSoapMessageBuilder charset(String charsetName) {
+    public SoapServerResponseActionBuilder charset(String charsetName) {
         if (!getAction().getAttachments().isEmpty()) {
             getAction().getAttachments().get(getAction().getAttachments().size() - 1).setCharsetName(charsetName);
         }
         return this;
     }
-    
+
     /**
      * Sets the attachment from Java object instance.
      * @param attachment
      * @return
      */
-    public SendSoapMessageBuilder attachment(SoapAttachment attachment) {
-        getAction().getAttachments().add(attachment);
+    public SoapServerResponseActionBuilder attachment(SoapAttachment attachment) {
+        soapMessage.addAttachment(attachment);
         return this;
     }
 
-    @Override
-    @Deprecated
-    public SendSoapMessageBuilder soap() {
+    /**
+     * Sets the response status.
+     * @param status
+     * @return
+     */
+    public SoapServerResponseActionBuilder status(HttpStatus status) {
+        soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
         return this;
     }
 
-    @Override
-    @Deprecated
-    public SendHttpMessageBuilder http() {
-        throw new CitrusRuntimeException("Invalid use of http and soap action builder");
+    /**
+     * Sets the response status code.
+     * @param statusCode
+     * @return
+     */
+    public SoapServerResponseActionBuilder statusCode(Integer statusCode) {
+        soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
+        return this;
+    }
+
+    /**
+     * Sets the response content type header.
+     * @param contentType
+     * @return
+     */
+    public SoapServerResponseActionBuilder contentType(String contentType) {
+        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Content-Type", contentType);
+        return this;
     }
 
     @Override
     protected SendSoapMessageAction getAction() {
-        return (SendSoapMessageAction) action.getDelegate();
+        return (SendSoapMessageAction) super.getAction();
     }
 }

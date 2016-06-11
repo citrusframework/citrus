@@ -30,6 +30,7 @@ import org.springframework.http.HttpMethod;
  *
  * @author Christoph Deppisch
  * @since 2.3
+ * @deprecated since 2.6 in favour of using {@link HttpActionBuilder}
  */
 public class SendHttpMessageBuilder extends SendMessageBuilder<SendMessageAction, SendHttpMessageBuilder> {
 
@@ -111,11 +112,13 @@ public class SendHttpMessageBuilder extends SendMessageBuilder<SendMessageAction
     }
 
     @Override
+    @Deprecated
     public SendHttpMessageBuilder http() {
         return this;
     }
 
     @Override
+    @Deprecated
     public SendSoapMessageBuilder soap() {
         throw new CitrusRuntimeException("Invalid use of http and soap action builder");
     }

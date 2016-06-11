@@ -32,7 +32,8 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusTestDesigner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send("webServiceClient")
+        soap().client("webServiceClient")
+            .send()
             .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                           "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                           "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -48,10 +49,10 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusTestDesigner {
                         "<ns0:User>${user}</ns0:User>" +
                         "<ns0:Text>Hello WebServer</ns0:Text>" +
                     "</ns0:HelloHeader>")
-            .soap()
             .fork(true);
         
-        receive("webServiceRequestReceiver")
+        soap().server("webServiceRequestReceiver")
+            .receive()
             .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                           "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                           "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -73,7 +74,8 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusTestDesigner {
             .schemaValidation(false)
             .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
             
-        send("webServiceResponseSender")
+        soap().server("webServiceResponseSender")
+            .send()
             .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -90,6 +92,93 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusTestDesigner {
             .header("citrus_http_operation", "answerHello")
             .header("citrus_jms_correlationId", "${internal_correlation_id}");
         
+        soap().client("webServiceClient")
+            .receive()
+            .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                            "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                            "<ns0:User>WebServer</ns0:User>" +
+                            "<ns0:Text>Hello ${user}</ns0:Text>" +
+                        "</ns0:HelloResponse>")
+            .header("<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                              "<Operation xmlns=\"http://citrusframework.org/test\">@ignore@</Operation>" +
+                              "<ns0:HelloHeader xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                  "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                  "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                  "<ns0:User>${user}</ns0:User>" +
+                                  "<ns0:Text>Hello WebServer</ns0:Text>" +
+                              "</ns0:HelloHeader>" +
+                          "</SOAP-ENV:Header>")
+            .header("Operation", "answerHello")
+            .header("operation", "answerHello")
+            .schemaValidation(false)
+            .timeout(5000L);
+    }
+
+    @CitrusTest
+    public void soapHeaderFragmentDeprecated() {
+        variable("correlationId", "citrus:randomNumber(10)");
+        variable("messageId", "citrus:randomNumber(10)");
+        variable("user", "Christoph");
+
+        send("webServiceClient")
+            .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                          "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                          "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                          "<ns0:User>${user}</ns0:User>" +
+                          "<ns0:Text>Hello WebServer</ns0:Text>" +
+                      "</ns0:HelloRequest>")
+            .header("{http://citrusframework.org/test}Operation", "sayHello")
+            .header("citrus_http_operation", "sayHello")
+            .header("citrus_soap_action", "sayHello")
+            .header("<ns0:HelloHeader xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                        "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                        "<ns0:User>${user}</ns0:User>" +
+                        "<ns0:Text>Hello WebServer</ns0:Text>" +
+                    "</ns0:HelloHeader>")
+            .soap()
+            .fork(true);
+
+        receive("webServiceRequestReceiver")
+            .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                          "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                          "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                          "<ns0:User>${user}</ns0:User>" +
+                          "<ns0:Text>Hello WebServer</ns0:Text>" +
+                      "</ns0:HelloRequest>")
+            .header("Operation", "sayHello")
+            .header("operation", "sayHello")
+            .header("citrus_soap_action", "sayHello")
+            .header("<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                          "<Operation xmlns=\"http://citrusframework.org/test\">sayHello</Operation>" +
+                          "<ns0:HelloHeader xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                              "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                              "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                              "<ns0:User>${user}</ns0:User>" +
+                              "<ns0:Text>Hello WebServer</ns0:Text>" +
+                          "</ns0:HelloHeader>" +
+                      "</SOAP-ENV:Header>")
+            .schemaValidation(false)
+            .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
+
+        send("webServiceResponseSender")
+            .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                            "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                            "<ns0:User>WebServer</ns0:User>" +
+                            "<ns0:Text>Hello ${user}</ns0:Text>" +
+                        "</ns0:HelloResponse>")
+            .header("<ns0:HelloHeader xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                              "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                              "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                              "<ns0:User>${user}</ns0:User>" +
+                              "<ns0:Text>Hello WebServer</ns0:Text>" +
+                          "</ns0:HelloHeader>")
+            .header("{http://citrusframework.org/test}Operation", "answerHello")
+            .header("citrus_http_operation", "answerHello")
+            .header("citrus_jms_correlationId", "${internal_correlation_id}");
+
         receive("webServiceClient")
             .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +

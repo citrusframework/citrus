@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
 /**
- * Action executes docker commands.
+ * Action executes http client operations such as sending requests and receiving responses.
  * 
  * @author Christoph Deppisch
  * @since 2.4

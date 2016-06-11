@@ -603,6 +603,7 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    @Deprecated
     public AssertExceptionBuilder assertException(TestAction testAction) {
         AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
         removeNestedActions(testAction);
@@ -638,6 +639,7 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    @Deprecated
     public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
         AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
         removeNestedActions(testAction);
@@ -805,6 +807,14 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public HttpActionBuilder http() {
         HttpActionBuilder builder = new HttpActionBuilder()
+                .withApplicationContext(getApplicationContext());
+        action(builder);
+        return builder;
+    }
+
+    @Override
+    public SoapActionBuilder soap() {
+        SoapActionBuilder builder = new SoapActionBuilder()
                 .withApplicationContext(getApplicationContext());
         action(builder);
         return builder;

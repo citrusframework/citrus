@@ -361,6 +361,11 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    public TestAction soap(BuilderSupport<SoapActionBuilder> configurer) {
+        return testRunner.soap(configurer);
+    }
+
+    @Override
     public AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         return testRunner.camel(configurer);
     }

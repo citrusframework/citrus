@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Christoph Deppisch
  * @since 2.3
+ * @deprecated since 2.6 in favour of using {@link HttpActionBuilder}
  */
 public class ReceiveHttpMessageBuilder extends ReceiveMessageBuilder<ReceiveMessageAction, ReceiveHttpMessageBuilder> {
 
@@ -133,11 +134,13 @@ public class ReceiveHttpMessageBuilder extends ReceiveMessageBuilder<ReceiveMess
 
 
     @Override
+    @Deprecated
     public ReceiveSoapMessageBuilder soap() {
         throw new CitrusRuntimeException("Invalid use of http and soap action builder");
     }
 
     @Override
+    @Deprecated
     public ReceiveHttpMessageBuilder http() {
         return this;
     }

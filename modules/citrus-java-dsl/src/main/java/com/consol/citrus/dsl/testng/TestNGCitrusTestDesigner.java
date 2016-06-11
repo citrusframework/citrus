@@ -377,6 +377,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public AssertExceptionBuilder assertException(TestAction testAction) {
         return testDesigner.assertException(testAction);
     }
@@ -387,6 +388,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public CatchExceptionBuilder catchException(TestAction ... actions) {
         return testDesigner.catchException(actions);
     }
@@ -397,6 +399,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
         return testDesigner.assertSoapFault(testAction);
     }
@@ -407,6 +410,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public ConditionalBuilder conditional(TestAction ... actions) {
         return testDesigner.conditional(actions);
     }
@@ -416,6 +420,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public IterateBuilder iterate(TestAction ... actions) {
         return testDesigner.iterate(actions);
     }
@@ -426,6 +431,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public ParallelBuilder parallel(TestAction ... actions) {
         return testDesigner.parallel(actions);
     }
@@ -436,6 +442,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public RepeatOnErrorBuilder repeatOnError(TestAction... actions) {
         return testDesigner.repeatOnError(actions);
     }
@@ -446,6 +453,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public RepeatBuilder repeat(TestAction... actions) {
         return testDesigner.repeat(actions);
     }
@@ -456,6 +464,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public SequenceBuilder sequential(TestAction ... actions) {
         return testDesigner.sequential(actions);
     }
@@ -471,6 +480,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public TimerBuilder timer(TestAction... actions) {
         return testDesigner.timer(actions);
     }
@@ -496,6 +506,11 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    public SoapActionBuilder soap() {
+        return testDesigner.soap();
+    }
+
+    @Override
     public CamelRouteActionBuilder camel() {
         return testDesigner.camel();
     }
@@ -511,6 +526,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public FinallySequenceBuilder doFinally(TestAction ... actions) {
         return testDesigner.doFinally(actions);
     }
