@@ -22,12 +22,9 @@ import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import java.util.Date;
 
@@ -241,15 +238,6 @@ public interface TestDesigner extends ApplicationContextAware {
     LoadPropertiesAction load(String filePath);
 
     /**
-     * Creates a new purge jms queues action definition
-     * for further configuration.
-     *
-     * @param connectionFactory
-     * @return
-     */
-    PurgeJmsQueuesBuilder purgeQueues(ConnectionFactory connectionFactory);
-
-    /**
      * Purge queues using default connection factory.
      *
      * @return
@@ -273,14 +261,6 @@ public interface TestDesigner extends ApplicationContextAware {
     PurgeEndpointsBuilder purgeEndpoints();
 
     /**
-     * Creates special SOAP receive message action definition with web service server instance.
-     *
-     * @param server
-     * @return
-     */
-    ReceiveSoapMessageBuilder receive(WebServiceServer server);
-
-    /**
      * Creates receive message action definition with message endpoint instance.
      *
      * @param messageEndpoint
@@ -295,14 +275,6 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      */
     ReceiveMessageBuilder receive(String messageEndpointName);
-
-    /**
-     * Create special SOAP send message action definition with web service client instance.
-     *
-     * @param client
-     * @return
-     */
-    SendSoapMessageBuilder send(WebServiceClient client);
 
     /**
      * Create send message action definition with message endpoint instance.

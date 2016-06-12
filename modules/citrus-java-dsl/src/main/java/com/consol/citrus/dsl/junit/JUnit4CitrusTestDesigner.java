@@ -26,15 +26,12 @@ import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.server.WebServiceServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 
-import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -241,11 +238,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public PurgeJmsQueuesBuilder purgeQueues(ConnectionFactory connectionFactory) {
-        return testDesigner.purgeQueues(connectionFactory);
-    }
-
-    @Override
     public PurgeJmsQueuesBuilder purgeQueues() {
         return testDesigner.purgeQueues();
     }
@@ -261,11 +253,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public ReceiveSoapMessageBuilder receive(WebServiceServer server) {
-        return testDesigner.receive(server);
-    }
-
-    @Override
     public ReceiveMessageBuilder receive(Endpoint messageEndpoint) {
         return testDesigner.receive(messageEndpoint);
     }
@@ -273,11 +260,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     public ReceiveMessageBuilder receive(String messageEndpointName) {
         return testDesigner.receive(messageEndpointName);
-    }
-
-    @Override
-    public SendSoapMessageBuilder send(WebServiceClient client) {
-        return testDesigner.send(client);
     }
 
     @Override

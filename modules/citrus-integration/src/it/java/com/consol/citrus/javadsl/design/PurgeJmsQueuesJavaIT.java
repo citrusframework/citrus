@@ -58,7 +58,8 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusTestDesigner {
             .queue("Citrus.Queue.Dummy.Three.In")
             .queue("Citrus.Queue.Dummy.Three.Out");
         
-        purgeQueues(connectionFactory)
+        purgeQueues()
+            .connectionFactory(connectionFactory)
             .timeout(150L)
             .queue("Citrus.Queue.Dummy")
             .queue("Citrus.Queue.Dummy.One.In")

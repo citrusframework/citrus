@@ -18,23 +18,18 @@ package com.consol.citrus.dsl.junit;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.dsl.simulation.TestSimulator;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -197,7 +192,7 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public PurgeJmsQueuesAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
+    public TestAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
         return testRunner.purgeQueues(configurer);
     }
 
@@ -222,7 +217,7 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public SendSoapFaultAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
+    public TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
         return testRunner.sendSoapFault(configurer);
     }
 
@@ -352,7 +347,7 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer) {
+    public TestAction docker(BuilderSupport<DockerActionBuilder> configurer) {
         return testRunner.docker(configurer);
     }
 
@@ -367,12 +362,12 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
+    public TestAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         return testRunner.camel(configurer);
     }
 
     @Override
-    public ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
+    public TestAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
         return testRunner.zookeeper(configurer);
     }
 

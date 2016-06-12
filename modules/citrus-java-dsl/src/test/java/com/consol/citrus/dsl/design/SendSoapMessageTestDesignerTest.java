@@ -45,7 +45,6 @@ import java.util.HashMap;
 
 import static org.mockito.Mockito.*;
 
-
 /**
  * @author Christoph Deppisch
  */
@@ -89,11 +88,11 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendMessageAction.class);
         
-        SendSoapMessageAction action = (SendSoapMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
@@ -107,7 +106,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertFalse(action.isForkMode());
         
-        action = (SendSoapMessageAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
+        action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
@@ -183,7 +182,8 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                send(soapClient)
+                soap().client(soapClient)
+                    .send()
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .attachment(testAttachment);
             }
@@ -200,10 +200,10 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
@@ -219,7 +219,8 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                send(soapClient)
+                soap().client(soapClient)
+                    .send()
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
             }
@@ -236,10 +237,10 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
@@ -255,7 +256,8 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                send(soapClient)
+                soap().client(soapClient)
+                        .send()
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .attachment(testAttachment.getContentId() + 1, testAttachment.getContentType(), testAttachment.getContent() + 1)
                         .attachment(testAttachment.getContentId() + 2, testAttachment.getContentType(), testAttachment.getContent() + 2);
@@ -273,10 +275,10 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
         Assert.assertEquals(action.getAttachments().size(), 2L);
@@ -297,7 +299,8 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                send(soapClient)
+                soap().client(soapClient)
+                    .send()
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .attachment(testAttachment.getContentId(), testAttachment.getContentType(), resource);
             }
@@ -316,10 +319,10 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         
         Assert.assertEquals(action.getAttachments().get(0).getContent(), "someAttachmentData");

@@ -42,7 +42,8 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                purgeQueues(connectionFactory)
+                purgeQueues()
+                    .connectionFactory(connectionFactory)
                     .queueNames("q1", "q2", "q3")
                     .queue("q4")
                     .timeout(2000L)
@@ -71,7 +72,8 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                purgeQueues(connectionFactory)
+                purgeQueues()
+                    .connectionFactory(connectionFactory)
                     .queues(queue1, queue2)
                     .queue(queue3)
                     .timeout(2000L)

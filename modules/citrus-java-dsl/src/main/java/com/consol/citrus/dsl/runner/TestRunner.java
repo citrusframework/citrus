@@ -18,15 +18,11 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
-import com.consol.citrus.container.*;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.Template;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.SendSoapFaultAction;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Date;
@@ -221,7 +217,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    PurgeJmsQueuesAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer);
+    TestAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer);
 
     /**
      * Creates a new purge message channel action definition
@@ -264,7 +260,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    SendSoapFaultAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer);
+    TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer);
 
     /**
      * Add sleep action with default delay time.
@@ -450,7 +446,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Run docker command action.
      * @return
      */
-    DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer);
+    TestAction docker(BuilderSupport<DockerActionBuilder> configurer);
 
     /**
      * Run http command action.
@@ -468,13 +464,13 @@ public interface TestRunner extends ApplicationContextAware {
      * Run Camel route actions.
      * @return
      */
-    AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer);
+    TestAction camel(BuilderSupport<CamelRouteActionBuilder> configurer);
 
     /**
      * Run zookeeper command action.
      * @return
      */
-    ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer);
+    TestAction zookeeper(BuilderSupport<ZooActionBuilder> configurer);
 
     /**
      * Adds template container with nested test actions.

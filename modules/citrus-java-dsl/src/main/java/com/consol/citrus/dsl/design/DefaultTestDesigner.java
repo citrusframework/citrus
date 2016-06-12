@@ -25,23 +25,14 @@ import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.actions.*;
-import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.server.WebServiceServer;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
 
-import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -359,19 +350,9 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public PurgeJmsQueuesBuilder purgeQueues(ConnectionFactory connectionFactory) {
-        PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
-        action.setConnectionFactory(connectionFactory);
-        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder(action);
-        action(builder);
-        return builder;
-    }
-
-    @Override
     public PurgeJmsQueuesBuilder purgeQueues() {
-        PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
-        action.setConnectionFactory(getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
-        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder(action);
+        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder()
+                .withApplicationContext(applicationContext);
         action(builder);
         return builder;
     }
@@ -386,18 +367,7 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public PurgeEndpointsBuilder purgeEndpoints() {
-        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder();
-        builder.withApplicationContext(getApplicationContext());
-        action(builder);
-        return builder;
-    }
-
-    @Override
-    public ReceiveSoapMessageBuilder receive(WebServiceServer server) {
-        ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-        action.setEndpoint(server);
-        ReceiveSoapMessageBuilder builder = new ReceiveSoapMessageBuilder(action)
-                .messageType(MessageType.XML)
+        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder()
                 .withApplicationContext(getApplicationContext());
         action(builder);
         return builder;
@@ -428,16 +398,6 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public SendSoapMessageBuilder send(WebServiceClient client) {
-        SendSoapMessageAction action = new SendSoapMessageAction();
-        action.setEndpoint(client);
-        SendSoapMessageBuilder builder = new SendSoapMessageBuilder(action)
-                .withApplicationContext(getApplicationContext());
-        action(builder);
-        return builder;
-    }
-
-    @Override
     public SendMessageBuilder send(Endpoint messageEndpoint) {
         SendMessageAction action = new SendMessageAction();
         action.setEndpoint(messageEndpoint);
@@ -461,9 +421,8 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public SendSoapFaultBuilder sendSoapFault(String messageEndpointUri) {
-        SendSoapFaultAction action = new SendSoapFaultAction();
-        action.setEndpointUri(messageEndpointUri);
-        SendSoapFaultBuilder builder = new SendSoapFaultBuilder(action)
+        SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
+                .endpoint(messageEndpointUri)
                 .withApplicationContext(getApplicationContext());
         action(builder);
         return builder;
@@ -471,9 +430,8 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
-        SendSoapFaultAction action = new SendSoapFaultAction();
-        action.setEndpoint(messageEndpoint);
-        SendSoapFaultBuilder builder = new SendSoapFaultBuilder(action)
+        SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
+                .endpoint(messageEndpoint)
                 .withApplicationContext(getApplicationContext());
 
         action(builder);
@@ -575,22 +533,16 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public GroovyActionBuilder groovy(String script) {
-        GroovyAction action = new GroovyAction();
-        action.setScript(script);
-        GroovyActionBuilder builder = new GroovyActionBuilder(action);
+        GroovyActionBuilder builder = new GroovyActionBuilder()
+                .script(script);
         action(builder);
         return builder;
     }
 
     @Override
     public GroovyActionBuilder groovy(Resource scriptResource) {
-        GroovyAction action = new GroovyAction();
-        try {
-            action.setScript(FileUtils.readToString(scriptResource));
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read script resource", e);
-        }
-        GroovyActionBuilder builder = new GroovyActionBuilder(action);
+        GroovyActionBuilder builder = new GroovyActionBuilder()
+                .script(scriptResource);
         action(builder);
         return builder;
     }
@@ -641,25 +593,22 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     @Deprecated
     public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this)
+                .withApplicationContext(applicationContext);
+
         removeNestedActions(testAction);
         containers.push(builder.build());
         builder.actions(testAction);
 
-        if (getApplicationContext().containsBean("soapFaultValidator")) {
-            builder.validator(getApplicationContext().getBean("soapFaultValidator", SoapFaultValidator.class));
-        }
         return builder;
     }
 
     @Override
     public AssertSoapFaultBuilder assertSoapFault() {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this)
+                .withApplicationContext(applicationContext);
         containers.push(builder.build());
 
-        if (getApplicationContext().containsBean("soapFaultValidator")) {
-            builder.validator(getApplicationContext().getBean("soapFaultValidator", SoapFaultValidator.class));
-        }
         return builder;
     }
 

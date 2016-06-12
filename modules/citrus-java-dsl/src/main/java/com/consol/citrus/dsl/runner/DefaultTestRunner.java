@@ -18,27 +18,20 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.SendSoapFaultAction;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
-import javax.jms.ConnectionFactory;
 import java.util.*;
 
 /**
@@ -285,13 +278,10 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public PurgeJmsQueuesAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
-        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder();
+    public TestAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
+        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder()
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
-
-        if (!builder.hasConnectionFactory()) {
-            builder.connectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
-        }
         return run(builder.build());
     }
 
@@ -305,8 +295,8 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer) {
-        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder();
-        builder.withApplicationContext(applicationContext);
+        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder()
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build());
     }
@@ -322,18 +312,18 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer) {
-        SendMessageBuilder<SendMessageAction, SendMessageBuilder> builder = new SendMessageBuilder();
-        builder.withApplicationContext(applicationContext);
+        SendMessageBuilder<SendMessageAction, SendMessageBuilder> builder = new SendMessageBuilder()
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return (SendMessageAction) run(builder.build().getDelegate());
     }
 
     @Override
-    public SendSoapFaultAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
-        SendSoapFaultBuilder builder = new SendSoapFaultBuilder();
-        builder.withApplicationContext(applicationContext);
+    public TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
+        SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return (SendSoapFaultAction) run(builder.build().getDelegate());
+        return run(builder.build().getDelegate());
     }
 
     @Override
@@ -437,12 +427,9 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public AssertSoapFaultBuilder assertSoapFault() {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this);
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this)
+                .withApplicationContext(applicationContext);
         containers.push(builder.build());
-
-        if (applicationContext.containsBean("soapFaultValidator")) {
-            builder.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
-        }
 
         return builder;
     }
@@ -510,7 +497,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public DockerExecuteAction docker(BuilderSupport<DockerActionBuilder> configurer) {
+    public TestAction docker(BuilderSupport<DockerActionBuilder> configurer) {
         DockerActionBuilder builder = new DockerActionBuilder();
         configurer.configure(builder);
         return run(builder.build());
@@ -518,30 +505,30 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
-        HttpActionBuilder builder = new HttpActionBuilder();
-        builder.withApplicationContext(applicationContext);
+        HttpActionBuilder builder = new HttpActionBuilder()
+                    .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build()).getDelegate();
     }
 
     @Override
     public TestAction soap(BuilderSupport<SoapActionBuilder> configurer) {
-        SoapActionBuilder builder = new SoapActionBuilder();
-        builder.withApplicationContext(applicationContext);
+        SoapActionBuilder builder = new SoapActionBuilder()
+                    .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build()).getDelegate();
     }
 
     @Override
-    public AbstractCamelRouteAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
-        CamelRouteActionBuilder builder = new CamelRouteActionBuilder();
-        builder.withApplicationContext(applicationContext);
+    public TestAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
+        CamelRouteActionBuilder builder = new CamelRouteActionBuilder()
+                    .withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build()).getDelegate();
     }
 
     @Override
-    public ZooExecuteAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
+    public TestAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
         ZooActionBuilder builder = new ZooActionBuilder()
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);

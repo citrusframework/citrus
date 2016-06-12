@@ -31,35 +31,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-camel</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-jms</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-ws</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-docker</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>info.cukes</groupId>
       <artifactId>cucumber-java</artifactId>
     </dependency>

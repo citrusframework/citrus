@@ -195,4 +195,16 @@ public class AssertSoapFaultBuilder extends AbstractExceptionContainerBuilder<As
         validationContext.setSchemaRepository(schemaRepository);
         return this;
     }
+
+    /**
+     * Sets the Spring bean application context.
+     * @param applicationContext
+     */
+    public AssertSoapFaultBuilder withApplicationContext(ApplicationContext applicationContext) {
+        if (applicationContext.containsBean("soapFaultValidator")) {
+            validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+        }
+
+        return this;
+    }
 }

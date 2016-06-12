@@ -77,7 +77,8 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                receive(server)
+                soap().server(server)
+                    .receive()
                     .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                     .attachment(testAttachment);
             }
