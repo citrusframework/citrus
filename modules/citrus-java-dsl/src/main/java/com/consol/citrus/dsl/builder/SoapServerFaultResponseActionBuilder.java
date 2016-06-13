@@ -21,7 +21,7 @@ import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import com.consol.citrus.ws.message.*;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -29,10 +29,11 @@ import org.springframework.http.HttpStatus;
 import java.io.IOException;
 
 /**
+ * Construct SOAP fault sending action with given fault code, string and details.
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoapMessageAction, SoapServerResponseActionBuilder> {
+public class SoapServerFaultResponseActionBuilder extends SendMessageBuilder<SendSoapFaultAction, SoapServerFaultResponseActionBuilder> {
 
     /** Soap message to send or receive */
     private SoapMessage soapMessage = new SoapMessage();
@@ -42,9 +43,9 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param delegate
      * @param soapServer
      */
-    public SoapServerResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapServer) {
+    public SoapServerFaultResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapServer) {
         super(delegate);
-        delegate.setDelegate(new SendSoapMessageAction());
+        delegate.setDelegate(new SendSoapFaultAction());
         getAction().setEndpoint(soapServer);
         message(soapMessage);
     }
@@ -61,7 +62,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param content
      * @return
      */
-    public SoapServerResponseActionBuilder attachment(String contentId, String contentType, String content) {
+    public SoapServerFaultResponseActionBuilder attachment(String contentId, String contentType, String content) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
@@ -78,7 +79,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param contentResource
      * @return
      */
-    public SoapServerResponseActionBuilder attachment(String contentId, String contentType, Resource contentResource) {
+    public SoapServerFaultResponseActionBuilder attachment(String contentId, String contentType, Resource contentResource) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
@@ -99,7 +100,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param charsetName
      * @return
      */
-    public SoapServerResponseActionBuilder charset(String charsetName) {
+    public SoapServerFaultResponseActionBuilder charset(String charsetName) {
         if (!getAction().getAttachments().isEmpty()) {
             getAction().getAttachments().get(getAction().getAttachments().size() - 1).setCharsetName(charsetName);
         }
@@ -111,7 +112,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param attachment
      * @return
      */
-    public SoapServerResponseActionBuilder attachment(SoapAttachment attachment) {
+    public SoapServerFaultResponseActionBuilder attachment(SoapAttachment attachment) {
         soapMessage.addAttachment(attachment);
         return this;
     }
@@ -121,7 +122,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param status
      * @return
      */
-    public SoapServerResponseActionBuilder status(HttpStatus status) {
+    public SoapServerFaultResponseActionBuilder status(HttpStatus status) {
         soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
         return this;
     }
@@ -131,7 +132,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param statusCode
      * @return
      */
-    public SoapServerResponseActionBuilder statusCode(Integer statusCode) {
+    public SoapServerFaultResponseActionBuilder statusCode(Integer statusCode) {
         soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
         return this;
     }
@@ -141,13 +142,77 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @param contentType
      * @return
      */
-    public SoapServerResponseActionBuilder contentType(String contentType) {
+    public SoapServerFaultResponseActionBuilder contentType(String contentType) {
         soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
         return this;
     }
 
+    /**
+     * Adds custom SOAP fault code.
+     * @param code
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultCode(String code) {
+        getAction().setFaultCode(code);
+        return this;
+    }
+
+    /**
+     * Add custom fault string to SOAP fault message.
+     * @param faultString
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultString(String faultString) {
+        getAction().setFaultString(faultString);
+        return this;
+    }
+
+    /**
+     * Add custom fault string to SOAP fault message.
+     * @param faultActor
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultActor(String faultActor) {
+        getAction().setFaultActor(faultActor);
+        return this;
+    }
+
+    /**
+     * Adds a fault detail to SOAP fault message.
+     * @param faultDetail
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultDetail(String faultDetail) {
+        getAction().getFaultDetails().add(faultDetail);
+        return this;
+    }
+
+    /**
+     * Adds a fault detail from file resource.
+     * @param resource
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultDetailResource(Resource resource) {
+        try {
+            getAction().getFaultDetails().add(FileUtils.readToString(resource));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read fault detail resource", e);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a fault detail from file resource path.
+     * @param filePath
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultDetailResource(String filePath) {
+        getAction().getFaultDetailResourcePaths().add(filePath);
+        return this;
+    }
+
     @Override
-    protected SendSoapMessageAction getAction() {
-        return (SendSoapMessageAction) super.getAction();
+    protected SendSoapFaultAction getAction() {
+        return (SendSoapFaultAction) super.getAction();
     }
 }

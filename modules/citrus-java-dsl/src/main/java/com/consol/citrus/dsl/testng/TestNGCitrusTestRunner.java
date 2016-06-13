@@ -216,6 +216,7 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    @Deprecated
     public TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
         return testRunner.sendSoapFault(configurer);
     }

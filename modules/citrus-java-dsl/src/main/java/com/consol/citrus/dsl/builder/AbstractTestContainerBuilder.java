@@ -78,7 +78,11 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
             } else if (container.getActions().size() == i) {
                 container.addTestAction(currentAction);
             } else if (container.getActions().get(i) instanceof DelegatingTestAction) {
-                if (!currentAction.equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
+                if (currentAction instanceof DelegatingTestAction &&
+                        !((DelegatingTestAction) currentAction).getDelegate().equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
+                    container.getActions().add(i, ((DelegatingTestAction) currentAction).getDelegate());
+                } else if (!(currentAction instanceof DelegatingTestAction) &&
+                        !currentAction.equals(((DelegatingTestAction)container.getActions().get(i)).getDelegate())) {
                     container.getActions().add(i, currentAction);
                 }
             } else if (!container.getActions().get(i).equals(currentAction)) {

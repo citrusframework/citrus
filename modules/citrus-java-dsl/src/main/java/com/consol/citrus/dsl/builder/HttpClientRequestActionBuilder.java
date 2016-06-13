@@ -39,10 +39,10 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
      * @param httpClient
      */
     public HttpClientRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpClient) {
-        super();
+        super(delegate);
+        delegate.setDelegate(new SendMessageAction());
         getAction().setEndpoint(httpClient);
         getAction().setMessageBuilder(new StaticMessageContentBuilder(httpMessage));
-        delegate.setDelegate(action);
     }
 
     /**
@@ -51,10 +51,10 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
      * @param httpClientUri
      */
     public HttpClientRequestActionBuilder(DelegatingTestAction<TestAction> delegate, String httpClientUri) {
-        super();
+        super(delegate);
+        delegate.setDelegate(new SendMessageAction());
         getAction().setEndpointUri(httpClientUri);
         getAction().setMessageBuilder(new StaticMessageContentBuilder(httpMessage));
-        delegate.setDelegate(action);
     }
 
     @Override

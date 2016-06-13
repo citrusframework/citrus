@@ -39,11 +39,11 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param httpClient
      */
     public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpClient) {
-        super();
+        super(delegate);
+        delegate.setDelegate(new ReceiveMessageAction());
         getAction().setEndpoint(httpClient);
         message(httpMessage);
         messageType(MessageType.XML);
-        delegate.setDelegate(action);
     }
 
     /**
@@ -52,11 +52,11 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param httpClientUri
      */
     public HttpClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, String httpClientUri) {
-        super();
+        super(delegate);
+        delegate.setDelegate(new ReceiveMessageAction());
         getAction().setEndpointUri(httpClientUri);
         message(httpMessage);
         messageType(MessageType.XML);
-        delegate.setDelegate(action);
     }
 
     @Override

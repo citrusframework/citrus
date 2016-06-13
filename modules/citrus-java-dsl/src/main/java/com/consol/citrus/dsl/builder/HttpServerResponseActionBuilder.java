@@ -38,10 +38,10 @@ public class HttpServerResponseActionBuilder extends SendMessageBuilder<SendMess
      * @param httpServer
      */
     public HttpServerResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpServer) {
-        super();
+        super(delegate);
+        delegate.setDelegate(new SendMessageAction());
         getAction().setEndpoint(httpServer);
         message(httpMessage);
-        delegate.setDelegate(action);
     }
 
     @Override

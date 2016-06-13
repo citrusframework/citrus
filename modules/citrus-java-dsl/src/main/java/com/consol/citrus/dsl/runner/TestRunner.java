@@ -259,6 +259,7 @@ public interface TestRunner extends ApplicationContextAware {
      *
      * @param configurer
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestRunner#soap(BuilderSupport)} )}
      */
     TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer);
 

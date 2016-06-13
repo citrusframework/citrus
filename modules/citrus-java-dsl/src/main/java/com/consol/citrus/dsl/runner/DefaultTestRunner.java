@@ -319,6 +319,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    @Deprecated
     public TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
         SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
                 .withApplicationContext(applicationContext);

@@ -88,9 +88,9 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate();
+        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
@@ -186,9 +186,9 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate();
+        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);

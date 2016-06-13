@@ -96,10 +96,10 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate()));
+        SendMessageAction action = ((SendMessageAction)(((DelegatingTestAction)test.getActions().get(0)).getDelegate()));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -113,7 +113,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertFalse(action.isForkMode());
 
-        action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate()).getDelegate());
+        action = ((SendMessageAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate());
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -221,9 +221,9 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate());
+        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -314,9 +314,9 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate());
+        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -413,9 +413,9 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate()).getDelegate());
+        SendMessageAction action = ((SendMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);

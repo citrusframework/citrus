@@ -274,11 +274,13 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public SendSoapFaultBuilder sendSoapFault(String messageEndpointName) {
         return testDesigner.sendSoapFault(messageEndpointName);
     }
 
     @Override
+    @Deprecated
     public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
         return testDesigner.sendSoapFault(messageEndpoint);
     }

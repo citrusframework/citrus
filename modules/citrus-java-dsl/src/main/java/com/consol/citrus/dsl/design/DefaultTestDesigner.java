@@ -420,6 +420,7 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    @Deprecated
     public SendSoapFaultBuilder sendSoapFault(String messageEndpointUri) {
         SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
                 .endpoint(messageEndpointUri)
@@ -429,6 +430,7 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    @Deprecated
     public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
         SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
                 .endpoint(messageEndpoint)

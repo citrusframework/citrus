@@ -299,6 +299,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param messageEndpointName
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#soap()}
      */
     SendSoapFaultBuilder sendSoapFault(String messageEndpointName);
 
@@ -308,6 +309,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param messageEndpoint
      * @return
+     * @deprecated since 2.6 in favor of using {@link TestDesigner#soap()}
      */
     SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint);
 

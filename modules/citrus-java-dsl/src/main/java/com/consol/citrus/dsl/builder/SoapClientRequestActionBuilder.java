@@ -44,10 +44,10 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
      * @param soapClient
      */
     public SoapClientRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapClient) {
-        super(new SendSoapMessageAction());
+        super(delegate);
+        delegate.setDelegate(new SendSoapMessageAction());
         getAction().setEndpoint(soapClient);
         getAction().setMessageBuilder(new StaticMessageContentBuilder(soapMessage));
-        delegate.setDelegate(getAction());
     }
 
     /**
@@ -56,10 +56,10 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
      * @param soapClientUri
      */
     public SoapClientRequestActionBuilder(DelegatingTestAction<TestAction> delegate, String soapClientUri) {
-        super(new SendSoapMessageAction());
+        super(delegate);
+        delegate.setDelegate(new SendSoapMessageAction());
         getAction().setEndpointUri(soapClientUri);
         getAction().setMessageBuilder(new StaticMessageContentBuilder(soapMessage));
-        delegate.setDelegate(getAction());
     }
 
     @Override

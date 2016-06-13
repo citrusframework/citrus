@@ -29,47 +29,57 @@ import org.springframework.context.ApplicationContext;
  */
 public class SoapServerActionBuilder extends AbstractTestActionBuilder<DelegatingTestAction<TestAction>> {
 
-	/** Spring application context */
-	private ApplicationContext applicationContext;
+    /** Spring application context */
+    private ApplicationContext applicationContext;
 
-	/** Target soap client instance */
-	private final Endpoint soapServer;
+    /** Target soap client instance */
+    private final Endpoint soapServer;
 
-	/**
-	 * Default constructor.
-	 */
-	public SoapServerActionBuilder(DelegatingTestAction<TestAction> action, Endpoint soapServer) {
-		super(action);
-		this.soapServer = soapServer;
-	}
+    /**
+     * Default constructor.
+     */
+    public SoapServerActionBuilder(DelegatingTestAction<TestAction> action, Endpoint soapServer) {
+        super(action);
+        this.soapServer = soapServer;
+    }
 
-	/**
-	 * Generic request builder with request method and path.
-	 * @return
-	 */
-	public SoapServerRequestActionBuilder receive() {
-		SoapServerRequestActionBuilder soapServerRequestActionBuilder = new SoapServerRequestActionBuilder(action, soapServer)
-				.withApplicationContext(applicationContext);
-		return soapServerRequestActionBuilder;
-	}
+    /**
+     * Generic request builder for receiving SOAP messages on server.
+     * @return
+     */
+    public SoapServerRequestActionBuilder receive() {
+        SoapServerRequestActionBuilder soapServerRequestActionBuilder = new SoapServerRequestActionBuilder(action, soapServer)
+                .withApplicationContext(applicationContext);
+        return soapServerRequestActionBuilder;
+    }
 
-	/**
-	 * Generic response builder for expecting response messages on client.
-	 * @return
-	 */
-	public SoapServerResponseActionBuilder send() {
-		SoapServerResponseActionBuilder soapServerResponseActionBuilder = new SoapServerResponseActionBuilder(action, soapServer)
-				.withApplicationContext(applicationContext);
-		return soapServerResponseActionBuilder;
-	}
+    /**
+     * Generic response builder for sending SOAP response messages to client.
+     * @return
+     */
+    public SoapServerResponseActionBuilder send() {
+        SoapServerResponseActionBuilder soapServerResponseActionBuilder = new SoapServerResponseActionBuilder(action, soapServer)
+                .withApplicationContext(applicationContext);
+        return soapServerResponseActionBuilder;
+    }
 
-	/**
-	 * Sets the Spring bean application context.
-	 * @param applicationContext
-	 */
-	public SoapServerActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-		return this;
-	}
+    /**
+     * Generic response builder for sending SOAP fault messages to client.
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder sendFault() {
+        SoapServerFaultResponseActionBuilder soapServerResponseActionBuilder = new SoapServerFaultResponseActionBuilder(action, soapServer)
+                .withApplicationContext(applicationContext);
+        return soapServerResponseActionBuilder;
+    }
+
+    /**
+     * Sets the Spring bean application context.
+     * @param applicationContext
+     */
+    public SoapServerActionBuilder withApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        return this;
+    }
 
 }

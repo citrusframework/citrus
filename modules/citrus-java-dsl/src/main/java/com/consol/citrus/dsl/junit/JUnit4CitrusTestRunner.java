@@ -217,6 +217,7 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
+    @Deprecated
     public TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
         return testRunner.sendSoapFault(configurer);
     }

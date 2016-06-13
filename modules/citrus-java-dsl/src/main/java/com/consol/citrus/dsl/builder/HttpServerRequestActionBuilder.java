@@ -39,11 +39,11 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
      * @param httpServer
      */
     public HttpServerRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint httpServer) {
-        super();
+        super(delegate);
+        delegate.setDelegate(new ReceiveMessageAction());
         getAction().setEndpoint(httpServer);
         message(httpMessage);
         messageType(MessageType.XML);
-        delegate.setDelegate(action);
     }
 
     @Override

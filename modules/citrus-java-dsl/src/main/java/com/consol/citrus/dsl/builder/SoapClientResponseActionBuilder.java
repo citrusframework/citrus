@@ -45,11 +45,11 @@ public class SoapClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param soapClient
      */
     public SoapClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapClient) {
-        super(new ReceiveSoapMessageAction());
+        super(delegate);
+        delegate.setDelegate(new ReceiveSoapMessageAction());
         getAction().setEndpoint(soapClient);
         message(soapMessage);
         messageType(MessageType.XML);
-        delegate.setDelegate(getAction());
     }
 
     /**
@@ -58,11 +58,11 @@ public class SoapClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @param soapClientUri
      */
     public SoapClientResponseActionBuilder(DelegatingTestAction<TestAction> delegate, String soapClientUri) {
-        super(new ReceiveSoapMessageAction());
+        super(delegate);
+        delegate.setDelegate(new ReceiveSoapMessageAction());
         getAction().setEndpointUri(soapClientUri);
         message(soapMessage);
         messageType(MessageType.XML);
-        delegate.setDelegate(getAction());
     }
 
     @Override

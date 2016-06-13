@@ -44,11 +44,11 @@ public class SoapServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
      * @param soapServer
      */
     public SoapServerRequestActionBuilder(DelegatingTestAction<TestAction> delegate, Endpoint soapServer) {
-        super(new ReceiveSoapMessageAction());
+        super(delegate);
+        delegate.setDelegate(new ReceiveSoapMessageAction());
         getAction().setEndpoint(soapServer);
         message(soapMessage);
         messageType(MessageType.XML);
-        delegate.setDelegate(getAction());
     }
 
     @Override

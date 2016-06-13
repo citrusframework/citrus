@@ -273,11 +273,13 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    @Deprecated
     public SendSoapFaultBuilder sendSoapFault(String messageEndpointName) {
         return testDesigner.sendSoapFault(messageEndpointName);
     }
 
     @Override
+    @Deprecated
     public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
         return testDesigner.sendSoapFault(messageEndpoint);
     }
