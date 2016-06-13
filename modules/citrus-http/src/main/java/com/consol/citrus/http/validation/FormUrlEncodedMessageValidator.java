@@ -137,7 +137,7 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
      * @return
      */
     private String getFormContentType(Message message) {
-        return message.getHeader("Content-Type") != null ? message.getHeader("Content-Type").toString() : null;
+        return message.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE) != null ? message.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE).toString() : null;
     }
 
     @Override

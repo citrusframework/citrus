@@ -46,7 +46,7 @@ public class SoapMimeHeaderTestRunnerIT extends TestNGCitrusTestRunner {
                                 "</ns0:HelloRequest>")
                         .header("{http://citrusframework.org/test}Operation", "sayHello")
                         .header("citrus_http_operation", "sayHello")
-                        .header("citrus_soap_action", "sayHello")
+                        .soapAction("sayHello")
                         .fork(true);
             }
         });
@@ -64,7 +64,7 @@ public class SoapMimeHeaderTestRunnerIT extends TestNGCitrusTestRunner {
                                 "</ns0:HelloRequest>")
                         .header("Operation", "sayHello")
                         .header("operation", "sayHello")
-                        .header("citrus_soap_action", "sayHello")
+                        .soapAction("sayHello")
                         .schemaValidation(false)
                         .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
             }

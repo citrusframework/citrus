@@ -51,7 +51,7 @@ public class FormUrlEncodedMessageValidatorTest {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test")
-                                        .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                                        .setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/x-www-form-urlencoded")
                                         .setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, "/form-test");
 
         validator.validateMessage(receivedMessage, controlMessage, new TestContext(), validationContext);
@@ -63,7 +63,7 @@ public class FormUrlEncodedMessageValidatorTest {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=other")
-                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, "/form-test");
 
         validator.validateMessage(receivedMessage, controlMessage, new TestContext(), validationContext);

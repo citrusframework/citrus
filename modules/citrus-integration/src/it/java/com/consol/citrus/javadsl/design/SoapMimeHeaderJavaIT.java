@@ -42,7 +42,7 @@ public class SoapMimeHeaderJavaIT extends TestNGCitrusTestDesigner {
                       "</ns0:HelloRequest>")
             .header("{http://citrusframework.org/test}Operation", "sayHello")
             .header("citrus_http_operation", "sayHello")
-            .header("citrus_soap_action", "sayHello")
+            .soapAction("sayHello")
             .fork(true);
         
         soap().server("webServiceRequestReceiver")
@@ -55,7 +55,7 @@ public class SoapMimeHeaderJavaIT extends TestNGCitrusTestDesigner {
                       "</ns0:HelloRequest>")
             .header("Operation", "sayHello")
             .header("operation", "sayHello")
-            .header("citrus_soap_action", "sayHello")
+            .soapAction("sayHello")
             .schemaValidation(false)
             .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
             

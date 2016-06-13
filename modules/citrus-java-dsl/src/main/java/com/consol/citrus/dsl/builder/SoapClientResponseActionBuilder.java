@@ -179,7 +179,7 @@ public class SoapClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
      * @return
      */
     public SoapClientResponseActionBuilder contentType(String contentType) {
-        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Content-Type", contentType);
+        soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
         return this;
     }
 

@@ -62,7 +62,7 @@ private Marshaller marshaller;
 public void sendMessageTest() {
     send(bookRequestEndpoint)
         .payload(createAddBookRequestMessage("978-citrus:randomNumber(10)"), marshaller)
-        .header("citrus_soap_action", "addBook");
+        .header(SoapMessageHeaders.SOAP_ACTION, "addBook");
 }
 
 private AddBookRequestMessage createAddBookRequestMessage(String isbn) {

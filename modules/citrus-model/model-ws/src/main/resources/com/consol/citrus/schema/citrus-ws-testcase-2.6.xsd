@@ -79,6 +79,9 @@
                     <xs:element name="attachment" type="SoapAttachmentType" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
                 <xs:attribute name="mtom-enabled"/>
+                <xs:attribute name="soap-action"/>
+                <xs:attribute name="content-type" type="xs:string"/>
+                <xs:attribute name="accept" type="xs:string"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -134,11 +137,15 @@
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
+              <xs:attribute name="soap-action"/>
+              <xs:attribute name="content-type" type="xs:string"/>
+              <xs:attribute name="accept" type="xs:string"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
     <xs:element name="assert" type="SoapAssertActionType"/>
+    <xs:element name="assert-fault" type="SoapAssertActionType"/>
     <xs:element name="send" type="SoapSendActionType"/>
     <xs:element name="send-fault" type="SoapSendFaultActionType"/>
     <xs:element name="receive" type="SoapReceiveActionType"/>

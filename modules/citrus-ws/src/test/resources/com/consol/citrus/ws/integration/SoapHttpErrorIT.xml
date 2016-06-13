@@ -26,7 +26,7 @@
       <parallel>
         <assert exception="org.springframework.ws.client.WebServiceTransportException" message="Server Error [500]">
           <when>
-            <ws:send endpoint="helloSoapClient">
+            <ws:send endpoint="helloSoapClient" soap-action="sayHello">
               <message>
                 <data>
                   <![CDATA[
@@ -42,14 +42,13 @@
               <header>
                 <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
                 <element name="citrus_http_operation" value="sayHello"/>
-                <element name="citrus_soap_action" value="sayHello"/>
               </header>
             </ws:send>
           </when>
         </assert>
 
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
+          <ws:receive endpoint="soapRequestEndpoint" soap-action="sayHello">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -65,12 +64,11 @@
             <header>
               <element name="Operation" value="sayHello"/>
               <element name="operation" value="sayHello"/>
-              <element name="citrus_soap_action" value= "sayHello"/>
             </header>
             <extract>
               <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
             </extract>
-          </receive>
+          </ws:receive>
 
           <send endpoint="soapResponseEndpoint">
             <message>

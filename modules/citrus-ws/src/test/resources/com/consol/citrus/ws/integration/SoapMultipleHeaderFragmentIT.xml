@@ -24,7 +24,7 @@
     </variables>
 
     <actions>
-      <ws:send endpoint="helloSoapClient" fork="true">
+      <ws:send endpoint="helloSoapClient" fork="true" soap-action="sayHello">
         <message>
           <data>
             <![CDATA[
@@ -57,11 +57,10 @@
           </data>
           <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
           <element name="citrus_http_operation" value="sayHello"/>
-          <element name="citrus_soap_action" value="sayHello"/>
         </header>
       </ws:send>
 
-      <ws:receive endpoint="soapRequestEndpoint">
+      <ws:receive endpoint="soapRequestEndpoint" soap-action="sayHello">
         <message schema-validation="false">
           <data>
             <![CDATA[
@@ -93,7 +92,6 @@
           </data>
           <element name="Operation" value="sayHello"/>
           <element name="operation" value="sayHello"/>
-          <element name="citrus_soap_action" value= "sayHello"/>
         </header>
         <extract>
           <header name="citrus_jms_messageId" variable="internal_correlation_id"/>

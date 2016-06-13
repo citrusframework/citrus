@@ -185,15 +185,113 @@
       with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in <xref linkend="endpoint-adapter"/>.</para>
     </section>
 
+    <section id="soap-send-receive">
+      <title>SOAP send and receive</title>
+
+        <para>Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport
+        we might need to set special information on that messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in a XML DSL test:</para>
+
+        <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
+          xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+          xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot;
+          xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/ws/testcase
+          http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd&quot;&gt;</programlisting>
+
+        <para>Once you have added the <emphasis>ws</emphasis> namespace from above to your test case you are ready to use special send and receive operations in the test.</para>
+
+        <para><emphasis>XML DSL</emphasis></para>
+        <programlisting>&lt;ws:send endpoint=&quot;soapClient&quot; soap-action=&quot;MySoapService/sayHello&quot;&gt;
+    &lt;message&gt;
+        [...]
+    &lt;/message&gt;
+&lt;/ws:send&gt;
+
+          &lt;ws:receive endpoint=&quot;soapServer&quot; soap-action=&quot;MySoapService/sayHello&quot;&gt;
+    &lt;message&gt;
+        [...]
+    &lt;/message&gt;
+&lt;/ws:receive&gt;</programlisting>
+
+      <para>The special namespace contains following elements:</para>
+
+      <itemizedlist>
+        <listitem><emphasis>send</emphasis>: Special send operation for sending out SOAP message content.</listitem>
+        <listitem><emphasis>receive</emphasis>: Special receive operation for validating SOAP message content.</listitem>
+        <listitem><emphasis>send-fault</emphasis>: Special send operation for sending out SOAP fault message content.</listitem>
+        <listitem><emphasis>assert-fault</emphasis>: Special assertion operation for expecting a SOAP fault message as response.</listitem>
+      </itemizedlist>
+
+      <para>The special SOAP related send and receive actions can coexist with normal Citrus actions. In fact you can mix those action types as you want inside of a test case. All test actions that work with
+      SOAP message content on client and server side should use this special namespace.</para>
+
+      <para>In Java DSL we have something similar to that. The Java DSL provides special SOAP related features when calling the <emphasis>soap()</emphasis> method. With a fluent API you are able to then
+      send and receive SOAP message content as client and server.</para>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting>@CitrusTest
+public void soapTest() {
+
+    soap().client(&quot;soapClient&quot;)
+        .send()
+        .soapAction(&quot;MySoapService/sayHello&quot;)
+        .payload(&quot;...&quot;);
+
+    soap().client(&quot;soapClient&quot;)
+        .receive()
+        .payload(&quot;...&quot;);
+}</programlisting>
+
+      <para>In the following sections the SOAP related capabilities are discussed in more detail.</para>
+    </section>
+
     <section id="soap-header">
         <title>SOAP headers</title>
 
         <para>SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special <emphasis>SOAP action</emphasis> header. In case we need to set this SOAP action header we simply need to use
-        the special header key called <literal>citrus_soap_action</literal> in our test. The special header key in combination with a underlying SOAP client endpoint component constructs the SOAP action in the SOAP message as intended.</para>
+        the special <literal>soap-action</literal> attribute in our test. The special header key in combination with a underlying SOAP client endpoint component constructs the SOAP action in the SOAP message.</para>
+
+      <para><emphasis>XML DSL</emphasis></para>
+      <programlisting>&lt;ws:send endpoint=&quot;soapClient&quot; soap-action=&quot;MySoapService/sayHello&quot;&gt;
+    &lt;message&gt;
+        [...]
+    &lt;/message&gt;
+&lt;/ws:send&gt;
+
+          &lt;ws:receive endpoint=&quot;soapServer&quot; soap-action=&quot;MySoapService/sayHello&quot;&gt;
+    &lt;message&gt;
+        [...]
+    &lt;/message&gt;
+&lt;/ws:receive&gt;</programlisting>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting>@CitrusTest
+public void soapActionTest() {
+
+    soap().client(&quot;soapClient&quot;)
+        .send()
+        .soapAction(&quot;MySoapService/sayHello&quot;)
+        .payload(&quot;...&quot;);
+
+    soap().server(&quot;soapClient&quot;)
+        .receive()
+        .soapAction(&quot;MySoapService/sayHello&quot;)
+        .payload(&quot;...&quot;);
+}</programlisting>
+
+        <para>The SOAP action header is added to the message before sending and validated when used in a receive operation.</para>
+
+        <note>
+          <para>The <emphasis>soap-action</emphasis> attribute is defined in the special SOAP namespace in Citrus. We recommend to use this namespace for all your send and receive operations that deal with SOAP message content. However
+          you can also set the special SOAP action header when not using the special SOAP namespace: Just set this header in your test action:</para>
 
         <programlisting>&lt;header&gt;
     &lt;element name=&quot;citrus_soap_action&quot; value=&quot;sayHello&quot;/&gt;
 &lt;/header&gt;</programlisting>
+        </note>
 
         <para>Secondly a SOAP message is able to contain customized SOAP headers. These are key-value pairs where the key is a qualified name (QName) and the value a normal String value.</para>
 
@@ -393,6 +491,7 @@
             <para>Please keep in mind that we use the citrus-ws extension for sending SOAP faults in our test case, as shown in this very
             simple example:</para>
 
+            <para><emphasis>XML DSL</emphasis></para>
             <programlisting>&lt;ws:send-fault endpoint=&quot;helloSoapServer&quot;&gt;
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
@@ -419,6 +518,7 @@
             placed inline as XML data. As an alternative to that you can also set the fault-detail via external file resource. Just use the
             <literal>file</literal> attribute as fault detail instead of the inline CDATA definition.</para>
 
+          <para><emphasis>XML DSL</emphasis></para>
           <programlisting>&lt;ws:send-fault endpoint=&quot;helloSoapServer&quot;&gt;
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
@@ -484,6 +584,7 @@ Server: Jetty(7.0.0.pre5)
             throws a specific exception when the SOAP response is a SOAP fault element. This exception is called <literal>SoapFaultClientException</literal>
             coming from the Spring API. You as a tester can assert this kind of exception in a test case in order to expect the SOAP error.</para>
 
+            <para><emphasis>XML DSL</emphasis></para>
             <programlisting>&lt;assert class=&quot;org.springframework.ws.soap.client.SoapFaultClientException&quot;&gt;
     &lt;send endpoint=&quot;soapClient&quot;&gt;
         &lt;message&gt;
@@ -505,7 +606,8 @@ Server: Jetty(7.0.0.pre5)
             fault-code and fault-string values for validation. The basic assert action simply has no access to the actual SOAP fault elements. Fortunately we can use the
             <emphasis>citrus-ws</emphasis> namespace again which offers a special assert action implementation especially designed for SOAP faults in this case.</para>
 
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+            <para><emphasis>XML DSL</emphasis></para>
+            <programlisting>&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
            fault-actor=&quot;SERVER&quot;&gt;
   &lt;ws:when&gt;
@@ -520,7 +622,7 @@ Server: Jetty(7.0.0.pre5)
         &lt;/message&gt;
     &lt;/send&gt;
   &lt;/ws:when&gt;
-&lt;/ws:assert&gt;</programlisting>
+&lt;/ws:assert-fault&gt;</programlisting>
 
             <para>The special assert action offers several attributes to validate the expected SOAP fault. Namely these are <emphasis>"fault-code"</emphasis>,
             <emphasis>"fault-string"</emphasis> and <emphasis>"fault-actor"</emphasis>. The <emphasis>fault-code</emphasis> is defined as a QName string and
@@ -543,11 +645,12 @@ Server: Jetty(7.0.0.pre5)
             <para>Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic
             (would be great if you could share your ideas!). In the test case you can explicitly choose the validator to use:</para>
 
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+            <para><emphasis>XML DSL</emphasis></para>
+            <programlisting>&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
               fault-string=&quot;Invalid request&quot;
               fault-validator=&quot;mySpecialSoapFaultValidator&quot;&gt;
    [...]
-&lt;/ws:assert&gt;</programlisting>
+&lt;/ws:assert-fault&gt;</programlisting>
 
             <important>
                 <para>Another important thing to notice when asserting SOAP faults is the fact, that Citrus needs to have a <literal>SoapMessageFactory</literal> available in
@@ -559,11 +662,12 @@ Server: Jetty(7.0.0.pre5)
                 with id <emphasis>'messageFactory'</emphasis> by default. In case you have other beans with different identifiers please choose the
                 messageFactory in the test case assert action:</para>
 
-                <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+                <para><emphasis>XML DSL</emphasis></para>
+                <programlisting>&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
               fault-string=&quot;Invalid request&quot;
               message-factory=&quot;mySpecialMessageFactory&quot;&gt;
    [...]
-&lt;/ws:assert&gt;</programlisting>
+&lt;/ws:assert-fault&gt;</programlisting>
             </important>
 
             <important>Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the <emphasis>ws:assert</emphasis> action uses SOAP specific features
@@ -582,7 +686,8 @@ Server: Jetty(7.0.0.pre5)
 
             <para>Citrus is also able to validate SOAP fault details. See the following example for understanding how to do it:</para>
 
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+            <para><emphasis>XML DSL</emphasis></para>
+            <programlisting>&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
     &lt;ws:fault-detail&gt;
       &lt;![CDATA[
@@ -604,7 +709,7 @@ Server: Jetty(7.0.0.pre5)
             &lt;/message&gt;
         &lt;/send&gt;
     &lt;/ws:when&gt;
-&lt;/ws:assert&gt;</programlisting>
+&lt;/ws:assert-fault&gt;</programlisting>
 
             <para>The expected SOAP fault detail content is simply added to the <emphasis>ws:assert</emphasis> action. The <literal>SoapFaultValidator</literal> implementation defined in the Spring application context
             is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template.
@@ -615,7 +720,8 @@ Server: Jetty(7.0.0.pre5)
             for instance. On the fault-detail element you are able to add some validation settings such as <emphasis>schema-validation=enabled/disabled</emphasis>, custom <emphasis>schema-repository</emphasis>
             and so on.</para>
 
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+            <para><emphasis>XML DSL</emphasis></para>
+            <programlisting>&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
     &lt;ws:fault-detail schema-validation=&quot;false&quot;&gt;
       &lt;![CDATA[
@@ -630,7 +736,7 @@ Server: Jetty(7.0.0.pre5)
             [...]
         &lt;/send&gt;
     &lt;/ws:when&gt;
-&lt;/ws:assert&gt;</programlisting>
+&lt;/ws:assert-fault&gt;</programlisting>
 
             <para>Please see also the Citrus API documentation for available validator implementations and validation algorithms.</para>
 
@@ -740,7 +846,8 @@ Server: Jetty(7.0.0.pre5)
 
             <para>Of course we can also expect several fault detail elements when receiving a SOAP fault.</para>
 
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+            <para><emphasis>XML DSL</emphasis></para>
+            <programlisting>&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
     &lt;ws:fault-detail schema-validation=&quot;false&quot;&gt;
       &lt;![CDATA[
@@ -762,7 +869,7 @@ Server: Jetty(7.0.0.pre5)
             [...]
         &lt;/send&gt;
     &lt;/ws:when&gt;
-&lt;/ws:assert&gt;</programlisting>
+&lt;/ws:assert-fault&gt;</programlisting>
 
             <para>As you can see we can individually use validation settings for each fault detail. In the example above we disabled schema validation for the first fault detail element.</para>
         </section>

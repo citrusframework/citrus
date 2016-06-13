@@ -42,7 +42,7 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusTestDesigner {
                       "</ns0:HelloRequest>")
             .header("{http://citrusframework.org/test}Operation", "sayHello")
             .header("citrus_http_operation", "sayHello")
-            .header("citrus_soap_action", "sayHello")
+            .soapAction("sayHello")
             .header("<ns0:HelloHeader xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                         "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                         "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -61,7 +61,7 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusTestDesigner {
                       "</ns0:HelloRequest>")
             .header("Operation", "sayHello")
             .header("operation", "sayHello")
-            .header("citrus_soap_action", "sayHello")
+            .soapAction("sayHello")
             .header("<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                           "<Operation xmlns=\"http://citrusframework.org/test\">sayHello</Operation>" +
                           "<ns0:HelloHeader xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +

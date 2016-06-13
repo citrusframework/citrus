@@ -23,7 +23,7 @@
         </variables>
         
         <actions>
-            <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
+            <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
                        fault-string="Invalid request">
                 <ws:when>
                     <send endpoint="webServiceHelloClient">
@@ -38,9 +38,9 @@
                         </message>
                     </send>
                 </ws:when>
-            </ws:assert>
+            </ws:assert-fault>
             
-            <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
+            <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
                        fault-string="@ignore@">
                 <ws:when>
                     <send endpoint="webServiceHelloClient">
@@ -55,9 +55,9 @@
                         </message>
                     </send>
                 </ws:when>
-            </ws:assert>
+            </ws:assert-fault>
             
-            <ws:assert fault-code="{http://www.citrusframework.org/faults}${soapFaultCode}" 
+            <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}${soapFaultCode}"
                        fault-string="${soapFaultString}">
                 <ws:when>
                     <send endpoint="webServiceHelloClient">
@@ -72,7 +72,7 @@
                         </message>
                     </send>
                 </ws:when>
-            </ws:assert>
+            </ws:assert-fault>
         </actions>
     </testcase>
 </spring:beans>

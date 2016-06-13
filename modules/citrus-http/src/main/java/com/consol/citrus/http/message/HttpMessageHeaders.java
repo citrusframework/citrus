@@ -45,4 +45,10 @@ public abstract class HttpMessageHeaders {
     public static final String HTTP_REQUEST_URI = HTTP_PREFIX + "request_uri";
     
     public static final String HTTP_QUERY_PARAMS = HTTP_PREFIX + "query_params";
+
+    /** Http content type */
+    public static final String HTTP_CONTENT_TYPE = "Content-Type";
+
+    /** Http accept */
+    public static final String HTTP_ACCEPT = "Accept";
 }

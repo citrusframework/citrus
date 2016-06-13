@@ -47,6 +47,12 @@ public abstract class SoapMessageHeaders {
     /** Http request method */
     public static final String HTTP_REQUEST_METHOD = HTTP_PREFIX + "method";
 
+    /** Http content type */
+    public static final String HTTP_CONTENT_TYPE = HTTP_PREFIX + "Content-Type";
+
+    /** Http accept */
+    public static final String HTTP_ACCEPT = HTTP_PREFIX + "Accept";
+
     /** Http query parameters */
     public static final String HTTP_QUERY_PARAMS = HTTP_PREFIX + "query_params";
 

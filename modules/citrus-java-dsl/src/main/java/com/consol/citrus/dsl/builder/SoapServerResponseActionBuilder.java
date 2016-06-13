@@ -142,7 +142,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @return
      */
     public SoapServerResponseActionBuilder contentType(String contentType) {
-        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Content-Type", contentType);
+        soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
         return this;
     }
 

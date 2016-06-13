@@ -157,7 +157,7 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
      * @return
      */
     public SoapClientRequestActionBuilder contentType(String contentType) {
-        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Content-Type", contentType);
+        soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
         return this;
     }
 
@@ -167,7 +167,7 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
      * @return
      */
     public SoapClientRequestActionBuilder accept(String accept) {
-        soapMessage.header(SoapMessageHeaders.HTTP_PREFIX + "Accept", accept);
+        soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
         return this;
     }
 

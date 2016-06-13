@@ -24,7 +24,7 @@
 
     <actions>
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request">
           <ws:when>
               <send endpoint="helloSoapClient">
@@ -42,7 +42,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -90,7 +90,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-actor="SERVER">
             <ws:when>
@@ -109,7 +109,7 @@
                 </message>
               </send>
             </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -158,7 +158,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-validator="xmlSoapFaultValidator">
           <ws:fault-detail>
@@ -187,7 +187,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -235,7 +235,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-validator="xmlSoapFaultValidator">
           <ws:fault-detail schema-validation="false">
@@ -265,7 +265,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -314,7 +314,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-validator="xmlSoapFaultValidator">
           <ws:fault-detail schema-repository="helloSchemaRepository">
@@ -344,7 +344,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -393,7 +393,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-validator="xmlSoapFaultValidator">
           <ws:fault-detail schema="helloSchemaExtended">
@@ -423,7 +423,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -472,7 +472,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-validator="xmlSoapFaultValidator">
           <ws:fault-detail>
@@ -507,7 +507,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">
@@ -561,7 +561,7 @@
       </echo>
 
       <parallel>
-        <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
+        <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-validator="xmlSoapFaultValidator">
           <ws:fault-detail>
@@ -607,7 +607,7 @@
                 </message>
               </send>
           </ws:when>
-        </ws:assert>
+        </ws:assert-fault>
 
         <sequential>
           <receive endpoint="soapRequestEndpoint">

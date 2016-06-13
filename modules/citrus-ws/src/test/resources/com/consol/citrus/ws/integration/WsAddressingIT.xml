@@ -22,7 +22,7 @@
     </variables>
 
     <actions>
-      <ws:assert fault-code="{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand"
+      <ws:assert-fault fault-code="{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand"
                  fault-string="One or more mandatory SOAP header blocks not understood">
         <ws:when>
             <send endpoint="helloWsAddressingSoapClient">
@@ -44,7 +44,7 @@
                 </header>
             </send>
         </ws:when>
-      </ws:assert>
+      </ws:assert-fault>
     </actions>
   </testcase>
 </spring:beans>
