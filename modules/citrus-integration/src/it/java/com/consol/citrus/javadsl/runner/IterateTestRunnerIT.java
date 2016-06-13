@@ -23,6 +23,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+
 /**
  * @author Christoph Deppisch
  */
@@ -35,6 +37,8 @@ public class IterateTestRunnerIT extends TestNGCitrusTestRunner {
         
         iterate().condition("i lt= citrus:randomNumber(1)").index("i")
                 .actions(echo("index is: ${i}"));
+
+        iterate().condition(lessThanOrEqualTo(20)).actions(echo("index is: ${i}"));
 
         iterate().condition(new IteratingConditionExpression() {
                     @Override

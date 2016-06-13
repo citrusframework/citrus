@@ -28,6 +28,7 @@ import java.util.*;
 
 import static org.mockito.Mockito.*;
 
+import static org.hamcrest.Matchers.*;
 
 /**
  * @author Christoph Deppisch
@@ -160,6 +161,24 @@ public class IterateTest extends AbstractTestNGUnitTest {
                 return index <= 5;
             }
         });
+
+        iterate.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "5");
+
+        verify(action, times(5)).execute(context);
+    }
+
+    @Test
+    public void testHamcrestIterationConditionExpression() {
+        Iterate iterate = new Iterate();
+
+        reset(action);
+
+        iterate.setActions(Collections.singletonList(action));
+
+        iterate.setConditionExpression(new HamcrestConditionExpression(lessThanOrEqualTo(5)));
 
         iterate.execute(context);
 

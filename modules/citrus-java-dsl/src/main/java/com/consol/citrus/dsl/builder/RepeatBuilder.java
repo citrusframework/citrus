@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.builder;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import org.hamcrest.Matcher;
 
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
@@ -96,6 +97,25 @@ public class RepeatBuilder extends AbstractTestContainerBuilder<RepeatUntilTrue>
 	 */
 	public RepeatBuilder until(IteratingConditionExpression condition) {
 		action.setConditionExpression(condition);
+		return this;
+	}
+
+    /**
+	 * Aborting Hamcrest condition expression.
+	 * @param conditionMatcher
+	 */
+	public RepeatBuilder until(Matcher conditionMatcher) {
+		action.setConditionExpression(new HamcrestConditionExpression(conditionMatcher));
+		return this;
+	}
+
+	/**
+	 * Adds a Hamcrest matcher as condition expression.
+	 * @param conditionMatcher
+	 * @return
+	 */
+	public RepeatBuilder condition(Matcher conditionMatcher) {
+		action.setConditionExpression(new HamcrestConditionExpression(conditionMatcher));
 		return this;
 	}
 }

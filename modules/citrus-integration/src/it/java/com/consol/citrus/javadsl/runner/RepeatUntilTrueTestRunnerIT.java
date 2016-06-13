@@ -23,6 +23,8 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.Matchers.is;
+
 /**
  * @author Christoph Deppisch
  */
@@ -42,6 +44,9 @@ public class RepeatUntilTrueTestRunnerIT extends TestNGCitrusTestRunner {
                         return index >= 5 && StringUtils.hasText(context.getVariable("max")) ;
                     }
                 })
+                .actions(echo("index is: ${i}"));
+
+        repeat().until(is(5))
                 .actions(echo("index is: ${i}"));
         
         repeat().until("i gt= 5").index("i")

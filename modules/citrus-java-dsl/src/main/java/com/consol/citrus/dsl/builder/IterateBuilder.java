@@ -16,10 +16,10 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.container.Iterate;
-import com.consol.citrus.container.IteratingConditionExpression;
+import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import org.hamcrest.Matcher;
 
 /**
  * @author Christoph Deppisch
@@ -78,6 +78,16 @@ public class IterateBuilder extends AbstractTestContainerBuilder<Iterate> {
      */
     public IterateBuilder condition(IteratingConditionExpression condition) {
         action.setConditionExpression(condition);
+        return this;
+    }
+
+    /**
+     * Adds a Hamcrest matcher as condition expression.
+     * @param conditionMatcher
+     * @return
+     */
+    public IterateBuilder condition(Matcher conditionMatcher) {
+        action.setConditionExpression(new HamcrestConditionExpression(conditionMatcher));
         return this;
     }
     

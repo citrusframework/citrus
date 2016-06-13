@@ -25,6 +25,7 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 
@@ -87,6 +88,24 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
                 return index == 5;
             }
         });
+
+        repeatUntilTrue.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "4");
+
+        verify(action, times(4)).execute(context);
+    }
+
+    @Test
+    public void testRepeatHamcrestConditionExpression() {
+        RepeatUntilTrue repeatUntilTrue = new RepeatUntilTrue();
+
+        reset(action);
+
+        repeatUntilTrue.setActions(Collections.singletonList(action));
+
+        repeatUntilTrue.setConditionExpression(new HamcrestConditionExpression(is(5)));
 
         repeatUntilTrue.execute(context);
 

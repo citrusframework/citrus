@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.builder;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import org.hamcrest.Matcher;
 
 /**
  * @author Christoph Deppisch
@@ -26,87 +27,107 @@ import com.consol.citrus.dsl.runner.TestRunner;
  */
 public class RepeatOnErrorBuilder extends AbstractTestContainerBuilder<RepeatOnErrorUntilTrue> {
 
-	/**
+    /**
      * Default constructor using action container.
-	 * @param designer
+     * @param designer
      * @param action
      */
-	public RepeatOnErrorBuilder(TestDesigner designer, RepeatOnErrorUntilTrue action) {
-	    super(designer, action);
+    public RepeatOnErrorBuilder(TestDesigner designer, RepeatOnErrorUntilTrue action) {
+        super(designer, action);
     }
 
-	/**
-	 * Default constructor.
-	 * @param designer
-	 */
-	public RepeatOnErrorBuilder(TestDesigner designer) {
-		this(designer, new RepeatOnErrorUntilTrue());
-	}
+    /**
+     * Default constructor.
+     * @param designer
+     */
+    public RepeatOnErrorBuilder(TestDesigner designer) {
+        this(designer, new RepeatOnErrorUntilTrue());
+    }
 
-	/**
-	 * Default constructor using runner and action container.
-	 * @param runner
-	 * @param action
-	 */
-	public RepeatOnErrorBuilder(TestRunner runner, RepeatOnErrorUntilTrue action) {
-		super(runner, action);
-	}
+    /**
+     * Default constructor using runner and action container.
+     * @param runner
+     * @param action
+     */
+    public RepeatOnErrorBuilder(TestRunner runner, RepeatOnErrorUntilTrue action) {
+        super(runner, action);
+    }
 
-	/**
-	 * Default constructor using test runner.
-	 * @param runner
-	 */
-	public RepeatOnErrorBuilder(TestRunner runner) {
-		this(runner, new RepeatOnErrorUntilTrue());
-	}
+    /**
+     * Default constructor using test runner.
+     * @param runner
+     */
+    public RepeatOnErrorBuilder(TestRunner runner) {
+        this(runner, new RepeatOnErrorUntilTrue());
+    }
 
-	/**
+    /**
      * Adds a condition to this iterate container.
      * @param condition
      * @return
      */
-	public RepeatOnErrorBuilder until(String condition) {
-		action.setCondition(condition);
-		return this;
-	}
+    public RepeatOnErrorBuilder until(String condition) {
+        action.setCondition(condition);
+        return this;
+    }
 
-	/**
-	 * Adds a condition expression to this iterate container.
-	 * @param condition
-	 * @return
-	 */
-	public RepeatOnErrorBuilder until(IteratingConditionExpression condition) {
-		action.setConditionExpression(condition);
-		return this;
-	}
-	
-	/**
+    /**
+     * Adds a condition expression to this iterate container.
+     * @param condition
+     * @return
+     */
+    public RepeatOnErrorBuilder until(IteratingConditionExpression condition) {
+        action.setConditionExpression(condition);
+        return this;
+    }
+
+    /**
+     * Adds a Hamcrest condition expression to this iterate container.
+     * @param conditionMatcher
+     * @return
+     */
+    public RepeatOnErrorBuilder until(Matcher conditionMatcher) {
+        action.setConditionExpression(new HamcrestConditionExpression(conditionMatcher));
+        return this;
+    }
+
+    /**
+     * Adds a Hamcrest matcher as condition expression.
+     * @param conditionMatcher
+     * @return
+     */
+    public RepeatOnErrorBuilder condition(Matcher conditionMatcher) {
+        action.setConditionExpression(new HamcrestConditionExpression(conditionMatcher));
+        return this;
+    }
+
+    /**
      * Sets the index variable name.
      * @param indexName
      * @return
      */
-	public RepeatOnErrorBuilder index(String indexName) {
-		action.setIndexName(indexName);
-		return this;
-	}
-	
-	/**
+    public RepeatOnErrorBuilder index(String indexName) {
+        action.setIndexName(indexName);
+        return this;
+    }
+
+    /**
      * Sets the index start value.
      * @param index
      * @return
      */
-	public RepeatOnErrorBuilder startsWith(int index) {
-		action.setStart(index);
-		return this;
-	}
-	
-	/**
-	 * Sets the auto sleep time in between repeats in milliseconds.
-	 * @param autoSleep
-	 * @return
-	 */
-	public RepeatOnErrorBuilder autoSleep(long autoSleep) {
-		action.setAutoSleep(autoSleep);
-		return this;
-	}
+    public RepeatOnErrorBuilder startsWith(int index) {
+        action.setStart(index);
+        return this;
+    }
+
+    /**
+     * Sets the auto sleep time in between repeats in milliseconds.
+     * @param autoSleep
+     * @return
+     */
+    public RepeatOnErrorBuilder autoSleep(long autoSleep) {
+        action.setAutoSleep(autoSleep);
+        return this;
+    }
 }

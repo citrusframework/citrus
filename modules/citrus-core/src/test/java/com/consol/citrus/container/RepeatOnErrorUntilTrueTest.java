@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 /**
@@ -55,7 +56,7 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
     public void testRepeatOnErrorNoSuccess() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
         
-        List<TestAction> actions = new ArrayList<TestAction>();
+        List<TestAction> actions = new ArrayList<>();
 
         reset(action);
 
@@ -76,7 +77,7 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
     public void testRepeatOnErrorNoSuccessConditionExpression() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
 
-        List<TestAction> actions = new ArrayList<TestAction>();
+        List<TestAction> actions = new ArrayList<>();
 
         reset(action);
 
@@ -91,6 +92,26 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
                 return index == 5;
             }
         });
+        repeat.setAutoSleep(0L);
+
+        repeat.execute(context);
+        verify(action, times(4)).execute(context);
+    }
+
+    @Test(expectedExceptions=CitrusRuntimeException.class)
+    public void testRepeatOnErrorNoSuccessHamcrestConditionExpression() {
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
+
+        List<TestAction> actions = new ArrayList<>();
+
+        reset(action);
+
+        actions.add(action);
+        actions.add(new FailAction());
+
+        repeat.setActions(actions);
+
+        repeat.setConditionExpression(new HamcrestConditionExpression(is(5)));
         repeat.setAutoSleep(0L);
 
         repeat.execute(context);

@@ -25,6 +25,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.testng.Assert.assertEquals;
 
 public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
@@ -74,6 +75,36 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
                                     return index > 5;
                                 }
                             })
+                        .actions(echo("${var}"), sleep(100), echo("${var}"));
+            }
+        };
+
+        TestContext context = builder.getTestContext();
+        Assert.assertNotNull(context.getVariable("i"));
+        Assert.assertEquals(context.getVariable("i"), "5");
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
+        assertEquals(test.getActions().get(0).getName(), "repeat");
+
+        RepeatUntilTrue container = (RepeatUntilTrue)test.getActions().get(0);
+        assertEquals(container.getActionCount(), 3);
+        assertEquals(container.getStart(), 2);
+        assertEquals(container.getIndexName(), "i");
+        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
+    }
+
+    @Test
+    public void testRepeatBuilderWithHamcrestConditionExpression() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                variable("var", "foo");
+
+                repeat().index("i")
+                            .startsWith(2)
+                            .until(greaterThan(5))
                         .actions(echo("${var}"), sleep(100), echo("${var}"));
             }
         };
