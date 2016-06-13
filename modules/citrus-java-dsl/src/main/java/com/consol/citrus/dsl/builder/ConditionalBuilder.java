@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.builder;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import org.hamcrest.Matcher;
 
 /**
  * Action builder creates a conditional container, which executes nested test actions
@@ -29,55 +30,64 @@ import com.consol.citrus.dsl.runner.TestRunner;
  */
 public class ConditionalBuilder extends AbstractTestContainerBuilder<Conditional> {
 
-	/**
-	 * Constructor using action field.
-	 * @param designer
-	 * @param action
-	 */
-	public ConditionalBuilder(TestDesigner designer, Conditional action) {
-	    super(designer, action);
+    /**
+     * Constructor using action field.
+     * @param designer
+     * @param action
+     */
+    public ConditionalBuilder(TestDesigner designer, Conditional action) {
+        super(designer, action);
     }
 
-	/**
-	 * Default constructor.
-	 * @param designer
-	 */
-	public ConditionalBuilder(TestDesigner designer) {
-		this(designer, new Conditional());
-	}
+    /**
+     * Default constructor.
+     * @param designer
+     */
+    public ConditionalBuilder(TestDesigner designer) {
+        this(designer, new Conditional());
+    }
 
-	/**
-	 * Default constructor using runner and action container.
-	 * @param runner
-	 * @param action
-	 */
-	public ConditionalBuilder(TestRunner runner, Conditional action) {
-		super(runner, action);
-	}
+    /**
+     * Default constructor using runner and action container.
+     * @param runner
+     * @param action
+     */
+    public ConditionalBuilder(TestRunner runner, Conditional action) {
+        super(runner, action);
+    }
 
-	/**
-	 * Default constructor using test runner.
-	 * @param runner
-	 */
-	public ConditionalBuilder(TestRunner runner) {
-		this(runner, new Conditional());
-	}
+    /**
+     * Default constructor using test runner.
+     * @param runner
+     */
+    public ConditionalBuilder(TestRunner runner) {
+        this(runner, new Conditional());
+    }
 
-	/**
+    /**
      * Condition which allows execution if true.
      * @param expression
      */
-	public ConditionalBuilder when(String expression) {
-		action.setCondition(expression);
-		return this;
-	}
+    public ConditionalBuilder when(String expression) {
+        action.setCondition(expression);
+        return this;
+    }
 
-	/**
-	 * Condition which allows execution if evaluates to true.
-	 * @param expression
-	 */
-	public ConditionalBuilder when(ConditionExpression expression) {
-		action.setConditionExpression(expression);
-		return this;
-	}
+    /**
+     * Condition which allows execution if evaluates to true.
+     * @param expression
+     */
+    public ConditionalBuilder when(ConditionExpression expression) {
+        action.setConditionExpression(expression);
+        return this;
+    }
+
+    /**
+     * Condition which allows execution if evaluates to true.
+     * @param expression
+     */
+    public ConditionalBuilder when(Object value, Matcher expression) {
+        action.setConditionExpression(new HamcrestConditionExpression(expression, value));
+        return this;
+    }
 }

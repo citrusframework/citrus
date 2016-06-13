@@ -18,17 +18,16 @@ package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.BooleanExpressionParser;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Class executes nested test actions if condition expression evaluates to true.
  *
- * See {@link com.consol.citrus.util.BooleanExpressionParser} for supported
- * boolean expressions that define the conditioning.
- *
- * @author Matthias Beil
+ * @author Matthias Beil, Christoph Deppisch
  * @since 1.2
  */
 public class Conditional extends AbstractActionContainer {
@@ -71,9 +70,20 @@ public class Conditional extends AbstractActionContainer {
     private boolean checkCondition(TestContext context) {
         if (conditionExpression != null) {
             return conditionExpression.evaluate(context);
-        } else {
-            return BooleanExpressionParser.evaluate(context.replaceDynamicContentInString(this.condition));
         }
+
+        // replace dynamic content with each iteration
+        String conditionString = context.replaceDynamicContentInString(condition);
+        if (ValidationMatcherUtils.isValidationMatcherExpression(conditionString)) {
+            try {
+                ValidationMatcherUtils.resolveValidationMatcher("iteratingCondition", "", conditionString, context);
+                return true;
+            } catch (ValidationException e) {
+                return false;
+            }
+        }
+
+        return BooleanExpressionParser.evaluate(conditionString);
     }
 
     /**

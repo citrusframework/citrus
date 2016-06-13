@@ -205,7 +205,7 @@
       <para>The field value has to be a date value otherwise the matcher will fail to parse the date. The matcher requires
       a date format which is <emphasis>dd.MM.yyyy</emphasis> by default. You can change this date format as follows:</para>
 
-      <programlisting>&lt;someDate&gt;@isWeekday('MONDAY('yyyy-MM-dd'))@&lt;/someDate&gt;</programlisting>
+      <programlisting>&lt;someDate&gt;@isWeekday(MONDAY('yyyy-MM-dd'))@&lt;/someDate&gt;</programlisting>
 
       <para>Now the matcher uses the custom date format in order to parse the date value for evaluation. The validation matcher
       also works with date time values. In this case you have to give a valid date time format respectively

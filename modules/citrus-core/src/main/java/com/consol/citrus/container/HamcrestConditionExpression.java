@@ -26,21 +26,42 @@ import org.hamcrest.Matcher;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class HamcrestConditionExpression implements IteratingConditionExpression {
+public class HamcrestConditionExpression implements IteratingConditionExpression, ConditionExpression {
 
     /** Matcher for evaluation */
     private final Matcher conditionMatcher;
 
+    /** Optional value to validate */
+    private final Object value;
+
     /**
-     * Default constructor.
+     * Default constructor using default value.
      * @param conditionMatcher
      */
     public HamcrestConditionExpression(Matcher conditionMatcher) {
+        this(conditionMatcher, null);
+    }
+
+    /**
+     * Default constructor using fields.
+     * @param conditionMatcher
+     */
+    public HamcrestConditionExpression(Matcher conditionMatcher, Object value) {
         this.conditionMatcher = conditionMatcher;
+        this.value = value;
     }
 
     @Override
     public boolean evaluate(int index, TestContext context) {
         return conditionMatcher.matches(index);
+    }
+
+    @Override
+    public boolean evaluate(TestContext context) {
+        if (value instanceof String) {
+            return conditionMatcher.matches(context.replaceDynamicContentInString(value.toString()));
+        } else {
+            return conditionMatcher.matches(value);
+        }
     }
 }
