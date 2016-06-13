@@ -22,9 +22,6 @@ import com.consol.citrus.context.TestContext;
  * Class executes nested test actions in loops. Iteration continues as long
  * as looping condition evaluates to true.
  * 
- * See {@link com.consol.citrus.util.BooleanExpressionParser} for supported boolean expressions that define
- * the conditioning.
- * 
  * Each loop an index variable is incremented. The index variable is accessible inside the nested
  * test actions as normal test variable. Iteration starts with index=1 and increments with a 
  * default step=1.

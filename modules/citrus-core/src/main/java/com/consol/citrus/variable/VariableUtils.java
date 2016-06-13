@@ -63,8 +63,8 @@ public final class VariableUtils {
      * @return
      */
     public static String cutOffVariablesPrefix(String variable) {
-        if (variable.indexOf(Citrus.VARIABLE_PREFIX) == 0 && variable.charAt(variable.length()-1) == Citrus.VARIABLE_SUFFIX) {
-            return variable.substring(Citrus.VARIABLE_PREFIX.length(), variable.length()-1);
+        if (variable.startsWith(Citrus.VARIABLE_PREFIX) && variable.endsWith(Citrus.VARIABLE_SUFFIX)) {
+            return variable.substring(Citrus.VARIABLE_PREFIX.length(), variable.length() - Citrus.VARIABLE_SUFFIX.length());
         }
 
         return variable;
@@ -80,7 +80,7 @@ public final class VariableUtils {
             return false;
         }
 
-        if (expression.indexOf(Citrus.VARIABLE_PREFIX) == 0 && expression.lastIndexOf(Citrus.VARIABLE_SUFFIX) == expression.length()-1) {
+        if (expression.startsWith(Citrus.VARIABLE_PREFIX) && expression.endsWith(Citrus.VARIABLE_SUFFIX)) {
             return true;
         }
 
@@ -100,8 +100,7 @@ public final class VariableUtils {
    public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) {
        StringBuffer newStr = new StringBuffer();
 
-       boolean isVarComplete = false;
-
+       boolean isVarComplete;
        StringBuffer variableNameBuf = new StringBuffer();
 
        int startIndex = 0;
@@ -119,7 +118,7 @@ public final class VariableUtils {
                    control++;
                }
 
-               if ((!Character.isJavaIdentifierPart(str.charAt(curIndex)) && (str.charAt(curIndex) == Citrus.VARIABLE_SUFFIX)) || (curIndex+1 == str.length())) {
+               if ((!Character.isJavaIdentifierPart(str.charAt(curIndex)) && (str.charAt(curIndex) == Citrus.VARIABLE_SUFFIX.charAt(0))) || (curIndex + 1 == str.length())) {
                    if (control == 0) {
                        isVarComplete = true;
                    } else {

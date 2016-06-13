@@ -27,7 +27,6 @@ import java.util.*;
 
 import static org.mockito.Mockito.*;
 
-
 /**
  * @author Matthias Beil
  * @since 1.2
@@ -38,7 +37,6 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionFalse() {
-
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setCondition("1 = 0");
 
@@ -51,8 +49,20 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSingleAction() {
+    public void testConditionMatcherFalse() {
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setCondition("@assertThat('5', 'is(4)')@");
 
+        reset(action);
+
+        conditionalAction.setActions(Collections.singletonList(action));
+
+        conditionalAction.execute(this.context);
+        verify(action, never()).execute(this.context);
+    }
+
+    @Test
+    public void testSingleAction() {
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setCondition("1 = 1");
 
@@ -60,7 +70,26 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
         reset(action);
 
-        final List<TestAction> actionList = new ArrayList<TestAction>();
+        final List<TestAction> actionList = new ArrayList<>();
+        actionList.add(action);
+
+        conditionalAction.setActions(actionList);
+
+        conditionalAction.execute(this.context);
+
+        verify(action).execute(this.context);
+    }
+
+    @Test
+    public void testMatcherSingleAction() {
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setCondition("@assertThat('5', 'is(5)')@");
+
+        final TestAction action = Mockito.mock(TestAction.class);
+
+        reset(action);
+
+        final List<TestAction> actionList = new ArrayList<>();
         actionList.add(action);
 
         conditionalAction.setActions(actionList);
@@ -72,7 +101,6 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleActions() {
-
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setCondition("1 = 1");
 
@@ -82,7 +110,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<TestAction>();
+        final List<TestAction> actionList = new ArrayList<>();
         actionList.add(action1);
         actionList.add(action2);
         actionList.add(action3);
@@ -98,7 +126,6 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFirstActionFailing() {
-
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setCondition("1 = 1");
 
@@ -108,7 +135,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<TestAction>();
+        final List<TestAction> actionList = new ArrayList<>();
         actionList.add(new FailAction());
         actionList.add(action1);
         actionList.add(action2);
@@ -122,7 +149,6 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testLastActionFailing() {
-
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setCondition("1 = 1");
 
@@ -132,7 +158,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<TestAction>();
+        final List<TestAction> actionList = new ArrayList<>();
         actionList.add(action1);
         actionList.add(action2);
         actionList.add(action3);
@@ -149,7 +175,6 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFailingAction() {
-
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setCondition("1 = 1");
 
@@ -159,7 +184,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<TestAction>();
+        final List<TestAction> actionList = new ArrayList<>();
         actionList.add(action1);
         actionList.add(new FailAction());
         actionList.add(action2);

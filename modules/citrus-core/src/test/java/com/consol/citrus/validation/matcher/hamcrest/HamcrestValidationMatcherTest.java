@@ -64,6 +64,8 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "4", Arrays.asList("lessThan(5)")},
             new Object[]{"foo", "4", Arrays.asList("not(lessThan(1))")},
             new Object[]{"foo", "4", Arrays.asList("lessThanOrEqualTo(4)")},
+            new Object[]{"foo", "", Arrays.asList("1", "lessThanOrEqualTo(4)")},
+            new Object[]{"foo", "", Arrays.asList("4", "lessThanOrEqualTo(4)")},
             new Object[]{"foo", "[value1,value2,value3,value4,value5]", Arrays.asList("hasSize(5)") }
         };
     }
@@ -102,6 +104,7 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "5", Arrays.asList("lessThan(5)")},
             new Object[]{"foo", "0", Arrays.asList("not(lessThan(1))")},
             new Object[]{"foo", "5", Arrays.asList("lessThanOrEqualTo(4)")},
+            new Object[]{"foo", "", Arrays.asList("5", "lessThanOrEqualTo(4)")},
             new Object[]{"foo", "[value1,value2]", Arrays.asList("hasSize(5)") }
         };
     }

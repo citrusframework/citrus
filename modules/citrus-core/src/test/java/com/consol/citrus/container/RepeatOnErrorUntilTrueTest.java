@@ -22,6 +22,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -36,8 +37,8 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
-    @Test
-    public void testSuccessOnFirstIteration() {
+    @Test(dataProvider = "expressionProvider")
+    public void testSuccessOnFirstIteration(String expression) {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
 
 
@@ -46,10 +47,19 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         repeat.setActions(Collections.singletonList(action));
 
         repeat.setIndexName("i");
-        repeat.setCondition("i = 5");
+        repeat.setCondition(expression);
 
         repeat.execute(context);
         verify(action).execute(context);
+    }
+
+    @DataProvider
+    public Object[][] expressionProvider() {
+        return new Object[][] {
+                new Object[] {"i = 5"},
+                new Object[] {"@assertThat(is(5))@"},
+                new Object[] {"@assertThat('${i}', 'is(5)')@"}
+        };
     }
     
     @Test(expectedExceptions=CitrusRuntimeException.class)

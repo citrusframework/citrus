@@ -18,7 +18,6 @@ package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.BooleanExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
@@ -78,7 +77,7 @@ public class Conditional extends AbstractActionContainer {
             try {
                 ValidationMatcherUtils.resolveValidationMatcher("iteratingCondition", "", conditionString, context);
                 return true;
-            } catch (ValidationException e) {
+            } catch (AssertionError e) {
                 return false;
             }
         }

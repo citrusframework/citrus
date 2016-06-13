@@ -53,16 +53,24 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String matcherExpression = controlParameters.get(0);
+        String matcherExpression;
+        String matcherValue = value;
+
+        if (controlParameters.size() > 1) {
+            matcherValue = context.replaceDynamicContentInString(controlParameters.get(0));
+            matcherExpression = controlParameters.get(1);
+        } else {
+            matcherExpression = controlParameters.get(0);
+        }
 
         String matcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
         String[] matcherParameter = matcherExpression.trim().substring(matcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
         if (noArgumentCollectionMatchers.contains(matcherName) || collectionMatchers.contains(matcherName)) {
-            assertThat(getCollection(value), getMatcher(matcherName, matcherParameter));
+            assertThat(getCollection(matcherValue), getMatcher(matcherName, matcherParameter));
             return;
         } else {
-            assertThat(value, getMatcher(matcherName, matcherParameter));
+            assertThat(matcherValue, getMatcher(matcherName, matcherParameter));
             return;
         }
     }

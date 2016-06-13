@@ -22,6 +22,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -37,15 +38,15 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
-    @Test
-    public void testIteration() {
+    @Test(dataProvider = "expressionProvider")
+    public void testIteration(String expression) {
         Iterate iterate = new Iterate();
 
         reset(action);
 
         iterate.setActions(Collections.singletonList(action));
 
-        iterate.setCondition("i lt= 5");
+        iterate.setCondition(expression);
         iterate.setIndexName("i");
 
         iterate.execute(context);
@@ -55,7 +56,16 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
         verify(action, times(5)).execute(context);
     }
-    
+
+    @DataProvider
+    public Object[][] expressionProvider() {
+        return new Object[][] {
+            new Object[] {"i lt= 5"},
+            new Object[] {"@assertThat(lessThanOrEqualTo(5))@"},
+            new Object[] {"@assertThat('${i}', 'lessThanOrEqualTo(5)')@"}
+        };
+    }
+
     @Test
     public void testStep() {
         Iterate iterate = new Iterate();

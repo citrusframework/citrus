@@ -23,6 +23,9 @@
         GITHUB-100 Java DSL should support test behavior inside test container
       </action>
       <action dev="christophd" type="add">
+        CITRUS-57 Hamcrest matcher in iteration conditions
+      </action>
+      <action dev="christophd" type="add">
         CITRUS-56 Cucumber BDD support
       </action>
       <action dev="christophd" type="add">

@@ -108,7 +108,7 @@ public final class Citrus {
 
     /** Prefix/sufix used to identify variable expressions */
     public static final String VARIABLE_PREFIX = "${";
-    public static final char VARIABLE_SUFFIX = '}';
+    public static final String VARIABLE_SUFFIX = "}";
 
     /** Default application context name */
     public static final String DEFAULT_APPLICATION_CONTEXT_PROPERTY = "citrus.spring.application.context";

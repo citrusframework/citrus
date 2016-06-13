@@ -13,6 +13,29 @@
       test. See details for this feature in <xref linkend="cucumber"/>.</para>
   </section>
 
+  <section id="new-2-6-zookeeper">
+    <title>Zookeeper support</title>
+
+    <para>Zookeeper from Apache lets you manage configuration with distributed coordination. As a user you create and edit values on a Zookeeper server. Other clients then can retrieve this information. With Citrus you are able to
+      access this information from within a test case. The Zookeeper Citrus client lets you manage information on the Zookeeper server. See details for this feature in <xref linkend="zookeeper"/>.</para>
+  </section>
+
+  <section id="new-2-6-restdocs">
+    <title>Spring Restdocs support</title>
+
+    <para>Restdocs is a fantastic way of generating documentation for RESTful APIs. While exchanging request/response data with the server Restdocs creates documentation information on the data. The documentation includes field descriptions,
+      headers and snippets for body content. With new Citrus version Http clients in Citrus can add Restdoc interceptors that generate the documentation while executing the test cases. This way you are able to document what messages were exchanged
+      in tests. The Restdocs support is also available for the SOAP Http client in Citrus. See details in <xref linkend="restdocs"/>.</para>
+  </section>
+
+  <section id="new-2-6-hamcrest-conditions">
+    <title>Hamcrest matcher conditions</title>
+
+    <para>Iterating test action containers in Citrus evaluate boolean expressions for determination of how to execute the nested actions in a loop. Also the conditional container executes nested actions based on boolean expression evaluation.
+      The Citrus boolean expression support is limited to very basic operations such as lower than or greater than. Furthermore the combination of boolean expressions with variables has not been supported. Following from that we have improved the
+      boolean expression evaluation mechanism with extension to Hamcrest matchers. So now you can evaluate matchers in iterating conditions. This feature is described in <xref linkend="containers-conditional"/> and <xref linkend="containers-iterate"/>.</para>
+  </section>
+
   <section id="new-2-6-bugfixes">
     <title>Bugfixes</title>
 

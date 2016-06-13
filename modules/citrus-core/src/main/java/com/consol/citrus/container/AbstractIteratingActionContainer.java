@@ -16,9 +16,14 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.springframework.util.PropertyPlaceholderHelper;
+
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
@@ -74,7 +79,23 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         }
 
         // replace dynamic content with each iteration
-        String conditionString = context.replaceDynamicContentInString(condition);
+        String conditionString = condition;
+        if (conditionString.indexOf(Citrus.VARIABLE_PREFIX + indexName + Citrus.VARIABLE_SUFFIX) != -1) {
+            Properties props = new Properties();
+            props.put(indexName, String.valueOf(index));
+            conditionString = new PropertyPlaceholderHelper(Citrus.VARIABLE_PREFIX, Citrus.VARIABLE_SUFFIX).replacePlaceholders(conditionString, props);
+        }
+
+        conditionString = context.replaceDynamicContentInString(conditionString);
+
+        if (ValidationMatcherUtils.isValidationMatcherExpression(conditionString)) {
+            try {
+                ValidationMatcherUtils.resolveValidationMatcher("iteratingCondition", String.valueOf(index), conditionString, context);
+                return true;
+            } catch (AssertionError e) {
+                return false;
+            }
+        }
 
         if (conditionString.indexOf(indexName) != -1) {
             conditionString = conditionString.replaceAll(indexName, String.valueOf(index));
