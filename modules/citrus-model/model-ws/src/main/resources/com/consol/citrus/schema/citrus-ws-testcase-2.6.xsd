@@ -144,7 +144,6 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:element name="assert" type="SoapAssertActionType"/>
     <xs:element name="assert-fault" type="SoapAssertActionType"/>
     <xs:element name="send" type="SoapSendActionType"/>
     <xs:element name="send-fault" type="SoapSendFaultActionType"/>

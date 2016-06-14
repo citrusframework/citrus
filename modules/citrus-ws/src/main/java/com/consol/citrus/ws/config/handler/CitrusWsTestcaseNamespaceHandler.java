@@ -28,7 +28,6 @@ import com.consol.citrus.ws.config.xml.*;
 public class CitrusWsTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("assert", new AssertSoapFaultParser());
         registerBeanDefinitionParser("assert-fault", new AssertSoapFaultParser());
         registerBeanDefinitionParser("send", new SendSoapMessageActionParser());
         registerBeanDefinitionParser("send-fault", new SendSoapFaultActionParser());
