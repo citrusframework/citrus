@@ -66,7 +66,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
         if (log.isDebugEnabled()) {
             log.debug("Sending message to channel: '" + destinationChannelName + "'");
-            log.debug("Message to sent is:\n" + message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
 
         endpointConfiguration.getMessagingTemplate().setReceiveTimeout(endpointConfiguration.getTimeout());
