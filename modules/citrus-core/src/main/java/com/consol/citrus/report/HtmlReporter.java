@@ -73,7 +73,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
 
     /** Enables/disables report generation */
     @Value("${citrus.html.report.enabled:true}")
-    private boolean enabled = true;
+    private String enabled;
     
     /**
      * @see com.consol.citrus.report.TestReporter#clearTestResults()
@@ -84,7 +84,8 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
 
     @Override
     public void generateTestResults() {
-        if (!enabled) {
+        if (StringUtils.hasText(enabled) &&
+                !enabled.equalsIgnoreCase(Boolean.TRUE.toString())) {
             return;
         }
 
@@ -318,15 +319,6 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     }
 
     /**
-     * Sets the enabled property.
-     *
-     * @param enabled
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    /**
      * Sets the logo.
      * @param logo the logo to set
      */
@@ -377,6 +369,15 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
      */
     public void setTestDetailTemplate(Resource testDetailTemplate) {
         this.testDetailTemplate = testDetailTemplate;
+    }
+
+    /**
+     * Sets the enabled property.
+     *
+     * @param enabled
+     */
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
     }
 
     /**
