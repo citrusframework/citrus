@@ -1,0 +1,23 @@
+- title: Getting Started
+  docs:
+  - home
+  - quickstart
+  - installation
+  - usage
+
+- title: Deployment
+  docs:
+  - github-pages
+  - deployment-methods
+  - continuous-integration
+
+- title: Miscellaneous
+  docs:
+  - upgrading/0-to-2
+  - upgrading/2-to-3
+
+- title: Meta
+  docs:
+  - contributing
+  - conduct
+  - history

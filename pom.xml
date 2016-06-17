@@ -851,11 +851,6 @@
           <version>2.10</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.4</version>
-        </plugin>
-        <plugin>
           <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <version>${jetty.version}</version>
@@ -1015,6 +1010,12 @@
           </dependencies>
         </plugin>
 
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.15.7</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -1035,6 +1036,50 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <configuration>
+          <watchInterval>500</watchInterval>
+          <logDate>default</logDate>
+          <verbose>true</verbose>
+          <images>
+            <image>
+              <alias>jekyll</alias>
+              <name>jekyll/jekyll:latest</name>
+              <run>
+                <namingStrategy>alias</namingStrategy>
+                <ports>
+                  <port>4000:4000</port>
+                </ports>
+                <volumes>
+                  <bind>
+                    <volume>${project.build.directory}/site:/srv/jekyll</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <log>Jekyll startup</log>
+                  <http>
+                    <url>http://dockerhost:4000</url>
+                    <method>GET</method>
+                    <status>200</status>
+                  </http>
+                  <time>60000</time>
+                  <shutdown>500</shutdown>
+                </wait>
+                <env>
+                  <POLLING>true</POLLING>
+                </env>
+                <log>
+                  <enabled>true</enabled>
+                  <color>green</color>
+                </log>
+              </run>
+            </image>
+          </images>
+        </configuration>
       </plugin>
     </plugins>
     
@@ -1079,13 +1124,8 @@
           <id>repository-consol-snapshots</id>
           <url>http://build.int.consol.de/nexus/content/repositories/inhouse-snapshots</url>
         </snapshotRepository>
-        <site>
-          <id>site-citrus</id>
-          <url>scpexe://build.int.consol.de/home/sites/www/htdocs/citrus</url>
-        </site>
       </distributionManagement>
       <properties>
-        <site.url>http://build.int.consol.de/citrus</site.url>
         <docbkx.img.path>images</docbkx.img.path>
       </properties>
     </profile>
@@ -1126,13 +1166,8 @@
           <id>consol-labs-snapshots</id>
           <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
         </snapshotRepository>
-        <site>
-          <id>site-citrus</id>
-          <url>scpexe://labs.consol.de/home/citrus/www/stage</url>
-        </site>
       </distributionManagement>
       <properties>
-        <site.url>http://www.citrusframework.org</site.url>
         <docbkx.img.path>images</docbkx.img.path>
       </properties>
 
@@ -1157,13 +1192,8 @@
           <id>local-snapshots</id>
           <url>file:///stage/snapshots-repository</url>
         </snapshotRepository>
-        <site>
-          <id>site-citrus</id>
-          <url>file:///stage/citrus-site</url>
-        </site>
       </distributionManagement>
       <properties>
-        <site.url>http://www.citrusframework.org</site.url>
         <docbkx.img.path>file:${basedir}/src/docbkx/images</docbkx.img.path>
       </properties>
     </profile>
@@ -1173,23 +1203,26 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-site-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>com.consol.citrus.mvn</groupId>
-                <artifactId>citrus-default-skin</artifactId>
-                <version>${project.version}</version>
-              </dependency>
-            </dependencies>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>attach-descriptor</id>
+                <id>start</id>
+                <phase>prepare-package</phase>
                 <goals>
-                  <goal>attach-descriptor</goal>
+                  <goal>start</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>stop</goal>
                 </goals>
               </execution>
             </executions>
           </plugin>
+
           <plugin>
             <groupId>com.agilejava.docbkx</groupId>
             <artifactId>docbkx-maven-plugin</artifactId>
@@ -1198,12 +1231,12 @@
                 <id>html-reference-doc</id>
                 <configuration>
                   <postProcess>
-                    <copy todir="${project.basedir}/target/site/reference">
-                      <fileset dir="${project.basedir}/target/docbkx">
+                    <copy todir="${project.build.directory}/site/_site/reference">
+                      <fileset dir="${project.build.directory}/docbkx">
                         <include name="**/*.html" />
                       </fileset>
                     </copy>
-                    <copy todir="${project.basedir}/target/site/reference/html">
+                    <copy todir="${project.build.directory}/site/_site/reference/html">
                       <fileset dir="${project.basedir}/src/docbkx">
                         <include name="**/*.css" />
                         <include name="**/*.png" />
@@ -1216,33 +1249,55 @@
                 <goals>
                   <goal>generate-html</goal>
                 </goals>
-                <phase>pre-site</phase>
+                <phase>package</phase>
               </execution>
               <execution>
                 <id>pdf-reference-doc</id>
                 <configuration>
                   <postProcess>
-                    <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
-                          tofile="${project.basedir}/target/site/reference/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
+                    <copy file="${project.build.directory}/docbkx/pdf/index.pdf"
+                          tofile="${project.build.directory}/site/_site/reference/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
                   </postProcess>                    
                 </configuration>
                 <goals>
                   <goal>generate-pdf</goal>
                 </goals>
-                <phase>pre-site</phase>
+                <phase>package</phase>
               </execution>
             </executions>
           </plugin>
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
             <inherited>false</inherited>
             <executions>
               <execution>
-                <id>copy-citrus-core-config-schemas</id>
-                <phase>post-site</phase>
+                <id>copy-site-resources</id>
+                <phase>process-resources</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/site</directory>
+                      <includes>
+                        <include>**/**</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                  <nonFilteredFileExtensions>
+                    <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                  </nonFilteredFileExtensions>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-core-config-schemas</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/config</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>modules/citrus-model/model-core/src/main/resources/com/consol/citrus/schema</directory>
@@ -1258,9 +1313,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-core-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-core/src/main/resources/com/consol/citrus/schema</directory>
@@ -1276,9 +1331,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-jms-config-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/jms/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/jms/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-jms/src/main/resources/com/consol/citrus/schema</directory>
@@ -1294,9 +1349,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-jms-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/jms/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/jms/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-jms/src/main/resources/com/consol/citrus/schema</directory>
@@ -1312,9 +1367,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-ftp-config-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/ftp/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/ftp/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-ftp/src/main/resources/com/consol/citrus/schema</directory>
@@ -1330,9 +1385,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-ftp-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/ftp/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/ftp/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-ftp/src/main/resources/com/consol/citrus/schema</directory>
@@ -1348,9 +1403,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-http-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/http/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/http/config</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>modules/citrus-model/model-http/src/main/resources/com/consol/citrus/schema</directory>
@@ -1366,9 +1421,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-http-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/http/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/http/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-http/src/main/resources/com/consol/citrus/schema</directory>
@@ -1384,9 +1439,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-websocket-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/websocket/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/websocket/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-websocket/src/main/resources/com/consol/citrus/schema</directory>
@@ -1402,9 +1457,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-ws-config-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/ws/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/ws/config</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>modules/citrus-model/model-ws/src/main/resources/com/consol/citrus/schema</directory>
@@ -1420,9 +1475,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-ws-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/ws/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/ws/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-ws/src/main/resources/com/consol/citrus/schema</directory>
@@ -1438,9 +1493,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-ssh-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/ssh/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/ssh/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-ssh/src/main/resources/com/consol/citrus/schema</directory>
@@ -1456,9 +1511,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-ssh-message-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/ssh/message</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/ssh/message</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-ssh/src/main/resources/com/consol/citrus/schema</directory>
@@ -1474,9 +1529,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-mail-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/mail/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/mail/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-mail/src/main/resources/com/consol/citrus/schema</directory>
@@ -1492,9 +1547,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-mail-message-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/mail/message</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/mail/message</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-mail/src/main/resources/com/consol/citrus/schema</directory>
@@ -1510,9 +1565,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-vertx-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/vertx/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/vertx/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-vertx/src/main/resources/com/consol/citrus/schema</directory>
@@ -1528,9 +1583,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-camel-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/camel/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/camel/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-camel/src/main/resources/com/consol/citrus/schema</directory>
@@ -1546,9 +1601,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-camel-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/camel/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/camel/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-camel/src/main/resources/com/consol/citrus/schema</directory>
@@ -1564,9 +1619,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-docker-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/docker/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/docker/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-docker/src/main/resources/com/consol/citrus/schema</directory>
@@ -1582,9 +1637,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-docker-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/docker/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/docker/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-docker/src/main/resources/com/consol/citrus/schema</directory>
@@ -1600,9 +1655,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-cucumber-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/cucumber/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/cucumber/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-cucumber/src/main/resources/com/consol/citrus/schema</directory>
@@ -1618,9 +1673,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-zookeeper-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/zookeeper/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/zookeeper/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-zookeeper/src/main/resources/com/consol/citrus/schema</directory>
@@ -1636,9 +1691,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-zookeeper-test-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/zookeeper/testcase</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/zookeeper/testcase</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-zookeeper/src/main/resources/com/consol/citrus/schema</directory>
@@ -1654,9 +1709,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-rmi-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/rmi/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/rmi/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-rmi/src/main/resources/com/consol/citrus/schema</directory>
@@ -1672,9 +1727,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-rmi-message-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/rmi/message</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/rmi/message</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-rmi/src/main/resources/com/consol/citrus/schema</directory>
@@ -1690,9 +1745,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-jmx-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/jmx/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/jmx/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-jmx/src/main/resources/com/consol/citrus/schema</directory>
@@ -1708,9 +1763,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-jmx-message-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/jmx/message</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/jmx/message</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-jmx/src/main/resources/com/consol/citrus/schema</directory>
@@ -1726,9 +1781,9 @@
               </execution>
               <execution>
                 <id>copy-citrus-restdocs-schemas</id>
-                <phase>post-site</phase>
+                <phase>package</phase>
                 <configuration>
-                  <outputDirectory>${project.build.directory}/site/schema/restdocs/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/restdocs/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-restdocs/src/main/resources/com/consol/citrus/schema</directory>
