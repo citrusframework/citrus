@@ -23,8 +23,7 @@ import com.consol.citrus.util.PropertyUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -50,24 +49,31 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private Map<String, ResultDetail> details = new HashMap<String, ResultDetail>();
     
     /** Static resource for the HTML test report template */
-    private static final Resource REPORT_TEMPLATE = new ClassPathResource("test-report.html", HtmlReporter.class);
-    
+    @Value("${citrus.html.report.template:classpath:com/consol/citrus/report/test-report.html}")
+    private Resource reportTemplate;
+
     /** Test detail template */
-    private static final Resource TEST_DETAIL_TEMPLATE = new ClassPathResource("test-detail.html", HtmlReporter.class);
-    
+    @Value("${citrus.html.report.detail.template:classpath:com/consol/citrus/report/test-detail.html}")
+    private Resource testDetailTemplate;
+
     /** Output directory */
-    private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "citrus-reports";
-    
-    /** Resulting HTML test report file name */    
-    private static final String REPORT_FILE_NAME = "citrus-test-results.html";
-    
+    @Value("${citrus.html.report.directory:}")
+    private String outputDirectory;
+
+    /** Resulting HTML test report file name */
+    @Value("${citrus.html.report.file:citrus-test-results.html}")
+    private String reportFileName;
+
     /** Format for creation and update date of TestCases */
     private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    
+
     /** Default logo image resource */
-    @Autowired(required = false)
-    @Qualifier("HtmlReporter.LOGO")
-    private Resource logo = new ClassPathResource("citrus_logo.png", HtmlReporter.class);
+    @Value("${citrus.html.report.logo:classpath:com/consol/citrus/report/citrus_logo.png}")
+    private Resource logo;
+
+    /** Enables/disables report generation */
+    @Value("${citrus.html.report.enabled:true}")
+    private boolean enabled = true;
     
     /**
      * @see com.consol.citrus.report.TestReporter#clearTestResults()
@@ -76,17 +82,19 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         testResults = new TestResults();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestReporter#generateTestResults()
-     */
+    @Override
     public void generateTestResults() {
+        if (!enabled) {
+            return;
+        }
+
         String report = "";
         final StringBuilder reportDetails = new StringBuilder();
         
         log.debug("Generating HTML test report");
 
         try {
-            final String testDetails = FileUtils.readToString(TEST_DETAIL_TEMPLATE);
+            final String testDetails = FileUtils.readToString(testDetailTemplate);
             final String unknown = "N/A";
 
             testResults.doWithResults(new TestResults.ResultCallback() {
@@ -123,7 +131,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             reportProps.put("success.test.pct", testResults.getSuccessPercentage());
             reportProps.put("test.results", reportDetails.toString());
             reportProps.put("logo.data", getLogoImageData());
-            report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(REPORT_TEMPLATE), reportProps);
+            report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(reportTemplate), reportProps);
 
             createReportFile(report);
 
@@ -261,8 +269,9 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
      */
     private void createReportFile(String content) {
         Writer fileWriter = null;
-        
-        File targetDirectory = new File(OUTPUT_DIRECTORY);
+
+        String directory = StringUtils.hasText(outputDirectory) ? outputDirectory : "test-output" + File.separator + "citrus-reports";
+        File targetDirectory = new File(directory);
         if (!targetDirectory.exists()) {
             boolean success = targetDirectory.mkdirs();
             
@@ -272,7 +281,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         }
         
         try {
-            fileWriter = new FileWriter(OUTPUT_DIRECTORY + File.separator + REPORT_FILE_NAME);
+            fileWriter = new FileWriter(directory + File.separator + reportFileName);
             fileWriter.append(content);
             fileWriter.flush();
         } catch (IOException e) {
@@ -307,7 +316,16 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         
         testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
     }
-    
+
+    /**
+     * Sets the enabled property.
+     *
+     * @param enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     /**
      * Sets the logo.
      * @param logo the logo to set
@@ -315,7 +333,52 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     public void setLogo(Resource logo) {
         this.logo = logo;
     }
-    
+
+    /**
+     * Sets the outputDirectory property.
+     *
+     * @param outputDirectory
+     */
+    public void setOutputDirectory(String outputDirectory) {
+        this.outputDirectory = outputDirectory;
+    }
+
+    /**
+     * Sets the reportFileName property.
+     *
+     * @param reportFileName
+     */
+    public void setReportFileName(String reportFileName) {
+        this.reportFileName = reportFileName;
+    }
+
+    /**
+     * Sets the dateFormat property.
+     *
+     * @param dateFormat
+     */
+    public void setDateFormat(DateFormat dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    /**
+     * Sets the reportTemplate property.
+     *
+     * @param reportTemplate
+     */
+    public void setReportTemplate(Resource reportTemplate) {
+        this.reportTemplate = reportTemplate;
+    }
+
+    /**
+     * Sets the testDetailTemplate property.
+     *
+     * @param testDetailTemplate
+     */
+    public void setTestDetailTemplate(Resource testDetailTemplate) {
+        this.testDetailTemplate = testDetailTemplate;
+    }
+
     /**
      * Value object holding test specific data for HTML report generation. 
      */

@@ -64,7 +64,7 @@ CITRUS TEST RESULTS
         <title>HTML reports</title>
         
         <para>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all
-        test results. You can find the report after a test run in the <literal>target/test-output/citrus-reports</literal> directory.</para>
+        test results. You can find the report after a test run in the directory <literal>${project.build.directory}/test-output/citrus-reports</literal>.</para>
         
         <para>The report consists of two parts. The test summary on top shows the total number executed tests. The main part lists all test cases 
         with detailed information. With this report you immediately identify all tests that were failing. Each test case is marked in color 
@@ -77,6 +77,20 @@ CITRUS TEST RESULTS
             <para>JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips
             like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.</para>
         </note>
+
+        <para>The HTML reports are customizable by system properties. Use following properties e.g. in your <emphasis>citrus.properties</emphasis> file:</para>
+
+        <itemizedlist>
+          <listitem><para><emphasis>citrus.html.report.enabled</emphasis>: Enables/disables HTML report generation (default=<literal>true</literal>).</para></listitem>
+          <listitem><para><emphasis>citrus.html.report.directory</emphasis>: Output directory path (default=<literal>${project.build.directory}/test-output/citrus-reports</literal>).</para></listitem>
+          <listitem><para><emphasis>citrus.html.report.file</emphasis>: File name for the report file (default=<literal>citrus-test-results.html</literal>).</para></listitem>
+          <listitem><para><emphasis>citrus.html.report.template</emphasis>: Template HTML file with placeholders for report results.</para></listitem>
+          <listitem><para><emphasis>citrus.html.report.detail.template</emphasis>: Template file for detailed test results.</para></listitem>
+          <listitem><para><emphasis>citrus.html.report.logo</emphasis>: File resource path pointing to a image that is added to top of HTML report.</para></listitem>
+        </itemizedlist>
+
+        <para>The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in
+        <ulink url="https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report">report-templates sources</ulink>.</para>
     </section>
     
 </chapter>
