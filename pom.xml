@@ -1201,6 +1201,27 @@
     <profile>
       <id>site</id>
       <build>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/src/site</directory>
+            <targetPath>${project.build.directory}/site</targetPath>
+            <includes>
+              <include>**/**</include>
+            </includes>
+          </resource>
+          <resource>
+            <directory>${project.basedir}/src/site</directory>
+            <targetPath>${project.build.directory}/site</targetPath>
+            <includes>
+              <include>_docs/**</include>
+              <include>_posts/**</include>
+              <include>index.html</include>
+              <include>latest_version.txt</include>
+            </includes>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
+
         <plugins>
           <plugin>
             <groupId>io.fabric8</groupId>
@@ -1272,27 +1293,6 @@
             <artifactId>maven-resources-plugin</artifactId>
             <inherited>false</inherited>
             <executions>
-              <execution>
-                <id>copy-site-resources</id>
-                <phase>process-resources</phase>
-                <configuration>
-                  <outputDirectory>${project.build.directory}/site</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>src/site</directory>
-                      <includes>
-                        <include>**/**</include>
-                      </includes>
-                    </resource>
-                  </resources>
-                  <nonFilteredFileExtensions>
-                    <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-                  </nonFilteredFileExtensions>
-                </configuration>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-              </execution>
               <execution>
                 <id>copy-citrus-core-config-schemas</id>
                 <phase>package</phase>
