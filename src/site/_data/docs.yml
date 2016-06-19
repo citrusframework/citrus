@@ -2,14 +2,8 @@
   docs:
   - home
   - quickstart
-  - installation
-  - usage
-
-- title: Deployment
-  docs:
-  - github-pages
-  - deployment-methods
-  - continuous-integration
+  - features
+  - download
 
 - title: Miscellaneous
   docs:

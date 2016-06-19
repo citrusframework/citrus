@@ -5,11 +5,49 @@ overview: true
 
 <section class="intro">
   <div class="grid">
-    <div class="unit whole center-on-mobiles">
+    <div class="unit whole align-center">
       <p class="first">Citrus Integration Testing</p>
+
+      <br>
+      <p>Automated integration tests for messaging interfaces!<br>
+        HTTP REST, JMS, TCP/IP, SOAP, FTP, SSH, XML, JSON and more!</p>
     </div>
   </div>
 </section>
+
+<section class="intro">
+  <div class="grid">
+    <div class="unit whole align-center">
+      <h1>Integration challenge</h1>
+      <h2><small>How Citrus works with automated tests</small></h2>
+
+      <img src="/img/test-scenario.png" alt="Test Scenario">
+
+      <p>In a typical test scenario the system under test is deployed on some application server and interacts with
+        Citrus over various message transports. During the test run Citrus is able to act on both sides as client and/or
+        server simulating request/response messages.</p>
+
+      <p>With each test step you can validate the exchanged messages with expected control data. The test is fully
+        automated and repeatable, so you can easily add the integration tests to your continuous build.</p>
+    </div>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="grid">
+    <div class="unit whole align-center">
+      <h1>Testing Microservices</h1>
+      <h2><small>Citrus "Tools in action" session @Devoxx BE 2015</small></h2>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/FPgXJveaLTo" frameborder="0" allowfullscreen="true"></iframe>
+
+      <p>Citrus integrates with frameworks like Apache Camel, Arquillian, Kubernetes and Docker in order to provide
+        automated integration testing of Microservice applications. The tools in action session gives a brief introduction
+        to the Citrus framework and shows code samples for a complete integration test scenario in a Microservices environment.</p>
+    </div>
+  </div>
+</section>
+
 <section class="features">
   <div class="grid">
     <div class="unit one-third">
@@ -35,7 +73,7 @@ overview: true
       </ul>
       <p>The reference documentation material for the latest Citrus release is available as online HTML
         or offline PDF version.</p>
-      <p><strong>Latest stable release:</strong> ${project.version}<br>
+      <p><strong>Latest stable release:</strong><br>
         Version ${project.version}: <a href="reference/html/index.html" target="_blank">HTML</a> | <a href="reference/pdf/citrus-reference-${project.version}.pdf" target="_blank">PDF</a>
       </p>
     </div>

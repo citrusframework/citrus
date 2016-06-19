@@ -11,8 +11,8 @@
   <li class="{% if page.author %}current{% endif %}">
     <a href="/news/">News<span class="hide-on-mobiles"> &amp; Blog</span></a>
   </li>
-  <li>
-    <a href="/sources">Sources</a>
+  <li class="{% if page.url contains '/sources/' %}current{% endif %}">
+    <a href="/sources/home/">Sources</a>
   </li>
   <li class="{% if page.url contains '/help/' %}current{% endif %}">
     <a href="/help/">Help</a>

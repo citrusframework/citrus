@@ -68,6 +68,7 @@ nav {
 
 .main-nav {
   margin-top: 35px;
+  margin-bottom: 20px;
 
   li {
     margin-right: 10px;
@@ -207,7 +208,7 @@ footer {
 
   .unit { padding: 10px 0 40px; }
 
-  p {
+  p.first {
     font-size: 1.75em;
     line-height: 1em;
     margin: 0;
@@ -215,7 +216,7 @@ footer {
 }
 
 @media (min-width: 569px) {
-  .intro p { font-size: 3.2em; }
+  .intro p.first { font-size: 3.2em; }
 }
 
 /* Quickstart */
