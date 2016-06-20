@@ -10,7 +10,7 @@ body {
   font: 300 21px Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #000;
   background-color: #fff;
-  border-top: 5px solid #fcc300;
+  border-top: 3px solid #0096D6;;
   @include box-shadow(inset 0 3px 30px rgba(0,0,0,.3));
   -webkit-font-feature-settings: "kern" 1;
   -moz-font-feature-settings: "kern" 1;
@@ -71,38 +71,42 @@ nav {
     margin-top: 2px;
     margin-right: 6px;
   }
+
+  span.brand {
+    color: #fff;
+    margin-right: 20px;
+  }
 }
 
 .main-nav {
   margin-top: 35px;
   margin-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #0096D6;
+  @include border-radius(5px);
 
   li {
-    margin-right: 10px;
 
     a {
-      @include border-radius(5px);
-      color: #fcc300;
+      color: #fff;
       font-weight: 900;
       font-size: 14px;
-      padding: 0.5em 1em;
+      display: block;
+      padding: 10px 15px 10px;
       text-shadow: none;
       text-transform: uppercase;
       @include transition(all .25s);
 
       &:hover {
-        background-color: #0096D6;
-        color: #fff;
-        @include box-shadow(inset 0 1px 0 rgba(255,255,255,.5), 0 1px 5px rgba(0,0,0,.5));
+        background-color: rgba(255,255,255,0.2);
       }
     }
 
     &.current {
 
       a {
-        background-color: #0096D6;
-        color: #fff;
-        @include box-shadow(inset 0 1px 0 rgba(255,255,255,.5), 0 1px 5px rgba(0,0,0,.5));
+        background-color: rgba(255,255,255,0.2);
       }
     }
   }
@@ -409,8 +413,6 @@ aside {
 
 .docs {
 
-  article { min-height: 800px; }
-
   .content { padding: 0; }
 }
 
@@ -576,6 +578,8 @@ p { line-height: 1.5em; }
 /* Article HTML */
 
 article {
+
+  min-height: 900px;
 
   h2, h3, h4, h5, h6 { margin: 1em 0; }
 
