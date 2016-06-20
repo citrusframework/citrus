@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Handle SOAP-ENV:mustUnderstand headers
+short-title: SOAP-ENV:mustUnderstand
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 

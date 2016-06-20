@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Citrus and TestNG groups
+short-title: TestNG groups
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 

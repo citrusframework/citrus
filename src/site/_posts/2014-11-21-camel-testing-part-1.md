@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Apache Camel Integration Testing - Part 1
+short-title: Apache Camel I
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 

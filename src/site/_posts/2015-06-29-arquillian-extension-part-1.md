@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Arquillian & Citrus in combination - Part 1
+short-title: Arquillian & Citrus I
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 

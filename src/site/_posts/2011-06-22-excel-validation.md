@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Validate Excel files in Citrus
+short-title: Validate Excel files
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 

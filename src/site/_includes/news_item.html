@@ -1,8 +1,7 @@
 <article>
   <h2>
-    <a href="{{ post.url }}">
-      {{ post.title }}
-    </a>
+    {{ post.title }}
+    <a href="{{ post.url }}" class="permalink" title="Permalink">∞</a>
   </h2>
   <span class="post-category">
     <span class="label">
@@ -13,7 +12,7 @@
     <span class="post-date">
       {{ post.date | date_to_string }}
     </span>
-    <a href="https://github.com/{{ post.author }}" class="post-author">
+    <a href="https://github.com/{{ post.github }}" class="post-author">
       {% assign author = post.author %}
       {{ post.author }}
     </a>

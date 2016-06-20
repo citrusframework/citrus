@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Use TestNG data providers in Citrus
+short-title: TestNG data providers
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 

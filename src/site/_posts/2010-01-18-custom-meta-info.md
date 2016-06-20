@@ -1,7 +1,9 @@
 ---
 layout: post
 title: Customize meta information
+short-title: Custom meta info
 author: Christoph Deppisch
+github: christophd
 categories: [blog]
 ---
 
