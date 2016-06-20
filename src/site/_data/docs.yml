@@ -2,17 +2,17 @@
   docs:
   - home
   - quickstart
+  - user-guide
   - setup-maven
   - setup-ant
-  - user-guide
   - features
   - download
 
 - title: Sources
   docs:
-  - development
   - repository
   - issues
+  - development
   - contributing
   - conventions
   - conduct

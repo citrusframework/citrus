@@ -32,8 +32,8 @@ Feel free to get in contact with us!
 
 The Citrus team members will listen on the following mailing-lists
 
-**user@citrusframework.org**
-**dev@citrusframework.org**
+- **user@citrusframework.org**
+- **dev@citrusframework.org**
 
 ConSol is the company behind Citrus
 
@@ -43,6 +43,6 @@ ConSol is the company behind Citrus
 
     Tel. +49-89-45841-100
     Fax +49-89-45841-111
-
-[ConSol Website](http://www.consol.de) 
-E-Mail: info@consol.de
+    E-Mail: info@consol.de
+    
+[ConSol Website](http://www.consol.de)

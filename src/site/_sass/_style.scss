@@ -617,7 +617,7 @@ blockquote {
 
 table {
   width: 100%;
-  background-color: #efefef;
+  background-color: #f9f9f9;
   margin: .5em 0;
   @include border-radius(5px);
 }
@@ -626,14 +626,14 @@ thead {
   @include border-top-left-radius(5px);
   @include border-top-right-radius(5px);
   color: #fff;
-  background-color: #3a3a3a;
+  background-color: #33abde;
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzNhM2EzYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZTFlMWUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#3a3a3a), to(#1e1e1e));
-  background-image: -webkit-linear-gradient(top, #3a3a3a 0%, #1e1e1e 100%);
-  background-image: -moz-linear-gradient(top, #3a3a3a 0%, #1e1e1e 100%);
-  background-image: -o-linear-gradient(top, #3a3a3a 0%, #1e1e1e 100%);
-  background-image: linear-gradient(to bottom, #3a3a3a 0%,#1e1e1e 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#1e1e1e',GradientType=0 );
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#33abde), to(#0096D6));
+  background-image: -webkit-linear-gradient(top, #33abde 0%, #0096D6 100%);
+  background-image: -moz-linear-gradient(top, #33abde 0%, #0096D6 100%);
+  background-image: -o-linear-gradient(top, #33abde 0%, #0096D6 100%);
+  background-image: linear-gradient(to bottom, #33abde 0%,#0096D6 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#0096D6',GradientType=0 );
 
   th {
     position: relative;
@@ -656,7 +656,6 @@ th {
   text-transform: uppercase;
   font-size: 16px;
   padding: .5em .75em;
-  color: #ddd;
 }
 
 tbody td {

@@ -15,6 +15,11 @@ releases are listed below:
 - citrus-${project.version}-release ([zip](http://citrusframework.org/dist/citrus-${project.version}-release.zip)/[tar.gz](http://citrusframework.org/dist/citrus-${project.version}-release.tar.gz))
 - citrus-${project.version}-src ([zip](http://citrusframework.org/dist/citrus-${project.version}-src.zip)/[tar.gz](http://citrusframework.org/dist/citrus-${project.version}-src.tar.gz))
 
+### Citrus 2.5
+
+- citrus-2.5-release ([zip](http://citrusframework.org/dist/citrus-2.5.2-release.zip)/[tar.gz](http://citrusframework.org/dist/citrus-2.5.2-release.tar.gz))
+- citrus-2.5-src ([zip](http://citrusframework.org/dist/citrus-2.5.2-src.zip)/[tar.gz](http://citrusframework.org/dist/citrus-2.5.2-src.tar.gz))
+
 ### Citrus 2.4
 
 - citrus-2.4-release ([zip](http://citrusframework.org/dist/citrus-2.4-release.zip)/[tar.gz](http://citrusframework.org/dist/citrus-2.4-release.tar.gz))
