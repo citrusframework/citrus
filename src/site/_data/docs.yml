@@ -2,16 +2,40 @@
   docs:
   - home
   - quickstart
+  - setup-maven
+  - setup-ant
+  - user-guide
   - features
   - download
 
+- title: Sources
+  docs:
+  - development
+  - repository
+  - issues
+  - contributing
+  - conventions
+  - conduct
+
+- title: Customize
+  docs:
+  - custom-endpoints
+  - custom-actions
+  - custom-functions
+
+- title: Tools
+  docs:
+  - maven-plugin
+
 - title: Miscellaneous
   docs:
-  - upgrading/0-to-2
-  - upgrading/2-to-3
+  - team
+  - config-sheet
+  - upgrade-migration
+  - consulting
 
 - title: Meta
   docs:
-  - contributing
-  - conduct
+  - license
+  - modules
   - history

@@ -13,7 +13,7 @@ Our guide to Citrus covering installation, writing, customization, deployment, a
 
 Learn from the source code.
 
-### [Citrus on StackOverflow](https://stackoverflow.com/questions/tagged/citrusframework)
+### [Q&A StackOverflow](https://stackoverflow.com/questions/tagged/citrus-framework)
 
 StackOverflow is a staple of any developer's diet. Check out the Citrus tag
 on StackOverflow for an answer to your question. Not there? Ask a new

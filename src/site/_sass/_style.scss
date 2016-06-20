@@ -19,6 +19,13 @@ body {
   font-kerning: normal;
 }
 
+hr {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #ffffff;
+}
+
 .clear {
   display: block;
 }
@@ -209,14 +216,15 @@ footer {
   .unit { padding: 10px 0 40px; }
 
   p.first {
-    font-size: 1.75em;
+    font-size: 2.75em;
+    font-weight: bold;
     line-height: 1em;
     margin: 0;
   }
 }
 
 @media (min-width: 569px) {
-  .intro p.first { font-size: 3.2em; }
+  .intro p.first { font-size: 4.2em; }
 }
 
 /* Quickstart */
@@ -500,7 +508,6 @@ article h2:first-child { margin-top: 0; }
 
 /* Code Highlighting */
 
-
 pre,
 code {
   white-space: pre;
@@ -606,15 +613,13 @@ blockquote {
   font-weight: 500;
 }
 
-
 /* Tables */
 
 table {
   width: 100%;
-  background-color: #555;
+  background-color: #efefef;
   margin: .5em 0;
   @include border-radius(5px);
-  @include box-shadow(0 1px 3px rgba(0,0,0,.3));
 }
 
 thead {
@@ -632,7 +637,6 @@ thead {
 
   th {
     position: relative;
-    @include box-shadow(inset 0 1px 0 rgba(255,255,255,.1));
 
     &:first-child {
       @include border-top-left-radius(5px);
@@ -652,7 +656,7 @@ th {
   text-transform: uppercase;
   font-size: 16px;
   padding: .5em .75em;
-  color: #888;
+  color: #ddd;
 }
 
 tbody td {

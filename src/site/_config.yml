@@ -12,14 +12,14 @@ collections:
   docs:
     output: true
 
-name: Citrus • Integration Tests
+name: Citrus Integration Tests
 description: Automated integration tests for message protocols and data formats that you require
 url: https://citrusframework.org
 
 twitter:
   username: citrus_test
 
-logo: img/logo.png
+logo: img/brand-logo.png
 
 gems:
   - jekyll-feed
