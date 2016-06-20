@@ -36,7 +36,7 @@ Citrus 1.2: [HTML](http://www.citrusframework.org/reference/1.2/html/index.html)
 - [Quickstart Maven](/docs/setup-maven)
 - [Quickstart Ant](/docs/setup-ant)
 - [Blog](http://labs.consol.de/tags/citrus)
-- [Java API](http://www.citrusframework.org/apidocs/index.html)
+- [Java API](/apidocs/index.html)
 - [Java Sources](http://www.github.com/christophd/citrus)
 
 

@@ -63,15 +63,15 @@ overview: true
         <li><strong>Message transport connectivity:</strong> HTTP, JMS, TCP/IP, REST, SOAP, XML, JSON, and more</li>
         <li><strong>Validation:</strong> message header and body assertions</li>
       </ul>
-      <p>See the complete <a href="/docs/features.html">feature list &rarr;</a> for details.</p>
+      <p>See the complete <a href="/docs/features">feature list &rarr;</a> for details.</p>
     </div>
     <div class="unit one-third">
       <h2>Documentation</h2>
       <p>See the following reading material and information on Citrus testing.</p>
       <ul>
-        <li><a href="docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/home/">Documentation</a></li>
         <li><a href="http://labs.consol.de/tags/citrus" target="_blank">Blog</a></li>
-        <li><a href="apidocs/index.html" target="_blank">Java API</a></li>
+        <li><a href="/apidocs/index.html" target="_blank">Java API</a></li>
         <li><a href="http://www.github.com/christophd/citrus" target="_blank">Java Sources</a></li>
       </ul>
       <p>The reference documentation material for the latest Citrus release is available as online HTML
@@ -83,12 +83,10 @@ overview: true
     <div class="unit one-third">
       <h2>News & Blog</h2>
       <ul>
-      {% for post in site.posts limit:5 %}
-      {% unless post.categories contains 'release' %}
+      {% for post in site.categories.blog limit:5 %}
       <li class="{% if page.title == post.title %}current{% endif %}">
         <a href="{{ post.url }}">{{ post.title }}</a>
       </li>
-      {% endunless %}
       {% endfor %}
       </ul>
     </div>
