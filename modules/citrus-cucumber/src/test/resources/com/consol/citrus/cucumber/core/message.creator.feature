@@ -1,7 +1,7 @@
 Feature: Message creator features
 
 Background:
-  Given message creator echo.EchoMessageCreator
+  Given message creator com.consol.citrus.cucumber.echo.EchoMessageCreator
   And variable operation is "sayHello"
   And variable text is "Hello"
 

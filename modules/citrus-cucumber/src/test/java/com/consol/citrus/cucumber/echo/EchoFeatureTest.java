@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package xml;
+package com.consol.citrus.cucumber.echo;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -26,7 +26,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        glue = { "com.consol.citrus.cucumber", "xml" },
         plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
-public class EchoXmlFeatureTest {
+public class EchoFeatureTest {
 }

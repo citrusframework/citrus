@@ -17,11 +17,13 @@
 package cucumber.runtime.java;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.cucumber.CitrusLifecycleHooks;
 import com.consol.citrus.cucumber.CitrusReporter;
 import com.consol.citrus.cucumber.container.StepTemplate;
 import com.consol.citrus.cucumber.step.xml.XmlStepDefinition;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import cucumber.api.java.ObjectFactory;
+import cucumber.api.Scenario;
+import cucumber.api.java.*;
 import cucumber.runtime.*;
 import cucumber.runtime.io.ResourceLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
@@ -31,6 +33,7 @@ import gherkin.formatter.model.Step;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -63,6 +66,20 @@ public class CitrusBackend implements Backend {
     public void loadGlue(Glue glue, List<String> gluePaths) {
         this.glue = glue;
         this.gluePaths = gluePaths;
+
+        try {
+            if (!gluePaths.contains(CitrusLifecycleHooks.class.getPackage().getName()) && getObjectFactory().addClass(CitrusLifecycleHooks.class)) {
+                Method beforeMethod = CitrusLifecycleHooks.class.getMethod("before", Scenario.class);
+                Before beforeAnnotation = beforeMethod.getAnnotation(Before.class);
+                glue.addBeforeHook(new JavaHookDefinition(beforeMethod, beforeAnnotation.value(), beforeAnnotation.order(), beforeAnnotation.timeout(), getObjectFactory()));
+
+                Method afterMethod = CitrusLifecycleHooks.class.getMethod("after", Scenario.class);
+                After afterAnnotation = afterMethod.getAnnotation(After.class);
+                glue.addAfterHook(new JavaHookDefinition(afterMethod, afterAnnotation.value(), afterAnnotation.order(), afterAnnotation.timeout(), getObjectFactory()));
+            }
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            throw new CucumberException("Unable to add Citrus lifecylce hooks");
+        }
     }
 
     @Override
@@ -75,7 +92,7 @@ public class CitrusBackend implements Backend {
             getCitrus().beforeSuite(CitrusReporter.SUITE_NAME);
 
             for (String gluePath : gluePaths) {
-                ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{"classpath*:" + gluePath.replaceAll("\\.", "/") + "/**/*Steps.xml"}, true, getCitrus().getApplicationContext());
+                ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{"classpath*:" + gluePath.replaceAll("\\.", "/").replaceAll("^classpath:", "") + "/**/*Steps.xml"}, true, getCitrus().getApplicationContext());
 
                 try {
                     for (StepTemplate stepTemplate : ctx.getBeansOfType(StepTemplate.class).values()) {
@@ -137,5 +154,13 @@ public class CitrusBackend implements Backend {
         }
 
         citrus = Citrus.newInstance(applicationContext);
+    }
+
+    /**
+     * Reset Citrus instance. Use this method with special care. Usually Citrus instance should only be instantiated
+     * once throughout the whole test suite run.
+     */
+    public static void resetCitrus() {
+        citrus = null;
     }
 }
