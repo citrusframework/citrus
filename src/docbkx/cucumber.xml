@@ -7,7 +7,7 @@
     as well as the domain experts. With BDD the domain experts can easily read and verify the tests and the technical experts get a detailed description of what should happen
     in the test.</para>
 
-    <para>The test scenario description most of the time follows the Gherkin syntax with a <emphasis>"Given-When-Then"</emphasis> structure. The Gherkin language is business readable and well known in BDD.</para>
+    <para>The test scenario descriptions follow the Gherkin syntax with a <emphasis>"Given-When-Then"</emphasis> structure most of the time. The Gherkin language is business readable and well known in BDD.</para>
 
     <para>There are lots of frameworks in the Java community that support BDD concepts. Citrus has dedicated support for the Cucumber framework because Cucumber is well suited for extensions and plugins.
     So with the Citrus and Cucumber integration you can write Gherkin syntax scenario and feature stories in order to execute the Citrus integration test capabilities. As usual we have a look at a first example.
@@ -40,7 +40,26 @@
 
 &lt;/spring:beans&gt;</programlisting>
 
-      <para>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</para>
+      <para>Cucumber works with both JUnit and TestNG as unit testing framework. You can choose which framework to use with Cucumber. So following from that we need a Maven dependency for the unit testing framework support:</para>
+
+      <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;info.cukes&lt;/groupId&gt;
+  &lt;artifactId&gt;cucumber-junit&lt;/artifactId&gt;
+  &lt;version&gt;${cucumber.version}&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
+      <para>In order to enable Citrus Cucumber support we need to specify a special object factory in the environment. The most comfortable way to specify a custom object factory is to add this property to the
+        <emphasis>cucumber.properties</emphasis> in classpath.</para>
+
+      <programlisting>cucumber.api.java.ObjectFactory=cucumber.runtime.java.CitrusObjectFactory</programlisting>
+
+      <para>This special object factory takes care on creating all step definition instances. The object factory is able to inject <emphasis>@CitrusResource</emphasis> annotated fields in step classes. We will see this later on in the examples. The usage
+        of this special object factory is mandatory in order to combine Citrus and Cucumber capabilities.</para>
+
+      <para>The <emphasis>CitrusObjectFactory</emphasis> will automatically initialize the Citrus world for us. This includes the default <emphasis>citrus-context.xml</emphasis> Citrus Spring configuration that is automatically
+        loaded within the object factory. So you can define and use Citrus components as usual within your test.</para>
+
+      <para>After these preparation steps you are able to combine Citrus and Cucumber in your project.</para>
     </note>
 
     <section id="cucumber-integration">
@@ -50,20 +69,16 @@
 
       <programlisting>@RunWith(Cucumber.class)
 @CucumberOptions(
-  glue = { "com.consol.citrus.cucumber", "my.company.features" },
   plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }</programlisting>
 
-      <para>The test case above uses the <emphasis>Cucumber</emphasis> JUnit test runner. In addition to that we give some options to the Cucumber execution. The glue option defines introduces Citrus glue code that is mandatory
-      for combining Cucumber and Citrus capabilities. Therefore always include the <emphasis>com.consol.citrus.cucumber</emphasis> glue. Secondly we add the feature package that we now want to test <emphasis>my.company.features</emphasis>. This is the package
-      where all scenario and feature stories and custom step definitions are located for the test run.</para>
+      <para>The test case above uses the <emphasis>Cucumber</emphasis> JUnit test runner. In addition to that we give some options to the Cucumber execution. We define a special Citrus reporter implementation. This class is responsible for printing
+        the Citrus test summary. This reporter extends the default Cucumber reporter implementation so the default Cucumber report summaries are also printed to the console.</para>
 
-      <para>Also important ith the Citrus reporter implementation. This class is responsible for printing the Citrus test summary. This reporter extends the default Cucumber reporter implementation so the default Cucumber report summaries are also printed
-      with this <emphasis>CitrusReporter</emphasis>.</para>
-
-      <para>That completes the JUnit class configuration. Now we are able to add feature stories and step definitions to the package <emphasis>my.company.features</emphasis>. So lets write a feature story <emphasis>echo.feature</emphasis>.</para>
+      <para>That completes the JUnit class configuration. Now we are able to add feature stories and step definitions to the package of our test <emphasis>MyFeatureIT</emphasis>. Cucumber and Citrus will automatically pick up step definitions and glue code
+        in that test package. So lets write a feature story <emphasis>echo.feature</emphasis> right next to the <emphasis>MyFeatureIT</emphasis> test class.</para>
 
       <programlisting>Feature: Echo service
 
@@ -112,8 +127,8 @@ public class MyFeatureIT {
 
 }</programlisting>
 
-      <para>If we have a closer look at the step definition class we see that it is a normal POJO that uses a <emphasis>@CitrusResource</emphasis> annotated <emphasis>TestDesginer</emphasis>. The test designer is automatically injected by Citrus. This is done
-      because we have included the citrus-cucumber glue in the Cucumber options before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them.
+      <para>If we have a closer look at the step definition class we see that it is a normal POJO that uses a <emphasis>@CitrusResource</emphasis> annotated <emphasis>TestDesginer</emphasis>. The test designer is automatically injected by Citrus Cucumber extension. This is done
+      because we have included the citrus-cucumber dependency to our project before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them.
       The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.</para>
 
       <para>If you run the Cucumber test you will see the step execution and at the end the Citrus test case performs its actions. That is a first combination of Citrus and Cucumber BDD. The story descriptions are translated to test designer actions and we are able to
@@ -126,10 +141,8 @@ public class MyFeatureIT {
       <para>So far we have written glue code in Java in order to translate Gherkin syntax descriptions to test designer actions. Now we want to do the same with just XML configuration. The JUnit Cucumber class should not change. We still use the Cucumber runner implementation
       with some options specific to Citrus:</para>
 
-
       <programlisting>@RunWith(Cucumber.class)
 @CucumberOptions(
-    glue = { "com.consol.citrus.cucumber", "my.company.features" },
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
@@ -149,7 +162,7 @@ public class MyFeatureIT {
     When I say goodbye to the service
     Then the service should return: "Goodbye from Citrus!"</programlisting>
 
-      <para>In the feature package <emphasis>my.company.features</emphasis> we add a new XML file <emphasis>EchiSteps.xml</emphasis> that holds the new XML step definitions:</para>
+      <para>In the feature package <emphasis>my.company.features</emphasis> we add a new XML file <emphasis>EchoSteps.xml</emphasis> that holds the new XML step definitions:</para>
 
       <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;spring:beans xmlns:citrus=&quot;http://www.citrusframework.org/schema/testcase&quot;
@@ -194,7 +207,10 @@ public class MyFeatureIT {
 &lt;/spring:beans&gt;</programlisting>
 
       <para>The above steps definition is written in pure XML. Citrus will automatically read the step definition and add those to the Cucumber runtime. Following from that the step definitions are
-      executed when matching to the feature story. The XML steps are able to receive parameters from the Gherkin regexp matcher. The paremeters are passed to the step as test variable. The parameter names
+      executed when matching to the feature story. The XML step files follow a naming convention. Citrus will look for all files located in the feature package with name pattern <emphasis>**/**.Steps.xml</emphasis>
+      and load those definitions when Cucumber starts up.</para>
+
+      <para>The XML steps are able to receive parameters from the Gherkin regexp matcher. The parameters are passed to the step as test variable. The parameter names
       get declared in the optional attribute <emphasis>parameter-names</emphasis>. In the step definition actions you can use the parameter names as test variables.</para>
 
       <note>
@@ -214,11 +230,88 @@ public class MyFeatureIT {
       <para>This completes the description of how to add XML step definitions to the cucumber BDD tests. In a next section we will use predefined steps for sending and receiving messages.</para>
     </section>
 
+    <section id="cucumber-spring">
+      <title>Cucumber Spring support</title>
+
+      <para>Cucumber provides support for Spring dependency injection in step definition classes. The Cucumber Spring capabilities are included in a separate module. So we first of all we have to add this dependency to our
+      project:</para>
+
+      <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;info.cukes&lt;/groupId&gt;
+  &lt;artifactId&gt;cucumber-spring&lt;/artifactId&gt;
+  &lt;version&gt;${cucumber.version}&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
+      <para>The Citrus Cucumber extension has to handle things different when Cucumber Spring support is enabled. Therefore we use another object factory implementation that also support Cucumber Spring features. Change the
+      object factory property in <emphasis>cucumber.properties</emphasis> to the following:</para>
+
+      <programlisting>cucumber.api.java.ObjectFactory=cucumber.runtime.java.spring.CitrusSpringObjectFactory</programlisting>
+
+      <para>Now we are ready to add <emphasis>@Autowired</emphasis> Spring bean dependeny injection to step definition classes:</para>
+
+      <programlisting>@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class EchoSteps {
+    @Autowired
+    private Endpoint echoEndpoint;
+
+    @CitrusResource
+    protected TestDesigner designer;
+
+    @Given("^My name is (.*)$")
+    public void my_name_is(String name) {
+        designer.variable("username", name);
+    }
+
+    @When("^I say hello.*$")
+    public void say_hello() {
+        designer.send(echoEndpoint)
+            .messageType(MessageType.PLAINTEXT)
+            .payload("Hello, my name is ${username}!");
+    }
+
+    @When("^I say goodbye.*$")
+    public void say_goodbye() {
+        designer.send(echoEndpoint)
+            .messageType(MessageType.PLAINTEXT)
+            .payload("Goodbye from ${username}!");
+    }
+
+    @Then("^the service should return: \"([^\"]*)\"$")
+    public void verify_return(final String body) {
+        designer.receive(echoEndpoint)
+            .messageType(MessageType.PLAINTEXT)
+            .payload("You just said: " + body);
+    }
+}</programlisting>
+
+      <para>As you can see we used Spring autowiring mechanism for the <emphasis>echoEndpoint</emphasis> field in the step definition. Also be sure to define the <emphasis>@ContextConfiguration</emphasis> annotation on the step definition. The Cucumber Spring
+      support loads the Spring application context and takes care on dependency injection. We use the Citrus <emphasis>CitrusSpringConfig</emphasis> Java configuration because this is the main entrance for Citrus test cases. You can add custom beans and further
+      Spring related configuration to this Spring application context. If you want to add more beans for autowiring do so in the Citrus Spring configuration. Usually this is the default <emphasis>citrus-context.xml</emphasis> which is automatically loaded.</para>
+
+      <para>Of course you can also use a custom Java Spring configuration class here. But be sure to always import the Citrus Spring Java configuration classes, too. Otherwise you will not be able to execute the Citrus integration test capabilities.</para>
+
+      <para>As usual we are able to use <emphasis>@CitrusResource</emphasis> annotated <emphasis>TestDesigner</emphasis> fields for building the Citrus integration test logic. With this extension you can use the full Spring testing power in your tests in
+      particular dependency injection and also transaction management for data persistance tests.</para>
+    </section>
+
     <section id="cucumber-messaging-steps">
       <title>Messaging steps</title>
 
       <para>Citrus provides some out of the box predefined steps for typical integration test scenarios. These steps are ready to use in scenario or feature stories. You can basically define send and receive operations.
       As these steps are predefined in Citrus you just need to write feature stories. The step definitions with glue to test designer actions are handled automatically.</para>
+
+      <para>If you want to enable predefined steps support in your test you need to include the glue code package in your test class like this:</para>
+
+      <programlisting>@RunWith(Cucumber.class)
+@CucumberOptions(
+    glue = { "com.consol.citrus.cucumber.step.core" }
+    plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+public class MyFeatureIT {
+
+}</programlisting>
+
+      <para>Instead of writing the glue code on our own in step definition classes we include the glue package <emphasis>com.consol.citrus.cucumber.step.core</emphasis>. This automatically loads all Citrus glue step definitions in this
+      package.</para>
 
       <para>Lets use the predefined steps in a story:</para>
 
@@ -230,6 +323,9 @@ public class MyFeatureIT {
     Scenario: Send and receive plaintext
       When &lt;echoEndpoint&gt; sends &quot;${messageText}&quot;
       Then &lt;echoEndpoint&gt; should receive plaintext &quot;You just said: ${messageText}&quot;</programlisting>
+
+      <para>Please note that we use predefined step definitions here. That means that we do not have to write any glue code steps. The steps are already included in Citrus. Only thing we have to do is to follow the predefined
+      syntax when writing feature stories. Let's have a closer look at this predefined syntax by further describing the above example.</para>
 
       <para>First of all we define a new test variable with <emphasis>Given variable messageText is &quot;Hello&quot;</emphasis>. This tells Citrus to create a new test variable named <emphasis>messageText</emphasis>
       with respective value. The step instruction follows this pattern:</para>
@@ -272,7 +368,7 @@ public class MyFeatureIT {
       <para>As you can see we are able to use the send and receive steps with multiline XML message payload data.</para>
 
       <para>We have created a new variable <emphasis>messageText</emphasis>. This is done in the <emphasis>Background</emphasis> section. This means that Cucumber will execute these steps for all upcoming scenarios.
-      The test varibale is so to speak global for this feature story. You can also add the variable step to a <emphasis>Scenario</emphasis> section. Then the variable is only created for this scenario exclusively. Speaking of test variables lets
+      The test variable is so to speak global for this feature story. You can also add the variable step to a <emphasis>Scenario</emphasis> section. Then the variable is only created for this scenario exclusively. Speaking of test variables lets
       have a closer look at defining several test variables:</para>
 
       <programlisting>Given variable messageText is &quot;Hello&quot;
