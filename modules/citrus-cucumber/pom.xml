@@ -36,6 +36,20 @@
     </dependency>
     <dependency>
       <groupId>info.cukes</groupId>
+      <artifactId>cucumber-spring</artifactId>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-camel</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>info.cukes</groupId>
       <artifactId>cucumber-junit</artifactId>
       <scope>test</scope>
     </dependency>

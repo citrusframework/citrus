@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java;
+package cucumber.runtime.java.spring;
 
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
+import cucumber.runtime.java.CitrusBackend;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class CitrusObjectFactory extends DefaultJavaObjectFactory {
+public class CitrusSpringObjectFactory extends SpringFactory {
 
     /** Test designer */
     private TestDesigner designer;
@@ -35,25 +36,32 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
     private TestContext context;
 
     /** Static self reference */
-    private static CitrusObjectFactory selfReference;
+    private static CitrusSpringObjectFactory selfReference;
 
     /**
      * Default constructor with static self reference initialization.
      */
-    public CitrusObjectFactory() {
+    public CitrusSpringObjectFactory() {
         selfReference = this;
     }
+
 
     @Override
     public void start() {
         super.start();
-        context = CitrusBackend.getCitrus().createTestContext();
-        designer = new DefaultTestDesigner(CitrusBackend.getCitrus().getApplicationContext(), context);
+        context = getInstance(TestContext.class);
+        designer = new DefaultTestDesigner(context.getApplicationContext(), context);
+
     }
 
     @Override
     public <T> T getInstance(Class<T> type) {
-        if (CitrusObjectFactory.class.isAssignableFrom(type)) {
+        if (context == null) {
+            context = super.getInstance(TestContext.class);
+            CitrusBackend.initializeCitrus(context.getApplicationContext());
+        }
+
+        if (CitrusSpringObjectFactory.class.isAssignableFrom(type)) {
             return (T) this;
         }
 
@@ -68,7 +76,7 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
      * Static access to self reference.
      * @return
      */
-    public static CitrusObjectFactory instance() throws IllegalAccessException {
+    public static CitrusSpringObjectFactory instance() throws IllegalAccessException {
         if (selfReference == null) {
             throw new IllegalAccessException("Illegal access to self reference - not available yet");
         }
