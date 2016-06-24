@@ -67,7 +67,7 @@
 
       <para>Cucumber is able to run tests with JUnit. The basic test case is an empty test which uses the respective JUnit runner implementation from cucumber.</para>
 
-      <programlisting>@RunWith(Cucumber.class)
+      <programlisting language="java">@RunWith(Cucumber.class)
 @CucumberOptions(
   plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
@@ -94,7 +94,7 @@ public class MyFeatureIT {
 
       <para>As you can see this story defines two scenarios with the Gherkin <emphasis>Given-When-Then</emphasis> syntax. Now we need to add step definitions that glue the story description to Citrus test actions. Lets do this in a new class <emphasis>EchoSteps</emphasis>.</para>
 
-      <programlisting>public class EchoSteps {
+      <programlisting language="java">public class EchoSteps {
 
     @CitrusResource
     protected TestDesigner designer;
@@ -149,7 +149,7 @@ public class MyFeatureIT {
       <para>So far we have written glue code in Java in order to translate Gherkin syntax descriptions to test actions. Now we want to do the same with just XML configuration. The JUnit Cucumber class should not change. We still use the Cucumber runner implementation
       with some options specific to Citrus:</para>
 
-      <programlisting>@RunWith(Cucumber.class)
+      <programlisting language="java">@RunWith(Cucumber.class)
 @CucumberOptions(
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
@@ -257,7 +257,7 @@ public class MyFeatureIT {
 
       <para>Now we are ready to add <emphasis>@Autowired</emphasis> Spring bean dependeny injection to step definition classes:</para>
 
-      <programlisting>@ContextConfiguration(classes = CitrusSpringConfig.class)
+      <programlisting language="java">@ContextConfiguration(classes = CitrusSpringConfig.class)
 public class EchoSteps {
     @Autowired
     private Endpoint echoEndpoint;
@@ -310,7 +310,7 @@ public class EchoSteps {
 
       <para>If you want to enable predefined steps support in your test you need to include the glue code package in your test class like this:</para>
 
-      <programlisting>@RunWith(Cucumber.class)
+      <programlisting language="java">@RunWith(Cucumber.class)
 @CucumberOptions(
     glue = { "com.consol.citrus.cucumber.step.designer" }
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
@@ -323,7 +323,7 @@ public class MyFeatureIT {
 
       <para>Of course you can also choose to include the <emphasis>TestRunner</emphasis> step definitions by choosing the glue package <emphasis>com.consol.citrus.cucumber.step.runner</emphasis>.</para>
 
-      <programlisting>@RunWith(Cucumber.class)
+      <programlisting language="java">@RunWith(Cucumber.class)
 @CucumberOptions(
     glue = { "com.consol.citrus.cucumber.step.runner" }
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
@@ -456,30 +456,6 @@ Then &lt;[endpoint-name]&gt; should send
         &quot;&quot;&quot;</programlisting>
 
         <para>As you can see we are able to use the send and receive steps with multiline XML message payload data.</para>
-
-        <para>Now what about message header information? We can also add headers with name and value to our messages. Just use one of these predefined step definitions:</para>
-
-        <programlisting>And message header [header-name] is "[header-value]"
-And message header [header-name] should be "[header-value]"</programlisting>
-
-        <para>Let us use this in our sample feature story:</para>
-
-        <programlisting>Feature: Messaging features with headers
-
-    Background:
-      Given variable messageText is &quot;Hello&quot;
-      And variable operationHeader is &quot;sayHello&quot;
-
-    Scenario: Send and receive plaintext
-      When &lt;echoEndpoint&gt; sends &quot;${messageText}&quot;
-      And message header operation is &quot;${operationHeader}&quot;
-      Then &lt;echoEndpoint&gt; should receive plaintext &quot;You just said: ${messageText}&quot;
-      And message header operation should be &quot;${operationHeader}&quot;</programlisting>
-
-        <para>I think this is still pretty readable. The result is a normal Citrus test case that executes all test actions as they are defined in the Cucumber steps. The message validation
-        is done as usual for all received messages.</para>
-
-        <para>The following predefined steps are available for you:</para>
       </section>
 
       <section id="cucumber-named-message-steps">
@@ -494,12 +470,12 @@ And message header [header-name] should be "[header-value]"</programlisting>
 
     Background:
       Given message echoRequest
-        And &lt;echoRequest&lt; payload is "Hi my name is Citrus!"
-        And &lt;echoRequest&lt; header operation is "sayHello"
+        And &lt;echoRequest&gt; payload is "Hi my name is Citrus!"
+        And &lt;echoRequest&gt; header operation is "sayHello"
 
       Given message echoResponse
-        And &lt;echoResponse&lt; payload is "Hi, Citrus how are you doing today?"
-        And &lt;echoResponse&lt; header operation is "sayHello"
+        And &lt;echoResponse&gt; payload is "Hi, Citrus how are you doing today?"
+        And &lt;echoResponse&gt; header operation is "sayHello"
 
     Scenario: Send and receive
       When &lt;echoEndpoint&gt; sends message &lt;echoRequest&gt;
@@ -554,7 +530,7 @@ Then &lt;[endpoint-name]&gt; should receive message &lt;[message-name]&gt;</prog
         <para>The steps reference a message by its name <emphasis>echoRequest</emphasis> and <emphasis>echoResponse</emphasis>. Now lets have a look at the message creator <emphasis>EchoMessageCreator</emphasis>
         implementation in order to see how this correlates to a real message.</para>
 
-        <programlisting>public class EchoMessageCreator {
+        <programlisting language="java">public class EchoMessageCreator {
     @MessageCreator("echoRequest")
     public Message createEchoRequest() {
       return new DefaultMessage("<message>" +
