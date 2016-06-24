@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.step.core;
+package com.consol.citrus.cucumber.core;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.design.TestDesigner;
-import cucumber.api.java.en.Then;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import org.junit.runner.RunWith;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class EchoSteps {
-
-    @CitrusResource
-    private TestDesigner designer;
-
-    @Then("^echo \"([^\"]*)\"$")
-    public void echo(String message) {
-        designer.echo(message);
-    }
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        glue = { "com.consol.citrus.cucumber.step.runner" },
+        plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+public class CoreRunnerFeatureTest {
 }

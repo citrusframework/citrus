@@ -21,7 +21,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.runner.DefaultTestRunner;
+import com.consol.citrus.dsl.runner.TestRunner;
+import cucumber.runtime.CucumberException;
 import cucumber.runtime.java.CitrusBackend;
+import cucumber.runtime.java.InjectionMode;
 
 /**
  * @author Christoph Deppisch
@@ -32,11 +36,17 @@ public class CitrusSpringObjectFactory extends SpringFactory {
     /** Test designer */
     private TestDesigner designer;
 
+    /** Test runner */
+    private TestRunner runner;
+
     /** Test context */
     private TestContext context;
 
     /** Static self reference */
     private static CitrusSpringObjectFactory selfReference;
+
+    /** Mode to use for injection */
+    private InjectionMode mode = null;
 
     /**
      * Default constructor with static self reference initialization.
@@ -45,13 +55,34 @@ public class CitrusSpringObjectFactory extends SpringFactory {
         selfReference = this;
     }
 
+    @Override
+    public boolean addClass(Class<?> clazz) {
+        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, mode);
+        if (mode == null) {
+            mode = requiredMode;
+        } else if (!mode.equals(requiredMode)) {
+            throw new CucumberException("Illegal mix of test designer and runner mode within test run");
+        }
+
+        return super.addClass(clazz);
+    }
 
     @Override
     public void start() {
         super.start();
         context = getInstance(TestContext.class);
-        designer = new DefaultTestDesigner(context.getApplicationContext(), context);
 
+        if (mode == null) {
+            mode = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+        }
+
+        if (InjectionMode.DESIGNER.equals(mode)) {
+            designer = new DefaultTestDesigner(CitrusBackend.getCitrus().getApplicationContext(), context);
+        }
+
+        if (InjectionMode.RUNNER.equals(mode)) {
+            runner = new DefaultTestRunner(CitrusBackend.getCitrus().getApplicationContext(), context);
+        }
     }
 
     @Override
@@ -67,7 +98,14 @@ public class CitrusSpringObjectFactory extends SpringFactory {
 
         T instance = super.getInstance(type);
         CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus());
-        CitrusDslAnnotations.injectTestDesigner(instance, designer);
+
+        if (InjectionMode.DESIGNER.equals(mode)) {
+            CitrusDslAnnotations.injectTestDesigner(instance, designer);
+        }
+
+        if (InjectionMode.RUNNER.equals(mode)) {
+            CitrusDslAnnotations.injectTestRunner(instance, runner);
+        }
 
         return instance;
     }

@@ -31,8 +31,28 @@ Background:
       You just said: ${text}
       """
 
-  Scenario: Message header validation
-    When <echoEndpoint> sends "${text}"
-    And message header operation is "sayHello"
-    Then <echoEndpoint> should receive plaintext "You just said: ${text}"
-    And message header operation should be "sayHello"
+  Scenario: Message definition
+    Given message echoRequest
+      And <echoRequest> payload is "${text}"
+      And <echoRequest> header operation is "sayHello"
+    Given message echoResponse
+      And <echoResponse> payload is "You just said: ${text}"
+      And <echoResponse> header operation is "sayHello"
+    When <echoEndpoint> sends message <echoRequest>
+    Then <echoEndpoint> should receive plaintext message <echoResponse>
+
+  Scenario: Message definition
+    Given message echoRequest
+      And <echoRequest> payload is
+        """
+        ${text}
+        """
+      And <echoRequest> header operation is "sayHello"
+    Given message echoResponse
+      And <echoResponse> payload is
+        """
+        You just said: ${text}
+        """
+      And <echoResponse> header operation is "sayHello"
+    When <echoEndpoint> sends message <echoRequest>
+    Then <echoEndpoint> should receive plaintext message <echoResponse>

@@ -14,29 +14,34 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java.spring;
+package com.consol.citrus.cucumber.step.runner.core;
 
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.config.CitrusSpringConfig;
-import com.consol.citrus.dsl.design.TestDesigner;
-import org.springframework.test.context.ContextConfiguration;
+import com.consol.citrus.dsl.runner.TestRunner;
+import cucumber.api.DataTable;
+import cucumber.api.java.en.Given;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-@ContextConfiguration(classes = CitrusSpringConfig.class)
-public class SpringSteps {
+public class VariableSteps {
 
     @CitrusResource
-    private TestDesigner testDesigner;
+    private TestRunner runner;
 
-    /**
-     * Gets the value of the testDesigner property.
-     *
-     * @return the testDesigner
-     */
-    public TestDesigner getTestDesigner() {
-        return testDesigner;
+    @Given("^variable ([^\\s]+) is \"([^\"]*)\"$")
+    public void variable(String name, String value) {
+        runner.variable(name, value);
+    }
+
+    @Given("^variables$")
+    public void variables(DataTable dataTable) {
+        Map<String, String> variables = dataTable.asMap(String.class, String.class);
+        for (Map.Entry<String, String> entry : variables.entrySet()) {
+            runner.variable(entry.getKey(), entry.getValue());
+        }
     }
 }

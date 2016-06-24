@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.core;
+package cucumber.runtime.java.spring;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-import org.junit.runner.RunWith;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-@RunWith(Cucumber.class)
-@CucumberOptions(
-        glue = { "com.consol.citrus.cucumber.step.core" },
-        plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
-public class CoreFeatureTest {
+public class DefaultSpringRunnerSteps {
+
+    @CitrusResource
+    private TestRunner testRunner;
+
+    /**
+     * Gets the value of the testRunner property.
+     *
+     * @return the testRunner
+     */
+    public TestRunner getTestRunner() {
+        return testRunner;
+    }
 }

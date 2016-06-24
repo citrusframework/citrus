@@ -37,15 +37,26 @@ public class CitrusObjectFactoryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testGetInstance() throws Exception {
+    public void testDesignerInject() throws Exception {
         CitrusObjectFactory factory = new CitrusObjectFactory();
-
         factory.addClass(TestDesignerSteps.class);
 
         // Scenario 1
         factory.start();
         final TestDesignerSteps steps = factory.getInstance(TestDesignerSteps.class);
         Assert.assertNotNull(steps.getTestDesigner());
+        factory.stop();
+    }
+
+    @Test
+    public void testRunnerInject() throws Exception {
+        CitrusObjectFactory factory = new CitrusObjectFactory();
+        factory.addClass(TestRunnerSteps.class);
+
+        // Scenario 1
+        factory.start();
+        final TestRunnerSteps steps = factory.getInstance(TestRunnerSteps.class);
+        Assert.assertNotNull(steps.getTestRunner());
         factory.stop();
     }
 }

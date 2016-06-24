@@ -14,34 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.step.core;
+package com.consol.citrus.cucumber.step.designer.core;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.dsl.design.TestDesigner;
-import cucumber.api.DataTable;
-import cucumber.api.java.en.Given;
-
-import java.util.Map;
+import cucumber.api.java.en.Then;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class VariableSteps {
+public class EchoSteps {
 
     @CitrusResource
     private TestDesigner designer;
 
-    @Given("^variable ([^\\s]+) is \"([^\"]*)\"$")
-    public void variable(String name, String value) {
-        designer.variable(name, value);
-    }
-
-    @Given("^variables$")
-    public void variables(DataTable dataTable) {
-        Map<String, String> variables = dataTable.asMap(String.class, String.class);
-        for (Map.Entry<String, String> entry : variables.entrySet()) {
-            designer.variable(entry.getKey(), entry.getValue());
-        }
+    @Then("^echo \"([^\"]*)\"$")
+    public void echo(String message) {
+        designer.echo(message);
     }
 }

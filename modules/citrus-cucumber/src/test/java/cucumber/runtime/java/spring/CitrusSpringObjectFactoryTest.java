@@ -32,28 +32,50 @@ public class CitrusSpringObjectFactoryTest {
     }
 
     @Test
-    public void testGetInstance() throws Exception {
+    public void testDesignerInject() throws Exception {
         CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
-
-        factory.addClass(SpringSteps.class);
+        factory.addClass(SpringDesignerSteps.class);
 
         // Scenario 1
         factory.start();
-        final SpringSteps steps = factory.getInstance(SpringSteps.class);
+        final SpringDesignerSteps steps = factory.getInstance(SpringDesignerSteps.class);
         Assert.assertNotNull(steps.getTestDesigner());
         factory.stop();
     }
 
     @Test
-    public void testGetInstanceWithDefaultContext() throws Exception {
+    public void testDesignerInjectWithDefaultContext() throws Exception {
         CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
-
-        factory.addClass(DefaultSpringSteps.class);
+        factory.addClass(DefaultSpringDesignerSteps.class);
 
         // Scenario 1
         factory.start();
-        final DefaultSpringSteps steps = factory.getInstance(DefaultSpringSteps.class);
+        final DefaultSpringDesignerSteps steps = factory.getInstance(DefaultSpringDesignerSteps.class);
         Assert.assertNotNull(steps.getTestDesigner());
+        factory.stop();
+    }
+
+    @Test
+    public void testRunnerInject() throws Exception {
+        CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
+        factory.addClass(SpringRunnerSteps.class);
+
+        // Scenario 1
+        factory.start();
+        final SpringRunnerSteps steps = factory.getInstance(SpringRunnerSteps.class);
+        Assert.assertNotNull(steps.getTestRunner());
+        factory.stop();
+    }
+
+    @Test
+    public void testRunnerInjectWithDefaultContext() throws Exception {
+        CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
+        factory.addClass(DefaultSpringRunnerSteps.class);
+
+        // Scenario 1
+        factory.start();
+        final DefaultSpringRunnerSteps steps = factory.getInstance(DefaultSpringRunnerSteps.class);
+        Assert.assertNotNull(steps.getTestRunner());
         factory.stop();
     }
 }

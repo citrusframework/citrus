@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java.spring;
+package com.consol.citrus.cucumber.step.runner.core;
 
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.runner.TestRunner;
+import cucumber.api.java.en.Then;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class DefaultSpringSteps {
+public class SleepSteps {
 
     @CitrusResource
-    private TestDesigner testDesigner;
+    private TestRunner runner;
 
-    /**
-     * Gets the value of the testDesigner property.
-     *
-     * @return the testDesigner
-     */
-    public TestDesigner getTestDesigner() {
-        return testDesigner;
+    @Then("^sleep$")
+    public void sleep() {
+        runner.sleep();
+    }
+
+    @Then("^sleep (\\d+) ms$")
+    public void sleep(long milliseconds) {
+        runner.sleep(milliseconds);
     }
 }
