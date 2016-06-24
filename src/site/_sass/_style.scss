@@ -262,7 +262,7 @@ footer {
   }
 }
 
-@media (max-width: 568px) {
+@media (max-width: 700px) {
   footer {
     .one-third p { margin-bottom: 0; }
     .two-thirds p { margin-top: -20px; }
@@ -409,7 +409,7 @@ article {
   article ul { padding-left: 20px; }
 }
 
-@media (max-width: 568px) {
+@media (max-width: 700px) {
   article { margin: 0; }
 }
 
@@ -535,7 +535,7 @@ article h2:first-child { margin-top: 0; }
   font-weight: 700;
 }
 
-@media (max-width: 568px) {
+@media (max-width: 700px) {
   .post-category { padding-left: 30px; }
 }
 
@@ -769,7 +769,7 @@ code.output {
   display: none;
 }
 
-@media screen and (max-width: 568px) {
+@media screen and (max-width: 700px) {
   .show-on-mobiles {
     display: block !important;
   }

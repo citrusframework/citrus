@@ -97,7 +97,7 @@
 }
 
 /* Responsive Stuff */
-@media screen and (max-width: 568px) {
+@media screen and (max-width: 700px) {
   /* Stack anything that isn’t full-width on smaller screens 
      and doesn't provide the no-stacking-on-mobiles class */
   .grid:not(.no-stacking-on-mobiles) > .unit {
