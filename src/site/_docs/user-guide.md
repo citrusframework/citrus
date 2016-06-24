@@ -9,27 +9,20 @@ code examples to all Citrus features on board. In case you miss something in our
 in case you discover something wrong or unclear please do not hesitate to tell us. Find below the reference documentation 
 for the latest Citrus release version.
 
-## Latest stable releases
+## Release documentation
 
-Citrus ${project.version}: [HTML](${site.url}/reference/html/index.html) \| [PDF](${site.url}/reference/pdf/citrus-reference-${project.version}.pdf)
-
-Citrus 2.5: [HTML](${site.url}/reference/2.5.2/html/index.html) \| [PDF](${site.url}/reference/2.5.2/pdf/citrus-reference-2.5.2.pdf)
-
-Citrus 2.4: [HTML](${site.url}/reference/2.4/html/index.html) \| [PDF](${site.url}/reference/2.4/pdf/citrus-reference-2.4.pdf)
-
-Citrus 2.3: [HTML](${site.url}/reference/2.3/html/index.html) \| [PDF](${site.url}/reference/2.3/pdf/citrus-reference-2.3.pdf)
-
-Citrus 2.2: [HTML](${site.url}/reference/2.2/html/index.html) \| [PDF](${site.url}/reference/2.2/pdf/citrus-reference-2.2.pdf)
-
-Citrus 2.1: [HTML](${site.url}/reference/2.1/html/index.html) \| [PDF](${site.url}/reference/2.1/pdf/citrus-reference-2.1.pdf)
-
-Citrus 2.0: [HTML](${site.url}/reference/2.0/html/index.html) \| [PDF](${site.url}/reference/2.0/pdf/citrus-reference-2.0.pdf)
-
-Citrus 1.4: [HTML](${site.url}/reference/1.4.1/html/index.html) \| [PDF](${site.url}/reference/1.4.1/pdf/citrus-reference-1.4.1.pdf)
-
-Citrus 1.3: [HTML](${site.url}/reference/1.3.1/html/index.html) \| [PDF](${site.url}/reference/1.3.1/pdf/citrus-reference-1.3.1.pdf)
-
-Citrus 1.2: [HTML](${site.url}/reference/1.2/html/index.html) \| [PDF](${site.url}/reference/1.2/pdf/citrus-reference-1.2.pdf)
+| Version | Documentation |
+|:--------|:------|
+| Citrus ${project.version} | [HTML](${site.url}/reference/html/index.html) \| [PDF](${site.url}/reference/pdf/citrus-reference-${project.version}.pdf) |
+| Citrus 2.5 | [HTML](${site.url}/reference/2.5.2/html/index.html) \| [PDF](${site.url}/reference/2.5.2/pdf/citrus-reference-2.5.2.pdf) |
+| Citrus 2.4 | [HTML](${site.url}/reference/2.4/html/index.html) \| [PDF](${site.url}/reference/2.4/pdf/citrus-reference-2.4.pdf) |
+| Citrus 2.3 | [HTML](${site.url}/reference/2.3/html/index.html) \| [PDF](${site.url}/reference/2.3/pdf/citrus-reference-2.3.pdf) |
+| Citrus 2.2 | [HTML](${site.url}/reference/2.2/html/index.html) \| [PDF](${site.url}/reference/2.2/pdf/citrus-reference-2.2.pdf) |
+| Citrus 2.1 | [HTML](${site.url}/reference/2.1/html/index.html) \| [PDF](${site.url}/reference/2.1/pdf/citrus-reference-2.1.pdf) |
+| Citrus 2.0 | [HTML](${site.url}/reference/2.0/html/index.html) \| [PDF](${site.url}/reference/2.0/pdf/citrus-reference-2.0.pdf) |
+| Citrus 1.4 | [HTML](${site.url}/reference/1.4.1/html/index.html) \| [PDF](${site.url}/reference/1.4.1/pdf/citrus-reference-1.4.1.pdf) |
+| Citrus 1.3 | [HTML](${site.url}/reference/1.3.1/html/index.html) \| [PDF](${site.url}/reference/1.3.1/pdf/citrus-reference-1.3.1.pdf) |
+| Citrus 1.2 | [HTML](${site.url}/reference/1.2/html/index.html) \| [PDF](${site.url}/reference/1.2/pdf/citrus-reference-1.2.pdf) |
 
 ## Additional documentation material
 

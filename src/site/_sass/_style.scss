@@ -130,7 +130,6 @@ nav {
 
   img {
     float: left;
-    margin-top: 2px;
     margin-right: 6px;
   }
 
@@ -149,6 +148,7 @@ nav {
   @include border-radius(5px);
 
   li {
+    vertical-align: middle;
 
     a {
       color: #fff;
@@ -179,6 +179,10 @@ nav {
     overflow: hidden;
     width: 100%;
     display: table;
+  }
+
+  img {
+    margin-left: 10px;
   }
 
   a {
@@ -224,15 +228,25 @@ h6:hover .header-link {
   opacity: 1;
 }
 
-@media (max-width: 768px) {
-  .main-nav ul {
-    text-align: right;
+@media (max-width: 1180px) {
+  .main-nav {
+    @include border-radius(0px);
   }
 }
-@media (max-width: 830px) {
+@media (max-width: 768px) {
   .main-nav {
     .show-on-mobiles { display: inline; }
     .hide-on-mobiles { display: none; }
+  }
+
+  .main-nav ul {
+    text-align: right;
+  }
+
+  nav {
+    img {
+      margin-right: 15px;
+    }
   }
 }
 
