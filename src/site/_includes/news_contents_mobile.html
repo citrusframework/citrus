@@ -1,0 +1,9 @@
+<div class="docs-nav-mobile unit whole show-on-mobiles">
+  <select onchange="if (this.value) window.location.href=this.value">
+    <option value="">Navigate the blog…</option>
+    <option value="${site.path}/news/">Home</option>
+    {% for post in site.posts %}
+    <option value="${site.path}{{ post.url }}">{{ post.title }}</option>
+    {% endfor %}
+  </select>
+</div>

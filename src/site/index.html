@@ -1,0 +1,96 @@
+---
+layout: default
+overview: true
+---
+
+<section class="intro">
+  <div class="grid jumbo">
+    <div class="unit whole align-center">
+      <p class="first">Citrus Integration<br>Testing</p>
+
+      <br>
+      <p>Automated integration tests for message protocols and data formats!<br>
+        HTTP REST, JMS, TCP/IP, SOAP, FTP, SSH, XML, JSON and more!</p>
+
+      <a href="${site.path}/docs/download" class="btn btn-primary">Download v${project.version}</a>
+    </div>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="grid">
+    <div class="unit whole align-center">
+      <h1>Integration challenge</h1>
+      <h2><small>How Citrus works with automated tests</small></h2>
+
+      <img src="${site.path}/img/test-scenario.png" alt="Test Scenario">
+
+      <p>In a typical test scenario the system under test is deployed on some application server and interacts with
+        Citrus over various message transports. During the test run Citrus is able to act on both sides as client and/or
+        server simulating request/response messages.</p>
+
+      <p>With each test step you can validate the exchanged messages with expected control data. The test is fully
+        automated and repeatable, so you can easily add the integration tests to your continuous build.</p>
+    </div>
+  </div>
+  <hr>
+</section>
+
+<section class="intro">
+  <div class="grid">
+    <div class="unit whole align-center">
+      <h1>Testing Microservices</h1>
+      <h2><small>Citrus "Tools in action" session @Devoxx BE 2015</small></h2>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/FPgXJveaLTo" frameborder="0" allowfullscreen="true"></iframe>
+
+      <p>Citrus integrates with frameworks like Apache Camel, Arquillian, Kubernetes and Docker in order to provide
+        automated integration testing of Microservice applications. The tools in action session gives a brief introduction
+        to the Citrus framework and shows code samples for a complete integration test scenario in a Microservices environment.</p>
+    </div>
+  </div>
+  <hr>
+</section>
+
+<section class="features">
+  <div class="grid">
+    <div class="unit one-third">
+      <h2>Features</h2>
+      <p>Your enterprise applications requires detailed integration testing. Citrus provides a
+        tooling for complex integration test with great validation capabilities for XML, JSON and plain text.</p>
+      <ul>
+        <li><strong>Interface mocks and simulators:</strong> client and server side</li>
+        <li><strong>Test automation:</strong> repeatable integration tests within your continuous build</li>
+        <li><strong>Message transport connectivity:</strong> HTTP, JMS, TCP/IP, REST, SOAP, XML, JSON, and more</li>
+        <li><strong>Validation:</strong> message header and body assertions</li>
+      </ul>
+      <p>See the complete <a href="${site.path}/docs/features">feature list &rarr;</a> for details.</p>
+    </div>
+    <div class="unit one-third">
+      <h2>Documentation</h2>
+      <p>See the following reading material and information on Citrus testing.</p>
+      <ul>
+        <li><a href="${site.path}/docs/home/">Documentation</a></li>
+        <li><a href="http://labs.consol.de/tags/citrus" target="_blank">Blog</a></li>
+        <li><a href="${site.path}/apidocs/index.html" target="_blank">Java API</a></li>
+        <li><a href="http://www.github.com/christophd/citrus" target="_blank">Java Sources</a></li>
+      </ul>
+      <p>The reference documentation material for the latest Citrus release is available as online HTML
+        or offline PDF version.</p>
+      <p><strong>Latest stable release:</strong><br>
+        Version ${project.version}: <a href="${site.path}/reference/html/index.html" target="_blank">HTML</a> | <a href="${site.path}/reference/pdf/citrus-reference-${project.version}.pdf" target="_blank">PDF</a>
+      </p>
+    </div>
+    <div class="unit one-third">
+      <h2>News & Blog</h2>
+      <ul>
+      {% for post in site.categories.blog limit:5 %}
+      <li class="{% if page.title == post.title %}current{% endif %}">
+        <a href="${site.path}{{ post.url }}">{{ post.title }}</a>
+      </li>
+      {% endfor %}
+      </ul>
+    </div>
+    <div class="clear"></div>
+  </div>
+</section>

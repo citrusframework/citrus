@@ -1,0 +1,29 @@
+markdown: kramdown
+highlighter: rouge
+permalink: /news/:year/:month/:day/:title/
+excerpt_separator: ""
+
+repository: https://github.com/christophd/citrus
+help_url: https://github.com/christophd/citrus
+
+timezone: Europe/Berlin
+
+collections:
+  docs:
+    output: true
+
+name: Citrus Integration Tests
+description: Automated integration tests for message protocols and data formats that you require
+url: https://citrusframework.org
+
+twitter:
+  username: citrus_test
+
+logo: img/brand-logo.png
+
+gems:
+  - jekyll-feed
+  - jekyll-redirect-from
+  - jemoji
+  - jekyll-sitemap
+  - jekyll-mentions

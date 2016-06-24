@@ -1,0 +1,12 @@
+---
+layout: news
+title: News
+permalink: /news/
+author: all
+---
+
+{% for post in site.posts %}
+  {% unless post.categories contains 'release' %}
+    {% include news_item.html %}
+  {% endunless %}
+{% endfor %}

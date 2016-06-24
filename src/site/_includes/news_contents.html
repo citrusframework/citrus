@@ -1,0 +1,37 @@
+<div class="unit one-fifth hide-on-mobiles">
+  <aside>
+    <h4>Overview</h4>
+    <ul>
+      <li class="{% if page.title == 'News' %}current{% endif %}">
+        <a href="${site.path}/news/">All News</a>
+      </li>
+      <li class="{% if page.title == 'Releases' %}current{% endif %}">
+        <a href="${site.path}/news/releases/">All Releases</a>
+      </li>
+      <li>
+        <a href="http://citrus.895196.n3.nabble.com/" target="_blank">Forum</a>
+      </li>
+    </ul>
+    <h4>Recent Releases</h4>
+    <ul>
+      {% for post in site.categories.release limit:5 %}
+      <li class="{% if page.title == post.title %}current{% endif %}">
+        <a href="${site.path}{{ post.url }}">Version {{ post.version }}</a>
+      </li>
+      {% endfor %}
+      <li>
+        <a href="${site.path}/docs/history/">History »</a>
+      </li>
+    </ul>
+    <h4>Other News</h4>
+    <ul>
+        {% for post in site.posts %}
+        {% unless post.categories contains 'release' %}
+        <li class="{% if page.title == post.title %}current{% endif %}">
+          <a href="${site.path}{{ post.url }}">{{ post.short-title }}</a>
+        </li>
+        {% endunless %}
+        {% endfor %}
+    </ul>
+  </aside>
+</div>
