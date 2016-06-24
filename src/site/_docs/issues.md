@@ -11,4 +11,4 @@ If you have found a bug in Citrus, please open a new issue at [Github](https://g
 for bugs and work hard on the issues you presented to us.
 
 Of course we would also be happy for any help you can give us and we encourage you to contribute your changes. In case 
-you have fixed a bug please see how to [contribute](/docs/contributing) code changes and patches.
+you have fixed a bug please see how to [contribute](${site.path}/docs/contributing) code changes and patches.

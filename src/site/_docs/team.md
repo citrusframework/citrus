@@ -19,14 +19,14 @@ another.
 
 | Image | Id | Name | Organization | Organization URL | Roles |
 |-------|:--:|:----:|:------------:|:----------------:|:-----:|
-| ![user](/img/user.png) | [christophd](http://github.com/christophd) | Christoph Deppisch | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [toschneck](http://github.com/toschneck) | Tobias Schneck | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [cwied](http://github.com/cwied) | Christian Wied | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [philkom](http://github.com/philkom) | Philipp Komninos | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [jblipphaus](http://github.com/jblipphaus) | Jan Lipphaus | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [jza](http://github.com/jza) | Jan Zahalka | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [maherma](http://github.com/maherma) | Martin Maher | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
-| ![user](/img/user.png) | [movchin](http://github.com/movchin) | Michael Movchin | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Web Developer |
+| ![user](${site.path}/img/user.png) | [christophd](http://github.com/christophd) | Christoph Deppisch | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [toschneck](http://github.com/toschneck) | Tobias Schneck | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [cwied](http://github.com/cwied) | Christian Wied | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [philkom](http://github.com/philkom) | Philipp Komninos | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [jblipphaus](http://github.com/jblipphaus) | Jan Lipphaus | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [jza](http://github.com/jza) | Jan Zahalka | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [maherma](http://github.com/maherma) | Martin Maher | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Developer |
+| ![user](${site.path}/img/user.png) | [movchin](http://github.com/movchin) | Michael Movchin | ConSol Software GmbH | [http://www.consol.de/](http://www.consol.de/) | Web Developer |
 
 ## Contributors
 

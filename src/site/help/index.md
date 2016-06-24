@@ -5,7 +5,7 @@ title: Getting Help
 
 Need help with Citrus? Try these resources.
 
-### [Documentation](/docs/home/)
+### [Documentation](${site.path}/docs/home/)
 
 Our guide to Citrus covering installation, writing, customization, deployment, and more.
 

@@ -1,18 +1,18 @@
 <ul>
   <li>
-    <img src="/img/brand-logo.png" alt="Citrus"><span class="brand hide-on-mobiles">Citrus</span>
+    <img src="${site.path}/img/brand-logo.png" alt="Citrus"><span class="brand hide-on-mobiles">Citrus</span>
   </li>
   <li class="{% if page.overview %}current{% endif %}">
-    <a href="/">Home</a>
+    <a href="${site.path}/">Home</a>
   </li>
-  <li class="{% if page.url contains '/docs/' %}current{% endif %}">
-    <a href="/docs/home/">Doc<span class="show-on-mobiles">s</span><span class="hide-on-mobiles">umentation</span></a>
+  <li class="{% if page.url contains '${site.path}/docs/' %}current{% endif %}">
+    <a href="${site.path}/docs/home/">Doc<span class="show-on-mobiles">s</span><span class="hide-on-mobiles">umentation</span></a>
   </li>
   <li class="{% if page.author %}current{% endif %}">
-    <a href="/news/">News<span class="hide-on-mobiles"> &amp; Blog</span></a>
+    <a href="${site.path}/news/">News<span class="hide-on-mobiles"> &amp; Blog</span></a>
   </li>
-  <li class="{% if page.url contains '/help/' %}current{% endif %}">
-    <a href="/help/">Help</a>
+  <li class="{% if page.url contains '${site.path}/help/' %}current{% endif %}">
+    <a href="${site.path}/help/">Help</a>
   </li>
   <li>
     <a href="{{ site.repository }}"><span class="hide-on-mobiles">View on </span>GitHub</a>

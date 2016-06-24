@@ -6,7 +6,7 @@ permalink: /docs/custom-actions/
 
 Citrus comes with a powerful set of actions built-in, covering a wide range of helpful SOA integration testing aspects 
 like sending and receiving messages, database access, Java and Groovy scripting support or dealing with exceptions. For 
-a full list of provided standard actions see the [reference documentation](/docs/user-guide). But each project and 
+a full list of provided standard actions see the [reference documentation](${site.path}/docs/user-guide). But each project and 
 especially each system-under-test (SUT) comes along with its own specifics and characteristics, so chances are high that 
 during a project the need for an extension of the built-in citrus actions will arise. This tutorial shall show you how 
 easy and handsome it is to provide your own custom actions and reuse them inside your citrus integration tests.

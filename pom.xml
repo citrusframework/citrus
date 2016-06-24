@@ -851,6 +851,14 @@
           <version>2.10</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.4</version>
+          <configuration>
+            <inputDirectory>${project.build.directory}/site/_site</inputDirectory>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <version>${jetty.version}</version>
@@ -1124,8 +1132,14 @@
           <id>repository-consol-snapshots</id>
           <url>http://build.int.consol.de/nexus/content/repositories/inhouse-snapshots</url>
         </snapshotRepository>
+        <site>
+          <id>site-citrus-inhouse</id>
+          <url>scpexe://build.int.consol.de/home/sites/www/htdocs/citrus</url>
+        </site>
       </distributionManagement>
       <properties>
+        <site.url>http://build.int.consol.de/citrus</site.url>
+        <site.path>/citrus</site.path>
         <docbkx.img.path>images</docbkx.img.path>
       </properties>
     </profile>
@@ -1166,8 +1180,14 @@
           <id>consol-labs-snapshots</id>
           <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
         </snapshotRepository>
+        <site>
+          <id>site-citrus</id>
+          <url>scpexe://labs.consol.de/home/citrus/www/stage</url>
+        </site>
       </distributionManagement>
       <properties>
+        <site.url>http://www.citrusframework.org</site.url>
+        <site.path></site.path>
         <docbkx.img.path>images</docbkx.img.path>
       </properties>
 
@@ -1192,8 +1212,14 @@
           <id>local-snapshots</id>
           <url>file:///stage/snapshots-repository</url>
         </snapshotRepository>
+        <site>
+          <id>site-citrus</id>
+          <url>file:///stage/citrus-site</url>
+        </site>
       </distributionManagement>
       <properties>
+        <site.url>http://www.citrusframework.org</site.url>
+        <site.path></site.path>
         <docbkx.img.path>file:${basedir}/src/docbkx/images</docbkx.img.path>
       </properties>
     </profile>
@@ -1216,7 +1242,9 @@
               <include>_docs/**</include>
               <include>_posts/**</include>
               <include>_includes/**</include>
+              <include>help/**</include>
               <include>index.html</include>
+              <include>_config.yml</include>
               <include>latest_version.txt</include>
             </includes>
             <filtering>true</filtering>
