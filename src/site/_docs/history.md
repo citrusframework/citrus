@@ -16,6 +16,7 @@ permalink: "/docs/history/"
 | Add | [#53](https://tree.taiga.io/project/christophd-citrus/us/53) | Spring RestDocs support | christophd |
 | Add | [#7](https://tree.taiga.io/project/christophd-citrus/us/7) | Zookeeper support | maherm |
 | Fix | [#99](https://github.com/christophd/citrus/issues/99) | Set custom message type in Java DSL | christophd |
+| Fix | [#97](https://github.com/christophd/citrus/issues/97) | Support configurable paths for reporters | christophd |
 | Fix | [#96](https://github.com/christophd/citrus/issues/96) | Unique particle attribution #cos-nonambig violation in citrus-ws-testcase XSD | christophd |
 | Fix | [#95](https://github.com/christophd/citrus/issues/95) | HttpStatus validation broken for BAD_REQUEST status code | christophd |
 | Fix | [#94](https://github.com/christophd/citrus/issues/94) | escapeXml() not working with ',' in sub-XML | christophd |
