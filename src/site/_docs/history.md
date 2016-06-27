@@ -21,7 +21,7 @@ permalink: "/docs/history/"
 | Add | [#57](https://tree.taiga.io/project/christophd-citrus/us/57) | Hamcrest matcher in iteration conditions | christophd |
 | Add | [#56](https://tree.taiga.io/project/christophd-citrus/us/56) | Cucumber BDD support | christophd |
 | Add | [#53](https://tree.taiga.io/project/christophd-citrus/us/53) | Spring RestDocs support | christophd |
-| Add | [#7](https://tree.taiga.io/project/christophd-citrus/us/7) | Zookeeper support | maherm |
+| Add | [#7](https://tree.taiga.io/project/christophd-citrus/us/7) | Zookeeper support | maherma |
 | Fix | [#99](https://github.com/christophd/citrus/issues/99) | Set custom message type in Java DSL | christophd |
 | Fix | [#97](https://github.com/christophd/citrus/issues/97) | Support configurable paths for reporters | christophd |
 | Fix | [#96](https://github.com/christophd/citrus/issues/96) | Unique particle attribution #cos-nonambig violation in citrus-ws-testcase XSD | christophd |
@@ -81,13 +81,13 @@ permalink: "/docs/history/"
 | Fix | [#55](https://github.com/christophd/citrus/issues/55) | x-www-form-urlencoded payload lost | christophd |
 | Fix | [#50](https://github.com/christophd/citrus/issues/50) | allow variable value definition in cdata section | christophd |
 | Add | [#36](https://tree.taiga.io/project/christophd-citrus/us/36) | RMI support | christophd |
-| Update | [#34](https://tree.taiga.io/project/christophd-citrus/us/34) | Cleanup validation matcher support | maherm |
+| Update | [#34](https://tree.taiga.io/project/christophd-citrus/us/34) | Cleanup validation matcher support | maherma |
 | Update | [#32](https://tree.taiga.io/project/christophd-citrus/us/32) | Use Mockito instead of EasyMock | christophd |
-| Add | [#31](https://tree.taiga.io/project/christophd-citrus/us/31) | Date range validation matcher | maherm |
+| Add | [#31](https://tree.taiga.io/project/christophd-citrus/us/31) | Date range validation matcher | maherma |
 | Add | [#29](https://tree.taiga.io/project/christophd-citrus/us/29) | Read file resource function | christophd |
-| Add | [#24](https://tree.taiga.io/project/christophd-citrus/us/24) | Timer action container | maherm |
-| Update | [#23](https://tree.taiga.io/project/christophd-citrus/us/23) | Optimize Jett-9 startup | maherm |
-| Update | [#17](https://tree.taiga.io/project/christophd-citrus/us/17) | Update to Vert.x 3.0 | maherm |
+| Add | [#24](https://tree.taiga.io/project/christophd-citrus/us/24) | Timer action container | maherma |
+| Update | [#23](https://tree.taiga.io/project/christophd-citrus/us/23) | Optimize Jett-9 startup | maherma |
+| Update | [#17](https://tree.taiga.io/project/christophd-citrus/us/17) | Update to Vert.x 3.0 | maherma |
 
 ## Release 2.4 / 2015-11-03
 {: #v2-4}
@@ -97,7 +97,7 @@ permalink: "/docs/history/"
 | Fix | [#47](https://github.com/christophd/citrus/issues/47) | JSON data dictionary throws NullPointerException | christophd |
 | Update | [#27](https://tree.taiga.io/project/christophd-citrus/us/27) | Validation callback with TestContext | christophd |
 | Update | [#26](https://tree.taiga.io/project/christophd-citrus/us/26) | Improved REST support | christophd |
-| Add | [#22](https://tree.taiga.io/project/christophd-citrus/us/22) | Wait-Condition Action | maherm |
+| Add | [#22](https://tree.taiga.io/project/christophd-citrus/us/22) | Wait-Condition Action | maherma |
 | Add | [#21](https://tree.taiga.io/project/christophd-citrus/us/21) | Camel route test actions | christophd |
 | Update | [#20](https://tree.taiga.io/project/christophd-citrus/us/20) | Http DELETE with payload | christophd |
 | Add | [#19](https://tree.taiga.io/project/christophd-citrus/us/19) | Purge endpoints action | christophd |
@@ -117,8 +117,8 @@ permalink: "/docs/history/"
 | Add | [#263](https://citrusframework.atlassian.net/browse/CITRUS-263) | Customize message validators | christophd |
 | Update | [#262](https://citrusframework.atlassian.net/browse/CITRUS-262) | Boolean expression evaluation in Java DSL | christophd |
 | Add | [#255](https://citrusframework.atlassian.net/browse/CITRUS-255) | Refactor Java DSL test action execution (TestRunner) | christophd |
-| Update | [#253](https://citrusframework.atlassian.net/browse/CITRUS-253) | Update Jetty version | maherm |
-| Add | [#248](https://citrusframework.atlassian.net/browse/CITRUS-248) | Websocket support | maherm |
+| Update | [#253](https://citrusframework.atlassian.net/browse/CITRUS-253) | Update Jetty version | maherma |
+| Add | [#248](https://citrusframework.atlassian.net/browse/CITRUS-248) | Websocket support | maherma |
 | Add | [#196](https://citrusframework.atlassian.net/browse/CITRUS-196) | JSONPath support | christophd |
 
 ## Release 2.2 / 2015-06-26
@@ -355,8 +355,8 @@ permalink: "/docs/history/"
 
 | Type | Id | Changes | By |
 |:----:|:--:|:-------:|:--:|
-| Add | #313 | Log message when validation fails | maherm |
-| Fix | #290 | Log XSD schema validation errors properly | maherm |
+| Add | #313 | Log message when validation fails | maherma |
+| Fix | #290 | Log XSD schema validation errors properly | maherma |
 | Fix | #297 | SubstringAfterFunction | cwied |
 | Add | #296 | Attachment support for webservice replies | cwied |
 | Fix | #295 | Support for namespace uri containing "xmlns" phrase | christophd |
@@ -367,8 +367,8 @@ permalink: "/docs/history/"
 | Add | #292 | MapValueFunction | dimovelev |
 | Add | #291 | RandomEnumValueFunction | dimovelev |
 | Add | #286 | Ignore placeholder | christophd |
-| Fix | #289 | Fixed Spring wiring bug in AbstractTestNGCitrusTest in test set up methods | maherm |
-| Add | #288 | Support setting variables in TestNG tests | maherm |
+| Fix | #289 | Fixed Spring wiring bug in AbstractTestNGCitrusTest in test set up methods | maherma |
+| Add | #288 | Support setting variables in TestNG tests | maherma |
 | Fix | #285 | Finally block not executed in failure state | christophd |
 | Add | #284 | Provide line numbers in failure messages | christophd |
 | Add | #283 | Improve exception tracing in parallel container | christophd |

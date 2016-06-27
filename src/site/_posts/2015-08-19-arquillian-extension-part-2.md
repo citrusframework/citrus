@@ -7,7 +7,7 @@ github: christophd
 categories: [blog]
 ---
 
-Some time has passed since <a href="http://christophd.github.io/arquillian-extension-part-1/" title="Part 1" target="_blank">part one</a> of this blog post series and we have made some improvements on the Citrus Arquillian extension.
+Some time has passed since [part one](/news/2015/06/29/arquillian-extension-part-1) of this blog post series and we have made some improvements on the Citrus Arquillian extension.
 So we can look forward to this post as we move on with a more complex test scenario where we include some Citrus mail server within our test. In part one we have already combined both frameworks <a href="http://arquillian.org/" title="Arquillian" target="_blank">Arquillian</a>
 and <a href="http://www.citrusframework.org" title="Citrus framework" target="_blank">Citrus</a> with a basic example.
 

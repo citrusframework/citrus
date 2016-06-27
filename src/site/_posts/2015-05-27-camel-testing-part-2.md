@@ -7,7 +7,7 @@ github: christophd
 categories: [blog]
 ---
 
-In <a href="http://christophd.github.io/camel-testing-part-1/" title="Part 1" target="_blank">part one</a> of this blog series we have used Citrus in combination with Apache Camel for setting up
+In [part one](/news/2014/11/21/camel-testing-part-1) of this blog series we have used Citrus in combination with Apache Camel for setting up
 a complete integration test scenario. Remember we have interacted with our Camel route via JMS as client and via SOAP Http WebService as a server.
 
 Now in the second part we want to interact with a Camel route using direct and Seda in memory message transports. First of all we need a Camel route to test.
