@@ -11,28 +11,19 @@ manual download are listed below:
 
 ## Release artifacts
 
-| Version | File | Artifacts |
-|:--------|:-----|:---------:|
-| ${project.version} | citrus-${project.version}-release | [zip](${site.url}/dist/citrus-${project.version}-release.zip)/[tar.gz](${site.url}/dist/citrus-${project.version}-release.tar.gz) |
-| ${project.version} | citrus-${project.version}-src | [zip](${site.url}/dist/citrus-${project.version}-src.zip)/[tar.gz](${site.url}/dist/citrus-${project.version}-src.tar.gz) |
-| 2.5 | citrus-2.5-release | [zip](${site.url}/dist/citrus-2.5.2-release.zip)/[tar.gz](${site.url}/dist/citrus-2.5.2-release.tar.gz) |
-| 2.5 | citrus-2.5-src | [zip](${site.url}/dist/citrus-2.5.2-src.zip)/[tar.gz](${site.url}/dist/citrus-2.5.2-src.tar.gz) |
-| 2.4 | citrus-2.4-release | [zip](${site.url}/dist/citrus-2.4-release.zip)/[tar.gz](${site.url}/dist/citrus-2.4-release.tar.gz) |
-| 2.4 | citrus-2.4-src | [zip](${site.url}/dist/citrus-2.4-src.zip)/[tar.gz](${site.url}/dist/citrus-2.4-src.tar.gz) |
-| 2.3 | citrus-2.3-release | [zip](${site.url}/dist/citrus-2.3-release.zip)/[tar.gz](${site.url}/dist/citrus-2.3-release.tar.gz) |
-| 2.3 | citrus-2.3-src | [zip](${site.url}/dist/citrus-2.3-src.zip)/[tar.gz](${site.url}/dist/citrus-2.3-src.tar.gz) |
-| 2.2 | citrus-2.2-release | [zip](${site.url}/dist/citrus-2.2-release.zip)/[tar.gz](${site.url}/dist/citrus-2.2-release.tar.gz) |
-| 2.2 | citrus-2.2-src | [zip](${site.url}/dist/citrus-2.2-src.zip)/[tar.gz](${site.url}/dist/citrus-2.2-src.tar.gz) |
-| 2.1 | citrus-2.1-release | [zip](${site.url}/dist/citrus-2.1-release.zip)/[tar.gz](${site.url}/dist/citrus-2.1-release.tar.gz) |
-| 2.1 | citrus-2.1-src | [zip](${site.url}/dist/citrus-2.1-src.zip)/[tar.gz](${site.url}/dist/citrus-2.1-src.tar.gz) |
-| 2.0 | citrus-2.0-release | [zip](${site.url}/dist/citrus-2.0-release.zip)/[tar.gz](${site.url}/dist/citrus-2.0-release.tar.gz) |
-| 2.0 | citrus-2.0-src | [zip](${site.url}/dist/citrus-2.0-src.zip)/[tar.gz](${site.url}/dist/citrus-2.0-src.tar.gz) |
-| 1.4 | citrus-1.4.1-release | [zip](${site.url}/dist/citrus-1.4.1-release.zip)/[tar.gz](${site.url}/dist/citrus-1.4.1-release.tar.gz) |
-| 1.4 | citrus-1.4.1-src | [zip](${site.url}/dist/citrus-1.4.1-src.zip)/[tar.gz](${site.url}/dist/citrus-1.4.1-src.tar.gz) |
-| 1.3 | citrus-1.3.1-release | [zip](${site.url}/dist/citrus-1.3.1-release.zip)/[tar.gz](${site.url}/dist/citrus-1.3.1-release.tar.gz) |
-| 1.3 | citrus-1.3.1-src | [zip](${site.url}/dist/citrus-1.3.1-src.zip)/[tar.gz](${site.url}/dist/citrus-1.3.1-src.tar.gz) |
-| 1.2 | citrus-1.2-release | [zip](${site.url}/dist/citrus-1.2-release.zip)/[tar.gz](${site.url}/dist/citrus-1.2-release.tar.gz) |
-| 1.2 | citrus-1.2-src | [zip](${site.url}/dist/citrus-1.2-src.zip)/[tar.gz](${site.url}/dist/citrus-1.2-src.tar.gz) |
+| Version | Artifact | Sources |
+|:--------|:--------|:--------|
+| ${project.version} | Release [zip](${site.url}/dist/citrus-${project.version}-release.zip)/[tar.gz](${site.url}/dist/citrus-${project.version}-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-${project.version}-src.zip)/[tar.gz](${site.url}/dist/citrus-${project.version}-src.tar.gz) |
+| 2.6 | Release [zip](${site.url}/dist/citrus-2.6-release.zip)/[tar.gz](${site.url}/dist/citrus-2.6-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.6-src.zip)/[tar.gz](${site.url}/dist/citrus-2.6-src.tar.gz) |
+| 2.5 | Release [zip](${site.url}/dist/citrus-2.5.2-release.zip)/[tar.gz](${site.url}/dist/citrus-2.5.2-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.5.2-src.zip)/[tar.gz](${site.url}/dist/citrus-2.5.2-src.tar.gz) |
+| 2.4 | Release [zip](${site.url}/dist/citrus-2.4-release.zip)/[tar.gz](${site.url}/dist/citrus-2.4-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.4-src.zip)/[tar.gz](${site.url}/dist/citrus-2.4-src.tar.gz) |
+| 2.3 | Release [zip](${site.url}/dist/citrus-2.3-release.zip)/[tar.gz](${site.url}/dist/citrus-2.3-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.3-src.zip)/[tar.gz](${site.url}/dist/citrus-2.3-src.tar.gz) |
+| 2.2 | Release [zip](${site.url}/dist/citrus-2.2-release.zip)/[tar.gz](${site.url}/dist/citrus-2.2-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.2-src.zip)/[tar.gz](${site.url}/dist/citrus-2.2-src.tar.gz) |
+| 2.1 | Release [zip](${site.url}/dist/citrus-2.1-release.zip)/[tar.gz](${site.url}/dist/citrus-2.1-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.1-src.zip)/[tar.gz](${site.url}/dist/citrus-2.1-src.tar.gz) |
+| 2.0 | Release [zip](${site.url}/dist/citrus-2.0-release.zip)/[tar.gz](${site.url}/dist/citrus-2.0-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-2.0-src.zip)/[tar.gz](${site.url}/dist/citrus-2.0-src.tar.gz) |
+| 1.4 | Release [zip](${site.url}/dist/citrus-1.4.1-release.zip)/[tar.gz](${site.url}/dist/citrus-1.4.1-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-1.4.1-src.zip)/[tar.gz](${site.url}/dist/citrus-1.4.1-src.tar.gz) |
+| 1.3 | Release [zip](${site.url}/dist/citrus-1.3.1-release.zip)/[tar.gz](${site.url}/dist/citrus-1.3.1-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-1.3.1-src.zip)/[tar.gz](${site.url}/dist/citrus-1.3.1-src.tar.gz) |
+| 1.2 | Release [zip](${site.url}/dist/citrus-1.2-release.zip)/[tar.gz](${site.url}/dist/citrus-1.2-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-1.2-src.zip)/[tar.gz](${site.url}/dist/citrus-1.2-src.tar.gz) |
 
 The Citrus project requires Java 7 (or newer version) to run.
 

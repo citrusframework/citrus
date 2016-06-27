@@ -14,6 +14,7 @@ for the latest Citrus release version.
 | Version | Documentation |
 |:--------|:------|
 | Citrus ${project.version} | [HTML](${site.url}/reference/html/index.html) \| [PDF](${site.url}/reference/pdf/citrus-reference-${project.version}.pdf) |
+| Citrus 2.6 | [HTML](${site.url}/reference/2.6/html/index.html) \| [PDF](${site.url}/reference/2.6/pdf/citrus-reference-2.6.pdf) |
 | Citrus 2.5 | [HTML](${site.url}/reference/2.5.2/html/index.html) \| [PDF](${site.url}/reference/2.5.2/pdf/citrus-reference-2.5.2.pdf) |
 | Citrus 2.4 | [HTML](${site.url}/reference/2.4/html/index.html) \| [PDF](${site.url}/reference/2.4/pdf/citrus-reference-2.4.pdf) |
 | Citrus 2.3 | [HTML](${site.url}/reference/2.3/html/index.html) \| [PDF](${site.url}/reference/2.3/pdf/citrus-reference-2.3.pdf) |

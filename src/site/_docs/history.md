@@ -4,6 +4,13 @@ layout: docs
 permalink: "/docs/history/"
 ---
 
+## Release ${project.version} / {{ site.time | date: '%Y-%m-%d' }}
+{: #latest}
+
+| Type | Id | Changes | By |
+|:----:|:--:|:-------:|:--:|
+|      |    |         |    |
+
 ## Release 2.6 / 2016-06-27
 {: #v2-6}
 
