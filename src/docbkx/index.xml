@@ -59,6 +59,7 @@
     <xi:include href='jmx.xml'/>
     <xi:include href='cucumber.xml'/>
     <xi:include href='zookeeper.xml'/>
+    <xi:include href='restdocs.xml'/>
     <xi:include href='endpoint-component.xml'/>
     <xi:include href='endpoint-adapter.xml'/>
     <xi:include href='functions.xml'/>

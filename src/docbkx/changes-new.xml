@@ -2,7 +2,7 @@
 <chapter id="changes-new">
   <title>What's new in Citrus 2.6?!</title>
 
-  <para>Citrus 2.5 comes with a set of new modules that enable completely new aspects of integration testing. Namely these are the new modules for Cucumber behavior driven development and Zookeeper support.
+  <para>Citrus 2.6 comes with a set of new modules that enable completely new aspects of integration testing. Namely these are the new modules for Cucumber behavior driven development and Zookeeper support.
   Just have a look at the following features that are shipped within the 2.6 box.</para>
 
   <section id="new-2-6-cucumber">
@@ -41,7 +41,7 @@
 
     <para>Citrus provides a new Java fluent API for sending and receiving SOAP related message content. The Java DSL enhancements are
     based on those of Http. Now you can define SOAP messages with special SOAP action headers more easily. On top of that you can handle SOAP faults
-    on client and server with the fluent API. Checkout <xref linkend="soap"/> for details.</para>
+    on client and server with the fluent API. Checkout <xref linkend="soap-webservices"/> for details.</para>
   </section>
 
   <section id="new-2-6-refactoring">

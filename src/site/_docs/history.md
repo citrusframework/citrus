@@ -4,7 +4,7 @@ layout: docs
 permalink: "/docs/history/"
 ---
 
-## Release 2.6 / 2016-06-30
+## Release 2.6 / 2016-06-27
 {: #v2-6}
 
 | Type | Id | Changes | By |
