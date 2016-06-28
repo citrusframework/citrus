@@ -4,7 +4,7 @@
 
     <para>Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As
     a tester you want to validate the binary content. In Citrus the way to compare binary message content is to use base64 String encoding.
-    The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.</para>
+    The binary data is encoded as base64 character sequence and therefore is comparable with an expected content.</para>
 
     <para>The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation
     takes place. The binary data can be anything e.g. images, pdf or gzip content.</para>
