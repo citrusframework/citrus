@@ -131,6 +131,15 @@ public class MyFirstTest extends AbstractTestNGCitrusTest {
     Citrus works with Java and uses the well known JUnit and TestNG framework benefits that you may be used to as a tester. Many users may prefer to write Java code instead of the verbose XML syntax.
     Therefore you have another possibility for writing Citrus tests in pure Java.</para>
 
+    <para>When using the Citrus Java DSL we need to include a special Maven dependency module to our project that provides the needed API.</para>
+
+    <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-javadsl&lt;/artifactId&gt;
+  &lt;version&gt;2.7-SNAPSHOT&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</programlisting>
+
     <para>Citrus in general differences between two ways of test cases in Java. These are <emphasis>test-designers</emphasis> and <emphasis>test-runners</emphasis> that we deal with each in the next two sections.</para>
 
     <section id="testcase-java-designer">

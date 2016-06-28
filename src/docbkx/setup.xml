@@ -89,6 +89,16 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
 &lt;/dependency&gt;</programlisting>
             </listitem>
             <listitem>
+                <para>In case you would like to use the Citrus Java DSL also add this dependency to the project</para>
+
+                <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-javadsl&lt;/artifactId&gt;
+  &lt;version&gt;2.7-SNAPSHOT&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</programlisting>
+            </listitem>
+            <listitem>
                 <para>Add the citrus Maven plugin to your project</para>
                 
                 <programlisting>&lt;plugin&gt;
