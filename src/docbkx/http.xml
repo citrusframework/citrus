@@ -335,9 +335,9 @@ public void httpActionTest() {
 public void httpServerActionTest() {
     http().server("helloHttpServer")
           .post("/test")
-          .payload("&lt;testRequestMessage&lt;" +
-                    "&lt;text&lt;Hello HttpServer&lt;/text&lt;" +
-                  "&lt;/testRequestMessage&lt;")
+          .payload("&lt;testRequestMessage&gt;" +
+                    "&lt;text&lt;Hello HttpServer&lt;/text&gt;" +
+                  "&lt;/testRequestMessage&gt;")
           .contentType("application/xml")
           .accept("application/xml, */*")
           .header("CustomHeaderId", "${custom_header_id}")
@@ -346,9 +346,9 @@ public void httpServerActionTest() {
 
     http().server("helloHttpServer")
           .respond(HttpStatus.OK)
-          .payload("&lt;testResponseMessage&lt;" +
-                    "&lt;text&lt;Hello Citrus&lt;/text&lt;" +
-                  "&lt;/testResponseMessage&lt;")
+          .payload("&lt;testResponseMessage&gt;" +
+                    "&lt;text&lt;Hello Citrus&lt;/text&gt;" +
+                  "&lt;/testResponseMessage&gt;")
           .version("HTTP/1.1")
           .contentType("application/xml")
           .header("CustomHeaderId", "${custom_header_id}")

@@ -10,6 +10,7 @@ permalink: "/docs/history/"
 | Type | Id | Changes | By |
 |:----:|:--:|:-------:|:--:|
 |      |    |         |    |
+| Fix | [#107](https://github.com/christophd/citrus/issues/107) | Documentation wrong XML tags | christophd |
 
 ## Release 2.6 / 2016-06-27
 {: #v2-6}
