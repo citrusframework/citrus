@@ -77,7 +77,7 @@ public class WaitConditionBuilder {
      * @return
      */
     public WaitConditionBuilder ms(Long milliseconds) {
-        action.setMilliseconds(milliseconds.toString());
+        action.setMilliseconds(String.valueOf(milliseconds));
         return this;
     }
 
@@ -88,6 +88,16 @@ public class WaitConditionBuilder {
      */
     public WaitConditionBuilder interval(String interval) {
         action.setInterval(interval);
+        return this;
+    }
+
+    /**
+     * The interval in seconds to use between each test of the condition
+     * @param interval
+     * @return
+     */
+    public WaitConditionBuilder interval(Long interval) {
+        action.setInterval(String.valueOf(interval));
         return this;
     }
 

@@ -11,6 +11,7 @@ permalink: "/docs/history/"
 |:----:|:--:|:-------:|:--:|
 |      |    |         |    |
 | Fix | [#107](https://github.com/christophd/citrus/issues/107) | Documentation wrong XML tags | christophd |
+| Fix | [#106](https://github.com/christophd/citrus/issues/106) | Documentation Wait wrong argument in Java DSL | christophd |
 
 ## Release 2.6 / 2016-06-27
 {: #v2-6}
