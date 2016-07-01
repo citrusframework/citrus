@@ -850,3 +850,582 @@
     id: 68
     type: Add
     author: christophd
+    
+- version: 1.2
+  date: 2012-07-05
+  tag: v1-2
+  changes:
+  - title: Add XML validation matcher
+    id: 368
+    type: Add
+    author: christophd
+  - title: Add JSON slurper Groovy validation support
+    id: 367
+    type: Add
+    author: danielp
+  - title: Fixed issue with JSONArray and simple object values
+    id: 366
+    type: Fix
+    author: christophd
+  - title: Message tracing log files
+    id: 365
+    type: Add
+    author: christophd
+  - title: Schema mappings on receive action definition
+    id: 364
+    type: Add
+    author: christophd
+  - title: Typed message headers
+    id: 363
+    type: Add
+    author: christophd
+  - title: Purge message channel action
+    id: 362
+    type: Add
+    author: christophd
+  - title: Schema mapping strategy chain
+    id: 361
+    type: Add
+    author: christophd
+  - title: Root QName schema mapping strategy
+    id: 360
+    type: Add
+    author: christophd
+  - title: Local host address function
+    id: 359
+    type: Add
+    author: christophd
+  - title: Function for digest authentication header creation
+    id: 358
+    type: Add
+    author: christophd
+  - title: Message selector support for message channels
+    id: 356
+    type: Add
+    author: christophd
+  - title: Root QName message selector on message channels
+    id: 357
+    type: Add
+    author: christophd
+  - title: Fixed JBoss Maven repository
+    id: 355
+    type: Fix
+    author: christophd
+  - title: Upgrade to Spring 3.1.1
+    id: 352
+    type: Update
+    author: christophd
+  - title: Upgrade to Spring WS 2.1.0
+    id: 353
+    type: Update
+    author: christophd
+  - title: Upgrade to Spring Integration 2.1.2
+    id: 354
+    type: Update
+    author: christophd
+  - title: Custom validation matchers
+    id: 348
+    type: Add
+    author: cwied
+  - title: Work on Sonar reported warnings
+    id: 339
+    type: Fix
+    author: christophd
+  - title: Do not use ParseException
+    id: 362
+    type: Fix
+    author: christophd
+  - title: Custom actions tutorial
+    id: 331
+    type: Add
+    author: jza
+  - title: Validation matchers
+    id: 346
+    type: Add
+    author: cwied
+  - title: Validate REST Http error status codes
+    id: 400
+    type: Add
+    author: christophd
+  - title: Write blog entry on TestNG parameter support
+    id: 369
+    type: Add
+    author: christophd
+  - title: Unknown test error reporting
+    id: 363
+    type: Fix
+    author: christophd
+  - title: Documentation bug on JmsConnectingMessageHandler package
+    id: 366
+    type: Fix
+    author: christophd
+  - title: Variable support in Java action
+    id: 301
+    type: Fix
+    author: christophd
+  - title: Setter on messaging template attribute in message-channel sender/receiver
+    id: 367
+    type: Fix
+    author: christophd
+  - title: property marker escaping in HTML reporter
+    id: 365
+    type: Fix
+    author: christophd
+  - title: JSON null value validation
+    id: 364
+    type: Fix
+    author: christophd
+  - title: REST support (client and server side)
+    id: 312
+    type: Add
+    author: christophd
+  - title: Autowired tasks before/after suite
+    id: 247
+    type: Add
+    author: christophd
+  - title: TestNG parameter as variables
+    id: 248
+    type: Add
+    author: christophd
+  - title: Maven3 support
+    id: 299
+    type: Add
+    author: christophd
+  - title: Update Maven plugin versions
+    id: 300
+    type: Add
+    author: christophd
+  - title: Fixed Http server connections from other machines
+    id: 361
+    type: Fix
+    author: christophd
+  - title: Mime headers in SOAP client
+    id: 316
+    type: Add
+    author: christophd
+  - title: Fork mode for SOAP message sending
+    id: 303
+    type: Add
+    author: christophd
+  - title: Create variable from Groovy script
+    id: 317
+    type: Add
+    author: jblipphaus
+  - title: HTML test report
+    id: 314
+    type: Add
+    author: philkom
+  - title: Citrus Maven archetype
+    id: 323
+    type: Add
+    author: christophd
+  - title: Variable support in templates
+    id: 350
+    type: Fix
+    author: christophd
+  - title: Groovy SQL result set validation
+    id: 330
+    type: Add
+    author: christophd
+  - title: Custom imports in Groovy scripts
+    id: 347
+    type: Add
+    author: christophd
+  - title: Objects as test variables
+    id: 349
+    type: Add
+    author: christophd
+  - title: Plain text message validator
+    id: 344
+    type: Add
+    author: christophd
+  - title: JSON message validator
+    id: 343
+    type: Add
+    author: christophd
+  - title: No XML specifica in TestContext
+    id: 345
+    type: Fix
+    author: christophd
+  - title: Multi-line SQL validation stmts
+    id: 324
+    type: Fix
+    author: philkom
+  - title: onFinish() of JUnitReporter called too late
+    id: 322
+    type: Fix
+    author: christophd
+  - title: Global namespace mappings for XPath
+    id: 342
+    type: Add
+    author: christophd
+  - title: Validate namespaces support is broken
+    id: 195
+    type: Fix
+    author: christophd
+  - title: Support message channel name resolving
+    id: 336
+    type: Add
+    author: christophd
+  - title: Add custom connectors to Citrus Jetty server
+    id: 321
+    type: Add
+    author: christophd
+  - title: WsAddressing support in Soap message sender
+    id: 338
+    type: Add
+    author: christophd
+  - title: Maven plugin for test generation from WSDL and XSD
+    id: 308
+    type: Add
+    author: christophd
+  - title: Dynamic Http endpoint uri resolver
+    id: 334
+    type: Add
+    author: christophd
+  - title: Dynamic SOAP endpoint uri resolver
+    id: 333
+    type: Add
+    author: christophd
+  - title: Handle errors in before suite/class annotated methods
+    id: 332
+    type: Fix
+    author: christophd
+  - title: Log SOAP client errors properly
+    id: 325
+    type: Add
+    author: christophd
+  - title: Handle and log errors during ApplicationContext setup
+    id: 328
+    type: Fix
+    author: christophd
+  - title: Log SOAP messages in pure nature
+    id: 329
+    type: Add
+    author: christophd
+  - title: CDATA vs. any-element
+    id: 320
+    type: Add
+    author: philkom
+  - title: Dependency cleanup and version updates
+    id: 139
+    type: Add
+    author: christophd
+  - title: HTTP headers in SOAP message validation
+    id: 315
+    type: Add
+    author: christophd
+  - title: Validate multiple db rows
+    id: 241
+    type: Add
+    author: philkom
+  - title: Groovy XML message validation
+    id: 305
+    type: Add
+    author: philkom
+  - title: Groovy MarkupBuilder
+    id: 306
+    type: Add
+    author: philkom
+  - title: TestContext in Groovy action
+    id: 304
+    type: Add
+    author: philkom
+  - title: Variable support in property loader
+    id: 272
+    type: Add
+    author: christophd
+
+- version: 1.1
+  date: 2010-08-12
+  tag: v1-1
+  changes:
+  - title: Log message when validation fails
+    id: 313
+    type: Add
+    author: maherma
+  - title: Log XSD schema validation errors properly
+    id: 290
+    type: Fix
+    author: maherma
+  - title: SubstringAfterFunction
+    id: 297
+    type: Fix
+    author: cwied
+  - title: Attachment support for webservice replies
+    id: 296
+    type: Add
+    author: cwied
+  - title: Support for namespace uri containing "xmlns" phrase
+    id: 295
+    type: Fix
+    author: christophd
+  - title: SOAP header XML support
+    id: 287
+    type: Add
+    author: christophd
+  - title: MessageChannelConnecting MessageHandler
+    id: 246
+    type: Add
+    author: christophd
+  - title: Template parameter variable support
+    id: 294
+    type: Fix
+    author: dimovelev
+  - title: Template parameter as CDATA
+    id: 293
+    type: Add
+    author: dimovelev
+  - title: MapValueFunction
+    id: 292
+    type: Add
+    author: dimovelev
+  - title: RandomEnumValueFunction
+    id: 291
+    type: Add
+    author: dimovelev
+  - title: Ignore placeholder
+    id: 286
+    type: Add
+    author: christophd
+  - title: Fixed Spring wiring bug in AbstractTestNGCitrusTest in test set up methods
+    id: 289
+    type: Fix
+    author: maherma
+  - title: Support setting variables in TestNG tests
+    id: 288
+    type: Add
+    author: maherma
+  - title: Finally block not executed in failure state
+    id: 285
+    type: Fix
+    author: christophd
+  - title: Provide line numbers in failure messages
+    id: 284
+    type: Add
+    author: christophd
+  - title: Improve exception tracing in parallel container
+    id: 283
+    type: Add
+    author: christophd
+  - title: TestExecutionAspect not working
+    id: 191
+    type: Fix
+    author: christophd
+  - title: NPE in ws:receive without attachment data
+    id: 268
+    type: Fix
+    author: christophd
+  - title: XPath result type support (boolean, string, number, node)
+    id: 281
+    type: Fix
+    author: christophd
+  - title: XML namespace context support in XPath expressions
+    id: 277
+    type: Fix
+    author: christophd
+  - title: Added SOAP fault support for sending SOAP responses
+    id: 274
+    type: Add
+    author: christophd
+  - title: XML processing instruction in inline XML data
+    id: 273
+    type: Fix
+    author: christophd
+  - title: citrus-ant-tasks Unix file path translation
+    id: 271
+    type: Fix
+    author: christophd
+  - title: Automatic UTF-8 to UTF-16 conversion when sending messages
+    id: 270
+    type: Fix
+    author: christophd
+  - title: Receive timeout ignored when using message selector string
+    id: 269
+    type: Fix
+    author: christophd
+  - title: Purge Jms queues - adjust receive timeout
+    id: 244
+    type: Fix
+    author: christophd
+  - title: Premature EOF in Citrus WS endpoint
+    id: 243
+    type: Fix
+    author: christophd
+  - title: SOAP header to JMS header conversion using WebLogic JMS Server
+    id: 226
+    type: Fix
+    author: christophd
+  - title: Read database values to variables without validation
+    id: 240
+    type: Fix
+    author: christophd
+  - title: Variable replacement in file resource
+    id: 237
+    type: Fix
+    author: christophd
+  - title: Handle large SOAP attachments
+    id: 236
+    type: Fix
+    author: christophd
+  - title: Inline attachment data setter in ws:send
+    id: 235
+    type: Fix
+    author: christophd
+  - title: Template parameter in parallel container
+    id: 222
+    type: Fix
+    author: christophd
+  - title: Overwrite message validator instance in test case
+    id: 227
+    type: Fix
+    author: christophd
+  - title: Validate SOAP attachment with unknown content-id
+    id: 225
+    type: Fix
+    author: christophd
+  - title: Set SOAP attachment validator in test case
+    id: 224
+    type: Fix
+    author: christophd
+  - title: Add documentation for auto-sleep in repeat-on-error-until-true
+    id: 196
+    type: Add
+    author: christophd
+  - title: Add documentation for Groovy support
+    id: 194
+    type: Add
+    author: christophd
+  - title: JMS to SOAP header conversion
+    id: 221
+    type: Fix
+    author: christophd
+  - title: Purge JMS queue destinations (JNDI support)
+    id: 220
+    type: Update
+    author: christophd
+  - title: Validating SOAP attachments
+    id: 219
+    type: Update
+    author: christophd
+  - title: Improved JMS Topic support in sender/receiver
+    id: 216
+    type: Update
+    author: christophd
+  - title: Fixed sender/receiver configuration when using JMS topics
+    id: 217
+    type: Fix
+    author: christophd
+  - title: Parallel container failing meaningful when handling single exception
+    id: 215
+    type: Update
+    author: christophd
+  - title: JMSTemplate interference with default destination setting
+    id: 212
+    type: Fix
+    author: christophd
+  - title: Creating new test cases with ant
+    id: 210
+    type: Fix
+    author: christophd
+  - title: SOAP header mapping for WSEndpoint implementation
+    id: 211
+    type: Fix
+    author: christophd
+  - title: Receive timeout configuration not compliant with PropertyPlaceholderConfigurer
+    id: 205
+    type: Fix
+    author: christophd
+  - title: Sync reply destination holder not threadsafe
+    id: 207
+    type: Fix
+    author: christophd
+  - title: Sync reply message handler not threadsafe
+    id: 206
+    type: Fix
+    author: christophd
+  - title: JMS receiver ignoring timeout setting when adding JMS selector
+    id: 208
+    type: Fix
+    author: christophd
+  - title: Sending SOAP attachments as a client
+    id: 203
+    type: Add
+    author: christophd
+  - title: SOAP Fault validation
+    id: 189
+    type: Add
+    author: christophd
+  - title: Extended exception validation
+    id: 187
+    type: Add
+    author: christophd
+  - title: Generate test documentation in Excel
+    id: 204
+    type: Add
+    author: christophd
+  - title: Extend test case meta-info with custom elements
+    id: 202
+    type: Add
+    author: christophd
+  - title: Write custom actions / extend test case with custom actions
+    id: 201
+    type: Add
+    author: christophd
+  - title: Interactive test creation in Maven plugin
+    id: 213
+    type: Add
+    author: christophd
+  - title: Interactive Excel doc generation in Maven plugin
+    id: 214
+    type: Add
+    author: christophd
+  - title: XML validation - fixed assert error messages
+    id: 186
+    type: Fix
+    author: christophd
+  - title: Avoid lower case test names
+    id: 184
+    type: Fix
+    author: christophd
+  - title: Set targetPackage for test creation in Maven plugin
+    id: 183
+    type: Fix
+    author: christophd
+  - title: Parallel container not failing correctly
+    id: 185
+    type: Fix
+    author: christophd
+
+- version: 1.0
+  date: 2009-09-25
+  tag: v1-0
+  changes:
+  - title: Switch to Maven build system
+    id: xxx
+    type: Update
+    author: christophd
+  - title: Code refactoring
+    id: xxx
+    type: Update
+    author: christophd
+  - title: Documentation update
+    id: xxx
+    type: Update
+    author: christophd
+  - title: Installation process
+    id: xxx
+    type: Update
+    author: christophd
+  - title: Maven plugin for test case creation
+    id: xxx
+    type: Add
+    author: christophd
+  - title: Citrus ANT tasks
+    id: xxx
+    type: Add
+    author: christophd
+  - title: Custom Spring 2.x XML configuration schema
+    id: xxx
+    type: Add
+    author: christophd

@@ -1300,6 +1300,19 @@
                         <include name="**/*.jpg" />
                       </fileset>
                     </copy>
+                    <copy todir="${project.build.directory}/site/_site/reference/${project.version}">
+                      <fileset dir="${project.build.directory}/docbkx">
+                        <include name="**/*.html" />
+                      </fileset>
+                    </copy>
+                    <copy todir="${project.build.directory}/site/_site/reference/${project.version}/html">
+                      <fileset dir="${project.basedir}/src/docbkx">
+                        <include name="**/*.css" />
+                        <include name="**/*.png" />
+                        <include name="**/*.gif" />
+                        <include name="**/*.jpg" />
+                      </fileset>
+                    </copy>
                   </postProcess>
                 </configuration>
                 <goals>
@@ -1313,6 +1326,8 @@
                   <postProcess>
                     <copy file="${project.build.directory}/docbkx/pdf/index.pdf"
                           tofile="${project.build.directory}/site/_site/reference/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
+                    <copy file="${project.build.directory}/docbkx/pdf/index.pdf"
+                          tofile="${project.build.directory}/site/_site/reference/${project.version}/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
                   </postProcess>                    
                 </configuration>
                 <goals>
