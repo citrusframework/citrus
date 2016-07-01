@@ -55,8 +55,10 @@
         <message>Pull docker image '${imageId}'</message>
       </echo>
 
-      <docker:pull image="${imageId}"
-                   tag="latest"/>
+      <catch>
+        <docker:pull image="${imageId}"
+                     tag="latest"/>
+      </catch>
 
       <echo>
         <message>Create container from docker image '${imageId}'</message>

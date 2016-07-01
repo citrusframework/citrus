@@ -35,9 +35,9 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -125,13 +125,49 @@ public class TestContext {
     public Object getVariableObject(final String variableExpression) {
         String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
         
-        if (!variables.containsKey(variableName)) {
-            throw new CitrusRuntimeException("Unknown variable '" + variableName + "'");
+        if (variables.containsKey(variableName)) {
+            return variables.get(variableName);
+        } else if (variableName.contains(".")) {
+            String objectName = variableName.substring(0, variableName.indexOf("."));
+            if (variables.containsKey(objectName)) {
+                return getVariable(variables.get(objectName), variableName.substring(variableName.indexOf(".") + 1));
+            }
         }
 
-        return variables.get(variableName);
+        throw new CitrusRuntimeException("Unknown variable '" + variableName + "'");
     }
-    
+
+    /**
+     * Gets variable from path expression. Variable paths are translated to reflection fields on object instances.
+     * Path separators are '.'. Each separator is handled as object hierarchy.
+     * @param instance
+     * @param pathExpression
+     */
+    private Object getVariable(Object instance, String pathExpression) {
+        String leftOver = null;
+        String fieldName;
+        if (pathExpression.contains(".")) {
+            fieldName = pathExpression.substring(0, pathExpression.indexOf("."));
+            leftOver = pathExpression.substring(pathExpression.indexOf(".") + 1);
+        } else {
+            fieldName = pathExpression;
+        }
+
+        Field field = ReflectionUtils.findField(instance.getClass(), fieldName);
+        if (field == null) {
+            throw new CitrusRuntimeException(String.format("Failed to get variable - unknown field '%s' on type %s", fieldName, instance.getClass().getName()));
+        }
+
+        ReflectionUtils.makeAccessible(field);
+        Object fieldValue = ReflectionUtils.getField(field, instance);
+
+        if (StringUtils.hasText(leftOver)) {
+            return getVariable(fieldValue, leftOver);
+        }
+
+        return fieldValue;
+    }
+
     /**
      * Creates a new variable in this test context with the respective value. In case variable already exists 
      * variable is overwritten.

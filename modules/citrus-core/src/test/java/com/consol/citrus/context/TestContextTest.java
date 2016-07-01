@@ -31,7 +31,6 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.fail;
@@ -115,14 +114,54 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("${test}"), "123");
         Assert.assertEquals(context.getVariable("test"), "123");
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testUnknownVariable() {
         context.getVariables().put("test", "123");
         
         context.getVariable("${test_wrong}");
     }
-    
+
+    @Test
+    public void testGetVariableFromPathExpression() {
+        context.setVariable("helloData", new DataContainer("hello"));
+        context.setVariable("container", new DataContainer(new DataContainer("nested")));
+
+        Assert.assertEquals(context.getVariable("${helloData}"), DataContainer.class.getName());
+        Assert.assertEquals(context.getVariable("${helloData.data}"), "hello");
+        Assert.assertEquals(context.getVariable("${helloData.number}"), "99");
+        Assert.assertEquals(context.getVariable("${helloData.CONSTANT}"), "FOO");
+        Assert.assertEquals(context.getVariable("${container.data}"), DataContainer.class.getName());
+        Assert.assertEquals(context.getVariable("${container.data.data}"), "nested");
+        Assert.assertEquals(context.getVariable("${container.data.number}"), "99");
+        Assert.assertEquals(context.getVariable("${container.data.CONSTANT}"), "FOO");
+    }
+
+    @Test
+    public void testUnknownFromPathExpression() {
+        context.setVariable("helloData", new DataContainer("hello"));
+        context.setVariable("container", new DataContainer(new DataContainer("nested")));
+
+        try {
+            context.getVariable("${helloData.unknown}");
+            Assert.fail("Missing exception due to unknown field in variable path");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().endsWith(""));
+        }
+
+        try {
+            context.getVariable("${container.data.unknown}");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().endsWith(""));
+        }
+
+        try {
+            context.getVariable("${something.else}");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Unknown variable 'something.else'");
+        }
+    }
+
     @Test
     public void testReplaceDynamicContentInString() {
         context.getVariables().put("test", "456");
@@ -257,5 +296,28 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         context.stopTimers();
 
         verify(timer, times(2)).stopTimer();
+    }
+
+    /**
+     * Data container for test variable object access.
+     */
+    private static class DataContainer {
+        private int number = 99;
+        private Object data;
+
+        private static final String CONSTANT = "FOO";
+
+        /**
+         * Constructor with data.
+         * @param data
+         */
+        public DataContainer(Object data) {
+            this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return DataContainer.class.getName();
+        }
     }
 }
