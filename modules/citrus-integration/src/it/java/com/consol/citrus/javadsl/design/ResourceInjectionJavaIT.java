@@ -26,6 +26,7 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.testng.TestNGCitrusTest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.jms.config.annotation.JmsEndpointConfig;
+import com.consol.citrus.testng.CitrusParameters;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -47,7 +48,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
     @CitrusTest
     public void injectResourceDesigner(@Optional @CitrusResource TestDesigner testDesigner, @Optional @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
-        context.setVariable("message", "Injection worked!");
+        context.setVariable("message", "Injection worked with test designer!");
 
         testDesigner.echo("${message}");
         testDesigner.createVariable("random", number);
@@ -68,7 +69,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
     @CitrusTest
     public void injectResourceRunner(@Optional @CitrusResource TestRunner testRunner, @Optional @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
-        context.setVariable("message", "Injection worked!");
+        context.setVariable("message", "Injection worked with test runner!");
 
         testRunner.echo("${message}");
         testRunner.createVariable("random", number);
@@ -93,6 +94,28 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
 
         testDesigner.echo("${message}");
         testDesigner.echo("${data}");
+        testDesigner.createVariable("random", number);
+
+        testDesigner.action(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                Assert.assertEquals(context.getVariable("random"), number);
+            }
+        });
+
+        Assert.assertNotNull(citrus);
+        Assert.assertNotNull(jmsEndpoint);
+    }
+
+    @Test(dataProvider = "testDataObjects")
+    @CitrusParameters( { "dataContainer", "designer", "context" })
+    @CitrusTest
+    public void injectResourceDesignerCombinedWithObjectParameter(DataContainer dataContainer, @CitrusResource TestDesigner testDesigner, @CitrusResource TestContext context) {
+        final String number = Functions.randomNumber(10L, context);
+        context.setVariable("message", "Injection worked!");
+
+        testDesigner.echo("${message}");
+        testDesigner.echo("${dataContainer.text}");
         testDesigner.createVariable("random", number);
 
         testDesigner.action(new AbstractTestAction() {
@@ -131,5 +154,30 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
     @DataProvider
     public Object[][] testData() {
         return new Object[][] { { "hello", null, null }, { "bye", null, null } };
+    }
+
+    @DataProvider
+    public Object[][] testDataObjects() {
+        return new Object[][] { { new DataContainer("hello"), null, null }, { new DataContainer("bye"), null, null } };
+    }
+
+    /**
+     * Sample data object holding some fields.
+     */
+    private static class DataContainer {
+        private String text;
+
+        public DataContainer(String text) {
+            this.text = text;
+        }
+
+        /**
+         * Gets the value of the text property.
+         *
+         * @return the text
+         */
+        public String getText() {
+            return text;
+        }
     }
 }
