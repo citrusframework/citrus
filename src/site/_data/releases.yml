@@ -1,0 +1,852 @@
+- version: ${project.version}
+  tag: latest
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  changes:
+  - title: Support variable object path
+    id: 58
+    type: Add
+    author: chrsitophd
+  - title: Documentation wrong XML tags
+    id: 107
+    type: Fix
+    author: chrsitophd
+  - title: Documentation wait wrong argument in Java DSL
+    id: 106
+    type: Fix
+    author: chrsitophd
+  - title: Documentation missing maven dependencies
+    id: 105
+    type: Fix
+    author: chrsitophd
+    
+- version: 2.6
+  date: 2016-06-27
+  tag: v2-6
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  changes:
+  - title: NoSuchElementException with custom action container in test runner
+    id: 101
+    type: Fix
+    author: christophd
+  - title: Java DSL should support test behavior inside test container
+    id: 100
+    type: Fix
+    author: christophd
+  - title: Hamcrest matcher in iteration conditions
+    id: 57
+    type: Add
+    author: christophd
+  - title: Cucumber BDD support
+    id: 56
+    type: Add
+    author: christophd
+  - title: Spring RestDocs support
+    id: 53
+    type: Add
+    author: christophd
+  - title: Zookeeper support
+    id: 7
+    type: Add
+    author: maherma
+  - title: Set custom message type in Java DSL
+    id: 99
+    type: Fix
+    author: christophd
+  - title: Support configurable paths for reporters
+    id: 97
+    type: Fix
+    author: christophd
+  - title: Unique particle attribution \#cos-nonambig violation in citrus-ws-testcase XSD
+    id: 96
+    type: Fix
+    author: christophd
+  - title: HttpStatus validation broken for BAD_REQUEST status code
+    id: 95
+    type: Fix
+    author: christophd
+  - title: escapeXml() not working with \',\' in sub-XML
+    id: 94
+    type: Fix
+    author: christophd
+  - title: Links to blogs on front page is 404
+    id: 93
+    type: Fix
+    author: christophd
+
+- version: 2.5.2
+  date: 2016-04-01
+  tag: v2-5-2
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  changes:
+  - title: Support Hamcrest matchers
+    id: 50
+    type: Add
+    author: christophd
+  - title: Support Json object functions in JsonPath validation
+    id: 49
+    type: Add
+    author: christophd
+  - title: BinaryBase64 message validator
+    id: 47
+    type: Add
+    author: christophd
+  - title: Annotation config support for all modules
+    id: 46
+    type: Add
+    author: christophd
+  - title: StringIndexOutOfBoundsException in XMLUtils.getTargetCharset()
+    id: 89
+    type: Fix
+    author: christophd
+  - title: Send binary messages with XML DSL
+    id: 90
+    type: Fix
+    author: christophd
+  - title: Validation matcher support in PlainTextMessageValidator
+    id: 87
+    type: Fix
+    author: christophd
+  - title: XML comments will counted as "normal" child element
+    id: 86
+    type: Fix
+    author: christophd
+  - title: XML comments before root element skip validation
+    id: 85
+    type: Fix
+    author: christophd
+  - title: Custom-Function, unclear Exception-Message
+    id: 84
+    type: Fix
+    author: christophd
+  - title: TestNG DataProvider and CitrusResource injection of TestRunner not working properly
+    id: 83
+    type: Fix
+    author: christophd
+  - title: Multithreaded selectors throw a ConcurrentModificationException
+    id: 82
+    type: Fix
+    author: christophd
+  - title: Empty message payload support in JSON data dictionary
+    id: 80
+    type: Fix
+    author: christophd
+  - title: SQL query file resource produces SQLSyntaxError
+    id: 79
+    type: Fix
+    author: christophd
+
+- version: 2.5.1
+  date: 2016-03-03
+  tag: v2-5-1
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  changes:
+  - title: Annotation config support
+    id: 46
+    type: Add
+    author: christophd
+  - title: Citrus main application class
+    id: 41
+    type: Add
+    author: christophd
+  - title: Dynamic endpoints not working for http DSL
+    id: 78
+    type: Fix
+    author: christophd
+  - title: Missing 2.5 xsd references in spring.schemas
+    id: 77
+    type: Fix
+    author: christophd
+  - title: Nullpointer in after suite
+    id: 76
+    type: Fix
+    author: christophd
+  - title: MailServer stops on emtpy line
+    id: 74
+    type: Fix
+    author: gucce
+  - title: Cant mvn install citrus with Java 1.7
+    id: 73
+    type: Fix
+    author: christophd
+  - title: Message payload lost for Http PATCH method
+    id: 70
+    type: Fix
+    author: christophd
+  - title: Form urlencoded marshaller using wrong xsd location
+    id: 67
+    type: Fix
+    author: christophd
+  - title: Empty Http request headers missing on server receive
+    id: 66
+    type: Fix
+    author: christophd
+  - title: Variable extractor not working in http:receive-response XML
+    id: 65
+    type: Fix
+    author: christophd
+
+- version: 2.5
+  date: 2016-01-28
+  tag: v2-5
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  changes:
+  - title: TestContext injection
+    id: 39
+    type: Add
+    author: christophd
+  - title: x-www-form-urlencoded message validator
+    id: 37
+    type: Add
+    author: christophd
+  - title: DataDictionary not settable via Java DSL
+    id: 62
+    type: Fix
+    author: christophd
+  - title: Global scoped data dictionaries breaking message receipt
+    id: 61
+    type: Fix
+    author: christophd
+  - title: ClassPathResource name needs correction in User Guide
+    id: 60
+    type: Fix
+    author: christophd
+  - title: Docker action sharing docker command instance
+    id: 59
+    type: Fix
+    author: christophd
+  - title: JUnit4CitrusTestDesigner validateScript doesn't work properly
+    id: 58
+    type: Fix
+    author: christophd
+  - title: x-www-form-urlencoded payload lost
+    id: 55
+    type: Fix
+    author: christophd
+  - title: allow variable value definition in cdata section
+    id: 50
+    type: Fix
+    author: christophd
+  - title: RMI support
+    id: 36
+    type: Add
+    author: christophd
+  - title: Cleanup validation matcher support
+    id: 34
+    type: Update
+    author: maherma
+  - title: Use Mockito instead of EasyMock
+    id: 32
+    type: Update
+    author: christophd
+  - title: Date range validation matcher
+    id: 31
+    type: Add
+    author: maherma
+  - title: Read file resource function
+    id: 29
+    type: Add
+    author: christophd
+  - title: Timer action container
+    id: 24
+    type: Add
+    author: maherma
+  - title: Optimize Jett-9 startup
+    id: 23
+    type: Update
+    author: maherma
+  - title: Update to Vert.x 3.0
+    id: 17
+    type: Update
+    author: maherma
+
+- version: 2.4
+  date: 2015-11-03
+  tag: v2-4
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  changes:
+  - title: JSON data dictionary throws NullPointerException
+    id: 47
+    type: Fix
+    author: christophd
+  - title: Validation callback with TestContext
+    id: 27
+    type: Update
+    author: christophd
+  - title: Improved REST support
+    id: 26
+    type: Update
+    author: christophd
+  - title: Wait-Condition Action
+    id: 22
+    type: Add
+    author: maherma
+  - title: Camel route test actions
+    id: 21
+    type: Add
+    author: christophd
+  - title: Http DELETE with payload
+    id: 20
+    type: Update
+    author: christophd
+  - title: Purge endpoints action
+    id: 19
+    type: Add
+    author: christophd
+  - title: Update plugin versions
+    id: 14
+    type: Update
+    author: christophd
+  - title: Update dependency versions
+    id: 13
+    type: Update
+    author: christophd
+  - title: Release archetypes to central
+    id: 12
+    type: Add
+    author: christophd
+  - title: Release to Maven central
+    id: 11
+    type: Add
+    author: christophd
+  - title: Docker support
+    id: 6
+    type: Add
+    author: christophd
+
+- version: 2.3
+  date: 2015-08-18
+  tag: v2-3
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Assertion error in parallel not causing test case to fail
+    id: 45
+    type: Fix
+    author: christophd
+  - title: Camel direct endpoint consumer caching
+    id: 264
+    type: Fix
+    author: christophd
+  - title: Customize message validators
+    id: 263
+    type: Add
+    author: christophd
+  - title: Boolean expression evaluation in Java DSL
+    id: 262
+    type: Update
+    author: christophd
+  - title: Refactor Java DSL test action execution (TestRunner)
+    id: 255
+    type: Add
+    author: christophd
+  - title: Update Jetty version
+    id: 253
+    type: Update
+    author: maherma
+  - title: Websocket support
+    id: 248
+    type: Add
+    author: maherma
+  - title: JSONPath support
+    id: 196
+    type: Add
+    author: christophd
+
+- version: 2.2
+  date: 2015-06-26
+  tag: v2-2
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Http server response message tracing
+    id: 261
+    type: Fix
+    author: christophd
+  - title: Customize dynamic endpoint names
+    id: 260
+    type: Add
+    author: christophd
+  - title: Nullpointer in SoapMessageConverter
+    id: 259
+    type: Fix
+    author: christophd
+  - title: Citrus annotation support in JUnit
+    id: 254
+    type: Update
+    author: christophd
+  - title: ANT tasks and tutorial
+    id: 252
+    type: Fix
+    author: christophd
+  - title: Start/Stop server action
+    id: 250
+    type: Add
+    author: christophd
+  - title: Arquillian integration
+    id: 249
+    type: Add
+    author: christophd
+  - title: Iterating action container in loops
+    id: 245
+    type: Fix
+    author: christophd
+
+- version: 2.1
+  date: 2015-02-20
+  tag: v2-1
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Keep SOAP envelope for incoming requests
+    id: 244
+    type: Update
+    author: christophd
+  - title: Ssh request/response XSD schema
+    id: 243
+    type: Update
+    author: christophd
+  - title: WSDL includes not working in schema validation
+    id: 242
+    type: Fix
+    author: christophd
+  - title: SOAP MTOM support
+    id: 241
+    type: Add
+    author: christophd
+  - title: Missing Java 7 requirements in user guide
+    id: 240
+    type: Fix
+    author: christophd
+  - title: Java test action cahing String[] method parameters
+    id: 239
+    type: Fix
+    author: christophd
+  - title: Conversion exception when logging object message payloads
+    id: 238
+    type: Fix
+    author: christophd
+  - title: TestNG data provider handling
+    id: 237
+    type: Update
+    author: christophd
+  - title: Fallback endpoint adapter not settable
+    id: 236
+    type: Fix
+    author: christophd
+  - title: SOAP 1.2 server support missing
+    id: 235
+    type: Fix
+    author: christophd
+  - title: Namespaces lost in SOAP envelope
+    id: 208
+    type: Fix
+    author: christophd
+  - title: Mail message payload namespace
+    id: 206
+    type: Fix
+    author: christophd
+  - title: Improve TestNG data provider documentation
+    id: 193
+    type: Fix
+    author: christophd
+
+- version: 2.0
+  date: 2014-11-01
+  tag: v2-0
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Remove deprecated classes
+    id: 234
+    type: Update
+    author: christophd
+  - title: Separate citrus-jms module
+    id: 233
+    type: Update
+    author: christophd
+  - title: Use message converter pattern
+    id: 232
+    type: Add
+    author: christophd
+  - title: Schema validation on xs:any
+    id: 231
+    type: Fix
+    author: christophd
+  - title: Upgrade to Spring 4.x
+    id: 230
+    type: Update
+    author: christophd
+  - title: Update dependency and Maven plugin versions
+    id: 229
+    type: Add
+    author: christophd
+  - title: TestNG parameters in Java DSL
+    id: 228
+    type: Fix
+    author: christophd
+  - title: Use TestContext in validation matcher interface
+    id: 227
+    type: Update
+    author: christophd
+  - title: Use TestContext in function interface
+    id: 226
+    type: Update
+    author: christophd
+  - title: Create variable validation matcher
+    id: 225
+    type: Add
+    author: christophd
+  - title: Namespace context configuration component
+    id: 224
+    type: Add
+    author: christophd
+  - title: Correlate messages by default
+    id: 223
+    type: Update
+    author: christophd
+  - title: Multiple SOAP attachments
+    id: 222
+    type: Add
+    author: christophd
+  - title: Multiple SOAP header fragments
+    id: 221
+    type: Add
+    author: christophd
+  - title: Data dictionary schema component
+    id: 220
+    type: Add
+    author: christophd
+  - title: Auto sleep in milliseconds
+    id: 219
+    type: Update
+    author: christophd
+  - title: Sleep action in milliseconds
+    id: 218
+    type: Update
+    author: christophd
+  - title: Rework MessageListener interface
+    id: 217
+    type: Update
+    author: christophd
+  - title: Log Citrus version
+    id: 216
+    type: Update
+    author: christophd
+  - title: Rework root application context
+    id: 215
+    type: Update
+    author: christophd
+  - title: ValidationMatcher XML schema component
+    id: 214
+    type: Add
+    author: christophd
+  - title: Function library component
+    id: 213
+    type: Add
+    author: christophd
+  - title: Sequence after test component
+    id: 212
+    type: Add
+    author: christophd
+  - title: Sequence before/after suite components
+    id: 211
+    type: Add
+    author: christophd
+  - title: Rework sample applications
+    id: 210
+    type: Update
+    author: christophd
+  - title: Rework Maven plugin
+    id: 209
+    type: Update
+    author: christophd
+  - title: Fail fast when validator is missing
+    id: 188
+    type: Add
+    author: christophd
+  - title: Ftp server adapter
+    id: 171
+    type: Add
+    author: christophd
+  - title: JMS Soap message converter
+    id: 191
+    type: Add
+    author: christophd
+  - title: Citrus Jms header mapper
+    id: 90
+    type: Add
+    author: christophd
+
+- version: 1.4.1
+  date: 2014-07-11
+  tag: v1-4-1
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Dynamic endpoint components
+    id: 207
+    type: Add
+    author: christophd
+  - title: Apache Camel support
+    id: 205
+    type: Add
+    author: christophd
+  - title: Vert.x support
+    id: 203
+    type: Add
+    author: christophd
+  - title: Missing soap must understand interceptor support
+    id: 202
+    type: Fix
+    author: christophd
+  - title: Custom interceptors in citrus-ws server component not loaded
+    id: 201
+    type: Fix
+    author: christophd
+
+- version: 1.4
+  date: 2014-05-02
+  tag: v1-4
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Global variables component
+    id: 200
+    type: Add
+    author: christophd
+  - title: Auto sleep < 1 second
+    id: 199
+    type: Fix
+    author: christophd
+  - title: JSON text validator strict mode
+    id: 198
+    type: Add
+    author: christophd
+  - title: Attachment spelling in Java DSL
+    id: 197
+    type: Fix
+    author: christophd
+  - title: Java DSL Http specific send options
+    id: 195
+    type: Add
+    author: christophd
+  - title: Misleading create variables action in Java DSL
+    id: 194
+    type: Fix
+    author: christophd
+  - title: Nested anonymous test actions fail
+    id: 192
+    type: Fix
+    author: christophd
+  - title: Dokumentation FTP adapter description
+    id: 190
+    type: Update
+    author: christophd
+  - title: Class cast exceptions when using object variable value
+    id: 187
+    type: Fix
+    author: christophd
+  - title: AssertionErrors not handled
+    id: 186
+    type: Fix
+    author: christophd
+  - title: SSHClient with just username/password
+    id: 185
+    type: Fix
+    author: christophd
+  - title: Mail adapter
+    id: 184
+    type: Add
+    author: christophd
+  - title: SOAP Http Uri as header
+    id: 183
+    type: Add
+    author: christophd
+  - title: XML data dictionary
+    id: 166
+    type: Add
+    author: christophd
+
+- version: 1.3.1
+  date: 2013-09-06
+  tag: v1-3-1
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Support multiple test methods in Java DSL TestBuilder class
+    id: 182
+    type: Update
+    author: christophd
+  - title: Add true/false to BooleanExpressionParser
+    id: 181
+    type: Update
+    author: christophd
+  - title: Attribute validation xsi:type namespace dependent
+    id: 180
+    type: Fix
+    author: christophd
+  - title: XHTML user guide missing tidy dependency
+    id: 179
+    type: Fix
+    author: christophd
+  - title: Groovy message header validation skipped
+    id: 178
+    type: Fix
+    author: christophd
+  - title: ProcessContents strategy for xs:any elements in testcase.xsd
+    id: 177
+    type: Fix
+    author: christophd
+  - title: Improve message dispatching handler
+    id: 176
+    type: Update
+    author: christophd
+  - title: Empty control message disables validation
+    id: 175
+    type: Fix
+    author: christophd
+  - title: JAXBHelperImpl using jdk internal NamespacePrefixMapper
+    id: 174
+    type: Fix
+    author: christophd
+  - title: MatchWeekday function
+    id: 173
+    type: Add
+    author: christophd
+  - title: ChangeDate function
+    id: 172
+    type: Add
+    author: christophd
+  - title: FileUtils read to String encoding
+    id: 169
+    type: Fix
+    author: christophd
+  - title: Add XSD schema repository bean definition parser
+    id: 168
+    type: Add
+    author: christophd
+  - title: Move message constructing interceptor to base interface
+    id: 167
+    type: Update
+    author: christophd
+
+- version: 1.3
+  date: 2013-04-01
+  tag: v1-3
+  issues: https://citrusframework.atlassian.net/browse/CITRUS-
+  stories: https://citrusframework.atlassian.net/browse/CITRUS-
+  changes:
+  - title: Add Http params to basic authentication
+    id: 165
+    type: Add
+    author: christophd
+  - title: Support Jetty server with security handler
+    id: 164
+    type: Add
+    author: christophd
+  - title: Support multiple SOAP fault detail elements
+    id: 163
+    type: Add
+    author: christophd
+  - title: Random number function leading zero numbers
+    id: 162
+    type: Fix
+    author: christophd
+  - title: SOAP 1.2 fault detail validation
+    id: 161
+    type: Fix
+    author: christophd
+  - title: CurrentDateFunction not threadsafe with custom date format pattern
+    id: 160
+    type: Fix
+    author: christophd
+  - title: MessageSelectorBuilder breaks with 'A' 'N' 'D' characters
+    id: 159
+    type: Fix
+    author: christophd
+  - title: Http error code simulation
+    id: 158
+    type: Add
+    author: christophd
+  - title: SSH adapter for mocking SSH requests
+    id: 157
+    type: Add
+    author: roland
+  - title: Extend schema repository with pattern resolver
+    id: 156
+    type: Update
+    author: christophd
+  - title: Add WSDL support for schema repository
+    id: 155
+    type: Add
+    author: christophd
+  - title: Add SOAP fault actor support
+    id: 154
+    type: Add
+    author: christophd
+  - title: Test actors
+    id: 153
+    type: Add
+    author: christophd
+  - title: JUnit test execution broken
+    id: 152
+    type: Fix
+    author: christophd
+  - title: Resolve function throwing StringIndexOutOfBounds
+    id: 151
+    type: Fix
+    author: christophd
+  - title: WebServiceEndpoint - NullPointerException when there´s no response
+    id: 150
+    type: Fix
+    author: christophd
+  - title: XPath breaks message selector with "=" character
+    id: 149
+    type: Fix
+    author: christophd
+  - title: Java action with String argument type
+    id: 148
+    type: Fix
+    author: christophd
+  - title: Comma character breaks concat function
+    id: 147
+    type: Fix
+    author: christophd
+  - title: Support variables in file resource paths
+    id: 146
+    type: Update
+    author: christophd
+  - title: JSONArray as top level element
+    id: 145
+    type: Fix
+    author: christophd
+  - title: SOAP fault detail schema validation
+    id: 143
+    type: Fix
+    author: christophd
+  - title: Add new test action for running ANT build targets
+    id: 142
+    type: Add
+    author: christophd
+  - title: JUnit samples
+    id: 91
+    type: Add
+    author: christophd
+  - title: JMS durable subscribers
+    id: 84
+    type: Add
+    author: christophd
+  - title: Fork Http send action
+    id: 82
+    type: Add
+    author: christophd
+  - title: Java DSL for writing test cases
+    id: 68
+    type: Add
+    author: christophd

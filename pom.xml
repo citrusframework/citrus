@@ -1244,6 +1244,7 @@
             <directory>${project.basedir}/src/site</directory>
             <targetPath>${project.build.directory}/site</targetPath>
             <includes>
+              <include>_data/**</include>
               <include>_docs/**</include>
               <include>_posts/**</include>
               <include>_includes/**</include>
