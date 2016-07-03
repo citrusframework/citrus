@@ -14,4 +14,4 @@ bin
 .codepro
 .pmd
 logs
-
+node_modules
