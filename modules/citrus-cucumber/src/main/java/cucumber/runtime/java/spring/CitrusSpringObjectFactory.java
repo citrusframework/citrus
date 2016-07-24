@@ -90,6 +90,10 @@ public class CitrusSpringObjectFactory extends SpringFactory {
         if (context == null) {
             context = super.getInstance(TestContext.class);
             CitrusBackend.initializeCitrus(context.getApplicationContext());
+
+            if (TestContext.class.isAssignableFrom(type)) {
+                return (T) context;
+            }
         }
 
         if (CitrusSpringObjectFactory.class.isAssignableFrom(type)) {
