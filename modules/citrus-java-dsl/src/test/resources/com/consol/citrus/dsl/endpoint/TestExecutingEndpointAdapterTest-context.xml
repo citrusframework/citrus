@@ -8,7 +8,8 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	 
-    <context:component-scan base-package="com.consol.citrus.dsl.endpoint.builder"/>
+    <context:component-scan base-package="com.consol.citrus.dsl.endpoint.designer"/>
+    <context:component-scan base-package="com.consol.citrus.dsl.endpoint.runner"/>
 
     <bean id="testSimulator" class="com.consol.citrus.dsl.endpoint.TestExecutingEndpointAdapter">
       <property name="mappingKeyExtractor">

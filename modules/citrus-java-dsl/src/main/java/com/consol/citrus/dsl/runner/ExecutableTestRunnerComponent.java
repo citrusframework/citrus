@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.endpoint.Executable;
 
 /**
@@ -23,4 +24,18 @@ import com.consol.citrus.dsl.endpoint.Executable;
  * @since 2.3
  */
 public class ExecutableTestRunnerComponent extends TestRunnerComponent implements Executable {
+
+    @Override
+    public void execute() {
+    }
+
+    /**
+     * Prepare test execution and create new test context.
+     */
+    public void prepareExecution() {
+        TestContext context = getApplicationContext().getBean(TestContext.class);
+        context.setApplicationContext(getApplicationContext());
+
+        setTestContext(context);
+    }
 }

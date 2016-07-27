@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.runner.ExecutableTestRunnerComponent;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -48,6 +49,9 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
             public void run() {
                 if (executable instanceof TestRunner) {
                     prepareExecution(request, (TestRunner) executable);
+                    if (executable instanceof ExecutableTestRunnerComponent) {
+                        ((ExecutableTestRunnerComponent) executable).prepareExecution();
+                    }
                 } else if (executable instanceof TestDesigner) {
                     prepareExecution(request, (TestDesigner) executable);
                 }

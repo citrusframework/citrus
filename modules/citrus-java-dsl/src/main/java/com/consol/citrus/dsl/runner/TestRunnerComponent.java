@@ -25,13 +25,6 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class TestRunnerComponent extends DefaultTestRunner implements ApplicationContextAware, InitializingBean {
 
-    /**
-     * Main entrance method for subclasses to call Java DSL builder methods in order to
-     * add test actions and basic test case properties to this builder instance.
-     */
-    public void execute() {
-    }
-
     @Override
     public final void afterPropertiesSet() throws Exception {
         initialize();
