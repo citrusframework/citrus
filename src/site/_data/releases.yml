@@ -7,6 +7,14 @@
     id: 58
     type: Add
     author: chrsitophd
+  - title: Cucumber messaging steps ambiguously defined
+    id: 116
+    type: Fix
+    author: chrsitophd
+  - title: TestRunnerComponent TestContext initialization
+    id: 115
+    type: Fix
+    author: chrsitophd
   - title: Documentation wrong XML tags
     id: 107
     type: Fix
