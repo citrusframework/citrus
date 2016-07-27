@@ -250,6 +250,37 @@
         <para>The above before test component is only executed for test cases that match the name pattern <emphasis>*_Ok_Test</emphasis> and that match the package <emphasis>com.consol.citrus.longrunning.*</emphasis>. Also we could just use the test name pattern or
         the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify before test actions in various ways. Of course you can have multiple before test configuration components
         at the same time. Citrus will pick the right containers and put it to execution when necessary.</para>
+
+        <para>When using the Java DSL we need to implement the before test logic in a separate class that extends <emphasis>TestDesignerBeforeTestSupport</emphasis> or <emphasis>TestRunnerBeforeTestSupport</emphasis></para>
+
+      <para>Java DSL designer</para>
+      <programlisting language="java">public class MyBeforeTest extends TestDesignerBeforeTestSupport {
+    @Override
+    public void beforeTest(TestDesigner designer) {
+        designer.echo("This action should be executed before each test");
+    }
+}</programlisting>
+
+        <para>As you can see the class implements the method <emphasis>beforeTest</emphasis> that is provided with a test designer argument. You simply add the before test actions to the designer instance as usual by calling Java DSL methods on the designer object. Citrus
+        will automatically execute these operations before each test is executed. The same logic applies to the test runner variation that extends <emphasis>TestRunnerBeforeTestSupport</emphasis>:</para>
+
+        <para>Java DSL runner</para>
+        <programlisting language="java">public class MyBeforeTest extends TestRunnerBeforeTestSupport {
+    @Override
+    public void beforeTest(TestRunner runner) {
+        runner.echo("This action should be executed before each test");
+    }
+}</programlisting>
+
+        <para>The before test implementations are added to the Spring bean application context for general activation. You can do this either as explicit Spring bean definition or via package component-scan. Here is a sample for adding the bean implementation explicitly
+        with some configuration</para>
+
+      <programlisting>&lt;bean id=&quot;myBeforeTest&quot; class=&quot;my.company.citrus.MyBeforeTest&quot;&gt;
+  &lt;property name=&quot;packageNamePattern&quot; value=&quot;com.consol.citrus.e2e&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+
+        <para>We can add filter properties to the before test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package <emphasis>com.consol.citrus.e2e</emphasis>. Leave these properties empty for default
+        actions that are executed before all tests.</para>
     </section>
 
     <section id="testsuite-after-test">
@@ -292,5 +323,36 @@
         <para>The above after test component is obviously only executed for test cases that match the name pattern <emphasis>*_Error_Test</emphasis> and that match the package <emphasis>com.consol.citrus.error.*</emphasis>. Also we could just use the test name pattern or
         the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components
         at the same time. Citrus will pick the right containers and put it to execution when necessary.</para>
+
+        <para>When using the Java DSL we need to implement the after test logic in a separate class that extends <emphasis>TestDesignerAfterTestSupport</emphasis> or <emphasis>TestRunnerAfterTestSupport</emphasis></para>
+
+        <para>Java DSL designer</para>
+        <programlisting language="java">public class MyAfterTest extends TestDesignerAfterTestSupport {
+    @Override
+    public void afterTest(TestDesigner designer) {
+        designer.echo("This action should be executed after each test");
+    }
+}</programlisting>
+
+        <para>As you can see the class implements the method <emphasis>afterTest</emphasis> that is provided with a test designer argument. You simply add the after test actions to the designer instance as usual by calling Java DSL methods on the designer object. Citrus
+          will automatically execute these operations after each test is executed. The same logic applies to the test runner variation that extends <emphasis>TestRunnerAfterTestSupport</emphasis>:</para>
+
+        <para>Java DSL runner</para>
+        <programlisting language="java">public class MyAfterTest extends TestRunnerAfterTestSupport {
+    @Override
+    public void afterTest(TestRunner runner) {
+        runner.echo("This action should be executed after each test");
+    }
+}</programlisting>
+
+        <para>The after test implementations are added to the Spring bean application context for general activation. You can do this either as explicit Spring bean definition or via package component-scan. Here is a sample for adding the bean implementation explicitly
+          with some configuration</para>
+
+        <programlisting>&lt;bean id=&quot;myAfterTest&quot; class=&quot;my.company.citrus.MyAfterTest&quot;&gt;
+  &lt;property name=&quot;packageNamePattern&quot; value=&quot;com.consol.citrus.e2e&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+
+        <para>We can add filter properties to the after test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package <emphasis>com.consol.citrus.e2e</emphasis>. Leave these properties empty for default
+        actions that are executed after all tests.</para>
     </section>
 </chapter>
