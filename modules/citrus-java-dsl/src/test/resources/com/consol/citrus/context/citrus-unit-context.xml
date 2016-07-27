@@ -25,4 +25,10 @@
       </route>
     </camelContext>
 
+    <bean id="beforeSuiteDesigner" class="com.consol.citrus.dsl.design.BeforeSuiteTestDesigner"/>
+    <bean id="afterSuiteDesigner" class="com.consol.citrus.dsl.design.AfterSuiteTestDesigner"/>
+
+    <bean id="beforeSuiteRunner" class="com.consol.citrus.dsl.runner.BeforeSuiteTestRunner"/>
+    <bean id="afterSuiteRunner" class="com.consol.citrus.dsl.runner.AfterSuiteTestRunner"/>
+
 </beans>
