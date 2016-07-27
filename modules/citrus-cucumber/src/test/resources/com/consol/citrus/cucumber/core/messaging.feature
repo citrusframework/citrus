@@ -4,6 +4,10 @@ Background:
   Given variable text is "Hello"
 
   Scenario: Send and receive
+    When <fooEndpoint> sends "<message><text>${text}</text></message>"
+    Then <fooEndpoint> should receive "<message><text>${text}</text></message>"
+
+  Scenario: Send and receive
     When <fooEndpoint> sends
       """
       <message>
