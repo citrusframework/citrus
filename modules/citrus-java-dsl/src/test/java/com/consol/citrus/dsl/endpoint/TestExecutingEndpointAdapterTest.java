@@ -47,20 +47,34 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
     @Test
     public void testRouteMessageByElementTextContent() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
-        mappingNameExtractor.setXpathExpression("//Test/@name");
+        mappingNameExtractor.setXpathExpression("//TestDesigner/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         Message response = endpointAdapter.handleMessage(
-                new DefaultMessage("<Test name=\"FooTest\"></Test>"));
+                new DefaultMessage("<TestDesigner name=\"FooTestDesigner\"></TestDesigner>"));
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
+        Assert.assertEquals(response.getPayload(), "<TestDesigner name=\"FooTestDesigner\">OK</TestDesigner>");
 
         response = endpointAdapter.handleMessage(
-                new DefaultMessage("<Test name=\"BarTest\"></Test>"));
+                new DefaultMessage("<TestDesigner name=\"BarTestDesigner\"></TestDesigner>"));
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
+        Assert.assertEquals(response.getPayload(), "<TestDesigner name=\"BarTestDesigner\">OK</TestDesigner>");
+
+        mappingNameExtractor.setXpathExpression("//TestRunner/@name");
+
+        response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestRunner name=\"FooTestRunner\"></TestRunner>"));
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getPayload(), "<TestRunner name=\"FooTestRunner\">OK</TestRunner>");
+
+        response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestRunner name=\"BarTestRunner\"></TestRunner>"));
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getPayload(), "<TestRunner name=\"BarTestRunner\">OK</TestRunner>");
     }
 
     /**
@@ -73,10 +87,17 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
 
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage(
-                        "<FooBarTest></FooBarTest>"));
+                        "<FooBarTestDesigner></FooBarTestDesigner>"));
 
         Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(), "<FooBarTest>OK</FooBarTest>");
+        Assert.assertEquals(response.getPayload(), "<FooBarTestDesigner>OK</FooBarTestDesigner>");
+
+        response = endpointAdapter.handleMessage(
+                new DefaultMessage(
+                        "<FooBarTestRunner></FooBarTestRunner>"));
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getPayload(), "<FooBarTestRunner>OK</FooBarTestRunner>");
     }
 
     /**
@@ -90,7 +111,7 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
 
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
-                    "<FooTest>foo test please</FooTest>"));
+                    "<FooTestDesigner>foo test please</FooTestDesigner>"));
             Assert.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
@@ -103,12 +124,12 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
     @Test
     public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
-        mappingNameExtractor.setXpathExpression("//Test/@name");
+        mappingNameExtractor.setXpathExpression("//TestDesigner/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
-                    "<Test name=\"UNKNOWN_TEST\"></Test>"));
+                    "<TestDesigner name=\"UNKNOWN_TEST\"></TestDesigner>"));
             Assert.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);

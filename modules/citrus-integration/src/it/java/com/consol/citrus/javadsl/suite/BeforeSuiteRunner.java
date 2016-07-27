@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.runner;
+package com.consol.citrus.javadsl.suite;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.endpoint.Executable;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.dsl.runner.TestRunnerBeforeSuiteSupport;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
- * @since 2.3
+ * @since 2.6
  */
-public class ExecutableTestRunnerComponent extends TestRunnerComponent implements Executable {
-
+@Component
+public class BeforeSuiteRunner extends TestRunnerBeforeSuiteSupport {
     @Override
-    public void execute() {
-    }
-
-    /**
-     * Prepare test execution and create new test context.
-     */
-    public void prepareExecution() {
-        TestContext context = getApplicationContext().getBean(TestContext.class);
-        context.setApplicationContext(getApplicationContext());
-
-        setTestContext(context);
+    public void beforeSuite(TestRunner runner) {
+        runner.echo("Before suite runner");
     }
 }

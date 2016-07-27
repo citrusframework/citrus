@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,24 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.endpoint.Executable;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2.3
+ * @since 2.6
  */
-public class ExecutableTestRunnerComponent extends TestRunnerComponent implements Executable {
+public class BeforeTestRunnerTest extends AbstractTestNGUnitTest {
 
-    @Override
-    public void execute() {
+    @Autowired
+    private BeforeTestRunner beforeTestRunner;
+
+    @Test
+    public void testBeforeTestBuilder() {
+        beforeTestRunner.execute(context);
+        Assert.assertEquals(beforeTestRunner.getExecutionCount(), 1);
     }
 
-    /**
-     * Prepare test execution and create new test context.
-     */
-    public void prepareExecution() {
-        TestContext context = getApplicationContext().getBean(TestContext.class);
-        context.setApplicationContext(getApplicationContext());
-
-        setTestContext(context);
-    }
 }

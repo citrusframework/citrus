@@ -71,8 +71,9 @@ public class SequenceBeforeSuiteParserTest extends AbstractBeanDefinitionParserT
         Assert.assertFalse(sequenceBefore.shouldExecute("suiteB", null));
         Assert.assertFalse(sequenceBefore.shouldExecute("suiteZ", null));
         Assert.assertFalse(sequenceBefore.shouldExecute("suiteZ", new String[]{}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("suiteZ", new String[]{"unit"}));
-        Assert.assertTrue(sequenceBefore.shouldExecute("suiteZ", new String[]{"e2e"}));
+        Assert.assertFalse(sequenceBefore.shouldExecute("suiteZ", new String[]{"unit"}));
+        Assert.assertFalse(sequenceBefore.shouldExecute("suiteZ", new String[]{"e2e"}));
+        Assert.assertFalse(sequenceBefore.shouldExecute("suiteA", new String[]{"other"}));
         Assert.assertTrue(sequenceBefore.shouldExecute("suiteA", new String[]{"unit"}));
         Assert.assertTrue(sequenceBefore.shouldExecute("suiteB", new String[]{"other", "unit", "e2e"}));
         Assert.assertTrue(sequenceBefore.shouldExecute("suiteA", new String[] {"e2e"}));

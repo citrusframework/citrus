@@ -6,19 +6,35 @@
   - title: Support variable object path
     id: 58
     type: Add
-    author: chrsitophd
+    author: christophd
+  - title: Cucumber messaging steps ambiguously defined
+    id: 116
+    type: Fix
+    author: christophd
+  - title: TestRunnerComponent TestContext initialization
+    id: 115
+    type: Fix
+    author: christophd
+  - title:
+    id: 110 Before/after suite methods in java DSL
+    type: Fix
+    author: christophd
+  - title:
+    id: 109 Before test methods in Java DSL
+    type: Fix
+    author: christophd
   - title: Documentation wrong XML tags
     id: 107
     type: Fix
-    author: chrsitophd
+    author: christophd
   - title: Documentation wait wrong argument in Java DSL
     id: 106
     type: Fix
-    author: chrsitophd
+    author: christophd
   - title: Documentation missing maven dependencies
     id: 105
     type: Fix
-    author: chrsitophd
+    author: christophd
     
 - version: 2.6
   date: 2016-06-27

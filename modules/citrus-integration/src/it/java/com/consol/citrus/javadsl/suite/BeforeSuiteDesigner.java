@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint.builder;
+package com.consol.citrus.javadsl.suite;
 
-import com.consol.citrus.dsl.design.ExecutableTestDesignerComponent;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.design.TestDesignerBeforeSuiteSupport;
 import org.springframework.stereotype.Component;
 
-@Component("FooTest")
-public class FooTest extends ExecutableTestDesignerComponent {
-
+/**
+ * @author Christoph Deppisch
+ * @since 2.6
+ */
+@Component
+public class BeforeSuiteDesigner extends TestDesignerBeforeSuiteSupport {
     @Override
-    public void configure() {
-        receive("inboundChannelEndpoint")
-                .messageType(MessageType.PLAINTEXT)
-                .payload("<Test name=\"FooTest\"></Test>");
-
-        send("inboundChannelEndpoint")
-                .payload("<Test name=\"FooTest\">OK</Test>");
-
-        echo("Foo Test OK!");
+    public void beforeSuite(TestDesigner designer) {
+        designer.echo("Before suite designer");
     }
 }

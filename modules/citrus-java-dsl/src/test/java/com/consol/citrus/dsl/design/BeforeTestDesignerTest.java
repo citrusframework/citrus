@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.runner;
+package com.consol.citrus.dsl.design;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContextAware;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2.3
+ * @since 2.6
  */
-public class TestRunnerComponent extends DefaultTestRunner implements ApplicationContextAware, InitializingBean {
+public class BeforeTestDesignerTest extends AbstractTestNGUnitTest {
 
-    @Override
-    public final void afterPropertiesSet() throws Exception {
-        initialize();
+    @Autowired
+    private BeforeTestDesigner beforeTestDesigner;
+
+    @Test
+    public void testBeforeTestBuilder() {
+        beforeTestDesigner.execute(context);
+        Assert.assertEquals(beforeTestDesigner.getExecutionCount(), 1);
     }
+
 }

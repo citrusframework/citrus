@@ -59,6 +59,8 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
                     return true;
                 }
             }
+
+            return false;
         }
 
         if (checkTestGroups(includedGroups)) {

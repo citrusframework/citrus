@@ -133,7 +133,7 @@ public class MessagingSteps {
         receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @When("^<([^>]*)> receives ([^\\s]+)$")
+    @When("^<([^>]*)> receives ([^\\s\"]+)$")
     public void receivePayload(String endpoint, String type, String payload) {
         receive(endpoint, type, payload);
     }
@@ -153,7 +153,7 @@ public class MessagingSteps {
         receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @Then("^<([^>]*)> should receive ([^\\s]+)$")
+    @Then("^<([^>]*)> should receive ([^\\s\"]+)$")
     public void shouldReceivePayload(String endpoint, String type, String payload) {
         receive(endpoint, type, payload);
     }
