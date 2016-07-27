@@ -41,6 +41,9 @@
 
     <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
 
+    <!-- Scan before and after suite Java DSL components -->
+    <context:component-scan base-package="com.consol.citrus.javadsl.suite"/>
+
     <!-- RMI local service registry -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
       <property name="staticMethod" value="java.rmi.registry.LocateRegistry.createRegistry"/>

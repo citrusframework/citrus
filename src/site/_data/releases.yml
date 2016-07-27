@@ -15,6 +15,14 @@
     id: 115
     type: Fix
     author: christophd
+  - title:
+    id: 110 Before/after suite methods in java DSL
+    type: Fix
+    author: christophd
+  - title:
+    id: 109 Before test methods in Java DSL
+    type: Fix
+    author: christophd
   - title: Documentation wrong XML tags
     id: 107
     type: Fix

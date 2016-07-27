@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.runner;
+package com.consol.citrus.javadsl.suite;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.design.TestDesignerAfterSuiteSupport;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class AfterSuiteTestRunnerTest extends AbstractTestNGUnitTest {
-
-    @Autowired
-    private AfterSuiteTestRunner afterSuiteTestRunner;
-
-    @Test
-    public void testAfterSuiteBuilder() {
-        Assert.assertEquals(afterSuiteTestRunner.getExecutionCount(), 0);
-        afterSuiteTestRunner.execute(context);
-        Assert.assertEquals(afterSuiteTestRunner.getExecutionCount(), 1);
+@Component
+public class AfterSuiteDesigner extends TestDesignerAfterSuiteSupport {
+    @Override
+    public void afterSuite(TestDesigner designer) {
+        designer.echo("After suite designer");
     }
-
 }

@@ -33,7 +33,7 @@ public class AfterSuiteTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testAfterSuiteBuilder() {
         Assert.assertEquals(afterSuiteTestDesigner.getExecutionCount(), 0);
-        citrus.afterSuite("my-suite");
+        afterSuiteTestDesigner.execute(context);
         Assert.assertEquals(afterSuiteTestDesigner.getExecutionCount(), 1);
     }
 

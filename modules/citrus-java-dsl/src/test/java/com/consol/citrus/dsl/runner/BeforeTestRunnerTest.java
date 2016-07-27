@@ -25,16 +25,15 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class AfterSuiteTestRunnerTest extends AbstractTestNGUnitTest {
+public class BeforeTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Autowired
-    private AfterSuiteTestRunner afterSuiteTestRunner;
+    private BeforeTestRunner beforeTestRunner;
 
     @Test
-    public void testAfterSuiteBuilder() {
-        Assert.assertEquals(afterSuiteTestRunner.getExecutionCount(), 0);
-        afterSuiteTestRunner.execute(context);
-        Assert.assertEquals(afterSuiteTestRunner.getExecutionCount(), 1);
+    public void testBeforeTestBuilder() {
+        beforeTestRunner.execute(context);
+        Assert.assertEquals(beforeTestRunner.getExecutionCount(), 1);
     }
 
 }
