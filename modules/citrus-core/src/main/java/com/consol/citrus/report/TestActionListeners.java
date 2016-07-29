@@ -16,13 +16,12 @@
 
 package com.consol.citrus.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.consol.citrus.TestAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class broadcasting test action events to all available test action listeners 
@@ -37,27 +36,21 @@ public class TestActionListeners implements TestActionListener {
     @Autowired(required = false)
     private List<TestActionListener> testActionListeners = new ArrayList<TestActionListener>();
 
-    /**
-     * @see com.consol.citrus.report.TestActionListener#onTestActionFinish(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
-     */
+    @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionFinish(testCase, testAction);
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestActionListener#onTestActionSkipped(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
-     */
+    @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionSkipped(testCase, testAction);
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestActionListener#onTestActionStart(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
-     */
+    @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionStart(testCase, testAction);

@@ -24,33 +24,21 @@ package com.consol.citrus.report;
  */
 public abstract class AbstractTestSuiteListener implements TestSuiteListener {
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
-     */
+    @Override
     public void onFinish() {}
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
-     */
+    @Override
     public void onFinishFailure(Throwable cause) {}
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
-     */
+    @Override
     public void onFinishSuccess() {}
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart()
-     */
+    @Override
     public void onStart() {}
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
-     */
+    @Override
     public void onStartFailure(Throwable cause) {}
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
-     */
+    @Override
     public void onStartSuccess() {}
 }
