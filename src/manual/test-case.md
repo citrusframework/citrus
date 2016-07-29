@@ -129,7 +129,7 @@ When using the Citrus Java DSL we need to include a special Maven dependency mod
 ```xml
 <dependency>
   <groupId>com.consol.citrus</groupId>
-  <artifactId>citrus-javadsl</artifactId>
+  <artifactId>citrus-java-dsl</artifactId>
   <version>2.7-SNAPSHOT</version>
   <scope>test</scope>
 </dependency>

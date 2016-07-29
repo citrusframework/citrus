@@ -38,6 +38,7 @@ public class MessageListeners implements MessageListener {
      * @param message
      * @param context
      */
+    @Override
     public void onInboundMessage(Message message, TestContext context) {
         if (message != null) {
             for (MessageListener listener : messageListener) {
@@ -51,6 +52,7 @@ public class MessageListeners implements MessageListener {
      * @param message
      * @param context
      */
+    @Override
     public void onOutboundMessage(Message message, TestContext context) {
         if (message != null) {
             for (MessageListener listener : messageListener) {

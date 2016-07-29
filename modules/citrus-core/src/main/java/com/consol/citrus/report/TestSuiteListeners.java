@@ -16,10 +16,10 @@
 
 package com.consol.citrus.report;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class managing a list of injected test suite listeners. Each event is spread to all
@@ -44,19 +44,15 @@ public class TestSuiteListeners implements TestSuiteListener {
     public void addTestSuiteListener(TestSuiteListener testSuiteListener) {
         testSuiteListeners.add(testSuiteListener);
     }
-    
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
-     */
+
+    @Override
     public void onFinish() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinish();
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
-     */
+    @Override
     public void onFinishFailure(Throwable cause) {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishFailure(cause);
@@ -67,9 +63,7 @@ public class TestSuiteListeners implements TestSuiteListener {
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
-     */
+    @Override
     public void onFinishSuccess() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishSuccess();
@@ -80,27 +74,21 @@ public class TestSuiteListeners implements TestSuiteListener {
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart()
-     */
+    @Override
     public void onStart() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStart();
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
-     */
+    @Override
     public void onStartFailure(Throwable cause) {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartFailure(cause);
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
-     */
+    @Override
     public void onStartSuccess() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartSuccess();

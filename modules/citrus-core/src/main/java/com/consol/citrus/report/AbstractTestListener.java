@@ -26,29 +26,19 @@ import com.consol.citrus.TestCase;
  */
 public abstract class AbstractTestListener implements TestListener {
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestFailure(com.consol.citrus.TestCase, java.lang.Throwable)
-     */
+    @Override
     public void onTestFailure(TestCase test, Throwable cause) {}
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestFinish(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestFinish(TestCase test) {}
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestSkipped(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestSkipped(TestCase test) {}
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestStart(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestStart(TestCase test) {}
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestSuccess(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestSuccess(TestCase test) {}
 
 }

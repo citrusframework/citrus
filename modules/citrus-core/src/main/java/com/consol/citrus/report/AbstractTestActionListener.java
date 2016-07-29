@@ -17,6 +17,7 @@
 package com.consol.citrus.report;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
 
 /**
  * Basic implementation of {@link TestActionListener} interface so that subclasses only have to overwrite 
@@ -27,14 +28,13 @@ import com.consol.citrus.TestAction;
  */
 public abstract class AbstractTestActionListener implements TestActionListener {
 
-    public void onTestActionFailure(TestAction testAction, Throwable cause) {}
+    @Override
+    public void onTestActionFinish(TestCase testCase, TestAction testAction) {}
 
-    public void onTestActionFinish(TestAction testAction) {}
+    @Override
+    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {}
 
-    public void onTestActionSkipped(TestAction testAction) {}
-
-    public void onTestActionStart(TestAction testAction) {}
-
-    public void onTestActionSuccess(TestAction testAction) {}
+    @Override
+    public void onTestActionStart(TestCase testCase, TestAction testAction) {}
 
 }

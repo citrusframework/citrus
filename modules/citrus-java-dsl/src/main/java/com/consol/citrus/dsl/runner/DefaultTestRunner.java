@@ -157,7 +157,7 @@ public class DefaultTestRunner implements TestRunner {
         testCase.getVariableDefinitions().put(name, value);
 
         if (value instanceof String) {
-            String resolved = context.resolveDynamicValue((String) value);
+            String resolved = context.replaceDynamicContentInString(value.toString());
             context.setVariable(name, resolved);
             return (T) resolved;
         } else {
