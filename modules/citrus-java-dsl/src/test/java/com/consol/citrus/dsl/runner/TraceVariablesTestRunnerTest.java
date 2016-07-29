@@ -24,31 +24,38 @@ import org.testng.annotations.Test;
 
 public class TraceVariablesTestRunnerTest extends AbstractTestNGUnitTest {
 
-	@Test
-	public void testTraceVariablesBuilder() {
-		MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
-			@Override
-			public void execute() {
-				variable("variable1", "foo");
-				variable("variable2", "bar");
+    @Test
+    public void testTraceVariablesBuilder() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                variable("variable1", "foo");
+                variable("variable2", "bar");
 
-				traceVariables();
-				traceVariables("variable1", "variable2");
-			}
-		};
+                variable("ONE", "1");
+                variable("TWO", "2");
 
-		TestCase test = builder.getTestCase();
-		Assert.assertEquals(test.getActionCount(), 2);
-		Assert.assertEquals(test.getActions().get(0).getClass(), TraceVariablesAction.class);
-		Assert.assertEquals(test.getActions().get(1).getClass(), TraceVariablesAction.class);
-		
-		TraceVariablesAction action = (TraceVariablesAction)test.getActions().get(0);
-		Assert.assertEquals(action.getName(), "trace");
-		Assert.assertNull(action.getVariableNames());
-		
-		action = (TraceVariablesAction)test.getActions().get(1);
+                variable("TWELFE", "${ONE}${TWO}");
+
+                traceVariables();
+                traceVariables("variable1", "variable2");
+                traceVariables("ONE", "TWO", "TWELFE");
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 3);
+        Assert.assertEquals(test.getActions().get(0).getClass(), TraceVariablesAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), TraceVariablesAction.class);
+        Assert.assertEquals(test.getActions().get(2).getClass(), TraceVariablesAction.class);
+
+        TraceVariablesAction action = (TraceVariablesAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "trace");
+        Assert.assertNull(action.getVariableNames());
+
+        action = (TraceVariablesAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "trace");
         Assert.assertNotNull(action.getVariableNames());
         Assert.assertEquals(action.getVariableNames().toString(), "[variable1, variable2]");
-	}
+    }
 }
