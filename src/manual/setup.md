@@ -91,7 +91,7 @@ as a dependency like follows.
 ```xml
 <dependency>
     <groupId>com.consol.citrus</groupId>
-    <artifactId>citrus-javadsl</artifactId>
+    <artifactId>citrus-java-dsl</artifactId>
     <version>2.7-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
