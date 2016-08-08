@@ -17,8 +17,7 @@
 package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -36,6 +35,19 @@ import java.util.Map;
 public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
 
     private final String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText name=\"foo\">No changes</OtherText></TestMessage>";
+    private final String htmlPayload = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">"
+            + "<html>"
+                + "<head>"
+                    + "<title>?</title>"
+                + "</head>"
+                + "<body>"
+                    + "<h1>?</h1>"
+                    + "<hr>"
+                    + "<form action=\"/\">"
+                        + "<input name=\"foo\" type=\"text\">"
+                    + "</form>"
+                + "</body>"
+            + "</html>";
 
     @Test
     public void testTranslate() throws Exception {
@@ -149,5 +161,26 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
                 "   <Text>Hello World!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
+    }
+
+    @Test
+    public void testTranslateXhtml() throws Exception {
+        Message message = new DefaultMessage(htmlPayload);
+
+        Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("/xh:html/xh:head/xh:title", "Hello");
+        mappings.put("//xh:h1", "Hello Citrus!");
+
+        XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+        namespaceContextBuilder.getNamespaceMappings().put("xh", "http://www.w3.org/1999/xhtml");
+        dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
+
+        Message intercepted = dictionary.interceptMessage(message, MessageType.XHTML.name(), context);
+        Assert.assertTrue(intercepted.getPayload(String.class).trim().contains("<title>Hello</title>"));
+        Assert.assertTrue(intercepted.getPayload(String.class).trim().contains("<h1>Hello Citrus!</h1>"));
+        Assert.assertTrue(intercepted.getPayload(String.class).trim().contains("<hr />"));
     }
 }

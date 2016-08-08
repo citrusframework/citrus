@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,31 +19,28 @@ package com.consol.citrus.validation.xhtml;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.*;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * XHTML message validator using W3C jtidy to automatically convert HTML content to XHTML fixing most common
- * well-formed errors in HTML markup.
- * 
  * @author Christoph Deppisch
+ * @since 2.6
  */
-public class XhtmlMessageValidator extends DomXmlMessageValidator implements InitializingBean {
+public class XhtmlXpathMessageValidator extends XpathMessageValidator implements InitializingBean {
 
     /** Message converter for XHTML content */
     private XhtmlMessageConverter messageConverter = new XhtmlMessageConverter();
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
-            TestContext context, XmlMessageValidationContext validationContext)
+            TestContext context, XpathMessageValidationContext validationContext)
             throws ValidationException {
-        
+
         String messagePayload = receivedMessage.getPayload(String.class);
         super.validateMessage(new DefaultMessage(messageConverter.convert(messagePayload), receivedMessage.getHeaders()),
                 controlMessage, context, validationContext);
     }
-    
+
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.XHTML.name());
