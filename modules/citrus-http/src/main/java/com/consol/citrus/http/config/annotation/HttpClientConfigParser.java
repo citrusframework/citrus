@@ -61,7 +61,9 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
 
         if (StringUtils.hasText(annotation.restTemplate())){
             builder.restTemplate(getReferenceResolver().resolve(annotation.restTemplate(), RestTemplate.class));
-        } else {
+        }
+
+        if (StringUtils.hasText(annotation.requestFactory())) {
             builder.requestFactory(getReferenceResolver().resolve(annotation.requestFactory(), ClientHttpRequestFactory.class));
         }
 
