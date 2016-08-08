@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.xhtml.XhtmlMessageConverter;
 import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
@@ -44,7 +45,12 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
             return message;
         }
 
-        Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
+        String messagePayload = message.getPayload(String.class);
+        if (MessageType.XHTML.name().equalsIgnoreCase(messageType)) {
+            messagePayload = new XhtmlMessageConverter().convert(messagePayload);
+        }
+
+        Document doc = XMLUtils.parseMessagePayload(messagePayload);
 
         LSSerializer serializer = XMLUtils.createLSSerializer();
 
@@ -105,7 +111,7 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
 
     @Override
     public boolean supportsMessageType(String messageType) {
-        return MessageType.XML.toString().equalsIgnoreCase(messageType);
+        return MessageType.XML.toString().equalsIgnoreCase(messageType) || MessageType.XHTML.toString().equalsIgnoreCase(messageType);
     }
 
 

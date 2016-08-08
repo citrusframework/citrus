@@ -104,6 +104,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
         when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
         when(applicationContext.getBean("clientInterceptor", ClientHttpRequestInterceptor.class)).thenReturn(clientInterceptor);
+        when(applicationContext.getBean("", ClientHttpRequestFactory.class)).thenThrow(new RuntimeException("Unexpected call to getBean on application context"));
     }
 
     @Test

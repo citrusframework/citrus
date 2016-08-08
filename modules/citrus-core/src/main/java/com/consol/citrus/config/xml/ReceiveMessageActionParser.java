@@ -107,7 +107,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyValue("messageType", messageType);
             }
 
-            if (messageType.equalsIgnoreCase(MessageType.XML.toString())) {
+            if (messageType.equalsIgnoreCase(MessageType.XML.toString()) || messageType.equalsIgnoreCase(MessageType.XHTML.toString())) {
                 XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(messageElement);
                 validationContexts.add(xmlMessageValidationContext);
 

@@ -339,7 +339,8 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         this.messageType = messageType;
         getAction().setMessageType(messageType);
 
-        if (messageType.equalsIgnoreCase(MessageType.XML.name())) {
+        if (messageType.equalsIgnoreCase(MessageType.XML.name())
+                || messageType.equalsIgnoreCase(MessageType.XHTML.name())) {
             getAction().getValidationContexts().add(xmlMessageValidationContext);
             getAction().getValidationContexts().remove(jsonMessageValidationContext);
         } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
@@ -401,7 +402,8 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T ignore(String path) {
-        if (messageType.equalsIgnoreCase(MessageType.XML.name())) {
+        if (messageType.equalsIgnoreCase(MessageType.XML.name())
+                || messageType.equalsIgnoreCase(MessageType.XHTML.name())) {
             xmlMessageValidationContext.getIgnoreExpressions().add(path);
         } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
             jsonMessageValidationContext.getIgnoreExpressions().add(path);

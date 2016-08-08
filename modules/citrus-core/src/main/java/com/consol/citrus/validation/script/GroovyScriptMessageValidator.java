@@ -127,6 +127,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         // support all known message types other than XML
-        return MessageType.knows(messageType) && !messageType.equalsIgnoreCase(MessageType.XML.toString());
+        return MessageType.knows(messageType) && !messageType.equalsIgnoreCase(MessageType.XML.toString())
+                && !messageType.equalsIgnoreCase(MessageType.XHTML.toString());
     }
 }

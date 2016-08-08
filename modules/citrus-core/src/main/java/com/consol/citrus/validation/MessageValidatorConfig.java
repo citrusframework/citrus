@@ -23,6 +23,7 @@ import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
 import com.consol.citrus.validation.text.BinaryBase64MessageValidator;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
+import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,7 @@ public class MessageValidatorConfig {
     private final BinaryBase64MessageValidator defaultBinaryBase64MessageValidator = new BinaryBase64MessageValidator();
 
     private final XhtmlMessageValidator defaultXhtmlMessageValidator = new XhtmlMessageValidator();
+    private final XhtmlXpathMessageValidator defaultXhtmlXpathMessageValidator = new XhtmlXpathMessageValidator();
 
     private final GroovyXmlMessageValidator defaultGroovyXmlMessageValidator = new GroovyXmlMessageValidator();
     private final GroovyJsonMessageValidator defaultGroovyJsonMessageValidator = new GroovyJsonMessageValidator();
@@ -82,6 +84,11 @@ public class MessageValidatorConfig {
         return defaultXhtmlMessageValidator;
     }
 
+    @Bean(name = "defaultXhtmlXpathMessageValidator")
+    public XhtmlXpathMessageValidator getDefaultXhtmlXpathMessageValidator() {
+        return defaultXhtmlXpathMessageValidator;
+    }
+
     @Bean(name = "defaultGroovyXmlMessageValidator")
     public GroovyXmlMessageValidator getDefaultGroovyXmlMessageValidator() {
         return defaultGroovyXmlMessageValidator;
@@ -106,6 +113,7 @@ public class MessageValidatorConfig {
 
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGroovyJsonMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultXhtmlMessageValidator);
+        citrusMessageValidatorRegistry.getMessageValidators().add(defaultXhtmlXpathMessageValidator);
 
         return citrusMessageValidatorRegistry;
     }

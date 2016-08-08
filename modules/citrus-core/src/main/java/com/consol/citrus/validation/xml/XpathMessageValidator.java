@@ -52,7 +52,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     @Override
-    public void validateMessage(Message receivedMessage,Message controlMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
         if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
