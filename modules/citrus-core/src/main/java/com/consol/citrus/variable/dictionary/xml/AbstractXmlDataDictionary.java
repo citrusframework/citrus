@@ -105,7 +105,7 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
 
     @Override
     public boolean supportsMessageType(String messageType) {
-        return MessageType.XML.toString().equalsIgnoreCase(messageType);
+        return MessageType.XML.toString().equalsIgnoreCase(messageType) || MessageType.XHTML.toString().equalsIgnoreCase(messageType);
     }
 
 

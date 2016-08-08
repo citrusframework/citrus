@@ -23,6 +23,7 @@ package com.consol.citrus.message;
  */
 public enum MessageType {
     XML,
+    XHTML,
     CSV,
     JSON,
     PLAINTEXT,

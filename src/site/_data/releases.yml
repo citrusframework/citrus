@@ -7,6 +7,14 @@
     id: 58
     type: Add
     author: christophd
+  - title: XHTML message validation XPath support
+    id: 119
+    type: Fix
+    author: christophd
+  - title: EscapeXml function not working with commas
+    id: 117
+    type: Fix
+    author: christophd
   - title: Cucumber messaging steps ambiguously defined
     id: 116
     type: Fix

@@ -127,7 +127,8 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.XML.toString());
+        return messageType.equalsIgnoreCase(MessageType.XML.toString()) ||
+                messageType.equalsIgnoreCase(MessageType.XHTML.toString());
     }
 
     /**

@@ -18,8 +18,7 @@ package com.consol.citrus.validation.xhtml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.springframework.beans.factory.InitializingBean;
@@ -43,9 +42,6 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
     /** Resource pointing to a custom tidy configuration file */
     private Resource tidyConfiguration;
     
-    /** Message type identifier */
-    private static final String XHTML_MESSAGE_TYPE = "xhtml";
-
     /** Search pattern for base w3 xhtml url */
     private static final String W3_XHTML1_URL = "http://www\\.w3\\.org/TR/xhtml1/DTD/";
     
@@ -77,7 +73,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
     
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(XHTML_MESSAGE_TYPE);
+        return messageType.equalsIgnoreCase(MessageType.XHTML.name());
     }
 
     /**
