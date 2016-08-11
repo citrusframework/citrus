@@ -53,7 +53,7 @@ public class ReadFileResourceFunctionTest extends AbstractTestNGUnitTest {
         String path = "classpath:com/consol/citrus/functions/${filename}";
         String result = function.execute(Arrays.asList(path, "true"), context);
 
-        Assert.assertEquals(result, "VGhpcyBpcyBhIHNhbXBsZSBmaWxlIGNvbnRlbnQhCldlIGNhbiBhbHNvIHVzZSB2YXJpYWJsZXMgJyR7dXNlcn0nIGFuZCBmdW5jdGlvbnMgY2l0cnVzOmN1cnJlbnREYXRlKCk=");
+        Assert.assertEquals(result, "VGhpcyBpcyBhIHNhbXBsZSBmaWxlIGNvbnRlbnQhDQpXZSBjYW4gYWxzbyB1c2UgdmFyaWFibGVzICcke3VzZXJ9JyBhbmQgZnVuY3Rpb25zIGNpdHJ1czpjdXJyZW50RGF0ZSgp");
     }
 
     @Test(expectedExceptions = InvalidFunctionUsageException.class)

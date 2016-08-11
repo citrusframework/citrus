@@ -30,7 +30,7 @@ public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                repeat(echo("${var}"), sleep(3000), echo("${var}"))
+                repeat(echo("${var}"), sleep(3000), echo("${var}")).autoSleep(2000)
                     .index("i")
                     .startsWith(2)
                     .until("i lt 5");
@@ -57,7 +57,7 @@ public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                repeat()
+                repeat().autoSleep(2000)
                     .index("i")
                     .startsWith(2)
                     .until("i lt 5")

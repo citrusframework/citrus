@@ -37,17 +37,20 @@ public class RepeatUntilTrueParserTest extends AbstractActionParserTest<RepeatUn
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000));
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "index lt= 2");
         Assert.assertEquals(action.getIndexName(), "index");
         Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000));
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i lt= 10");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getActionCount(), 2);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000));
     }
 }

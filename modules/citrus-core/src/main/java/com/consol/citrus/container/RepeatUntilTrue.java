@@ -45,6 +45,7 @@ public class RepeatUntilTrue extends AbstractIteratingActionContainer {
         do {
             executeActions(context);
             index++;
+            doAutoSleep();
         } while (!checkCondition(context));
     }
 }

@@ -35,7 +35,7 @@ public class RepeatUntilTrueTestRunnerIT extends TestNGCitrusTestRunner {
     public void repeatUntilTrueContainer() {
         variable("max", "3");
         
-        repeat().until("i gt citrus:randomNumber(1)").index("i")
+        repeat().until("i gt citrus:randomNumber(1)").autoSleep(100).index("i")
                 .actions(echo("index is: ${i}"));
 
         repeat().until(new IteratingConditionExpression() {
@@ -43,25 +43,25 @@ public class RepeatUntilTrueTestRunnerIT extends TestNGCitrusTestRunner {
                     public boolean evaluate(int index, TestContext context) {
                         return index >= 5 && StringUtils.hasText(context.getVariable("max")) ;
                     }
-                })
+                }).autoSleep(100)
                 .actions(echo("index is: ${i}"));
 
-        repeat().until(is(5))
+        repeat().until(is(5)).autoSleep(100)
                 .actions(echo("index is: ${i}"));
         
-        repeat().until("i gt= 5").index("i")
+        repeat().until("i gt= 5").autoSleep(100).index("i")
                 .actions(echo("index is: ${i}"));
         
-        repeat().until("(i gt 5) or (i = 5)").index("i")
+        repeat().until("(i gt 5) or (i = 5)").autoSleep(100).index("i")
                 .actions(echo("index is: ${i}"));
         
-        repeat().until("(i gt 5) and (i gt 3)").index("i")
+        repeat().until("(i gt 5) and (i gt 3)").autoSleep(100).index("i")
                 .actions(echo("index is: ${i}"));
         
-        repeat().until("i gt 0").index("i")
+        repeat().until("i gt 0").autoSleep(100).index("i")
                 .actions(echo("index is: ${i}"));
         
-        repeat().until("${max} lt i").index("i")
+        repeat().until("${max} lt i").autoSleep(100).index("i")
                 .actions(echo("index is: ${i}"));
 
         repeat().until(new IteratingConditionExpression() {
@@ -69,7 +69,7 @@ public class RepeatUntilTrueTestRunnerIT extends TestNGCitrusTestRunner {
                     public boolean evaluate(int index, TestContext context) {
                         return Integer.valueOf(context.getVariable("max")) > index;
                     }
-                })
+                }).autoSleep(100)
                 .actions(echo("index is: ${i}"));
     }
 }

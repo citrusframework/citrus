@@ -21,6 +21,8 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.PropertyPlaceholderHelper;
 
 import java.util.Properties;
@@ -43,6 +45,12 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
 
     /** Cache start index for further container executions - e.g. in loop */
     protected int start = 1;
+
+    /** Auto sleep in milliseconds */
+    private Long autoSleep = 1000L;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(AbstractIteratingActionContainer.class);
 	
     @Override
     public final void doExecute(TestContext context) {
@@ -182,5 +190,38 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      */
     public int getStart() {
         return start;
+    }
+
+    /**
+     * Setter for auto sleep time (in seconds).
+     * @param autoSleep
+     */
+    public void setAutoSleep(Long autoSleep) {
+        this.autoSleep = autoSleep;
+    }
+
+    /**
+     * Gets the autoSleep.
+     * @return the autoSleep
+     */
+    public Long getAutoSleep() {
+        return autoSleep;
+    }
+
+    /**
+     * Sleep amount of time in between iterations.
+     */
+    protected void doAutoSleep() {
+        if (autoSleep > 0) {
+            log.info("Sleeping " + autoSleep + " milliseconds");
+
+            try {
+                Thread.sleep(autoSleep);
+            } catch (InterruptedException e) {
+                log.error("Error during doc generation", e);
+            }
+
+            log.info("Returning after " + autoSleep + " milliseconds");
+        }
     }
 }

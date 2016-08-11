@@ -34,8 +34,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
-    /** Auto sleep in milliseconds */
-    private Long autoSleep = 1000L;
+
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
@@ -77,36 +76,4 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
     }
 
-    /**
-     * Sleep amount of time in between iterations.
-     */
-    private void doAutoSleep() {
-        if (autoSleep > 0) {
-            log.info("Sleeping " + autoSleep + " milliseconds");
-
-            try {
-                Thread.sleep(autoSleep);
-            } catch (InterruptedException e) {
-                log.error("Error during doc generation", e);
-            }
-
-            log.info("Returning after " + autoSleep + " milliseconds");
-        }
-    }
-
-    /**
-     * Setter for auto sleep time (in seconds).
-     * @param autoSleep
-     */
-    public void setAutoSleep(Long autoSleep) {
-        this.autoSleep = autoSleep;
-    }
-
-    /**
-     * Gets the autoSleep.
-     * @return the autoSleep
-     */
-    public Long getAutoSleep() {
-        return autoSleep;
-    }
 }

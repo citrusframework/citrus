@@ -47,6 +47,7 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
 
         repeatUntilTrue.setCondition(expression);
         repeatUntilTrue.setIndexName("i");
+        repeatUntilTrue.setAutoSleep(0L);
 
         repeatUntilTrue.execute(context);
 
@@ -98,6 +99,7 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
                 return index == 5;
             }
         });
+        repeatUntilTrue.setAutoSleep(0L);
 
         repeatUntilTrue.execute(context);
 
@@ -116,6 +118,7 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
         repeatUntilTrue.setActions(Collections.singletonList(action));
 
         repeatUntilTrue.setConditionExpression(new HamcrestConditionExpression(is(5)));
+        repeatUntilTrue.setAutoSleep(0L);
 
         repeatUntilTrue.execute(context);
 

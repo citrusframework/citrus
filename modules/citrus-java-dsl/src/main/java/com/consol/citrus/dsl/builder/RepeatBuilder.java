@@ -118,4 +118,14 @@ public class RepeatBuilder extends AbstractTestContainerBuilder<RepeatUntilTrue>
 		action.setConditionExpression(new HamcrestConditionExpression(conditionMatcher));
 		return this;
 	}
+
+	/**
+	 * Sets the auto sleep time in between repeats in milliseconds.
+	 * @param autoSleep
+	 * @return
+	 */
+	public RepeatBuilder autoSleep(long autoSleep) {
+		action.setAutoSleep(autoSleep);
+		return this;
+	}
 }
