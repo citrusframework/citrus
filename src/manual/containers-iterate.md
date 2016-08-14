@@ -1,0 +1,87 @@
+### Iterate
+
+Iterations are very powerful elements when describing complex logic. The container executes the embedded actions several times. The container will continue with looping as long as the defined breaking condition string evaluates to ***true*** . In case the condition evaluates to ***false*** the iteration will break an finish execution.
+
+ **XML DSL** 
+
+```xml
+<testcase name="iterateTest">
+    <actions>
+        <iterate index="i" condition="i lt 5">
+            <echo>
+                <message>index is: ${i}</message>
+            </echo>
+        </iterate>
+    </actions>
+</testcase>
+```
+
+ **Java DSL designer and runner** 
+
+```java
+@CitrusTest
+public void iterateTest() {
+    iterate().condition("i lt 5").index("i"))
+        .actions(
+            echo("index is: ${i}")
+        );
+}
+```
+
+The attribute "index" automatically defines a new variable that holds the actual loop index starting at "1". This index variable is available as a normal variable inside the iterate container. Therefore it is possible to print out the actual loop index in the echo action as shown in the above example.
+
+The condition string is mandatory and describes the actual end of the loop. In iterate containers the loop will break in case the condition evaluates to ***false*** .
+
+The condition string can be any Boolean expression and supports several operators:
+
+* lt (lower than)
+
+* lt= (lower than equals)
+
+* gt (greater than)
+
+* gt= (greater than equals)
+
+* = (equals)
+
+* and (logical combining of two Boolean values)
+
+* or (logical combining of two Boolean values)
+
+* () (brackets)
+
+
+
+**Important**
+It is very important to notice that the condition is evaluated before the very first iteration takes place. The loop therefore can be executed 0-n times according to the condition value.
+
+Now the boolean expression evaluation as described above is limited to very basic operation such as **lower than** , **greater than** and so on. We also can use Hamcrest matchers in conditions that are way more powerful than that.
+
+ **XML DSL** 
+
+```xml
+<testcase name="iterateTest">
+    <actions>
+        <iterate index="i" condition="@assertThat(lessThan(5))@">
+            <echo>
+                <message>index is: ${i}</message>
+            </echo>
+        </iterate>
+    </actions>
+</testcase>
+```
+
+ **Java DSL designer and runner** 
+
+```java
+@CitrusTest
+public void iterateTest() {
+    iterate().condition(lessThan(5)).index("i"))
+        .actions(
+            echo("index is: ${i}")
+        );
+}
+```
+
+In the example above we use Hamcrest matchers as condition. You can combine Hamcrest matchers and create very powerful condition evaluations here.
+

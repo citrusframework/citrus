@@ -1,0 +1,38 @@
+### Sequential
+
+The sequential container executes the embedded test actions in strict sequence. Readers now might search for the difference to the normal action chain that is specified inside the test case. The actual power of sequential containers does show only in combination with other containers like iterations and parallels. We will see this later when handling these containers.
+
+For now the sequential container seems not very sensational - one might say boring - because it simply groups a pair of test actions to sequential execution.
+
+ **XML DSL** 
+
+```xml
+<testcase name="sequentialTest">
+    <actions>
+        <sequential>
+            <trace-time/>
+            <sleep/>
+            <echo>
+                <message>Hallo TestFramework</message>
+            </echo>
+            <trace-time/>
+        </sequential>
+    </actions>
+</testcase>
+```
+
+ **Java DSL designer and runner** 
+
+```java
+@CitrusTest
+public void sequentialTest() {
+    sequential()
+        .actions(
+            stopTime(),
+            sleep(1.0),
+            echo("Hello Citrus"),
+            stopTime()
+        );
+}
+```
+

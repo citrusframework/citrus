@@ -1,0 +1,60 @@
+### Conditional
+
+Now we deal with conditional executions of test actions. Nested actions inside a conditional container are executed only in case a booleand expression evaluates to true. Otherwise the container execution is not performed at all.
+
+See some example to find out how it works with the conditional expression string.
+
+ **XML DSL** 
+
+```xml
+<testcase name="conditionalTest">
+    <variables>
+      <variable name="index" value="5"/>
+      <variable name="shouldSleep" value="true"/>
+    </variables>
+
+    <actions>
+        <conditional expression="${index} = 5">
+            <sleep seconds="10"/>
+        </conditional>
+
+        <conditional expression="${shouldSleep}">
+            <sleep seconds="10"/>
+        </conditional>
+
+        <conditional expression="@assertThat('${shouldSleep}', 'anyOf(is(true), isEmptyString())')@">
+            <sleep seconds="10"/>
+        </conditional>
+    </actions>
+</testcase>
+```
+
+ **Java DSL designer and runner** 
+
+```java
+@CitrusTest
+public void conditionalTest() {
+    variable("index", 5);
+    variable("shouldSleep", true);
+
+    conditional().when("${index} = 5"))
+        .actions(
+            sleep(10000L)
+        );
+
+    conditional().when("${shouldSleep}"))
+        .actions(
+            sleep(10000L)
+        );
+
+    conditional().when("${shouldSleep}", anyOf(is("true"), isEmptyString()))
+        .actions(
+            sleep(10000L)
+        );
+}
+```
+
+The nested sleep action is executed in case the variable ${index} is equal to the value '5'. This conditional execution of test actions is useful when dealing with different test environments such as different operating systems for instance. The conditional container also supports expressions that evaluate to the character sequence "true" or "false" as shown in the ${shouldSleep} example.
+
+The last conditional container in the example above makes use of Hamcrest matchers. The matcher evaluates to **true** of **false** and based on that the container actions are executed or skipped. The Hamcrest matchers are very powerful when it comes to evaluation of multiple conditions at a time.
+

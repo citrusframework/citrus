@@ -1,0 +1,230 @@
+## Docker support
+
+Citrus provides configuration components and test actions for interaction with a Docker deamon. The Citrus docker client component will execute Docker commands for container management such as start, stop, build, inspect and so on. The Docker client by default uses the Docker remote REST API. As a user you can execute Docker commands as part of a Citrus test and validate possible command results.
+
+**Note**
+The Docker test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+
+```xml
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-docker</artifactId>
+  <version>2.7-SNAPSHOT</version>
+</dependency>
+```
+
+Citrus provides a "citrus-docker" configuration namespace and schema definition for Docker related components and actions. Include this namespace into your Spring configuration in order to use the Citrus Docker configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-docker="http://www.citrusframework.org/schema/docker/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/docker/config
+       http://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd">
+       
+    [...]
+    
+</beans>
+```
+
+After that you are able to use customized Citrus XML elements in order to define the Spring beans.
+
+### Docker client
+
+Citrus operates with the Docker remote REST API in order to interact with the Docker deamon. The Docker client is defined as Spring bean component in the configuration as follows:
+
+```xml
+<citrus-docker:client id="dockerClient"/>
+```
+
+The Docker client component above is using all default configuration values. By default Citrus is searching the system properties as well as environment variables for default Docker settings such as:
+
+*  **DOCKER_HOST** ="tcp://localhost:2376"
+
+*  **DOCKER_CERT_PATH** ="~/.docker/machine/machines/default"
+
+*  **DOCKER_TLS_VERIFY** ="1"
+
+*  **DOCKER_MACHINE_NAME** ="default"
+
+
+
+In case these settings are not settable in your environment you can also use explicit settings in the Docker client component:
+
+```xml
+<citrus-docker:client id="dockerClient"
+            url="http://192.168.2.100:2376"
+            version="1.20"
+            username="user"
+            password="s!cr!t"
+            email="user@consol.de"
+            server-address="https://index.docker.io/v1/"
+            cert-path="/path/to/some/cert/directory"
+            config-path="/path/to/some/config/directory"/>
+```
+
+Now Citrus is able to access the Docker remote API for executing commands such as start, stop, build, inspect and so on.
+
+### Docker commands
+
+We have several Citrus test actions each representing a Docker command. These actions can be part of a test case where you can manage Docker containers inside the test. As a prerequisite we have to enable the Docker specific test actions in our XML test as follows:
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/docker/testcase
+        http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd">
+
+    [...]
+
+</beans>
+```
+
+We added a special docker namespace with prefix **docker:** so now we can start to add Docker test actions to the test case:
+
+ **XML DSL** 
+
+```xml
+<testcase name="DockerCommandIT">
+    <actions>
+          <docker:ping></docker:ping>
+
+          <docker:version>
+            <docker:expect>
+              <docker:result>
+                <![CDATA[
+                  {
+                    "Version":"1.8.3",
+                    "ApiVersion":"1.21",
+                    "GitCommit":"@ignore@",
+                    "GoVersion":"go1.4.2",
+                    "Os":"darwin",
+                    "Arch":"amd64",
+                    "KernelVersion":"@ignore@"
+                  }
+                ]]>
+              </docker:result>
+            </docker:expect>
+          </docker:version>
+    </actions>
+</testcase>
+```
+
+In this very simple example we first ping the Docker deamon to make sure we have connectivity up and running. After that we get the Docker version information. The second action shows an important concept when executing Docker commands in Citrus. As a tester we might be interested in validating the command result. So wen can specify an optional **docker:result** which is usually in JSON data format. As usual we can use test variables here and ignore some values explicitly such as the **GitCommit** value.
+
+Based on that we can execute several Docker commands in a test case:
+
+ **XML DSL** 
+
+```xml
+<testcase name="DockerCommandIT">
+    <variables>
+      <variable name="imageId" value="busybox"></variable>
+      <variable name="containerName" value="citrus_box"></variable>
+    </variables>
+
+    <actions>
+        <docker:pull image="${imageId}"
+                        tag="latest"/>
+
+        <docker:create image="${imageId}"
+                          name="${containerName}"
+                          cmd="top">
+            <docker:expect>
+                <docker:result>
+                    <![CDATA[
+                      {"Id":"@variable(containerId)@","Warnings":null}
+                    ]]>
+                </docker:result>
+            </docker:expect>
+        </docker:create>
+
+        <docker:start container="${containerName}"/>
+    </actions>
+</testcase>
+```
+
+In this example we pull a Docker image, build a new container out of this image and start the container. As you can see each Docker command action offers attributes such as **container** , **image** or **tag** . These are command settings that are available on the Docker command specification. Read more about the Docker commands and the specific settings in official Docker API reference guide.
+
+Citrus supports the following Docker commands with respective test actions:
+
+*  **docker:pull** 
+
+*  **docker:build** 
+
+*  **docker:create** 
+
+*  **docker:start** 
+
+*  **docker:stop** 
+
+*  **docker:wait** 
+
+*  **docker:ping** 
+
+*  **docker:version** 
+
+*  **docker:inspect** 
+
+*  **docker:remove** 
+
+*  **docker:info** 
+
+
+
+Some of the Docker commands can be executed both on container and image targets such as **docker:inspect** or **docker:remove** . The command action then offers both **container** and **image** attributes so the user can choose the target of the command operation to be a container or an image.
+
+Up to now we have only used the Citrus XML DSL. Of course all Docker commands are also available in Java DSL as the next example shows.
+
+ **Java DSL** 
+
+```java
+@CitrusTest
+public void dockerTest() {
+    docker().version()
+        .validateCommandResult(new CommandResultCallback<Version>() {
+            @Override
+            public void doWithCommandResult(Version version, TestContext context) {
+                Assert.assertEquals(version.getApiVersion(), "1.20");
+            }
+    });
+
+    docker().ping();
+
+    docker().start("my_container");
+}
+```
+
+The Java DSL Docker commands provide an optional **CommandResultCallback** that is called with the unmarshalled command result object. In the example above the Version model object is passed as argument to the callback. So the tester can access the command result and validate its properties.
+
+By default Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:
+
+ **Java DSL** 
+
+```java
+@Autowired
+private DockerClient dockerClient;
+
+@CitrusTest
+public void dockerTest() {
+    docker().client(dockerClient).version()
+        .validateCommandResult(new CommandResultCallback<Version>() {
+            @Override
+            public void doWithCommandResult(Version version, TestContext context) {
+                Assert.assertEquals(version.getApiVersion(), "1.20");
+            }
+    });
+
+    docker().client(dockerClient).ping();
+
+    docker().client(dockerClient).start("my_container");
+}
+```
+

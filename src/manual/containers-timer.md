@@ -1,0 +1,74 @@
+### Timer
+
+Timers are very useful containers when you wish to execute a collection of test actions several times at regular intervals. The timer component generates an event which in turn triggers the execution of the nested test actions associated with timer. This can be useful in a number of test scenarios for example when Citrus needs to simulate a heart beat or if you are debugging a test and you wist to query the contents of the database, to mention just a few. The following code sample should demonstrate the power and flexibility of timers:
+
+ **XML DSL** 
+
+```xml
+<testcase name="timerTest">
+      <actions>
+        <timer id="forkedTimer" interval="100" fork="true">
+          <echo>
+            <message>I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)</message>
+          </echo>
+          <sleep milliseconds="50" />
+        </timer>
+
+        <timer repeatCount="3" interval="100" delay="50">
+          <sleep milliseconds="50" />
+          <echo>
+            <message>I'm going to repeat this message 3 times before the next test actions are executed</message>
+          </echo>
+        </timer>
+
+        <echo>
+          <message>Test almost complete. Make sure all timers running in the background are stopped</message>
+        </echo>
+      </actions>
+      <finally>
+        <stop-timer timerId="forkedTimer" />
+      </finally>
+    </testcase>
+```
+
+ **Java DSL designer and runner** 
+
+```java
+@CitrusTest
+public void timerTest() {
+
+    timer()
+        .timerId("forkedTimer")
+        .interval(100L)
+        .fork(true)
+        .actions(
+            echo("I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)"),
+            sleep(50L)
+        );
+
+    timer()
+        .repeatCount(3)
+        .interval(100L)
+        .delay(50L)
+        .actions(
+            sleep(50L),
+            echo("I'm going to repeat this message 3 times before the next test actions are executed")
+        );
+
+    echo("Test almost complete. Make sure all timers running in the background are stopped");
+
+    doFinally().actions(
+        stopTimer("forkedTimer")
+    );
+}
+```
+
+In the above example the first timer (timerId = forkedTimer) is started in the background. By default timers are run in the current thread of execution but to start it in the background just use "fork=true". Every 100 milliseconds this timer emits an event which will result in the nested actions being executed. The nested 'echo' action outputs the number of times this timer has already been executed. It does this with the help of an 'index' variable, in this example ${forkedTimer-index}, which is named according to the timer **id** with the suffix '-index'. No limit is set on the number of times this timer should run so it will keep on running until either a nested test action fails or it is instructed to stop (more on this below).
+
+The second timer is configured to run 3 times with a delay of 100 milliseconds between each iteration. Using the attribute 'delay' we can get the timer pause for 50 milliseconds before running the nested actions for the first time. The timer is configured to run in the current thread of execution so the last test action, the 'echo', has to wait for this timer to complete before it is executed.
+
+So how do we tell the forked timer to stop running? If we forget to do this the timer will just execute indefinitely. To help us out here we can use the 'stop-timer' action. By adding this to the finally block we ensure that the timer will be stopped, even if some nested test action fails. We could have easily added it as a nested test action, to the forkedTimer for example, but if some other test action failed before the stop-timer was called, the timer would never stop.
+
+**Note**
+You can also configure timers to run in the background using the 'parallel' container, rather than setting the attribute 'fork' to true. Using parallel allows more fine-grained control of the test and has the added advantage that all errors generated from a nester timer action are visible to the test executer. If an error occurs within the timer then the test status is set to failed. Using fork=true an error causes the timer to stop executing, but the test status is not influenced by this error.
+

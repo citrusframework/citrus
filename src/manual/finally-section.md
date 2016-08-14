@@ -1,0 +1,86 @@
+## Finally section
+
+This chapter deals with a special section inside the test case that is executed even in case errors did occur during the test. Lets say you have started a Jetty web server instance at the beginning of the test case and you need to shutdown the server when the test has finished its work. Or as a second example imagine that you have prepared some data inside the database at the beginning of your test and you want to make sure that the data is cleaned up at the end of the test case.
+
+In both situations we might run into some problems when the test failed. We face the problem that the whole test case will terminate immediately in case of errors. Cleanup tasks at the end of the test action chain may not be executed correctly.
+
+Dirty states inside the database or still running server instances then might cause problems for following test cases. To avoid this problems you should use the finally block of the test case. The <finally> section contains actions that are executed even in case the test fails. Using this strategy the database cleaning tasks mentioned before will find execution in every case (success or failure).
+
+The following example shows how to use the finally section at the end of a test:
+
+ **XML DSL** 
+
+```xml
+<testcase name="finallyTest">
+    <variables>
+        <variable name="orderId" value="citrus:randomNumber(5)"/>
+        <variable name="date" value="citrus:currentDate('dd.MM.yyyy')"/>
+    </variables>
+    <actions>
+        <sql datasource="testDataSource">
+            <statement>
+                INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')
+            </statement>
+        </sql>
+        
+        <echo>
+            <message>
+                ORDER creation time: ${date}
+            </message>
+        </echo>
+    </actions>
+    <finally>
+        <sql datasource="testDataSource">
+            <statement>
+              DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'
+            </statement>
+        </sql>
+    </finally>
+</testcase>
+```
+
+In the example the first action creates an entry in the database using an ***INSERT*** statement. To be sure that the entry in the database is deleted after the test, the finally section contains the respective ***DELETE*** statement that is always executed regardless the test case state (successful or failed).
+
+Of course you can also use the finally block in the Java test case DSL. Find following example to see how it works:
+
+ **Java DSL designer** 
+
+```java
+@CitrusTest
+public void finallySectionTest() {
+    variable("orderId", "citrus:randomNumber(5)");
+    variable("date", "citrus:currentDate('dd.MM.yyyy')");
+
+    sql(dataSource)
+        .statement("INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')");
+    
+    echo("ORDER creation time: citrus:currentDate('dd.MM.yyyy')");
+    
+    doFinally(
+        sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'")
+    );
+}
+```
+
+ **Java DSL runner** 
+
+```java
+@CitrusTest
+public void finallySectionTest() {
+    variable("orderId", "citrus:randomNumber(5)");
+    variable("date", "citrus:currentDate('dd.MM.yyyy')");
+
+    sql(action -> action.dataSource(dataSource)
+            .statement("INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')"));
+
+    echo("ORDER creation time: citrus:currentDate('dd.MM.yyyy')");
+
+    doFinally()
+        .actions(
+            sql(action -> action.dataSource(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"))
+        );
+}
+```
+
+**Note**
+Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The **@CitrusTest** annotated method is called at design time of the test case. The method builds the test case afterwards the test is executed at runtime. This means that a try-finally block within the **@CitrusTest** annotated method will never perform during the test run but at design time before the test gets executed. This is why we have to add the finally section as part of the test case with **doFinally()** .
