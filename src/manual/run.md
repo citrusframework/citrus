@@ -4,8 +4,10 @@ Citrus test cases are nothing but Java classes that get executed within a Java r
 
 If you create new test cases in Citrus - for instance via Maven plugin or ANT build script - Citrus generates both parts in your test directory. For example: if you create a new test named **MyFirstCitrusTest** you will find these two files as a result:
 
- ***src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml*** 
- ***src/it/java/com/consol/citrus/MyFirstCitrusTest.java*** 
+```
+src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml 
+src/it/java/com/consol/citrus/MyFirstCitrusTest.java 
+```
 
 **Note**
 If you prefer to just write Java code you can throw away the XML part immediately and continue working with the Java part only. In case you are familiar with writing Java code you may just skip the test template generation via Maven or ANT and preferably just create new Citrus Java test classes on your own.
@@ -26,7 +28,6 @@ TestNG stands for next generation testing and has had a great influence in addin
 package com.consol.citrus.samples;
 
 import org.testng.annotations.Test;
-
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
     
@@ -178,9 +179,9 @@ Now we also use the @CitrusXmlTest annotation in the Java class. This annotation
 
 The default naming convention requires a XML file with the tests name in the same package that the Java class is placed in. In the basic example above this means that Citrus searches for a XML test file in **com/consol/citrus/samples/SampleIT.xml** . You tell Citrus to search for another XML file by using the @CitrusXmlTest annotation properties. Following annotation properties are valid:
 
-* name: List of test case names to execute. Names also define XML file names to look for ( **.xml** file extension is not needed here).
-* packageName: Custom package location for the XML files to load
-* packageScan: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with ****/*Test.xml** and ****/*IT.xml** file name pattern.
+* **name**: List of test case names to execute. Names also define XML file names to look for ( **.xml** file extension is not needed here).
+* **packageName**: Custom package location for the XML files to load
+* **packageScan**: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with ****/*Test.xml** and ****/*IT.xml** file name pattern.
 
 You can also mix the various CitrusXmlTest annotation patterns in a single Java class. So we are able to have several test cases in one single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.
 

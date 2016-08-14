@@ -4,15 +4,10 @@ Some time ago in this document we have already seen how XML message payloads are
 
 XPath is a very powerful technology for walking XML trees. This W3C standard stands for advanced XML tree handling using a special syntax as query language. Citrus supports the XPath syntax in the following fields:
 
-* <message><element path="[XPath-Expression]"></message>
-
-* <validate><xpath expression="[XPath-Expression]"/></validate>
-
-* <extract><message path="[XPath-Expression]"></extract>
-
-* <ignore path="[XPath-Expression]"/>
-
-
+* &lt;message>&lt;element path="[XPath-Expression]">&lt;/message>
+* &lt;validate>&lt;xpath expression="[XPath-Expression]"/>&lt;/validate>
+* &lt;extract>&lt;message path="[XPath-Expression]">&lt;/extract>
+* &lt;ignore path="[XPath-Expression]"/>
 
 The next program listing indicates the power in using XPath with Citrus:
 
@@ -303,4 +298,3 @@ Even default namespaces need to be specified in the XPath expressions. Look at t
 
 **Tip**
 It is recommended to use the namespace context as described in the previous chapter when validating. Only this approach ensures flexibility and stable test cases regarding namespace changes.
-

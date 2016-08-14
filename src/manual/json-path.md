@@ -4,15 +4,10 @@ JSONPath is the JSON equivalent to XPath in the XML message world. With JSONPath
 
 You will see that JSONPath is a very powerful technology when it comes to find object entries in a complex JSON hierarchy structure. Also JSONPath can help to do message manipulations before a message is sent out for instance. Citrus supports JSONPath expressions in various scenarios:
 
-* <message><element path="[JSONPath-Expression]"></message>
-
-* <validate><json-path expression="[JSONPath-Expression]"/></validate>
-
-* <extract><message path="[JSONPath-Expression]"></extract>
-
-* <ignore path="[JSONPath-Expression]"/>
-
-
+* &lt;message>&lt;element path="[JSONPath-Expression]">&lt;/message>
+* &lt;validate>&lt;json-path expression="[JSONPath-Expression]"/>&lt;/validate>
+* &lt;extract>&lt;message path="[JSONPath-Expression]">&lt;/extract>
+* &lt;ignore path="[JSONPath-Expression]"/>
 
 ### Manipulate with JSONPath
 
@@ -235,4 +230,3 @@ The next usage scenario for JSONPath expressions in Citrus is the ignoring of el
 This time we add JSONPath expressions as ignore statements. This means that we explicitly leave out the evaluated elements from validation. Obviously this mechanism is a good thing to do when dynamic message data simply is not deterministic such as timestamps and dynamic identifiers. In the example above we explicitly skip the **token** entry and all **lastLogin** values that are obviously timestamp values in milliseconds.
 
 The JSONPath evaluation is very powerful when it comes to select a set of JSON objects and elements. This is how we can ignore several elements with one single JSONPath expression which is very powerful.
-

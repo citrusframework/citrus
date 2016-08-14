@@ -221,10 +221,10 @@ Now we placed the **loggingService** call inside a custom TestAction implementat
 
 ```xml
 INFO            Citrus| STARTING TEST LoggingTest
-  INFO        EchoAction| Before loggingService call
-  INFO    LoggingService| Now called custom logging service
-  INFO        EchoAction| After loggingService call
-  INFO            Citrus| TEST SUCCESS LoggingTest
+INFO        EchoAction| Before loggingService call
+INFO    LoggingService| Now called custom logging service
+INFO        EchoAction| After loggingService call
+INFO            Citrus| TEST SUCCESS LoggingTest
 ```
 
 Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called **test-runner** that we deal with in the next section. Before we continue we have to mention that the **test-designer** approach does also work for JUnit. Although we have only seen TestNG sample code in this section everything is working exactly the same way with JUnit framework. Just use the base class **com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner** instead.
@@ -240,22 +240,22 @@ The new test runner concept solves the issues that may come along when working w
 
 ```java
 import org.testng.annotations.Test;
-  import com.consol.citrus.annotations.CitrusTest;
-  import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 
-  @Test
-  public class LoggingTestRunner extends TestNGCitrusTestRunner {
-      private LoggingService loggingService = new LoggingService();
+@Test
+public class LoggingTestRunner extends TestNGCitrusTestRunner {
+    private LoggingService loggingService = new LoggingService();
 
-      @CitrusTest(name = "LoggingTest")
-      public void loggingTest() {
-          echo("Before loggingService call");
+    @CitrusTest(name = "LoggingTest")
+    public void loggingTest() {
+        echo("Before loggingService call");
 
-          loggingService.log("Now called custom logging service");
-
-          echo("After loggingService call");
-      }
-  }
+        loggingService.log("Now called custom logging service");
+      
+        echo("After loggingService call");
+    }
+}
 ```
 
 With the new test runner implementation as base class we are able to mix Java DSL method calls and normal Java code statement in our test in an unlimited way. This example above will also create the expected logging output as all Java DSL method calls are executed immediately.
@@ -334,7 +334,7 @@ As you can see we have added a method parameter of type **com.consol.citrus.cont
 
 Of course the same approach works with TestNG, too. As TestNG also provides resource injection mechanisms we have to make sure that the different resource injection approaches do not interfere with each other. So we tell TestNG to not inject this parameter by declaring it as **@Optional** for TestNG. In addition to that we need to introduce the parameter to TestNG with the **@Parameters** annotation. Otherwise TestNG would complain about not knowing this parameter. The final test method with Citrus resource injection looks like follows:
 
-```xml
+```java
 public class ResourceInjectionIT extends TestNGCitrusTestDesigner {
 
     @Test @Parameters("context")
