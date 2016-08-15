@@ -4,7 +4,7 @@ Citrus is working with server components that are started and stopped within a t
 
 Let me explain with a simple sample test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="sleepTest">
@@ -44,7 +44,7 @@ The start and stop server test action receive a server name which references a S
 
 When using the Java DSL the best way to reference a server instance is to autowire the Spring bean via dependency injection. The Spring framework takes case on injecting the proper Spring bean component defined in the SPring application context. This way you can easily start and stop server instances within Java DSL test cases.
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @Autowired

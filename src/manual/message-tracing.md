@@ -12,11 +12,11 @@ Just add this bean to the Spring configuration and Citrus will listen for sent a
 
 For example:
 
- ***logs/trace/messages/MyTest.msgs*** 
-
- ***logs/trace/messages/FooTest.msgs*** 
-
- ***logs/trace/messages/SomeTest.msgs*** 
+```
+logs/trace/messages/MyTest.msgs 
+logs/trace/messages/FooTest.msgs 
+logs/trace/messages/SomeTest.msgs 
+```
 
 Each Citrus test writes a **.msgs** file containing all messages that went over the wire during the test. By default the debug directory is set to ***logs/trace/messages/*** relative to the project test output directory. But you can set your own output directory in the configuration
 

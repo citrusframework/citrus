@@ -36,7 +36,7 @@ Again the type of transport to use is not specified inside the test case but in 
 
 We assume that the message's payload will be plain XML format. Citrus uses XML as the default data format for message payload data. But Citrus is not limited to XML message format though; you can always define other message data formats such as JSON, plain text, CSV. As XML is still a very popular message format in enterprise applications and message-based solution architectures we have this as a default format. Anyway Citrus works best on XML payloads and you will see a lot of example code in this document using XML. Finally let us have a look at a first example how a sending action is defined in the test.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="SendMessageTest">
@@ -67,7 +67,7 @@ In other words the **"endpoint"** attribute of the **<send>** element specifies 
 
 If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint definition and reference this instance. The same test as shown above in Java DSL looks like this:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 import org.testng.ITestContext;
@@ -102,7 +102,7 @@ This is basically how to send messages in Citrus. The test case is responsible f
 
 Now we have a look at the message receiving part inside the test. A simple example shows how it works.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="helloServiceEndpoint">
@@ -123,7 +123,7 @@ If we recap the send action of the previous chapter we can identify some common 
 
 Before we go into detail on validating the received message we have a quick look at the Java DSL variation for the receive action. The same receive action as above looks like this in Java DSL.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest

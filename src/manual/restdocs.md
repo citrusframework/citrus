@@ -73,7 +73,7 @@ test-output
 
 The example above is the result of three test cases each of them performing a client Http request/response communication. Each test message exchange is documented with separate files:
 
- **curl-request.adoc** 
+**curl-request.adoc** 
 
 ```xml
 [source,bash]
@@ -86,7 +86,7 @@ $ curl 'http://localhost:8080/test' -i -X POST -H 'Accept: application/xml' -H '
 
 The curl file represents the client request as curl command and can be seen as a sample to reproduce the request.
 
- **http-request.adoc** 
+**http-request.adoc** 
 
 ```xml
 [source,http,options="nowrap"]
@@ -107,7 +107,7 @@ Host: localhost
 
 The **http-request.adoc** file represents the sent message data for the client request. The respective **http-response.adoc** represents the response that was sent to the client.
 
- **http-response.adoc** 
+**http-response.adoc** 
 
 ```xml
 [source,http,options="nowrap"]
@@ -169,7 +169,7 @@ We have added a **type** setting with value **soap** . And that is basically all
 
 Following from that the **soapClient** is enabled to generate Spring Restdocs documentation for each request/response. The generated snippets then do represent the SOAP request and response messages.
 
- **http-request.adoc** 
+**http-request.adoc** 
 
 ```xml
 [source,http,options="nowrap"]
@@ -196,7 +196,7 @@ Host: localhost
 ----
 ```
 
- **http-response.adoc** 
+**http-response.adoc** 
 
 ```xml
 [source,http,options="nowrap"]
@@ -227,7 +227,7 @@ The file names are still using **http-request** and **http-response** but the co
 
 How can we use Spring Restdocs in Java DSL? Of course we have special support in Citrus Java DSL for the Spring Restdocs configuration, too.
 
- **Java DSL** 
+**Java DSL** 
 
 ```xml
 public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {

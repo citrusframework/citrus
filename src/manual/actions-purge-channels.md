@@ -4,7 +4,7 @@ Message channels define central messaging destinations in Citrus. These are name
 
 Following action definition purges all messages from a list of message channels:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="purgeChannelTest">
@@ -26,7 +26,7 @@ As you can see the test action supports channel names as well as channel referen
 
 The Java DSL works quite similar as you can read from next examples:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -42,7 +42,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -62,7 +62,7 @@ The channel resolver reference is optional. By default Citrus will automatically
 
 While speaking of Spring application context bean references the next example uses such bean references for channels to purge.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -85,7 +85,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -139,7 +139,7 @@ You simply define the message selector as a new Spring bean in the Citrus applic
 
 Now let us have a look at how you reference the selector in your test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <purge-channels message-selector="specialMessageSelector">
@@ -148,7 +148,7 @@ Now let us have a look at how you reference the selector in your test case:
 </purge-channels>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 
@@ -164,7 +164,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 

@@ -2,7 +2,7 @@
 
 The ***<transform>*** action transforms XML fragments with XSLT in order to construct various XML representations. The transformation result is stored into a test variable for further usage. The property **xml-data** defines the XML source, that is going to be transformed, while **xslt-data** defines the XSLT transformation rules. The attribute **variable** specifies the target test variable which receives the transformation result. The tester might use the action to transform XML messages as shown in the next code example:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 
@@ -65,7 +65,7 @@ In the example we used CDATA sections to define the transformation source as wel
 
 The Java DSL alternative for transforming data via XSTL in Citrus looks like follows:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -97,7 +97,7 @@ public void transformTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest

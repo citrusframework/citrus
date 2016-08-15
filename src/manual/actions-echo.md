@@ -2,7 +2,7 @@
 
 The <echo> action prints messages to the console/logger. This functionality is useful when debugging test runs. The property "message" defines the text that is printed. Tester might use it to print out debug messages and variables as shown the next code example:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="echoTest">
@@ -21,7 +21,7 @@ The <echo> action prints messages to the console/logger. This functionality is u
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

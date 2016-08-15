@@ -4,7 +4,7 @@ The sequential container executes the embedded test actions in strict sequence. 
 
 For now the sequential container seems not very sensational - one might say boring - because it simply groups a pair of test actions to sequential execution.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="sequentialTest">
@@ -21,7 +21,7 @@ For now the sequential container seems not very sensational - one might say bori
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

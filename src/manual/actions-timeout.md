@@ -4,7 +4,7 @@ In some cases it might be necessary to validate that a message is **not** presen
 
 In order to validate such a timeout situation the action <expectTimout> shall help. The usage is very simple as the following example shows:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="receiveJMSTimeoutTest">
@@ -14,7 +14,7 @@ In order to validate such a timeout situation the action <expectTimout> shall he
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -28,7 +28,7 @@ public void receiveTimeoutTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -52,7 +52,7 @@ The action offers two attributes:
 
 Sometimes you may want to add some selector on the timeout receiving action. This way you can very selective check on a message to not be present on a message destination. This is possible with defining a message selector on the test action as follows.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <expect-timeout endpoint="myEndpoint" wait="500">
@@ -60,7 +60,7 @@ Sometimes you may want to add some selector on the timeout receiving action. Thi
 <expect-timeout/>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -71,7 +71,7 @@ public void receiveTimeoutTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest

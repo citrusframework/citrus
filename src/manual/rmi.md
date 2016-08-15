@@ -55,7 +55,7 @@ On the client side we want to call e remote interface. We need to specify the me
 
 The client component in the Spring application context receives host and port configuration of a valid RMI service registry. Either by specifying a proper server url or by giving host, port and binding properties. The service binding is the name of the service that we would like to address in the registry. Now we are ready to use this client referenced by its id or name in a test case for a message sending action.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="rmiClient">
@@ -70,7 +70,7 @@ The client component in the Spring application context receives host and port co
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -84,7 +84,7 @@ We are using the usual Citrus send message action referencing the **rmiClient** 
 
 The method return value is receivable for validation using the very same client endpoint.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="rmiClient">
@@ -98,7 +98,7 @@ The method return value is receivable for validation using the very same client 
 </receive>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -112,7 +112,7 @@ In the sample above we receive the service result and expect a **java.lang.Strin
 
 Of course we can also deal with method arguments.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="rmiClient">
@@ -141,7 +141,7 @@ public void rmiServerTest() {
 
 This completes the basic remote service call. Citrus invokes the remote interface method and validates the method return value. As a tester you might also face errors and exceptions when calling the remote interface method. You can catch and assert these remote exceptions verifying your error scenario.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <assert exception="java.rmi.RemoteException">
@@ -181,7 +181,7 @@ The RMI server component uses properties such as **host** and **port** to define
 
 You have to give Citrus the fully qualified remote interface name so Citrus can bind it to the service registry and handle incoming method calls properly. In your test case you can then receive the incoming method calls on the server in order to perform validation steps.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="rmiServer">
@@ -200,7 +200,7 @@ You have to give Citrus the fully qualified remote interface name so Citrus can 
 </receive>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -214,7 +214,7 @@ As you can see Citrus converts the incoming service invocation to a special XML 
 
 Since we have received the method call we need to provide some return value for the client. As usual we can specify the method return value with some XML representation.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="rmiServer">
@@ -228,7 +228,7 @@ Since we have received the method call we need to provide some return value for 
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -240,7 +240,7 @@ public void rmiServerTest() {
 
 The service result is defined as object with a **type** and **value** . The Citrus RMI remote interface method will return this value to the calling client. This would complete the successful remote service invocation. At this point we also have to think of choosing to raise some remote exception as service outcome.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="rmiServer">
@@ -254,7 +254,7 @@ The service result is defined as object with a **type** and **value** . The Citr
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest

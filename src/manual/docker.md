@@ -89,7 +89,7 @@ We have several Citrus test actions each representing a Docker command. These ac
 
 We added a special docker namespace with prefix **docker:** so now we can start to add Docker test actions to the test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="DockerCommandIT">
@@ -121,7 +121,7 @@ In this very simple example we first ping the Docker deamon to make sure we have
 
 Based on that we can execute several Docker commands in a test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="DockerCommandIT">
@@ -151,39 +151,27 @@ Based on that we can execute several Docker commands in a test case:
 </testcase>
 ```
 
-In this example we pull a Docker image, build a new container out of this image and start the container. As you can see each Docker command action offers attributes such as **container** , **image** or **tag** . These are command settings that are available on the Docker command specification. Read more about the Docker commands and the specific settings in official Docker API reference guide.
+In this example we pull a Docker image, build a new container out of this image and start the container. As you can see each Docker command action offers attributes such as **container**, **image** or **tag** . These are command settings that are available on the Docker command specification. Read more about the Docker commands and the specific settings in official Docker API reference guide.
 
 Citrus supports the following Docker commands with respective test actions:
 
 *  **docker:pull** 
-
 *  **docker:build** 
-
 *  **docker:create** 
-
 *  **docker:start** 
-
 *  **docker:stop** 
-
 *  **docker:wait** 
-
 *  **docker:ping** 
-
 *  **docker:version** 
-
 *  **docker:inspect** 
-
 *  **docker:remove** 
-
 *  **docker:info** 
-
-
 
 Some of the Docker commands can be executed both on container and image targets such as **docker:inspect** or **docker:remove** . The command action then offers both **container** and **image** attributes so the user can choose the target of the command operation to be a container or an image.
 
 Up to now we have only used the Citrus XML DSL. Of course all Docker commands are also available in Java DSL as the next example shows.
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -206,7 +194,7 @@ The Java DSL Docker commands provide an optional **CommandResultCallback** that 
 
 By default Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @Autowired

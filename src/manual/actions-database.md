@@ -8,7 +8,7 @@ The <sql> action simply executes a group of SQL statements in order to change da
 
 On the one hand you can specify the statements as inline SQL or stored in an external SQL resource file as shown in the next two examples.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <actions>
@@ -23,7 +23,7 @@ On the one hand you can specify the statements as inline SQL or stored in an ext
 </actions>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -41,7 +41,7 @@ public void sqlTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -81,7 +81,7 @@ Both examples use the "datasource" attribute. This value defines the database da
 
 The <sql> query action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to read data from a database. The query results are validated against expected data as shown in the next example.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <sql datasource="testDataSource">
@@ -97,7 +97,7 @@ The <sql> query action is specially designed to execute SQL queries (SELECT * FR
 </sql>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -118,7 +118,7 @@ public void databaseQueryTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -216,7 +216,7 @@ It is important, that the control values are defined in the correct order, becau
 
 Groovy provides great support for accessing Java list objects and maps. As a Java SQL result set is nothing but a list of map representations, where each entry in the list defines a row in the result set and each map entry represents the columns and values. So with Groovy's list and map access we have great possibilities to validate a SQL result set - out of the box.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <sql datasource="testDataSource">
@@ -232,7 +232,7 @@ Groovy provides great support for accessing Java list objects and maps. As a Jav
 </sql>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 query(dataSource)
@@ -242,7 +242,7 @@ query(dataSource)
             "assert rows[0].STATUS == 'in progress';", "groovy");
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 query(action -> action.dataSource(dataSource)
@@ -261,7 +261,7 @@ In general other script languages do also support this kind of list and map acce
 
 Now the validation of database entries is a very powerful feature but sometimes we simply do not know the persisted content values. The test may want to read database entries into test variables without validation. Citrus is able to do that with the following <extract> expressions:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <sql datasource="testDataSource">
@@ -273,7 +273,7 @@ Now the validation of database entries is a very powerful feature but sometimes 
 </sql>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 query(dataSource)
@@ -281,7 +281,7 @@ query(dataSource)
     .extract("STATUS", "orderStatus");
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 query(action -> action.dataSource(dataSource)

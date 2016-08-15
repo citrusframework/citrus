@@ -31,7 +31,7 @@ Now we describe the XPath usage in Citrus step by step.
 
 Some elements in XML message payloads might be of dynamic nature. Just think of generated identifiers or timestamps. Also we do not want to repeat the same static identifier several times in our test cases. This is the time where test variables and dynamic message element overwrite come in handy. The idea is simple. We want to overwrite a specific message element in our payload with a dynamic value. This can be done with XPath or inline variable declarations. Lets have a look at an example listing showing both ways:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <message>
@@ -48,7 +48,7 @@ Some elements in XML message payloads might be of dynamic nature. Just think of 
 
 The program listing above shows ways of setting variable values inside a message template. First of all you can simply place variable expressions inside the message (see how ${messageId} is used). In addition to that you can also use XPath expressions to explicitly overwrite message elements before validation.
 
- ***<element path="/TestMessage/CreatedBy" value="${user}"/>*** 
+***<element path="/TestMessage/CreatedBy" value="${user}"/>*** 
 
 The XPath expression evaluates and searches for the right element in the message payload. The previously defined variable **${user}** replaces the element value. Of course this works with XML attributes too.
 
@@ -59,7 +59,7 @@ Validation matchers put validation mechanisms to a new level offering dynamic as
 
 We have already seen how to validate whole XML structures with control message templates. All elements are validated and compared one after another. In some cases this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements. The definition of control templates in combination with several ignore statements is not appropriate in this case. You would rather want to use explicit element validation.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <message>
@@ -70,7 +70,7 @@ We have already seen how to validate whole XML structures with control message t
 </message>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -90,7 +90,7 @@ If this type of element validation is chosen neither <payload> nor <data> nor <r
 **Tip**
 Citrus offers an alternative dot-notated syntax in order to walk through XML trees. In case you are not familiar with XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every element hierarchy in the XML tree is represented with a simple dot - for example:
 
- ***TestRequest.VersionId*** 
+***TestRequest.VersionId*** 
 
 The expression will search the XML tree for the respective <TestRequest><VersionId> element. Attributes are supported too. In case the last element in the dot-notated expression is a XML attribute the framework will automatically find it.
 
@@ -98,7 +98,7 @@ Of course this dot-notated syntax is very simple and might not be applicable for
 
 The Xpath expressions can evaluate to different result types. By default Citrus is operating on **NODE** and **STRING** result types so that you can validate some element value. But you can also use different result types such as **NODESET** and **BOOLEAN** . See this example how that works:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <message>
@@ -110,7 +110,7 @@ The Xpath expressions can evaluate to different result types. By default Citrus 
 </message>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -125,9 +125,9 @@ public void receiveMessageTest() {
 
 In the example above we use different expression result types. First we want to make sure nor **/TestRequest/Error** element is present. This can be done with a boolean result type and **false** value. Second we want to validate the number of found elements for the expression **/TestRequest/Status[.='success']** . The XPath expression evaluates to a node list that results in its list size to be checked. And last not least we evaluate to a **node-set** result type where all values in the node list will be translated to a comma delimited string value.
 
-Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that XPath expression results are comparable with **equalTo** operations. We would like to add some more powerful validation such as **greaterThan** , **lessThan** , **hasSize** and much more. Therefore we have introduced Hamcrest validation matcher support in Citrus. Hamcrest is a very poweful matcher library that provides a fantastic set of matcher implementations. Lets see how we can add these in our test case:
+Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that XPath expression results are comparable with **equalTo** operations. We would like to add some more powerful validation such as **greaterThan**, **lessThan**, **hasSize** and much more. Therefore we have introduced Hamcrest validation matcher support in Citrus. Hamcrest is a very poweful matcher library that provides a fantastic set of matcher implementations. Lets see how we can add these in our test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <message>
@@ -139,7 +139,7 @@ Now lets have a look at some more powerful validation expressions using matcher 
 </message>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -160,7 +160,7 @@ This is how you can add very powerful message element validation in XML using XP
 
 Imagine you receive a message in your test with some generated message identifier values. You have no chance to predict the identifier value because it was generated at runtime by a foreign application. You can ignore the value in order to protect your validation. But in many cases you might need to return this identifier in the respective response message or somewhat later on in the test. So we have to save the dynamic message content for reuse in later test steps. The solution is simple and very powerful. We can extract dynamic values from received messages and save those to test variables. Add this code to your message receiving action.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <extract>
@@ -169,7 +169,7 @@ Imagine you receive a message in your test with some generated message identifie
 </extract>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest

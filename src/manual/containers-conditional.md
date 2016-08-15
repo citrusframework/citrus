@@ -4,7 +4,7 @@ Now we deal with conditional executions of test actions. Nested actions inside a
 
 See some example to find out how it works with the conditional expression string.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="conditionalTest">
@@ -29,7 +29,7 @@ See some example to find out how it works with the conditional expression string
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

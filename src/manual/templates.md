@@ -27,7 +27,7 @@ The code example above describes two template definitions. Templates hold a sequ
 **Note**
 The <call-template> action calls other templates by their name. The called template not necessarily has to be located in the same test case XML file. The template might be defined in a separate XML file other than the test case itself:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="templateTest">
@@ -44,7 +44,7 @@ The <call-template> action calls other templates by their name. The called templ
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -58,7 +58,7 @@ public void templateTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest

@@ -2,7 +2,7 @@
 
 As you know variables usually are defined at the beginning of the test case ([testcase-variables](testcase-variables)). It might also be helpful to reset existing variables as well as to define new variables during the test. The action <create-variables> is able to declare new variables or overwrite existing ones.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="createVariablesTest">
@@ -33,7 +33,7 @@ As you know variables usually are defined at the beginning of the test case ([te
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

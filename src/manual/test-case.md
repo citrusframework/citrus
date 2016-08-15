@@ -16,7 +16,7 @@ If you are not familiar to writing Java code you can also write Citrus tests as 
 
 Put simply, a Citrus test case is nothing but a simple Spring XML configuration file. The Spring framework has become a state of the art development framework for enterprise Java applications. As you work with Citrus you will also learn how to use the Spring Ioc (Inversion of control) container and the concepts of dependency injection. So let us have a look at the pure Spring XML configuration syntax first. You are free to write fully compatible test cases for the Citrus framework just using this syntax.
 
- **Spring bean definition syntax** 
+**Spring bean definition syntax** 
 
 ```xml
 <beans
@@ -41,7 +41,7 @@ Citrus can execute these Spring bean definitions as normal test cases - no probl
 
 The custom XML schema aims to reach the convenience of domain specific languages (DSL). Let us have a look at the Citrus test describing XML language by introducing a first very simple test case definition:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <spring:beans
@@ -115,7 +115,7 @@ Citrus in general differences between two ways of test cases in Java. These are 
 
 The first way of defining a Citrus test in Java is the **test-designer** . The Java DSL for a test designer works similar to the XML approach. The whole test case is built with all test actions first. Then the whole test case is executed as a whole Citrus test. This is how to define a Citrus test with designer Java DSL methods:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 import org.testng.annotations.Test;
@@ -143,7 +143,7 @@ This is the basic test Java class pattern used in Citrus. You as a tester with d
 
 We have mentioned that the **test-designer** will build the complete test case in design time with all actions first before execution of the whole test case takes place at runtime of the test. This approach has the advantage that Citrus knows all test actions in a test before execution. On the other hand you are limited in mixing Java DSL method calls and normal Java code. The following example should clarify things a little bit.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 import org.testng.annotations.Test;
@@ -167,7 +167,7 @@ public class LoggingTestDesigner extends TestNGCitrusTestDesigner {
 
 In this example test case above we use an instance of a custom **LoggingService** and call some operation **log()** in the middle of our Java DSL test. Now developers might expect the logging service call to be done in the middle of the Java Citrus test case but if we have a look at the logging output of the test we get a total different result:
 
- **Expected output** 
+**Expected output** 
 
 ```xml
 INFO            Citrus| STARTING TEST LoggingTest
@@ -177,7 +177,7 @@ INFO        EchoAction| After loggingService call
 INFO            Citrus| TEST SUCCESS LoggingTest
 ```
 
- **Actual output** 
+**Actual output** 
 
 ```xml
 INFO    LoggingService| Now called custom logging service
@@ -191,7 +191,7 @@ So if we analyse the actual logging output we see that the logging service was c
 
 We can fix this with the following **test-designer** code:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 import org.testng.annotations.Test;
@@ -236,7 +236,7 @@ Neither **TestNGCitrusTestDesigner** nor **JUnit4CitrusTestDesigner** implementa
 
 The new test runner concept solves the issues that may come along when working with the test designer. We have already seen a simple example where the test designer requires strict separation of designtime and runtime. The test runner implementation executes each test action immediately. This changes the prerequisites in such that the test action Java DSL method calls can be mixed with usual Java code statements. The the example that we have seen before in a test runner implementation:
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 import org.testng.annotations.Test;
@@ -401,7 +401,7 @@ In the test examples that we have seen so far you may have noticed that a tester
 
 Now we get close to the main part of writing an integration test. A Citrus test case defines a sequence of actions that will take place during the test. Actions by default are executed sequentially in the same order as they are defined in the test case definition.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <actions>
@@ -410,15 +410,15 @@ Now we get close to the main part of writing an integration test. A Citrus test 
 </actions>
 ```
 
-All actions have individual names and properties that define the respective behavior. Citrus offers a wide range of test actions from scratch, but you are also able to write your own test actions in Java or Groovy and execute them during a test.[actions](actions)gives you a brief description of all available actions that can be part of a test case execution.
+All actions have individual names and properties that define the respective behavior. Citrus offers a wide range of test actions from scratch, but you are also able to write your own test actions in Java or Groovy and execute them during a test. [actions](actions) gives you a brief description of all available actions that can be part of a test case execution.
 
 The actions are combined in free sequence to each other so that the tester is able to declare a special action chain inside the test. These actions can be sending or receiving messages, delaying the test, validating the database and so on. Step-by-step the test proceeds through the action chain. In case one single action fails by reason the whole test case is red and declared not successful.
 
 ### Finally test section
 
-Java developers might be familiar with the concept of doing something in the finally code section. The ***finally*** section contains a list of test actions that will be executed guaranteed at the very end of the test case even if errors did occur during the execution before. This is the right place to tidy up things that were previously created by the test like cleaning up the database for instance. The ***finally*** section is described in more detail in[finally](finally). However here is the basic syntax inside a test.
+Java developers might be familiar with the concept of doing something in the finally code section. The ***finally*** section contains a list of test actions that will be executed guaranteed at the very end of the test case even if errors did occur during the execution before. This is the right place to tidy up things that were previously created by the test like cleaning up the database for instance. The ***finally*** section is described in more detail in [finally](finally). However here is the basic syntax inside a test.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <finally>
@@ -428,7 +428,7 @@ Java developers might be familiar with the concept of doing something in the fin
 </finally>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -441,7 +441,7 @@ public void sampleTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest
@@ -459,7 +459,7 @@ public void sampleTest() {
 
 The user can provide some additional information about the test case. The meta-info section at the very beginning of the test case holds information like author, status or creation date. In detail the meta information is specified like this:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="metaInfoTest">
@@ -479,7 +479,7 @@ The user can provide some additional information about the test case. The meta-i
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

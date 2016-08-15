@@ -4,7 +4,7 @@ In the previous chapter we have seen how to expect failures in Citrus with asser
 
 The nested actions are error proof for the chosen exception type. This means possible exceptions are caught and ignored - the test case will not fail for this exception type. But only for this particular exception type! Other exception types that occur during execution do cause the test to fail as usual.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="catchExceptionTest">
@@ -18,7 +18,7 @@ The nested actions are error proof for the chosen exception type. This means pos
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

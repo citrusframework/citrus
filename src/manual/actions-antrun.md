@@ -4,7 +4,7 @@ The <ant> action loads a build.xml Ant file and executes one or more targets in 
 
 See this basic Ant run example to see how it works within your test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="AntRunTest">
@@ -23,7 +23,7 @@ See this basic Ant run example to see how it works within your test case:
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -37,7 +37,7 @@ public void antRunTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest
@@ -71,7 +71,7 @@ As you can see you can pass custom build properties to the Ant build execution. 
 
 You can also call multiple targets within one single build run by using a comma separated list of target names:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="AntRunTest">
@@ -89,7 +89,7 @@ You can also call multiple targets within one single build run by using a comma 
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -102,7 +102,7 @@ public void antRunTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest
@@ -119,7 +119,7 @@ The build properties can live in external file resource as an alternative to the
 
 In addition to that you can also define a custom build listener. The build listener must implement the Ant API interface **org.apache.tools.ant.BuildListener** . During the Ant build run the build listener is called with several callback methods (e.g. buildStarted(), buildFinished(), targetStarted(), targetFinished(), ...). This is how you can add additional logic to the Ant build run from Citrus. A custom build listener could manage the fail state of your test case, in particular by raising some exception forcing the test case to fail accordingly.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="AntRunTest">
@@ -133,7 +133,7 @@ In addition to that you can also define a custom build listener. The build liste
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -148,7 +148,7 @@ public void antRunTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired

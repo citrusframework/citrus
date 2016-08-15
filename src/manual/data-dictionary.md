@@ -130,7 +130,7 @@ You can overwrite the dictionary scope. For instance in order to use an explicit
 
 We set the global scope property to **false** so the dictionary is handled in explicit scope. This means that you have to set the data dictionary explicitly in your test actions:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="myEndpoint">
@@ -142,7 +142,7 @@ We set the global scope property to **false** so the dictionary is handled in ex
 </send>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

@@ -2,7 +2,7 @@
 
 The next looping container is called repeat-on-error-until-true. This container repeats a group of actions in case one embedded action failed with error. In case of an error inside the container the loop will try to execute ***all*** embedded actions again in order to seek for overall success. The execution continues until all embedded actions were processed successfully ***or*** the ending condition evaluates to true and the error-loop will lead to final failure.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="iterateTest">
@@ -17,7 +17,7 @@ The next looping container is called repeat-on-error-until-true. This container 
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -29,7 +29,7 @@ public void repeatOnErrorTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest
@@ -51,7 +51,7 @@ The repeat-on-error container also offers an automatic sleep mechanism. This aut
 
 We can avoid unstable test cases that are based on these runtime conditions with the auto-sleep functionality.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <repeat-onerror-until-true auto-sleep="1000" condition="i = 5" index="i">
@@ -68,7 +68,7 @@ We can avoid unstable test cases that are based on these runtime conditions with
 </repeat-onerror-until-true>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

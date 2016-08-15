@@ -53,7 +53,9 @@ The function will combine several string tokens to a single string value. This m
 
 Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to be combined.
 
- ***citrus:concat('Text1', 'Text2', 'Text3', ${text}, 'Text5', … , 'TextN')*** 
+```
+citrus:concat('Text1', 'Text2', 'Text3', ${text}, 'Text5', …, 'TextN') 
+```
 
 The function can be used wherever variables can be used. For instance when validating XML elements in the receive action.
 
@@ -68,9 +70,7 @@ The function can be used wherever variables can be used. For instance when valid
 The function will have three parameters.
 
 1. String to work on
-
 2. Starting index
-
 3. End index (optional)
 
 Let us have a look at a simple example for this function:
@@ -90,9 +90,10 @@ Let us have a look at a simple example for this function:
 
 Function output:
 
- **Test Framework** 
-
- **Hello** 
+```
+Test Framework 
+Hello 
+```
 
 ### citrus:stringLength()
 
@@ -106,7 +107,7 @@ The function will calculate the number of characters in a string representation 
 
 Function output:
 
- **20** 
+**20** 
 
 ### citrus:translate()
 
@@ -124,7 +125,7 @@ Note that the second parameter will be a regular expression. The third parameter
 
 Function output:
 
- **Hello Test Framework** 
+**Hello Test Framework** 
 
 ### citrus:substringBefore()
 
@@ -142,7 +143,7 @@ In the specific example the function will search for the ‘/’ character and r
 
 Function output:
 
- **Test** 
+**Test** 
 
 ### citrus:substringAfter()
 
@@ -160,7 +161,7 @@ Similar to the substringBefore function the ‘/’ character is found in the st
 
 Function output:
 
- **Framework** 
+**Framework** 
 
 ### citrus:round()
 
@@ -174,7 +175,7 @@ This is a simple mathematic function that will round decimal numbers representat
 
 Function output:
 
- **3** 
+**3** 
 
 ### citrus:floor()
 
@@ -188,7 +189,7 @@ This function will round down decimal number values.
 
 Function output:
 
- **3.0** 
+**3.0** 
 
 ### citrus:ceiling()
 
@@ -202,7 +203,7 @@ Similar to floor function, but now the function will round up the decimal number
 
 Function output:
 
- **4.0** 
+**4.0** 
 
 ### citrus:randomNumber()
 
@@ -221,13 +222,12 @@ Next example will show the function usage:
 
 Function output:
 
- **8954638765** 
-
- **5003485980** 
-
- **6387650** 
-
- **65** 
+```
+8954638765 
+5003485980 
+6387650 
+65 
+```
 
 ### citrus:randomString()
 
@@ -246,15 +246,13 @@ This function will generate a random string representation with a defined length
 
 Function output:
 
- **HrGHOdfAer** 
-
- **AgSSwedetG** 
-
- **JSDFUTTRKU** 
-
- **dtkhirtsuz** 
-
- **Vt567JkA32** 
+```
+HrGHOdfAer 
+AgSSwedetG 
+JSDFUTTRKU 
+dtkhirtsuz 
+Vt567JkA32 
+```
 
 ### citrus:randomEnumValue()
 
@@ -312,13 +310,12 @@ Note that the currentDate function provides two parameters. First parameter desc
 
 Function output:
 
- **01.09.2009** 
-
- **2009-09-01** 
-
- **2009-09-01 12:00:00** 
-
- **2009-09-01T12:00:00** 
+```
+01.09.2009 
+2009-09-01 
+2009-09-01 12:00:00 
+2009-09-01T12:00:00 
+```
 
 ### citrus:upperCase()
 
@@ -332,7 +329,7 @@ This function converts any string to upper case letters.
 
 Function output:
 
- **HELLO TEST FRAMEWORK** 
+**HELLO TEST FRAMEWORK** 
 
 ### citrus:lowerCase()
 
@@ -346,7 +343,7 @@ This function converts any string to lower case letters.
 
 Function output:
 
- **hello test framework** 
+**hello test framework** 
 
 ### citrus:average()
 
@@ -470,7 +467,7 @@ If you want to deal with escaped XML in your test case you may want to use this 
 </echo>
 ```
 
- **&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;** 
+**&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;** 
 
 ### citrus:cdataSection()
 
@@ -541,9 +538,10 @@ Let us clarify this with a simple example for this function:
 
 Function output:
 
- **02.02.2001** 
-
- **13.04.2013** 
+```
+02.02.2001 
+13.04.2013 
+```
 
 As you can see the change date function works on static date values or dynamic variable values or functions like **citrus:currentDate()** . By default the change date function requires a date format such as the current date function ('dd.MM.yyyy'). You can also define a custom date format:
 
@@ -555,7 +553,9 @@ As you can see the change date function works on static date values or dynamic v
 
 Function output:
 
- **1999-12-09** 
+```
+1999-12-09 
+```
 
 With this you are able to manipulate all date values of static or dynamic nature at test runtime.
 

@@ -2,7 +2,7 @@
 
 You already know the <echo> action that prints messages to the console or logger. The <trace-variables> action is specially designed to trace all currently valid test variables to the console. This was mainly used by us for debug reasons. The usage is quite simple:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="traceVariablesTest">
@@ -21,7 +21,7 @@ You already know the <echo> action that prints messages to the console or logger
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

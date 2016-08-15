@@ -24,7 +24,7 @@ With the new mail adapter you are able to both send and receive mail messages wi
 
 On the server side Citrus provides a SMTP server to accept client mail messages. The incoming mail messages can have multiple text parts and attachment parts. As usual you can validate the incoming mail messages regarding headers and payload with the well known validation capabilities in Citrus.
 
-Read more about the new mail module in[mail](mail)
+Read more about the new mail module in [mail](mail)
 
 ### Endpoint adapter
 
@@ -42,7 +42,7 @@ The Json text validator is now able to operate in two different modes. The **str
 
 ### HTTP REST specific Java DSL options
 
-When sending and receiving HTTP messages on REST APIs you can now use interface specific options in the Java DSL. This refers to request uri, context path, query parameters and HTTP status codes for instance. With this enhancement you are now more comfortable in handling REST API calls in Citrus. Find out how to us it in[http](http)
+When sending and receiving HTTP messages on REST APIs you can now use interface specific options in the Java DSL. This refers to request uri, context path, query parameters and HTTP status codes for instance. With this enhancement you are now more comfortable in handling REST API calls in Citrus. Find out how to us it in [http](http)
 
 ### SOAP HTTP validation
 
@@ -50,11 +50,11 @@ While receiving SOAP messages over HTTP we are now able to also verify the used 
 
 ### Apache Camel integration
 
-Apache Camel is a great enterprise integration platform that implements the enterprise integration patterns for building powerful mediation and routing rules for message based integration applications. With the new support for camel endpoints in Citrus you can interact with Apache Camel components for sending and receiving messages. Apache Camel offers a fine support for different message transports that now can be used in Citrus also. In addition to that you can put your Camel application to the test with loading of the Apache Camel context with all your route definitions. Citrus is able to interact with these routes in asynchronous and synchronous communication scenarios. Read about it in[camel](camel).
+Apache Camel is a great enterprise integration platform that implements the enterprise integration patterns for building powerful mediation and routing rules for message based integration applications. With the new support for camel endpoints in Citrus you can interact with Apache Camel components for sending and receiving messages. Apache Camel offers a fine support for different message transports that now can be used in Citrus also. In addition to that you can put your Camel application to the test with loading of the Apache Camel context with all your route definitions. Citrus is able to interact with these routes in asynchronous and synchronous communication scenarios. Read about it in [camel](camel).
 
 ### Vert.x integration
 
-Vert.x is a very powerful application platform that provides scalable messaging for several message transports such as HTTP, WebSockets, TCP and more. Vert.x also has a distributed event bus that connects multiple Vert.x instances across the network. With Citrus 1.4 the Vert.x platform is integrated with Citrus event bus endpoints. So you can participate in communicating to the Vert.x event bus from Citrus test case. This enables you to add automated integration tests to the Vert.x platform. Read about that in[vertx](vertx).
+Vert.x is a very powerful application platform that provides scalable messaging for several message transports such as HTTP, WebSockets, TCP and more. Vert.x also has a distributed event bus that connects multiple Vert.x instances across the network. With Citrus 1.4 the Vert.x platform is integrated with Citrus event bus endpoints. So you can participate in communicating to the Vert.x event bus from Citrus test case. This enables you to add automated integration tests to the Vert.x platform. Read about that in [vertx](vertx).
 
 ### Dynamic endpoint components
 

@@ -71,7 +71,7 @@ Again we tell Citrus that we expect a message of **type="json"** . Now we used a
 
 There is even more object injection for the validation script. With the automatically added object ***receivedMessage*** You have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message payload or header.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="httpMessageEndpoint">
@@ -92,7 +92,7 @@ The listing above shows some power of the validation script. We can access the m
 
 In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation scripts. The syntax looks like follows:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="helloServiceClient" timeout="5000">
@@ -104,7 +104,7 @@ In general Groovy code inside the XML test case definition or as part of the Jav
 </receive>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
