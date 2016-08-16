@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Stop-timer | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./templates.html" />
     
+    
+    <link rel="prev" href="./actions-generic-action.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.25"
+        data-chapter-title="Stop-timer"
+        data-filepath="actions-stop-timer.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -742,7 +744,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+        <li class="chapter active" data-level="13.25" data-path="actions-stop-timer.html">
             
                 
                     <a href="./actions-stop-timer.html">
@@ -1578,9 +1580,58 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="stop-timer"><a name="stop-timer" class="plugin-anchor" href="#stop-timer"><span class="fa fa-link"></span></a>Stop Timer</h3>
+<p>The <stop-timer> action can be used for stopping either a specific timer (<a href="containers-timer">containers-timer</a>) or all timers running within a test. This action is useful when timers are started in the background (using parallel or fork=true) and you wish to stop these timers at the end of the test. Some examples of using this action are provided below:</stop-timer></p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;timerTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">timer</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;forkedTimer&quot;</span> <span class="hljs-attribute">fork</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">milliseconds</span>=<span class="hljs-value">&quot;50&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">timer</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">timer</span> <span class="hljs-attribute">fork</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">milliseconds</span>=<span class="hljs-value">&quot;50&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">timer</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">timer</span> <span class="hljs-attribute">repeatCount</span>=<span class="hljs-value">&quot;5&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">milliseconds</span>=<span class="hljs-value">&quot;50&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">timer</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">stop-timer</span> <span class="hljs-attribute">timerId</span>=<span class="hljs-value">&quot;forkedTimer&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">finally</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">stop-timer</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">finally</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">timerTest</span><span class="hljs-params">()</span> </span>{
+
+    timer()
+      .timerId(<span class="hljs-string">&quot;forkedTimer&quot;</span>)
+      .fork(<span class="hljs-keyword">true</span>)
+      .actions(sleep(<span class="hljs-number">50L</span>)
+    );
+
+    timer()
+      .fork(<span class="hljs-keyword">true</span>)
+      .actions(sleep(<span class="hljs-number">50L</span>)
+    );
+
+    timer()
+      .repeatCount(<span class="hljs-number">5</span>)
+      .actions(sleep(<span class="hljs-number">50L</span>));
+
+    stopTimer(<span class="hljs-string">&quot;forkedTimer&quot;</span>)
+
+    doFinally().actions(
+      stopTimer()
+    );
+    }
+</code></pre>
+<p>In the above example 3 timers are started, the first 2 in the background and the third in the test execution thread. Timer #3 has a repeatCount set to 5 so it will terminate automatically after 5 runs. Timer #1 and #2 however have no repeatCount set so they will execute until they are told to stop.</p>
+<p>Timer #1 is stopped explicitly using the first stopTimer action. Here the stopTimer action includes the name of the timer to stop. This is convenient when you wish to terminate a specific timer. However since no timerId was set for timer #2, you can terminate this (and all other timers) using the &apos;stopTimer&apos; action with no explicit timerId set.</p>
 
                     
                     </section>
@@ -1591,8 +1642,10 @@
         </div>
 
         
+        <a href="./actions-generic-action.html" class="navigation navigation-prev " aria-label="Previous page: Generic-action"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./templates.html" class="navigation navigation-next " aria-label="Next page: Templates"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

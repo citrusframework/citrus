@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Repeat | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./containers-repeat-onerror.html" />
     
+    
+    <link rel="prev" href="./containers-iterate.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="15.5"
+        data-chapter-title="Repeat"
+        data-filepath="containers-repeat.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -853,7 +855,7 @@
             
         </li>
     
-        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+        <li class="chapter active" data-level="15.5" data-path="containers-repeat.html">
             
                 
                     <a href="./containers-repeat.html">
@@ -1578,9 +1580,53 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="repeat-until-true"><a name="repeat-until-true" class="plugin-anchor" href="#repeat-until-true"><span class="fa fa-link"></span></a>Repeat until true</h3>
+<p>Quite similar to the previously described iterate container this repeating container will execute its actions in a loop according to an ending condition. The condition describes a Boolean expression using the operators as described in the previous chapter.</p>
+<p><strong>Note</strong>
+The loop continues its work until the provided condition evaluates to <strong>true</strong> . It is very important to notice that the repeat loop will execute the actions before evaluating the condition. This means the actions get executed 1-n times.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;iterateTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">repeat-until-true</span> <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;(i = 3) or (i = 5)&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>index is: ${i}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">repeat-until-true</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">repeatTest</span><span class="hljs-params">()</span> </span>{
+    repeat().until(<span class="hljs-string">&quot;(i gt 5) or (i = 3)&quot;</span>).index(<span class="hljs-string">&quot;i&quot;</span>))
+        .actions(
+            echo(<span class="hljs-string">&quot;index is: ${i}&quot;</span>)
+        );
+}
+</code></pre>
+<p>As you can see the repeat container is only executed when the iterating condition expression evaluates to <strong>false</strong> . By the time the condition is <strong>true</strong> execution is discontinued. You can use basic logical operators such as <strong>and</strong>, <strong>or</strong> and so on.</p>
+<p>A more powerful way is given by Hamcrest matchers that are directly supported in condition expressions.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;iterateTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">repeat-until-true</span> <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;@assertThat(anyOf(is(3), is(5))@&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>index is: ${i}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">repeat-until-true</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">repeatTest</span><span class="hljs-params">()</span> </span>{
+    repeat().until(anyOf(is(<span class="hljs-number">3</span>), is(<span class="hljs-number">5</span>)).index(<span class="hljs-string">&quot;i&quot;</span>))
+        .actions(
+            echo(<span class="hljs-string">&quot;index is: ${i}&quot;</span>)
+        );
+}
+</code></pre>
+<p>The Hamcrest matcher usage simplifies the reading a lot. And it empowers you to combine more complex condition expressions. So I personally prefer this syntax.</p>
 
                     
                     </section>
@@ -1591,8 +1637,10 @@
         </div>
 
         
+        <a href="./containers-iterate.html" class="navigation navigation-prev " aria-label="Previous page: Iterate"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./containers-repeat-onerror.html" class="navigation navigation-next " aria-label="Next page: Repeat-onerror"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

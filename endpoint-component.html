@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Endpoint-component | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./endpoint-adapter.html" />
     
+    
+    <link rel="prev" href="./restdocs.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="35"
+        data-chapter-title="Endpoint-component"
+        data-filepath="endpoint-component.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1203,7 +1205,7 @@
             
         </li>
     
-        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+        <li class="chapter active" data-level="35" data-path="endpoint-component.html">
             
                 
                     <a href="./endpoint-component.html">
@@ -1578,9 +1580,155 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="dynamic-endpoint-components"><a name="dynamic-endpoint-components" class="plugin-anchor" href="#dynamic-endpoint-components"><span class="fa fa-link"></span></a>Dynamic endpoint components</h2>
+<p>Endpoints represent the central components in Citrus to send or receive a message on some destination. Usually endpoints get defined in the basic Citrus Spring application context configuration as Spring bean components. In some cases this might be over engineering as the tester just wants to send or receive a message. In particular this is done when doing sanity checks in server endpoints while debugging a certain scenario.</p>
+<p>With endpoint components you are able to create the Citrus endpoint for sending and receiving a message at test runtime. There is no additional configuration or Spring bean component needed. You just use the endpoint uri in a special naming convention and Citrus will create the endpoint for you. Let us see a first example of this scenario:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;DynamicEndpointTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;jms:Hello.Queue?timeout=10000&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;jms:Hello.Response.Queue?timeout=5000&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>As you can see the endpoint uri just goes into the test case action in substitution to the usual endpoint reference name. Instead of referencing a bean id that points to the previously configured Citrus endpoint we use the endpoint uri directly. The endpoint uri should give all information to create the endpoint at runtime. In the example above we use a keyword <strong>jms:</strong> which tells Citrus that we need to create a JMS message endpoint. Secondly we give the JMS destination name <strong>Hello.Queue</strong> which is a mandatory part of the endpoint uri when using the JMS component. The optional timeout parameter completed the uri. Citrus is able to create the JMS endpoint at runtime sending the message to the defined destination via JMS.</p>
+<p>Of course this mechanism is not limited to JMS endpoints. We can use all default Citrus message transports in the endpoint uri. Just pick the right keyword that defines the message transport to use. Here is a list of supported keywords:</p>
+<ul>
+<li>jms: Creates a JMS endpoint for sending and receiving message to a queue or topic</li>
+<li>channel: Creates a channel endpoint for sending and receiving messages using an in memory Spring Integration message channel</li>
+<li>http: Creates a HTTP client for sending a request to some server URL synchronously waiting for the response message</li>
+<li>ws: Creates a Web Socket client for sending messages to or receiving messages from a Web Socket server</li>
+<li>soap: Creates a SOAP WebService client that send a proper SOAP message to the server URL and waits for the synchronous response to arrive</li>
+<li>ssh: Creates a new ssh client for publishing a command to the server</li>
+<li>mail: or smtp: Creates a new mail client for sending a mail mime message to a SMTP server</li>
+<li>camel: Creates a new Apache Camel endpoint for sending and receiving Camel exchanges both to and from Camel routes.</li>
+<li>vertx: or eventbus: Creates a new Vert.x instance sending and receiving messages with the network event bus</li>
+<li>rmi: Creates a new RMI client instance sending and receiving messages for method invocation on remote interfaces</li>
+<li>jmx: Creates a new JMX client instance sending and receiving messages to and from a managed bean server.</li>
+</ul>
+<p>Depending on the message transport we have to add mandatory parameters to the endpoint uri. In the JMS example we had to specify the destination name. The mandatory parameters are always part of the endpoint uri. Optional parameters can be added as key value pairs to the endpoint uri. The available parameters depend on the endpoint keyword that you have chosen. See these example endpoint uri expressions:</p>
+<pre><code class="lang-xml">
+    jms:queuename?connectionFactory=specialConnectionFactory&amp;timeout=10000
+    jms:topic:topicname?connectionFactory=topicConnectionFactory
+    jms:sync:queuename?connectionFactory=specialConnectionFactory&amp;pollingInterval=100&amp;replyDestination=myReplyDestination
+
+    channel:channelName
+    channel:sync:channelName
+    channel:channelName?timeout=10000&amp;channelResolver=myChannelResolver
+
+    http:localhost:8088/test
+    http://localhost:8088/test
+    http:localhost:8088?requestMethod=GET&amp;timeout=10000&amp;errorHandlingStrategy=throwsException&amp;requestFactory=myRequestFactory
+    http://localhost:8088/test?requestMethod=DELETE&amp;customParam=foo
+
+    websocket:localhost:8088/test
+    websocket://localhost:8088/test
+    ws:localhost:8088/test
+    ws://localhost:8088/test
+
+    soap:localhost:8088/test
+    soap:localhost:8088?timeout=10000&amp;errorHandlingStrategy=propagateError&amp;messageFactory=myMessageFactory
+
+    mail:localhost:25000
+    smtp://localhost:25000
+    smtp://localhost?timeout=10000&amp;username=foo&amp;password=1234&amp;mailMessageMapper=myMapper
+
+    ssh:localhost:2200
+    ssh://localhost:2200?timeout=10000&amp;strictHostChecking=true&amp;user=foo&amp;password=12345678
+
+    rmi://localhost:1099/someService
+    rmi:localhost/someService&amp;timeout=10000
+
+    jmx:rmi:///jndi/rmi://localhost:1099/someService
+    jmx:platform&amp;timeout=10000
+
+    camel:direct:address
+    camel:seda:address
+    camel:jms:queue:someQueue?connectionFactory=myConnectionFactory
+    camel:activemq:queue:someQueue?concurrentConsumers=5&amp;destination.consumer.prefetchSize=50
+    camel:controlbus:route?routeId=myRoute&amp;action=status
+
+    vertx:addressName
+    vertx:addressName?port=10105&amp;timeout=10000&amp;pubSubDomain=true
+    vertx:addressName?vertxInstanceFactory=vertxFactory
+</code></pre>
+<p>The optional parameters get directly set as endpoint configuration. You can use primitive values as well as Spring bean id references. Citrus will automatically detect the target parameter type and resolve the value to a Spring bean in the application context if necessary. If you use some unknown parameter Citrus will raise an exception at runtime as the endpoint could not be created properly.</p>
+<p>In synchronous communication we have to reuse endpoint components in order to receive synchronous messages on reply destinations. This is a problem when using dynamic endpoints as the endpoints get created at runtime. Citrus uses a caching of endpoints that get created at runtime. Following from that we have to use the exact same endpoint uri in your test case in order to get the cached endpoint instance. With this little trick synchronous communication will work just as it is done with static endpoint components. Have a look at this sample test:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;DynamicEndpointTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;jms:sync:Hello.Sync.Queue&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;jms:sync:Hello.Sync.Queue&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>As you can see we used the exact dynamic endpoint uri in both send and receive actions. Citrus is then able to reuse the same dynamic endpoint and the synchronous reply will be received as expected. However the reuse of exactly the same endpoint uri might get annoying as we also have to copy endpoint uri parameters and so on.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;DynamicEndpointTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;http://localhost:8080/HelloService?user=1234567&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;http://localhost:8080/HelloService?user=1234567&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>We have to use the exact same endpoint uri when receiving the synchronous service response. This is not very straight forward. This is why Citrus also supports dynamic endpoint names. With a special endpoint uri parameter called <strong>endpointName</strong> you can name the dynamic endpoint. In a corresponding receive action you just use the endpoint name as reference which makes life more easy:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;DynamicEndpointTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;http://localhost:8080/HelloService?endpointName=myHttpClient&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;http://localhost?endpointName=myHttpClient&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>So we can reference the dynamic endpoint with the given name. The internal <strong>endpointName</strong> uri parameter is automatically removed before sending out messages. Once again the dynamic endpoint uri mechanism provides a fast way to write test cases in Citrus with less configuration. But you should consider to use the static endpoint components defined in the basic Spring bean application context for endpoints that are heavily reused in multiple test cases.</p>
 
                     
                     </section>
@@ -1591,8 +1739,10 @@
         </div>
 
         
+        <a href="./restdocs.html" class="navigation navigation-prev " aria-label="Previous page: Restdocs"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./endpoint-adapter.html" class="navigation navigation-next " aria-label="Next page: Endpoint-adapter"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

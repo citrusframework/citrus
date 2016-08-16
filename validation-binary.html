@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Binary | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./xpath.html" />
     
+    
+    <link rel="prev" href="./validation-plaintext.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="10.6"
+        data-chapter-title="Binary"
+        data-filepath="validation-binary.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -316,7 +318,7 @@
             
         </li>
     
-        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+        <li class="chapter active" data-level="10.6" data-path="validation-binary.html">
             
                 
                     <a href="./validation-binary.html">
@@ -1578,9 +1580,27 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="binary-message-validation"><a name="binary-message-validation" class="plugin-anchor" href="#binary-message-validation"><span class="fa fa-link"></span></a>Binary message validation</h3>
+<p>Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. In Citrus the way to compare binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.</p>
+<p>The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation takes place. The binary data can be anything e.g. images, pdf or gzip content.</p>
+<p>The default message validator for binary messages is active by default. Citrus will pick this message validator for all messages of <strong>type=&quot;binary_base64&quot;</strong> . The default message validator implementation can be overwritten by placing a Spring bean with id <strong>defaultBinaryBase64MessageValidator</strong> to the Spring application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultBinaryBase64MessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.text.BinaryBase64MessageValidator&quot;</span>/&gt;</span>
+</code></pre>
+<p>In the test case receiving action we tell Citrus to use binary base64 message validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;binary_base64&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>With the message format type <strong>type=&quot;binary_base64&quot;</strong> Citrus performs the base64 character sequence validation. Incoming message content is automatically encoded as base64 String and compared to the expected data. This way we can make sure that the binary content is as expected.</p>
+<p>By the way sending binary base64 messages in Citrus is also very easy. Just use the binary base64 encoding function to do so.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>citrus:encodeBase64(&apos;Hello World!&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
 
                     
                     </section>
@@ -1591,8 +1611,10 @@
         </div>
 
         
+        <a href="./validation-plaintext.html" class="navigation navigation-prev " aria-label="Previous page: Plaintext"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./xpath.html" class="navigation navigation-next " aria-label="Next page: Xpath"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

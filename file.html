@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>File | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./camel.html" />
     
+    
+    <link rel="prev" href="./message-channel.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="23"
+        data-chapter-title="File"
+        data-filepath="file.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1023,7 +1025,7 @@
             
         </li>
     
-        <li class="chapter " data-level="23" data-path="file.html">
+        <li class="chapter active" data-level="23" data-path="file.html">
             
                 
                     <a href="./file.html">
@@ -1578,9 +1580,61 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="file-support"><a name="file-support" class="plugin-anchor" href="#file-support"><span class="fa fa-link"></span></a>File support</h2>
+<p>In chapter<a href="message-channel">message-channel</a>we discussed the native Spring Integration channel support which enables Citrus to interact with all Spring Integration messaging adapter implementations. This is a fantastic way to extend Citrus for additional transports. This interaction now comes handy when writing and reading files from the file system in Citrus.</p>
+<h3 id="write-files"><a name="write-files" class="plugin-anchor" href="#write-files"><span class="fa fa-link"></span></a>Write files</h3>
+<p>We want to use the Spring Integration file adapter for both reading and writing files with a local directory. Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to message channels that are connected to the Spring Integration file adapters.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileEndpoint&quot;</span> <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">file:outbound-channel-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileOutboundAdapter&quot;</span>
+      <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>
+      <span class="hljs-attribute">directory</span>=<span class="hljs-value">&quot;file:${some.directory.property}&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">si:channel</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>/&gt;</span>
+</code></pre>
+<p>The configuration above describes a Citrus message channel endpoint connected to a Spring Integration outbound file adapter that writes messages to a storage directory. With this combination you are able to write files to a directory in your Citrus test case. The test case uses the channel endpoint in its send action and the endpoint interacts with the Spring Integration file adapter so sending out the file.</p>
+<p><strong>Note</strong>
+The Spring Integration file adapter configuration components add a new namespace to our Spring application context. See this template which holds all necessary namespaces and schema locations:</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+        <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+        <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/config&quot;</span>
+        <span class="hljs-attribute">xmlns:si</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/integration&quot;</span>
+        <span class="hljs-attribute">xmlns:file</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/integration/file&quot;</span>
+        <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/config
+        http://www.citrusframework.org/schema/config/citrus-config.xsd
+        http://www.springframework.org/schema/integration
+        http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/integration/file
+        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<h3 id="read-files"><a name="read-files" class="plugin-anchor" href="#read-files"><span class="fa fa-link"></span></a>Read files</h3>
+<p>The next program listing shows a possible inbound file communication. So the Spring Integration file inbound adapter will read files from a storage directory and publish the file contents to a message channel. Citrus can then receive those files as messages in a test case via the channel endpoint and validate the file contents for instance.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">file:inbound-channel-adapter</span>  <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileInboundAdapter&quot;</span>
+        <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>
+        <span class="hljs-attribute">directory</span>=<span class="hljs-value">&quot;file:${some.directory.property}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">si:poller</span> <span class="hljs-attribute">fixed-rate</span>=<span class="hljs-value">&quot;100&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">file:inbound-channel-adapter</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">si:channel</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">si:queue</span> <span class="hljs-attribute">capacity</span>=<span class="hljs-value">&quot;25&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">si:interceptors</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.integration.transformer.MessageTransformingChannelInterceptor&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.integration.file.transformer.FileToStringTransformer&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">constructor-arg</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">si:interceptors</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">si:channel</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileEndpoint&quot;</span> <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>/&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+The file inbound adapter constructs Java file objects as the message payload by default. Citrus can only work on String message payloads. So we need a file transformer that converts the file objects to String payloads representing the file&apos;s content.</p>
+<p>This file adapter example shows how easy Citrus can work hand in hand with Spring Integration adapter implementations. The message channel support is a fantastic way to extend the transport and protocol support in Citrus by connecting with the very good Spring Integration adapter implementations. Have a closer look at the Spring Integration project for more details and other adapter implementations that you can use with Citrus integration testing.</p>
 
                     
                     </section>
@@ -1591,8 +1645,10 @@
         </div>
 
         
+        <a href="./message-channel.html" class="navigation navigation-prev " aria-label="Previous page: Message-channel"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./camel.html" class="navigation navigation-next " aria-label="Next page: Camel"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

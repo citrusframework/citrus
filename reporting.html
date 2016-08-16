@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Reporting | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./samples.html" />
     
+    
+    <link rel="prev" href="./message-tracing.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="44"
+        data-chapter-title="Reporting"
+        data-filepath="reporting.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1338,7 +1340,7 @@
             
         </li>
     
-        <li class="chapter " data-level="44" data-path="reporting.html">
+        <li class="chapter active" data-level="44" data-path="reporting.html">
             
                 
                     <a href="./reporting.html">
@@ -1578,9 +1580,52 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="reporting-and-test-results"><a name="reporting-and-test-results" class="plugin-anchor" href="#reporting-and-test-results"><span class="fa fa-link"></span></a>Reporting and test results</h2>
+<p>The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.</p>
+<h3 id="console-logging"><a name="console-logging" class="plugin-anchor" href="#console-logging"><span class="fa fa-link"></span></a>Console logging</h3>
+<p>During the test run the framework will provide a huge amount of information that is printed out to the console. This includes current test progress, validation results and error information. This enables the user to quickly supervise the test run progress. Failures in tests will be printed to the console just the time the error occurred. The detailed stack trace information and the detailed error messages are helpful to get the idea what went wrong.</p>
+<p>As the console output might be limited to a defined buffer limit, the user may not be able to follow the output to the very beginning of the test run. Therefore the framework additionally prints all information to a log file according to the logging configuration.</p>
+<p>The logging mechanism uses the SLF4J logging framework. SLF4J is independent of logging framework implementations on the market. So in case you use Log4J logging framework the specified log file path as well as logging levels can be freely configured in the respective log4j.xml file in your project. At the end of a test run the combined test results get printed to both console and log file. The overall test results look like following example:</p>
+<pre><code class="lang-xml">
+CITRUS TEST RESULTS
+
+  [...]
+  HelloService_Ok_1             : SUCCESS
+  HelloService_Ok_2             : SUCCESS
+  EchoService_Ok_1              : SUCCESS
+  EchoService_Ok_2              : SUCCESS
+  EchoService_TempError_1       : SUCCESS
+  EchoService_AutomacticRetry_1 : SUCCESS
+  [...]
+
+  Found 175 test cases to execute
+  Skipped 0 test cases (0.0%)
+  Executed 175 test cases
+  Tests failed:         0 (0.0%)
+  Tests successfully: 175 (100.0%)
+</code></pre>
+<p>Failed tests will be marked as failed in the result list. The framework will give a short description of the error cause while the detailed stack trace information can be found in the log messages that were made during the test run.</p>
+<pre><code class="lang-xml">HelloService_Ok_3 : failed - Exception is Action timed out
+</code></pre>
+<h3 id="junit-reports"><a name="junit-reports" class="plugin-anchor" href="#junit-reports"><span class="fa fa-link"></span></a>JUnit reports</h3>
+<p>As tests are executed as TestNG test cases, the framework will also generate JUnit compliant XML and HTML reports. JUnit test reports are very popular and find support in many build management and development tools. In general the Citrus test reports give you an overall picture of all tests and tell you which of them were failing.</p>
+<p>Build management tools like Jenkins can easily import and display the generated JUnit XML results. Please have a look at the TestNG and JUnit documentation for more information about this topic as well as the build management tools (e.g. Jenkins) to find out how to integrate the tests results.</p>
+<h3 id="html-reports"><a name="html-reports" class="plugin-anchor" href="#html-reports"><span class="fa fa-link"></span></a>HTML reports</h3>
+<p>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory <strong><em>${project.build.directory}/test-output/citrus-reports</em></strong> .</p>
+<p>The report consists of two parts. The test summary on top shows the total number executed tests. The main part lists all test cases with detailed information. With this report you immediately identify all tests that were failing. Each test case is marked in color according to its result outcome.</p>
+<p>The failed tests give detailed error information with error messages and Java StackTrace information. In addition to that the report tries to find the test action inside the XML test part that failed in execution. With the failing code snippet you can see where the test stopped.</p>
+<p><strong>Note</strong>
+JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.</p>
+<p>The HTML reports are customizable by system properties. Use following properties e.g. in your <strong>citrus.properties</strong> file:</p>
+<ul>
+<li><strong>citrus.html.report.enabled</strong> : Enables/disables HTML report generation (default= <strong><em>true</em></strong>).</li>
+<li><strong>citrus.html.report.directory</strong> : Output directory path (default= <strong><em>${project.build.directory}/test-output/citrus-reports</em></strong>).</li>
+<li><strong>citrus.html.report.file</strong> : File name for the report file (default= <strong><em>citrus-test-results.html</em></strong>).</li>
+<li><strong>citrus.html.report.template</strong> : Template HTML file with placeholders for report results.</li>
+<li><strong>citrus.html.report.detail.template</strong> : Template file for detailed test results.</li>
+<li><strong>citrus.html.report.logo</strong> : File resource path pointing to a image that is added to top of HTML report.</li>
+</ul>
+<p>The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in<a href="report-templates sources">https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report</a>.</p>
 
                     
                     </section>
@@ -1591,8 +1636,10 @@
         </div>
 
         
+        <a href="./message-tracing.html" class="navigation navigation-prev " aria-label="Previous page: Message-tracing"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./samples.html" class="navigation navigation-next " aria-label="Next page: Samples"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

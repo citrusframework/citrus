@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Validation | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./validation-xml.html" />
     
+    
+    <link rel="prev" href="./endpoints.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="10"
+        data-chapter-title="Validation"
+        data-filepath="validation.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -225,7 +227,7 @@
             
         </li>
     
-        <li class="chapter " data-level="10" data-path="validation.html">
+        <li class="chapter active" data-level="10" data-path="validation.html">
             
                 
                     <a href="./validation.html">
@@ -1578,9 +1580,99 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="message-validation"><a name="message-validation" class="plugin-anchor" href="#message-validation"><span class="fa fa-link"></span></a>Message validation</h2>
+<p>When Citrus receives a message from external applications it is time to verify the message content. This message validation includes syntax rules as well as semantic values that need to be compared to an expected behavior. Citrus provides powerful message validation capabilities. Each incoming message is validated with syntax and semantics. The tester is able to define expected message headers and payloads. Citrus message validator implementations will compare the messages and report differences as test failure. With the upcoming sections we have a closer look at message validation of XML messages with XPath and XML schema validation and further message formats like JSON and plaintext.</p>
+<h3 id="java-dsl-validation-callbacks"><a name="java-dsl-validation-callbacks" class="plugin-anchor" href="#java-dsl-validation-callbacks"><span class="fa fa-link"></span></a>Java DSL validation callbacks</h3>
+<p>The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation callback functionality. With this feature you can marshal/unmarshal message payloads and code validation steps on Java objects.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessageTest</span><span class="hljs-params">()</span> </span>{
+    receive(bookResponseEndpoint)
+        .validationCallback(<span class="hljs-keyword">new</span> MarshallingValidationCallback&lt;AddBookResponseMessage&gt;() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">validate</span><span class="hljs-params">(AddBookResponseMessage response, MessageHeaders headers)</span> </span>{
+                Assert.isTrue(response.isSuccess());
+            }
+        });
+}
+</code></pre>
+<p>By default the validation callback needs some XML unmarshaller implementation for transforming the XML payload to a Java object. Citrus will automatically search for the unmarshaller bean in your Spring application context if nothing specific is set. Of course you can also set the unmarshaller instance explicitly.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-keyword">private</span> Unmarshaller unmarshaller;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessageTest</span><span class="hljs-params">()</span> </span>{
+    receive(bookResponseEndpoint)
+        .validationCallback(<span class="hljs-keyword">new</span> MarshallingValidationCallback&lt;AddBookResponseMessage&gt;(unmarshaller) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">validate</span><span class="hljs-params">(AddBookResponseMessage response, MessageHeaders headers)</span> </span>{
+                Assert.isTrue(response.isSuccess());
+            }
+        });
+}
+</code></pre>
+<p>Obviously working on Java objects is much more comfortable than using the XML String concatenation. This is why you can also use this feature when sending messages.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-keyword">private</span> Marshaller marshaller;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sendMessageTest</span><span class="hljs-params">()</span> </span>{
+    send(bookRequestEndpoint)
+        .payload(createAddBookRequestMessage(<span class="hljs-string">&quot;978-citrus:randomNumber(10)&quot;</span>), marshaller)
+        .header(SoapMessageHeaders.SOAP_ACTION, <span class="hljs-string">&quot;addBook&quot;</span>);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> AddBookRequestMessage <span class="hljs-title">createAddBookRequestMessage</span><span class="hljs-params">(String isbn)</span> </span>{
+    AddBookRequestMessage requestMessage = <span class="hljs-keyword">new</span> AddBookRequestMessage();
+    Book book = <span class="hljs-keyword">new</span> Book();
+    book.setAuthor(<span class="hljs-string">&quot;Foo&quot;</span>);
+    book.setTitle(<span class="hljs-string">&quot;FooTitle&quot;</span>);
+    book.setIsbn(isbn);
+    book.setYear(<span class="hljs-number">2008</span>);
+    book.setRegistrationDate(Calendar.getInstance());
+    requestMessage.setBook(book);
+    <span class="hljs-keyword">return</span> requestMessage;
+}
+</code></pre>
+<p>The example above creates a <strong>AddBookRequestMessage</strong> object and puts this as payload to a send action. In combination with a marshaller instance Citrus is able to create a proper XML message payload then.</p>
+<h3 id="customize-message-validators"><a name="customize-message-validators" class="plugin-anchor" href="#customize-message-validators"><span class="fa fa-link"></span></a>Customize message validators</h3>
+<p>In the previous sections we have already seen some examples on how to overwrite default message validator implementations in Citrus. By default all message validators can be overwritten by placing a Spring bean of the same id to the Spring application context. The default implementations of Citrus are:</p>
+<ul>
+<li><strong>defaultXmlMessageValidator</strong>: com.consol.citrus.validation.xml.DomXmlMessageValidator </li>
+<li><strong>defaultXpathMessageValidator</strong>: com.consol.citrus.validation.xml.XpathMessageValidator </li>
+<li><strong>defaultJsonMessageValidator</strong>: com.consol.citrus.validation.json.JsonTextMessageValidator </li>
+<li><strong>defaultJsonPathMessageValidator</strong>: com.consol.citrus.validation.json.JsonPathMessageValidator </li>
+<li><strong>defaultPlaintextMessageValidator</strong>: com.consol.citrus.validation.text.PlainTextMessageValidator </li>
+<li><strong>defaultBinaryBase64MessageValidator</strong>: com.consol.citrus.validation.text.BinaryBase64MessageValidator </li>
+<li><strong>defaultXhtmlMessageValidator</strong>: com.consol.citrus.validation.xhtml.XhtmlMessageValidator </li>
+<li><strong>defaultGroovyXmlMessageValidator</strong>: com.consol.citrus.validation.script.GroovyXmlMessageValidator </li>
+<li><strong>defaultGroovyJsonMessageValidator</strong>: com.consol.citrus.validation.script.GroovyJsonMessageValidator </li>
+</ul>
+<p>Overwriting a single message validator with a custom implementation is then very easy. Just add your custom Spring bean to the application context using one of these default bean identifiers. In case you want to change the message validator gang by adding or removing a message validator implementation completely you can place a message validator component in the Spring application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:message-validators</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultXmlMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultXpathMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyXmlMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultPlaintextMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultBinaryBase64MessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.custom.CustomMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonPathMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyJsonMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultXhtmlMessageValidator&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message-validators</span>&gt;</span>
+</code></pre>
+<p>The listing above adds a custom message validator implementation to the sequence of message validators in Citrus. We reference default message validators and add a implementation of type <strong>com.consol.citrus.validation.custom.CustomMessageValidator</strong> . The custom implementation class has to implement the basic interface <strong>com.consol.citrus.validation.MessageValidator</strong> . Now Citrus will try to match the custom implementation to incoming message types and occasionally execute the message validator logic. This is how you can add and change the basic message validator registry in Citrus. You can add custom implementations for new message formats very easy.</p>
+<p>The same approach applies in case you want to remove a message validator implementation by banning it completely. Just delete the entry in the message validator registry component:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:message-validators</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonPathMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyJsonMessageValidator&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message-validators</span>&gt;</span>
+</code></pre>
+<p>The Citrus message validator component deleted all default implementations except of those dealing with JSON message format. Now Citrus is only able to validate JSON messages. Be careful as the complete Citrus project will be affected by this change.</p>
 
                     
                     </section>
@@ -1591,8 +1683,10 @@
         </div>
 
         
+        <a href="./endpoints.html" class="navigation navigation-prev " aria-label="Previous page: Endpoints"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./validation-xml.html" class="navigation navigation-next " aria-label="Next page: Xml"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

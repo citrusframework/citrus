@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Vertx | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./mail.html" />
     
+    
+    <link rel="prev" href="./camel.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="25"
+        data-chapter-title="Vertx"
+        data-filepath="vertx.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1053,7 +1055,7 @@
             
         </li>
     
-        <li class="chapter " data-level="25" data-path="vertx.html">
+        <li class="chapter active" data-level="25" data-path="vertx.html">
             
                 
                     <a href="./vertx.html">
@@ -1578,9 +1580,121 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="vertx-event-bus-support"><a name="vertx-event-bus-support" class="plugin-anchor" href="#vertx-event-bus-support"><span class="fa fa-link"></span></a>Vert.x event bus support</h2>
+<p>Vert.x is an application platform for the JVM that provides a network event bus for lightweight scalable messaging solutions. The Citrus Vert.x components do participate on that event bus messaging as producer or consumer. With these components you can access Vert.x instances available in your network in order to test those Vert.x applications in some integration test scenario.</p>
+<p><strong>Note</strong>
+The Vert.x components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-vertx<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>Citrus provides a special Vert.x configuration schema that is used in our Spring configuration files. You have to include the citrus-vertx namespace in your Spring configuration XML files as follows.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+      <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+      <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/config&quot;</span>
+      <span class="hljs-attribute">xmlns:citrus-vertx</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/vertx/config&quot;</span>
+      <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/config
+      http://www.citrusframework.org/schema/config/citrus-config.xsd
+      http://www.citrusframework.org/schema/vertx/config
+      http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd&quot;</span>&gt;</span>
+
+      [...]
+
+      <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>Now you are ready to use the Citrus Vert.x configuration elements using the citrus-vertx namespace prefix.</p>
+<p>The next sections discuss sending and receiving operations on the Vert.x event bus with Citrus.</p>
+<h3 id="vertx-endpoint"><a name="vertx-endpoint" class="plugin-anchor" href="#vertx-endpoint"><span class="fa fa-link"></span></a>Vert.x endpoint</h3>
+<p>As usual Citrus uses an endpoint component in order to specify some message destination to send and receive messages to and from. The Vert.x endpoint component is defined as follows in your Citrus Spring configuration.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-vertx:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;simpleVertxEndpoint&quot;</span>
+      <span class="hljs-attribute">host</span>=<span class="hljs-value">&quot;localhost&quot;</span>
+      <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;5001&quot;</span>
+      <span class="hljs-attribute">pubSubDomain</span>=<span class="hljs-value">&quot;false&quot;</span>
+      <span class="hljs-attribute">address</span>=<span class="hljs-value">&quot;news-feed&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;vertxInstanceFactory&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.vertx.factory.CachingVertxInstanceFactory&quot;</span>/&gt;</span>
+</code></pre>
+<p>The endpoint holds some general information how to access the Vert.x event bus. Host and port values define the Vert.x Hazelcast cluster hostname and port. Citrus starts a new Vert.x instance using this cluster. So all other Vert.x instances connected to this cluster host will receive the event bus messages from Citrus during the test. In your test case you can use this endpoint component referenced by its id or name in order to send and receive messages on the event bus address <strong>news-feed</strong> . In Vert.x the event bus address defines the destination for event consumers to listen on. As already mentioned cluster hostname and port are optional, so Citrus will use <strong>localhost</strong> and a new random port on the cluster host if nothing is specified.</p>
+<p>The Vert.x event bus supports publish-subscribe and point-to-point message communication patterns. By default the <strong>pubSubDomain</strong> in Citrus is false so the event bus sender will initiate a point-to-point communication on the event bus address. This means that only one single consumer on the event bus address will receive the message. If there are more consumers on the address the first to come wins and receives the message. In contrary to that the publish-subscribe scenario would deliver the message to all available consumers on the event bus address simultaneously. You can enable the <strong>pubSubDomain</strong> on the Vert.x endpoint component for this communication pattern.</p>
+<p>The Vert.x endpoint needs a instance factory implementation in order to create the embedded Vert.x instance. By default the bean name <strong>vertxInstanceFactory</strong> is recognized by all Vert.x endpoint components. We will talk about Vert.x instance factories in more detail later on in this chapter.</p>
+<p>As message content you can send and receive JSON objects or simple character sequences to the event bus. Let us have a look at a simple sample sending action that uses the new Vert.x endpoint component:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;simpleVertxEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>Hello from Citrus!<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>As the Vert.x Citrus endpoint is bidirectional you can also receive messages from the event bus.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;simpleVertxEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>Hello from Vert.x!<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_vertx_address&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;news-feed&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>Citrus automatically adds some special message headers to the message, so you can validate the Vert.x event bus address. This completes the simple send and receive operations on a Vert.x event bus. Now lets move on to synchronous endpoints where Citrus waits for a reply on the event bus.</p>
+<h3 id="synchronous-vertx-endpoint"><a name="synchronous-vertx-endpoint" class="plugin-anchor" href="#synchronous-vertx-endpoint"><span class="fa fa-link"></span></a>Synchronous Vert.x endpoint</h3>
+<p>The synchronous Vert.x event bus producer sends a message and waits synchronously for the response to arrive on some reply address destination. The reply address name is generated automatically and set in the request message header attributes so the receiving counterpart in this communication can send its reply to that event bus address. The basic configuration for a synchronous Vert.x endpoint component looks like follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-vertx:sync-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;vertxSyncEndpoint&quot;</span>
+      <span class="hljs-attribute">address</span>=<span class="hljs-value">&quot;hello&quot;</span>
+      <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;1000&quot;</span>
+      <span class="hljs-attribute">polling-interval</span>=<span class="hljs-value">&quot;300&quot;</span>/&gt;</span>
+</code></pre>
+<p>Synchronous endpoints poll for synchronous reply messages to arrive on the event bus reply address. The poll interval is an optional setting in order to manage the amount of reply message handshake attempts. Once the endpoint was able to receive the reply message synchronously the test case can receive the reply. In case all message handshake attempts do fail because the reply message is not available in time we raise some timeout error and the test will fail.</p>
+<p><strong>Note</strong>
+The Vert.x endpoint uses temporary reply address destinations. The temporary reply address in generated and is only used once for a single communication handshake. After that the reply address is dismissed again.</p>
+<p>When sending a message to the synchronous Vert.x endpoint the producer will wait synchronously for the response message to arrive on the reply address. You can receive the reply message in your test case using the same endpoint component. So we have two actions on the same endpoint, first send then receive.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;vertxSyncEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>Hello from Citrus!<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;vertxSyncEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>This is the reply from Vert.x!<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>In the last section we saw that synchronous communication is based on reply messages on temporary reply event bus address. We saw that Citrus is able to send messages to event bus address and wait for reply messages to arrive. This next section deals with the same synchronous communication, but send and receive roles are switched. Now Citrus receives a message and has to send a reply message to a temporary reply address.</p>
+<p>We handle this synchronous communication with the same synchronous Vert.x endpoint component. Only difference is that we initially start the communication by receiving a message from the endpoint. Knowing this Citrus is able to send a synchronous response back. Again just use the same endpoint reference in your test case. The handling of the temporary reply address is done automatically behind the scenes. So we have again two actions in our test case, but this time first receive then send.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;vertxSyncEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>Hello from Vert.x!<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;vertxSyncEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>This is the reply from Citrus!<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>The synchronous message endpoint for Vert.x event bus communication will handle all reply address destinations and provide those behind the scenes.</p>
+<h3 id="vertx-instance-factory"><a name="vertx-instance-factory" class="plugin-anchor" href="#vertx-instance-factory"><span class="fa fa-link"></span></a>Vert.x instance factory</h3>
+<p>Citrus starts an embedded Vert.x instance at runtime in order to participate in the Vert.x cluster. Within this cluster multiple Vert.x instances are connected via the event bus. For starting the Vert.x event bus Citrus uses a cluster hostname and port definition. You can customize this cluster host in order to connect to a very special cluster in your network.</p>
+<p>Now Citrus needs to manage the Vert.x instances created during the test run. By default Citrus will look for a instance factory bean named <strong>vertxInstanceFactory</strong> . You can choose the factory implementation to use in your project. By default you can use the caching factory implementation that caches the Vert.x instances so we do not connect more than one Vert.x instance to the same cluster host. Citrus offers following instance factory implementations:</p>
+<ul>
+<li>com.consol.citrus.vertx.factory.CachingVertxInstanceFactory - default implementation that reuses the Vert.x instance based on given cluster host and port. With this implementation we ensure to<pre><code>connect a single Citrus Vert.x instance to a cluster host.
+</code></pre></li>
+<li>com.consol.citrus.vertx.factory.SingleVertxInstanceFactory - creates a single Vert.x instance and reuses this instance for all endpoints. You can also set your very custom Vert.x instance via configuration<pre><code>for custom Vert.x instantiation.
+</code></pre></li>
+</ul>
+<p>The instance factory implementations do implement the <strong><em>VertxInstanceFactory</em></strong> interface. So you can also provide your very special implementation. By default Citrus looks for a bean named <strong>vertxInstanceFactory</strong> but you can also define your very special factory implementation onm an endpoint component. The Vert.x instance factory is set on the Vert.x endpoint as follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-vertx:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;vertxHelloEndpoint&quot;</span>
+      <span class="hljs-attribute">address</span>=<span class="hljs-value">&quot;hello&quot;</span>
+      <span class="hljs-attribute">vertx-factory</span>=<span class="hljs-value">&quot;singleVertxInstanceFactory&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;singleVertxInstanceFactory&quot;</span>
+      <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.vertx.factory.SingleVertxInstanceFactory&quot;</span>/&gt;</span>
+</code></pre>
 
                     
                     </section>
@@ -1591,8 +1705,10 @@
         </div>
 
         
+        <a href="./camel.html" class="navigation navigation-prev " aria-label="Previous page: Camel"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./mail.html" class="navigation navigation-next " aria-label="Next page: Mail"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

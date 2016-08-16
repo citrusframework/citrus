@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Test-actors | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./test-suite.html" />
     
+    
+    <link rel="prev" href="./data-dictionary.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="40"
+        data-chapter-title="Test-actors"
+        data-filepath="test-actors.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1278,7 +1280,7 @@
             
         </li>
     
-        <li class="chapter " data-level="40" data-path="test-actors.html">
+        <li class="chapter active" data-level="40" data-path="test-actors.html">
             
                 
                     <a href="./test-actors.html">
@@ -1578,9 +1580,44 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="test-actors"><a name="test-actors" class="plugin-anchor" href="#test-actors"><span class="fa fa-link"></span></a>Test actors</h2>
+<p>The concept of test actors came to our mind when reusing Citrus test cases in end-to-end test scenarios. Usually Citrus simulates all interface partners within a test case which is great for continuous integration testing. In end-to-end integration test scenarios some of our interface partners may be real and alive. Some other interface partners still require Citrus simulation logic.</p>
+<p>It would be great if we could reuse the Citrus integration tests in this test setup as we have the complete test flow of messages available in the Citrus tests. We only have to remove the simulated send/receive actions for those real interface partner applications which are available in our end-to-end test setup.</p>
+<p>With test actors we have the opportunity to link test actions, in particular send/receive message actions, to a test actor. The test actor can be disabled in configuration very easy and following from that all linked send/receive actions are disabled, too. One Citrus test case is runnable with different test setup scenarios where different partner applications on the one hand are available as real life applications and on the other hand my require simulation.</p>
+<h3 id="define-test-actors"><a name="define-test-actors" class="plugin-anchor" href="#define-test-actors"><span class="fa fa-link"></span></a>Define test actors</h3>
+<p>First thing to do is to define one or more test actors in Citrus configuration. A test actor represents a participating party (e.g. interface partner, backend application). We write the test actors into the central Spring application context. We can use a special Citrus Spring XML schema so definitions are quite easy:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:actor</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;travelagency&quot;</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;TRAVEL_AGENCY&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus:actor</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;royalairline&quot;</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;ROYAL_AIRLINE&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus:actor</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;smartariline&quot;</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;SMART_AIRLINE&quot;</span>/&gt;</span>
+</code></pre>
+<p>The listing above defines three test actors participating in our test scenario. A travel agency application which is simulated by Citrus as a calling client, the smart airline application and a royal airline application. Now we have the test actors defined we can link those to message sender/receiver instances and/or test actions within our test case.</p>
+<h3 id="link-test-actors"><a name="link-test-actors" class="plugin-anchor" href="#link-test-actors"><span class="fa fa-link"></span></a>Link test actors</h3>
+<p>We need to link the test actors to message send and receive actions in our test cases. We can do this in two different ways. First we can set a test actor reference on a message sender and message receiver.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:sync-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;royalAirlineBookingEndpoint&quot;</span>
+        <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${royal.airline.request.queue}&quot;</span>
+        <span class="hljs-attribute">actor</span>=<span class="hljs-value">&quot;royalairline&quot;</span>/&gt;</span>
+</code></pre>
+<p>Now all test actions that are using these message receiver and message sender instances are linked to the test actor. In addition to that you can also explicitly link test actions to test actors in a test.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;royalAirlineBookingEndpoint&quot;</span> <span class="hljs-attribute">actor</span>=<span class="hljs-value">&quot;royalairline&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;royalAirlineBookingEndpoint&quot;</span> <span class="hljs-attribute">actor</span>=<span class="hljs-value">&quot;royalairline&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>This explicitly links test actors to test actions so you can decide which link should be set without having to rely on the message receiver and sender configuration.</p>
+<h3 id="disable-test-actors"><a name="disable-test-actors" class="plugin-anchor" href="#disable-test-actors"><span class="fa fa-link"></span></a>Disable test actors</h3>
+<p>Usually both airline applications are simulated in our integration tests. But this time we want to change this by introducing a royal airline application which is online as a real application instance. So we need to skip all simulated message interactions for the royal airline application in our Citrus tests. This is easy as we have linked all send/receive actions to one of our test actors. So wen can disable the royal airline test actor in our configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:actor</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;royalairline&quot;</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;ROYAL_AIRLINE&quot;</span> <span class="hljs-attribute">disabled</span>=<span class="hljs-value">&quot;true&quot;</span>/&gt;</span>
+</code></pre>
+<p>Any test action linked to this test actor is now skipped. As we introduced a real royal airline application in our test scenario the requests get answered and the test should be successful within this end-to-end test scenario. The travel agency and the smart airline still get simulated by Citrus. This is a perfect way of reusing integration tests in different test scenarios where you enable and disable simulated participating parties in Citrus.</p>
+<p><strong>Important</strong>
+Server ports may be of special interest when dealing with different test scenarios. You may have to also disable a Citrus embedded Jetty server instance in order to avoid port binding conflicts and you may have to wire endpoint URIs accordingly before executing a test. The real life application may not use the same port and ip as the Citrus embedded servers for simulation.</p>
 
                     
                     </section>
@@ -1591,8 +1628,10 @@
         </div>
 
         
+        <a href="./data-dictionary.html" class="navigation navigation-prev " aria-label="Previous page: Data-dictionary"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./test-suite.html" class="navigation navigation-next " aria-label="Next page: Test-suite"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

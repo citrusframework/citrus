@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Custom | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./finally-section.html" />
     
+    
+    <link rel="prev" href="./containers-timer.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="15.8"
+        data-chapter-title="Custom"
+        data-filepath="containers-custom.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -898,7 +900,7 @@
             
         </li>
     
-        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+        <li class="chapter active" data-level="15.8" data-path="containers-custom.html">
             
                 
                     <a href="./containers-custom.html">
@@ -1578,9 +1580,72 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="custom-containers"><a name="custom-containers" class="plugin-anchor" href="#custom-containers"><span class="fa fa-link"></span></a>Custom containers</h3>
+<p>In case you have a custom action container implementation you might also want to use it in Java DSL. The action containers are handled with special care in the Java DSL because they have nested actions. So when you call a test action container in the Java DSL you always have something like this:</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">containerTest</span><span class="hljs-params">()</span> </span>{
+    echo(<span class="hljs-string">&quot;This echo is outside of the action container&quot;</span>);
+
+    sequential()
+        .actions(
+            echo(<span class="hljs-string">&quot;Inside&quot;</span>),
+            echo(<span class="hljs-string">&quot;Inside once more&quot;</span>),
+            echo(<span class="hljs-string">&quot;And again: Inside!&quot;</span>)
+        );
+
+    echo(<span class="hljs-string">&quot;This echo is outside of the action container&quot;</span>);
+}
+</code></pre>
+<p>Now the three nested actions are added to the action <strong>sequential</strong> container rather than to the test case itself although we are using the same action Java DSL methods as outside the container. This mechanism is only working because Citrus is handling test action containers with special care.</p>
+<p>A custom test action container implementation could look like this:</p>
+<pre><code class="lang-xml">public class ReverseActionContainer extends AbstractActionContainer {
+    @Override
+    public void doExecute(TestContext context) {
+        for (int i = getActions().size(); i &gt; 0; i--) {
+            getActions().get(i-1).execute(context);
+        }
+    }
+}
+</code></pre>
+<p>The container logic is very simple: The container executes the nested actions in reverse order. As already mentioned Citrus needs to take special care on all action containers when executing a Java DSL test. This is why you should not execute a custom test container implementation on your own.</p>
+<pre><code class="lang-xml">@CitrusTest
+public void containerTest() {
+    ReverseActionContainer reverseContainer = new ReverseActionContainer();
+    reverseContainer.addTestAction(new EchoAction().setMessage(&quot;Foo&quot;));
+    reverseContainer.addTestAction(new EchoAction().setMessage(&quot;Bar&quot;));
+    run(reverseContainer);
+}
+</code></pre>
+<p>The above custom container execution is going to fail with internal error as the Citrus Java DSL was not able to recognise the action container as it should be. Also the <strong>EchoAction</strong> instance creation is not very comfortable. Instead you can use a special container Java DSL syntax also with your custom container implementation:</p>
+<pre><code class="lang-xml">@CitrusTest
+public void containerTest() {
+    container(new ReverseActionContainer()).actions(
+        echo(&quot;Foo&quot;),
+        echo(&quot;Bar&quot;)
+    );
+}
+</code></pre>
+<p>The custom container implementation now works fine with the automatically nested echo actions. And we are able to use the usual Java DSL syntactic sugar for test actions like <strong>echo</strong> .</p>
+<p>In a next step we add a custom superclass for all our test classes which provides a helper method for the custom container implementation in order to have a even more comfortable syntax.</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomCitrusBaseTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestNGCitrusTestDesigner</span> </span>{
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> AbstractTestContainerBuilder&lt;ReverseActionContainer&gt; <span class="hljs-title">reverse</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> container(<span class="hljs-keyword">new</span> ReverseActionContainer());
+    }
+}
+</code></pre>
+<p>Now all subclasses can use the new <strong>reverse</strong> method for calling the custom container implementation.</p>
+<pre><code class="lang-xml">@CitrusTest
+public void containerTest() {
+    reverse().actions(
+        echo(&quot;Foo&quot;),
+        echo(&quot;Bar&quot;)
+    );
+}
+</code></pre>
+<p>Nice! This is how we should integrate customized test action containers to the Citrus Java DSL.</p>
 
                     
                     </section>
@@ -1591,8 +1656,10 @@
         </div>
 
         
+        <a href="./containers-timer.html" class="navigation navigation-prev " aria-label="Previous page: Timer"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./finally-section.html" class="navigation navigation-next " aria-label="Next page: Finally-section"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

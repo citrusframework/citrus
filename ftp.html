@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Ftp | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./message-channel.html" />
     
+    
+    <link rel="prev" href="./soap.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="21"
+        data-chapter-title="Ftp"
+        data-filepath="ftp.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -993,7 +995,7 @@
             
         </li>
     
-        <li class="chapter " data-level="21" data-path="ftp.html">
+        <li class="chapter active" data-level="21" data-path="ftp.html">
             
                 
                     <a href="./ftp.html">
@@ -1578,9 +1580,140 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="ftp-support"><a name="ftp-support" class="plugin-anchor" href="#ftp-support"><span class="fa fa-link"></span></a>FTP support</h2>
+<p>Citrus is able to start a little ftp server accepting incoming client requests. Also Citrus is able to call FTP commands as a client. The next sections deal with FTP connectivity.</p>
+<p><strong>Note</strong>
+The FTP components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-ftp<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>As Citrus provides a customized FTP configuration schema for the Spring application context configuration files we have to add name to the top level <strong>beans</strong> element. Simply include the ftp-config namespace in the configuration XML files as follows.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+    <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+    <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/config&quot;</span>
+    <span class="hljs-attribute">xmlns:citrus-ftp</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/ftp/config&quot;</span>
+    <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/config
+    http://www.citrusframework.org/schema/config/citrus-config.xsd
+    http://www.citrusframework.org/schema/http/config
+    http://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd&quot;</span>&gt;</span>
+
+      [...]
+
+      <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>Now we are ready to use the customized Citrus FTP configuration elements with the citrus-ftp namespace prefix.</p>
+<h3 id="ftp-client"><a name="ftp-client" class="plugin-anchor" href="#ftp-client"><span class="fa fa-link"></span></a>FTP client</h3>
+<p>We want to use Citrus fo connect to dome FTP server as a client sending commands such as creating a directory or listing all files. Citrus offers a client component doing exactly this FTP client connection.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ftp:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;ftpClient&quot;</span>
+      <span class="hljs-attribute">host</span>=<span class="hljs-value">&quot;localhost&quot;</span>
+      <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;22222&quot;</span>
+      <span class="hljs-attribute">username</span>=<span class="hljs-value">&quot;admin&quot;</span>
+      <span class="hljs-attribute">password</span>=<span class="hljs-value">&quot;admin&quot;</span>
+      <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;10000&quot;</span>/&gt;</span>
+</code></pre>
+<p>The configuration above describes a Citrus ftp client connected to a ftp server with <strong>ftp://localhost:22222</strong> . For authentication username and password are defined as well as the global connection timeout. The client will automatically send username and password for proper authentication to the server when opening a new connection.</p>
+<p>In a test case you are now able to use the client to push commands to the server.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;ftpClient&quot;</span> <span class="hljs-attribute">fork</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_command&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;PWD&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_arguments&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;test&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;ftpClient&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>PWD<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_command&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;PWD&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_arguments&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;test&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_reply_code&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;257&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_reply_string&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;@contains(&apos;is current directory&apos;)@&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>As you can see most of the ftp communication parameters are specified as special header elements in the message. Citrus automatically converts those information to proper FTP commands and response messages.</p>
+<h3 id="ftp-server"><a name="ftp-server" class="plugin-anchor" href="#ftp-server"><span class="fa fa-link"></span></a>FTP server</h3>
+<p>Now that we are able to access FTP as a client we might also want to simulate the server side. Therefore Citrus offers a server component that is listening on a port for incoming FTP connections. The server has a default home directory on the local file system specified. But you can also define home directories per user. For now let us have a look at the server configuration component:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ftp:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;ftpServer&quot;</span>&gt;</span>
+      port=&quot;22222&quot;
+      auto-start=&quot;true&quot;
+      user-manager-properties=&quot;classpath:ftp.server.properties&quot;/&gt;
+</code></pre>
+<p>The ftp server configuration is quite simple. The server starts automatically and binds to a port. The user configuration is read from a <strong>user-manager-property</strong> file. Let us have a look at the content of this user management file:</p>
+<pre><code class="lang-xml"># Password is &quot;admin&quot;
+ftpserver.user.admin.userpassword=21232F297A57A5A743894A0E4A801FC3
+ftpserver.user.admin.homedirectory=target/ftp/user/admin
+ftpserver.user.admin.enableflag=true
+ftpserver.user.admin.writepermission=true
+ftpserver.user.admin.maxloginnumber=0
+ftpserver.user.admin.maxloginperip=0
+ftpserver.user.admin.idletime=0
+ftpserver.user.admin.uploadrate=0
+ftpserver.user.admin.downloadrate=0
+
+ftpserver.user.anonymous.userpassword=
+ftpserver.user.anonymous.homedirectory=target/ftp/user/anonymous
+ftpserver.user.anonymous.enableflag=true
+ftpserver.user.anonymous.writepermission=false
+ftpserver.user.anonymous.maxloginnumber=20
+ftpserver.user.anonymous.maxloginperip=2
+ftpserver.user.anonymous.idletime=300
+ftpserver.user.anonymous.uploadrate=4800
+ftpserver.user.anonymous.downloadrate=4800
+</code></pre>
+<p>As you can see you are able to define as many user for the ftp server as you like. Username and password define the authentication on the server. In addition to that you have plenty of configuration possibilities per user. Citrus uses the Apache ftp server implementation. So for more details on configuration capabilities please consult the official Apache ftp server documentation.</p>
+<p>Now we would like to use the server in a test case. Very easy you just have to define a receive message action within your test case that uses the server id as endpoint reference:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Receive user login on FTP server<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;ftpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>USER<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_command&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;USER&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_arguments&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;admin&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;ftpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>OK<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Receive user password on FTP server<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;ftpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>PASS<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_command&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;PASS&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_ftp_arguments&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;admin&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;ftpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span><span class="hljs-value">&quot;&gt;
+    &lt;data&gt;OK&lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;
+</span></span></code></pre>
+<p>The listing above shows two incoming commands representing a user login. We indicate with re send actions that we would link the server to respond with positive feedback and to accept the login. As we have a fully qualified ftp server running the client can also push files read directories and more. All incoming commands can be validated inside a test case.</p>
 
                     
                     </section>
@@ -1591,8 +1724,10 @@
         </div>
 
         
+        <a href="./soap.html" class="navigation navigation-prev " aria-label="Previous page: Soap"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./message-channel.html" class="navigation navigation-next " aria-label="Next page: Message-channel"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

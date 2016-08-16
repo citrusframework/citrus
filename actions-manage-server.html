@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Manage-server | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-generic-action.html" />
     
+    
+    <link rel="prev" href="./actions-antrun.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.23"
+        data-chapter-title="Manage-server"
+        data-filepath="actions-manage-server.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -712,7 +714,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+        <li class="chapter active" data-level="13.23" data-path="actions-manage-server.html">
             
                 
                     <a href="./actions-manage-server.html">
@@ -1578,9 +1580,59 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="startstop-server-instances"><a name="startstop-server-instances" class="plugin-anchor" href="#startstop-server-instances"><span class="fa fa-link"></span></a>Start/Stop server instances</h3>
+<p>Citrus is working with server components that are started and stopped within a test run. This can be a Http server or some SMTP mail server for instance. Usually the Citrus server components are automatically started when Citrus is starting and respectively stopped when Citrus is shutting down. Sometimes it might be helpful to explicitly start and stop a server instance within your test case. Here you can use special start and stop test actions inside your test. This is a good way to test downtime scenarios of interface partners with respective error handling when connections to servers are lost</p>
+<p>Let me explain with a simple sample test case:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;sleepTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">start</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;myMailServer&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">stop</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;myMailServer&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>The start and stop server test action receive a server name which references a Spring bean component of type <strong>com.consol.citrus.server.Server</strong> in your basic Spring application context. The server instance is started or stopped within the test case. As you can see in the next listing we can also start and stop multiple server instances within a single test action.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;sleepTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">start</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">servers</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">server</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myMailServer&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">server</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myFtpServer&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">servers</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">start</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">stop</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">servers</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">server</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myMailServer&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">server</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myFtpServer&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">servers</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">stop</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>When using the Java DSL the best way to reference a server instance is to autowire the Spring bean via dependency injection. The Spring framework takes case on injecting the proper Spring bean component defined in the SPring application context. This way you can easily start and stop server instances within Java DSL test cases.</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;myFtpServer&quot;</span>)
+<span class="hljs-keyword">private</span> FtpServer myFtpServer;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">startStopServerTest</span><span class="hljs-params">()</span> </span>{
+    start(myFtpServer);
+
+    sleep();
+
+    stop(myFtpServer);
+}
+</code></pre>
+<p><strong>Note</strong>
+Starting and stopping server instances is a synchronous test action. This means that your test case is waiting for the server to start before other test actions take place. Startup times and shut down of server instances may delay your test accordingly.</p>
+<p>As you can see starting and stopping Citrus server instances is very easy. You can also write your own server implementations by implementing the interface <strong>com.consol.citrus.server.Server</strong> . All custom server implementations can then be started and stopped during a test case.</p>
 
                     
                     </section>
@@ -1591,8 +1643,10 @@
         </div>
 
         
+        <a href="./actions-antrun.html" class="navigation navigation-prev " aria-label="Previous page: Antrun"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-generic-action.html" class="navigation navigation-next " aria-label="Next page: Generic-action"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Xhtml | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./validation-plaintext.html" />
     
+    
+    <link rel="prev" href="./validation-json.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="10.4"
+        data-chapter-title="Xhtml"
+        data-filepath="validation-xhtml.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -286,7 +288,7 @@
             
         </li>
     
-        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+        <li class="chapter active" data-level="10.4" data-path="validation-xhtml.html">
             
                 
                     <a href="./validation-xhtml.html">
@@ -1578,9 +1580,41 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="xhtml-message-validation"><a name="xhtml-message-validation" class="plugin-anchor" href="#xhtml-message-validation"><span class="fa fa-link"></span></a>XHTML message validation</h3>
+<p>When Citrus receives plain Html messages we likely want to use the powerful XML validation capabilities such as XML tree comparison or XPath support. Unfortunately Html messages do not follow the XML well formed rules very strictly. This implies that XML message validation will fail because of non well formed Html code.</p>
+<p>XHTML closes this gap by automatically fixing the most common Html XML incompatible rule violations such as missing end tags (e.g. <br>).</p>
+<p>Let&apos;s try this with a simple example. Very first thing for us to do is to add a new library dependency to the project. Citrus is using the <strong>jtidy</strong> library in order to prepare the HTML and XHTML messages for validation. As this 3rd party dependency is optional in Citrus we have to add it now to our project dependency list. Just add the <strong>jtidy</strong> dependency to your Maven project POM.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>net.sf.jtidy<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>jtidy<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>r938<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>Please refer to the <strong>jtidy</strong> project documentation for the latest versions. Now everything is ready. As usual the Citrus message validator for XHTML is active in background by default. You can overwrite this default implementation by placing a Spring bean with id <strong>defaultXhtmlMessageValidator</strong> to the Citrus application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultXhtmlMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.xhtml.XhtmlMessageValidator&quot;</span>/&gt;</span>
+</code></pre>
+<p>Now we can tell the test case receiving action that we want to use the XHTML message validation in our test case.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;xhtml&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+          <span class="hljs-cdata">&lt;![CDATA[
+            &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot; &quot;org/w3c/xhtml/xhtml1-strict.dtd&quot;&gt;
+            &lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+            &lt;head&gt;
+              &lt;title&gt;Citrus Hello World&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              &lt;h1&gt;Hello World!&lt;/h1&gt;
+              &lt;br/&gt;
+              &lt;p&gt;This is a test!&lt;/p&gt;
+            &lt;/body&gt;
+          ]]&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>The message receiving action in our test case has to specify a message format type <strong>type=&quot;xhtml&quot;</strong> . As you can see the Html message payload get XHTML specific DOCTYPE processing instruction. The <strong>xhtml1-strict.dtd</strong> is mandatory in the XHTML message validation. For better convenience all XHTML dtd files are packaged within Citrus so you can use this as a relative path.</p>
+<p>The incoming Html message is automatically converted into proper XHTML code with well formed XML. So now the XHTML message validator can use the XML message validation mechanism of Citrus for comparing received and expected data. As usual you can use test variables, ignore element expressions and XPath expressions.</p>
 
                     
                     </section>
@@ -1591,8 +1625,10 @@
         </div>
 
         
+        <a href="./validation-json.html" class="navigation navigation-prev " aria-label="Previous page: Json"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./validation-plaintext.html" class="navigation navigation-next " aria-label="Next page: Plaintext"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Meta-info | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./message-tracing.html" />
     
+    
+    <link rel="prev" href="./test-suite.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="42"
+        data-chapter-title="Meta-info"
+        data-filepath="meta-info.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1308,7 +1310,7 @@
             
         </li>
     
-        <li class="chapter " data-level="42" data-path="meta-info.html">
+        <li class="chapter active" data-level="42" data-path="meta-info.html">
             
                 
                     <a href="./meta-info.html">
@@ -1578,9 +1580,73 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="customize-meta-information"><a name="customize-meta-information" class="plugin-anchor" href="#customize-meta-information"><span class="fa fa-link"></span></a>Customize meta information</h2>
+<p>Test cases in Citrus are usually provided with some meta information like the author&#x2019;s name or the date of creation. In Citrus you are able to extend this test case meta information with your own very specific criteria.</p>
+<p>By default a test case comes shipped with meta information that looks like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;PwdChange_OK_1_Test&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta-info</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">author</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">author</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">creationdate</span>&gt;</span>2010-01-18<span class="hljs-tag">&lt;/<span class="hljs-title">creationdate</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">status</span>&gt;</span>FINAL<span class="hljs-tag">&lt;/<span class="hljs-title">status</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">last-updated-by</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">last-updated-by</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">last-updated-on</span>&gt;</span>2010-01-18T15:00:00<span class="hljs-tag">&lt;/<span class="hljs-title">last-updated-on</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">meta-info</span>&gt;</span>
+
+    [...]
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>You can quite easily add data to this section in order to meet your individual testing strategy. Let us have a simple example to show how it is done.</p>
+<p>First of all we define a custom XSD schema describing the new elements:</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">schema</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>  
+        <span class="hljs-attribute">xmlns:tns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/samples/my-testcase-info&quot;</span> 
+        <span class="hljs-attribute">targetNamespace</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/samples/my-testcase-info&quot;</span>
+        <span class="hljs-attribute">elementFormDefault</span>=<span class="hljs-value">&quot;qualified&quot;</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;requirement&quot;</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;string&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;pre-condition&quot;</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;string&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;result&quot;</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;string&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;classification&quot;</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;string&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">schema</span>&gt;</span>
+</code></pre>
+<p>We have four simple elements (<strong>requirement</strong>, <strong>pre-condition</strong>, <strong>result</strong> and <strong>classification</strong>) all typed as string. These new elements later go into the test case meta information section.</p>
+<p>After we added the new XML schema file to the classpath of our project we need to announce the schema to Spring. As you might know already a Citrus test case is nothing else but a simple Spring configuration file with customized XML schema support. If we add new elements to a test case Spring needs to know the XML schema for parsing the test case configuration file. See the <strong>spring.schemas</strong> file usually placed in the META-INF/spring.schemas in your project.</p>
+<p>The file content for our example will look like follows:</p>
+<pre><code class="lang-xml">http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd=com/consol/citrus/schemas/my-testcase-info.xsd
+</code></pre>
+<p>So now we are finally ready to use the new meta-info elements inside the test case:</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
+    <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span> 
+    <span class="hljs-attribute">xmlns:custom</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/samples/my-testcase-info&quot;</span>
+    <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+    <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/testcase 
+      http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd 
+      http://www.citrusframework.org/samples/my-testcase-info 
+      http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd&quot;</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;PwdChange_OK_1_Test&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">meta-info</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">author</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">author</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">creationdate</span>&gt;</span>2010-01-18<span class="hljs-tag">&lt;/<span class="hljs-title">creationdate</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">status</span>&gt;</span>FINAL<span class="hljs-tag">&lt;/<span class="hljs-title">status</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">last-updated-by</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">last-updated-by</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">last-updated-on</span>&gt;</span>2010-01-18T15:00:00<span class="hljs-tag">&lt;/<span class="hljs-title">last-updated-on</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">custom:requirement</span>&gt;</span>REQ10001<span class="hljs-tag">&lt;/<span class="hljs-title">custom:requirement</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">custom:pre-condition</span>&gt;</span>Existing user, sufficient rights<span class="hljs-tag">&lt;/<span class="hljs-title">custom:pre-condition</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">custom:result</span>&gt;</span>Password reset in database<span class="hljs-tag">&lt;/<span class="hljs-title">custom:result</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">custom:classification</span>&gt;</span>PasswordChange<span class="hljs-tag">&lt;/<span class="hljs-title">custom:classification</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">meta-info</span>&gt;</span>
+
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">spring:beans</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong>
+We use a separate namespace declaration with a custom namespace prefix &#x201C;custom&#x201D; in order to declare the new XML schema to our test case. Of course you can pick a namespace url and prefix that fits best for your project.As you see it is quite easy to add custom meta information to your Citrus test case. The customized elements may be precious for automatic reporting. XSL transformations for instance are able to read those meta information elements in order to generate automatic test reports and documentation.</p>
+<p>You can also declare our new XML schema in the Eclipse preferences section as user specific XML catalog entry. Then even the schema code completion in your Eclipse XML editor will be available for our customized meta-info elements.</p>
 
                     
                     </section>
@@ -1591,8 +1657,10 @@
         </div>
 
         
+        <a href="./test-suite.html" class="navigation navigation-prev " aria-label="Previous page: Test-suite"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./message-tracing.html" class="navigation navigation-next " aria-label="Next page: Message-tracing"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Configuration | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./endpoints.html" />
     
+    
+    <link rel="prev" href="./run.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="8"
+        data-chapter-title="Configuration"
+        data-filepath="configuration.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -195,7 +197,7 @@
             
         </li>
     
-        <li class="chapter " data-level="8" data-path="configuration.html">
+        <li class="chapter active" data-level="8" data-path="configuration.html">
             
                 
                     <a href="./configuration.html">
@@ -1578,9 +1580,96 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="configuration"><a name="configuration" class="plugin-anchor" href="#configuration"><span class="fa fa-link"></span></a>Configuration</h2>
+<p>You have several options in customizing the Citrus project configuration. Citrus uses default settings that can be overwritten to some extend. As a framework Citrus internally works with the Spring IoC container. So Citrus will start a Spring application context and register several components as Spring beans. You can customize the behavior of these beans and you can add custom settings by setting system properties.</p>
+<h3 id="citrus-spring-xml-application-context"><a name="citrus-spring-xml-application-context" class="plugin-anchor" href="#citrus-spring-xml-application-context"><span class="fa fa-link"></span></a>Citrus Spring XML application context</h3>
+<p>Citrus starts a Spring application context and adds some default Spring bean components. By default Citrus will load some internal Spring Java config classes defining those bean components. At some point you might add some custom beans to that basic application context. This is why Citrus will search for custom Spring application context files in your project. These are automatically loaded.</p>
+<p>By default Citrus looks for custom XML Spring application context files in this location: <strong>classpath*:citrus-context.xml</strong> . So you can add a file named <strong>citrus-context.xml</strong> to your project classpath and Citrus will load all Spring beans automatically.</p>
+<p>The location of this file can be customized by setting a System property <strong>citrus.spring.application.context</strong> . So you can customize the XML Spring application context file location. The System property is settable with Maven surefire and failsafe plugin for instance or via Java before the Citrus framework gets loaded.</p>
+<p>See the following sample XML configuration which is a normal Spring bean XML configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+       <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+       <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/config&quot;</span>
+       <span class="hljs-attribute">xmlns:context</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/context&quot;</span>
+       <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">citrus:schema-repository</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;schemaRepository&quot;</span> /&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>Now you can add some Spring beans and you can use the Citrus XML components such as <strong>schema-repository</strong> for adding custom beans and components to your Citrus project. Citrus provides several namespaces for custom Spring XML components. These are described in more detail in the respective chapters and sections in this reference guide.</p>
+<p><strong>Tip</strong>
+You can also use import statements in this Spring application context in order to load other configuration files. So you are free to modularize your configuration in several files that get loaded by Citrus.</p>
+<h3 id="citrus-spring-java-config"><a name="citrus-spring-java-config" class="plugin-anchor" href="#citrus-spring-java-config"><span class="fa fa-link"></span></a>Citrus Spring Java config</h3>
+<p>Using XML Spring application context configuration is the default behavior of Citrus. However some people might prefer pure Java code configuration. You can do that by adding a System property <strong>citrus.spring.java.config</strong> with a custom Spring Java config class as value.</p>
+<pre><code class="lang-java">System.setProperty(<span class="hljs-string">&quot;citrus.spring.java.config&quot;</span>, MyCustomConfig.class.getName())
+</code></pre>
+<p>Citrus will load the Spring bean configurations in <strong>MyCustomConfig.class</strong> as Java config then. See the following example for custom Spring Java configuration:</p>
+<pre><code class="lang-java"><span class="hljs-keyword">import</span> com.consol.citrus.TestCase;
+<span class="hljs-keyword">import</span> com.consol.citrus.report.*;
+<span class="hljs-keyword">import</span> org.slf4j.Logger;
+<span class="hljs-keyword">import</span> org.slf4j.LoggerFactory;
+<span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;
+<span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;
+
+<span class="hljs-annotation">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyCustomConfig</span> </span>{
+
+    <span class="hljs-annotation">@Bean</span>(name = <span class="hljs-string">&quot;customTestListener&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> TestListener <span class="hljs-title">customTestListener</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> PlusMinusTestReporter();
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PlusMinusTestReporter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTestListener</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">TestReporter</span> </span>{
+
+        <span class="hljs-comment">/** Logger */</span>
+        <span class="hljs-keyword">private</span> Logger log = LoggerFactory.getLogger(CustomBeanConfig.class);
+
+        <span class="hljs-keyword">private</span> StringBuilder testReport = <span class="hljs-keyword">new</span> StringBuilder();
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onTestSuccess</span><span class="hljs-params">(TestCase test)</span> </span>{
+            testReport.append(<span class="hljs-string">&quot;+&quot;</span>);
+        }
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onTestFailure</span><span class="hljs-params">(TestCase test, Throwable cause)</span> </span>{
+            testReport.append(<span class="hljs-string">&quot;-&quot;</span>);
+        }
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">generateTestResults</span><span class="hljs-params">()</span> </span>{
+            log.info(testReport.toString());
+        }
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">clearTestResults</span><span class="hljs-params">()</span> </span>{
+            testReport = <span class="hljs-keyword">new</span> StringBuilder();
+        }
+    }
+}
+</code></pre>
+<p>You can also mix XML and Java configuration so Citrus will load both configuration to the Spring bean application context on startup.</p>
+<h3 id="citrus-application-properties"><a name="citrus-application-properties" class="plugin-anchor" href="#citrus-application-properties"><span class="fa fa-link"></span></a>Citrus application properties</h3>
+<p>The Citrus framework references some basic System properties that can be overwritten. The properties are loaded from Java System and are also settable via property file. Just add a property file named <strong>citrus-application.properties</strong> to your project classpath. This property file contains customized settings such as:</p>
+<pre><code class="lang-xml">citrus.spring.application.context=classpath*:citrus-custom-context.xml
+citrus.spring.java.config=com.consol.citrus.config.MyCustomConfig
+citrus.file.encoding=UTF-8
+citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml
+</code></pre>
+<p>Citrus loads these application properties at startup. All properties are also settable with Java System properties. The location of the <strong>citrus-application.properties</strong> is customizable with the System property <strong>citrus.application.config</strong> .</p>
+<pre><code class="lang-java">System.setProperty(<span class="hljs-string">&quot;citrus.application.config&quot;</span>, <span class="hljs-string">&quot;custom/path/to/citrus-application.properties&quot;</span>)
+</code></pre>
+<p>At the moment you can use these properties for customization:</p>
+<ul>
+<li>citrus.spring.application.context: File location for Spring XML configurations</li>
+<li>citrus.spring.java.config: Class name for Spring Java config</li>
+<li>citrus.file.encoding: Default file encoding used in Citrus when reading and writing file content</li>
+<li>citrus.xml.file.name.pattern: File name patterns used for XML test file package scan</li>
+</ul>
 
                     
                     </section>
@@ -1591,8 +1680,10 @@
         </div>
 
         
+        <a href="./run.html" class="navigation navigation-prev " aria-label="Previous page: Run"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./endpoints.html" class="navigation navigation-next " aria-label="Next page: Endpoints"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

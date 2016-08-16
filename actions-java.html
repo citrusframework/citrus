@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Java | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-timeout.html" />
     
+    
+    <link rel="prev" href="./actions-sleep.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.5"
+        data-chapter-title="Java"
+        data-filepath="actions-java.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -442,7 +444,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+        <li class="chapter active" data-level="13.5" data-path="actions-java.html">
             
                 
                     <a href="./actions-java.html">
@@ -1578,9 +1580,51 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="java"><a name="java" class="plugin-anchor" href="#java"><span class="fa fa-link"></span></a>Java</h3>
+<p>The test framework is written in Java and runs inside a Java virtual machine. The functionality of calling other Java objects and methods in this same Java VM through Java Reflection is self-evident. With this action you can call any Java API available at runtime through the specified Java classpath.</p>
+<p>The action syntax looks like follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">java</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.test.util.InvocationDummy&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">constructor</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;&quot;</span>&gt;</span>Test Invocation<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">constructor</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">method</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;invoke&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;String[]&quot;</span>&gt;</span>1,2<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">method</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">java</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">java</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.test.util.InvocationDummy&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">constructor</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;&quot;</span>&gt;</span>Test Invocation<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">constructor</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">method</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;invoke&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;int&quot;</span>&gt;</span>4<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;String&quot;</span>&gt;</span>Test Invocation<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;boolean&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">method</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">java</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">java</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.test.util.InvocationDummy&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">method</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;main&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;String[]&quot;</span>&gt;</span>4,Test,true <span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">method</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">java</span>&gt;</span>
+</code></pre>
+<p>The Java class is specified by fully qualified class name. Constructor arguments are added using the <constructor> element with a list of <argument> child elements. The type of the argument is defined within the respective attribute &quot;type&quot;. By default the type would be String.</argument></constructor></p>
+<p>The invoked method on the Java object is simply referenced by its name. Method arguments do not bring anything new after knowing the constructor argument definition, do they?.</p>
+<p>Method arguments support data type conversion too, even string arrays (useful when calling CLIs). In the third action in the example code you can see that colon separated strings are automatically converted to string arrays.</p>
+<p>Simple data types are defined by their name (int, boolean, float etc.). Be sure that the invoked method and class constructor fit your arguments and vice versa, otherwise you will cause errors at runtime.</p>
+<p>Besides instantiating a fully new object instance for a class how about reusing a bean instance available in Spring bean container. Simply use the <strong>ref</strong> attribute and refer to an existing bean in Spring application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">java</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;invocationDummy&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">method</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;invoke&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;int&quot;</span>&gt;</span>4<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;String&quot;</span>&gt;</span>Test Invocation<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">argument</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;boolean&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">argument</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">method</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">java</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;invocationDummy&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.test.util.InvocationDummy&quot;</span>/&gt;</span>
+</code></pre>
+<p>The method is invoked on the Spring bean instance. This is very useful as you can inject other objects (e.g. via Autowiring) to the Spring bean instance before method invocation in test takes place. This enables you to execute any Java logic inside a test case.</p>
 
                     
                     </section>
@@ -1591,8 +1635,10 @@
         </div>
 
         
+        <a href="./actions-sleep.html" class="navigation navigation-prev " aria-label="Previous page: Sleep"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-timeout.html" class="navigation navigation-next " aria-label="Next page: Timeout"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Finally-section | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./jms.html" />
     
+    
+    <link rel="prev" href="./containers-custom.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="16"
+        data-chapter-title="Finally-section"
+        data-filepath="finally-section.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -918,7 +920,7 @@
             
         </li>
     
-        <li class="chapter " data-level="16" data-path="finally-section.html">
+        <li class="chapter active" data-level="16" data-path="finally-section.html">
             
                 
                     <a href="./finally-section.html">
@@ -1578,9 +1580,76 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="finally-section"><a name="finally-section" class="plugin-anchor" href="#finally-section"><span class="fa fa-link"></span></a>Finally section</h2>
+<p>This chapter deals with a special section inside the test case that is executed even in case errors did occur during the test. Lets say you have started a Jetty web server instance at the beginning of the test case and you need to shutdown the server when the test has finished its work. Or as a second example imagine that you have prepared some data inside the database at the beginning of your test and you want to make sure that the data is cleaned up at the end of the test case.</p>
+<p>In both situations we might run into some problems when the test failed. We face the problem that the whole test case will terminate immediately in case of errors. Cleanup tasks at the end of the test action chain may not be executed correctly.</p>
+<p>Dirty states inside the database or still running server instances then might cause problems for following test cases. To avoid this problems you should use the finally block of the test case. The <finally> section contains actions that are executed even in case the test fails. Using this strategy the database cleaning tasks mentioned before will find execution in every case (success or failure).</finally></p>
+<p>The following example shows how to use the finally section at the end of a test:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;finallyTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;orderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomNumber(5)&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;date&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:currentDate(&apos;dd.MM.yyyy&apos;)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">sql</span> <span class="hljs-attribute">datasource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">statement</span>&gt;</span>
+                INSERT INTO ORDERS VALUES (${orderId}, 1, 1, &apos;${date}&apos;)
+            <span class="hljs-tag">&lt;/<span class="hljs-title">statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">sql</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                ORDER creation time: ${date}
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">finally</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">sql</span> <span class="hljs-attribute">datasource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">statement</span>&gt;</span>
+              DELETE FROM ORDERS WHERE ORDER_ID=&apos;${orderId}&apos;
+            <span class="hljs-tag">&lt;/<span class="hljs-title">statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">finally</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>In the example the first action creates an entry in the database using an <strong><em>INSERT</em></strong> statement. To be sure that the entry in the database is deleted after the test, the finally section contains the respective <strong><em>DELETE</em></strong> statement that is always executed regardless the test case state (successful or failed).</p>
+<p>Of course you can also use the finally block in the Java test case DSL. Find following example to see how it works:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">finallySectionTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;orderId&quot;</span>, <span class="hljs-string">&quot;citrus:randomNumber(5)&quot;</span>);
+    variable(<span class="hljs-string">&quot;date&quot;</span>, <span class="hljs-string">&quot;citrus:currentDate(&apos;dd.MM.yyyy&apos;)&quot;</span>);
+
+    sql(dataSource)
+        .statement(<span class="hljs-string">&quot;INSERT INTO ORDERS VALUES (${orderId}, 1, 1, &apos;${date}&apos;)&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;ORDER creation time: citrus:currentDate(&apos;dd.MM.yyyy&apos;)&quot;</span>);
+
+    doFinally(
+        sql(dataSource).statement(<span class="hljs-string">&quot;DELETE FROM ORDERS WHERE ORDER_ID=&apos;${orderId}&apos;&quot;</span>)
+    );
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">finallySectionTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;orderId&quot;</span>, <span class="hljs-string">&quot;citrus:randomNumber(5)&quot;</span>);
+    variable(<span class="hljs-string">&quot;date&quot;</span>, <span class="hljs-string">&quot;citrus:currentDate(&apos;dd.MM.yyyy&apos;)&quot;</span>);
+
+    sql(action -&gt; action.dataSource(dataSource)
+            .statement(<span class="hljs-string">&quot;INSERT INTO ORDERS VALUES (${orderId}, 1, 1, &apos;${date}&apos;)&quot;</span>));
+
+    echo(<span class="hljs-string">&quot;ORDER creation time: citrus:currentDate(&apos;dd.MM.yyyy&apos;)&quot;</span>);
+
+    doFinally()
+        .actions(
+            sql(action -&gt; action.dataSource(dataSource).statement(<span class="hljs-string">&quot;DELETE FROM ORDERS WHERE ORDER_ID=&apos;${orderId}&apos;&quot;</span>))
+        );
+}
+</code></pre>
+<p><strong>Note</strong>
+Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The <strong>@CitrusTest</strong> annotated method is called at design time of the test case. The method builds the test case afterwards the test is executed at runtime. This means that a try-finally block within the <strong>@CitrusTest</strong> annotated method will never perform during the test run but at design time before the test gets executed. This is why we have to add the finally section as part of the test case with <strong>doFinally()</strong> .</p>
 
                     
                     </section>
@@ -1591,8 +1660,10 @@
         </div>
 
         
+        <a href="./containers-custom.html" class="navigation navigation-prev " aria-label="Previous page: Custom"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./jms.html" class="navigation navigation-next " aria-label="Next page: Jms"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

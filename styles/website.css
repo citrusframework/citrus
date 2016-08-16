@@ -1,0 +1,14 @@
+/*
+ * Customizations for website.
+ */
+
+.book .book-body .page-wrapper .page-inner section.normal img {
+    border: 1px solid #dddddd;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.book .book-body .page-wrapper .page-inner {
+    max-width: 1170px;
+}

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Templates | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./containers.html" />
     
+    
+    <link rel="prev" href="./actions-stop-timer.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="14"
+        data-chapter-title="Templates"
+        data-filepath="templates.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -762,7 +764,7 @@
             
         </li>
     
-        <li class="chapter " data-level="14" data-path="templates.html">
+        <li class="chapter active" data-level="14" data-path="templates.html">
             
                 
                     <a href="./templates.html">
@@ -1578,9 +1580,116 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="templates"><a name="templates" class="plugin-anchor" href="#templates"><span class="fa fa-link"></span></a>Templates</h2>
+<p>Templates group action sequences to a logical unit. You can think of templates as reusable components that are used in several tests. The maintenance is much more effective because the templates are referenced several times.</p>
+<p>The template always has a unique name. Inside a test case we call the template by this unique name. Have a look at a first example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;doCreateVariables&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">create-variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;var&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;123456789&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">create-variables</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;doTraceVariables&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;doTraceVariables&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Current time is: ${time}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">trace-variables</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span>
+</code></pre>
+<p>The code example above describes two template definitions. Templates hold a sequence of test actions or call other templates themselves as seen in the example above.</p>
+<p><strong>Note</strong>
+The <call-template> action calls other templates by their name. The called template not necessarily has to be located in the same test case XML file. The template might be defined in a separate XML file other than the test case itself:</call-template></p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;templateTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myTime&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:currentDate()&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;doCreateVariables&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;doTraceVariables&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;time&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${myTime}&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">call-template</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">templateTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;myTime&quot;</span>, <span class="hljs-string">&quot;citrus:currentDate()&quot;</span>);
+
+    applyTemplate(<span class="hljs-string">&quot;doCreateVariables&quot;</span>);
+
+    applyTemplate(<span class="hljs-string">&quot;doTraceVariables&quot;</span>)
+        .parameter(<span class="hljs-string">&quot;time&quot;</span>, <span class="hljs-string">&quot;${myTime}&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">templateTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;myTime&quot;</span>, <span class="hljs-string">&quot;citrus:currentDate()&quot;</span>);
+
+    applyTemplate(template -&gt; template.name(<span class="hljs-string">&quot;doCreateVariables&quot;</span>));
+
+    applyTemplate(template -&gt; template.name(<span class="hljs-string">&quot;doTraceVariables&quot;</span>)
+                    .parameter(<span class="hljs-string">&quot;time&quot;</span>, <span class="hljs-string">&quot;${myTime}&quot;</span>));
+}
+</code></pre>
+<p>There is an open question when dealing with templates that are defined somewhere else outside the test case. How to handle variables? A templates may use different variable names then the test and vice versa. No doubt the template will fail as soon as special variables with respective values are not present. Unknown variables cause the template and the whole test to fail with errors.</p>
+<p>So a first approach would be to harmonize variable usage across templates and test cases, so that templates and test cases do use the same variable naming. But this approach might lead to high calibration effort. Therefore templates support parameters to solve this problem. When a template is called the calling actor is able to set some parameters. Let us discuss an example for this issue.</p>
+<p>The template &quot;doDateCoversion&quot; in the next sample uses the variable ${date}. The calling test case can set this variable as a parameter without actually declaring the variable in the test itself:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;doDateCoversion&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;date&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${sampleDate}&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">call-template</span>&gt;</span>
+</code></pre>
+<p>The variable <strong>sampleDate</strong> is already present in the test case and gets translated into the <strong>date</strong> parameter. Following from that the template works fine although test and template do work on different variable namings.</p>
+<p>With template parameters you are able to solve the calibration effort when working with templates and variables. It is always a good idea to check the used variables/parameters inside a template when calling it. There might be a variable that is not declared yet inside your test. So you need to define this value as a parameter.</p>
+<p>Template parameters may contain more complex values like XML fragments. The call-template action offers following CDATA variation for defining complex parameter values:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;printXMLPayload&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;payload&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>
+        <span class="hljs-cdata">&lt;![CDATA[
+          &lt;HelloRequest xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+            &lt;Text&gt;Hello South ${var}&lt;/Text&gt;
+          &lt;/HelloRequest&gt;
+        ]]&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">parameter</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">call-template</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+When a template works on variable values and parameters changes to these variables will automatically affect the variables in the whole test. So if you change a variable&apos;s value inside a template and the variable is defined inside the test case the changes will affect the variable in a global context. We have to be careful with this when executing a template several times in a test, especially in combination with parallel containers (see<a href="containers-parallel">containers-parallel</a>).</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">parallel</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;print&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;param1&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;1&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;param2&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Hello Europe&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">call-template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;print&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;param1&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;2&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;param2&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Hello Asia&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">call-template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">call-template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;print&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;param1&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;3&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parameter</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;param2&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Hello Africa&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">call-template</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">parallel</span>&gt;</span>
+</code></pre>
+<p>In the listing above a template <strong>print</strong> is called several times in a parallel container. The parameter values will be handled in a global context, so it is quite likely to happen that the template instances influence each other during execution. We might get such print messages:</p>
+<pre><code class="lang-xml">2. Hello Europe
+2. Hello Africa
+3. Hello Africa
+</code></pre>
+<p>Index parameters do not fit and the message <strong>&apos;Hello Asia&apos;</strong> is completely gone. This is because templates overwrite parameters to each other as they are executed in parallel at the same time. To avoid this behavior we need to tell the template that it should handle parameters as well as variables in a local context. This will enforce that each template instance is working on a dedicated local context. See the <strong>global-context</strong> attribute that is set to <strong>false</strong> in this example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;print&quot;</span> <span class="hljs-attribute">global-context</span>=<span class="hljs-value">&quot;false&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>${param1}.${param2}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span>
+</code></pre>
+<p>After that template instances won&apos;t influence each other anymore. But notice that variable changes inside the template then do not affect the test case neither.</p>
 
                     
                     </section>
@@ -1591,8 +1700,10 @@
         </div>
 
         
+        <a href="./actions-stop-timer.html" class="navigation navigation-prev " aria-label="Previous page: Stop-timer"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./containers.html" class="navigation navigation-next " aria-label="Next page: Containers"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

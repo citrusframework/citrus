@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Groovy | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-fail.html" />
     
+    
+    <link rel="prev" href="./actions-transform.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.12"
+        data-chapter-title="Groovy"
+        data-filepath="actions-groovy.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -547,7 +549,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+        <li class="chapter active" data-level="13.12" data-path="actions-groovy.html">
             
                 
                     <a href="./actions-groovy.html">
@@ -1578,9 +1580,106 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="groovy-script-execution"><a name="groovy-script-execution" class="plugin-anchor" href="#groovy-script-execution"><span class="fa fa-link"></span></a>Groovy script execution</h3>
+<p>Groovy is an agile dynamic language for the Java Platform. Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.</p>
+<p>The Citrus Groovy support might be the entrance for you to write customized test actions. You can easily execute Groovy code inside a test case, just like a normal test action. The whole test context with all variables is available to the Groovy action. This means someone can change variable values or create new variables very easily.</p>
+<p>Let&apos;s have a look at some examples in order to understand the possible Groovy code interactions in Citrus:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;groovyTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;time&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:currentDate()&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groovy</span>&gt;</span>
+        println &apos;Hello Citrus&apos;
+    <span class="hljs-tag">&lt;/<span class="hljs-title">groovy</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groovy</span>&gt;</span>
+        println &apos;The variable is: ${time}&apos;
+    <span class="hljs-tag">&lt;/<span class="hljs-title">groovy</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groovy</span> <span class="hljs-attribute">resource</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/script/example.groovy&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">groovyTest</span><span class="hljs-params">()</span> </span>{
+    groovy(<span class="hljs-string">&quot;println &apos;Hello Citrus&apos;&quot;</span>);
+    groovy(<span class="hljs-string">&quot;println &apos;The variable is: ${time}&apos;&quot;</span>);
+
+    groovy(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/script/example.groovy&quot;</span>));
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">groovyTest</span><span class="hljs-params">()</span> </span>{
+    groovy(action -&gt; action.script(<span class="hljs-string">&quot;println &apos;Hello Citrus&apos;&quot;</span>));
+    groovy(action -&gt; action.script(<span class="hljs-string">&quot;println &apos;The variable is: ${time}&apos;&quot;</span>));
+
+    groovy(action -&gt; action.script(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/script/example.groovy&quot;</span>)));
+}
+</code></pre>
+<p>As you can see it is possible to write Groovy code directly into the test case. Citrus will interpret and execute the Groovy code at runtime. As usual nested variable expressions are replaced with respective values. In general this is done in advance before the Groovy code is interpreted. For more complex Groovy code sections which grow in lines of code you can also reference external file resources.</p>
+<p>After this basic Groovy code usage inside a test case we might be interested accessing the whole TestContext. The TestContext Java object holds all test variables and function definitions for the test case and can be referenced in Groovy code via simple naming convention. Just access the object reference &apos;context&apos; and you are able to manipulate the TestContext (e.g. setting a new variable which is directly ready for use in following test actions).</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;groovyTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groovy</span>&gt;</span>
+      context.setVariable(&quot;greetingText&quot;,&quot;Hello Citrus&quot;)
+      println context.getVariable(&quot;greetingText&quot;)
+    <span class="hljs-tag">&lt;/<span class="hljs-title">groovy</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>New variable: ${greetingText}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong>
+The implicit TestContext access that was shown in the previous sample works with a default Groovy script template provided by Citrus. The Groovy code you write in the test case is automatically surrounded with a Groovy script which takes care of handling the TestContext. The default template looks like follows:</p>
+<pre><code class="lang-java"><span class="hljs-keyword">import</span> com.consol.citrus.*
+<span class="hljs-keyword">import</span> com.consol.citrus.variable.*
+<span class="hljs-keyword">import</span> com.consol.citrus.context.TestContext
+<span class="hljs-keyword">import</span> com.consol.citrus.script.GroovyAction.ScriptExecutor
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GScript</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ScriptExecutor</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">execute</span><span class="hljs-params">(TestContext context)</span> </span>{
+        <span class="hljs-annotation">@SCRIPTBODY</span>@
+    }
+}
+</code></pre>
+<p>Your code is placed in substitution to the <strong><em>@SCRIPTBODY@</em></strong> placeholder. Now you might understand how Citrus handles the context automatically. You can also write your own script templates making more advanced usage of other Java APIs and Groovy code. Just add a script template path to the test action like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">groovy</span> <span class="hljs-attribute">script-template</span>=<span class="hljs-value">&quot;classpath:my-custom-template.groovy&quot;</span>&gt;</span>
+  [...]
+<span class="hljs-tag">&lt;/<span class="hljs-title">groovy</span>&gt;</span>
+</code></pre>
+<p>On the other hand you can disable the automatic script template wrapping in your action at all:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">groovy</span> <span class="hljs-attribute">use-script-template</span>=<span class="hljs-value">&quot;false&quot;</span>&gt;</span>
+  println &apos;Just use some Groovy code&apos;
+<span class="hljs-tag">&lt;/<span class="hljs-title">groovy</span>&gt;</span>
+</code></pre>
+<p>The next example deals with advanced Groovy code and writing whole classes. We write a new Groovy class which implements the ScriptExecutor interface offered by Citrus. This interface defines a special execute method and provides access to the whole TestContext for advanced test variables access.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;groovyTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;time&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:currentDate()&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groovy</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        import com.consol.citrus.*
+        import com.consol.citrus.variable.*
+        import com.consol.citrus.context.TestContext
+        import com.consol.citrus.script.GroovyAction.ScriptExecutor
+
+        public class GScript implements ScriptExecutor {
+            public void execute(TestContext context) {
+                println context.getVariable(&quot;time&quot;)
+            }
+        }
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">groovy</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>Implementing the ScriptExecutor interface in a custom Groovy class is applicable for very special test context manipulations as you are able to import and use other Java API classes in this code.</p>
 
                     
                     </section>
@@ -1591,8 +1690,10 @@
         </div>
 
         
+        <a href="./actions-transform.html" class="navigation navigation-prev " aria-label="Previous page: Transform"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-fail.html" class="navigation navigation-next " aria-label="Next page: Fail"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

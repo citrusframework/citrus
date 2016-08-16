@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Iterate | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./containers-repeat.html" />
     
+    
+    <link rel="prev" href="./containers-parallel.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="15.4"
+        data-chapter-title="Iterate"
+        data-filepath="containers-iterate.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -838,7 +840,7 @@
             
         </li>
     
-        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+        <li class="chapter active" data-level="15.4" data-path="containers-iterate.html">
             
                 
                     <a href="./containers-iterate.html">
@@ -1578,9 +1580,73 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="iterate"><a name="iterate" class="plugin-anchor" href="#iterate"><span class="fa fa-link"></span></a>Iterate</h3>
+<p>Iterations are very powerful elements when describing complex logic. The container executes the embedded actions several times. The container will continue with looping as long as the defined breaking condition string evaluates to <strong><em>true</em></strong> . In case the condition evaluates to <strong><em>false</em></strong> the iteration will break an finish execution.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;iterateTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">iterate</span> <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;i lt 5&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>index is: ${i}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">iterate</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">iterateTest</span><span class="hljs-params">()</span> </span>{
+    iterate().condition(<span class="hljs-string">&quot;i lt 5&quot;</span>).index(<span class="hljs-string">&quot;i&quot;</span>))
+        .actions(
+            echo(<span class="hljs-string">&quot;index is: ${i}&quot;</span>)
+        );
+}
+</code></pre>
+<p>The attribute &quot;index&quot; automatically defines a new variable that holds the actual loop index starting at &quot;1&quot;. This index variable is available as a normal variable inside the iterate container. Therefore it is possible to print out the actual loop index in the echo action as shown in the above example.</p>
+<p>The condition string is mandatory and describes the actual end of the loop. In iterate containers the loop will break in case the condition evaluates to <strong><em>false</em></strong> .</p>
+<p>The condition string can be any Boolean expression and supports several operators:</p>
+<ul>
+<li><p>lt (lower than)</p>
+</li>
+<li><p>lt= (lower than equals)</p>
+</li>
+<li><p>gt (greater than)</p>
+</li>
+<li><p>gt= (greater than equals)</p>
+</li>
+<li><p>= (equals)</p>
+</li>
+<li><p>and (logical combining of two Boolean values)</p>
+</li>
+<li><p>or (logical combining of two Boolean values)</p>
+</li>
+<li><p>() (brackets)</p>
+</li>
+</ul>
+<p><strong>Important</strong>
+It is very important to notice that the condition is evaluated before the very first iteration takes place. The loop therefore can be executed 0-n times according to the condition value.</p>
+<p>Now the boolean expression evaluation as described above is limited to very basic operation such as <strong>lower than</strong>, <strong>greater than</strong> and so on. We also can use Hamcrest matchers in conditions that are way more powerful than that.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;iterateTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">iterate</span> <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;@assertThat(lessThan(5))@&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>index is: ${i}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">iterate</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">iterateTest</span><span class="hljs-params">()</span> </span>{
+    iterate().condition(lessThan(<span class="hljs-number">5</span>)).index(<span class="hljs-string">&quot;i&quot;</span>))
+        .actions(
+            echo(<span class="hljs-string">&quot;index is: ${i}&quot;</span>)
+        );
+}
+</code></pre>
+<p>In the example above we use Hamcrest matchers as condition. You can combine Hamcrest matchers and create very powerful condition evaluations here.</p>
 
                     
                     </section>
@@ -1591,8 +1657,10 @@
         </div>
 
         
+        <a href="./containers-parallel.html" class="navigation navigation-prev " aria-label="Previous page: Parallel"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./containers-repeat.html" class="navigation navigation-next " aria-label="Next page: Repeat"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

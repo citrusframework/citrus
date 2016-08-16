@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Create-variables | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-trace.html" />
     
+    
+    <link rel="prev" href="./actions-stop-time.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.9"
+        data-chapter-title="Create-variables"
+        data-filepath="actions-create-variables.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -502,7 +504,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+        <li class="chapter active" data-level="13.9" data-path="actions-create-variables.html">
             
                 
                     <a href="./actions-create-variables.html">
@@ -1578,9 +1580,54 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="create-variables"><a name="create-variables" class="plugin-anchor" href="#create-variables"><span class="fa fa-link"></span></a>Create variables</h3>
+<p>As you know variables usually are defined at the beginning of the test case (<a href="testcase-variables">testcase-variables</a>). It might also be helpful to reset existing variables as well as to define new variables during the test. The action <create-variables> is able to declare new variables or overwrite existing ones.</create-variables></p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;createVariablesTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myVariable&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;12345&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;id&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;54321&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Current variable value: ${myVariable}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">create-variables</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myVariable&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${id}&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;newVariable&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&apos;this is a test&apos;&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">create-variables</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Current variable value: ${myVariable} <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+              New variable &apos;newVariable&apos; has the value: ${newVariable}
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">createVariableTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;myVariable&quot;</span>, <span class="hljs-string">&quot;12345&quot;</span>);
+    variable(<span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-string">&quot;54321&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;Current variable value: ${myVariable}&quot;</span>);
+
+    createVariable(<span class="hljs-string">&quot;myVariable&quot;</span>, <span class="hljs-string">&quot;${id}&quot;</span>);
+    createVariable(<span class="hljs-string">&quot;newVariable&quot;</span>, <span class="hljs-string">&quot;this is a test&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;Current variable value: ${myVariable}&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;New variable &apos;newVariable&apos; has the value: ${newVariable}&quot;</span>);
+}
+</code></pre>
+<p><strong>Note</strong>
+Please note the difference between the <strong>variable()</strong> method and the <strong>createVariable()</strong> method. The first initializes the test case with the test variables. So all variables defined with this method are valid from the very beginning of the test. In contrary to that the <strong>createVariable()</strong> is executed within the test action chain. The newly created variables are then valid for the rest of the test. Trailing actions can reference the variables as usual with the variable expression.</p>
 
                     
                     </section>
@@ -1591,8 +1638,10 @@
         </div>
 
         
+        <a href="./actions-stop-time.html" class="navigation navigation-prev " aria-label="Previous page: Stop-time"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-trace.html" class="navigation navigation-next " aria-label="Next page: Trace"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

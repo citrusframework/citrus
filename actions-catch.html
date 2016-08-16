@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Catch | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-antrun.html" />
     
+    
+    <link rel="prev" href="./actions-assert.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.21"
+        data-chapter-title="Catch"
+        data-filepath="actions-catch.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -682,7 +684,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+        <li class="chapter active" data-level="13.21" data-path="actions-catch.html">
             
                 
                     <a href="./actions-catch.html">
@@ -1578,9 +1580,32 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="catch-exceptions"><a name="catch-exceptions" class="plugin-anchor" href="#catch-exceptions"><span class="fa fa-link"></span></a>Catch exceptions</h3>
+<p>In the previous chapter we have seen how to expect failures in Citrus with assert action. Now the assert action is designed for single actions to be monitored and for failures to be expected in any case. The <strong>&apos;catch&apos;</strong> action in contrary can hold several nested test actions and exception failure is optional.</p>
+<p>The nested actions are error proof for the chosen exception type. This means possible exceptions are caught and ignored - the test case will not fail for this exception type. But only for this particular exception type! Other exception types that occur during execution do cause the test to fail as usual.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;catchExceptionTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">catch</span> <span class="hljs-attribute">exception</span>=<span class="hljs-value">&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Current date is: ${date}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">catch</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">catchTest</span><span class="hljs-params">()</span> </span>{
+    catchException().exception(CitrusRuntimeException.class)
+                    .when(echo(<span class="hljs-string">&quot;Current date is: ${date}&quot;</span>));
+}
+</code></pre>
+<p><strong>Important</strong>
+Note that there is no validation available in a catch block. So catching exceptions is just to make a test more stable towards errors that can occur. The caught exception does not cause any failure in the test. The test case may continue with execution as if there was not failure. Also notice that the catch action is also happy when no exception at all is raised. In contrary to that the assert action requires the exception and an assert action is failing in positive processing.</p>
+<p>Catching exceptions like this may only fit to very error prone action blocks where failures do not harm the test case success. Otherwise a failure in a test action should always reflect to the whole test case to fail with errors.</p>
+<p><strong>Note</strong>
+Java developers might ask why not use try-catch Java block instead? The answer is simple yet very important to understand. The test method is called by the Java DSL test case builder for building the Citrus test. This can be referred to as the design time of the test. After the building test method was processed the test gets executed, which can be called the runtime of the test. This means that a try-catch block within the design time method will never perform during the test run. The only reliable way to add the catch capability to the test as part of the test case runtime is to use the Citrus test action which gets executed during test runtime.</p>
 
                     
                     </section>
@@ -1591,8 +1616,10 @@
         </div>
 
         
+        <a href="./actions-assert.html" class="navigation navigation-prev " aria-label="Previous page: Assert"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-antrun.html" class="navigation navigation-next " aria-label="Next page: Antrun"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

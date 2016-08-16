@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Purge-channels | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-purge-endpoints.html" />
     
+    
+    <link rel="prev" href="./actions-purge-jms.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.18"
+        data-chapter-title="Purge-channels"
+        data-filepath="actions-purge-channels.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -637,7 +639,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+        <li class="chapter active" data-level="13.18" data-path="actions-purge-channels.html">
             
                 
                     <a href="./actions-purge-channels.html">
@@ -1578,9 +1580,164 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="purging-message-channels"><a name="purging-message-channels" class="plugin-anchor" href="#purging-message-channels"><span class="fa fa-link"></span></a>Purging message channels</h3>
+<p>Message channels define central messaging destinations in Citrus. These are namely in memory message queues holding messages for test cases. These messages may become obsolete during a test run, especially when test cases fail and stop in their message consumption. Purging these message channel destinations is essential in these scenarios in order to not influence upcoming test cases. Each test case should only receive those messages that actually refer to the test model. Therefore it is a good idea to purge all message channel destinations between the test cases. Obsolete messages that get stuck in a message channel destination for some reason are then removed so that upcoming test case are not broken.</p>
+<p>Following action definition purges all messages from a list of message channels:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;purgeChannelTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">purge-channel</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;someChannelName&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;anotherChannelName&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">purge-channel</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">purge-channel</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;someChannel&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;anotherChannel&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">purge-channel</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>As you can see the test action supports channel names as well as channel references to Spring bean instances. When using channel references you refer to the Spring bean id or name in your application context.</p>
+<p>The Java DSL works quite similar as you can read from next examples:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channelResolver&quot;</span>)
+<span class="hljs-keyword">private</span> DestinationResolver&lt;MessageChannel&gt; channelResolver;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeChannels()
+        .channelResolver(channelResolver)
+        .channelNames(<span class="hljs-string">&quot;ch1&quot;</span>, <span class="hljs-string">&quot;ch2&quot;</span>, <span class="hljs-string">&quot;ch3&quot;</span>)
+        .channel(<span class="hljs-string">&quot;ch4&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channelResolver&quot;</span>)
+<span class="hljs-keyword">private</span> DestinationResolver&lt;MessageChannel&gt; channelResolver;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeChannels(action -&gt;
+        action.channelResolver(channelResolver)
+                .channelNames(<span class="hljs-string">&quot;ch1&quot;</span>, <span class="hljs-string">&quot;ch2&quot;</span>, <span class="hljs-string">&quot;ch3&quot;</span>)
+                .channel(<span class="hljs-string">&quot;ch4&quot;</span>));
+}
+</code></pre>
+<p>The channel resolver reference is optional. By default Citrus will automatically use a Spring application context channel resolver so you just have to use the respective Spring bean names that are configured in the Spring application context. However setting a custom channel resolver may be adequate for you in some special cases.</p>
+<p>While speaking of Spring application context bean references the next example uses such bean references for channels to purge.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channel1&quot;</span>)
+<span class="hljs-keyword">private</span> MessageChannel channel1;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channel2&quot;</span>)
+<span class="hljs-keyword">private</span> MessageChannel channel2;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channel3&quot;</span>)
+<span class="hljs-keyword">private</span> MessageChannel channel3;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeChannels()
+        .channels(channel1, channel2)
+        .channel(channel3);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channel1&quot;</span>)
+<span class="hljs-keyword">private</span> MessageChannel channel1;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channel2&quot;</span>)
+<span class="hljs-keyword">private</span> MessageChannel channel2;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;channel3&quot;</span>)
+<span class="hljs-keyword">private</span> MessageChannel channel3;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeChannels(action -&gt;
+        action.channels(channel1, channel2)
+                .channel(channel3));
+}
+</code></pre>
+<p>Message selectors enable you to selectively remove messages from the destination. All messages that pass the message selection logic get deleted the other messages will remain unchanged inside the channel destination. The message selector is a Spring bean that implements a special message selector interface. A possible implementation could be a selector deleting all messages that are older than five seconds:</p>
+<pre><code class="lang-java"><span class="hljs-keyword">import</span> org.springframework.messaging.Message;
+<span class="hljs-keyword">import</span> org.springframework.integration.core.MessageSelector;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TimeBasedMessageSelector</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MessageSelector</span> </span>{
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">accept</span><span class="hljs-params">(Message&lt;?&gt; message)</span> </span>{
+        <span class="hljs-keyword">if</span> (System.currentTimeMillis() - message.getHeaders().getTimestamp() &gt; <span class="hljs-number">5000</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        }
+    }
+
+}
+</code></pre>
+<p><strong>Note</strong>
+The message selector returns <strong>false</strong> for those messages that should be deleted from the channel!</p>
+<p>You simply define the message selector as a new Spring bean in the Citrus application context and reference it in your test action property.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;specialMessageSelector&quot;</span> 
+    <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.special.TimeBasedMessageSelector&quot;</span>/&gt;</span>
+</code></pre>
+<p>Now let us have a look at how you reference the selector in your test case:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">purge-channels</span> <span class="hljs-attribute">message-selector</span>=<span class="hljs-value">&quot;specialMessageSelector&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;someChannelName&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;anotherChannelName&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">purge-channels</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java">
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;specialMessageSelector&quot;</span>)
+<span class="hljs-keyword">private</span> MessageSelector specialMessageSelector;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeChannels()
+        .channelNames(<span class="hljs-string">&quot;ch1&quot;</span>, <span class="hljs-string">&quot;ch2&quot;</span>, <span class="hljs-string">&quot;ch3&quot;</span>)
+        .selector(specialMessageSelector);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java">
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;specialMessageSelector&quot;</span>)
+<span class="hljs-keyword">private</span> MessageSelector specialMessageSelector;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeChannels(action -&gt;
+        action.channelNames(<span class="hljs-string">&quot;ch1&quot;</span>, <span class="hljs-string">&quot;ch2&quot;</span>, <span class="hljs-string">&quot;ch3&quot;</span>)
+                .selector(specialMessageSelector));
+}
+</code></pre>
+<p>In the examples above we use a message selector implementation that gets injected via Spring IoC container.</p>
+<p>Purging channels in each test case every time is quite exhausting because every test case needs to define a purging action at the very beginning of the test. A more straight forward approach would be to introduce some purging action which is automatically executed before each test. Fortunately the Citrus test suite offers a very simple way to do this. It is described in<a href="testsuite-before-test">testsuite-before-test</a>.</p>
+<p>When using the special action sequence before test cases we are able to purge channel destinations every time a test case executes. See the upcoming example to find out how the action is defined in the Spring configuration application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;purgeBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">purge-channel</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;fooChannel&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">channel</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;barChannel&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">purge-channel</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>Just use this before-test bean in the Spring bean application context and the purge channel action is active. Obsolete messages that are waiting on the message channels for consumption are purged before the next test in line is executed.</p>
+<p><strong>Tip</strong>
+Purging message channels becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention <strong>{serverName}.inbound</strong> where <strong>{serverName}</strong> is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.</p>
 
                     
                     </section>
@@ -1591,8 +1748,10 @@
         </div>
 
         
+        <a href="./actions-purge-jms.html" class="navigation navigation-prev " aria-label="Previous page: Purge-jms"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-purge-endpoints.html" class="navigation navigation-next " aria-label="Next page: Purge-endpoints"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Purge-endpoints | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-assert.html" />
     
+    
+    <link rel="prev" href="./actions-purge-channels.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.19"
+        data-chapter-title="Purge-endpoints"
+        data-filepath="actions-purge-endpoints.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -652,7 +654,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+        <li class="chapter active" data-level="13.19" data-path="actions-purge-endpoints.html">
             
                 
                     <a href="./actions-purge-endpoints.html">
@@ -1578,9 +1580,128 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="purging-endpoints"><a name="purging-endpoints" class="plugin-anchor" href="#purging-endpoints"><span class="fa fa-link"></span></a>Purging endpoints</h3>
+<p>Citrus works with message endpoints when sending and receiving messages. In general endpoints can also queue messages. This is especially the case when using JMS message endpoints or any server endpoint component in Citrus. These are in memory message queues holding messages for test cases. These messages may become obsolete during a test run, especially when a test case that would consume the messages fails. Deleting all messages from a message endpoint is therefore a useful task and is essential in such scenarios so that upcoming test cases are not influenced. Each test case should only receive those messages that actually refer to the test model. Therefore it is a good idea to purge all message endpoint destinations between the test cases. Obsolete messages that get stuck in a message endpoint destination for some reason are then removed so that upcoming test case are not broken.</p>
+<p>Following action definition purges all messages from a list of message endpoints:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;purgeEndpointTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">purge-endpoint</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;someEndpointName&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;anotherEndpointName&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">purge-endpoint</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">purge-endpoint</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;someEndpoint&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;anotherEndpoint&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">purge-endpoint</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>As you can see the test action supports endpoint names as well as endpoint references to Spring bean instances. When using endpoint references you refer to the Spring bean name in your application context.</p>
+<p>The Java DSL works quite similar - have a look:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeEndpoints()
+        .endpointNames(<span class="hljs-string">&quot;endpoint1&quot;</span>, <span class="hljs-string">&quot;endpoint2&quot;</span>, <span class="hljs-string">&quot;endpoint3&quot;</span>)
+        .endpoint(<span class="hljs-string">&quot;endpoint4&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeEndpoints(action -&gt;
+        action.endpointNames(<span class="hljs-string">&quot;endpoint1&quot;</span>, <span class="hljs-string">&quot;endpoint2&quot;</span>, <span class="hljs-string">&quot;endpoint3&quot;</span>)
+                .endpoint(<span class="hljs-string">&quot;endpoint4&quot;</span>));
+}
+</code></pre>
+<p>When using the Java DSL we can inject endpoint objects with Spring bean container IoC. The next example uses such bean references for endpoints in a purge action.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;endpoint1&quot;</span>)
+<span class="hljs-keyword">private</span> Endpoint endpoint1;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;endpoint2&quot;</span>)
+<span class="hljs-keyword">private</span> Endpoint endpoint2;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;endpoint3&quot;</span>)
+<span class="hljs-keyword">private</span> Endpoint endpoint3;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeEndpoints()
+        .endpoints(endpoint1, endpoint2)
+        .endpoint(endpoint3);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;endpoint1&quot;</span>)
+<span class="hljs-keyword">private</span> Endpoint endpoint1;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;endpoint2&quot;</span>)
+<span class="hljs-keyword">private</span> Endpoint endpoint2;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;endpoint3&quot;</span>)
+<span class="hljs-keyword">private</span> Endpoint endpoint3;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeEndpoints(action -&gt;
+        action.endpoints(endpoint1, endpoint2)
+                .endpoint(endpoint3));
+}
+</code></pre>
+<p>Message selectors enable you to selectively remove messages from an endpoint. All messages that meet the message selector condition get deleted and the other messages remain inside the endpoint destination. The message selector is either a normal String name-value representation or a map of key value pairs:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">purge-endpoints</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">selector</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>operation = &apos;sayHello&apos;<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">selector</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;someEndpointName&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;anotherEndpointName&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">purge-endpoints</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java">
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeEndpoints()
+        .endpointNames(<span class="hljs-string">&quot;endpoint1&quot;</span>, <span class="hljs-string">&quot;endpoint2&quot;</span>, <span class="hljs-string">&quot;endpoint3&quot;</span>)
+        .selector(<span class="hljs-string">&quot;operation = &apos;sayHello&apos;&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java">
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeEndpoints(action -&gt;
+        action.endpointNames(<span class="hljs-string">&quot;endpoint1&quot;</span>, <span class="hljs-string">&quot;endpoint2&quot;</span>, <span class="hljs-string">&quot;endpoint3&quot;</span>)
+                .selector(<span class="hljs-string">&quot;operation = &apos;sayHello&apos;&quot;</span>));
+}
+</code></pre>
+<p>In the examples above we use a String to represent the message selector expression. In general the message selector operates on the message header. So following on from that we remove all messages selectively that have a message header <strong>operation</strong> with its value <strong>sayHello</strong> .</p>
+<p>Purging endpoints in each test case every time is quite exhausting because every test case needs to define a purging action at the very beginning of the test. A more straight forward approach would be to introduce some purging action which is automatically executed before each test. Fortunately the Citrus test suite offers a very simple way to do this. It is described in<a href="testsuite-before-test">testsuite-before-test</a>.</p>
+<p>When using the special action sequence before test cases we are able to purge endpoint destinations every time a test case executes. See the upcoming example to find out how the action is defined in the Spring configuration application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;purgeBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">purge-endpoint</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;fooEndpoint&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">endpoint</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;barEndpoint&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">purge-endpoint</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>Just use this before-test bean in the Spring bean application context and the purge endpoint action is active. Obsolete messages that are waiting on the message endpoints for consumption are purged before the next test in line is executed.</p>
+<p><strong>Tip</strong>
+Purging message endpoints becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message endpoint where incoming messages are stored to internally. Citrus will automatically use this incoming message endpoint as target for the purge action so you can just use the server instance as you know it from your configuration in any purge action.</p>
 
                     
                     </section>
@@ -1591,8 +1712,10 @@
         </div>
 
         
+        <a href="./actions-purge-channels.html" class="navigation navigation-prev " aria-label="Previous page: Purge-channels"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-assert.html" class="navigation navigation-next " aria-label="Next page: Assert"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

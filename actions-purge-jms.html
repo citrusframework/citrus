@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Purge-jms | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-purge-channels.html" />
     
+    
+    <link rel="prev" href="./actions-wait.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.17"
+        data-chapter-title="Purge-jms"
+        data-filepath="actions-purge-jms.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -622,7 +624,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+        <li class="chapter active" data-level="13.17" data-path="actions-purge-jms.html">
             
                 
                     <a href="./actions-purge-jms.html">
@@ -1578,9 +1580,151 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="purging-jms-destinations"><a name="purging-jms-destinations" class="plugin-anchor" href="#purging-jms-destinations"><span class="fa fa-link"></span></a>Purging JMS destinations</h3>
+<p>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending messages to the same JMS destinations. A test case should only receive those messages that actually belong to it. Therefore it is a good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some reason are then removed so that the following test case is not offended.</p>
+<p><strong>Note</strong>
+Citrus provides special support for JMS related features. We have to activate those JMS features in our test case by adding a special &quot;jms&quot; namespace and schema definition location to the test case XML.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
+        <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+        <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+        <span class="hljs-attribute">xmlns:jms</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/jms/testcase&quot;</span>
+        <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/testcase
+        http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+        http://www.citrusframework.org/schema/jms/testcase
+        http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd&quot;</span>&gt;</span>
+
+    [...]
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>Now we are ready to use the JMS features in our test case in order to purge some JMS queues. This can be done with following action definition:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;purgeTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Some.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Another.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;My.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-title">jms:purge-jms-queues</span> <span class="hljs-attribute">connection-factory</span>=<span class="hljs-value">&quot;connectionFactory&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Some.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Another.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;My.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>Notice that we have referenced the <strong>jms</strong> namespace when using the <strong>purge-jms-queues</strong> test action.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;connectionFactory&quot;</span>)
+<span class="hljs-keyword">private</span> ConnectionFactory connectionFactory;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeQueues()
+        .queue(<span class="hljs-string">&quot;Some.JMS.QUEUE.Name&quot;</span>)
+        .queue(<span class="hljs-string">&quot;Another.JMS.QUEUE.Name&quot;</span>);
+
+    purgeQueues(connectionFactory)
+        .timeout(<span class="hljs-number">150L</span>) <span class="hljs-comment">// custom timeout in ms</span>
+        .queue(<span class="hljs-string">&quot;Some.JMS.QUEUE.Name&quot;</span>)
+        .queue(<span class="hljs-string">&quot;Another.JMS.QUEUE.Name&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;connectionFactory&quot;</span>)
+<span class="hljs-keyword">private</span> ConnectionFactory connectionFactory;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeQueues(action -&gt;
+        action.queue(<span class="hljs-string">&quot;Some.JMS.QUEUE.Name&quot;</span>)
+            .queue(<span class="hljs-string">&quot;Another.JMS.QUEUE.Name&quot;</span>));
+
+    purgeQueues(action -&gt; action.connectionFactory(connectionFactory)
+            .timeout(<span class="hljs-number">150L</span>) <span class="hljs-comment">// custom timeout in ms</span>
+            .queue(<span class="hljs-string">&quot;Some.JMS.QUEUE.Name&quot;</span>)
+            .queue(<span class="hljs-string">&quot;Another.JMS.QUEUE.Name&quot;</span>));
+}
+</code></pre>
+<p>Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. See<a href="testsuite-before-test">testsuite-before-test</a>for more information about this.</p>
+<p>As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration that get purged before a test is executed.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;purgeBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Some.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Another.JMS.QUEUE.Name&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong>
+Please keep in mind that the JMS related configuration components in Citrus belong to a separate XML namespace <strong>jms:</strong> . We have to add this namespace declaration to each test case XML and Spring bean XML configuration file as described at the very beginning of this section.</p>
+<p>The syntax for purging the destinations is the same as we used it inside the test case. So now we are able to purge JMS destinations with given destination names. But sometimes we do not want to rely on queue or topic names as we retrieve destinations over JNDI for instance. We can deal with destinations coming from JNDI lookup like follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">jee:jndi-lookup</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;jmsQueueHelloRequestIn&quot;</span> <span class="hljs-attribute">jndi-name</span>=<span class="hljs-value">&quot;jms/jmsQueueHelloRequestIn&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">jee:jndi-lookup</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;jmsQueueHelloResponseOut&quot;</span> <span class="hljs-attribute">jndi-name</span>=<span class="hljs-value">&quot;jms/jmsQueueHelloResponseOut&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;purgeBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;jmsQueueHelloRequestIn&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;jmsQueueHelloResponseOut&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>We just use the attribute <strong>&apos;ref&apos;</strong> instead of <strong>&apos;name&apos;</strong> and Citrus is looking for a bean reference for that identifier that resolves to a JMS destination. You can use the JNDI bean references inside a test case, too.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;purgeTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;jmsQueueHelloRequestIn&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">jms:queue</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;jmsQueueHelloResponseOut&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">jms:purge-jms-queues</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>Of course you can use queue object references also in Java DSL test cases. Here we easily can use Spring&apos;s dependency injection with autowiring to get the object references from the IoC container.</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;jmsQueueHelloRequestIn&quot;</span>)
+<span class="hljs-keyword">private</span> Queue jmsQueueHelloRequestIn;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;jmsQueueHelloResponseOut&quot;</span>)
+<span class="hljs-keyword">private</span> Queue jmsQueueHelloResponseOut;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeQueues()
+        .queue(jmsQueueHelloRequestIn)
+        .queue(jmsQueueHelloResponseOut);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;jmsQueueHelloRequestIn&quot;</span>)
+<span class="hljs-keyword">private</span> Queue jmsQueueHelloRequestIn;
+
+<span class="hljs-annotation">@Autowired</span>
+<span class="hljs-annotation">@Qualifier</span>(<span class="hljs-string">&quot;jmsQueueHelloResponseOut&quot;</span>)
+<span class="hljs-keyword">private</span> Queue jmsQueueHelloResponseOut;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">purgeTest</span><span class="hljs-params">()</span> </span>{
+    purgeQueues(action -&gt;
+        action.queue(jmsQueueHelloRequestIn)
+            .queue(jmsQueueHelloResponseOut));
+}
+</code></pre>
+<p><strong>Note</strong>
+You can mix queue name and queue object references as you like within one single purge queue test action.</p>
 
                     
                     </section>
@@ -1591,8 +1735,10 @@
         </div>
 
         
+        <a href="./actions-wait.html" class="navigation navigation-prev " aria-label="Previous page: Wait"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-purge-channels.html" class="navigation navigation-next " aria-label="Next page: Purge-channels"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

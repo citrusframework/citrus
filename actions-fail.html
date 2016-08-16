@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Fail | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-input.html" />
     
+    
+    <link rel="prev" href="./actions-groovy.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.13"
+        data-chapter-title="Fail"
+        data-filepath="actions-fail.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -562,7 +564,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+        <li class="chapter active" data-level="13.13" data-path="actions-fail.html">
             
                 
                     <a href="./actions-fail.html">
@@ -1578,9 +1580,52 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="failing-the-test"><a name="failing-the-test" class="plugin-anchor" href="#failing-the-test"><span class="fa fa-link"></span></a>Failing the test</h3>
+<p>The fail action will generate an exception in order to terminate the test case with error. The test case will therefore not be successful in the reports.</p>
+<p>The user can specify a custom error message for the exception in order to describe the error cause. Here is a very simple example to clarify the syntax:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;failTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">fail</span> <span class="hljs-attribute">message</span>=<span class="hljs-value">&quot;Test will fail with custom message&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>Test results:</p>
+<pre><code class="lang-xml">Execution of test: failTest failed! Nested exception is: 
+com.consol.citrus.exceptions.CitrusRuntimeException: 
+Test will fail with custom message
+
+[...]
+
+CITRUS TEST RESULTS
+
+failTest          : failed - Exception is: Test will fail with custom message
+
+Found 1 test cases to execute
+Skipped 0 test cases (0.0%)
+Executed 1 test cases, containing 3 actions
+Tests failed:        1 (100.0%)
+Tests successfully:  0 (0.0%)
+</code></pre>
+<p>While using the Java DSL tester might want to raise some Java exceptions in the middle of configuring the test case. But this is not possible as we have to separate the design time and the execution time of the test case. The <strong>@CitrusTest</strong> annotated configuration method is called for building up the whole test case. After this method was processed the test gets executed in runtime oth the test. If you specify a throws exception statement in the configuration method this will not be done at runtime but at design time. This is why you have to use the special fail test action which raises a Java exception during the runtime of the test. The next example will not work as expected:</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">wrongUsageSample</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">// some test actions</span>
+
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ValidationException(<span class="hljs-string">&quot;This test should fail now&quot;</span>); <span class="hljs-comment">// does not work as expected </span>
+}
+</code></pre>
+<p>The validation exception above is directly raised before the test is able to start as the <strong>@CitrusTest</strong> annotated method does not represent the test runtime. Instead of this we have to use the fail action as follows:</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">failTest</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">// some test actions</span>
+
+    fail(<span class="hljs-string">&quot;This test should fail now&quot;</span>); <span class="hljs-comment">// fails at test runtime as expected </span>
+}
+</code></pre>
+<p>Now the test fails at runtime as the fail action is raised during the test execution as expected.</p>
 
                     
                     </section>
@@ -1591,8 +1636,10 @@
         </div>
 
         
+        <a href="./actions-groovy.html" class="navigation navigation-prev " aria-label="Previous page: Groovy"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-input.html" class="navigation navigation-next " aria-label="Next page: Input"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

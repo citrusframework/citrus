@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Echo | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-stop-time.html" />
     
+    
+    <link rel="prev" href="./actions-timeout.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.7"
+        data-chapter-title="Echo"
+        data-filepath="actions-echo.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -472,7 +474,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+        <li class="chapter active" data-level="13.7" data-path="actions-echo.html">
             
                 
                     <a href="./actions-echo.html">
@@ -1578,9 +1580,37 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="echo"><a name="echo" class="plugin-anchor" href="#echo"><span class="fa fa-link"></span></a>Echo</h3>
+<p>The <echo> action prints messages to the console/logger. This functionality is useful when debugging test runs. The property &quot;message&quot; defines the text that is printed. Tester might use it to print out debug messages and variables as shown the next code example:</echo></p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;echoTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;date&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:currentDate()&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Hello Test Framework<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Current date is: ${date}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echoTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;date&quot;</span>, <span class="hljs-string">&quot;citrus:currentDate()&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;Hello Test Framework&quot;</span>);
+    echo(<span class="hljs-string">&quot;Current date is: ${date}&quot;</span>);
+}
+</code></pre>
+<p>Result on the console:</p>
+<pre><code class="lang-xml">Hello Test Framework
+Current time is: 05.08.2008
+</code></pre>
 
                     
                     </section>
@@ -1591,8 +1621,10 @@
         </div>
 
         
+        <a href="./actions-timeout.html" class="navigation navigation-prev " aria-label="Previous page: Timeout"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-stop-time.html" class="navigation navigation-next " aria-label="Next page: Stop-time"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

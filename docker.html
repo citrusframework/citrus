@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Docker | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./ssh.html" />
     
+    
+    <link rel="prev" href="./arquillian.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="28"
+        data-chapter-title="Docker"
+        data-filepath="docker.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1098,7 +1100,7 @@
             
         </li>
     
-        <li class="chapter " data-level="28" data-path="docker.html">
+        <li class="chapter active" data-level="28" data-path="docker.html">
             
                 
                     <a href="./docker.html">
@@ -1578,9 +1580,182 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="docker-support"><a name="docker-support" class="plugin-anchor" href="#docker-support"><span class="fa fa-link"></span></a>Docker support</h2>
+<p>Citrus provides configuration components and test actions for interaction with a Docker deamon. The Citrus docker client component will execute Docker commands for container management such as start, stop, build, inspect and so on. The Docker client by default uses the Docker remote REST API. As a user you can execute Docker commands as part of a Citrus test and validate possible command results.</p>
+<p><strong>Note</strong>
+The Docker test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-docker<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>Citrus provides a &quot;citrus-docker&quot; configuration namespace and schema definition for Docker related components and actions. Include this namespace into your Spring configuration in order to use the Citrus Docker configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+       <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+       <span class="hljs-attribute">xmlns:citrus-docker</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/docker/config&quot;</span>
+       <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/docker/config
+       http://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd&quot;</span>&gt;</span>
+
+    [...]
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</p>
+<h3 id="docker-client"><a name="docker-client" class="plugin-anchor" href="#docker-client"><span class="fa fa-link"></span></a>Docker client</h3>
+<p>Citrus operates with the Docker remote REST API in order to interact with the Docker deamon. The Docker client is defined as Spring bean component in the configuration as follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-docker:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;dockerClient&quot;</span>/&gt;</span>
+</code></pre>
+<p>The Docker client component above is using all default configuration values. By default Citrus is searching the system properties as well as environment variables for default Docker settings such as:</p>
+<ul>
+<li><p><strong>DOCKER_HOST</strong> =&quot;tcp://localhost:2376&quot;</p>
+</li>
+<li><p><strong>DOCKER_CERT_PATH</strong> =&quot;~/.docker/machine/machines/default&quot;</p>
+</li>
+<li><p><strong>DOCKER_TLS_VERIFY</strong> =&quot;1&quot;</p>
+</li>
+<li><p><strong>DOCKER_MACHINE_NAME</strong> =&quot;default&quot;</p>
+</li>
+</ul>
+<p>In case these settings are not settable in your environment you can also use explicit settings in the Docker client component:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-docker:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;dockerClient&quot;</span>
+            <span class="hljs-attribute">url</span>=<span class="hljs-value">&quot;http://192.168.2.100:2376&quot;</span>
+            <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;1.20&quot;</span>
+            <span class="hljs-attribute">username</span>=<span class="hljs-value">&quot;user&quot;</span>
+            <span class="hljs-attribute">password</span>=<span class="hljs-value">&quot;s!cr!t&quot;</span>
+            <span class="hljs-attribute">email</span>=<span class="hljs-value">&quot;user@consol.de&quot;</span>
+            <span class="hljs-attribute">server-address</span>=<span class="hljs-value">&quot;https://index.docker.io/v1/&quot;</span>
+            <span class="hljs-attribute">cert-path</span>=<span class="hljs-value">&quot;/path/to/some/cert/directory&quot;</span>
+            <span class="hljs-attribute">config-path</span>=<span class="hljs-value">&quot;/path/to/some/config/directory&quot;</span>/&gt;</span>
+</code></pre>
+<p>Now Citrus is able to access the Docker remote API for executing commands such as start, stop, build, inspect and so on.</p>
+<h3 id="docker-commands"><a name="docker-commands" class="plugin-anchor" href="#docker-commands"><span class="fa fa-link"></span></a>Docker commands</h3>
+<p>We have several Citrus test actions each representing a Docker command. These actions can be part of a test case where you can manage Docker containers inside the test. As a prerequisite we have to enable the Docker specific test actions in our XML test as follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+        <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+        <span class="hljs-attribute">xmlns:docker</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/docker/testcase&quot;</span>
+        <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/docker/testcase
+        http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd&quot;</span>&gt;</span>
+
+    [...]
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>We added a special docker namespace with prefix <strong>docker:</strong> so now we can start to add Docker test actions to the test case:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;DockerCommandIT&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">docker:ping</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">docker:ping</span>&gt;</span>
+
+          <span class="hljs-tag">&lt;<span class="hljs-title">docker:version</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">docker:expect</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">docker:result</span>&gt;</span>
+                <span class="hljs-cdata">&lt;![CDATA[
+                  {
+                    &quot;Version&quot;:&quot;1.8.3&quot;,
+                    &quot;ApiVersion&quot;:&quot;1.21&quot;,
+                    &quot;GitCommit&quot;:&quot;@ignore@&quot;,
+                    &quot;GoVersion&quot;:&quot;go1.4.2&quot;,
+                    &quot;Os&quot;:&quot;darwin&quot;,
+                    &quot;Arch&quot;:&quot;amd64&quot;,
+                    &quot;KernelVersion&quot;:&quot;@ignore@&quot;
+                  }
+                ]]&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-title">docker:result</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">docker:expect</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">docker:version</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>In this very simple example we first ping the Docker deamon to make sure we have connectivity up and running. After that we get the Docker version information. The second action shows an important concept when executing Docker commands in Citrus. As a tester we might be interested in validating the command result. So wen can specify an optional <strong>docker:result</strong> which is usually in JSON data format. As usual we can use test variables here and ignore some values explicitly such as the <strong>GitCommit</strong> value.</p>
+<p>Based on that we can execute several Docker commands in a test case:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;DockerCommandIT&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;imageId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;busybox&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">variable</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;containerName&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus_box&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">variable</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">docker:pull</span> <span class="hljs-attribute">image</span>=<span class="hljs-value">&quot;${imageId}&quot;</span>
+                        <span class="hljs-attribute">tag</span>=<span class="hljs-value">&quot;latest&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">docker:create</span> <span class="hljs-attribute">image</span>=<span class="hljs-value">&quot;${imageId}&quot;</span>
+                          <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;${containerName}&quot;</span>
+                          <span class="hljs-attribute">cmd</span>=<span class="hljs-value">&quot;top&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">docker:expect</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">docker:result</span>&gt;</span>
+                    <span class="hljs-cdata">&lt;![CDATA[
+                      {&quot;Id&quot;:&quot;@variable(containerId)@&quot;,&quot;Warnings&quot;:null}
+                    ]]&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">docker:result</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">docker:expect</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">docker:create</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">docker:start</span> <span class="hljs-attribute">container</span>=<span class="hljs-value">&quot;${containerName}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>In this example we pull a Docker image, build a new container out of this image and start the container. As you can see each Docker command action offers attributes such as <strong>container</strong>, <strong>image</strong> or <strong>tag</strong> . These are command settings that are available on the Docker command specification. Read more about the Docker commands and the specific settings in official Docker API reference guide.</p>
+<p>Citrus supports the following Docker commands with respective test actions:</p>
+<ul>
+<li><strong>docker:pull</strong> </li>
+<li><strong>docker:build</strong> </li>
+<li><strong>docker:create</strong> </li>
+<li><strong>docker:start</strong> </li>
+<li><strong>docker:stop</strong> </li>
+<li><strong>docker:wait</strong> </li>
+<li><strong>docker:ping</strong> </li>
+<li><strong>docker:version</strong> </li>
+<li><strong>docker:inspect</strong> </li>
+<li><strong>docker:remove</strong> </li>
+<li><strong>docker:info</strong> </li>
+</ul>
+<p>Some of the Docker commands can be executed both on container and image targets such as <strong>docker:inspect</strong> or <strong>docker:remove</strong> . The command action then offers both <strong>container</strong> and <strong>image</strong> attributes so the user can choose the target of the command operation to be a container or an image.</p>
+<p>Up to now we have only used the Citrus XML DSL. Of course all Docker commands are also available in Java DSL as the next example shows.</p>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">dockerTest</span><span class="hljs-params">()</span> </span>{
+    docker().version()
+        .validateCommandResult(<span class="hljs-keyword">new</span> CommandResultCallback&lt;Version&gt;() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doWithCommandResult</span><span class="hljs-params">(Version version, TestContext context)</span> </span>{
+                Assert.assertEquals(version.getApiVersion(), <span class="hljs-string">&quot;1.20&quot;</span>);
+            }
+    });
+
+    docker().ping();
+
+    docker().start(<span class="hljs-string">&quot;my_container&quot;</span>);
+}
+</code></pre>
+<p>The Java DSL Docker commands provide an optional <strong>CommandResultCallback</strong> that is called with the unmarshalled command result object. In the example above the Version model object is passed as argument to the callback. So the tester can access the command result and validate its properties.</p>
+<p>By default Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:</p>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-keyword">private</span> DockerClient dockerClient;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">dockerTest</span><span class="hljs-params">()</span> </span>{
+    docker().client(dockerClient).version()
+        .validateCommandResult(<span class="hljs-keyword">new</span> CommandResultCallback&lt;Version&gt;() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doWithCommandResult</span><span class="hljs-params">(Version version, TestContext context)</span> </span>{
+                Assert.assertEquals(version.getApiVersion(), <span class="hljs-string">&quot;1.20&quot;</span>);
+            }
+    });
+
+    docker().client(dockerClient).ping();
+
+    docker().client(dockerClient).start(<span class="hljs-string">&quot;my_container&quot;</span>);
+}
+</code></pre>
 
                     
                     </section>
@@ -1591,8 +1766,10 @@
         </div>
 
         
+        <a href="./arquillian.html" class="navigation navigation-prev " aria-label="Previous page: Arquillian"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./ssh.html" class="navigation navigation-next " aria-label="Next page: Ssh"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

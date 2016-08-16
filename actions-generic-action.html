@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Generic-action | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-stop-timer.html" />
     
+    
+    <link rel="prev" href="./actions-manage-server.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.24"
+        data-chapter-title="Generic-action"
+        data-filepath="actions-generic-action.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -727,7 +729,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+        <li class="chapter active" data-level="13.24" data-path="actions-generic-action.html">
             
                 
                     <a href="./actions-generic-action.html">
@@ -1578,9 +1580,70 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="including-custom-test-actions"><a name="including-custom-test-actions" class="plugin-anchor" href="#including-custom-test-actions"><span class="fa fa-link"></span></a>Including custom test actions</h3>
+<p>Now we have a look at the opportunity to add custom test actions to the test case flow. Let us start this section with an example:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;ActionReferenceTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">action</span> <span class="hljs-attribute">reference</span>=<span class="hljs-value">&quot;cleanUpDatabase&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">action</span> <span class="hljs-attribute">reference</span>=<span class="hljs-value">&quot;mySpecialAction&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>The generic <action> element references Spring beans that implement the Java interface <strong><em>com.consol.citrus.TestAction</em></strong> . This is a very fast way to add your own action implementations to a Citrus test case. This way you can easily implement your own actions in Java and include them into the test case.</action></p>
+<p>In the example above the called actions are special database cleanup implementations. The actions are defined as Spring beans in the Citrus configuration and get referenced by their bean name or id.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;cleanUpDatabase&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.domain.citrus.actions.SpecialDatabaseCleanupAction&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;dataSource&quot;</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The Spring application context holds your custom bean implementations. You can set properties and use the full Spring power while implementing your custom test action in Java. Let us have a look on how such a Java class may look like.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">import</span> com.consol.citrus.actions.AbstractTestAction;
+<span class="hljs-keyword">import</span> com.consol.citrus.context.TestContext;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SpecialDatabaseCleanupAction</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTestAction</span> </span>{
+
+    <span class="hljs-annotation">@Autowired</span>
+    <span class="hljs-keyword">private</span> DataSource dataSource;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doExecute</span><span class="hljs-params">(TestContext context)</span> </span>{
+        JdbcTemplate jdbcTemplate = <span class="hljs-keyword">new</span> JdbcTemplate(dataSource);
+
+        jdbcTemplate.execute(<span class="hljs-string">&quot;...&quot;</span>);
+    }
+
+}
+</code></pre>
+<p>All you need to do in your Java class is to implement the Citrus <strong><em>com.consol.citrus.TestAction</em></strong> interface. The abstract class <strong><em>com.consol.citrus.actions.AbstractTestAction</em></strong> may help you to start with your custom test action implementation as it provides basic method implementations so you just have to implement the <strong><em>doExecute()</em></strong> method.</p>
+<p>When using the Java test case DSL you are also quite comfortable with including your custom test actions.</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@Autowired</span>
+<span class="hljs-keyword">private</span> SpecialDatabaseCleanupAction cleanUpDatabaseAction;
+
+<span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">genericActionTest</span><span class="hljs-params">()</span> </span>{
+    echo(<span class="hljs-string">&quot;Now let&apos;s include our special test action&quot;</span>);
+
+    action(cleanUpDatabaseAction);
+
+    echo(<span class="hljs-string">&quot;That&apos;s it!&quot;</span>);
+}
+</code></pre>
+<p>Using anonymous class implementations is also possible.</p>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">genericActionTest</span><span class="hljs-params">()</span> </span>{
+    echo(<span class="hljs-string">&quot;Now let&apos;s call our special test action anonymously&quot;</span>);
+
+    action(<span class="hljs-keyword">new</span> AbstractTestAction() {
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doExecute</span><span class="hljs-params">(TestContext context)</span> </span>{
+            <span class="hljs-comment">// do something</span>
+        }
+    });
+
+    echo(<span class="hljs-string">&quot;That&apos;s it!&quot;</span>);
+}
+</code></pre>
 
                     
                     </section>
@@ -1591,8 +1654,10 @@
         </div>
 
         
+        <a href="./actions-manage-server.html" class="navigation navigation-prev " aria-label="Previous page: Manage-server"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-stop-timer.html" class="navigation navigation-next " aria-label="Next page: Stop-timer"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

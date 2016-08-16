@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Stop-time | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-create-variables.html" />
     
+    
+    <link rel="prev" href="./actions-echo.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.8"
+        data-chapter-title="Stop-time"
+        data-filepath="actions-stop-time.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -487,7 +489,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+        <li class="chapter active" data-level="13.8" data-path="actions-stop-time.html">
             
                 
                     <a href="./actions-stop-time.html">
@@ -1578,9 +1580,49 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="stop-time"><a name="stop-time" class="plugin-anchor" href="#stop-time"><span class="fa fa-link"></span></a>Stop time</h3>
+<p>Time measurement during a test can be very helpful. The <trace-time> action creates and monitors multiple timelines. The action offers the attribute &quot;id&quot; to identify a time line. The tester can of course use more than one time line with different ids simultaneously.</trace-time></p>
+<p>Read the next example and you will understand the mix of different time lines:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;StopTimeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;time_line_id&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;3.5&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot; time_line_id &quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">milliseconds</span>=<span class="hljs-value">&quot;5000&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot; time_line_id &quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">stopTimeTest</span><span class="hljs-params">()</span> </span>{
+    stopTime();
+    stopTime(<span class="hljs-string">&quot;time_line_id&quot;</span>);
+    sleep(<span class="hljs-number">3.5</span>); <span class="hljs-comment">// do something</span>
+    stopTime(<span class="hljs-string">&quot;time_line_id&quot;</span>);
+    sleep(<span class="hljs-number">5000</span>); <span class="hljs-comment">// do something</span>
+    stopTime();
+    stopTime(<span class="hljs-string">&quot;time_line_id&quot;</span>);
+}
+</code></pre>
+<p>The test output looks like follows:</p>
+<pre><code class="lang-xml">Starting TimeWatcher:
+Starting TimeWatcher: time_line_id
+TimeWatcher time_line_id after 3500 milliseconds
+TimeWatcher after 8500 seconds
+TimeWatcher time_line_id after 8500 milliseconds
+</code></pre>
+<p><strong>Note</strong>
+In case no time line id is specified the framework will measure the time for a default time line.To print out the current elapsed time for a time line you simply have to place the <trace-time> action into the action chain again and again, using the respective time line identifier. The elapsed time will be printed out to the console every time.</trace-time></p>
 
                     
                     </section>
@@ -1591,8 +1633,10 @@
         </div>
 
         
+        <a href="./actions-echo.html" class="navigation navigation-prev " aria-label="Previous page: Echo"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-create-variables.html" class="navigation navigation-next " aria-label="Next page: Create-variables"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

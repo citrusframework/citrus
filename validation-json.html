@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Json | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./validation-xhtml.html" />
     
+    
+    <link rel="prev" href="./validation-schema.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="10.3"
+        data-chapter-title="Json"
+        data-filepath="validation-json.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -271,7 +273,7 @@
             
         </li>
     
-        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+        <li class="chapter active" data-level="10.3" data-path="validation-json.html">
             
                 
                     <a href="./validation-json.html">
@@ -1578,9 +1580,127 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="json-message-validation"><a name="json-message-validation" class="plugin-anchor" href="#json-message-validation"><span class="fa fa-link"></span></a>JSON message validation</h3>
+<p>Message formats such as JSON have become very popular, in particular when speaking of RESTful WebServices and JavaScript using JSON as the message format to go for. Citrus is able to expect and validate JSON messages as we will see in the next sections.</p>
+<p><strong>Important</strong>
+By default Citrus will use XML message formats when sending and receiving messages. This also reflects to the message validation logic Citrus uses for incoming messages. So by default Citrus will try to parse the incoming message as XML DOM element tree. In case we would like to enable JSON message validation we have to tell Citrus that we expect a JSON message right now.</p>
+<p>And this is quite easy. Citrus has a JSON message validator implementation active by default and immediately as we mark an incoming message as JSON data this message validator will jump in.</p>
+<p>Citrus provides several default message validator implementations for JOSN message format:</p>
+<ul>
+<li><p>com.consol.citrus.validation.json.JsonTextMessageValidator: Basic JSON message validator implementation compares JSON objects (expected and received). The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. JSONArray as well as nested JSONObjects are supported, too. The JSON validator offers two different modes to operate. By default <strong>strict</strong> mode is set and the validator will also check the exact amount of control object fields to match. No additional fields in received JSON data structure will be accepted. In <strong>soft</strong> mode validator allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated. Additional fields in the received JSON data structure are ignored then.</p>
+</li>
+<li><p>com.consol.citrus.validation.script.GroovyJsonMessageValidator: Extended groovy message validator provides specific JSON slurper support. With JSON slurper the tester can validate the JSON message payload with closures for instance.</p>
+</li>
+</ul>
+<p>You can overwrite this default message validators for JSON by placing a bean into the Spring Application context. The bean uses a default name as identifier. Then your custom bean will overwrite the default validator:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultJsonMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.json.JsonTextMessageValidator&quot;</span>/&gt;</span>
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultGroovyJsonMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.script.GroovyJsonMessageValidator&quot;</span>/&gt;</span>
+</code></pre>
+<p>This is how you can customize the message validators used for JSON message data.</p>
+<p>We have mentioned before that Citrus is working with XML by default. This is why we have to tell Citrus that the message that we are receiving uses the JSON message format. We have to tell the test case receiving action that we expect a different format other than XML.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+          {
+            &quot;type&quot; : &quot;read&quot;,
+            &quot;mbean&quot; : &quot;java.lang:type=Memory&quot;,
+            &quot;attribute&quot; : &quot;HeapMemoryUsage&quot;,
+            &quot;path&quot; : &quot;@equalsIgnoreCase(&apos;USED&apos;)@&quot;,
+            &quot;value&quot; : &quot;${heapUsage}&quot;,
+            &quot;timestamp&quot; : &quot;@ignore@&quot;
+          }
+        <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>The message receiving action in our test case specifies a message format type <strong>type=&quot;json&quot;</strong> . This tells Citrus to look for some message validator implementation capable of validating JSON messages. As we have added the proper message validator to the Spring application context Citrus will pick the right validator and JSON message validation is performed on this message. As you can see you we can use the usual test variables and the ignore element syntax here, too. Citrus is able to handle different JSON element orders when comparing received and expected JSON object. We can also use JSON arrays and nested objects. The default JSON message validator implementation in Citrus is very powerful in comparing JSON objects.</p>
+<p>Instead of defining an expected message payload template we can also use Groovy validation scripts. Lets have a look at the Groovy JSON message validator example. As usual the default Groovy JSON message validator is active by default. But the special Groovy message validator implementation will only jump in when we used a validation script in our receive message definition. Let&apos;s have an example for that.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span>&gt;</span><span class="handlebars"><span class="xml">
+                <span class="hljs-cdata">&lt;![CDATA[
+                  assert json.type == &apos;read&apos;
+                  assert json.mbean == &apos;java.lang:type=Memory&apos;
+                  assert json.attribute == &apos;HeapMemoryUsage&apos;
+                  assert json.value == &apos;${heapUsage}&apos;
+                ]]&gt;</span>
+            </span></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>Again we tell Citrus that we expect a message of <strong>type=&quot;json&quot;</strong> . Now we used a validation script that is written in Groovy. Citrus will automatically activate the special message validator that executes our Groovy script. The script validation is more powerful as we can use the full power of the Groovy language. The validation script automatically has access to the incoming JSON message object <strong>json</strong> . We can use the Groovy JSON dot notated syntax in order to navigate through the JSON structure. The Groovy JSON slurper object <strong>json</strong> is automatically passed to the validation script. This way you can access the JSON object elements in your code doing some assertions.</p>
+<p>There is even more object injection for the validation script. With the automatically added object <strong><em>receivedMessage</em></strong> You have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message payload or header.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span>&gt;</span><span class="actionscript">
+                assert receivedMessage.getPayload(String.<span class="hljs-keyword">class</span>).contains(<span class="hljs-string">&quot;Hello Citrus!&quot;</span>)
+                assert receivedMessage.getHeader(<span class="hljs-string">&quot;Operation&quot;</span>) == <span class="hljs-string">&apos;sayHello&apos;</span>
+
+                context.setVariable(<span class="hljs-string">&quot;request_payload&quot;</span>, receivedMessage.getPayload(String.<span class="hljs-keyword">class</span>))
+            </span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>The listing above shows some power of the validation script. We can access the message payload, we can access the message header. With test context access we can also save the whole message payload as a new test variable for later usage in the test.</p>
+<p>In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation scripts. The syntax looks like follows:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceClient&quot;</span> <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;5000&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:validationScript.groovy&quot;</span>/&gt;</span><span class="handlebars"><span class="xml">
+        <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</span></span></code></pre>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessageTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceClient&quot;</span>)
+        .validateScript(<span class="hljs-keyword">new</span> FileSystemResource(<span class="hljs-string">&quot;validationScript.groovy&quot;</span>));
+}
+</code></pre>
+<p>We referenced some external file resource <strong><em>validationScript.groovy</em></strong> . This file content is loaded at runtime and is used as script body. Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite Groovy editor.</p>
+<p><strong>Important</strong>
+Using several message validator implementations at the same time in the Spring application context is also no problem. Citrus automatically searches for all available message validators applicable for the given message format and executes these validators in sequence. So several message validators can coexist in a Citrus project.</p>
+<p>When we have multiple message validators that apply to the message format Citrus will execute all of them in sequence. In case you need to explicitly choose a message validator implementation you can do so in the receive action:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span> <span class="hljs-attribute">validator</span>=<span class="hljs-value">&quot;groovyJsonMessageValidator&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span>&gt;</span><span class="handlebars"><span class="xml">
+                <span class="hljs-cdata">&lt;![CDATA[
+                  assert json.type == &apos;read&apos;
+                  assert json.mbean == &apos;java.lang:type=Memory&apos;
+                  assert json.attribute == &apos;HeapMemoryUsage&apos;
+                  assert json.value == &apos;${heapUsage}&apos;
+                ]]&gt;</span>
+            </span></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>In this example we use the <strong>groovyJsonMessageValidator</strong> explicitly in the receive test action. The message validator implementation was added as Spring bean with id <strong>groovyJsonMessageValidator</strong> to the Spring application context before. Now Citrus will only execute the explicit message validator. Other implementations that might also apply are skipped.</p>
+<p><strong>Tip</strong>
+By default Citrus will consolidate all available message validators for a message format in sequence. You can explicitly pick a special message validator in the receive message action as shown in the example above. In this case all other validators will not take part in this special message validation. But be careful: When picking a message validator explicitly you are of course limited to this message validator capabilities. Validation features of other validators are not valid in this case (e.g. message header validation, XPath validation, etc.)</p>
+<p>So much for receiving JSON message data in Citrus. Of course sending JSON messages in Citrus is also very easy. Just use JSON message payloads in your sending message action.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+          {
+            &quot;type&quot; : &quot;read&quot;,
+            &quot;mbean&quot; : &quot;java.lang:type=Memory&quot;,
+            &quot;attribute&quot; : &quot;HeapMemoryUsage&quot;,
+            &quot;path&quot; : &quot;used&quot;
+          }
+        <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
 
                     
                     </section>
@@ -1591,8 +1711,10 @@
         </div>
 
         
+        <a href="./validation-schema.html" class="navigation navigation-prev " aria-label="Previous page: Schema"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./validation-xhtml.html" class="navigation navigation-next " aria-label="Next page: Xhtml"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

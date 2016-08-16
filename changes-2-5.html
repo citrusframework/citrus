@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Changes 2.5 | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./changes-2-4.html" />
     
+    
+    <link rel="prev" href="./appendix.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="46.1"
+        data-chapter-title="Changes 2.5"
+        data-filepath="changes-2-5.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1405,7 +1407,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+        <li class="chapter active" data-level="46.1" data-path="changes-2-5.html">
             
                 
                     <a href="./changes-2-5.html">
@@ -1578,9 +1580,30 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="changes-in-citrus-25"><a name="changes-in-citrus-25" class="plugin-anchor" href="#changes-in-citrus-25"><span class="fa fa-link"></span></a>Changes in Citrus 2.5?!</h3>
+<p>We have added lots of new features and improvements with Citrus 2.5. Namely these are the new modules for RMI and JMX support, a new x-www-form-urlencoded message validator and new functions anc test actions. Just have a look at the following features that made it to the box.</p>
+<h3 id="hamcrest-matcher-support"><a name="hamcrest-matcher-support" class="plugin-anchor" href="#hamcrest-matcher-support"><span class="fa fa-link"></span></a>Hamcrest matcher support</h3>
+<p>Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations for message validation purpose. Citrus now supports these matchers coming from Hamcrest library. On the one hand you can use Hamcrest matchers as a Citrus validation matcher as described in<a href="validation-matcher-hamcrest">validation-matcher-hamcrest</a>. On the other hand you can use Hamcrest matchers now directly using the Citrus Java DSL. See details for this feature in<a href="json-path-validate">json-path-validate</a>.</p>
+<h3 id="binary-base64-message-validator"><a name="binary-base64-message-validator" class="plugin-anchor" href="#binary-base64-message-validator"><span class="fa fa-link"></span></a>Binary base64 message validator</h3>
+<p>There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message payload. See<a href="validation-binary">validation-binary</a>how this is working for you.</p>
+<h3 id="rmi-support"><a name="rmi-support" class="plugin-anchor" href="#rmi-support"><span class="fa fa-link"></span></a>RMI support</h3>
+<p>Remote method invocation is a standard Java technology and API for calling methods on remote objects across different JVM instances. Although RMI has lost its popularity it is still used in legacy components. Testing RMI bean invocation is a hard thing to do. Now Citrus provides client and server support for remote interface invocation. See <a href="rmi">rmi</a> for details.</p>
+<h3 id="jmx-support"><a name="jmx-support" class="plugin-anchor" href="#jmx-support"><span class="fa fa-link"></span></a>JMX support</h3>
+<p>Similar to RMI JMX can be used to connect to remote bean invocation. This time we expose some beans to a managed bean server in order to be managed by JMX operations for read and write. With Citrus 2.5 we have added a client and server support for calling and providing managed beans on a mbean server. See <a href="jmx">jmx</a> for details.</p>
+<h3 id="resource-injection"><a name="resource-injection" class="plugin-anchor" href="#resource-injection"><span class="fa fa-link"></span></a>Resource injection</h3>
+<p>With 2.5 we have added mechanisms for injecting Citrus components to your Java DSL test methods. This is very useful when needing access to the Citrus test context for instance. Also we are able to use new injection of test designer and runner instances in order to support parallel test execution with multiple threads. See the explanations in<a href="testcase-resource-injection">testcase-resource-injection</a>and<a href="testcase-context-injection">testcase-context-injection</a>.</p>
+<h3 id="http-xwwwformurlencoded-message-validator"><a name="http-xwwwformurlencoded-message-validator" class="plugin-anchor" href="#http-xwwwformurlencoded-message-validator"><span class="fa fa-link"></span></a>Http x-www-form-urlencoded message validator</h3>
+<p>HTML form data can be transmitted with different methods and content types. One of the most common ways is to use <strong>x-www-form-urlencoded</strong> form data content. As validation can be tricky we have added a special message validator for that. See<a href="http-www-form-urlencoded">http-www-form-urlencoded</a>for details.</p>
+<h3 id="date-range-validation-matcher"><a name="date-range-validation-matcher" class="plugin-anchor" href="#date-range-validation-matcher"><span class="fa fa-link"></span></a>Date range validation matcher</h3>
+<p>Added a new validation matcher implementation that is able to check that a date value is between a certain date range (from and to) The date range is able to focus on days as well as additional time (hour, minute, second) specifications. See<a href="validation-matcher-daterange">validation-matcher-daterange</a>for details.</p>
+<h3 id="read-file-resource-function"><a name="read-file-resource-function" class="plugin-anchor" href="#read-file-resource-function"><span class="fa fa-link"></span></a>Read file resource function</h3>
+<p>A new function implementation offers you the possibilities to read file resource contents as inline data. The function is called and returns the file content as return value. The file content is then placed right where the function was called e.g. inside of a message paylaod element or as message header value. See<a href="functions-read-file">functions-read-file</a>for details.</p>
+<h3 id="timer-container"><a name="timer-container" class="plugin-anchor" href="#timer-container"><span class="fa fa-link"></span></a>Timer container</h3>
+<p>The new timer test action container repeats its execution based on a time expression (e.g. every 5 seconds). With this timer we can repeat test actions with a fixed time delay or constantly execute test actions with time schedule. See<a href="containers-timer">containers-timer</a>and<a href="actions-stop-timer">actions-stop-timer</a>for details.</p>
+<h3 id="upgrade-to-vertx-320"><a name="upgrade-to-vertx-320" class="plugin-anchor" href="#upgrade-to-vertx-320"><span class="fa fa-link"></span></a>Upgrade to Vert.x 3.2.0</h3>
+<p>The Vert.x module was upgraded to use Vert.x 3.2.0 version. The Citrus module implementation was updated to work with this new Vert.x version. Learn more about the Vert.x integration in Citrus with <a href="vertx">vertx</a>.</p>
+<h3 id="bugfixes"><a name="bugfixes" class="plugin-anchor" href="#bugfixes"><span class="fa fa-link"></span></a>Bugfixes</h3>
+<p>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in JIRA (<a href="http://www.citrusframework.org/changes-report.html" target="_blank">http://www.citrusframework.org/changes-report.html</a>).</p>
 
                     
                     </section>
@@ -1591,8 +1614,10 @@
         </div>
 
         
+        <a href="./appendix.html" class="navigation navigation-prev " aria-label="Previous page: Appendix"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./changes-2-4.html" class="navigation navigation-next " aria-label="Next page: Changes 2.4"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

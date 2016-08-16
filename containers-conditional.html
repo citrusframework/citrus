@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Conditional | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./containers-parallel.html" />
     
+    
+    <link rel="prev" href="./containers-sequential.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="15.2"
+        data-chapter-title="Conditional"
+        data-filepath="containers-conditional.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -808,7 +810,7 @@
             
         </li>
     
-        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+        <li class="chapter active" data-level="15.2" data-path="containers-conditional.html">
             
                 
                     <a href="./containers-conditional.html">
@@ -1578,9 +1580,55 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="conditional"><a name="conditional" class="plugin-anchor" href="#conditional"><span class="fa fa-link"></span></a>Conditional</h3>
+<p>Now we deal with conditional executions of test actions. Nested actions inside a conditional container are executed only in case a booleand expression evaluates to true. Otherwise the container execution is not performed at all.</p>
+<p>See some example to find out how it works with the conditional expression string.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;conditionalTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;index&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;5&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;shouldSleep&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;true&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">conditional</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;${index} = 5&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;10&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">conditional</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">conditional</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;${shouldSleep}&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;10&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">conditional</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">conditional</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;@assertThat(&apos;${shouldSleep}&apos;, &apos;anyOf(is(true), isEmptyString())&apos;)@&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;10&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">conditional</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">conditionalTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;index&quot;</span>, <span class="hljs-number">5</span>);
+    variable(<span class="hljs-string">&quot;shouldSleep&quot;</span>, <span class="hljs-keyword">true</span>);
+
+    conditional().when(<span class="hljs-string">&quot;${index} = 5&quot;</span>))
+        .actions(
+            sleep(<span class="hljs-number">10000L</span>)
+        );
+
+    conditional().when(<span class="hljs-string">&quot;${shouldSleep}&quot;</span>))
+        .actions(
+            sleep(<span class="hljs-number">10000L</span>)
+        );
+
+    conditional().when(<span class="hljs-string">&quot;${shouldSleep}&quot;</span>, anyOf(is(<span class="hljs-string">&quot;true&quot;</span>), isEmptyString()))
+        .actions(
+            sleep(<span class="hljs-number">10000L</span>)
+        );
+}
+</code></pre>
+<p>The nested sleep action is executed in case the variable ${index} is equal to the value &apos;5&apos;. This conditional execution of test actions is useful when dealing with different test environments such as different operating systems for instance. The conditional container also supports expressions that evaluate to the character sequence &quot;true&quot; or &quot;false&quot; as shown in the ${shouldSleep} example.</p>
+<p>The last conditional container in the example above makes use of Hamcrest matchers. The matcher evaluates to <strong>true</strong> of <strong>false</strong> and based on that the container actions are executed or skipped. The Hamcrest matchers are very powerful when it comes to evaluation of multiple conditions at a time.</p>
 
                     
                     </section>
@@ -1591,8 +1639,10 @@
         </div>
 
         
+        <a href="./containers-sequential.html" class="navigation navigation-prev " aria-label="Previous page: Sequential"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./containers-parallel.html" class="navigation navigation-next " aria-label="Next page: Parallel"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

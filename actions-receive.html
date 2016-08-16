@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Receive | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-database.html" />
     
+    
+    <link rel="prev" href="./actions-send.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.2"
+        data-chapter-title="Receive"
+        data-filepath="actions-receive.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -397,7 +399,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+        <li class="chapter active" data-level="13.2" data-path="actions-receive.html">
             
                 
                     <a href="./actions-receive.html">
@@ -1578,9 +1580,253 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="receiving-messages"><a name="receiving-messages" class="plugin-anchor" href="#receiving-messages"><span class="fa fa-link"></span></a>Receiving messages</h3>
+<p>Just like sending messages the receiving part is a very important action in an integration test. Honestly the receive action is even more important in Citrus as we also want to validate the incoming message contents. We are writing a test so we also need assertions and checks that everything works as expected.</p>
+<p>As already mentioned before a message consists of a message header (name-value pairs) and a message payload. Later in this document we will see how to validate incoming messages with payload and header values. We start with a very simple example:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">TestMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>${text}<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">TestMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Operation&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;MessageId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${messageId}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload and header values. We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;Text&gt;${text}&lt;/Text&gt;&quot;</span> +
+                <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
+        .header(<span class="hljs-string">&quot;Operation&quot;</span>, <span class="hljs-string">&quot;sayHello&quot;</span>)
+        .header(<span class="hljs-string">&quot;MessageId&quot;</span>, <span class="hljs-string">&quot;${messageId}&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(action -&gt; action.endpoint(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+                .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
+                      <span class="hljs-string">&quot;&lt;Text&gt;${text}&lt;/Text&gt;&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
+                .header(<span class="hljs-string">&quot;Operation&quot;</span>, <span class="hljs-string">&quot;sayHello&quot;</span>)
+                .header(<span class="hljs-string">&quot;MessageId&quot;</span>, <span class="hljs-string">&quot;${messageId}&quot;</span>));
+}
+</code></pre>
+<p>The receive action waits for a message to arrive. The whole test execution is stopped while waiting for the message. This is important to ensure the step by step test workflow processing. Of course you can specify message timeouts so the receiver will only wait a given amount of time before raising a timeout error. Following from that timeout exception the test case fails as the message did not arrive in time. Citrus defines default timeout settings for all message receiving tasks.</p>
+<p>In a good case scenario the message arrives in time and the content can be validated as a next step. This validation can be done in various ways. On the one hand you can specify a whole XML message that you expect as control template. In this case the received message structure is compared to the expected message content element by element. On the other hand you can use explicit element validation where only a small subset of message elements is included into validation.</p>
+<p>Besides the message payload Citrus will also perform validation on the received message header values. Test variable usage is supported as usual during the whole validation process for payload and header checks.</p>
+<p>In general the validation component (validator) in Citrus works hand in hand with a message receiving component as the following figure shows:</p>
+<p><img src="images/figure_005.jpg" alt="figure_005.jpg"></p>
+<p>The message receiving component passes the message to the validator where the individual validation steps are performed. Let us have a closer look at the validation options and features step by step.</p>
+<h3 id="validate-message-payloads"><a name="validate-message-payloads" class="plugin-anchor" href="#validate-message-payloads"><span class="fa fa-link"></span></a>Validate message payloads</h3>
+<p>The most detailed validation of incoming messages is to define some expected message payload. The Citrus message validator will then perform a detailed message payload comparison. The incoming message has to match exactly to the expected message payload. The different message validator implementations in Citrus provide deep comparison of message structures such as XML, JSON and so on.</p>
+<p>So by defining an expected message payload we validate the incoming message in syntax and semantics. In case a difference is identified by the message validator the validation and the test case fails with respective exceptions. This is how you can define message payloads in receive action:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- message payload as XML --&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        &lt;!-- message payload as XML --&gt;
+      ]]&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/messages/TestRequest.xml&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>The three examples above represent three different ways of defining the message payload in a receive message action. On the one hand we can use inline message payloads as nested XML or CDATA sections in the test. On the other hand we can load the message content from external file resource.</p>
+<p><strong>Note</strong>
+Sometimes the nested XML message payload elements may cause XSD schema validation rule violations. This is because of variable values not fitting the XSD schema rules for example. In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the <strong><em><data></data></em></strong> element in contrast to the <strong><em><payload></payload></em></strong> element that we have used in our examples so far.</p>
+<p>With this alternative you can skip the XML schema validation from your IDE at design time. Unfortunately you will loose the XSD auto completion features many XML editors offer when constructing your payload.</p>
+<p>In Java DSL we also have multiple options for specifying the message payloads:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;Text&gt;Hello!&lt;/Text&gt;&quot;</span> +
+                <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>);
+}
+</code></pre>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .payload(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/messages/TestRequest.xml&quot;</span>));
+}
+</code></pre>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .payloadModel(<span class="hljs-keyword">new</span> TestRequest(<span class="hljs-string">&quot;Hello Citrus!&quot;</span>));
+}
+</code></pre>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .message(<span class="hljs-keyword">new</span> DefaultMessage(<span class="hljs-string">&quot;Hello World!&quot;</span>)));
+}
+</code></pre>
+<p>The examples above represent the basic variations of how to define message payloads in Citrus Java DSL. The payload can be a simple String or a Spring file resource (classpath or file system). In addition to that we can use a model object. When using model objects as payloads we need a proper message marshaller implementation in the Spring application context. By default this is a marshaller bean of type <strong>org.springframework.oxm.Marshaller</strong> that has to be present in the Spring application context. You can add such a bean for XML and JSON message marshalling for instance.</p>
+<p>In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this particular send message action.</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .payloadModel(<span class="hljs-keyword">new</span> TestRequest(<span class="hljs-string">&quot;Hello Citrus!&quot;</span>), <span class="hljs-string">&quot;myMessageMarshallerBean&quot;</span>);
+}
+</code></pre>
+<p>Now Citrus will marshal the message payload with the message marshaller bean named <strong>myMessageMarshallerBean</strong> . This way you can have multiple message marshaller implementations active in your project (XML, JSON, and so on).</p>
+<p>Last not least the message can be defined as Citrus message object. Here you can choose one of the different message implementations used in Citrus for SOAP, Http or JMS messages. Or you just use the default message implementation or maybe a custom implementation.</p>
+<p>In general the expected message content can be manipulated using XPath (<a href="xpath">xpath</a>) or JSONPath (<a href="json-path">json-path</a>). In addition to that you can ignore some elements that are skipped in comparison. We will describe this later on in this section. Now lets continue with message header validation.</p>
+<h3 id="validate-message-headers"><a name="validate-message-headers" class="plugin-anchor" href="#validate-message-headers"><span class="fa fa-link"></span></a>Validate message headers</h3>
+<p>Message headers are used widely in enterprise messaging solution: The message headers are part of the message semantics and need to be validated, too. Citrus can validate message header by name and value.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">TestMessage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>Hello!<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">TestMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Operation&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>The expected message headers are defined by a name and value pair. Citrus will check that the expected message header is present and will check the value. In case the message header is not found or the value does not match Citrus will raise an exception and the test fails. You can use validation matchers (<a href="validation-matchers">validation-matchers</a>) for a more powerful validation of header values, too.</p>
+<p>Let&apos;s see how this looks like in Java DSL:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
+                <span class="hljs-string">&quot;&lt;Text&gt;Hello!&lt;/Text&gt;&quot;</span> +
+            <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
+        .header(<span class="hljs-string">&quot;Operation&quot;</span>, <span class="hljs-string">&quot;sayHello&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
+    receive(action -&gt; action.endpoint(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+                .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
+                      <span class="hljs-string">&quot;&lt;Text&gt;Hello!&lt;/Text&gt;&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
+                .header(<span class="hljs-string">&quot;Operation&quot;</span>, <span class="hljs-string">&quot;sayHello&quot;</span>));
+}
+</code></pre>
+<p>Header definition in Java DSL is straight forward as we just define name and value as usual. This completes the message validation when receiving a message in Citrus. The message validator implementations may add additional validation capabilities such as XML schema validation or XPath and JSONPath validation. Please refer to the respective chapters in this guide to learn more about that.</p>
+<h3 id="message-selectors"><a name="message-selectors" class="plugin-anchor" href="#message-selectors"><span class="fa fa-link"></span></a>Message selectors</h3>
+<p>The <strong><selector></selector></strong> element inside the receiving action defines key-value pairs in order to filter the messages being received. The filter applies to the message headers. This means that a receiver will only accept messages matching a header element value. In messaging applications the header information often holds message ids, correlation ids, operation names and so on. With this information given you can explicitly listen for messages that belong to your test case. This is very helpful to avoid receiving messages that are still available on the message destination.</p>
+<p>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry situations where the application error handling automatically tries to solve a communication problem that occurred during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not valid any more for the currently running test case. The test case might fail because the received message does not apply to the actual use case. So we will definitely run into validation errors as the expected message control values do not match.</p>
+<p>Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages that apply for the use case that is being tested. The Java Messaging System (JMS) came up with a message header selector that will only accept messages that fit the expected header values.</p>
+<p>Let us have a closer look at a message selector inside a receiving action:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">selector</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span>&gt;</span> name=&quot;correlationId&quot; value=&quot;Cx1x123456789&quot;<span class="hljs-tag">&lt;/<span class="hljs-title">element</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span>&gt;</span> name=&quot;operation&quot; value=&quot;getOrders&quot;<span class="hljs-tag">&lt;/<span class="hljs-title">element</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">selector</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessageTest</span><span class="hljs-params">()</span> </span>{
+    receive(<span class="hljs-string">&quot;testServiceEndpoint&quot;</span>)
+        .selector(<span class="hljs-string">&quot;correlationId=&apos;Cx1x123456789&apos; AND operation=&apos;getOrders&apos;&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">receiveMessageTest</span><span class="hljs-params">()</span> </span>{
+    receive(action -&gt; action.endpoint(<span class="hljs-string">&quot;testServiceEndpoint&quot;</span>)
+                .selector(<span class="hljs-string">&quot;correlationId=&apos;Cx1x123456789&apos; AND operation=&apos;getOrders&apos;&quot;</span>));
+}
+</code></pre>
+<p>This example shows how message selectors work. The selector will only accept messages that meet the correlation id and the operation in the header values. All other messages on the message destination are ignored. The selector elements are automatically associated to each other using the logical AND operator. This means that the message selector string would look like this: <strong>correlationId = &apos;Cx1x123456789&apos; AND operation = &apos;getOrders&apos;</strong> .</p>
+<p>Instead of using several elements in the selector you can also define a selector string directly which gives you more power in constructing the selection logic yourself. This way you can use <strong>AND</strong> logical operators yourself.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">selector</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>
+        correlationId = &apos;Cx1x123456789&apos; AND operation = &apos;getOrders&apos;
+    <span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">selector</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+In case you want to run tests in parallel message selectors become essential in your test cases. The different tests running at the same time will steal messages from each other when you lack of message selection mechanisms.</p>
+<p><strong>Important</strong>
+Previously only JMS message destinations offered support for message selectors! With Citrus version 1.2 we introduced message selector support for Spring Integration message channels, too (see<a href="message-channel-selector-support">message-channel-selector-support</a>).</p>
+<h3 id="groovy-markupbuilder"><a name="groovy-markupbuilder" class="plugin-anchor" href="#groovy-markupbuilder"><span class="fa fa-link"></span></a>Groovy MarkupBuilder</h3>
+<p>With the Groovy MarkupBuilder you can build XML message payloads in a simple way, without having to write the typical XML overhead. For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML section or the nested payload XML data we write a Groovy script snippet. The Groovy MarkupBuilder generates the XML message payload with exactly the same result:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">builder</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span>&gt;</span>
+        markupBuilder.TestMessage {
+                MessageId(&apos;${messageId}&apos;)
+                Timestamp(&apos;?&apos;)
+                VersionId(&apos;2&apos;)
+                Text(&apos;Hello Citrus!&apos;)
+            }
+        }
+    <span class="hljs-tag">&lt;/<span class="hljs-title">builder</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/TestMessage/Timestamp&quot;</span>
+                <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${createDate}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Operation&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;MessageId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${messageId}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>We use the <strong>builder</strong> element with type <strong>groovy</strong> and the MarkupBuilder code is directly written to this element. As you can see from the example above, you can mix XPath and Groovy markup builder code. The MarkupBuilder syntax is very easy and follows the simple rule: <strong>markupBuilder.ROOT-ELEMENT{ CHILD-ELEMENTS }</strong> . However the tester has to follow some simple rules and naming conventions when using the Citrus MarkupBuilder extension:</p>
+<ul>
+<li>The MarkupBuilder is accessed within the script over an object named markupBuilder. The name of the custom root element follows with all its child elements.</li>
+<li>Child elements may be defined within curly brackets after the root-element (the same applies for further nested child elements)</li>
+<li>Attributes and element values are defined within round brackets, after the element name</li>
+<li>Attribute and element values have to stand within apostrophes (e.g. attribute-name: &apos;attribute-value&apos;)</li>
+</ul>
+<p>The Groovy MarkupBuilder script may also be used within receive actions as shown in the following listing:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">builder</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/groovy/helloRequest.groovy&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span> <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;5000&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">builder</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;groovy&quot;</span>&gt;</span>
+            markupBuilder.TestResponse(xmlns: &apos;http://www.consol.de/schemas/samples/sayHello.xsd&apos;){
+                MessageId(&apos;${messageId}&apos;)
+                CorrelationId(&apos;${correlationId}&apos;)
+                User(&apos;HelloService&apos;)
+                Text(&apos;Hello ${user}&apos;)
+            }
+        <span class="hljs-tag">&lt;/<span class="hljs-title">builder</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>As you can see it is also possible to define the script as external file resource. In addition to that namespace support is given as normal attribute definition within the round brackets after the element name.</p>
+<p>The MarkupBuilder implementation in Groovy offers great possibilities in defining message payloads. We do not need to write XML tag overhead and we can construct complex message payloads with Groovy logic like iterations and conditional elements. For detailed MarkupBuilder descriptions please see the official Groovy documentation.</p>
 
                     
                     </section>
@@ -1591,8 +1837,10 @@
         </div>
 
         
+        <a href="./actions-send.html" class="navigation navigation-prev " aria-label="Previous page: Send"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-database.html" class="navigation navigation-next " aria-label="Next page: Database"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

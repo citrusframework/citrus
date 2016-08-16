@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Transform | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./actions-groovy.html" />
     
+    
+    <link rel="prev" href="./actions-trace.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="13.11"
+        data-chapter-title="Transform"
+        data-filepath="actions-transform.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -532,7 +534,7 @@
             
         </li>
     
-        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+        <li class="chapter active" data-level="13.11" data-path="actions-transform.html">
             
                 
                     <a href="./actions-transform.html">
@@ -1578,9 +1580,117 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="transform"><a name="transform" class="plugin-anchor" href="#transform"><span class="fa fa-link"></span></a>Transform</h3>
+<p>The <strong><em><transform></transform></em></strong> action transforms XML fragments with XSLT in order to construct various XML representations. The transformation result is stored into a test variable for further usage. The property <strong>xml-data</strong> defines the XML source, that is going to be transformed, while <strong>xslt-data</strong> defines the XSLT transformation rules. The attribute <strong>variable</strong> specifies the target test variable which receives the transformation result. The tester might use the action to transform XML messages as shown in the next code example:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml">
+  <span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;transformTest&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">transform</span> <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;result&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">xml-data</span>&gt;</span>
+                  <span class="hljs-cdata">&lt;![CDATA[
+                      &lt;TestRequest&gt;
+                          &lt;Message&gt;Hello World!&lt;/Message&gt;
+                      &lt;/TestRequest&gt;
+                  ]]&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-title">xml-data</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">xslt-data</span>&gt;</span>
+                  <span class="hljs-cdata">&lt;![CDATA[
+                      &lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
+                      &lt;xsl:template match=&quot;/&quot;&gt;
+                          &lt;html&gt;
+                              &lt;body&gt;
+                                  &lt;h2&gt;Test Request&lt;/h2&gt;
+                                  &lt;p&gt;Message: &lt;xsl:value-of select=&quot;TestRequest/Message&quot;/&gt;&lt;/p&gt;
+                              &lt;/body&gt;
+                          &lt;/html&gt;
+                      &lt;/xsl:template&gt;
+                      &lt;/xsl:stylesheet&gt;
+                  ]]&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-title">xslt-data</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">transform</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>${result}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>The transformation above results to:</p>
+<pre><code class="lang-xml">
+  <span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Test Request<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Message: Hello World!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+</code></pre>
+<p>In the example we used CDATA sections to define the transformation source as well as the XSL transformation rules. As usual you can also use external file resources here. The transform action with external file resources looks like follows:</p>
+<pre><code class="lang-xml">
+  <span class="hljs-tag">&lt;<span class="hljs-title">transform</span> <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;result&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">xml-resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:transform-source.xml&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">xslt-resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:transform.xslt&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">transform</span>&gt;</span>
+</code></pre>
+<p>The Java DSL alternative for transforming data via XSTL in Citrus looks like follows:</p>
+<p><strong>Java DSL designer</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transformTest</span><span class="hljs-params">()</span> </span>{
+    transform()
+        .source(<span class="hljs-string">&quot;&lt;TestRequest&gt;&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;Message&gt;Hello World!&lt;/Message&gt;&quot;</span> +
+                <span class="hljs-string">&quot;&lt;/TestRequest&gt;&quot;</span>)
+        .xslt(<span class="hljs-string">&quot;&lt;xsl:stylesheet version=\&quot;1.0\&quot; xmlns:xsl=\&quot;http://www.w3.org/1999/XSL/Transform\&quot;&gt;\n&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;xsl:template match=\&quot;/\&quot;&gt;\n&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;html&gt;\n&quot;</span> +
+                        <span class="hljs-string">&quot;&lt;body&gt;\n&quot;</span> +
+                            <span class="hljs-string">&quot;&lt;h2&gt;Test Request&lt;/h2&gt;\n&quot;</span> +
+                            <span class="hljs-string">&quot;&lt;p&gt;Message: &lt;xsl:value-of select=\&quot;TestRequest/Message\&quot;/&gt;&lt;/p&gt;\n&quot;</span> +
+                        <span class="hljs-string">&quot;&lt;/body&gt;\n&quot;</span> +  
+                    <span class="hljs-string">&quot;&lt;/html&gt;\n&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;/xsl:template&gt;\n&quot;</span> +
+                <span class="hljs-string">&quot;&lt;/xsl:stylesheet&gt;&quot;</span>)
+        .result(<span class="hljs-string">&quot;result&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;${result}&quot;</span>);
+
+    transform()
+        .source(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/actions/transform-source.xml&quot;</span>))
+        .xslt(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/actions/transform.xslt&quot;</span>))
+        .result(<span class="hljs-string">&quot;result&quot;</span>);
+
+    echo(<span class="hljs-string">&quot;${result}&quot;</span>);
+}
+</code></pre>
+<p><strong>Java DSL runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transformTest</span><span class="hljs-params">()</span> </span>{
+    transform(action -&gt;
+        action.source(<span class="hljs-string">&quot;&lt;TestRequest&gt;&quot;</span> +
+                        <span class="hljs-string">&quot;&lt;Message&gt;Hello World!&lt;/Message&gt;&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;/TestRequest&gt;&quot;</span>)
+        .xslt(<span class="hljs-string">&quot;&lt;xsl:stylesheet version=\&quot;1.0\&quot; xmlns:xsl=\&quot;http://www.w3.org/1999/XSL/Transform\&quot;&gt;\n&quot;</span> +
+                <span class="hljs-string">&quot;&lt;xsl:template match=\&quot;/\&quot;&gt;\n&quot;</span> +
+                <span class="hljs-string">&quot;&lt;html&gt;\n&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;body&gt;\n&quot;</span> +
+                        <span class="hljs-string">&quot;&lt;h2&gt;Test Request&lt;/h2&gt;\n&quot;</span> +
+                        <span class="hljs-string">&quot;&lt;p&gt;Message: &lt;xsl:value-of select=\&quot;TestRequest/Message\&quot;/&gt;&lt;/p&gt;\n&quot;</span> +
+                    <span class="hljs-string">&quot;&lt;/body&gt;\n&quot;</span> +
+                <span class="hljs-string">&quot;&lt;/html&gt;\n&quot;</span> +
+                <span class="hljs-string">&quot;&lt;/xsl:template&gt;\n&quot;</span> +
+            <span class="hljs-string">&quot;&lt;/xsl:stylesheet&gt;&quot;</span>)
+        .result(<span class="hljs-string">&quot;result&quot;</span>));
+
+    echo(<span class="hljs-string">&quot;${result}&quot;</span>);
+
+    transform(action -&gt;
+        action.source(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/actions/transform-source.xml&quot;</span>))
+              .xslt(<span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;com/consol/citrus/actions/transform.xslt&quot;</span>))
+              .result(<span class="hljs-string">&quot;result&quot;</span>));
+
+    echo(<span class="hljs-string">&quot;${result}&quot;</span>);
+}
+</code></pre>
+<p>Defining multi-line Strings with nested quotes is no fun in Java. So you may want to use external file resources for your scripts as shown in the second part of the example. In fact you could also use script languages like Groovy or Scala that have much better support for multi-line Strings.</p>
 
                     
                     </section>
@@ -1591,8 +1701,10 @@
         </div>
 
         
+        <a href="./actions-trace.html" class="navigation navigation-prev " aria-label="Previous page: Trace"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./actions-groovy.html" class="navigation navigation-next " aria-label="Next page: Groovy"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

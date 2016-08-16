@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Parallel | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./containers-iterate.html" />
     
+    
+    <link rel="prev" href="./containers-conditional.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="15.3"
+        data-chapter-title="Parallel"
+        data-filepath="containers-parallel.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -823,7 +825,7 @@
             
         </li>
     
-        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+        <li class="chapter active" data-level="15.3" data-path="containers-parallel.html">
             
                 
                     <a href="./containers-parallel.html">
@@ -1578,9 +1580,60 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="parallel"><a name="parallel" class="plugin-anchor" href="#parallel"><span class="fa fa-link"></span></a>Parallel</h3>
+<p>Parallel containers execute the embedded test actions concurrent to each other. Every action in this container will be executed in a separate Java Thread. Following example should clarify the usage:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;parallelTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">parallel</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span>/&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">sequential</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">sequential</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">iterate</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;i lt= 5&quot;</span> 
+                        <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">iterate</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">parallel</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">paralletTest</span><span class="hljs-params">()</span> </span>{
+    parallel().actions(
+        sleep(),
+        sequential().actions(
+            sleep(),
+            echo(<span class="hljs-string">&quot;1&quot;</span>)
+        ),
+        echo(<span class="hljs-string">&quot;2&quot;</span>),
+        echo(<span class="hljs-string">&quot;3&quot;</span>),
+        iterate().condition(<span class="hljs-string">&quot;i lt= 5&quot;</span>).index(<span class="hljs-string">&quot;i&quot;</span>))
+            .actions(
+                echo(<span class="hljs-string">&quot;10&quot;</span>)
+            )
+    );
+}
+</code></pre>
+<p>So the normal test action processing would be to execute one action after another. As the first action is a sleep of five seconds, the whole test processing would stop and wait for 5 seconds. Things are different inside the parallel container. Here the descending test actions will not wait but execute at the same time.</p>
+<p><strong>Note</strong>
+Note that containers can easily wrap other containers. The example shows a simple combination of sequential and parallel containers that will archive a complex execution logic. Actions inside the sequential container will execute one after another. But actions in parallel will be executed at the same time.</p>
 
                     
                     </section>
@@ -1591,8 +1644,10 @@
         </div>
 
         
+        <a href="./containers-conditional.html" class="navigation navigation-prev " aria-label="Previous page: Conditional"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./containers-iterate.html" class="navigation navigation-next " aria-label="Next page: Iterate"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

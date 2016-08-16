@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Message-tracing | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./reporting.html" />
     
+    
+    <link rel="prev" href="./meta-info.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="43"
+        data-chapter-title="Message-tracing"
+        data-filepath="message-tracing.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1323,7 +1325,7 @@
             
         </li>
     
-        <li class="chapter " data-level="43" data-path="message-tracing.html">
+        <li class="chapter active" data-level="43" data-path="message-tracing.html">
             
                 
                     <a href="./message-tracing.html">
@@ -1578,9 +1580,66 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h2 id="tracing-incomingoutgoing-messages"><a name="tracing-incomingoutgoing-messages" class="plugin-anchor" href="#tracing-incomingoutgoing-messages"><span class="fa fa-link"></span></a>Tracing incoming/outgoing messages</h2>
+<p>As we deal with message based interfaces Citrus will send and receive a lot of messages during a test run. Now we may want to see these messages in chronological order as they were processed by Citrus. We can enable message tracing in Citrus in order to save messages to the file system for further investigations.</p>
+<p>Citrus offers an easy way to debug all received messages to the file system. You need to enable some specific loggers and interceptors in the Spring application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.report.MessageTracingTestListener&quot;</span>/&gt;</span>
+</code></pre>
+<p>Just add this bean to the Spring configuration and Citrus will listen for sent and received messages for saving those to the file system. You will find files like these in the default test-output folder after the test run:</p>
+<p>For example:</p>
+<pre><code>logs/trace/messages/MyTest.msgs 
+logs/trace/messages/FooTest.msgs 
+logs/trace/messages/SomeTest.msgs
+</code></pre><p>Each Citrus test writes a <strong>.msgs</strong> file containing all messages that went over the wire during the test. By default the debug directory is set to <strong><em>logs/trace/messages/</em></strong> relative to the project test output directory. But you can set your own output directory in the configuration</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.report.MessageTracingTestListener&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;outputDirectory&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;file:/path/to/folder&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong>
+As the file names do not change with each test run message tracing files may be overwritten. So you eventually need to save the generated message debug files before running another group of test cases.</p>
+<p>Lets see some sample output for a test case with message communication over SOAP Http:</p>
+<pre><code class="lang-xml">Sending SOAP request:
+<span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">Operation</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://citrusframework.org/test&quot;</span>&gt;</span>sayHello<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">ns0:HelloRequest</span> <span class="hljs-attribute">xmlns:ns0</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:MessageId</span>&gt;</span>0857041782<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:MessageId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:CorrelationId</span>&gt;</span>6915071793<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:CorrelationId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:User</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:User</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:Text</span>&gt;</span>Hello WebServer<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:Text</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:HelloRequest</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+
+======================================================================
+
+Received SOAP response:
+<span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">ns0:HelloResponse</span> <span class="hljs-attribute">xmlns:ns0</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:MessageId</span>&gt;</span>0857041782<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:MessageId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:CorrelationId</span>&gt;</span>6915071793<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:CorrelationId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:User</span>&gt;</span>WebServer<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:User</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ns0:Text</span>&gt;</span>Hello Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:Text</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ns0:HelloResponse</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+</code></pre>
+<p>For this message tracing to work we need to add logging listeners to our sender and receiver components accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;webServiceClient&quot;</span>
+    <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8071&quot;</span>
+    <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;messageFactory&quot;</span>
+    <span class="hljs-attribute">interceptors</span>=<span class="hljs-value">&quot;clientInterceptors&quot;</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;clientInterceptors&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.interceptor.LoggingClientInterceptor&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+Be aware of adding the Spring <strong>util</strong> XML namespace to the application context when using the <strong>util:list</strong> construct.</p>
 
                     
                     </section>
@@ -1591,8 +1650,10 @@
         </div>
 
         
+        <a href="./meta-info.html" class="navigation navigation-prev " aria-label="Previous page: Meta-info"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./reporting.html" class="navigation navigation-next " aria-label="Next page: Reporting"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

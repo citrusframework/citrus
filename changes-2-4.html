@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | citrus-reference</title>
+        <title>Changes 2.4 | citrus-reference</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Citrus Reference Documentation">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
         
         
@@ -47,8 +47,10 @@
         
     
     
-    <link rel="next" href="./preface.html" />
+    <link rel="next" href="./changes-2-3.html" />
     
+    
+    <link rel="prev" href="./changes-2-5.html" />
     
 
         
@@ -57,9 +59,9 @@
         
         
     <div class="book"
-        data-level="0"
-        data-chapter-title="Introduction"
-        data-filepath="README.md"
+        data-level="46.2"
+        data-chapter-title="Changes 2.4"
+        data-filepath="changes-2-4.md"
         data-basepath="."
         data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
         data-innerlanguage="">
@@ -77,7 +79,7 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -1420,7 +1422,7 @@
             
         </li>
     
-        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+        <li class="chapter active" data-level="46.2" data-path="changes-2-4.html">
             
                 
                     <a href="./changes-2-4.html">
@@ -1578,9 +1580,20 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="citrus-framework--reference-documentation"><a name="citrus-framework--reference-documentation" class="plugin-anchor" href="#citrus-framework--reference-documentation"><span class="fa fa-link"></span></a>Citrus Framework - Reference Documentation</h1>
-<h2 id="welcome-to-the-citrus-user-guide"><a name="welcome-to-the-citrus-user-guide" class="plugin-anchor" href="#welcome-to-the-citrus-user-guide"><span class="fa fa-link"></span></a>Welcome to the Citrus user guide</h2>
-<p>Citrus <a href="http://www.citrusframework.org" target="_blank">www.citrusframework.org</a>.</p>
+                        <h3 id="changes-in-citrus-24"><a name="changes-in-citrus-24" class="plugin-anchor" href="#changes-in-citrus-24"><span class="fa fa-link"></span></a>Changes in Citrus 2.4?!</h3>
+<p>Citrus 2.4 comes with a set of new features especially regarding Apache Camel and Docker integrations. Bugfixes of course are also part of the package. See the following overview on what has changed.</p>
+<h3 id="docker-support"><a name="docker-support" class="plugin-anchor" href="#docker-support"><span class="fa fa-link"></span></a>Docker support</h3>
+<p>Docker and Microservices are frequent topics in software development recently. We have added interaction with Docker in Citrus so the user can manage Docker containers within a test case. Citrus now provides special Docker test actions for building, starting, stopping and inspecting Docker images and containers in a test. See <a href="docker">docker</a> for details.</p>
+<h3 id="http-rest-actions"><a name="http-rest-actions" class="plugin-anchor" href="#http-rest-actions"><span class="fa fa-link"></span></a>Http REST actions</h3>
+<p>We have significantly improved the Http REST support in Citrus. The focus is on simplifying the Http REST usage in Citrus test cases. With new Http specific test actions on client and server we can send and receive Http REST messages very easy. See <a href="http">http</a> for details.</p>
+<h3 id="wait-test-action"><a name="wait-test-action" class="plugin-anchor" href="#wait-test-action"><span class="fa fa-link"></span></a>Wait test action</h3>
+<p>With the new wait test action we can explicitly wait for some remote condition to become true inside of a test case. The conditions supported at the moment are Http url requests and file based conditions. A user can invoke a Http server url and wait for it to return a success <strong>Http 200 OK</strong> response. This is an awesome feature when waiting for a server to start up before the test continues. We can also think of waiting for a Docker container to start up before continuing. Or you can wait until a file is present on the local file system. See<a href="actions-wait">actions-wait</a>for details.</p>
+<h3 id="camel-actions"><a name="camel-actions" class="plugin-anchor" href="#camel-actions"><span class="fa fa-link"></span></a>Camel actions</h3>
+<p>Citrus has already had support for Apache Camel routes and Camel context loading. Now with 2.4 version we have added some special Apache Camel test actions for interacting with a Camel context and its routes. This enables the tester to create and use a new Camel route on the fly inside a test case. Also Citrus is now able to interact with the Camel control bus accessing route statistics and status information. Also possible are start, stop, suspend, resume operations on a Camel route. See<a href="camel-actions">camel-actions</a>and<a href="camel-controlbus">camel-controlbus</a>for details.</p>
+<h3 id="purge-endpoints-action"><a name="purge-endpoints-action" class="plugin-anchor" href="#purge-endpoints-action"><span class="fa fa-link"></span></a>Purge endpoints action</h3>
+<p>Purging JMS queues and in memory channels at test runtime has become a widely used feature especially when aiming to make tests more stable in terms of independent tests. We have added a purge endpoint test action that works on any consumer endpoint. So you do not need to separate between endpoint implementations anymore and more important you can purge server in memory channel components very easy. See<a href="actions-purge-endpoints">actions-purge-endpoints</a>for details.</p>
+<h3 id="release-to-maven-central"><a name="release-to-maven-central" class="plugin-anchor" href="#release-to-maven-central"><span class="fa fa-link"></span></a>Release to Maven Central</h3>
+<p>This is not a new feature but also worth to tell here as it is a significant improvement on the whole framework project. We can now release the Citrus artifacts to Maven central repository. So you do not need the additional <strong>labs.consol.de</strong> repository in your Maven POM anymore. The <strong>labs.consol.de</strong> repository will continue to exist though as we will release SNAPSHOT versions of Citrus here in future.</p>
 
                     
                     </section>
@@ -1591,8 +1604,10 @@
         </div>
 
         
+        <a href="./changes-2-5.html" class="navigation navigation-prev " aria-label="Previous page: Changes 2.5"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./preface.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Preface"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./changes-2-3.html" class="navigation navigation-next " aria-label="Next page: Changes 2.3"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
