@@ -1,0 +1,86 @@
+## Customize meta information
+
+Test cases in Citrus are usually provided with some meta information like the author’s name or the date of creation. In Citrus you are able to extend this test case meta information with your own very specific criteria.
+
+By default a test case comes shipped with meta information that looks like this:
+
+```xml
+<testcase name="PwdChange_OK_1_Test">
+    <meta-info>
+        <author>Christoph</author>
+        <creationdate>2010-01-18</creationdate>
+        <status>FINAL</status>
+        <last-updated-by>Christoph</last-updated-by>
+        <last-updated-on>2010-01-18T15:00:00</last-updated-on>
+    </meta-info>
+ 
+    [...]
+</testcase>
+```
+
+You can quite easily add data to this section in order to meet your individual testing strategy. Let us have a simple example to show how it is done.
+
+First of all we define a custom XSD schema describing the new elements:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"  
+        xmlns:tns="http://www.citrusframework.org/samples/my-testcase-info" 
+        targetNamespace="http://www.citrusframework.org/samples/my-testcase-info"
+        elementFormDefault="qualified">
+ 
+    <element name="requirement" type="string"/>
+    <element name="pre-condition" type="string"/>
+    <element name="result" type="string"/>
+    <element name="classification" type="string"/>
+</schema>
+```
+
+We have four simple elements (**requirement**, **pre-condition**, **result** and **classification**) all typed as string. These new elements later go into the test case meta information section.
+
+After we added the new XML schema file to the classpath of our project we need to announce the schema to Spring. As you might know already a Citrus test case is nothing else but a simple Spring configuration file with customized XML schema support. If we add new elements to a test case Spring needs to know the XML schema for parsing the test case configuration file. See the **spring.schemas** file usually placed in the META-INF/spring.schemas in your project.
+
+The file content for our example will look like follows:
+
+```xml
+http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd=com/consol/citrus/schemas/my-testcase-info.xsd
+```
+
+So now we are finally ready to use the new meta-info elements inside the test case:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:spring="http://www.springframework.org/schema/beans" 
+    xmlns:custom="http://www.citrusframework.org/samples/my-testcase-info"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/testcase 
+      http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd 
+      http://www.citrusframework.org/samples/my-testcase-info 
+      http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd">
+ 
+    <testcase name="PwdChange_OK_1_Test">
+        <meta-info>
+            <author>Christoph</author>
+            <creationdate>2010-01-18</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph</last-updated-by>
+            <last-updated-on>2010-01-18T15:00:00</last-updated-on>
+            <custom:requirement>REQ10001</custom:requirement>
+            <custom:pre-condition>Existing user, sufficient rights</custom:pre-condition>
+            <custom:result>Password reset in database</custom:result>
+            <custom:classification>PasswordChange</custom:classification>
+        </meta-info>
+ 
+        [...]
+    </testcase>
+</spring:beans>
+```
+
+**Note**
+We use a separate namespace declaration with a custom namespace prefix “custom” in order to declare the new XML schema to our test case. Of course you can pick a namespace url and prefix that fits best for your project.As you see it is quite easy to add custom meta information to your Citrus test case. The customized elements may be precious for automatic reporting. XSL transformations for instance are able to read those meta information elements in order to generate automatic test reports and documentation.
+
+You can also declare our new XML schema in the Eclipse preferences section as user specific XML catalog entry. Then even the schema code completion in your Eclipse XML editor will be available for our customized meta-info elements.
+

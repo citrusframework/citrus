@@ -1,0 +1,162 @@
+### JSON message validation
+
+Message formats such as JSON have become very popular, in particular when speaking of RESTful WebServices and JavaScript using JSON as the message format to go for. Citrus is able to expect and validate JSON messages as we will see in the next sections.
+
+**Important**
+By default Citrus will use XML message formats when sending and receiving messages. This also reflects to the message validation logic Citrus uses for incoming messages. So by default Citrus will try to parse the incoming message as XML DOM element tree. In case we would like to enable JSON message validation we have to tell Citrus that we expect a JSON message right now.
+
+And this is quite easy. Citrus has a JSON message validator implementation active by default and immediately as we mark an incoming message as JSON data this message validator will jump in.
+
+Citrus provides several default message validator implementations for JOSN message format:
+
+* com.consol.citrus.validation.json.JsonTextMessageValidator: Basic JSON message validator implementation compares JSON objects (expected and received). The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. JSONArray as well as nested JSONObjects are supported, too. The JSON validator offers two different modes to operate. By default **strict** mode is set and the validator will also check the exact amount of control object fields to match. No additional fields in received JSON data structure will be accepted. In **soft** mode validator allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated. Additional fields in the received JSON data structure are ignored then.
+
+* com.consol.citrus.validation.script.GroovyJsonMessageValidator: Extended groovy message validator provides specific JSON slurper support. With JSON slurper the tester can validate the JSON message payload with closures for instance.
+
+
+
+You can overwrite this default message validators for JSON by placing a bean into the Spring Application context. The bean uses a default name as identifier. Then your custom bean will overwrite the default validator:
+
+```xml
+<bean id="defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
+```
+
+```xml
+<bean id="defaultGroovyJsonMessageValidator" class="com.consol.citrus.validation.script.GroovyJsonMessageValidator"/>
+```
+
+This is how you can customize the message validators used for JSON message data.
+
+We have mentioned before that Citrus is working with XML by default. This is why we have to tell Citrus that the message that we are receiving uses the JSON message format. We have to tell the test case receiving action that we expect a different format other than XML.
+
+```xml
+<receive endpoint="httpMessageEndpoint">
+    <message type="json">
+        <data>
+          {
+            "type" : "read",
+            "mbean" : "java.lang:type=Memory",
+            "attribute" : "HeapMemoryUsage",
+            "path" : "@equalsIgnoreCase('USED')@",
+            "value" : "${heapUsage}",
+            "timestamp" : "@ignore@"
+          }
+        </data>
+    </message>
+</receive>
+```
+
+The message receiving action in our test case specifies a message format type **type="json"** . This tells Citrus to look for some message validator implementation capable of validating JSON messages. As we have added the proper message validator to the Spring application context Citrus will pick the right validator and JSON message validation is performed on this message. As you can see you we can use the usual test variables and the ignore element syntax here, too. Citrus is able to handle different JSON element orders when comparing received and expected JSON object. We can also use JSON arrays and nested objects. The default JSON message validator implementation in Citrus is very powerful in comparing JSON objects.
+
+Instead of defining an expected message payload template we can also use Groovy validation scripts. Lets have a look at the Groovy JSON message validator example. As usual the default Groovy JSON message validator is active by default. But the special Groovy message validator implementation will only jump in when we used a validation script in our receive message definition. Let's have an example for that.
+
+```xml
+<receive endpoint="httpMessageEndpoint">
+    <message type="json">
+        <validate>
+            <script type="groovy">
+                <![CDATA[
+                  assert json.type == 'read'
+                  assert json.mbean == 'java.lang:type=Memory'
+                  assert json.attribute == 'HeapMemoryUsage'
+                  assert json.value == '${heapUsage}'
+                ]]>
+            </script>
+        </validate>
+    </message>
+</receive>
+```
+
+Again we tell Citrus that we expect a message of **type="json"** . Now we used a validation script that is written in Groovy. Citrus will automatically activate the special message validator that executes our Groovy script. The script validation is more powerful as we can use the full power of the Groovy language. The validation script automatically has access to the incoming JSON message object **json** . We can use the Groovy JSON dot notated syntax in order to navigate through the JSON structure. The Groovy JSON slurper object **json** is automatically passed to the validation script. This way you can access the JSON object elements in your code doing some assertions.
+
+There is even more object injection for the validation script. With the automatically added object ***receivedMessage*** You have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message payload or header.
+
+**XML DSL** 
+
+```xml
+<receive endpoint="httpMessageEndpoint">
+    <message type="json">
+        <validate>
+            <script type="groovy">
+                assert receivedMessage.getPayload(String.class).contains("Hello Citrus!")
+                assert receivedMessage.getHeader("Operation") == 'sayHello'
+
+                context.setVariable("request_payload", receivedMessage.getPayload(String.class))
+            </script>
+        </validate>
+    </message>
+</receive>
+```
+
+The listing above shows some power of the validation script. We can access the message payload, we can access the message header. With test context access we can also save the whole message payload as a new test variable for later usage in the test.
+
+In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation scripts. The syntax looks like follows:
+
+**XML DSL** 
+
+```xml
+<receive endpoint="helloServiceClient" timeout="5000">
+    <message>
+        <validate>
+            <script type="groovy" file="classpath:validationScript.groovy"/>
+        </validate>
+    </message>
+</receive>
+```
+
+**Java DSL designer** 
+
+```java
+@CitrusTest
+public void receiveMessageTest() {
+    receive("helloServiceClient")
+        .validateScript(new FileSystemResource("validationScript.groovy"));
+}
+```
+
+We referenced some external file resource ***validationScript.groovy*** . This file content is loaded at runtime and is used as script body. Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite Groovy editor.
+
+**Important**
+Using several message validator implementations at the same time in the Spring application context is also no problem. Citrus automatically searches for all available message validators applicable for the given message format and executes these validators in sequence. So several message validators can coexist in a Citrus project.
+
+When we have multiple message validators that apply to the message format Citrus will execute all of them in sequence. In case you need to explicitly choose a message validator implementation you can do so in the receive action:
+
+```xml
+<receive endpoint="httpMessageEndpoint">
+    <message type="json" validator="groovyJsonMessageValidator">
+        <validate>
+            <script type="groovy">
+                <![CDATA[
+                  assert json.type == 'read'
+                  assert json.mbean == 'java.lang:type=Memory'
+                  assert json.attribute == 'HeapMemoryUsage'
+                  assert json.value == '${heapUsage}'
+                ]]>
+            </script>
+        </validate>
+    </message>
+</receive>
+```
+
+In this example we use the **groovyJsonMessageValidator** explicitly in the receive test action. The message validator implementation was added as Spring bean with id **groovyJsonMessageValidator** to the Spring application context before. Now Citrus will only execute the explicit message validator. Other implementations that might also apply are skipped.
+
+**Tip**
+By default Citrus will consolidate all available message validators for a message format in sequence. You can explicitly pick a special message validator in the receive message action as shown in the example above. In this case all other validators will not take part in this special message validation. But be careful: When picking a message validator explicitly you are of course limited to this message validator capabilities. Validation features of other validators are not valid in this case (e.g. message header validation, XPath validation, etc.)
+
+So much for receiving JSON message data in Citrus. Of course sending JSON messages in Citrus is also very easy. Just use JSON message payloads in your sending message action.
+
+```xml
+<send endpoint="httpMessageEndpoint">
+    <message>
+        <data>
+          {
+            "type" : "read",
+            "mbean" : "java.lang:type=Memory",
+            "attribute" : "HeapMemoryUsage",
+            "path" : "used"
+          }
+        </data>
+    </message>
+</send>
+```
+

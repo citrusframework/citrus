@@ -1,0 +1,71 @@
+## File support
+
+In chapter[message-channel](message-channel)we discussed the native Spring Integration channel support which enables Citrus to interact with all Spring Integration messaging adapter implementations. This is a fantastic way to extend Citrus for additional transports. This interaction now comes handy when writing and reading files from the file system in Citrus.
+
+### Write files
+
+We want to use the Spring Integration file adapter for both reading and writing files with a local directory. Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to message channels that are connected to the Spring Integration file adapters.
+
+```xml
+<citrus:channel-endpoint id="fileEndpoint" channel="fileChannel"/>
+
+<file:outbound-channel-adapter id="fileOutboundAdapter"
+      channel="fileChannel"
+      directory="file:${some.directory.property}"/>
+
+<si:channel id="fileChannel"/>
+```
+
+The configuration above describes a Citrus message channel endpoint connected to a Spring Integration outbound file adapter that writes messages to a storage directory. With this combination you are able to write files to a directory in your Citrus test case. The test case uses the channel endpoint in its send action and the endpoint interacts with the Spring Integration file adapter so sending out the file.
+
+**Note**
+The Spring Integration file adapter configuration components add a new namespace to our Spring application context. See this template which holds all necessary namespaces and schema locations:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+        <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:si="http://www.springframework.org/schema/integration"
+        xmlns:file="http://www.springframework.org/schema/integration/file"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/config
+        http://www.citrusframework.org/schema/config/citrus-config.xsd
+        http://www.springframework.org/schema/integration
+        http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/integration/file
+        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+        </beans>
+```
+
+### Read files
+
+The next program listing shows a possible inbound file communication. So the Spring Integration file inbound adapter will read files from a storage directory and publish the file contents to a message channel. Citrus can then receive those files as messages in a test case via the channel endpoint and validate the file contents for instance.
+
+```xml
+<file:inbound-channel-adapter  id="fileInboundAdapter"
+        channel="fileChannel"
+        directory="file:${some.directory.property}">
+    <si:poller fixed-rate="100"/>
+</file:inbound-channel-adapter>
+
+<si:channel id="fileChannel">
+    <si:queue capacity="25"/>
+    <si:interceptors>
+        <bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
+            <constructor-arg>
+                <bean class="org.springframework.integration.file.transformer.FileToStringTransformer"/>
+            </constructor-arg>
+        </bean>
+    </si:interceptors>
+</si:channel>
+
+<citrus:channel-endpoint id="fileEndpoint" channel="fileChannel"/>
+```
+
+**Important**
+The file inbound adapter constructs Java file objects as the message payload by default. Citrus can only work on String message payloads. So we need a file transformer that converts the file objects to String payloads representing the file's content.
+
+This file adapter example shows how easy Citrus can work hand in hand with Spring Integration adapter implementations. The message channel support is a fantastic way to extend the transport and protocol support in Citrus by connecting with the very good Spring Integration adapter implementations. Have a closer look at the Spring Integration project for more details and other adapter implementations that you can use with Citrus integration testing.
+

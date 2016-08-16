@@ -1,0 +1,746 @@
+## HTTP REST support
+
+REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a HTTP client sending HTTP requests usually in JSON data format to a HTTP server. As HTTP is a synchronous protocol by nature the client receives the server response synchronously. Citrus is able to connect with HTTP services and test REST APIs on both client and server side with a powerful JSON message data support. In the next sections you will learn how to invoke HTTP services as a client and how to handle REST HTTP requests in a test case. We deal with setting up a HTTP server in order to accept client requests and provide proper HTTP responses with GET, PUT, DELETE or POST request method.
+
+**Note**
+The http components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
+
+```xml
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-http</artifactId>
+  <version>2.7-SNAPSHOT</version>
+</dependency>
+```
+
+As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level **beans** element. Simply include the http-config namespace in the configuration XML files as follows.
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:citrus="http://www.citrusframework.org/schema/config"
+   xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+   xsi:schemaLocation="
+   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.citrusframework.org/schema/config 
+   http://www.citrusframework.org/schema/config/citrus-config.xsd
+   http://www.citrusframework.org/schema/http/config 
+   http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
+       
+    [...]
+    
+</beans>
+```
+
+Now we are ready to use the customized Citrus HTTP configuration elements with the citrus-http namespace prefix.
+
+### HTTP REST client
+
+On the client side we have a simple HTTP message client component connecting to the server. The **request-url** attribute defines the HTTP server endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages. Citrus as client waits for the response message from server. After that the response message goes through the validation process as usual. Let us see how a Citrus HTTP client component looks like:
+
+```xml
+<citrus-http:client id="helloHttpClient"
+          request-url="http://localhost:8080/hello"
+          request-method="GET"
+          content-type="application/xml"
+          timeout="60000"/>
+```
+
+The **request-method** defines the HTTP method to use. In addition to that we can specify the content-type of the request we are about to send. The client builds the HTTP request and sends it to the HTTP server. While the client is waiting for the synchronous HTTP response to arrive we are able to poll several times for the response message in our test case. As usual aou can use the same client endpoint in your test case to send and receive messages synchronously. In case the reply message comes in too late according to the timeout settings a respective timeout error is raised.
+
+Http defines several request methods that a client can use to access Http server resources. In the example client above we are using **GET** as default request method. Of course you can overwrite this setting in a test case action by setting the HTTP request method inside the sending test action. The Http client component can be used as normal endpoint in a sending test action. Use something like this in your test:
+
+**XML DSL** 
+
+```xml
+<send endpoint="helloHttpClient">
+    <message>
+        <payload>
+            <TestMessage>
+                <Text>Hello HttpServer</Text>
+            </TestMessage>
+        </payload>
+    </message>
+    <header>
+        <element name="citrus_http_method" value="POST"/>
+    </header>
+</send>
+```
+
+**Tip**
+Citrus uses the Spring REST template mechanism for sending out HTTP requests. This means you have great customizing opportunities with a special REST template configuration. You can think of basic HTTP authentication, read timeouts and special message factory implementations. Just use the custom REST template attribute in client configuration like this:
+
+```xml
+<citrus-http:client id="helloHttpClient"
+                               request-url="http://localhost:8080/hello"
+                               request-method="GET"
+                               content-type="text/plain"
+                               rest-template="customizedRestTemplate"/>
+                               
+<!-- Customized rest template -->
+<bean name="customizedRestTemplate" class="org.springframework.web.client.RestTemplate">
+  <property name="messageConverters">
+    <util:list id="converter">
+      <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+          <util:list id="types">
+            <value>text/plain</value>
+          </util:list>
+        </property>
+      </bean>
+    </util:list>
+  </property>
+  <property name="errorHandler">
+    <!-- Custom error handler -->
+  </property>
+  <property name="requestFactory">
+    <bean class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+      <property name="readTimeout" value="9000" />
+    </bean>
+  </property>
+</bean>
+        
+```
+
+Up to now we have used a normal **send** test action to send Http requests as a client. This is completely valid strategy as the Citrus Http client is a normal endpoint. But we might want to set some more Http REST specific properties and settings. In order to simplify the Http usage in a test case we can use a special test action implementation. The Citrus Http specific actions are located in a separate XML namespace. So wen need to add this namespace to our test case XML first.
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/http/testcase
+        http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+
+      [...]
+
+    </beans>
+```
+
+The test case is now ready to use the specific Http test actions by using the prefix **http:** .
+
+**XML DSL** 
+
+```xml
+<http:send-request client="httpClient">
+  <http:POST path="/customer">
+    <http:headers content-type="application/xml" accept="application/xml, */*">
+      <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+    </http:headers>
+    <http:body>
+      <http:data>
+        <![CDATA[
+          <customer>
+            <id>citrus:randomNumber()</id>
+            <name>testuser</name>
+          </customer>
+        ]]>
+      </http:data>
+    </http:body>
+  </http:POST>
+</http:send-request>
+```
+
+The action above uses several Http specific settings such as the request method **POST** as well as the **content-type** and **accept** headers. As usual the send action needs a target Http client endpoint component. We can specify a request **path** attribute that added as relative path to the base uri used on the client.
+
+When using a **GET** request we can specify some request uri parameters.
+
+**XML DSL** 
+
+```xml
+<http:send-request client="httpClient">
+  <http:GET path="/customer/${custom_header_id}">
+    <http:params content-type="application/xml" accept="application/xml, */*">
+      <http:param name="type" value="active"/>
+    </http:params>
+  </http:GET>
+</http:send-request>
+```
+
+The send action above uses a **GET** request on the endpoint uri **http://localhost:8080/customer/1234?type=active** .
+
+Of course when sending Http client requests we are also interested in receiving Http response messages. We want to validate the success response with Http status code.
+
+**XML DSL** 
+
+```xml
+<http:receive-response client="httpClient">
+  <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+    <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+  </http:headers>
+  <http:body>
+    <http:data>
+      <![CDATA[
+          <customerResponse>
+            <success>true</success>
+          </customerResponse>
+      ]]>
+    </http:data>
+  </http:body>
+</http:receive-response>
+```
+
+The **receive-response** test action also uses a client component. We can expect response status code information such as **status** and **reason-phrase** . Of course Citrus will raise a validation exception in case Http status codes mismatch.
+
+Up to now we have used XML DSL test cases. The Java DSL in Citrus also works with specific Http test actions. See following example and find out how this works:
+
+**XML DSL** 
+
+```xml
+@CitrusTest
+public void httpActionTest() {
+    http().client("httpClient")
+          .post("/customer")
+          .payload("<customer>" +
+                    "<id>citrus:randomNumber()</id>" +
+                    "<name>testuser</name>" +
+                  "</customer>")
+          .header("CustomHeaderId", "${custom_header_id}")
+          .contentType("text/xml")
+          .accept("text/xml, */*");
+
+    http().client("httpClient")
+          .response(HttpStatus.OK)
+          .payload("<customerResponse>" +
+                    "<success>true</success>" +
+                  "</customerResponse>")
+          .header("CustomHeaderId", "${custom_header_id}")
+          .version("HTTP/1.1");
+}
+```
+
+Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.
+
+### HTTP REST server
+
+The HTTP client was quite easy and straight forward. Receiving HTTP messages is a little bit more complicated because Citrus has to provide server functionality listening on a local port for client connections. Therefore Citrus offers an embedded HTTP server which is capable of handling incoming HTTP requests. Once a client connection is accepted the HTTP server must also provide a proper HTTP response to the client. In the next few lines you will see how to simulate server side HTTP REST service with Citrus.
+
+```xml
+<citrus-http:server id="helloHttpServer"
+                port="8080"
+                auto-start="true"
+                resource-base="src/it/resources"/>
+```
+
+Citrus uses an embedded Jetty server that will automatically start when the Spring application context is loaded (auto-start="true"). The basic connector is listening on port **8080** for requests. Test cases can interact with this server instance via message channels by default. The server provides an inbound channel that holds incoming request messages. The test case can receive those requests from the channel with a normal receive test action. In a second step the test case can provide a synchronous response message as reply which will be automatically sent back to the HTTP client as response.
+
+![figure_008.jpg](images/figure_008.jpg)
+
+The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this to much. By default you as a tester just use the server as synchronous endpoint in your test case. This means that you simply receive a message from the server and send a response back.
+
+```xml
+<testcase name="httpServerTest">
+    <actions>
+        <receive endpoint="helloHttpServer">
+            <message>
+                <data>
+                  [...]
+                </data>
+            </message>
+        </receive>
+
+        <send endpoint="helloHttpServer">
+            <message>
+                <data>
+                  [...]
+                </data>
+            </message>
+        </send>
+    </actions>
+</testcase>
+```
+
+As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling HTTP client. In most cases this is exactly what we want to do - send back a response message that is specified inside the test. The HTTP server component by default uses a channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Http server component provides some more customization possibilities when it comes to endpoint adapter implementations. This topic is discussed in a separate section[endpoint-adapter](endpoint-adapter). Up to now we keep it simple by synchronously receiving and sending messages in the test case.
+
+**Tip**
+The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention **{serverName}.inbound** where **{serverName}** is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
+
+So lets get back to our mission of providing response messages as server to connected clients. As you might know Http REST works with some characteristic properties when it comes to send and receive messages. For instance a client can send different request methods GET, POST, PUT, DELETE, HEAD and so on. The Citrus server may verify this method when receiving client requests. Therefore we have introduced special Http test actions for server communication. Have a look at a simple example:
+
+```xml
+<http:receive-request server="helloHttpServer">
+  <http:POST path="/test">
+    <http:headers content-type="application/xml" accept="application/xml, */*">
+      <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+      <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
+    </http:headers>
+    <http:body>
+    <http:data>
+      <![CDATA[
+        <testRequestMessage>
+          <text>Hello HttpServer</text>
+        </testRequestMessage>
+      ]]>
+    </http:data>
+    </http:body>
+  </http:POST>
+  <http:extract>
+    <http:header name="X-MessageId" variable="message_id"/>
+  </http:extract>
+</http:receive-request>
+
+<http:send-response server="helloHttpServer">
+  <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+    <http:header name="X-MessageId" value="${message_id}"/>
+    <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+    <http:header name="Content-Type" value="application/xml"/>
+  </http:headers>
+  <http:body>
+  <http:data>
+    <![CDATA[
+      <testResponseMessage>
+        <text>Hello Citrus</text>
+      </testResponseMessage>
+    ]]>
+  </http:data>
+  </http:body>
+</http:send-response>
+```
+
+We receive a client request and validate that the request method is **POST** on request path **/test** . Now we can validate special message headers such as **content-type** . In addition to that we can check custom headers and basic authorization headers. As usual the optional message body is compared to an expected message template. The custom **X-MessageId** header is saved to a test variable **message_id** for later usage in the response.
+
+The response message defines Http typical entities such as **status** and **reason-phrase** . Here the tester can simulate **404 NOT_FOUND** errors or similar other status codes that get send back to the client. In our example everything is **OK** and we send back a response body and some custom header entries.
+
+That is basically how Citrus simulates Http server operations. We receive the client request and validate the request properties. Then we send back a response with a Http status code.
+
+As usual all these Http specific actions are also available in Java DSL.
+
+```xml
+@CitrusTest
+public void httpServerActionTest() {
+    http().server("helloHttpServer")
+          .post("/test")
+          .payload("<testRequestMessage>" +
+                    "<text<Hello HttpServer</text>" +
+                  "</testRequestMessage>")
+          .contentType("application/xml")
+          .accept("application/xml, */*")
+          .header("CustomHeaderId", "${custom_header_id}")
+          .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
+          .extractFromHeader("X-MessageId", "message_id");
+
+    http().server("helloHttpServer")
+          .respond(HttpStatus.OK)
+          .payload("<testResponseMessage>" +
+                    "<text<Hello Citrus</text>" +
+                  "</testResponseMessage>")
+          .version("HTTP/1.1")
+          .contentType("application/xml")
+          .header("CustomHeaderId", "${custom_header_id}")
+          .header("X-MessageId", "${message_id}");
+}
+```
+
+This is the exact same example in Java DSL. We select server actions first and receive client requests. Then we send back a response with a **HttpStatus.OK** status. This completes the server actions on Http message transport. Now we continue with some more Http specific settings and features.
+
+### HTTP headers
+
+When dealing with HTTP request/response communication we always deal with HTTP specific headers. The HTTP protocol defines a group of header attributes that both client and server need to be able to handle. You can set and validate these HTTP headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some HTTP headers are explicitly set before the request is sent out.
+
+```xml
+<http:send-request client="httpClient">
+  <http:POST>
+    <http:headers>
+        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="Content-Type" value="text/xml"/>
+        <http:header name="Accept" value="text/xml,*/*"/>
+    </http:headers>
+    <http:body>
+        <http:payload>
+            <testRequestMessage>
+                <text>Hello HttpServer</text>
+            </testRequestMessage>
+        </http:payload>
+    </http:body>
+  </http:POST>
+</http:send-request>
+```
+
+We are able to set custom headers (**CustomHeaderId**) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as **Content-Type** . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:
+
+```xml
+POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+CustomHeaderId: 123456789
+Accept-Charset: macroman
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8091
+Content-Length: 175
+<testRequestMessage>
+    <text>Hello HttpServer</text>
+</testRequestMessage>
+```
+
+On server side testers are interested in validating the HTTP headers. Within Citrus receive action you simply define the expected header entries. The HTTP specific headers are automatically available for validation as you can see in this example:
+
+```xml
+<http:receive-request server="httpServer">
+  <http:POST>
+    <http:headers>
+        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="Content-Type" value="text/xml"/>
+        <http:header name="Accept" value="text/xml,*/*"/>
+    </http:headers>
+    <http:body>
+        <http:payload>
+            <testRequestMessage>
+                <text>Hello HttpServer</text>
+            </testRequestMessage>
+        </http:payload>
+    </http:body>
+  </http:POST>
+</http:receive-request>
+```
+
+The test checks on custom headers and HTTP specific headers to meet the expected values.
+
+Now that we have accepted the client request and validated the contents we are able to send back a proper HTTP response message. Same thing here with HTTP specific headers. The HTTP protocol defines several headers marking the success or failure of the server operation. In the test case you can set those headers for the response message with conventional Citrus header names. See the following example to find out how that works for you.
+
+```xml
+<http:send-response server="httpServer">
+    <http:headers status="200" reason-phrase="OK">
+        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="Content-Type" value="text/xml"/>
+    </http:headers>
+    <http:body>
+        <http:payload>
+            <testResponseMessage>
+                <text>Hello Citrus Client</text>
+            </testResponseMessage>
+        </http:payload>
+    </http:body>
+</http:send-response>
+```
+
+Once more we set the custom header entry (**CustomHeaderId**) and a HTTP reserved header (**Content-Type**) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names **status** in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:
+
+```xml
+HTTP/1.1 200 OK
+Content-Type: text/xml;charset=UTF-8
+Accept-Charset: macroman
+Content-Length: 205
+Server: Jetty(7.0.0.pre5)
+<testResponseMessage>
+    <text>Hello Citrus Client</text>
+</testResponseMessage>
+```
+
+**Tip**
+You do not have to set the reason phrase all the time. It is sufficient to only set the HTTP status code. Citrus will automatically add the proper reason phrase for well known HTTP status codes.
+
+The only thing that is missing right now is the validation of HTTP status codes when receiving the server response in a Citrus test case. It is very easy as you can use the Citrus reserved header names for validation, too.
+
+```xml
+<http:receive-response client="httpClient">
+    <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+    </http:headers>
+    <http:body>
+        <http:payload>
+            <testResponseMessage>
+                <text>Hello Test Framework</text>
+            </testResponseMessage>
+        </http:payload>
+    </http:body>
+</http:receive-response>
+```
+
+Up to now we have used some of the basic Citrus reserved HTTP header names (status, version, reason-phrase). In HTTP RESTful services some other header names are essential for validation. These are request attributes like query parameters, context path and request URI. The Citrus server side REST message controller will automatically add all this information to the message header for you. So all you need to do is validate the header entries in your test.
+
+The next example receives a HTTP GET method request on server side. Here the GET request does not have any message payload, so the validation just works on the information given in the message header. We assume the client to call **http://localhost:8080/app/users?id=123456789** . As a tester we need to validate the request method, request URI, context path and the query parameters.
+
+```xml
+<http:receive-request server="httpServer">
+  <http:GET path="/app/users" context-path="/app">
+    <http:params>
+        <http:param name="id" value="123456789"/>
+    </http:params>
+    <http:headers>
+        <http:header name="Host" value="localhost:8080"/>
+        <http:header name="Content-Type" value="text/html"/>
+        <http:header name="Accept" value="text/xml,*/*"/>
+    </http:headers>
+    <http:body>
+        <http:data></http:data>
+    </http:body>
+  </http:GET>
+</http:receive-request>
+```
+
+**Tip**
+Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.
+
+As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.
+
+### HTTP form urlencoded data
+
+HTML form data can be sent to the server using different methods and content types. One of them is a POST method with **x-www-form-urlencoded** body content. The form data elements are sent to the server using key-value pairs POST data where the form control name is the key and the control data is the url encoded value.
+
+Form urlencoded form data content could look like this:
+
+```xml
+password=s%21cr%21t&username=foo
+```
+
+A you can see the form data is automatically encoded. In the example above we transmit two form controls **password** and **username** with respective values **s$cr$t** and **foo** . In case we would validate this form data in Citrus we are able to do this with plaintext message validation.
+
+```xml
+<receive endpoint="httpServer">
+  <message type="plaintext">
+    <data>
+      <![CDATA[
+        password=s%21cr%21t&username=${username}
+      ]]>
+    </data>
+  </message>
+  <header>
+    <element name="citrus_http_method" value="POST"/>
+    <element name="citrus_http_request_uri" value="/form-test"/>
+    <element name="Content-Type" value="application/x-www-form-urlencoded"/>
+  </header>
+</receive>
+```
+
+Obviously validating these key-value pair character sequences can be hard especially when having HTML forms with lots of form controls. This is why Citrus provides a special message validator for **x-www-form-urlencoded** contents. First of all we have to add **citrus-http** module as dependency to our project if not done so yet. After that we can add the validator implementation to the list of message validators used in Citrus.
+
+```xml
+<citrus:message-validators>
+  <citrus:validator class="com.consol.citrus.http.validation.FormUrlEncodedMessageValidator"/>
+</citrus:message-validators>
+```
+
+Now we are able to receive the urlencoded form data message in a test.
+
+```xml
+<receive endpoint="httpServer">
+  <message type="x-www-form-urlencoded">
+    <payload>
+      <form-data xmlns="http://www.citrusframework.org/schema/http/message">
+        <content-type>application/x-www-form-urlencoded</content-type>
+        <action>/form-test</action>
+        <controls>
+          <control name="password">
+            <value>${password}</value>
+          </control>
+          <control name="username">
+            <value>${username}</value>
+          </control>
+        </controls>
+      </form-data>
+    </payload>
+  </message>
+  <header>
+    <element name="citrus_http_method" value="POST"/>
+    <element name="citrus_http_request_uri" value="/form-test"/>
+    <element name="Content-Type" value="application/x-www-form-urlencoded"/>
+  </header>
+</receive>
+```
+
+We use a special message type **x-www-form-urlencoded** so the new message validator will take action. The form url encoded message validator is able to handle a special XML representation of the form data. This enables the very powerful XML message validation capabilities of Citrus such as ignoring elements and usage of test variables inline.
+
+Each form control is translated to a control element with respective name and value properties. The form data is validated in a more comfortable way as the plaintext message validator would be able to offer.
+
+### HTTP error handling
+
+So far we have received response messages with HTTP status code **200 OK** . How to deal with server errors like **404 Not Found** or **500 Internal server error** ? The default HTTP message client error strategy is to propagate server error response messages to the receive action for validation. We simply check on HTTP status code and status text for error validation.
+
+```xml
+<http:send-request client="httpClient">
+    <http:body>
+        <http:payload>
+            <testRequestMessage>
+                <text>Hello HttpServer</text>
+            </testRequestMessage>
+        </http:payload>
+    </http:body>
+</http:send-request>
+
+<http:receive-request client="httpClient">
+    <http:body>
+        <http:data><![CDATA[]]></http:data>
+    </http:body>
+    <http:headers status="403" reason-phrase="FORBIDDEN"/>
+</http:receive>
+```
+
+The message data can be empty depending on the server logic for these error situations. If we receive additional error information as message payload just add validation assertions as usual.
+
+Instead of receiving such empty messages with checks on HTTP status header information we can change the error strategy in the message sender component in order to automatically raise exceptions on response messages other than **200 OK** . Therefore we go back to the HTTP message sender configuration for changing the error strategy.
+
+```xml
+<citrus-http:client id="httpClient"
+                              request-url="http://localhost:8080/test"
+                              error-strategy="throwsException"/>
+```
+
+Now we expect an exception to be thrown because of the error response. Following from that we have to change our test case. Instead of receiving the error message with receive action we assert the client exception and check on the HTTP status code and status text.
+
+```xml
+<assert exception="org.springframework.web.client.HttpClientErrorException"
+           message="403 Forbidden">
+    <when>
+        <http:send-request client="httpClient">
+            <http:body>
+                <http:payload>
+                    <testRequestMessage>
+                        <text>Hello HttpServer</text>
+                    </testRequestMessage>
+                </http:payload>
+            </http:body>
+        </http:send-request>
+    </when>
+</assert>
+```
+
+Both ways of handling HTTP error messages on client side are valid for expecting the server to raise HTTP error codes. Choose the preferred way according to your test project requirements.
+
+### HTTP client basic authentication
+
+As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication where the credentials are transmitted in the request header section as base64 encoding.
+
+The easiest approach to set the **Authorization** header for a basic authentication HTTP request would be to set it on your own in the send action definition. Of course you have to use the correct basic authentication header syntax with base64 encoding for the username:password phrase. See this simple example.
+
+```xml
+<http:headers>
+    <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
+</http:headers>
+```
+
+Citrus will add this header to the HTTP requests and the server will read the **Authorization** username and password. For more convenient base64 encoding you can also use a Citrus function, see[functions-encode-base64](functions-encode-base64)
+
+Now there is a more comfortable way to set the basic authentication header in all the Citrus requests. As Citrus uses Spring's REST support with the RestTemplate and ClientHttpRequestFactory the basic authentication is already covered there in a more generic way. You simply have to configure the basic authentication credentials on the RestTemplate's ClientHttpRequestFactory. Just see the following example and learn how to do that.
+
+```xml
+<citrus-http:client id="httpClient"
+                    request-method="POST"
+                    request-url="http://localhost:8080/test"
+                    request-factory="basicAuthFactory"/>
+
+<bean id="basicAuthFactory"
+    class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
+  <property name="authScope">
+      <bean class="org.apache.http.auth.AuthScope">
+        <constructor-arg value="localhost"/>
+        <constructor-arg value="8072"/>
+        <constructor-arg value=""/>
+        <constructor-arg value="basic"/>
+      </bean>
+  </property>
+  <property name="credentials">
+    <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+        <constructor-arg value="someUsername"/>
+        <constructor-arg value="somePassword"/>
+    </bean>
+  </property>
+</bean>
+```
+
+The advantages of this method is obvious. Now all sending test actions that reference the client component will automatically add the basic authentication header.
+
+**Important**
+Since Citrus has upgraded to Spring 3.1.x the Jakarta commons HTTP client is deprecated with Citrus version 1.2. The formerly used UserCredentialsClientHttpRequestFactory is therefore also deprecated and will not continue with next versions. Please update your configuration if you are coming from Citrus 1.1 or earlier versions.
+
+The above configuration results in HTTP client requests with authentication headers properly set for basic authentication. The client request factory takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. Citrus uses preemtive authentication. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can setup an authentication cache within the HTTP context in order to have preemtive authentication.
+
+As a result of the basic auth client request factory the following example request that is created by the Citrus HTTP client has the **Authorization** header set. This is done now automatically for all requests with this HTTP client.
+
+```xml
+POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+Accept-Charset: iso-8859-1, us-ascii, utf-8
+Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8080
+Content-Length: 175
+<testRequestMessage>
+  <text>Hello HttpServer</text>
+</testRequestMessage>
+```
+
+### HTTP server basic authentication
+
+Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.
+
+```xml
+<citrus-http:server id="basicAuthHttpServer"
+                port="8090"
+                auto-start="true"
+                resource-base="src/it/resources"
+                security-handler="basicSecurityHandler"/>
+
+<bean id="securityHandler" class="com.consol.citrus.http.security.SecurityHandlerFactory">
+    <property name="users">
+        <list>
+            <bean class="com.consol.citrus.http.security.User">
+                <property name="name" value="citrus"/>
+                <property name="password" value="secret"/>
+                <property name="roles" value="CitrusRole"/>
+            </bean>
+        </list>
+    </property>
+    <property name="constraints">
+        <map>
+            <entry key="/foo/*">
+                <bean class="com.consol.citrus.http.security.BasicAuthConstraint">
+                    <constructor-arg value="CitrusRole"/>
+                </bean>
+            </entry>
+        </map>
+    </property>
+</bean>
+```
+
+We have set a security handler on the server web container with a constraint on all resources with **/foo/*** . Following from that the server requires basic authentication for these resources. The granted users and roles are specified within the security handler bean definition. Connecting clients have to set the basic auth HTTP header properly using the correct user and role for accessing the Citrus server now.
+
+You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and inspect the settings and properties offered by the security handler interface.
+
+**Tip**
+This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.
+
+### HTTP servlet context customization
+
+The Citrus HTTP server uses Spring application context loading on startup. For high customizations you can provide a custom servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling incoming requests (GET, PUT, DELETE, POST, etc.).
+
+```xml
+<bean id="citrusHandlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+<bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+  <property name="messageConverters">
+    <util:list id="converters">
+      <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+          <util:list>
+            <value>text/xml</value>
+          </util:list>
+        </property>
+      </bean>
+    </util:list>
+  </property>
+</bean>
+
+<bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController">
+  <property name="endpointAdapter">
+      <bean
+       class="com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter"/>
+  </property>
+</bean>
+```
+
+The beans above are responsible for proper HTTP server configuration. In general you do not need to adjust those beans, but we have the possibility to do so which gives us a great customization and extension points. The important part is the endpoint adapter definition inside the HttpMessageController. Once a client request was accepted the adapter is responsible for generating a proper response to the client.
+
+You can add the custom servlet context as file resource to the Citrus HTTP server component. Just use the **context-config-location** attribute as follows:
+
+```xml
+<citrus-http:server id="helloHttpServer"
+      port="8080"
+      auto-start="true"
+      context-config-location="classpath:com/consol/citrus/http/custom-servlet-context.xml"
+      resource-base="src/it/resources"/>
+```
+

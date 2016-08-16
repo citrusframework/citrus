@@ -1,0 +1,131 @@
+### Groovy script execution
+
+Groovy is an agile dynamic language for the Java Platform. Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.
+
+The Citrus Groovy support might be the entrance for you to write customized test actions. You can easily execute Groovy code inside a test case, just like a normal test action. The whole test context with all variables is available to the Groovy action. This means someone can change variable values or create new variables very easily.
+
+Let's have a look at some examples in order to understand the possible Groovy code interactions in Citrus:
+
+**XML DSL** 
+
+```xml
+<testcase name="groovyTest">
+  <variables>
+    <variable name="time" value="citrus:currentDate()"/>
+  </variables>
+  <actions>
+    <groovy>
+        println 'Hello Citrus'
+    </groovy>
+    <groovy>
+        println 'The variable is: ${time}'
+    </groovy>
+    <groovy resource="classpath:com/consol/citrus/script/example.groovy"/>
+  </actions>
+</testcase>
+```
+
+**Java DSL designer** 
+
+```java
+@CitrusTest
+public void groovyTest() {
+    groovy("println 'Hello Citrus'");
+    groovy("println 'The variable is: ${time}'");
+    
+    groovy(new ClassPathResource("com/consol/citrus/script/example.groovy"));
+}
+```
+
+**Java DSL runner** 
+
+```java
+@CitrusTest
+public void groovyTest() {
+    groovy(action -> action.script("println 'Hello Citrus'"));
+    groovy(action -> action.script("println 'The variable is: ${time}'"));
+
+    groovy(action -> action.script(new ClassPathResource("com/consol/citrus/script/example.groovy")));
+}
+```
+
+As you can see it is possible to write Groovy code directly into the test case. Citrus will interpret and execute the Groovy code at runtime. As usual nested variable expressions are replaced with respective values. In general this is done in advance before the Groovy code is interpreted. For more complex Groovy code sections which grow in lines of code you can also reference external file resources.
+
+After this basic Groovy code usage inside a test case we might be interested accessing the whole TestContext. The TestContext Java object holds all test variables and function definitions for the test case and can be referenced in Groovy code via simple naming convention. Just access the object reference 'context' and you are able to manipulate the TestContext (e.g. setting a new variable which is directly ready for use in following test actions).
+
+**XML DSL** 
+
+```xml
+<testcase name="groovyTest">
+  <actions>
+    <groovy>
+      context.setVariable("greetingText","Hello Citrus")
+      println context.getVariable("greetingText")
+    </groovy>
+    <echo>
+      <message>New variable: ${greetingText}</message>
+    </echo>
+  </actions>
+</testcase>
+```
+
+**Note**
+The implicit TestContext access that was shown in the previous sample works with a default Groovy script template provided by Citrus. The Groovy code you write in the test case is automatically surrounded with a Groovy script which takes care of handling the TestContext. The default template looks like follows:
+
+```java
+import com.consol.citrus.*
+import com.consol.citrus.variable.*
+import com.consol.citrus.context.TestContext
+import com.consol.citrus.script.GroovyAction.ScriptExecutor
+
+public class GScript implements ScriptExecutor {
+    public void execute(TestContext context) {
+        @SCRIPTBODY@
+    }
+}
+```
+
+Your code is placed in substitution to the ***@SCRIPTBODY@*** placeholder. Now you might understand how Citrus handles the context automatically. You can also write your own script templates making more advanced usage of other Java APIs and Groovy code. Just add a script template path to the test action like this:
+
+```xml
+<groovy script-template="classpath:my-custom-template.groovy">
+  [...]
+</groovy>
+```
+
+On the other hand you can disable the automatic script template wrapping in your action at all:
+
+```xml
+<groovy use-script-template="false">
+  println 'Just use some Groovy code'
+</groovy>
+```
+
+The next example deals with advanced Groovy code and writing whole classes. We write a new Groovy class which implements the ScriptExecutor interface offered by Citrus. This interface defines a special execute method and provides access to the whole TestContext for advanced test variables access.
+
+```xml
+<testcase name="groovyTest">
+  <variables>
+    <variable name="time" value="citrus:currentDate()"/>
+  </variables>
+  <actions>
+    <groovy>
+      <![CDATA[
+        import com.consol.citrus.*
+        import com.consol.citrus.variable.*
+        import com.consol.citrus.context.TestContext
+        import com.consol.citrus.script.GroovyAction.ScriptExecutor
+        
+        public class GScript implements ScriptExecutor {
+            public void execute(TestContext context) {
+                println context.getVariable("time")
+            }
+        }
+      ]]>
+    </groovy>
+  </actions>
+</testcase>
+```
+
+Implementing the ScriptExecutor interface in a custom Groovy class is applicable for very special test context manipulations as you are able to import and use other Java API classes in this code.
+

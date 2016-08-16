@@ -1,0 +1,197 @@
+## WebSocket support
+
+The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. Citrus is able to send and receive messages with WebSocket connections as client and server. The Http server implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish and consumer messages via bidirectional WebSocket protocol.
+
+The new WebSocket support is located in the module **citrus-websocket** . Therefore we need to add this module to our project as dependency when we are about to use the WebSocket features in Citrus.
+
+```xml
+<dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-websocket</artifactId>
+    <version>2.7-SNAPSHOT</version>
+</dependency>
+```
+
+As Citrus provides a customized WebSocket configuration schema for the Spring application context configuration files we have to add name to the top level **beans** element. Simply include the websocket-config namespace in the configuration XML files as follows.
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:citrus="http://www.citrusframework.org/schema/config"
+      xmlns:citrus-websocket="http://www.citrusframework.org/schema/websocket/config"
+      xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.citrusframework.org/schema/config
+            http://www.citrusframework.org/schema/config/citrus-config.xsd
+            http://www.citrusframework.org/schema/websocket/config
+            http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
+
+    [...]
+
+</beans>
+```
+
+Now our project is ready to use the Citrus WebSocket support. First of all let us send a message via WebSocket connection to some server.
+
+### WebSocket client
+
+On the client side Citrus offers a client component that goes directly to the Spring bean application context. The client needs a server endpoint uri. This is a WebSocket protocol endpoint uri.
+
+```xml
+<citrus-websocket:client id="helloWebSocketClient"
+    url="http://localhost:8080/hello"
+    timeout="5000"/>
+```
+
+The **url** defines the endpoint to send messages to. The server has to be a WebSocket ready web server that supports Http connection upgrade for WebSocket protocols. WebSocket by its nature is an asynchronous bidirectional protocol. This means that the connection between client and server remains open and both server and client can send and receive messages. So when the Citrus client is waiting for a message we need a timeout that stops the asynchronous waiting. The receiving test action and the test case will fail when such a timeout is raised.
+
+The WebSocket client will automatically open a connection to the server and ask for a connection upgrade to WebSocket protocol. This handshake is done once when the connection to the server is established. After that the client can push messages to the server and on the other side the server can push messages to the client. Now lets first push some messages to the server:
+
+```xml
+<send endpoint="helloWebSocketClient">
+  <message>
+      <payload>
+          <TestMessage>
+              <Text>Hello WebSocketServer</Text>
+          </TestMessage>
+      </payload>
+  </message>
+</send>
+```
+
+The connection handshake and the connection upgrade is done automatically by the client. After that the message is pushed to the server. As WebSocket is a bidirectional protocol we can also receive messages on the WebSocket client. These messages are pushed from server to all connected clients.
+
+```xml
+<receive endpoint="helloWebSocketClient">
+  <message>
+      <payload>
+          <TestMessage>
+              <Text>Hello WebSocketClient</Text>
+          </TestMessage>
+      </payload>
+  </message>
+</receive>
+```
+
+We just use the very same client endpoint component in a message receive action. The client will wait for messages from the server and once received perform the well known message validation. Here we expect some XML message payload. This completes the client side as we are able to push and consumer messages via WebSocket connections.
+
+**Tip**
+Up to now we have used static WebSocket endpoint URIs in our client component configurations. This can be done with a more powerful dynamic endpoint URI in WebSocket client. Similar to the endpoint resolving mechanism in SOAP you can dynamically set the called endpoint uri at test runtime through message header values. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action inside the test.
+
+The **dynamicEndpointResolver** bean must implement the EndpointUriResolver interface in order to resolve dynamic endpoint uri values. Citrus offers a default implementation, the **DynamicEndpointUriResolver**, which uses a specific message header for setting dynamic endpoint uri. The message header needs to specify the header **citrus_endpoint_uri** with a valid request uri.
+
+```xml
+<header>
+          <element name="citrus_endpoint_uri" value="ws://localhost:8080/customers/${customerId}"/>
+          </header>
+```
+
+The specific send action above will send its message to the dynamic endpoint (ws://localhost:8080/customers/${customerId}) which is set in the header **citrus_endpoint_uri** .
+
+### WebSocket server endpoints
+
+On the server side Citrus has a Http server implementation that we can easily start during test runtime. The Http server accepts connections from clients and also supports WebSocket upgrade strategies. This means clients can ask for a upgrade to the WebSocket standard. In this handshake the server will upgrade the connection to WebSocket and afterwards client and server can exchange messages over this connection. This means the connection is kept alive and multiple messages can be exchanged. Lets see how WebSocket endpoints are added to a Http server component in Citrus.
+
+```xml
+<citrus-websocket:server id="helloHttpServer"
+        port="8080"
+        auto-start="true"
+        resource-base="src/it/resources">
+    <citrus-websocket:endpoints>
+        <citrus-websocket:endpoint ref="websocket1"/>
+        <citrus-websocket:endpoint ref="websocket2"/>
+    </citrus-websocket:endpoints>
+</citrus-websocket:server>
+
+<citrus-websocket:endpoint id="websocket1" path="/test1"/>
+<citrus-websocket:endpoint id="websocket2" path="/test2" timeout="10000"/>
+```
+
+The embedded Jetty WebSocket server component in Citrus now is able to define multiple WebSocket endpoints. The WebSocket endpoints match to a request path on the server and are referenced by a unique id. Each WebSocket endpoint can follow individual timeout settings. In a test we can use these endpoints directly to receive messages.
+
+```xml
+<testcase name="httpWebSocketServerTest">
+    <actions>
+        <receive endpoint="websocket1">
+            <message>
+                <data>
+                  [...]
+                </data>
+            </message>
+        </receive>
+
+        <send endpoint="websocket1">
+            <message>
+                <data>
+                  [...]
+                </data>
+            </message>
+        </send>
+    </actions>
+</testcase>
+```
+
+As you can see we reference the endpoint id in both receive and send actions. Each WebSocket endpoint holds one or more open connections to its clients. Each message that is sent is pushed to all connected clients. Each client can send messages to the WebSocket endpoint.
+
+The WebSocket endpoint component handles connection handshakes automatically and caches all open sessions in memory. By default all connected clients will receive the messages pushed from server. This is done completely behind the scenes. The Citrus server is able to handle multiple WebSocket endpoints with different clients connected to it at the same time. This is why we have to choose the WebSocket endpoint on the server by its identifier when sending and receiving messages.
+
+With this WebSocket endpoints we change the Citrus server behavior so that clients can upgrade to WebSocket connection. Now we have a bidirectional connection where the server can push messages to the client and vice versa.
+
+### WebSocket headers
+
+The WebSocket standard defines some default headers to use during connection upgrade. These headers are made available to the test case in both directions. Citrus will handle these header values with special care when WebSocket support is activated on a server or client. Now WebSocket messages can also be split into multiple pieces. Each message part is pushed separately to the server but still is considered to be a single message payload. The server has to collect and aggregate all messages until a special message header **isLast** is set in one of the message parts.
+
+The Citrus WebSocket client can slice messages into several parts.
+
+```xml
+<send endpoint="webSocketClient">
+    <message type="json">
+        <data>
+        [
+            {
+                "event" : "client_message_1",
+                "timestamp" : "citrus:currentDate()"
+            },
+        </data>
+    </message>
+    <header>
+        <element name="citrus_websocket_is_last" value="false"/>
+    </header>
+</send>
+
+<sleep milliseconds="500"/>
+
+<send endpoint="webSocketClient">
+    <message type="json">
+        <data>
+            {
+                "event" : "client_message_2",
+                "timestamp" : "citrus:currentDate()"
+            }
+          ]
+        </data>
+    </message>
+    <header>
+        <element name="citrus_websocket_is_last" value="true"/>
+    </header>
+</send>
+```
+
+The test above has two separate send operations both sending to a WebSocket endpoint. The first sending action sets the header **citrus_websocket_is_last** to **false** which indicates that the message is not complete yet. The 2nd send action pushes the rest of the message to the server and set the **citrus_websocket_is_last** header to **true** . Now the server is able to aggregate the message pieces to a single message payload. The result is a valida JSON array with both events in it.
+
+```xml
+[
+  {
+    "event" : "client_message_1",
+    "timestamp" : "2015-01-01"
+  },
+  {
+    "event" : "client_message_2",
+    "timestamp" : "2015-01-01"
+  }
+]
+```
+
+Now the server part in Citrus is able to handle these sliced messages, too. The server will automatically aggregate those message parts before passing it to the test case for validation.
+
