@@ -8,7 +8,7 @@ Dirty states inside the database or still running server instances then might ca
 
 The following example shows how to use the finally section at the end of a test:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="finallyTest">
@@ -43,7 +43,7 @@ In the example the first action creates an entry in the database using an ***INS
 
 Of course you can also use the finally block in the Java test case DSL. Find following example to see how it works:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -62,7 +62,7 @@ public void finallySectionTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest

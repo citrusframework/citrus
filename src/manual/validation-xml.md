@@ -30,7 +30,7 @@ The control message template is not necessarily very static. Citrus supports var
 
 When using the Citrus Java DSL you will face a verbose message payload definition. This is because Java does not support multiline character sequence values as Strings. We have to use verbose String concatenation when constructing XML message payload contents for instance. In addition to that reserved characters like quotes must be escaped and line breaks must be explicitly added. All these impediments let me suggest to use external file resources in Java DSL when dealing with large complex message payload data. Here is an example:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -46,7 +46,7 @@ public void receiveMessageTest() {
 
 Now that we have validated the message payload in various ways we are now interested in validating the message header. This is simple as you have to define the header name and the control value that you expect. Just add the following header validation to your receiving action.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <header>
@@ -55,7 +55,7 @@ Now that we have validated the message payload in various ways we are now intere
 </header>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -75,7 +75,7 @@ Some elements in the message payload might not apply for validation at all. Just
 
 The timestamp value in our next example will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
  <message>
@@ -94,7 +94,7 @@ Although we have given a static timestamp value in the payload data the element 
 
 When using the Java DSL the **@ignore@** placeholder as well as XPath expressions can be used seamlessly. Here is an example of that:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -113,7 +113,7 @@ Of course you can use the inline **@ignore@** placeholder in an external file re
 
 With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the message elements and uses simple code assertions in order to control the message content. Here is an example how to validate messages with Groovy script:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="helloServiceClient" timeout="5000">
@@ -135,7 +135,7 @@ With the Groovy XmlSlurper you can easily validate XML message payloads without 
 </receive>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -155,7 +155,7 @@ As you can see from the example, we may use test variables within the validation
 
 There is even more object injection for the validation script. With the automatically added object ***receivedMessage*** You have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message payload or header.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="helloServiceClient" timeout="5000">
@@ -176,7 +176,7 @@ The listing above shows some power of the validation script. We can access the m
 
 In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation scripts. The syntax looks like follows:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="helloServiceClient" timeout="5000">
@@ -192,7 +192,7 @@ In general Groovy code inside the XML test case definition or as part of the Jav
 </receive>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest

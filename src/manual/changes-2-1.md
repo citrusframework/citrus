@@ -8,7 +8,7 @@ SOAP MTOM stands for Message Transmission Optimization Mechanism which allows yo
 
 ### SOAP envelope handling
 
-In its default behavior Citrus will remove the SOAP envelope for incoming SOAP requests just providing the SOAP body as message payload. This is more straight forward in a test case to perform further validation steps. However it might be mandatory to see the whole SOAP envelope inside the test case for special validation. As a user you can now choose how to handle incoming SOAP envelope by definig the **keep-soap-envelope** setting on the Citrus SOAP server components. See[soap-keep-envelope](soap-keep-envelope)for details.
+In its default behavior Citrus will remove the SOAP envelope for incoming SOAP requests just providing the SOAP body as message payload. This is more straight forward in a test case to perform further validation steps. However it might be mandatory to see the whole SOAP envelope inside the test case for special validation. As a user you can now choose how to handle incoming SOAP envelope by definig the **keep-soap-envelope** setting on the Citrus SOAP server components. See [soap-keep-envelope](soap-keep-envelope) for details.
 
 ### SOAP 1.2 message factory
 
@@ -16,13 +16,13 @@ The Citrus SOAP server component was missing a setting for the SOAP message fact
 
 ### TestNG data provider handling
 
-We improved the TestNG data provider handling in Citrus. Now you can use the usual TestNG data provider annotations in your test methods. TestNG will call the Citrus test case several times with respective parameters provided as test variables. This replaces the old **citrusDataProvider** mechanism that tried to make things working in a kind of workaround. The new provider handling also supports multiple data providers in a test class.[run-testng-data-providers](run-testng-data-providers)describes how this is working for you.
+We improved the TestNG data provider handling in Citrus. Now you can use the usual TestNG data provider annotations in your test methods. TestNG will call the Citrus test case several times with respective parameters provided as test variables. This replaces the old **citrusDataProvider** mechanism that tried to make things working in a kind of workaround. The new provider handling also supports multiple data providers in a test class.[run-testng-data-providers](run-testng-data-providers) describes how this is working for you.
 
 ### Mail message namespace
 
-The Citrus mail components enable message exchange as mail client and server. For validation purpose the components offer a XML mail message representation. We have added a target namespace **xmlns="http://www.citrusframework.org/schema/mail/message"** and a XSD schema for this XML mail message representation. From now on you have to use the namespace accordingly in your mail message payloads when sending and receiving mail messages in Citrus. See[mail](mail)how to use the new XML mail message namespace.
+The Citrus mail components enable message exchange as mail client and server. For validation purpose the components offer a XML mail message representation. We have added a target namespace **xmlns="http://www.citrusframework.org/schema/mail/message"** and a XSD schema for this XML mail message representation. From now on you have to use the namespace accordingly in your mail message payloads when sending and receiving mail messages in Citrus. See [mail](mail) how to use the new XML mail message namespace.
 
 ### Ssh message namespace
 
-When sending and receiving messages via ssh Citrus provides a XML representation for request and response data. These ssh messages follow a new target namespace **xmlns="http://www.citrusframework.org/schema/ssh/message"** and a XSD schema. This means you have to use the namespace accordingly in your ssh message payloads when sending and receiving ssh messages in Citrus. See[ssh](ssh)for further details.
+When sending and receiving messages via ssh Citrus provides a XML representation for request and response data. These ssh messages follow a new target namespace **xmlns="http://www.citrusframework.org/schema/ssh/message"** and a XSD schema. This means you have to use the namespace accordingly in your ssh message payloads when sending and receiving ssh messages in Citrus. See [ssh](ssh) for further details.
 

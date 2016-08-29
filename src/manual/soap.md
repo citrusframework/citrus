@@ -84,7 +84,7 @@ Up to now we have used a static endpoint request url for the SOAP message sender
        class="com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
 ```
 
-The **dynamicEndpointResolver** bean must implement the EndpointUriResolver interface in order to resolve dynamic endpoint uri values. Citrus offers a default implementation, the **DynamicEndpointUriResolver** , which uses a specific message header for setting the dynamic endpoint uri for each message. The message header needs to specify the header **citrus_endpoint_uri** with a valid request uri. Just like this:
+The **dynamicEndpointResolver** bean must implement the EndpointUriResolver interface in order to resolve dynamic endpoint uri values. Citrus offers a default implementation, the **DynamicEndpointUriResolver**, which uses a specific message header for setting the dynamic endpoint uri for each message. The message header needs to specify the header **citrus_endpoint_uri** with a valid request uri. Just like this:
 
 ```xml
 <header>
@@ -175,7 +175,7 @@ Citrus provides test actions for sending and receiving messages of all kind. Dif
 
 Once you have added the **ws** namespace from above to your test case you are ready to use special send and receive operations in the test.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:send endpoint="soapClient" soap-action="MySoapService/sayHello">
@@ -203,7 +203,7 @@ The special SOAP related send and receive actions can coexist with normal Citrus
 
 In Java DSL we have something similar to that. The Java DSL provides special SOAP related features when calling the **soap()** method. With a fluent API you are able to then send and receive SOAP message content as client and server.
 
- **Java DSL** 
+**Java DSL** 
 
 ```xml
 @CitrusTest
@@ -226,7 +226,7 @@ In the following sections the SOAP related capabilities are discussed in more de
 
 SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special **SOAP action** header. In case we need to set this SOAP action header we simply need to use the special ***soap-action*** attribute in our test. The special header key in combination with a underlying SOAP client endpoint component constructs the SOAP action in the SOAP message.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:send endpoint="soapClient" soap-action="MySoapService/sayHello">
@@ -242,7 +242,7 @@ SOAP defines several header variations that we discuss in the following sections
 </ws:receive>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```xml
 @CitrusTest
@@ -465,7 +465,7 @@ As Citrus simulates SOAP server endpoints you also need to think about sending a
 
 Please keep in mind that we use the citrus-ws extension for sending SOAP faults in our test case, as shown in this very simple example:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:send-fault endpoint="helloSoapServer">
@@ -492,7 +492,7 @@ Please keep in mind that we use the citrus-ws extension for sending SOAP faults 
 
 The example generates a simple SOAP fault that is sent back to the calling client. The fault-actor and the fault-detail elements are optional. Same with the soap action declared in the special Citrus header ***citrus_soap_action*** . In the sample above the fault-detail data is placed inline as XML data. As an alternative to that you can also set the fault-detail via external file resource. Just use the ***file*** attribute as fault detail instead of the inline CDATA definition.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:send-fault endpoint="helloSoapServer">
@@ -556,7 +556,7 @@ In case you receive SOAP response messages as a client endpoint you may need to 
 
 As a client we send out a request and receive a SOAP fault as response. By default the client sending action in Citrus throws a specific exception when the SOAP response is a SOAP fault element. This exception is called ***SoapFaultClientException*** coming from the Spring API. You as a tester can assert this kind of exception in a test case in order to expect the SOAP error.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <assert class="org.springframework.ws.soap.client.SoapFaultClientException">
@@ -577,7 +577,7 @@ The SOAP message sending action is surrounded by a simple assert action. The ass
 
 So far we have used the Citrus core capabilities of asserting an exception. This basic assertion test action is not able to offer direct access to the SOAP fault-code and fault-string values for validation. The basic assert action simply has no access to the actual SOAP fault elements. Fortunately we can use the **citrus-ws** namespace again which offers a special assert action implementation especially designed for SOAP faults in this case.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
@@ -598,7 +598,7 @@ So far we have used the Citrus core capabilities of asserting an exception. This
 </ws:assert-fault>
 ```
 
-The special assert action offers several attributes to validate the expected SOAP fault. Namely these are **"fault-code"** , **"fault-string"** and **"fault-actor"** . The **fault-code** is defined as a QName string and is mandatory for the validation. The fault assertion also supports test variable replacement as usual (e.g. fault-code="{http://www.citrusframework.org/faults}${myFaultCode}").
+The special assert action offers several attributes to validate the expected SOAP fault. Namely these are **"fault-code"**, **"fault-string"** and **"fault-actor"** . The **fault-code** is defined as a QName string and is mandatory for the validation. The fault assertion also supports test variable replacement as usual (e.g. fault-code="{http://www.citrusframework.org/faults}${myFaultCode}").
 
 The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an instance of a ***SoapFaultValitator*** that we need to add to the Spring application context. By default Citrus is searching for a bean with the id **'soapFaultValidator'** .
 
@@ -615,7 +615,7 @@ Citrus offers several reference implementations for these SOAP fault validators.
 
 Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic (would be great if you could share your ideas!). In the test case you can explicitly choose the validator to use:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
@@ -634,7 +634,7 @@ Another important thing to notice when asserting SOAP faults is the fact, that C
 
 Choose one of Spring's reference implementations or some other implementation as SOAP message factory. Citrus will search for a bean with id **'messageFactory'** by default. In case you have other beans with different identifiers please choose the messageFactory in the test case assert action:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
@@ -659,7 +659,7 @@ Notice the ws specific namespace that belongs to the Citrus WebService extension
 
 Citrus is also able to validate SOAP fault details. See the following example for understanding how to do it:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
@@ -687,11 +687,11 @@ Citrus is also able to validate SOAP fault details. See the following example fo
 </ws:assert-fault>
 ```
 
-The expected SOAP fault detail content is simply added to the **ws:assert** action. The ***SoapFaultValidator*** implementation defined in the Spring application context is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. Citrus provides some default ***SoapFaultValidator*** implementations. Supported algorithms are pure String comparison ( **com.consol.citrus.ws.validation.SimpleSoapFaultValidator** ) as well as XML tree walk-through ( **com.consol.citrus.ws.validation.XmlSoapFaultValidator** ).
+The expected SOAP fault detail content is simply added to the **ws:assert** action. The ***SoapFaultValidator*** implementation defined in the Spring application context is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. Citrus provides some default ***SoapFaultValidator*** implementations. Supported algorithms are pure String comparison (**com.consol.citrus.ws.validation.SimpleSoapFaultValidator**) as well as XML tree walk-through (**com.consol.citrus.ws.validation.XmlSoapFaultValidator**).
 
-When using the XML validation algorithm you have the complete power as known from normal message validation in receive actions. This includes schema validation or ignoring elements for instance. On the fault-detail element you are able to add some validation settings such as **schema-validation=enabled/disabled** , custom **schema-repository** and so on.
+When using the XML validation algorithm you have the complete power as known from normal message validation in receive actions. This includes schema validation or ignoring elements for instance. On the fault-detail element you are able to add some validation settings such as **schema-validation=enabled/disabled**, custom **schema-repository** and so on.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
@@ -722,7 +722,7 @@ So far we have used assert action wrapper in order to catch SOAP fault exception
                                fault-strategy="propagateError"/>
 ```
 
-We have configured a fault strategy **propagateError** so the message sender will not raise client exceptions but inform the receive action with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy= **throwsException** ).
+We have configured a fault strategy **propagateError** so the message sender will not raise client exceptions but inform the receive action with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy= **throwsException**).
 
 So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault like this.
 
@@ -819,7 +819,7 @@ Server: Jetty(7.0.0.pre5)
 
 Of course we can also expect several fault detail elements when receiving a SOAP fault.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
@@ -929,7 +929,7 @@ When Citrus calls SOAP WebServices as a client we may receive SOAP responses wit
 </ws:receive>
 ```
 
-Again we use the Citrus SOAP extension namespace with the specific receive action that is aware of SOAP attachment validation. The tester can validate the **content-id** , the **content-type** and the attachment content. Instead of using the external file resource you could also define an expected attachment template directly in the test case as inline CDATA section.
+Again we use the Citrus SOAP extension namespace with the specific receive action that is aware of SOAP attachment validation. The tester can validate the **content-id**, the **content-type** and the attachment content. Instead of using the external file resource you could also define an expected attachment template directly in the test case as inline CDATA section.
 
 **Note**
 The **ws:attachment** element specifies a validator instance. This validator determines how to validate the attachment content. SOAP attachments are not limited to XML content. Plain text content and binary content is possible, too. So each SOAP attachment validating action can use a different ***SoapAttachmentValidator*** instance which is responsible for validating and comparing received attachments to expected template attachments. In the Citrus configuration the validator is set as normal Spring bean with the respective identifier.
@@ -964,7 +964,7 @@ Citrus is able to both send and receive MTOM enabled SOAP messages on client and
 </ws:send>
 ```
 
-As you can see the example above sends a SOAP message that contains a large binary image content. The actual binary image data is referenced with a content id marker **cid:IMAGE** inside the message payload. The actual image content is added as attachment with a separate file resource. Important is here the **content-id** which matches the id marker in the SOAP message payload ( **IMAGE** ).
+As you can see the example above sends a SOAP message that contains a large binary image content. The actual binary image data is referenced with a content id marker **cid:IMAGE** inside the message payload. The actual image content is added as attachment with a separate file resource. Important is here the **content-id** which matches the id marker in the SOAP message payload (**IMAGE**).
 
 Citrus builds a proper SOAP MTOM enabled message automatically adding the XOP package inside the message. The binary data is sent as separate SOAP attachment accordingly. The resulting SOAP message looks like this:
 

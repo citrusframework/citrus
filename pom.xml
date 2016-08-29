@@ -181,7 +181,6 @@
     <arquillian.version>1.1.11.Final</arquillian.version>
     <cucumber.version>1.2.4</cucumber.version>
     <zookeeper.version>3.4.7</zookeeper.version>
-    <docbkx.img.path>images</docbkx.img.path>
     <javadoc.options></javadoc.options>
 
     <skip.integration.tests>false</skip.integration.tests>
@@ -962,41 +961,11 @@
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>1.9.1</version>
         </plugin>
-        
+
         <plugin>
-          <groupId>com.agilejava.docbkx</groupId>
-          <artifactId>docbkx-maven-plugin</artifactId>
-          <version>2.0.7</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.docbook</groupId>
-              <artifactId>docbook-xml</artifactId>
-              <version>4.4</version>
-              <scope>runtime</scope>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <includes>index.xml</includes>
-            <xincludeSupported>true</xincludeSupported>
-            <tableBordersWithCss>true</tableBordersWithCss>
-            <foCustomization>src/docbkx/styles/reference-pdf.xsl</foCustomization>
-            <htmlCustomization>src/docbkx/styles/reference-html.xsl</htmlCustomization>
-            <htmlStylesheet>css/reference.css</htmlStylesheet>
-            <imgSrcPath>${docbkx.img.path}/</imgSrcPath>
-            <admonGraphicsPath>${docbkx.img.path}/admons/</admonGraphicsPath>
-            <calloutGraphicsPath>${docbkx.img.path}/callouts/</calloutGraphicsPath>
-            <admonGraphicsExtension>.jpg</admonGraphicsExtension>
-            <calloutGraphicsExtension>.jpg</calloutGraphicsExtension>
-            <!-- produce single-page html output -->
-            <chunkedOutput>false</chunkedOutput>
-            <highlightSource>1</highlightSource>
-            <entities>
-              <entity>
-                <name>version</name>
-                <value>${project.version}</value>
-              </entity>
-            </entities>
-          </configuration>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>1.9.4</version>
         </plugin>
 
         <plugin>
@@ -1133,7 +1102,6 @@
       <properties>
         <site.url>http://build.int.consol.de/citrus</site.url>
         <site.path>/citrus</site.path>
-        <docbkx.img.path>images</docbkx.img.path>
       </properties>
     </profile>
 
@@ -1181,7 +1149,6 @@
       <properties>
         <site.url>http://www.citrusframework.org</site.url>
         <site.path></site.path>
-        <docbkx.img.path>images</docbkx.img.path>
       </properties>
 
       <build>
@@ -1213,8 +1180,81 @@
       <properties>
         <site.url>http://www.citrusframework.org</site.url>
         <site.path></site.path>
-        <docbkx.img.path>file:${basedir}/src/docbkx/images</docbkx.img.path>
       </properties>
+    </profile>
+
+    <profile>
+      <id>release-docs</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-scm-plugin</artifactId>
+            <configuration>
+              <connectionUrl>scm:git:git@github.com:christophd/citrus.git</connectionUrl>
+              <developerConnectionUrl>scm:git:git@github.com:christophd/citrus.git</developerConnectionUrl>
+              <scmVersion>gh-pages</scmVersion>
+              <scmVersionType>branch</scmVersionType>
+            </configuration>
+            <executions>
+              <execution>
+                <id>gh-pages-clone</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>checkout</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>gh-pages-add</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>add</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>${project.build.directory}/checkout</workingDirectory>
+                  <includes>**/**</includes>
+                </configuration>
+              </execution>
+              <execution>
+                <id>gh-pages-push</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>checkin</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>${project.build.directory}/checkout</workingDirectory>
+                  <message>Update reference manual</message>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-gitbook-sources</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/checkout</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.build.directory}/reference/html</directory>
+                      <includes>
+                        <include>**/**</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>
@@ -1251,7 +1291,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>site</id>
       <build>
@@ -1298,65 +1338,6 @@
                 <goals>
                   <goal>stop</goal>
                 </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>com.agilejava.docbkx</groupId>
-            <artifactId>docbkx-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>html-reference-doc</id>
-                <configuration>
-                  <postProcess>
-                    <copy todir="${project.build.directory}/site/_site/reference">
-                      <fileset dir="${project.build.directory}/docbkx">
-                        <include name="**/*.html" />
-                      </fileset>
-                    </copy>
-                    <copy todir="${project.build.directory}/site/_site/reference/html">
-                      <fileset dir="${project.basedir}/src/docbkx">
-                        <include name="**/*.css" />
-                        <include name="**/*.png" />
-                        <include name="**/*.gif" />
-                        <include name="**/*.jpg" />
-                      </fileset>
-                    </copy>
-                    <copy todir="${project.build.directory}/site/_site/reference/${project.version}">
-                      <fileset dir="${project.build.directory}/docbkx">
-                        <include name="**/*.html" />
-                      </fileset>
-                    </copy>
-                    <copy todir="${project.build.directory}/site/_site/reference/${project.version}/html">
-                      <fileset dir="${project.basedir}/src/docbkx">
-                        <include name="**/*.css" />
-                        <include name="**/*.png" />
-                        <include name="**/*.gif" />
-                        <include name="**/*.jpg" />
-                      </fileset>
-                    </copy>
-                  </postProcess>
-                </configuration>
-                <goals>
-                  <goal>generate-html</goal>
-                </goals>
-                <phase>package</phase>
-              </execution>
-              <execution>
-                <id>pdf-reference-doc</id>
-                <configuration>
-                  <postProcess>
-                    <copy file="${project.build.directory}/docbkx/pdf/index.pdf"
-                          tofile="${project.build.directory}/site/_site/reference/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
-                    <copy file="${project.build.directory}/docbkx/pdf/index.pdf"
-                          tofile="${project.build.directory}/site/_site/reference/${project.version}/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
-                  </postProcess>                    
-                </configuration>
-                <goals>
-                  <goal>generate-pdf</goal>
-                </goals>
-                <phase>package</phase>
               </execution>
             </executions>
           </plugin>
@@ -1938,49 +1919,6 @@
       <id>assembly</id>
       <build>
         <plugins>
-          <plugin>
-            <groupId>com.agilejava.docbkx</groupId>
-            <artifactId>docbkx-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>html-reference-doc</id>
-                <configuration>
-                  <postProcess>
-                    <copy todir="${project.basedir}/target/doc">
-                      <fileset dir="${project.basedir}/target/docbkx">
-                        <include name="**/*.html" />
-                      </fileset>
-                    </copy>
-                    <copy todir="${project.basedir}/target/doc/html">
-                      <fileset dir="${project.basedir}/src/docbkx">
-                        <include name="**/*.css" />
-                        <include name="**/*.png" />
-                        <include name="**/*.gif" />
-                        <include name="**/*.jpg" />
-                      </fileset>
-                    </copy>
-                  </postProcess>
-                </configuration>
-                <goals>
-                  <goal>generate-html</goal>
-                </goals>
-                <phase>process-resources</phase>
-              </execution>
-              <execution>
-                <id>pdf-reference-doc</id>
-                <configuration>
-                  <postProcess>
-                    <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
-                          tofile="${project.basedir}/target/doc/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
-                  </postProcess>                    
-                </configuration>
-                <goals>
-                  <goal>generate-pdf</goal>
-                </goals>
-                <phase>process-resources</phase>
-              </execution>
-            </executions>
-          </plugin>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
             <configuration>

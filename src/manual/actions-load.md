@@ -4,14 +4,14 @@ You are able to load properties from external property files and store them as t
 
 Let us look at an example to get an idea about this action:
 
- **Content of load.properties:** 
+**Content of load.properties:** 
 
 ```xml
 username=Mickey Mouse
 greeting.text=Hello Test Framework
 ```
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="loadPropertiesTest">
@@ -25,7 +25,7 @@ greeting.text=Hello Test Framework
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest
@@ -36,7 +36,7 @@ public void loadPropertiesTest() {
 }
 ```
 
- **Output:** 
+**Output:** 
 
 ```xml
 Current value of variable username = Mickey Mouse

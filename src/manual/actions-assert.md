@@ -2,7 +2,7 @@
 
 Citrus test actions fail with Java exceptions and error messages. This gives you the opportunity to expect an action to fail during test execution. You can simple assert a Java exception to be thrown during execution. See the example for an assert action definition in a test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="assertFailureTest">
@@ -19,7 +19,7 @@ Citrus test actions fail with Java exceptions and error messages. This gives you
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

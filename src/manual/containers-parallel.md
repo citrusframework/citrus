@@ -2,7 +2,7 @@
 
 Parallel containers execute the embedded test actions concurrent to each other. Every action in this container will be executed in a separate Java Thread. Following example should clarify the usage:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="parallelTest">
@@ -36,7 +36,7 @@ Parallel containers execute the embedded test actions concurrent to each other. 
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

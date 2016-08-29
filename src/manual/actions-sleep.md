@@ -2,7 +2,7 @@
 
 This action shows how to make the test framework sleep for a given amount of time. The attribute 'time' defines the amount of time to wait in seconds. As shown in the next example decimal values are supported too. When no waiting time is specified the default time of 50000 milliseconds applies.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="sleepTest">
@@ -16,7 +16,7 @@ This action shows how to make the test framework sleep for a given amount of tim
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

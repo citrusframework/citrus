@@ -6,7 +6,7 @@ When Citrus receives a message from external applications it is time to verify t
 
 The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation callback functionality. With this feature you can marshal/unmarshal message payloads and code validation steps on Java objects.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -23,7 +23,7 @@ public void receiveMessageTest() {
 
 By default the validation callback needs some XML unmarshaller implementation for transforming the XML payload to a Java object. Citrus will automatically search for the unmarshaller bean in your Spring application context if nothing specific is set. Of course you can also set the unmarshaller instance explicitly.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -43,7 +43,7 @@ public void receiveMessageTest() {
 
 Obviously working on Java objects is much more comfortable than using the XML String concatenation. This is why you can also use this feature when sending messages.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -75,25 +75,15 @@ The example above creates a **AddBookRequestMessage** object and puts this as pa
 
 In the previous sections we have already seen some examples on how to overwrite default message validator implementations in Citrus. By default all message validators can be overwritten by placing a Spring bean of the same id to the Spring application context. The default implementations of Citrus are:
 
-*  **defaultXmlMessageValidator: com.consol.citrus.validation.xml.DomXmlMessageValidator** 
-
-*  **defaultXpathMessageValidator: com.consol.citrus.validation.xml.XpathMessageValidator** 
-
-*  **defaultJsonMessageValidator: com.consol.citrus.validation.json.JsonTextMessageValidator** 
-
-*  **defaultJsonPathMessageValidator: com.consol.citrus.validation.json.JsonPathMessageValidator** 
-
-*  **defaultPlaintextMessageValidator: com.consol.citrus.validation.text.PlainTextMessageValidator** 
-
-*  **defaultBinaryBase64MessageValidator: com.consol.citrus.validation.text.BinaryBase64MessageValidator** 
-
-*  **defaultXhtmlMessageValidator: com.consol.citrus.validation.xhtml.XhtmlMessageValidator** 
-
-*  **defaultGroovyXmlMessageValidator: com.consol.citrus.validation.script.GroovyXmlMessageValidator** 
-
-*  **defaultGroovyJsonMessageValidator: com.consol.citrus.validation.script.GroovyJsonMessageValidator** 
-
-
+*  **defaultXmlMessageValidator**: com.consol.citrus.validation.xml.DomXmlMessageValidator 
+*  **defaultXpathMessageValidator**: com.consol.citrus.validation.xml.XpathMessageValidator 
+*  **defaultJsonMessageValidator**: com.consol.citrus.validation.json.JsonTextMessageValidator 
+*  **defaultJsonPathMessageValidator**: com.consol.citrus.validation.json.JsonPathMessageValidator 
+*  **defaultPlaintextMessageValidator**: com.consol.citrus.validation.text.PlainTextMessageValidator 
+*  **defaultBinaryBase64MessageValidator**: com.consol.citrus.validation.text.BinaryBase64MessageValidator 
+*  **defaultXhtmlMessageValidator**: com.consol.citrus.validation.xhtml.XhtmlMessageValidator 
+*  **defaultGroovyXmlMessageValidator**: com.consol.citrus.validation.script.GroovyXmlMessageValidator 
+*  **defaultGroovyJsonMessageValidator**: com.consol.citrus.validation.script.GroovyJsonMessageValidator 
 
 Overwriting a single message validator with a custom implementation is then very easy. Just add your custom Spring bean to the application context using one of these default bean identifiers. In case you want to change the message validator gang by adding or removing a message validator implementation completely you can place a message validator component in the Spring application context.
 

@@ -2,7 +2,7 @@
 
 The <stop-timer> action can be used for stopping either a specific timer ([containers-timer](containers-timer)) or all timers running within a test. This action is useful when timers are started in the background (using parallel or fork=true) and you wish to stop these timers at the end of the test. Some examples of using this action are provided below:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="timerTest">
@@ -27,7 +27,7 @@ The <stop-timer> action can be used for stopping either a specific timer ([conta
   </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

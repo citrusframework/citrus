@@ -2,7 +2,7 @@
 
 Now we have a look at the opportunity to add custom test actions to the test case flow. Let us start this section with an example:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="ActionReferenceTest">
@@ -48,7 +48,7 @@ All you need to do in your Java class is to implement the Citrus ***com.consol.c
 
 When using the Java test case DSL you are also quite comfortable with including your custom test actions.
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @Autowired
@@ -66,7 +66,7 @@ public void genericActionTest() {
 
 Using anonymous class implementations is also possible.
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

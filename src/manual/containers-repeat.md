@@ -5,7 +5,7 @@ Quite similar to the previously described iterate container this repeating conta
 **Note**
 The loop continues its work until the provided condition evaluates to **true** . It is very important to notice that the repeat loop will execute the actions before evaluating the condition. This means the actions get executed 1-n times.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="iterateTest">
@@ -19,7 +19,7 @@ The loop continues its work until the provided condition evaluates to **true** .
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest
@@ -31,11 +31,11 @@ public void repeatTest() {
 }
 ```
 
-As you can see the repeat container is only executed when the iterating condition expression evaluates to **false** . By the time the condition is **true** execution is discontinued. You can use basic logical operators such as **and** , **or** and so on.
+As you can see the repeat container is only executed when the iterating condition expression evaluates to **false** . By the time the condition is **true** execution is discontinued. You can use basic logical operators such as **and**, **or** and so on.
 
 A more powerful way is given by Hamcrest matchers that are directly supported in condition expressions.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="iterateTest">
@@ -49,7 +49,7 @@ A more powerful way is given by Hamcrest matchers that are directly supported in
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

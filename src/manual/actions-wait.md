@@ -12,7 +12,7 @@ If the check does not exceed within the defined overall waiting time then the te
 
 Next let us have a look at a simple example:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="waitTest">
@@ -24,7 +24,7 @@ Next let us have a look at a simple example:
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest
@@ -37,7 +37,7 @@ The example waits for some Http server resource to be available with **Http 200 
 
 Next let us have a look at the file condition usage:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="waitTest">
@@ -49,7 +49,7 @@ Next let us have a look at the file condition usage:
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

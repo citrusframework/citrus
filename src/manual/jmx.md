@@ -65,7 +65,7 @@ In this example above we connect to a remote mbean server via RMI using the defa
 
 Now that we have setup the client component we can use it in a test case to access a managed bean.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="jmxClient">
@@ -80,7 +80,7 @@ Now that we have setup the client component we can use it in a test case to acce
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -95,7 +95,7 @@ As you can see we just used a normal send action referencing the jmx client comp
 
 Now that we have access to the managed bean we can read its managed attributes such as **Verbose** . This is a boolean type attribute so the mbean invocation result will be a respective Boolean object. We can validate the managed bean attribute access in a receive action.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="jmxClient">
@@ -109,7 +109,7 @@ Now that we have access to the managed bean we can read its managed attributes s
 </receive>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -123,7 +123,7 @@ In the sample above we receive the mbean result and expect a **java.lang.Boolean
 
 Some managed bean attributes might also be settable for us. So wen can define the attribute access as write operation by specifying a value in the send action payload.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="jmxClient">
@@ -138,7 +138,7 @@ Some managed bean attributes might also be settable for us. So wen can define th
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -153,7 +153,7 @@ Now we have write access to the managed attribute **Verbose** . We do specify th
 
 Last not least we are able to access managed bean operations.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="jmxClient">
@@ -172,7 +172,7 @@ Last not least we are able to access managed bean operations.
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -256,7 +256,7 @@ The generic bean definition needs to define all operations and attributes that a
 
 Now we can use the server component in a test case to receive some incoming managed bean access.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="jmxServer">
@@ -275,7 +275,7 @@ Now we can use the server component in a test case to receive some incoming mana
 </receive>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -289,7 +289,7 @@ public void jmxServerTest() {
 
 In this very first example we expect a managed bean access to the bean **com.consol.citrus.jmx.mbean:type=HelloBean** . We further expect the operation **sayHello** to be called with respective parameter values. Now we have to define the operation result that will be returned to the calling client as operation result.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="jmxServer">
@@ -303,7 +303,7 @@ In this very first example we expect a managed bean access to the bean **com.con
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest
@@ -315,7 +315,7 @@ public void jmxServerTest() {
 
 The operation returns a String **Hello from JMX!** . This is how we can expect operation calls on managed beans. Now we already have seen that managed beans also expose attributes. The next example is handling incoming attribute read access.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <receive endpoint="jmxServer">
@@ -340,7 +340,7 @@ The operation returns a String **Hello from JMX!** . This is how we can expect o
 </send>
 ```
 
- **Java DSL** 
+**Java DSL** 
 
 ```java
 @CitrusTest

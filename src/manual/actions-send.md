@@ -6,7 +6,7 @@ In a integration test scenario we want to trigger processes and call interface s
 
 A message consists of a message header (name-value pairs) and a message payload. Later in this section we will see different ways of constructing a message with payload and header values. But first of all let's concentrate on a simple sending message action inside a test case.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="SendMessageTest">
@@ -35,7 +35,7 @@ A message consists of a message header (name-value pairs) and a message payload.
 </testcase>
 ```
 
-The sample uses both header and payload as message parts to send. In both parts you can use variable definitions (see **${text}** and **${messageId}** ). So first of all let us recap what variables do. Test variables are defined at the very beginning of the test case and are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the expression ***${variable-name}*** .
+The sample uses both header and payload as message parts to send. In both parts you can use variable definitions (see **${text}** and **${messageId}**). So first of all let us recap what variables do. Test variables are defined at the very beginning of the test case and are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the expression ***${variable-name}*** .
 
 **Tip**
 Use variables wherever you can! At least the important entities of a test should be defined as variables at the beginning. The test case improves maintainability and flexibility when using variables.
@@ -48,7 +48,7 @@ In other words the **"endpoint"** attribute of the **<send>** element specifies 
 
 If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint definition and reference this instance. The same test as shown above in Java DSL looks like this:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 import org.testng.ITestContext;
@@ -76,7 +76,7 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 import org.testng.ITestContext;
@@ -130,7 +130,7 @@ The file path prefix indicates the resource type, so the file location is resolv
 
 
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="helloServiceEndpoint">
@@ -171,7 +171,7 @@ With this alternative you can skip the XML schema validation from your IDE at de
 
 The The same possibilities apply to the Citrus Java DSL.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -223,11 +223,11 @@ Now Citrus will marshal the message payload with the message marshaller bean nam
 
 Last not least the message can be defined as Citrus message object. Here you can choose one of the different message implementations used in Citrus for SOAP, Http or JMS messages. Or you just use the default message implementation or maybe a custom implementation.
 
-Before sending takes place you can explicitly overwrite some message values in payload. You can think of overwriting specific message elements with variable values. Also you can overwrite values using XPath([xpath](xpath)) or JSONPath ([json-path](json-path)) expressions.
+Before sending takes place you can explicitly overwrite some message values in payload. You can think of overwriting specific message elements with variable values. Also you can overwrite values using XPath ([xpath](xpath)) or JSONPath ([json-path](json-path)) expressions.
 
 The message header is part of our duty of defining proper messages, too. So Citrus uses name-value pairs like "Operation" and "MessageId" in the next example to set message header entries. Depending on what message endpoint is used and which message transport underneath the header values will be shipped in different ways. In JMS the headers go to the header section of the message, in Http we set mime headers accordingly, in SOAP we can access the SOAP header elements and so on. Citrus aims to do the hard work for you. So Citrus knows how to set headers on different message transports.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="helloServiceEndpoint">
@@ -246,7 +246,7 @@ The message header is part of our duty of defining proper messages, too. So Citr
 
 The message headers to send are defined by a simple name and value pair. Of course you can use test variables in header values as well. Let's see how this looks like in Java DSL:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -259,7 +259,7 @@ public void messagingTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest

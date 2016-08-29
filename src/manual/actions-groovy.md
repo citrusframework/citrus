@@ -6,7 +6,7 @@ The Citrus Groovy support might be the entrance for you to write customized test
 
 Let's have a look at some examples in order to understand the possible Groovy code interactions in Citrus:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="groovyTest">
@@ -25,7 +25,7 @@ Let's have a look at some examples in order to understand the possible Groovy co
 </testcase>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -37,7 +37,7 @@ public void groovyTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest
@@ -53,7 +53,7 @@ As you can see it is possible to write Groovy code directly into the test case. 
 
 After this basic Groovy code usage inside a test case we might be interested accessing the whole TestContext. The TestContext Java object holds all test variables and function definitions for the test case and can be referenced in Groovy code via simple naming convention. Just access the object reference 'context' and you are able to manipulate the TestContext (e.g. setting a new variable which is directly ready for use in following test actions).
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="groovyTest">

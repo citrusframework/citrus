@@ -2,7 +2,7 @@
 
 In case you have a custom action container implementation you might also want to use it in Java DSL. The action containers are handled with special care in the Java DSL because they have nested actions. So when you call a test action container in the Java DSL you always have something like this:
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest
@@ -63,7 +63,7 @@ The custom container implementation now works fine with the automatically nested
 
 In a next step we add a custom superclass for all our test classes which provides a helper method for the custom container implementation in order to have a even more comfortable syntax.
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 public class CustomCitrusBaseTest extends TestNGCitrusTestDesigner {

@@ -25,7 +25,7 @@ Citrus provides special support for JMS related features. We have to activate th
 
 Now we are ready to use the JMS features in our test case in order to purge some JMS queues. This can be done with following action definition:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="purgeTest">
@@ -47,7 +47,7 @@ Now we are ready to use the JMS features in our test case in order to purge some
 
 Notice that we have referenced the **jms** namespace when using the **purge-jms-queues** test action.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -67,7 +67,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -123,7 +123,7 @@ The syntax for purging the destinations is the same as we used it inside the tes
 
 We just use the attribute **'ref'** instead of **'name'** and Citrus is looking for a bean reference for that identifier that resolves to a JMS destination. You can use the JNDI bean references inside a test case, too.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="purgeTest">
@@ -138,7 +138,7 @@ We just use the attribute **'ref'** instead of **'name'** and Citrus is looking 
 
 Of course you can use queue object references also in Java DSL test cases. Here we easily can use Spring's dependency injection with autowiring to get the object references from the IoC container.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -157,7 +157,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired

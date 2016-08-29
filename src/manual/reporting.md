@@ -55,19 +55,12 @@ JavaScript should be active in your web browser. This is to enable the detailed 
 
 The HTML reports are customizable by system properties. Use following properties e.g. in your **citrus.properties** file:
 
-*  **citrus.html.report.enabled** : Enables/disables HTML report generation (default= ***true*** ).
-
-*  **citrus.html.report.directory** : Output directory path (default= ***${project.build.directory}/test-output/citrus-reports*** ).
-
-*  **citrus.html.report.file** : File name for the report file (default= ***citrus-test-results.html*** ).
-
+*  **citrus.html.report.enabled** : Enables/disables HTML report generation (default= ***true***).
+*  **citrus.html.report.directory** : Output directory path (default= ***${project.build.directory}/test-output/citrus-reports***).
+*  **citrus.html.report.file** : File name for the report file (default= ***citrus-test-results.html***).
 *  **citrus.html.report.template** : Template HTML file with placeholders for report results.
-
 *  **citrus.html.report.detail.template** : Template file for detailed test results.
-
 *  **citrus.html.report.logo** : File resource path pointing to a image that is added to top of HTML report.
-
-
 
 The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in[https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report](report-templates sources).
 

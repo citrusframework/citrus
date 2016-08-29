@@ -4,7 +4,7 @@ Time measurement during a test can be very helpful. The <trace-time> action crea
 
 Read the next example and you will understand the mix of different time lines:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="StopTimeTest">
@@ -26,7 +26,7 @@ Read the next example and you will understand the mix of different time lines:
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

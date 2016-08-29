@@ -51,7 +51,7 @@ The **request-method** defines the HTTP method to use. In addition to that we ca
 
 Http defines several request methods that a client can use to access Http server resources. In the example client above we are using **GET** as default request method. Of course you can overwrite this setting in a test case action by setting the HTTP request method inside the sending test action. The Http client component can be used as normal endpoint in a sending test action. Use something like this in your test:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <send endpoint="helloHttpClient">
@@ -122,7 +122,7 @@ Up to now we have used a normal **send** test action to send Http requests as a 
 
 The test case is now ready to use the specific Http test actions by using the prefix **http:** .
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <http:send-request client="httpClient">
@@ -148,7 +148,7 @@ The action above uses several Http specific settings such as the request method 
 
 When using a **GET** request we can specify some request uri parameters.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <http:send-request client="httpClient">
@@ -164,7 +164,7 @@ The send action above uses a **GET** request on the endpoint uri **http://localh
 
 Of course when sending Http client requests we are also interested in receiving Http response messages. We want to validate the success response with Http status code.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <http:receive-response client="httpClient">
@@ -187,7 +187,7 @@ The **receive-response** test action also uses a client component. We can expect
 
 Up to now we have used XML DSL test cases. The Java DSL in Citrus also works with specific Http test actions. See following example and find out how this works:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 @CitrusTest
@@ -359,7 +359,7 @@ When dealing with HTTP request/response communication we always deal with HTTP s
 </http:send-request>
 ```
 
-We are able to set custom headers ( **CustomHeaderId** ) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as **Content-Type** . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:
+We are able to set custom headers (**CustomHeaderId**) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as **Content-Type** . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:
 
 ```xml
 POST /test HTTP/1.1
@@ -416,7 +416,7 @@ Now that we have accepted the client request and validated the contents we are a
 </http:send-response>
 ```
 
-Once more we set the custom header entry ( **CustomHeaderId** ) and a HTTP reserved header ( **Content-Type** ) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names **status** in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:
+Once more we set the custom header entry (**CustomHeaderId**) and a HTTP reserved header (**Content-Type**) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names **status** in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:
 
 ```xml
 HTTP/1.1 200 OK

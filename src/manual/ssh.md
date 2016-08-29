@@ -58,33 +58,20 @@ The SSH client components receive its configuration in the Spring application co
            host="localhost"/>
 ```
 
- **The SSH client receives several attributes, these are:** 
+**The SSH client receives several attributes, these are:** 
 
 *  **id:** Id identifying the bean and used as reference from with test descriptions. (e.g. id="sshClient")
-
 *  **host:** Host to connect to for sending an SSH Exec request. Default is 'localhost' (e.g. host="localhost")
-
 *  **port** Port to use. Default is 2222 (e.g. port="9072")
-
 *  **private-key-path:** Path to a private key, which can be either a plain file path or an class resource if prefixed with 'classpath' (e.g. private-key-path="classpath:test_user.priv")
-
 *  **private-key-password:** Optional password for the private key (e.g. password="s!cr!t")
-
 *  **user:** User used for connecting to the SSH server (e.g. user="roland")
-
 *  **password:** Password used for password based authentication. Might be combined with "private-key-path" in which case both authentication mechanism are tried (e.g. password="ps!st)
-
 *  **strict-host-checking:** Whether the host key should be verified by looking it up in a 'known_hosts' file. Default is false (e.g. strict-host-checking="true")
-
 *  **known-hosts-path:** Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as a resource in the classpath (e.g. known-hosts-path="/etc/ssh/known_hosts")
-
 *  **command-timeout:** Timeout in milliseconds for how long to wait for the SSH command to complete. Default is 5 minutes (e.g. command-timeout="300000")
-
 *  **connection-timeout:** Timeout in milliseconds for how long to for a connectiuon to connect. Default is 1 minute (e.g. connection-timeout="60000")
-
-*  **actor** : Actor used for switching groups of actions (e.g. actor="ssh-mock")
-
-
+*  **actor:** Actor used for switching groups of actions (e.g. actor="ssh-mock")
 
 Once defines as client component in the Spring application context test cases can reference the client in every send test action.
 
@@ -130,31 +117,21 @@ Given the above SSH module namespace declaration, adding a new SSH server is qui
              endpoint-adapter="sshEndpointAdapter"/>
 ```
 
- **endpoint-adapter** is the handler which receives the SSH request as messages (in the request format described above). Endpoint adapter implementations are fully described in[http-server](http-server)All adapters described there are supported in SSH server module, too.
+**endpoint-adapter** is the handler which receives the SSH request as messages (in the request format described above). Endpoint adapter implementations are fully described in[http-server](http-server)All adapters described there are supported in SSH server module, too.
 
 The **<citrus-ssh:server>** supports the following attributes:
 
- **SSH Server Attributes:** 
+**SSH Server Attributes:** 
 
 *  **id:** Name of the SSH server which identifies it unique within the Citrus Spring context (e.g. id="sshServer")
-
 *  **host-key-path:** Path to PEM encoded key pair (public and private key) which is used as host key. By default, a standard, pre-generate, fixed keypair is used. The path can be specified either as an file path, or, if prefixed with **classpath:** is looked up from within the classpath. The path the is relative from to the top-level package, so no leading slash should be used (e.g. hist-key-path="/etc/citrus_ssh_server.pem)
-
 *  **user:** User which is allowed to connect (e.g. user="roland")
-
 *  **allowed-key-path:** Path to a SSH public key stored in PEM format. These are the keys, which are allowed to connect to the SSH server when publickey authentication is used. It seves the same purpose asauthorized_keysfor standard SSH installations. The path can be specified either as an file path, or, if prefixed with **classpath:** is looked up from within the classpath. The path the is relative from to the top-level package, so no leading slash should be used (e.g. allowed-key-path="classpath:test_user_pub.pem)
-
 *  **password:** Password which should be used when password authentication is used. Both publickey authentication and password based authentication can be used together in which case both methods are tried in turn (e.g. password="s!cr!t")
-
 *  **host:** Host address (e.g. localhost)
-
 *  **port:** Port on which to listen. The SSH server will bind on localhost to this port (e.g. port="9072")
-
-*  **auto-start:** Whether to start this SSH server automatically. Default is **true** . If set to **false** , a test action is responsible for starting/stopping the server (e.g. auto-start="true")
-
+*  **auto-start:** Whether to start this SSH server automatically. Default is **true** . If set to **false**, a test action is responsible for starting/stopping the server (e.g. auto-start="true")
 *  **endpoint-adapter:** Bean reference to a endpoint adapter which processes the incoming SSH request. The message format for the request and response are described above (e.g. endpoint-adapter="sshEndpointAdapter")
-
-
 
 Once the SSH server component is added to the Spring application context with a proper endpoint adapter like the MessageChannel forwarding adapter we can receive incoming requests in a test case and provide a respone message for the client.
 

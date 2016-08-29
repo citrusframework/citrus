@@ -77,7 +77,7 @@ Before we see some of these commands in action we have to add a new test namespa
 
 We added the Zookeeper namespace with prefix **zookeeper:** so now we can start to add special test actions to the test case:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}" acl="OPEN_ACL_UNSAFE" mode="PERSISTENT">
@@ -116,7 +116,7 @@ We added the Zookeeper namespace with prefix **zookeeper:** so now we can start 
 
 When using the Java DSL we can directly configure the commands with a fluent API.
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```xml
 @CitrusTest
@@ -152,7 +152,7 @@ The examples above create a new znode in Zookeeper using a **randomString** as p
 
 Zookeeper keeps its nodes in a hierarchical storage. This means a znode can have children and we can add and remove those. In Citrus you can get all children of a znode and manage those within the test:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}/child1" acl="OPEN_ACL_UNSAFE" mode="EPHEMERAL">
@@ -200,7 +200,7 @@ Zookeeper keeps its nodes in a hierarchical storage. This means a znode can have
 </zookeeper:children>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```xml
 zookeeper()

@@ -30,7 +30,7 @@ In terms of upgrading the Citrus API dependencies we introduced Spring 4.x versi
 
 ### FTP support
 
-New member of the Citrus family deals with FTP connectivity. The new **citrus-ftp** module provides a neat ftp server and client implementation so you can send and receive messages vie FTP message transport.[ftp](ftp)describes the new functionality in detail.
+New member of the Citrus family deals with FTP connectivity. The new **citrus-ftp** module provides a neat ftp server and client implementation so you can send and receive messages vie FTP message transport. [ftp](ftp) describes the new functionality in detail.
 
 ### Functions with test context access
 
@@ -64,21 +64,21 @@ A new validation matcher implementation is able to create a new variable on the 
 
 A major part of the Citrus configuration is done in a Spring bean application context. Central Citrus components and features are added as Spring beans to the application context. Now with Citrus 2.0 we have added special configuration components for almost all features. This means that you can easily add configuration using the new XML schema components. See which components are available:
 
-*  **Function library** Custom function libraries with custom function implementations are now configured with the **function-library** XML schema components in the Spring application context configuration. See[functions](functions)for details.
+*  **Function library** Custom function libraries with custom function implementations are now configured with the **function-library** XML schema components in the Spring application context configuration. See [functions](functions) for details.
 
-*  **Validation matcher library** Custom validation matcher implementations are now configured with the **validation-matcher-library** XML schema components in the Spring application context configuration. See[validation-matchers](validation-matchers)for details.
+*  **Validation matcher library** Custom validation matcher implementations are now configured with the **validation-matcher-library** XML schema components in the Spring application context configuration. See [validation-matchers](validation-matchers)for details.
 
-*  **Data dictionary** Data dictionaries apply to all messages send and received in test cases. You can define multiple dictionaries using the **data-dictionary** XML schema components in the Spring application context configuration. See[data-dictionary](data-dictionary)for details.
+*  **Data dictionary** Data dictionaries apply to all messages send and received in test cases. You can define multiple dictionaries using the **data-dictionary** XML schema components in the Spring application context configuration. See [data-dictionary](data-dictionary) for details.
 
-*  **Namespace context** Configuration of a global namespace context is necessary for XML message payloads and XPath expressions used in the test cases. The **namespace-context** XML schema component is used in the Spring application context configuration and simplifies the configuration. See[xpath](xpath)for details.
+*  **Namespace context** Configuration of a global namespace context is necessary for XML message payloads and XPath expressions used in the test cases. The **namespace-context** XML schema component is used in the Spring application context configuration and simplifies the configuration. See [xpath](xpath) for details.
 
 
 
 ### Before/after suite components
 
-When executing test actions before the actual test run you can use the sequence before suite components. We have improved these components to use a special XML schema. This enables easy configuration of both before and after suite actions. In addition to that you can bind the suite actions to special packages, test names or suite names. So you can now have more than one sequence before suite at the same time. According to the environment settings the before suite actions are executed or left out. Last not least we have done the same improvement to the before test actions and we have introduced a after test sequence component for execution after each test. See how this is done in[testsuite](testsuite).
+When executing test actions before the actual test run you can use the sequence before suite components. We have improved these components to use a special XML schema. This enables easy configuration of both before and after suite actions. In addition to that you can bind the suite actions to special packages, test names or suite names. So you can now have more than one sequence before suite at the same time. According to the environment settings the before suite actions are executed or left out. Last not least we have done the same improvement to the before test actions and we have introduced a after test sequence component for execution after each test. See how this is done in [testsuite](testsuite).
 
 ### Citrus JMS module
 
-JMS support has been a major part of Citrus from the very beginning. Up to now the JMS features were located in **citrus-core** Maven module. With Citrus 2.0 we introduced a separate **citrus-jms** Maven module. This means that you might have to add proper Maven dependency of this new module in your existing project when using JMS. See how this is done in[jms](jms).
+JMS support has been a major part of Citrus from the very beginning. Up to now the JMS features were located in **citrus-core** Maven module. With Citrus 2.0 we introduced a separate **citrus-jms** Maven module. This means that you might have to add proper Maven dependency of this new module in your existing project when using JMS. See how this is done in [jms](jms).
 

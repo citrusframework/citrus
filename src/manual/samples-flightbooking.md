@@ -363,13 +363,14 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
 
 Similar to a sequence diagram the test case describes every step of the use case. At the very beginning the test case gets name and its meta information. Following with the variable values that are used all over the test. Here it is the correlationId and the customerId that are used as test variables. Inside message templates header values the variables are referenced several times in the test
 
- ***<correlationId>${correlationId}</correlationId>*** 
-
- ***<id>${customerId}</id>*** 
+```
+<correlationId>${correlationId}</correlationId> 
+<id>${customerId}</id> 
+```
 
 The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic Spring configuration we have done before.
 
- ***<send endpoint="travelAgencyBookingRequestEndpoint">*** 
+***<send endpoint="travelAgencyBookingRequestEndpoint">*** 
 
 The sending action chooses a message sender to actually send the message using a message transport (JMS, Http, SOAP, etc.). After sending this first "TravelBookingRequestMessage" request the test case expects the first "FlightBookingRequestMessage" message on the SmartAirline JMS destination. In case this message is not arriving in time the test will fail with errors. In positive case our FlightBookingService works well and the message arrives in time. The received message is validated against a defined expected message template. Only in case all content validation steps are successful the test continues with the action chain. And so the test case proceeds and works through the use case until every message is sent respectively received and validated. The use case is done automatically without human interaction. Citrus simulates all surrounding applications and provides detailed validation possibilities of messages.
 

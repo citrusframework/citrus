@@ -2,7 +2,7 @@
 
 Iterations are very powerful elements when describing complex logic. The container executes the embedded actions several times. The container will continue with looping as long as the defined breaking condition string evaluates to ***true*** . In case the condition evaluates to ***false*** the iteration will break an finish execution.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="iterateTest">
@@ -16,7 +16,7 @@ Iterations are very powerful elements when describing complex logic. The contain
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest
@@ -55,9 +55,9 @@ The condition string can be any Boolean expression and supports several operator
 **Important**
 It is very important to notice that the condition is evaluated before the very first iteration takes place. The loop therefore can be executed 0-n times according to the condition value.
 
-Now the boolean expression evaluation as described above is limited to very basic operation such as **lower than** , **greater than** and so on. We also can use Hamcrest matchers in conditions that are way more powerful than that.
+Now the boolean expression evaluation as described above is limited to very basic operation such as **lower than**, **greater than** and so on. We also can use Hamcrest matchers in conditions that are way more powerful than that.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="iterateTest">
@@ -71,7 +71,7 @@ Now the boolean expression evaluation as described above is limited to very basi
 </testcase>
 ```
 
- **Java DSL designer and runner** 
+**Java DSL designer and runner** 
 
 ```java
 @CitrusTest

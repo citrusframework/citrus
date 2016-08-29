@@ -40,7 +40,7 @@ Some really small change introduced with this release is the fact that Citrus no
 
 We have changed Http communication components for full support of RESTful WebServices on client and server side. The Http client now uses Spring's REST support for Http requests (GET, PUT, DELETE, POST, etc.). The server side has changed, too. The Http server now provides RESTful WebServices and is compliant to the existing SOAP Jetty server implementation in Citrus. If you want to upgrade existing projects to this version you may have to adjust the Spring application context configuration to some extent.
 
-For details have a look at the upgrade guide ([history-upgrading](history-upgrading)) in this chapter or find detailed explanations to the new Http components in[http](http).
+For details have a look at the upgrade guide ([history-upgrading](history-upgrading)) in this chapter or find detailed explanations to the new Http components in [http](http).
 
 ### HTML reporting
 
@@ -65,7 +65,7 @@ We introduced some completely new test actions in this release for you. The new 
 * Purge message channel action ()
 
 
-See[actions](actions)for detailed instructions how to use the new actions.
+See [actions](actions) for detailed instructions how to use the new actions.
 
 ### New functions
 
@@ -79,7 +79,7 @@ We introduced some new default Citrus functions that will ease the testers life.
 * citrus:localHostAddress()
 
 
-See[functions](functions)for detail descriptions of each function.
+See [functions](functions) for detail descriptions of each function.
 
 ### Upgrading from version 1.1
 
@@ -97,7 +97,7 @@ If you are coming from Citrus 1.1 final you may have to look at the following po
 
 *  **Test suite:** We have eliminated/changed the Citrus test suite logic because it duplicates those test suites defined in TestNG or JUnit. In older versions the tester had to define a Citrus test suite in Spring application context in order to execute test actions before/after the test run. Now these tasks before and after the test run are decoupled from a test suite. You define test suites exclusively in TestNG or JUnit. The test actions before/after the test run are separately defined in Spring application context so you have to change this configuration in your Citrus project.
 
-See[testsuite](testsuite)for details on this configuration changes.
+See [testsuite](testsuite) for details on this configuration changes.
 
 *  **JUnit vs. TestNG:** We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your prefered one. In this manner you need to add either a JUnit dependency or a TestNG dependency to your project on your own. We do not have static dependencies in our Maven POM to neither of those two. On our side these dependencies are declared optional so you feel free to add the one you like best to your Maven POM. Just add a JUnit or TestNG dependency to your Maven project or add the respective jar file to your project if you use ANT instead.
 

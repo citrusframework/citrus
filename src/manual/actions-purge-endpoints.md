@@ -4,7 +4,7 @@ Citrus works with message endpoints when sending and receiving messages. In gene
 
 Following action definition purges all messages from a list of message endpoints:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="purgeEndpointTest">
@@ -26,7 +26,7 @@ As you can see the test action supports endpoint names as well as endpoint refer
 
 The Java DSL works quite similar - have a look:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -38,7 +38,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -52,7 +52,7 @@ public void purgeTest() {
 
 When using the Java DSL we can inject endpoint objects with Spring bean container IoC. The next example uses such bean references for endpoints in a purge action.
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @Autowired
@@ -75,7 +75,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @Autowired
@@ -100,7 +100,7 @@ public void purgeTest() {
 
 Message selectors enable you to selectively remove messages from an endpoint. All messages that meet the message selector condition get deleted and the other messages remain inside the endpoint destination. The message selector is either a normal String name-value representation or a map of key value pairs:
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <purge-endpoints>
@@ -112,7 +112,7 @@ Message selectors enable you to selectively remove messages from an endpoint. Al
 </purge-endpoints>
 ```
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 
@@ -124,7 +124,7 @@ public void purgeTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 

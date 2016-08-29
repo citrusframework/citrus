@@ -12,11 +12,11 @@ There is a new message validator implementation that automatically converts bina
 
 ### RMI support
 
-Remote method invocation is a standard Java technology and API for calling methods on remote objects across different JVM instances. Although RMI has lost its popularity it is still used in legacy components. Testing RMI bean invocation is a hard thing to do. Now Citrus provides client and server support for remote interface invocation. See[rmi](rmi)for details.
+Remote method invocation is a standard Java technology and API for calling methods on remote objects across different JVM instances. Although RMI has lost its popularity it is still used in legacy components. Testing RMI bean invocation is a hard thing to do. Now Citrus provides client and server support for remote interface invocation. See [rmi](rmi) for details.
 
 ### JMX support
 
-Similar to RMI JMX can be used to connect to remote bean invocation. This time we expose some beans to a managed bean server in order to be managed by JMX operations for read and write. With Citrus 2.5 we have added a client and server support for calling and providing managed beans on a mbean server. See[jmx](jmx)for details.
+Similar to RMI JMX can be used to connect to remote bean invocation. This time we expose some beans to a managed bean server in order to be managed by JMX operations for read and write. With Citrus 2.5 we have added a client and server support for calling and providing managed beans on a mbean server. See [jmx](jmx) for details.
 
 ### Resource injection
 
@@ -40,7 +40,7 @@ The new timer test action container repeats its execution based on a time expres
 
 ### Upgrade to Vert.x 3.2.0
 
-The Vert.x module was upgraded to use Vert.x 3.2.0 version. The Citrus module implementation was updated to work with this new Vert.x version. Learn more about the Vert.x integration in Citrus with[vertx](vertx).
+The Vert.x module was upgraded to use Vert.x 3.2.0 version. The Citrus module implementation was updated to work with this new Vert.x version. Learn more about the Vert.x integration in Citrus with [vertx](vertx).
 
 ### Bugfixes
 

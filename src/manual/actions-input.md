@@ -4,7 +4,7 @@ During the test case execution it is possible to read some user input from the c
 
 The user input is stored to the respective variable value.
 
- **XML DSL** 
+**XML DSL** 
 
 ```xml
 <testcase name="inputTest">
@@ -48,7 +48,7 @@ As you can see the input action is customizable with a prompt message that is di
 
 The same action in Java DSL now looks quite familiar to us although attribute naming is slightly different:
 
- **Java DSL designer** 
+**Java DSL designer** 
 
 ```java
 @CitrusTest
@@ -72,7 +72,7 @@ public void inputActionTest() {
 }
 ```
 
- **Java DSL runner** 
+**Java DSL runner** 
 
 ```java
 @CitrusTest
