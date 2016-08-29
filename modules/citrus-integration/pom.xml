@@ -70,24 +70,6 @@
             </xjbSources>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>net.revelc.code</groupId>
-          <artifactId>zookeeper-maven-plugin</artifactId>
-          <configuration>
-            <clientPort>${zookeeper.port.listen}</clientPort>
-            <shutdownString>UniqueShutDownString</shutdownString>
-            <shutdownPort>${zookeeper.port.shutdown}</shutdownPort>
-          </configuration>
-          <executions>
-            <execution>
-              <id>run-zookeeper</id>
-              <goals>
-                <goal>start</goal>
-                <goal>stop</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
     </plugins>
 
   	<testSourceDirectory>src/it/java</testSourceDirectory>

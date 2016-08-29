@@ -495,6 +495,8 @@
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
 
+    <bean class="com.consol.citrus.zookeeper.server.ZooServer" init-method="startup" destroy-method="shutdown"/>
+
     <citrus-zookeeper:client id="zookeeperClient" timeout="2000" url="localhost:21181"/>
 
     <citrus:before-suite id="defaultBeforeSuite">
