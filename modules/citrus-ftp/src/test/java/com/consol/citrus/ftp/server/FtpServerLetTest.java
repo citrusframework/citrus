@@ -20,7 +20,6 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.ftp.message.FtpMessage;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.*;
-import org.apache.tools.ant.taskdefs.Java;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
