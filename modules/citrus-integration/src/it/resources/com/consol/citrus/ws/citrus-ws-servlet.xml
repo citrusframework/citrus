@@ -98,6 +98,13 @@
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
       <property name="brokerURL" value="tcp://localhost:61616" />
+      <property name="trustedPackages">
+        <list>
+          <value>java.util</value>
+          <value>java.lang</value>
+          <value>com.consol.citrus</value>
+        </list>
+      </property>
       <property name="watchTopicAdvisories" value="false"/>
     </bean>
     

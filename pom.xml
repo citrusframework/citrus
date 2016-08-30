@@ -165,22 +165,22 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <spring.version>4.2.3.RELEASE</spring.version>
-    <spring.ws.version>2.2.3.RELEASE</spring.ws.version>
-    <spring.integration.version>4.2.2.RELEASE</spring.integration.version>
-    <spring.restdocs.version>1.1.0.RELEASE</spring.restdocs.version>
-    <apache.camel.version>2.16.0</apache.camel.version>
-    <activemq.version>5.12.1</activemq.version>
-    <vertx.version>3.2.0</vertx.version>
-    <groovy.version>2.4.5</groovy.version>
+    <spring.version>4.2.7.RELEASE</spring.version>
+    <spring.ws.version>2.2.4.RELEASE</spring.ws.version>
+    <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
+    <spring.restdocs.version>1.1.1.RELEASE</spring.restdocs.version>
+    <apache.camel.version>2.16.3</apache.camel.version>
+    <activemq.version>5.12.3</activemq.version>
+    <vertx.version>3.2.1</vertx.version>
+    <groovy.version>2.4.7</groovy.version>
     <jetty.version>9.2.15.v20160210</jetty.version>
-    <testng.version>6.9.9</testng.version>
-    <slf4j.version>1.7.13</slf4j.version>
+    <testng.version>6.9.10</testng.version>
+    <slf4j.version>1.7.21</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
-    <jackson.version>2.6.3</jackson.version>
+    <jackson.version>2.6.7</jackson.version>
     <arquillian.version>1.1.11.Final</arquillian.version>
     <cucumber.version>1.2.4</cucumber.version>
-    <zookeeper.version>3.4.7</zookeeper.version>
+    <zookeeper.version>3.4.8</zookeeper.version>
     <javadoc.options></javadoc.options>
 
     <skip.integration.tests>false</skip.integration.tests>
@@ -263,7 +263,7 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5.1</version>
+        <version>4.5.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sshd</groupId>
@@ -468,7 +468,7 @@
       <dependency>
         <groupId>org.apache.ant</groupId>
         <artifactId>ant</artifactId>
-        <version>1.9.6</version>
+        <version>1.9.7</version>
         <scope>provided</scope>
       </dependency>
 
@@ -541,12 +541,12 @@
       <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-        <version>2.2.0</version>
+        <version>2.2.2</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
-        <version>1.2.3</version>
+        <version>1.2.6</version>
       </dependency>
 
       <!-- Cucumber -->
@@ -642,7 +642,7 @@
       <dependency>
         <groupId>com.github.docker-java</groupId>
         <artifactId>docker-java</artifactId>
-        <version>2.1.2</version>
+        <version>2.1.4</version>
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>
@@ -681,7 +681,7 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.9</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xbean</groupId>
@@ -691,7 +691,7 @@
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
-        <version>2.3.3</version>
+        <version>2.3.4</version>
       </dependency>
       <dependency>
         <groupId>commons-dbcp</groupId>
@@ -762,7 +762,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.5.1</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
             <source>1.7</source>
@@ -771,7 +771,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.7</version>
+          <version>3.0.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -824,7 +824,7 @@
 
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.0.2</version>
           <configuration>
             <archive>
               <addMavenDescriptor>true</addMavenDescriptor>
@@ -858,7 +858,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.4</version>
+          <version>3.5.1</version>
           <configuration>
             <inputDirectory>${project.build.directory}/site/_site</inputDirectory>
           </configuration>
@@ -887,7 +887,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.4</version>
+          <version>3.0.1</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -900,7 +900,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.3</version>
+          <version>2.10.4</version>
           <configuration>
             <additionalparam>${javadoc.options}</additionalparam>
           </configuration>
@@ -942,7 +942,7 @@
         <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
-          <version>0.11</version>
+          <version>0.12</version>
           <configuration>
             <includes>
               <include>**/*.java</include>
@@ -959,19 +959,13 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>1.9.1</version>
+          <version>1.12</version>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-plugin</artifactId>
-          <version>1.9.4</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.searls</groupId>
-          <artifactId>jasmine-maven-plugin</artifactId>
-          <version>1.3.1.2</version>
+          <version>1.9.5</version>
         </plugin>
 
         <plugin>
@@ -983,7 +977,7 @@
         <plugin>
           <groupId>io.fabric8</groupId>
           <artifactId>docker-maven-plugin</artifactId>
-          <version>0.15.7</version>
+          <version>0.15.16</version>
         </plugin>
 
       </plugins>
@@ -1861,7 +1855,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
-            <version>2.11</version>
+            <version>2.12</version>
             <reportSets>
               <reportSet>
                 <reports>
@@ -1891,7 +1885,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.8</version>
+            <version>2.9</version>
             <configuration>
               <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
               <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
