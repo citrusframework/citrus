@@ -50,7 +50,7 @@
         </message>
         <header>
           <element name="SOAPAction" value="HelloService/sayHello"/>
-          <element name="Content-Type" value="text/xml; charset=UTF-8"/>
+          <element name="Content-Type" value="text/xml;charset=utf-8"/>
         </header>
       </send>
 
@@ -117,7 +117,7 @@
         </message>
         <header>
           <element name="SOAPAction" value='"HelloService/sayHello"'/>
-          <element name="Content-Type" value="text/xml; charset=UTF-8"/>
+          <element name="Content-Type" value="text/xml;charset=utf-8"/>
         </header>
       </receive>
 

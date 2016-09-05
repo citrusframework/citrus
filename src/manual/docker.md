@@ -56,12 +56,12 @@ In case these settings are not settable in your environment you can also use exp
 
 ```xml
 <citrus-docker:client id="dockerClient"
-            url="http://192.168.2.100:2376"
+            url="tcp://localhost:2376"
             version="1.20"
             username="user"
             password="s!cr!t"
             email="user@consol.de"
-            server-address="https://index.docker.io/v1/"
+            registry="https://index.docker.io/v1/"
             cert-path="/path/to/some/cert/directory"
             config-path="/path/to/some/config/directory"/>
 ```

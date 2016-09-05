@@ -30,7 +30,7 @@ import java.lang.annotation.*;
 public @interface DockerClientConfig {
 
     /**
-     * Client url
+     * Docker host url
      * @return
      */
     String url() default "";
@@ -60,10 +60,16 @@ public @interface DockerClientConfig {
     String email() default "";
 
     /**
-     * Server address
+     * Docker registry url
      * @return
      */
-    String serverAddress() default "";
+    String registry() default "";
+
+    /**
+     * TLS verification
+     * @return
+     */
+    boolean verifyTls() default false;
 
     /**
      * Certificate path

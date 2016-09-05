@@ -71,13 +71,13 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
         if (log.isDebugEnabled()) {
-            log.debug("Sending Docker request to: '" + getEndpointConfiguration().getDockerClientConfig().getUri() + "'");
+            log.debug("Sending Docker request to: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
         }
 
         DockerCommand command = message.getPayload(DockerCommand.class);
         command.execute(this, context);
 
-        log.info("Docker request was sent to endpoint: '" + getEndpointConfiguration().getDockerClientConfig().getUri() + "'");
+        log.info("Docker request was sent to endpoint: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
 
         correlationManager.store(correlationKey, command);
 

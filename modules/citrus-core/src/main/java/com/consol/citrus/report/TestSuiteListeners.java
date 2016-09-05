@@ -27,7 +27,7 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
-public class TestSuiteListeners implements TestSuiteListener {
+public class TestSuiteListeners {
     
     /** List of testsuite listeners **/
     @Autowired
@@ -45,14 +45,12 @@ public class TestSuiteListeners implements TestSuiteListener {
         testSuiteListeners.add(testSuiteListener);
     }
 
-    @Override
     public void onFinish() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinish();
         }
     }
 
-    @Override
     public void onFinishFailure(Throwable cause) {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishFailure(cause);
@@ -63,7 +61,6 @@ public class TestSuiteListeners implements TestSuiteListener {
         }
     }
 
-    @Override
     public void onFinishSuccess() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishSuccess();
@@ -74,21 +71,18 @@ public class TestSuiteListeners implements TestSuiteListener {
         }
     }
 
-    @Override
     public void onStart() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStart();
         }
     }
 
-    @Override
     public void onStartFailure(Throwable cause) {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartFailure(cause);
         }
     }
 
-    @Override
     public void onStartSuccess() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartSuccess();

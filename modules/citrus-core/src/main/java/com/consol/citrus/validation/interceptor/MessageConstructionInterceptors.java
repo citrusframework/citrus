@@ -30,12 +30,11 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageConstructionInterceptors implements MessageConstructionInterceptor {
+public class MessageConstructionInterceptors {
 
     @Autowired(required = false)
     private List<MessageConstructionInterceptor> messageConstructionInterceptors = new ArrayList<MessageConstructionInterceptor>();
 
-    @Override
     public Message interceptMessageConstruction(Message message, String messageType, TestContext context) {
         Message interceptedMessage = message;
 
@@ -52,7 +51,6 @@ public class MessageConstructionInterceptors implements MessageConstructionInter
         return interceptedMessage;
     }
 
-    @Override
     public boolean supportsMessageType(String messageType) {
         return true;
     }

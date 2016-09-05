@@ -31,7 +31,8 @@
       <xs:attribute name="username" type="xs:string"/>
       <xs:attribute name="password" type="xs:string"/>
       <xs:attribute name="email" type="xs:string"/>
-      <xs:attribute name="server-address" type="xs:string"/>
+      <xs:attribute name="registry" type="xs:string"/>
+      <xs:attribute name="verify-tls" type="xs:boolean"/>
       <xs:attribute name="cert-path" type="xs:string"/>
       <xs:attribute name="config-path" type="xs:string"/>
     </xs:complexType>

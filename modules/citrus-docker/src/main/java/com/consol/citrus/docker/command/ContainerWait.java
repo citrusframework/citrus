@@ -18,15 +18,16 @@ package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.github.dockerjava.api.command.WaitContainerCmd;
+import com.github.dockerjava.api.model.WaitResponse;
+import com.github.dockerjava.core.command.WaitContainerResultCallback;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class ContainerWait extends AbstractDockerCommand<ContainerWait.ExitCode> {
+public class ContainerWait extends AbstractDockerCommand<WaitResponse> {
 
     /**
      * Default constructor initializing the command name.
@@ -38,39 +39,19 @@ public class ContainerWait extends AbstractDockerCommand<ContainerWait.ExitCode>
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
         WaitContainerCmd command = dockerClient.getEndpointConfiguration().getDockerClient().waitContainerCmd(getContainerId(context));
-        Integer exitCode = command.exec();
 
-        setCommandResult(new ExitCode(getContainerId(context), exitCode));
-    }
+        WaitContainerResultCallback waitResult = new WaitContainerResultCallback() {
+            @Override
+            public void onNext(WaitResponse waitResponse) {
+                super.onNext(waitResponse);
+                setCommandResult(waitResponse);
+            }
+        };
 
-    @JsonIgnoreProperties(ignoreUnknown = false)
-    public static class ExitCode {
-        @JsonProperty
-        private String containerId;
+        command.exec(waitResult);
 
-        @JsonProperty
-        private Integer exitCode;
-
-        public ExitCode(String containerId, Integer exitCode) {
-            this.containerId = containerId;
-            this.exitCode = exitCode;
-        }
-
-        public void setContainerId(String containerId) {
-            this.containerId = containerId;
-        }
-
-        public String getContainerId() {
-            return containerId;
-        }
-
-        public void setExitCode(Integer exitCode) {
-            this.exitCode = exitCode;
-        }
-
-        public Integer getExitCode() {
-            return exitCode;
-        }
+        Integer statusCode = waitResult.awaitStatusCode();
+        context.setVariable(DockerMessageHeaders.DOCKER_PREFIX + "statusCode", statusCode);
     }
 
     /**

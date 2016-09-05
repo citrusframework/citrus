@@ -28,41 +28,36 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
-public class TestListeners implements TestListener {
+public class TestListeners {
     
     /** List of test listeners **/
     @Autowired
     private List<TestListener> testListeners = new ArrayList<TestListener>();
 
-    @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         for (TestListener listener : testListeners) {
             listener.onTestFailure(test, cause);
         }
     }
 
-    @Override
     public void onTestFinish(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestFinish(test);
         }
     }
 
-    @Override
     public void onTestSkipped(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestSkipped(test);
         }
     }
 
-    @Override
     public void onTestStart(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestStart(test);
         }
     }
 
-    @Override
     public void onTestSuccess(TestCase test) {
         for (TestListener listener : testListeners) {
             listener.onTestSuccess(test);

@@ -30,27 +30,24 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class TestActionListeners implements TestActionListener {
+public class TestActionListeners {
     
     /** List of test action listeners **/
     @Autowired(required = false)
     private List<TestActionListener> testActionListeners = new ArrayList<TestActionListener>();
 
-    @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionFinish(testCase, testAction);
         }
     }
 
-    @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionSkipped(testCase, testAction);
         }
     }
 
-    @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionStart(testCase, testAction);

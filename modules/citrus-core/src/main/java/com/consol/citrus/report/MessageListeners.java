@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  */
-public class MessageListeners implements MessageListener {
+public class MessageListeners {
 
     /** List of message listener known to Spring application context */
     @Autowired
@@ -38,7 +38,6 @@ public class MessageListeners implements MessageListener {
      * @param message
      * @param context
      */
-    @Override
     public void onInboundMessage(Message message, TestContext context) {
         if (message != null) {
             for (MessageListener listener : messageListener) {
@@ -52,7 +51,6 @@ public class MessageListeners implements MessageListener {
      * @param message
      * @param context
      */
-    @Override
     public void onOutboundMessage(Message message, TestContext context) {
         if (message != null) {
             for (MessageListener listener : messageListener) {

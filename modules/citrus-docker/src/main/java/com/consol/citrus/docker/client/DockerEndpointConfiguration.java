@@ -19,8 +19,7 @@ package com.consol.citrus.docker.client;
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
-import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.core.*;
 import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
 
 /**
@@ -74,7 +73,7 @@ public class DockerEndpointConfiguration extends AbstractPollableEndpointConfigu
      */
     public DockerClientConfig getDockerClientConfig() {
         if (dockerClientConfig == null) {
-            dockerClientConfig = DockerClientConfig.createDefaultConfigBuilder().build();
+            dockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         }
 
         return dockerClientConfig;

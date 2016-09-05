@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
 
 /**
  * @author Christoph Deppisch
@@ -27,7 +27,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
 
     /** Endpoint target */
     private DockerClient endpoint = new DockerClient();
-    private DockerClientConfig.DockerClientConfigBuilder config = DockerClientConfig.createDefaultConfigBuilder();
+    private DefaultDockerClientConfig.Builder config = DefaultDockerClientConfig.createDefaultConfigBuilder();
 
     @Override
     public DockerClient build() {
@@ -41,12 +41,11 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
     }
 
     /**
-     * Sets the client url.
-     * @param url
+     * Sets the docker host url.
      * @return
      */
-    public DockerClientBuilder url(String url) {
-        config.withUri(url);
+    public DockerClientBuilder url(String host) {
+        config.withDockerHost(host);
         return this;
     }
 
@@ -56,7 +55,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
      * @return
      */
     public DockerClientBuilder version(String version) {
-        config.withVersion(version);
+        config.withApiVersion(version);
         return this;
     }
 
@@ -66,7 +65,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
      * @return
      */
     public DockerClientBuilder username(String username) {
-        config.withUsername(username);
+        config.withRegistryUsername(username);
         return this;
     }
 
@@ -76,7 +75,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
      * @return
      */
     public DockerClientBuilder password(String password) {
-        config.withPassword(password);
+        config.withRegistryPassword(password);
         return this;
     }
 
@@ -86,17 +85,27 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
      * @return
      */
     public DockerClientBuilder email(String email) {
-        config.withEmail(email);
+        config.withRegistryEmail(email);
         return this;
     }
 
     /**
-     * Sets the client serverAddress.
-     * @param serverAddress
+     * Sets the docker registry url.
+     * @param url
      * @return
      */
-    public DockerClientBuilder serverAddress(String serverAddress) {
-        config.withServerAddress(serverAddress);
+    public DockerClientBuilder registry(String url) {
+        config.withRegistryUrl(url);
+        return this;
+    }
+
+    /**
+     * Sets the TLS verification.
+     * @param verify
+     * @return
+     */
+    public DockerClientBuilder verifyTls(boolean verify) {
+        config.withDockerTlsVerify(verify);
         return this;
     }
 
@@ -116,7 +125,7 @@ public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
      * @return
      */
     public DockerClientBuilder configPath(String configPath) {
-        config.withDockerCfgPath(configPath);
+        config.withDockerConfig(configPath);
         return this;
     }
 }

@@ -18,7 +18,7 @@ package com.consol.citrus.docker.config.xml;
 
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
-import com.github.dockerjava.core.LocalDirectorySSLConfig;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,13 +42,12 @@ public class DockerClientParserTest extends AbstractBeanDefinitionParserTest {
         // 2nd client
         dockerClient = clients.get("dockerClient2");
         Assert.assertNotNull(dockerClient.getEndpointConfiguration().getDockerClient());
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getUri().toString(), "http://localhost:2376");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getVersion().asWebPathPart(), "v1.19");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getUsername(), "user");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getPassword(), "s!cr!t");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getEmail(), "user@consol.de");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getServerAddress(), "https://index.docker.io/v1/");
-        Assert.assertEquals(((LocalDirectorySSLConfig)dockerClient.getEndpointConfiguration().getDockerClientConfig().getSslConfig()).getDockerCertPath(), "/path/to/some/cert/directory");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getDockerCfgPath(), "/path/to/some/config/directory");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getDockerHost().toString(), "tcp://localhost:2376");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getApiVersion().asWebPathPart(), "v1.19");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryUsername(), "user");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryPassword(), "s!cr!t");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@consol.de");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryUrl(), "https://index.docker.io/v1/");
+        Assert.assertEquals(((DefaultDockerClientConfig)dockerClient.getEndpointConfiguration().getDockerClientConfig()).getDockerConfig(), "/path/to/some/config/directory");
     }
 }

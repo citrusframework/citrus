@@ -16,7 +16,6 @@
 
 package com.consol.citrus.validation.json;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -34,7 +33,7 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
     public void testConstructWithJsonPath() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\" }}");
         
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
         
         JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
@@ -46,7 +45,7 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
     public void testConstructWithJsonPathMultipleValues() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\", \"Id\": \"1234567\"}}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
         jsonPathExpressions.put("$.TestMessage.Id", "9999999");
 
@@ -59,7 +58,7 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
     public void testConstructWithJsonPathWithArrays() {
         Message message = new DefaultMessage("{ \"TestMessage\": [{ \"Text\": \"Hello World!\" }, { \"Text\": \"Another Hello World!\" }]}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..Text", "Hello!");
 
         JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
@@ -67,15 +66,15 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello!\"}]}");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Could not find element for expression.*")
+    @Test
     public void testConstructWithJsonPathNoResult() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\" }}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Unknown", "Hello!");
 
         JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
-        interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
+        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\"}}");
     }
 }
