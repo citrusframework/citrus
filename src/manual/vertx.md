@@ -9,7 +9,7 @@ The Vert.x components in Citrus are kept in a separate Maven module. So you shou
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-vertx</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.6.1-SNAPSHOT</version>
 </dependency>
 ```
 

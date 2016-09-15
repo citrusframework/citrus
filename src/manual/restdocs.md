@@ -9,7 +9,7 @@ The Spring Restdocs support components in Citrus are kept in a separate Maven mo
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-restdocs</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.6.1-SNAPSHOT</version>
 </dependency>
 ```
 
