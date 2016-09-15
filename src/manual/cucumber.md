@@ -13,7 +13,7 @@ The Cucumber components in Citrus are kept in a separate Maven module. If not al
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-cucumber</artifactId>
-  <version>2.6.1-SNAPSHOT</version>
+  <version>2.7-SNAPSHOT</version>
 </dependency>
 ```
 

@@ -9,7 +9,7 @@ The Docker test components in Citrus are kept in a separate Maven module. If not
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-docker</artifactId>
-  <version>2.6.1-SNAPSHOT</version>
+  <version>2.7-SNAPSHOT</version>
 </dependency>
 ```
 
