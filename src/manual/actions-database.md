@@ -1,6 +1,16 @@
 ### Database actions
 
-In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this using the two database actions that are described in the following sections.
+In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent 
+data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this 
+using the two database actions that are described in the following sections.
+
+In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing a SQL query with
+SELECT you are able to add validation steps on the result sets returned from the database. This is not allowed when executing update statements like 
+INSERT, UPDATE, DELETE. 
+
+**Important**
+Do not mix statements of type ***SELECT*** with others in a single sql test action. This will lead to errors because validation steps are not valid
+for statements other than SELECT. Please use separate test actions for update statements.
 
 ### SQL update, insert, delete
 
@@ -65,12 +75,8 @@ The first action uses inline SQL statements defined directly inside the test cas
 You have to pay attention to some rules when dealing with external SQL resources.
 
 * Each statement should begin in a new line
-
 * It is not allowed to define statements with word wrapping
-
 * Comments begin with two dashes "--"
-
-
 
 **Note**
 The external file is referenced either as file system resource or class path resource, by using the "file:" or "classpath:" prefix.
