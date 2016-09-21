@@ -25,6 +25,7 @@ import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.CollectionUtils;
@@ -146,15 +147,19 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     private void fillColumnValuesMap(List<Map<String, Object>> results, Map<String, List<String>> columnValuesMap) {
         for (Map<String, Object> row : results) {
             for (Entry<String, Object> column : row.entrySet()) {
+                String columnValue;
                 String columnName = column.getKey();
-                if (columnValuesMap.containsKey(columnName)) {
-                    columnValuesMap.get(columnName).add((column.getValue() == null ?
-                            null : column.getValue().toString()));
-                } else {
-                    List<String> columnValues = new ArrayList<String>();
-                    columnValues.add((column.getValue() == null ? null : column.getValue().toString()));
-                    columnValuesMap.put(columnName, columnValues);
+                if (!columnValuesMap.containsKey(columnName)) {
+                    columnValuesMap.put(columnName, new ArrayList<String>());
                 }
+
+                if (column.getValue() instanceof byte[]) {
+                    columnValue = Base64.encodeBase64String((byte[]) column.getValue());
+                } else {
+                    columnValue = column.getValue() == null ? null : column.getValue().toString();
+                }
+
+                columnValuesMap.get(columnName).add((columnValue));
             }
         }
     }
