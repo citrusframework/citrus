@@ -55,6 +55,6 @@ public class JsonPathMessageValidationContext implements ValidationContext {
      * @return
      */
     public static boolean isJsonPathExpression(String pathExpression) {
-        return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("$.") || pathExpression.startsWith("$["));
+        return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("$"));
     }
 }

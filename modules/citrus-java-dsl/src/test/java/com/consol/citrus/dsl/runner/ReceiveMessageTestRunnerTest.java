@@ -1156,6 +1156,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .extractFromPayload("$.text", "text")
+                                .extractFromPayload("$.toString()", "payload")
                                 .extractFromPayload("$.person", "person");
                     }
                 });
@@ -1165,7 +1166,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("text"));
         Assert.assertNotNull(context.getVariable("person"));
+        Assert.assertNotNull(context.getVariable("payload"));
         Assert.assertEquals(context.getVariable("text"), "Hello World!");
+        Assert.assertEquals(context.getVariable("payload"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
         Assert.assertTrue(context.getVariable("person").contains("\"John\""));
 
         TestCase test = builder.getTestCase();
