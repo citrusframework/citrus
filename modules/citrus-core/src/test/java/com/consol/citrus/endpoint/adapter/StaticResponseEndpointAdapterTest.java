@@ -45,4 +45,21 @@ public class StaticResponseEndpointAdapterTest {
         Assert.assertNotNull(response.getHeader("Operation"));
         Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
     }
+
+    @Test
+    public void testHandleMessageResource() {
+        StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+        Map<String, Object> header = new HashMap<String, Object>();
+        header.put("Operation", "UnitTest");
+
+        endpointAdapter.setMessageHeader(header);
+        endpointAdapter.setMessagePayloadResource("classpath:com/consol/citrus/endpoint/adapter/response.xml");
+
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
+
+        Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");
+        Assert.assertNotNull(response.getHeader("Operation"));
+        Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
+    }
 }

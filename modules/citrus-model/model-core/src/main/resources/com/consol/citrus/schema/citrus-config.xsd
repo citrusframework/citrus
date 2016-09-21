@@ -467,7 +467,12 @@
     <xs:element name="static-response-adapter">
       <xs:complexType>
         <xs:sequence>
-          <xs:element name="payload" type="xs:string" minOccurs="1"/>
+          <xs:element name="payload" type="xs:string" minOccurs="0"/>
+          <xs:element name="resource" minOccurs="0">
+            <xs:complexType>
+              <xs:attribute name="file" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:element name="header" minOccurs="0">
             <xs:complexType>
               <xs:sequence>

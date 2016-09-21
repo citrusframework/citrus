@@ -34,11 +34,16 @@ public class StaticResponseEndpointAdapterParserTest extends AbstractBeanDefinit
     public void testParseBeanDefinition() throws Exception {
         Map<String, StaticResponseEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(StaticResponseEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 1);
+        Assert.assertEquals(adapters.size(), 2);
 
         // 1st endpoint adapter
-        StaticResponseEndpointAdapter adapter = adapters.get("endpointAdapter");
+        StaticResponseEndpointAdapter adapter = adapters.get("endpointAdapter1");
         Assert.assertEquals(StringUtils.trimAllWhitespace(adapter.getMessagePayload()), "<TestMessage><Text>Hello!</Text></TestMessage>");
+        Assert.assertEquals(adapter.getMessageHeader().get("Operation"), "sayHello");
+
+        adapter = adapters.get("endpointAdapter2");
+        Assert.assertEquals(adapter.getMessagePayload(), "");
+        Assert.assertEquals(adapter.getMessagePayloadResource(), "classpath:coms/consol/citrus/response-data.xml");
         Assert.assertEquals(adapter.getMessageHeader().get("Operation"), "sayHello");
     }
 }

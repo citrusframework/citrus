@@ -44,6 +44,11 @@ public class StaticResponseEndpointAdapterParser extends AbstractBeanDefinitionP
             builder.addPropertyValue("messagePayload", DomUtils.getTextValue(payloadData));
         }
 
+        Element payloadResource = DomUtils.getChildElementByTagName(element, "resource");
+        if (payloadResource != null) {
+            builder.addPropertyValue("messagePayloadResource", payloadResource.getAttribute("file"));
+        }
+
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
         if (headerElement != null) {
             Map<String, Object> messageHeaders = new HashMap<String, Object>();
