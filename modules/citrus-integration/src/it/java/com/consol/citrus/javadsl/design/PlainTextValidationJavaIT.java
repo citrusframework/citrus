@@ -32,16 +32,19 @@ public class PlainTextValidationJavaIT extends TestNGCitrusTestDesigner {
     public void plainTextValidation() {
         parallel(
             http().client("httpClient")
+                .send()
                 .post()
                 .payload("Hello, World!"),
             sequential(
                 http().server("httpServerRequestEndpoint")
+                   .receive()
                    .post()
                    .messageType(MessageType.PLAINTEXT)
                    .payload("Hello, World!")
                    .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                 http().server("httpServerResponseEndpoint")
-                   .respond(HttpStatus.OK)
+                   .send()
+                   .response(HttpStatus.OK)
                    .payload("Hello, Citrus!")
                    .version("HTTP/1.1")
                    .header("citrus_jms_correlationId", "${correlation_id}")
@@ -49,18 +52,21 @@ public class PlainTextValidationJavaIT extends TestNGCitrusTestDesigner {
         );
         
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .messageType(MessageType.PLAINTEXT)
             .payload("Hello, Citrus!")
             .version("HTTP/1.1");
         
         http().client("httpClient")
+            .send()
             .post()
             .payload("Hello, World!");
         
         sleep(2000);
         
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .messageType(MessageType.PLAINTEXT)
             .version("HTTP/1.1");

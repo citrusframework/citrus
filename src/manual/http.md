@@ -193,6 +193,7 @@ Up to now we have used XML DSL test cases. The Java DSL in Citrus also works wit
 @CitrusTest
 public void httpActionTest() {
     http().client("httpClient")
+          .send()
           .post("/customer")
           .payload("<customer>" +
                     "<id>citrus:randomNumber()</id>" +
@@ -203,6 +204,7 @@ public void httpActionTest() {
           .accept("text/xml, */*");
 
     http().client("httpClient")
+          .receive()
           .response(HttpStatus.OK)
           .payload("<customerResponse>" +
                     "<success>true</success>" +
@@ -312,6 +314,7 @@ As usual all these Http specific actions are also available in Java DSL.
 @CitrusTest
 public void httpServerActionTest() {
     http().server("helloHttpServer")
+          .receive()
           .post("/test")
           .payload("<testRequestMessage>" +
                     "<text<Hello HttpServer</text>" +
@@ -323,7 +326,8 @@ public void httpServerActionTest() {
           .extractFromHeader("X-MessageId", "message_id");
 
     http().server("helloHttpServer")
-          .respond(HttpStatus.OK)
+          .send()
+          .response(HttpStatus.OK)
           .payload("<testResponseMessage>" +
                     "<text<Hello Citrus</text>" +
                   "</testResponseMessage>")

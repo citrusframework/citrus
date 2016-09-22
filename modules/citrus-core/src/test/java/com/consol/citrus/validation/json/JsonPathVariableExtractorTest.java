@@ -16,16 +16,58 @@
 
 package com.consol.citrus.validation.json;
 
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JsonPathVariableExtractorTest {
+public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
+
+    private JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor();
+    private Message jsonMessage;
+
+    @BeforeClass
+    public void setup() {
+        jsonMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+    }
 
     @Test
     public void testExtractVariables() throws Exception {
+        variableExtractor.getJsonPathExpressions().put("$['index']", "index");
+        variableExtractor.getJsonPathExpressions().put("$.person", "person");
+        variableExtractor.getJsonPathExpressions().put("$.person.name", "personName");
+        variableExtractor.getJsonPathExpressions().put("$.toString()", "toString");
+        variableExtractor.getJsonPathExpressions().put("$.keySet()", "keySet");
+        variableExtractor.getJsonPathExpressions().put("$.values()", "values");
+        variableExtractor.getJsonPathExpressions().put("$.size()", "size");
+        variableExtractor.getJsonPathExpressions().put("$.*", "all");
+        variableExtractor.getJsonPathExpressions().put("$", "root");
+        variableExtractor.extractVariables(jsonMessage, context);
 
+        Assert.assertNotNull(context.getVariable("toString"));
+        Assert.assertEquals(context.getVariable("toString"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
+        Assert.assertNotNull(context.getVariable("keySet"));
+        Assert.assertEquals(context.getVariable("keySet"), "[person, index, text, id]");
+        Assert.assertNotNull(context.getVariable("values"));
+        Assert.assertEquals(context.getVariable("values"), "[{\"surname\":\"Doe\",\"name\":\"John\"}, 5, Hello World!, x123456789x]");
+        Assert.assertNotNull(context.getVariable("size"));
+        Assert.assertEquals(context.getVariable("size"), "4");
+        Assert.assertNotNull(context.getVariable("person"));
+        Assert.assertEquals(context.getVariable("person"), "{\"surname\":\"Doe\",\"name\":\"John\"}");
+        Assert.assertNotNull(context.getVariable("personName"));
+        Assert.assertEquals(context.getVariable("personName"), "John");
+        Assert.assertNotNull(context.getVariable("index"));
+        Assert.assertEquals(context.getVariable("index"), "5");
+
+        Assert.assertNotNull(context.getVariable("all"));
+        Assert.assertEquals(context.getVariable("all"), "[{\"surname\":\"Doe\",\"name\":\"John\"},5,\"Hello World!\",\"x123456789x\"]");
+        Assert.assertNotNull(context.getVariable("root"));
+        Assert.assertEquals(context.getVariable("root"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
     }
 }

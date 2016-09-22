@@ -19,8 +19,7 @@ package com.consol.citrus.validation.json;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Custom JsonPath function support for size(), keySet() and toString() operations on Json objects and arrays.
@@ -55,7 +54,19 @@ public class JsonPathFunctions {
             }
         } else if (jsonPathFunction.equals("values")) {
             if (jsonPathResult instanceof JSONObject) {
-                return ((JSONObject) jsonPathResult).values().toArray();
+                Object[] valueObjects = ((JSONObject) jsonPathResult).values().toArray();
+                List<String> values = new ArrayList<>(valueObjects.length);
+                for(Object value : valueObjects) {
+                    if (value instanceof JSONObject) {
+                        values.add(((JSONObject) value).toJSONString());
+                    } else if (value instanceof JSONArray) {
+                        values.add(((JSONArray) value).toJSONString());
+                    } else {
+                        values.add(String.valueOf(value));
+                    }
+                }
+
+                return values.toString();
             } else {
                 return new Object[] {};
             }

@@ -39,6 +39,7 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .post()
                             .payload("{" +
                                     "\"type\" : \"read\"," +
@@ -53,6 +54,7 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .post()
                                 .messageType(MessageType.JSON)
                                 .validator("defaultGroovyJsonMessageValidator")
@@ -66,7 +68,8 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerResponseEndpoint")
-                                .respond(HttpStatus.OK)
+                                .send()
+                                .response(HttpStatus.OK)
                                 .payload("{" + NEWLINE +
                                         "\"timestamp\" : \"2011-01-01\"," + NEWLINE +
                                         "\"status\" : 200," + NEWLINE +
@@ -90,6 +93,7 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .messageType(MessageType.JSON)
                         .validator("defaultGroovyJsonMessageValidator")

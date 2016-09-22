@@ -27,10 +27,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.apache.commons.codec.binary.Base64;
 
 import java.util.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -833,5 +835,30 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         context.getVariables().put("testVariable", "testVariableValue");
         context.getVariables().put("progressVar", "progress");
         executeSQLQueryAction.execute(context);
+    }
+
+    @Test
+    public void testBinaryBlobColumnValues() {
+        String sql = "select ORDERTYPE, BINARY_DATA from orders where ID=5";
+        reset(jdbcTemplate);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("BINARY_DATA", "some_binary_data".getBytes());
+
+        when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.singletonList(resultMap));
+
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+
+        Map<String, String> extractVariables = new HashMap<String, String>();
+        extractVariables.put("BINARY_DATA", "binaryData");
+        executeSQLQueryAction.setExtractVariables(extractVariables);
+
+        executeSQLQueryAction.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${binaryData}"));
+        Assert.assertEquals(context.getVariable("${binaryData}"), Base64.encodeBase64String("some_binary_data".getBytes()));
+        Assert.assertEquals(new String(Base64.decodeBase64(context.getVariable("${binaryData}"))), "some_binary_data");
     }
 }

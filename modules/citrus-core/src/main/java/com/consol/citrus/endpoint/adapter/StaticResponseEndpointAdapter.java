@@ -16,9 +16,14 @@
 
 package com.consol.citrus.endpoint.adapter;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.util.FileUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,12 +38,26 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
     /** Response message payload */
     private String messagePayload = "";
 
+    /** Payload resource as file path */
+    private String messagePayloadResource;
+
     /** Response message header */
     private Map<String, Object> messageHeader = new HashMap<String, Object>();
 
     @Override
     public Message handleMessageInternal(Message message) {
-        return new DefaultMessage(messagePayload, messageHeader);
+        String payload;
+        if (StringUtils.hasText(messagePayloadResource)) {
+            try {
+                payload = FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(messagePayloadResource));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read message payload file resource", e);
+            }
+        } else {
+            payload = messagePayload;
+        }
+
+        return new DefaultMessage(payload, messageHeader);
     }
 
     /**
@@ -55,6 +74,24 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
      */
     public void setMessagePayload(String messagePayload) {
         this.messagePayload = messagePayload;
+    }
+
+    /**
+     * Gets the value of the messagePayloadResource property.
+     *
+     * @return the messagePayloadResource
+     */
+    public String getMessagePayloadResource() {
+        return messagePayloadResource;
+    }
+
+    /**
+     * Sets the messagePayloadResource property.
+     *
+     * @param messagePayloadResource
+     */
+    public void setMessagePayloadResource(String messagePayloadResource) {
+        this.messagePayloadResource = messagePayloadResource;
     }
 
     /**

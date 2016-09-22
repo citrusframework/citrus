@@ -35,6 +35,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         
         parallel(
             http().client("httpClient")
+                .send()
                 .post()
                 .payload("<testRequestMessage>" +
                         "<text>Hello HttpServer</text>" +
@@ -45,6 +46,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
             
             sequential(
                 http().server("httpServerRequestEndpoint")
+                    .receive()
                     .post("/test")
                     .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
@@ -56,7 +58,8 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                     .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                     
                http().server("httpServerResponseEndpoint")
-                   .respond(HttpStatus.OK)
+                   .send()
+                   .response(HttpStatus.OK)
                    .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
@@ -68,6 +71,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         );
         
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
                     "<text>Hello Citrus</text>" +
@@ -79,6 +83,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         
         parallel(
             http().client("httpClient")
+                .send()
                 .post()
                 .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
@@ -89,6 +94,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
             
             sequential(
                 http().server("httpServerRequestEndpoint")
+                    .receive()
                     .post()
                     .path("/test")
                     .payload("<testRequestMessage>" +
@@ -101,7 +107,8 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                     .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                     
                http().server("httpServerResponseEndpoint")
-                   .respond()
+                   .send()
+                   .response()
                    .status(HttpStatus.NOT_FOUND)
                    .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
@@ -114,6 +121,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         );
         
         http().client("httpClient")
+            .receive()
             .response()
             .status(HttpStatus.NOT_FOUND)
             .payload("<testResponseMessage>" +
@@ -125,6 +133,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         echo("Skip response and use fallback endpoint adapter");
         
         http().client("httpClient")
+            .send()
             .post()
             .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
@@ -134,6 +143,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
             .accept("text/xml, */*");
 
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .version("HTTP/1.1")
             .timeout(2000L);

@@ -42,8 +42,8 @@ public class JsonPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor 
             Object receivedJson = parser.parse(request.getPayload(String.class));
             ReadContext readerContext = JsonPath.parse(receivedJson);
 
-            String jsonPathFunction = null;
             String expression = jsonPathExpression;
+            String jsonPathFunction = null;
             for (String name : JsonPathFunctions.getSupportedFunctions()) {
                 if (expression.endsWith(String.format(".%s()", name))) {
                     jsonPathFunction = name;

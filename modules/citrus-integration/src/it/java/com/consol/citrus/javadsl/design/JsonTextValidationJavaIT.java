@@ -32,6 +32,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
     public void jsonTextValidation() {
         parallel(
             http().client("httpClient")
+                .send()
                 .post()
                 .payload("{" +
                     "\"type\" : \"read\"," +
@@ -41,6 +42,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                   "}"),
             sequential(
                 http().server("httpServerRequestEndpoint")
+                   .receive()
                    .post()
                    .messageType(MessageType.JSON)
                    .payload("{" +
@@ -51,7 +53,8 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                           "}")
                    .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                 http().server("httpServerResponseEndpoint")
-                   .respond(HttpStatus.OK)
+                   .send()
+                   .response(HttpStatus.OK)
                    .payload("{" +
                         "\"timestamp\" : \"2011-01-01\"," +
                         "\"status\" : 200," +
@@ -70,6 +73,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
         );
         
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .messageType(MessageType.JSON)
             .payload("{" +
@@ -87,6 +91,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
             .version("HTTP/1.1");
         
         http().client("httpClient")
+            .send()
             .post()
             .payload("{" +
                 "\"type\" : \"read\"," +
@@ -98,6 +103,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
         sleep(2000);
         
         http().client("httpClient")
+            .receive()
             .response()
             .messageType(MessageType.JSON)
             .status(HttpStatus.OK)

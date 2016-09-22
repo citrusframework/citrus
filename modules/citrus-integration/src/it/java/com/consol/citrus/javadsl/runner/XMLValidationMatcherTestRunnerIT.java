@@ -37,6 +37,7 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .post()
                             .payload("<testRequestMessage>" +
                                     "<text>citrus:cdataSection('<data>" +
@@ -53,6 +54,7 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .post("/test")
                                 .payload("<testRequestMessage>" +
                                         "<text>citrus:cdataSection('@matchesXml('<data>" +
@@ -70,7 +72,8 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerResponseEndpoint")
-                                .respond(HttpStatus.OK)
+                                .send()
+                                .response(HttpStatus.OK)
                                 .payload("<testResponseMessage>" +
                                         "<text>Hello Citrus</text>" +
                                         "</testResponseMessage>")
@@ -86,6 +89,7 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +

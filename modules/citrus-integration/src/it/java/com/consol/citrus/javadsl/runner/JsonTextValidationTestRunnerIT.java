@@ -36,6 +36,7 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .post()
                             .payload("{" +
                                     "\"type\" : \"read\"," +
@@ -50,6 +51,7 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .post()
                                 .messageType(MessageType.JSON)
                                 .payload("{" +
@@ -65,7 +67,8 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerResponseEndpoint")
-                                .respond(HttpStatus.OK)
+                                .send()
+                                .response(HttpStatus.OK)
                                 .payload("{" +
                                         "\"timestamp\" : \"2011-01-01\"," +
                                         "\"status\" : 200," +
@@ -89,6 +92,7 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .messageType(MessageType.JSON)
                         .payload("{" +
@@ -111,6 +115,7 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .send()
                         .post()
                         .payload("{" +
                                 "\"type\" : \"read\"," +
@@ -127,6 +132,7 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .messageType(MessageType.JSON)
                         .version("HTTP/1.1");

@@ -39,6 +39,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .post()
                             .payload("<testRequestMessage>" +
                                     "<text>Hello HttpServer</text>" +
@@ -54,6 +55,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .post("/test")
                                 .payload("<testRequestMessage>" +
                                         "<text>Hello HttpServer</text>" +
@@ -70,7 +72,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                    @Override
                    public void configure(HttpActionBuilder builder) {
                        builder.server("httpServerResponseEndpoint")
-                               .respond(HttpStatus.OK)
+                               .send()
+                               .response(HttpStatus.OK)
                                .payload("<testResponseMessage>" +
                                        "<text>Hello Citrus</text>" +
                                        "</testResponseMessage>")
@@ -87,6 +90,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
@@ -103,6 +107,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .post()
                             .payload("<testRequestMessage>" +
                                     "<text>Hello HttpServer</text>" +
@@ -118,6 +123,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .post()
                                 .path("/test")
                                 .payload("<testRequestMessage>" +
@@ -135,7 +141,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                    @Override
                    public void configure(HttpActionBuilder builder) {
                        builder.server("httpServerResponseEndpoint")
-                               .respond(HttpStatus.NOT_FOUND)
+                               .send()
+                               .response(HttpStatus.NOT_FOUND)
                                .payload("<testResponseMessage>" +
                                        "<text>Hello Citrus</text>" +
                                        "</testResponseMessage>")
@@ -152,6 +159,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.NOT_FOUND)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
@@ -167,6 +175,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .send()
                         .post()
                         .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
@@ -181,6 +190,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .timeout(2000L)
                         .version("HTTP/1.1");

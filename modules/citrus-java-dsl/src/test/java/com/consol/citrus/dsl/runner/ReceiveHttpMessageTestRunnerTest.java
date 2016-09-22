@@ -77,6 +77,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server(httpServer)
+                                .receive()
                                 .get("/test/foo")
                                 .queryParam("param1", "value1")
                                 .queryParam("param2", "value2")
@@ -176,6 +177,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client(httpClient)
+                                .receive()
                                 .response(HttpStatus.OK)
                                 .version("HTTP/1.1")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");

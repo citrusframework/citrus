@@ -74,6 +74,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client(httpClient)
+                                .send()
                                 .get()
                                 .messageType(MessageType.PLAINTEXT)
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
@@ -85,6 +86,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client(httpClient)
+                                .send()
                                 .get()
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                                 .messageType(MessageType.PLAINTEXT)
@@ -212,6 +214,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client(httpClient)
+                                .send()
                                 .get()
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
@@ -304,6 +307,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client(httpClient)
+                                .send()
                                 .get("/test")
                                 .uri("http://localhost:8080/")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -401,6 +405,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client(httpClient)
+                                .send()
                                 .get()
                                 .uri("http://localhost:8080/")
                                 .queryParam("param1", "value1")

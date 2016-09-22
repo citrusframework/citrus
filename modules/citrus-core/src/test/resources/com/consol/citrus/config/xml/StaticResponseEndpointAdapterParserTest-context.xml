@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
-    <citrus:static-response-adapter id="endpointAdapter">
+    <citrus:static-response-adapter id="endpointAdapter1">
       <citrus:payload>
         <![CDATA[
           <TestMessage>
@@ -13,6 +13,13 @@
           </TestMessage>
         ]]>
       </citrus:payload>
+      <citrus:header>
+        <citrus:element name="Operation" value="sayHello"/>
+      </citrus:header>
+    </citrus:static-response-adapter>
+
+    <citrus:static-response-adapter id="endpointAdapter2">
+      <citrus:resource file="classpath:coms/consol/citrus/response-data.xml" />
       <citrus:header>
         <citrus:element name="Operation" value="sayHello"/>
       </citrus:header>
