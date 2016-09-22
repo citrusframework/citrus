@@ -51,7 +51,7 @@ public class HttpServerActionBuilder extends AbstractTestActionBuilder<Delegatin
      * @return
      */
     public HttpServerResponseActionBuilder respond() {
-        return response();
+        return new HttpServerSendActionBuilder().response();
     }
 
     /**
@@ -59,154 +59,21 @@ public class HttpServerActionBuilder extends AbstractTestActionBuilder<Delegatin
      * @return
      */
     public HttpServerResponseActionBuilder respond(HttpStatus status) {
-        return response(status);
-    }
-
-    /**
-     * Generic response builder for sending response messages to client.
-     * @return
-     */
-    public HttpServerResponseActionBuilder response() {
-        HttpServerResponseActionBuilder httpServerResponseActionBuilder = new HttpServerResponseActionBuilder(action, httpServer)
-                .withApplicationContext(applicationContext);
-        return httpServerResponseActionBuilder;
-    }
-
-    /**
-     * Generic response builder for sending response messages to client with response status code.
-     * @return
-     */
-    public HttpServerResponseActionBuilder response(HttpStatus status) {
-        HttpServerResponseActionBuilder httpServerResponseActionBuilder = new HttpServerResponseActionBuilder(action, httpServer)
-                .withApplicationContext(applicationContext)
-                .status(status);
-        return httpServerResponseActionBuilder;
+        return new HttpServerSendActionBuilder().response(status);
     }
 
     /**
      * Receive Http requests as server.
      */
-    public HttpServerActionBuilder receive() {
-        return this;
+    public HttpServerReceiveActionBuilder receive() {
+        return new HttpServerReceiveActionBuilder();
     }
 
     /**
      * Send Http response messages as server to client.
      */
-    public HttpServerActionBuilder send() {
-        return this;
-    }
-
-    /**
-     * Receive Http GET request as server.
-     */
-    public HttpServerRequestActionBuilder get() {
-        return request(HttpMethod.GET, null);
-    }
-
-    /**
-     * Receive Http GET request as server.
-     */
-    public HttpServerRequestActionBuilder get(String path) {
-        return request(HttpMethod.GET, path);
-    }
-
-    /**
-     * Receive Http POST request as server.
-     */
-    public HttpServerRequestActionBuilder post() {
-        return request(HttpMethod.POST, null);
-    }
-
-    /**
-     * Receive Http POST request as server.
-     */
-    public HttpServerRequestActionBuilder post(String path) {
-        return request(HttpMethod.POST, path);
-    }
-
-    /**
-     * Receive Http PUT request as server.
-     */
-    public HttpServerRequestActionBuilder put() {
-        return request(HttpMethod.PUT, null);
-    }
-
-    /**
-     * Receive Http PUT request as server.
-     */
-    public HttpServerRequestActionBuilder put(String path) {
-        return request(HttpMethod.PUT, path);
-    }
-
-    /**
-     * Receive Http DELETE request as server.
-     */
-    public HttpServerRequestActionBuilder delete() {
-        return request(HttpMethod.DELETE, null);
-    }
-
-    /**
-     * Receive Http DELETE request as server.
-     */
-    public HttpServerRequestActionBuilder delete(String path) {
-        return request(HttpMethod.DELETE, path);
-    }
-
-    /**
-     * Receive Http HEAD request as server.
-     */
-    public HttpServerRequestActionBuilder head() {
-        return request(HttpMethod.HEAD, null);
-    }
-
-    /**
-     * Receive Http HEAD request as server.
-     */
-    public HttpServerRequestActionBuilder head(String path) {
-        return request(HttpMethod.HEAD, path);
-    }
-
-    /**
-     * Receive Http OPTIONS request as server.
-     */
-    public HttpServerRequestActionBuilder options() {
-        return request(HttpMethod.OPTIONS, null);
-    }
-
-    /**
-     * Receive Http OPTIONS request as server.
-     */
-    public HttpServerRequestActionBuilder options(String path) {
-        return request(HttpMethod.OPTIONS, path);
-    }
-
-    /**
-     * Receive Http TRACE request as server.
-     */
-    public HttpServerRequestActionBuilder trace() {
-        return request(HttpMethod.TRACE, null);
-    }
-
-    /**
-     * Receive Http TRACE request as server.
-     */
-    public HttpServerRequestActionBuilder trace(String path) {
-        return request(HttpMethod.TRACE, path);
-    }
-
-    /**
-     * Receive Http PATCH request as server.
-     */
-    public HttpServerRequestActionBuilder patch() {
-        return request(HttpMethod.PATCH, null);
-    }
-
-    /**
-     * Receive Http PATCH request as server.
-     */
-    public HttpServerRequestActionBuilder patch(String path) {
-        return request(HttpMethod.PATCH, path);
+    public HttpServerSendActionBuilder send() {
+        return new HttpServerSendActionBuilder();
     }
 
     /**
@@ -236,4 +103,144 @@ public class HttpServerActionBuilder extends AbstractTestActionBuilder<Delegatin
         return this;
     }
 
+    /**
+     * Provides send response action methods.
+     */
+    public class HttpServerSendActionBuilder {
+        /**
+         * Generic response builder for sending response messages to client.
+         * @return
+         */
+        public HttpServerResponseActionBuilder response() {
+            return new HttpServerResponseActionBuilder(action, httpServer)
+                    .withApplicationContext(applicationContext);
+        }
+
+        /**
+         * Generic response builder for sending response messages to client with response status code.
+         * @return
+         */
+        public HttpServerResponseActionBuilder response(HttpStatus status) {
+            return new HttpServerResponseActionBuilder(action, httpServer)
+                    .withApplicationContext(applicationContext)
+                    .status(status);
+        }
+    }
+
+    /**
+     * Provides receive request action methods.
+     */
+    public class HttpServerReceiveActionBuilder {
+        /**
+         * Receive Http GET request as server.
+         */
+        public HttpServerRequestActionBuilder get() {
+            return request(HttpMethod.GET, null);
+        }
+
+        /**
+         * Receive Http GET request as server.
+         */
+        public HttpServerRequestActionBuilder get(String path) {
+            return request(HttpMethod.GET, path);
+        }
+
+        /**
+         * Receive Http POST request as server.
+         */
+        public HttpServerRequestActionBuilder post() {
+            return request(HttpMethod.POST, null);
+        }
+
+        /**
+         * Receive Http POST request as server.
+         */
+        public HttpServerRequestActionBuilder post(String path) {
+            return request(HttpMethod.POST, path);
+        }
+
+        /**
+         * Receive Http PUT request as server.
+         */
+        public HttpServerRequestActionBuilder put() {
+            return request(HttpMethod.PUT, null);
+        }
+
+        /**
+         * Receive Http PUT request as server.
+         */
+        public HttpServerRequestActionBuilder put(String path) {
+            return request(HttpMethod.PUT, path);
+        }
+
+        /**
+         * Receive Http DELETE request as server.
+         */
+        public HttpServerRequestActionBuilder delete() {
+            return request(HttpMethod.DELETE, null);
+        }
+
+        /**
+         * Receive Http DELETE request as server.
+         */
+        public HttpServerRequestActionBuilder delete(String path) {
+            return request(HttpMethod.DELETE, path);
+        }
+
+        /**
+         * Receive Http HEAD request as server.
+         */
+        public HttpServerRequestActionBuilder head() {
+            return request(HttpMethod.HEAD, null);
+        }
+
+        /**
+         * Receive Http HEAD request as server.
+         */
+        public HttpServerRequestActionBuilder head(String path) {
+            return request(HttpMethod.HEAD, path);
+        }
+
+        /**
+         * Receive Http OPTIONS request as server.
+         */
+        public HttpServerRequestActionBuilder options() {
+            return request(HttpMethod.OPTIONS, null);
+        }
+
+        /**
+         * Receive Http OPTIONS request as server.
+         */
+        public HttpServerRequestActionBuilder options(String path) {
+            return request(HttpMethod.OPTIONS, path);
+        }
+
+        /**
+         * Receive Http TRACE request as server.
+         */
+        public HttpServerRequestActionBuilder trace() {
+            return request(HttpMethod.TRACE, null);
+        }
+
+        /**
+         * Receive Http TRACE request as server.
+         */
+        public HttpServerRequestActionBuilder trace(String path) {
+            return request(HttpMethod.TRACE, path);
+        }
+
+        /**
+         * Receive Http PATCH request as server.
+         */
+        public HttpServerRequestActionBuilder patch() {
+            return request(HttpMethod.PATCH, null);
+        }
+
+        /**
+         * Receive Http PATCH request as server.
+         */
+        public HttpServerRequestActionBuilder patch(String path) {
+            return request(HttpMethod.PATCH, path);
+        }
+    }
 }
