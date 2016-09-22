@@ -3,6 +3,17 @@
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+  - title: Update to Java 8
+      id: 133
+      type: Add
+      author: christophd
+
+- version: 2.6.1
+  date: 2016-09-23
+  tag: v2-6-1
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
   - title: Support variable object path
     id: 132
     type: Add
