@@ -1,11 +1,27 @@
 - version: ${project.version}
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
-  stories: https://tree.taiga.io/project/christophd-citrus/us/
+  stories: https://github.com/christophd/citrus/issues/
   changes:
   - title: Support variable object path
-    id: 58
+    id: 132
     type: Add
+    author: christophd
+  - title: Add JsonPathFunctions to variable extractor
+    id: 129
+    type: Add
+    author: christophd
+  - title: Handle BLOB column values in sql query action
+    id: 126
+    type: Add
+    author: christophd
+  - title: Add payload file resource in static response adapter
+    id: 121
+    type: Add
+    author: christophd
+  - title: Http client annotation config
+    id: 120
+    type: Fix
     author: christophd
   - title: XHTML message validation XPath support
     id: 119

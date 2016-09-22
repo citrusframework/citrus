@@ -2,6 +2,7 @@
   docs:
   - home
   - user-guide
+  - samples
   - setup-maven
   - setup-ant
   - features
