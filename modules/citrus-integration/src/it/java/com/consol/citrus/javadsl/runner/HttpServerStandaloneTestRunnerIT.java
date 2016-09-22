@@ -36,6 +36,7 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpStandaloneClient")
+                        .send()
                         .post()
                         .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
@@ -48,6 +49,7 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpStandaloneClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello TestFramework</text>" +
@@ -60,6 +62,7 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpStandaloneClient")
+                        .send()
                         .post()
                         .payload("<moreRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
@@ -72,6 +75,7 @@ public class HttpServerStandaloneTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpStandaloneClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello TestFramework</text>" +

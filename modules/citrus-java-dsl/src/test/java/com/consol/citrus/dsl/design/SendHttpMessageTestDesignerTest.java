@@ -103,6 +103,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 http().client(httpClient)
+                        .send()
                         .get()
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
@@ -164,6 +165,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 http().client(httpClient)
+                        .send()
                         .get("/test")
                         .uri("http://localhost:8080/")
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -230,6 +232,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 http().client(httpClient)
+                        .send()
                         .get()
                         .uri("http://localhost:8080/")
                         .queryParam("param1", "value1")

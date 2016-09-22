@@ -26,184 +26,214 @@ import org.springframework.util.StringUtils;
 
 /**
  * Action executes http server operations such as receiving requests and sending response messages.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
 public class HttpServerActionBuilder extends AbstractTestActionBuilder<DelegatingTestAction<TestAction>> {
 
-	/** Spring application context */
-	private ApplicationContext applicationContext;
+    /** Spring application context */
+    private ApplicationContext applicationContext;
 
-	/** Target http client instance */
-	private final Endpoint httpServer;
+    /** Target http client instance */
+    private final Endpoint httpServer;
 
-	/**
-	 * Default constructor.
-	 */
-	public HttpServerActionBuilder(DelegatingTestAction<TestAction> action, Endpoint httpServer) {
-		super(action);
-		this.httpServer = httpServer;
-	}
+    /**
+     * Default constructor.
+     */
+    public HttpServerActionBuilder(DelegatingTestAction<TestAction> action, Endpoint httpServer) {
+        super(action);
+        this.httpServer = httpServer;
+    }
 
-	/**
-	 * Generic response builder for expecting response messages on client.
-	 * @return
-	 */
-	public HttpServerResponseActionBuilder respond() {
-		HttpServerResponseActionBuilder httpServerResponseActionBuilder = new HttpServerResponseActionBuilder(action, httpServer)
-				.withApplicationContext(applicationContext);
-		return httpServerResponseActionBuilder;
-	}
+    /**
+     * Generic response builder for sending response messages to client.
+     * @return
+     */
+    public HttpServerResponseActionBuilder respond() {
+        return response();
+    }
 
-	/**
-	 * Generic response builder for expecting response messages on client with response status code.
-	 * @return
-	 */
-	public HttpServerResponseActionBuilder respond(HttpStatus status) {
-		HttpServerResponseActionBuilder httpServerResponseActionBuilder = new HttpServerResponseActionBuilder(action, httpServer)
-				.withApplicationContext(applicationContext)
-				.status(status);
-		return httpServerResponseActionBuilder;
-	}
+    /**
+     * Generic response builder for sending response messages to client with response status code.
+     * @return
+     */
+    public HttpServerResponseActionBuilder respond(HttpStatus status) {
+        return response(status);
+    }
 
-	/**
-	 * Sends Http GET request as client to server.
-	 */
-	public HttpServerRequestActionBuilder get() {
-		return request(HttpMethod.GET, null);
-	}
+    /**
+     * Generic response builder for sending response messages to client.
+     * @return
+     */
+    public HttpServerResponseActionBuilder response() {
+        HttpServerResponseActionBuilder httpServerResponseActionBuilder = new HttpServerResponseActionBuilder(action, httpServer)
+                .withApplicationContext(applicationContext);
+        return httpServerResponseActionBuilder;
+    }
 
-	/**
-	 * Sends Http GET request as client to server.
-	 */
-	public HttpServerRequestActionBuilder get(String path) {
-		return request(HttpMethod.GET, path);
-	}
+    /**
+     * Generic response builder for sending response messages to client with response status code.
+     * @return
+     */
+    public HttpServerResponseActionBuilder response(HttpStatus status) {
+        HttpServerResponseActionBuilder httpServerResponseActionBuilder = new HttpServerResponseActionBuilder(action, httpServer)
+                .withApplicationContext(applicationContext)
+                .status(status);
+        return httpServerResponseActionBuilder;
+    }
 
-	/**
-	 * Sends Http POST request as client to server.
-	 */
-	public HttpServerRequestActionBuilder post() {
-		return request(HttpMethod.POST, null);
-	}
+    /**
+     * Receive Http requests as server.
+     */
+    public HttpServerActionBuilder receive() {
+        return this;
+    }
 
-	/**
-	 * Sends Http POST request as client to server.
-	 */
-	public HttpServerRequestActionBuilder post(String path) {
-		return request(HttpMethod.POST, path);
-	}
+    /**
+     * Send Http response messages as server to client.
+     */
+    public HttpServerActionBuilder send() {
+        return this;
+    }
 
-	/**
-	 * Sends Http PUT request as client to server.
-	 */
-	public HttpServerRequestActionBuilder put() {
-		return request(HttpMethod.PUT, null);
-	}
+    /**
+     * Receive Http GET request as server.
+     */
+    public HttpServerRequestActionBuilder get() {
+        return request(HttpMethod.GET, null);
+    }
 
-	/**
-	 * Sends Http PUT request as client to server.
-	 */
-	public HttpServerRequestActionBuilder put(String path) {
-		return request(HttpMethod.PUT, path);
-	}
+    /**
+     * Receive Http GET request as server.
+     */
+    public HttpServerRequestActionBuilder get(String path) {
+        return request(HttpMethod.GET, path);
+    }
 
-	/**
-	 * Sends Http DELETE request as client to server.
-	 */
-	public HttpServerRequestActionBuilder delete() {
-		return request(HttpMethod.DELETE, null);
-	}
+    /**
+     * Receive Http POST request as server.
+     */
+    public HttpServerRequestActionBuilder post() {
+        return request(HttpMethod.POST, null);
+    }
 
-	/**
-	 * Sends Http DELETE request as client to server.
-	 */
-	public HttpServerRequestActionBuilder delete(String path) {
-		return request(HttpMethod.DELETE, path);
-	}
+    /**
+     * Receive Http POST request as server.
+     */
+    public HttpServerRequestActionBuilder post(String path) {
+        return request(HttpMethod.POST, path);
+    }
 
-	/**
-	 * Sends Http HEAD request as client to server.
-	 */
-	public HttpServerRequestActionBuilder head() {
-		return request(HttpMethod.HEAD, null);
-	}
+    /**
+     * Receive Http PUT request as server.
+     */
+    public HttpServerRequestActionBuilder put() {
+        return request(HttpMethod.PUT, null);
+    }
 
-	/**
-	 * Sends Http HEAD request as client to server.
-	 */
-	public HttpServerRequestActionBuilder head(String path) {
-		return request(HttpMethod.HEAD, path);
-	}
+    /**
+     * Receive Http PUT request as server.
+     */
+    public HttpServerRequestActionBuilder put(String path) {
+        return request(HttpMethod.PUT, path);
+    }
 
-	/**
-	 * Sends Http OPTIONS request as client to server.
-	 */
-	public HttpServerRequestActionBuilder options() {
-		return request(HttpMethod.OPTIONS, null);
-	}
+    /**
+     * Receive Http DELETE request as server.
+     */
+    public HttpServerRequestActionBuilder delete() {
+        return request(HttpMethod.DELETE, null);
+    }
 
-	/**
-	 * Sends Http OPTIONS request as client to server.
-	 */
-	public HttpServerRequestActionBuilder options(String path) {
-		return request(HttpMethod.OPTIONS, path);
-	}
+    /**
+     * Receive Http DELETE request as server.
+     */
+    public HttpServerRequestActionBuilder delete(String path) {
+        return request(HttpMethod.DELETE, path);
+    }
 
-	/**
-	 * Sends Http TRACE request as client to server.
-	 */
-	public HttpServerRequestActionBuilder trace() {
-		return request(HttpMethod.TRACE, null);
-	}
+    /**
+     * Receive Http HEAD request as server.
+     */
+    public HttpServerRequestActionBuilder head() {
+        return request(HttpMethod.HEAD, null);
+    }
 
-	/**
-	 * Sends Http TRACE request as client to server.
-	 */
-	public HttpServerRequestActionBuilder trace(String path) {
-		return request(HttpMethod.TRACE, path);
-	}
+    /**
+     * Receive Http HEAD request as server.
+     */
+    public HttpServerRequestActionBuilder head(String path) {
+        return request(HttpMethod.HEAD, path);
+    }
 
-	/**
-	 * Sends Http PATCH request as client to server.
-	 */
-	public HttpServerRequestActionBuilder patch() {
-		return request(HttpMethod.PATCH, null);
-	}
+    /**
+     * Receive Http OPTIONS request as server.
+     */
+    public HttpServerRequestActionBuilder options() {
+        return request(HttpMethod.OPTIONS, null);
+    }
 
-	/**
-	 * Sends Http PATCH request as client to server.
-	 */
-	public HttpServerRequestActionBuilder patch(String path) {
-		return request(HttpMethod.PATCH, path);
-	}
+    /**
+     * Receive Http OPTIONS request as server.
+     */
+    public HttpServerRequestActionBuilder options(String path) {
+        return request(HttpMethod.OPTIONS, path);
+    }
 
-	/**
-	 * Generic request builder with request method and path.
-	 * @param method
-	 * @param path
-	 * @return
-	 */
-	private HttpServerRequestActionBuilder request(HttpMethod method, String path) {
-		HttpServerRequestActionBuilder httpServerRequestActionBuilder = new HttpServerRequestActionBuilder(action, httpServer)
-				.withApplicationContext(applicationContext)
-				.method(method);
+    /**
+     * Receive Http TRACE request as server.
+     */
+    public HttpServerRequestActionBuilder trace() {
+        return request(HttpMethod.TRACE, null);
+    }
 
-		if (StringUtils.hasText(path)) {
-			httpServerRequestActionBuilder.path(path);
-		}
+    /**
+     * Receive Http TRACE request as server.
+     */
+    public HttpServerRequestActionBuilder trace(String path) {
+        return request(HttpMethod.TRACE, path);
+    }
 
-		return httpServerRequestActionBuilder;
-	}
+    /**
+     * Receive Http PATCH request as server.
+     */
+    public HttpServerRequestActionBuilder patch() {
+        return request(HttpMethod.PATCH, null);
+    }
 
-	/**
-	 * Sets the Spring bean application context.
-	 * @param applicationContext
-	 */
-	public HttpServerActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-		return this;
-	}
+    /**
+     * Receive Http PATCH request as server.
+     */
+    public HttpServerRequestActionBuilder patch(String path) {
+        return request(HttpMethod.PATCH, path);
+    }
+
+    /**
+     * Generic request builder with request method and path.
+     * @param method
+     * @param path
+     * @return
+     */
+    private HttpServerRequestActionBuilder request(HttpMethod method, String path) {
+        HttpServerRequestActionBuilder httpServerRequestActionBuilder = new HttpServerRequestActionBuilder(action, httpServer)
+                .withApplicationContext(applicationContext)
+                .method(method);
+
+        if (StringUtils.hasText(path)) {
+            httpServerRequestActionBuilder.path(path);
+        }
+
+        return httpServerRequestActionBuilder;
+    }
+
+    /**
+     * Sets the Spring bean application context.
+     * @param applicationContext
+     */
+    public HttpServerActionBuilder withApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        return this;
+    }
 
 }

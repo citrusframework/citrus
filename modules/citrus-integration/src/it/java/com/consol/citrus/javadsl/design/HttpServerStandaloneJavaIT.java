@@ -32,6 +32,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusTestDesigner {
         variable("custom_header_id", "123456789");
         
         http().client("httpStandaloneClient")
+            .send()
             .post()
             .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
@@ -39,6 +40,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusTestDesigner {
             .header("CustomHeaderId", "${custom_header_id}");
         
         http().client("httpStandaloneClient")
+            .receive()
             .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
@@ -46,6 +48,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusTestDesigner {
             .version("HTTP/1.1");
         
         http().client("httpStandaloneClient")
+            .send()
             .post()
             .payload("<moreRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
@@ -53,6 +56,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusTestDesigner {
             .header("CustomHeaderId", "${custom_header_id}");
         
         http().client("httpStandaloneClient")
+            .receive()
             .response(HttpStatus.OK)
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +

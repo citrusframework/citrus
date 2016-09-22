@@ -37,6 +37,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         
         parallel(
             http().client("httpClient")
+                .send()
                 .get()
                 .uri("http://localhost:8072")
                 .message(new HttpMessage()
@@ -46,6 +47,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                 
             sequential(
                 http().server("httpServerRequestEndpoint")
+                    .receive()
                     .get()
                     .message(new HttpMessage()
                         .method(HttpMethod.GET)
@@ -56,6 +58,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         );
 
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .version("HTTP/1.1");
@@ -65,6 +68,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         
         parallel(
             http().client("httpClient")
+                .send()
                 .get()
                 .uri("http://localhost:8072/test/user/${id}")
                 .message(new HttpMessage()
@@ -74,6 +78,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
 
             sequential(
                 http().server("httpServerRequestEndpoint")
+                    .receive()
                     .get("/test/user/${id}")
                     .message(new HttpMessage()
                         .contentType("text/html")
@@ -84,6 +89,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         );
         
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .version("HTTP/1.1");
@@ -92,6 +98,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         
         parallel(
             http().client("httpClient")
+                .send()
                 .get()
                 .uri("http://localhost:8072/test")
                 .message(new HttpMessage()
@@ -104,6 +111,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
 
             sequential(
                 http().server("httpServerRequestEndpoint")
+                    .receive()
                     .get("/test/user")
                     .message(new HttpMessage()
                         .method(HttpMethod.GET)
@@ -116,6 +124,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         );
 
         http().client("httpClient")
+            .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .version("HTTP/1.1");

@@ -36,6 +36,7 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .post()
                             .payload("Hello, World!");
                 }
@@ -45,6 +46,7 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .post()
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("Hello, World!")
@@ -55,7 +57,8 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerResponseEndpoint")
-                                .respond(HttpStatus.OK)
+                                .send()
+                                .response(HttpStatus.OK)
                                 .payload("Hello, Citrus!")
                                 .version("HTTP/1.1")
                                 .header("citrus_jms_correlationId", "${correlation_id}");
@@ -68,6 +71,7 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .messageType(MessageType.PLAINTEXT)
                         .payload("Hello, Citrus!")
@@ -79,6 +83,7 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .send()
                         .post()
                         .payload("Hello, World!");
             }
@@ -90,6 +95,7 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response()
                         .messageType(MessageType.PLAINTEXT)
                         .header("HTTP/1.1");

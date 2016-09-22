@@ -41,6 +41,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.client("httpClient")
+                                .send()
                                 .get()
                                 .uri("http://localhost:8072")
                                 .message(new HttpMessage()
@@ -55,6 +56,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                             @Override
                             public void configure(HttpActionBuilder builder) {
                                 builder.server("httpServerRequestEndpoint")
+                                        .receive()
                                         .get()
                                         .message(new HttpMessage()
                                                 .method(HttpMethod.GET)
@@ -69,6 +71,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .timeout(2000L)
                         .version("HTTP/1.1");
@@ -82,6 +85,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .get()
                             .uri("http://localhost:8072/test/user/${id}")
                             .message(new HttpMessage()
@@ -96,6 +100,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .get("/test/user/${id}")
                                 .message(new HttpMessage()
                                         .contentType("text/html")
@@ -110,6 +115,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .timeout(2000L)
                         .version("HTTP/1.1");
@@ -123,6 +129,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                 @Override
                 public void configure(HttpActionBuilder builder) {
                     builder.client("httpClient")
+                            .send()
                             .get()
                             .uri("http://localhost:8072/test")
                             .message(new HttpMessage()
@@ -140,6 +147,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                     @Override
                     public void configure(HttpActionBuilder builder) {
                         builder.server("httpServerRequestEndpoint")
+                                .receive()
                                 .get("/test/user")
                                 .message(new HttpMessage()
                                         .method(HttpMethod.GET)
@@ -157,6 +165,7 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
             @Override
             public void configure(HttpActionBuilder builder) {
                 builder.client("httpClient")
+                        .receive()
                         .response(HttpStatus.OK)
                         .timeout(2000L)
                         .version("HTTP/1.1");

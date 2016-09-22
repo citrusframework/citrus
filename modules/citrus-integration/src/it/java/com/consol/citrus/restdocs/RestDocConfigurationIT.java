@@ -66,12 +66,14 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void testRestDocs() {
         http().client(httpClient)
+                .send()
                 .post()
                 .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>");
 
         http().client(httpClient)
+                .receive()
                 .response(HttpStatus.OK)
                 .payload("<testResponseMessage>" +
                             "<text>Hello TestFramework</text>" +

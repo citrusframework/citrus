@@ -58,6 +58,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 http().server(httpServer)
+                        .receive()
                         .get("/test/foo")
                         .method(HttpMethod.GET)
                         .queryParam("param1", "value1")
@@ -133,6 +134,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 http().client(httpClient)
+                        .receive()
                         .response(HttpStatus.OK)
                         .version("HTTP/1.1")
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
