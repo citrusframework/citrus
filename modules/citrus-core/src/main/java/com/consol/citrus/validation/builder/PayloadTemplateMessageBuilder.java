@@ -47,7 +47,11 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
                     return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context)));
                 }
             } else if (payloadData != null){
-                return context.replaceDynamicContentInString(payloadData);
+                if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
+                    return context.replaceDynamicContentInString(payloadData).getBytes();
+                } else {
+                    return context.replaceDynamicContentInString(payloadData);
+                }
             }
 
             return "";

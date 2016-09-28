@@ -18,6 +18,7 @@ system under test. Please find following list of samples and their primary objec
 |---------------------------------------|:---------:|
 | [sample-javaconfig](https://github.com/christophd/citrus-samples/sample-javaconfig)| Uses pure Java POJOs for configuration |
 | [sample-jdbc](https://github.com/christophd/citrus-samples/sample-jdbc)| Validates stored data in relational database |
+| [sample-binary](https://github.com/christophd/citrus-samples/sample-binary)| Shows binary message content handling in Citrus |
 | [sample-jms](https://github.com/christophd/citrus-samples/sample-jms)| Shows JMS queue connectivity |
 | [sample-soap](https://github.com/christophd/citrus-samples/sample-soap)| Shows SOAP web service support |
 | [sample-xhtml](https://github.com/christophd/citrus-samples/sample-xhtml)| Shows XHTML validation feature |
