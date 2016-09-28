@@ -35,11 +35,14 @@ import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
@@ -211,6 +214,23 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
+     * Expect this message payload as model object which is mapped to a character sequence
+     * using the default object to json mapper before validation is performed.
+     * @param payload
+     * @param objectMapper
+     * @return
+     */
+    public T payload(Object payload, ObjectMapper objectMapper) {
+        try {
+            setPayload(objectMapper.writer().writeValueAsString(payload));
+        } catch (JsonProcessingException e) {
+            throw new CitrusRuntimeException("Failed to map object graph for message payload", e);
+        }
+
+        return self;
+    }
+
+    /**
      * Expect this message payload as model object which is marshalled to a character sequence using the default object to xml mapper that
      * is available in Spring bean application context.
      *
@@ -219,7 +239,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T payloadModel(Object payload) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-        return payload(payload, applicationContext.getBean(Marshaller.class));
+
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
+            return payload(payload, applicationContext.getBean(Marshaller.class));
+        } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
+            return payload(payload, applicationContext.getBean(ObjectMapper.class));
+        }
+
+        throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
     }
 
     /**
@@ -227,12 +254,25 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * is accessed by its bean name in Spring bean application context.
      *
      * @param payload
-     * @param marshallerName
+     * @param mapperName
      * @return
      */
-    public T payload(Object payload, String marshallerName) {
+    public T payload(Object payload, String mapperName) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-        return payload(payload, applicationContext.getBean(marshallerName, Marshaller.class));
+
+        if (applicationContext.containsBean(mapperName)) {
+            Object mapper = applicationContext.getBean(mapperName);
+
+            if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
+                return payload(payload, (Marshaller) mapper);
+            } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
+                return payload(payload, (ObjectMapper) mapper);
+            } else {
+                throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
+            }
+        }
+
+        throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
     }
     
     /**
