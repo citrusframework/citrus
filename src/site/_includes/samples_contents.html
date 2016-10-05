@@ -1,0 +1,24 @@
+<div class="unit one-fifth hide-on-mobiles">
+  <aside>
+    <h4>Common</h4>
+    <ul>
+      <li class="{% if page.title == 'Samples' %}current{% endif %}">
+        <a href="${site.path}/samples/">Overview</a>
+      </li>
+      <li class="{% if page.title == 'TodoList' %}current{% endif %}">
+        <a href="${site.path}/samples/todo-app">Sample application</a>
+      </li>
+      <li class="{% if page.title == 'Running' %}current{% endif %}">
+        <a href="${site.path}/samples/run">Running</a>
+      </li>
+    </ul>
+    <h4>Samples</h4>
+    <ul>
+      {% for post in site.categories.samples %}
+      <li class="{% if page.title == post.title %}current{% endif %}">
+        <a href="${site.path}{{ post.url }}">{{ post.sample }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+</div>

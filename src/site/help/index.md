@@ -9,6 +9,10 @@ Need help with Citrus? Try these resources.
 
 Our guide to Citrus covering installation, writing, customization, deployment, and more.
 
+### [Samples](${site.path}/samples/overview/)
+
+Our samples provide detailed code examples for various test scenarios.
+
 ### [View source](https://github.com/christophd/citrus)
 
 Learn from the source code.

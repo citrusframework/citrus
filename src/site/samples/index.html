@@ -1,0 +1,49 @@
+---
+layout: samples
+title: Samples
+permalink: /samples/
+sample: sample-overview
+---
+
+<article>
+  <h2>
+    Samples
+  </h2>
+  <div class="post-content">
+    <p>We try to give you example projects as a good starting point for your very own Citrus testing project.</p>
+
+    <p>The Citrus sample applications try to demonstrate how Citrus works in different integration test scenarios. The projects are executable with Maven
+      and should give you a detailed picture how Citrus testing works.</p>
+
+    <p>Please have a look at the repository on <a href="https://github.com/christophd/citrus-samples" target="_blank">citrus-samples</a>. There you can find all our sample projects.</p>
+
+    <p>Each sample folder demonstrates a special aspect of how to use Citrus. Most of the samples use a simple todo-list application as
+      system under test. Please find following list of samples and their primary objective</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 15em;">Name</th>
+          <th align="center">Objective</th>
+          <th align="center">Source code</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in site.categories.samples %}
+        <tr>
+          <td><a href="{{ post.permalink }}">{{ post.sample }}</a></td>
+          <td align="center">{{ post.description }}</td>
+          <td align="center"><a href="https://github.com/christophd/citrus-samples/blob/master/{{ post.sample }}" target="_blank"><i class="fa fa-pencil"></i></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p>Pick your sample application for try out and got to the respective folder. Each sample is executable on your host. You just need Maven, Java and a git client.
+      Refer to the detailed instructions in the sample <a href="https://github.com/christophd/citrus-samples/blob/master/README.md" target="_blank">README</a>.</p>
+
+    <p>Of course we appreciate any kind of help that you can give us in order to make things easy for Citrus users. So if you have
+      a sample worth reading for others please let us know. Also if you are missing a sample because you do not know how to accomplish the Citrus
+      use case please do not hesitate to contact us. You may also open a new issue in the <a href="https://github.com/christophd/citrus-samples/issues" target="_blank">Citrus samples</a> repository.</p>
+  </div>
+</article>
