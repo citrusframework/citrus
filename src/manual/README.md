@@ -1,5 +1,14 @@
-# Citrus Framework - Reference Documentation
+# Citrus Framework - Reference Documentation ![citrus-logo](images/citrus_logo.png) 
 
-## Welcome to the Citrus user guide
+## Authors
 
-Citrus [www.citrusframework.org](http://www.citrusframework.org).
+Christoph Deppisch, Martin Maher
+
+## Version
+
+**2.6.1-SNAPSHOT**
+
+**Copyright © 2016 ConSol Software GmbH**
+
+**[www.citrusframework.org](http://www.citrusframework.org)**
+
