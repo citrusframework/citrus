@@ -91,6 +91,7 @@ img[alt=citrus-logo] {
         color: #4271ae;
     }
 }
+
 @media print, projection {
     .str {
         color: #006600;
