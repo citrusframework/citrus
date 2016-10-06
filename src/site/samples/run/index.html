@@ -15,25 +15,23 @@ sample: sample-run
     </span>
   </span>
   <div class="post-content">
+    <h3>Code repository</h3>
+
+    <p>The samples are available at the <b><a href="https://github.com/christophd/citrus-samples" target="_blank">Citrus Github repository</a></b>.
+      After cloning the repository you can build and execute the samples on your local machine.</p>
+
     <h3>Build</h3>
 
     <p>The sample application uses Maven as build tool. So you can compile, package and test the
       sample with Maven.</p>
 
     <figure class="highlight">
-      <pre>mvn clean install</pre>
+      <pre>mvn clean install -Dembedded=true</pre>
     </figure>
 
     <p>This executes the complete Maven build lifecycle. The embedded option automatically starts a Jetty web
       container before the integration test phase. The todo-list system under test is automatically deployed in this phase.
       After that the Citrus test cases are able to interact with the todo-list application in the integration test phase.</p>
-
-    <p>The sample application uses Maven as build tool. So you can compile, package and test the
-    sample with Maven.</p>
-
-    <figure class="highlight">
-      <pre>mvn clean install -Dembedded=true</pre>
-    </figure>
 
     <p>During the build you will see Citrus performing some integration tests.
     After the tests are finished the embedded Jetty web container and the todo-list application are automatically stopped.</p>

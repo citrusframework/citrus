@@ -29,7 +29,7 @@ known schemas to the schema repository and Citrus will automatically validate in
 
 That is all for configuration, now we can use XML as message payload in the test cases.
     
-{% highlight java %}    
+{% highlight java %}
 http()
     .client(todoClient)
     .send()
@@ -56,7 +56,7 @@ http()
                  "<title>${todoName}</title>" +
                  "<description>${todoDescription}</description>" +
              "</todo>");
-{% endhighlight %}             
+{% endhighlight %}         
 
 The XMl message payload can be difficult to read when used as String concatenation. Fortunately we can also use file resources as message
 payloads.
@@ -67,7 +67,7 @@ http()
     .receive()
     .response(HttpStatus.OK)
     .payload(new ClassPathResource("templates/todo.xml"));    
-{% endhighlight %}    
+{% endhighlight %}
         
 An alternative approach would be to use Xpath expressions when validating incoming XML messages.
 
@@ -79,12 +79,12 @@ http()
     .validate("/t:todo/t:id", "${todoId}")
     .validate("/t:todo/t:title", "${todoName}")
     .validate("/t:todo/t:description", "${todoDescription}");
-{% endhighlight %}    
+{% endhighlight %}
         
 Each expression is evaluated and checked for expected values. XPath is namespace sensitive. So we need to use the correct namespaces
 in the expressions. Here we have used a namespace prefix ***t:***. This prefix is defined in a central namespace context in the configuration.
        
-{% highlight xml %}       
+{% highlight xml %}   
 <citrus:namespace-context>
     <citrus:namespace prefix="t" uri="http://citrusframework.org/samples/todolist"/>
 </citrus:namespace-context>
@@ -93,7 +93,7 @@ in the expressions. Here we have used a namespace prefix ***t:***. This prefix i
 This makes sure that the Xpath expressions are able to find the elements with correct namespaces. Of course you can also specify the 
 namespace context for each receive action individually.       
        
-{% highlight java %}        
+{% highlight java %}    
 http()
     .client(todoClient)
     .receive()
@@ -102,7 +102,7 @@ http()
     .validate("/t:todo/t:id", "${todoId}")
     .validate("/t:todo/t:title", "${todoName}")
     .validate("/t:todo/t:description", "${todoDescription}");
-{% endhighlight %}    
+{% endhighlight %}
 
 Run
 ---------
