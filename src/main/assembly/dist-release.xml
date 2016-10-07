@@ -55,7 +55,7 @@
   <fileSets>
     <!-- Reference documentation -->
     <fileSet>
-      <directory>target/doc/html</directory>
+      <directory>target/site/reference/html</directory>
       <outputDirectory>docs/reference/html</outputDirectory>
     </fileSet>
     

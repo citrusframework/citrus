@@ -1254,6 +1254,7 @@
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <version>1.0</version>
+            <inherited>false</inherited>
             <configuration>
               <workingDirectory>src</workingDirectory>
               <installDirectory>target</installDirectory>
