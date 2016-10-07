@@ -1232,7 +1232,7 @@
                   <outputDirectory>${project.build.directory}/checkout</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/reference/html</directory>
+                      <directory>${project.build.directory}/site/reference/html</directory>
                       <includes>
                         <include>**/**</include>
                       </includes>
