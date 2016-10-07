@@ -10,6 +10,6 @@
   },
 
   "scripts": {
-    "postinstall": "gitbook install & gitbook build ./manual ../target/reference/html & gitbook pdf ./manual ../target/reference/pdf/citrus-reference.pdf & gitbook mobi ./manual ../target/reference/pdf/citrus-reference.mobi"
+    "postinstall": "gitbook install & gitbook build ./manual ../target/site/reference/html & gitbook pdf ./manual ../target/site/reference/pdf/citrus-reference-2.6.1-SNAPSHOT.pdf & gitbook mobi ./manual ../target/site/reference/pdf/citrus-reference-2.6.1-SNAPSHOT.mobi"
   }
 }
