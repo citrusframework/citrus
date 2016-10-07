@@ -1,0 +1,23 @@
+---
+layout: samples
+---
+
+<article>
+  <h2>
+    {{ page.title }}
+    <a href="{{ page.url }}" class="permalink" title="Permalink">∞</a>
+  </h2>
+  <div class="right">
+    <a href="https://github.com/christophd/citrus-samples/blob/master/{{ page.sample }}" target="_blank">
+      <i class="fa fa-pencil"></i>&nbsp;View source code
+    </a>
+  </div>
+  <span class="post-category">
+    <span class="label">
+      {{ page.categories | array_to_sentence_string }}
+    </span>
+  </span>
+  <div class="post-content">
+    {{ content }}
+  </div>
+</article>

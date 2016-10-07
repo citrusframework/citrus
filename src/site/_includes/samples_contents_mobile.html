@@ -1,0 +1,11 @@
+<div class="samples-nav-mobile unit whole show-on-mobiles">
+  <select onchange="if (this.value) window.location.href=this.value">
+    <option value="">Navigate the samples…</option>
+    <option value="${site.path}/samples/">Overview</option>
+    <option value="${site.path}/samples/todo-app/">Sample app</option>
+    <option value="${site.path}/samples/run/">Running</option>
+    {% for post in site.categories.samples %}
+    <option value="${site.path}{{ post.url }}">{{ post.sample }}</option>
+    {% endfor %}
+  </select>
+</div>

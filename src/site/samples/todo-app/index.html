@@ -1,0 +1,65 @@
+---
+layout: samples
+title: TodoList
+permalink: /samples/todo-app/
+sample: sample-todo-app
+---
+
+<article>
+  <h2>
+    TodoList
+  </h2>
+  <div class="right">
+    <a href="https://github.com/christophd/citrus-samples/blob/master/todo-app" target="_blank">
+      <i class="fa fa-pencil"></i>&nbsp;View source code
+    </a>
+  </div>
+  <span class="post-category">
+    <span class="label">
+      Sample application
+    </span>
+  </span>
+  <div class="post-content">
+    <p>Obviously we need something to test in the samples section. The todo-list is a very simple sample application that represents the system under test for the Citrus samples. This
+    todo application provides an API for adding, removing and changing todo entries.</p>
+
+    <h3>Objectives</h3>
+
+    <p>The todo-list sample application should be both simple but yet capable to act as service in a fully qualified integration test
+    scenario. The application provides a REST API for accessing the todo entries via Http.</p>
+
+    <h3>Build</h3>
+
+    <p>The sample application uses Maven as build tool. So you can compile, package and test the
+    sample with Maven.</p>
+
+    <figure class="highlight">
+      <pre>mvn clean install</pre>
+    </figure>
+
+    <p>This executes the complete Maven build lifecycle and creates the sample artifacts that are used throughout the other samples.
+    The build application represents the system under test.</p>
+
+    <h3>Run</h3>
+
+    <p>The application is a Spring Boot web application that you can deploy on any web container. Of course Spring Boot provides many other fantastic
+    ways of starting the application.</p>
+
+    <p>On of these possibilities is the Spring Boot Maven Plugin. You can start the sample todo list application with this command.</p>
+
+    <figure class="highlight">
+      <pre>mvn spring-boot:run</pre>
+    </figure>
+
+    <p>This starts the application in a Tomcat web container and automatically deploys the todo list app. Point your browser to</p>
+
+    <figure class="highlight">
+      <pre>http://localhost:8080/todolist/</pre>
+    </figure>
+
+    <p>You will see the web UI of the todo list. Now add some new todo entries manually and you are ready to go.</p>
+
+    <p>Now we are ready to execute some Citrus tests. Choose one of the Citrus <b><a href="${site.path}/samples/">samples</a></b> folders and read the instructions on how to interact with the
+    todo application.</p>
+  </div>
+</article>

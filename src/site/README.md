@@ -10,6 +10,8 @@ For information about contributing, see the [Contributing page](http://citrusfra
 
 You can preview your contributions before opening a pull request by running from within the directory:
 
-`mvn process-resources docker:start -Psite`
+```
+mvn clean resources:resources package -Psite,release-local -N
+```
 
-It's just a jekyll site, afterall! :wink:
+It's just a jekyll site, after all! :wink:

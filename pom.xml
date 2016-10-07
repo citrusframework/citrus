@@ -978,6 +978,45 @@
           <groupId>io.fabric8</groupId>
           <artifactId>docker-maven-plugin</artifactId>
           <version>0.15.16</version>
+          <configuration>
+            <watchInterval>500</watchInterval>
+            <logDate>default</logDate>
+            <verbose>true</verbose>
+            <images>
+              <image>
+                <alias>jekyll</alias>
+                <name>jekyll/jekyll:3.1.6</name>
+                <run>
+                  <namingStrategy>alias</namingStrategy>
+                  <ports>
+                    <port>4000:4000</port>
+                  </ports>
+                  <volumes>
+                    <bind>
+                      <volume>${project.build.directory}/site:/srv/jekyll</volume>
+                    </bind>
+                  </volumes>
+                  <wait>
+                    <log>Jekyll startup</log>
+                    <http>
+                      <url>http://localhost:4000</url>
+                      <method>GET</method>
+                      <status>200</status>
+                    </http>
+                    <time>60000</time>
+                    <shutdown>500</shutdown>
+                  </wait>
+                  <env>
+                    <POLLING>true</POLLING>
+                  </env>
+                  <log>
+                    <enabled>true</enabled>
+                    <color>green</color>
+                  </log>
+                </run>
+              </image>
+            </images>
+          </configuration>
         </plugin>
 
       </plugins>
@@ -1000,50 +1039,6 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <configuration>
-          <watchInterval>500</watchInterval>
-          <logDate>default</logDate>
-          <verbose>true</verbose>
-          <images>
-            <image>
-              <alias>jekyll</alias>
-              <name>jekyll/jekyll:latest</name>
-              <run>
-                <namingStrategy>alias</namingStrategy>
-                <ports>
-                  <port>4000:4000</port>
-                </ports>
-                <volumes>
-                  <bind>
-                    <volume>${project.build.directory}/site:/srv/jekyll</volume>
-                  </bind>
-                </volumes>
-                <wait>
-                  <log>Jekyll startup</log>
-                  <http>
-                    <url>http://dockerhost:4000</url>
-                    <method>GET</method>
-                    <status>200</status>
-                  </http>
-                  <time>60000</time>
-                  <shutdown>500</shutdown>
-                </wait>
-                <env>
-                  <POLLING>true</POLLING>
-                </env>
-                <log>
-                  <enabled>true</enabled>
-                  <color>green</color>
-                </log>
-              </run>
-            </image>
-          </images>
-        </configuration>
       </plugin>
     </plugins>
     
@@ -1258,7 +1253,7 @@
           <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
-            <version>0.0.29</version>
+            <version>1.0</version>
             <configuration>
               <workingDirectory>src</workingDirectory>
               <installDirectory>target</installDirectory>

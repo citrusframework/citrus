@@ -1,0 +1,8 @@
+/*
+ * Customizations for pdf.
+ */
+
+img[alt=citrus-logo] {
+    float: right;
+    width: 80px;
+}

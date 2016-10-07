@@ -25,12 +25,10 @@
     </ul>
     <h4>Other News</h4>
     <ul>
-        {% for post in site.posts %}
-        {% unless post.categories contains 'release' %}
+        {% for post in site.categories.blog %}
         <li class="{% if page.title == post.title %}current{% endif %}">
           <a href="${site.path}{{ post.url }}">{{ post.short-title }}</a>
         </li>
-        {% endunless %}
         {% endfor %}
     </ul>
   </aside>
