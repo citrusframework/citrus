@@ -2,11 +2,11 @@
   "projectHome" : "/Users/christoph/Projekte/Citrus/citrus/modules/citrus-integration",
   "name" : "citrus-integration-test",
   "description" : "",
-  "version" : "2.6.1-SNAPSHOT",
+  "version" : "2.6.1",
   "testCount" : 0,
   "settings" : {
     "basePackage" : "com.consol.citrus",
-    "citrusVersion" : "2.6.1-SNAPSHOT",
+    "citrusVersion" : "2.6.1",
     "springApplicationContext" : "src/it/resources/citrus-context.xml",
     "javaSrcDirectory" : "src/it/java/",
     "xmlSrcDirectory" : "src/it/resources/",
