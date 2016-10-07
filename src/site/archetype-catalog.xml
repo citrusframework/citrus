@@ -1,0 +1,26 @@
+<archetype-catalog xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0 http://maven.apache.org/xsd/archetype-catalog-1.0.0.xsd">
+  <archetypes>
+    <archetype>
+      <groupId>com.consol.citrus.mvn</groupId>
+      <artifactId>citrus-quickstart</artifactId>
+      <version>2.7-SNAPSHOT</version>
+      <repository>http://labs.consol.de/maven/repository/</repository>
+      <description>Citrus quickstart project</description>
+    </archetype>
+    <archetype>
+      <groupId>com.consol.citrus.mvn</groupId>
+      <artifactId>citrus-quickstart-soap</artifactId>
+      <version>2.7-SNAPSHOT</version>
+      <repository>http://labs.consol.de/maven/repository/</repository>
+      <description>Citrus quickstart project with SOAP client and server</description>
+    </archetype>
+    <archetype>
+      <groupId>com.consol.citrus.mvn</groupId>
+      <artifactId>citrus-quickstart-jms</artifactId>
+      <version>2.7-SNAPSHOT</version>
+      <repository>http://labs.consol.de/maven/repository/</repository>
+      <description>Citrus quickstart project with JMS consumer and producer</description>
+    </archetype>
+  </archetypes>
+</archetype-catalog>

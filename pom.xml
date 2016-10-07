@@ -1232,7 +1232,7 @@
                   <outputDirectory>${project.build.directory}/checkout</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/reference/html</directory>
+                      <directory>${project.build.directory}/site/reference/html</directory>
                       <includes>
                         <include>**/**</include>
                       </includes>
@@ -1254,6 +1254,7 @@
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <version>1.0</version>
+            <inherited>false</inherited>
             <configuration>
               <workingDirectory>src</workingDirectory>
               <installDirectory>target</installDirectory>
