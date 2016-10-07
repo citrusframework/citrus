@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Configuration | citrus-reference</title>
+        <title>Configuration | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Configuration"
         data-filepath="configuration.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,9 +1580,9 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="configuration"><a name="configuration" class="plugin-anchor" href="#configuration"><span class="fa fa-link"></span></a>Configuration</h2>
+                        <h2 id="configuration">Configuration</h2>
 <p>You have several options in customizing the Citrus project configuration. Citrus uses default settings that can be overwritten to some extend. As a framework Citrus internally works with the Spring IoC container. So Citrus will start a Spring application context and register several components as Spring beans. You can customize the behavior of these beans and you can add custom settings by setting system properties.</p>
-<h3 id="citrus-spring-xml-application-context"><a name="citrus-spring-xml-application-context" class="plugin-anchor" href="#citrus-spring-xml-application-context"><span class="fa fa-link"></span></a>Citrus Spring XML application context</h3>
+<h3 id="citrus-spring-xml-application-context">Citrus Spring XML application context</h3>
 <p>Citrus starts a Spring application context and adds some default Spring bean components. By default Citrus will load some internal Spring Java config classes defining those bean components. At some point you might add some custom beans to that basic application context. This is why Citrus will search for custom Spring application context files in your project. These are automatically loaded.</p>
 <p>By default Citrus looks for custom XML Spring application context files in this location: <strong>classpath*:citrus-context.xml</strong> . So you can add a file named <strong>citrus-context.xml</strong> to your project classpath and Citrus will load all Spring beans automatically.</p>
 <p>The location of this file can be customized by setting a System property <strong>citrus.spring.application.context</strong> . So you can customize the XML Spring application context file location. The System property is settable with Maven surefire and failsafe plugin for instance or via Java before the Citrus framework gets loaded.</p>
@@ -1603,7 +1603,7 @@
 <p>Now you can add some Spring beans and you can use the Citrus XML components such as <strong>schema-repository</strong> for adding custom beans and components to your Citrus project. Citrus provides several namespaces for custom Spring XML components. These are described in more detail in the respective chapters and sections in this reference guide.</p>
 <p><strong>Tip</strong>
 You can also use import statements in this Spring application context in order to load other configuration files. So you are free to modularize your configuration in several files that get loaded by Citrus.</p>
-<h3 id="citrus-spring-java-config"><a name="citrus-spring-java-config" class="plugin-anchor" href="#citrus-spring-java-config"><span class="fa fa-link"></span></a>Citrus Spring Java config</h3>
+<h3 id="citrus-spring-java-config">Citrus Spring Java config</h3>
 <p>Using XML Spring application context configuration is the default behavior of Citrus. However some people might prefer pure Java code configuration. You can do that by adding a System property <strong>citrus.spring.java.config</strong> with a custom Spring Java config class as value.</p>
 <pre><code class="lang-java">System.setProperty(<span class="hljs-string">&quot;citrus.spring.java.config&quot;</span>, MyCustomConfig.class.getName())
 </code></pre>
@@ -1653,7 +1653,7 @@ You can also use import statements in this Spring application context in order t
 }
 </code></pre>
 <p>You can also mix XML and Java configuration so Citrus will load both configuration to the Spring bean application context on startup.</p>
-<h3 id="citrus-application-properties"><a name="citrus-application-properties" class="plugin-anchor" href="#citrus-application-properties"><span class="fa fa-link"></span></a>Citrus application properties</h3>
+<h3 id="citrus-application-properties">Citrus application properties</h3>
 <p>The Citrus framework references some basic System properties that can be overwritten. The properties are loaded from Java System and are also settable via property file. Just add a property file named <strong>citrus-application.properties</strong> to your project classpath. This property file contains customized settings such as:</p>
 <pre><code class="lang-xml">citrus.spring.application.context=classpath*:citrus-custom-context.xml
 citrus.spring.java.config=com.consol.citrus.config.MyCustomConfig

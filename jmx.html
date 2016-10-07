@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Jmx | citrus-reference</title>
+        <title>Jmx | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Jmx"
         data-filepath="jmx.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="jmx-support"><a name="jmx-support" class="plugin-anchor" href="#jmx-support"><span class="fa fa-link"></span></a>JMX support</h2>
+                        <h2 id="jmx-support">JMX support</h2>
 <p>JMX is a standard Java API for making beans accessible to others in terms of management and remote configuration. JMX is the short term for Java Management Extensions and is often used in JEE application servers to manage bean attributes and operations from outside (e.g. another JVM). A managed bean server hosts multiple managed beans for JMX access. Remote connections to JMX can be realized with RMI (Remote method invocation) capabilities.</p>
 <p>Citrus is able to connect to JMX managed beans as client and server. As a client Citrus can invoke managed bean operations and read write managed bean attributes. As a server Citrus is able to expose managed beans as mbean server. Clients can access those Citrus managed beans and get proper response objects as result. Doing so you can use the JVM platform managed bean server or some RMI registry for providing remote access.</p>
 <p><strong>Note</strong>
@@ -1588,7 +1588,7 @@ The JMX components in Citrus are kept in a separate Maven module. So you should 
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-jmx<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As usual Citrus provides a customized jmx configuration schema that is used in Spring configuration files. Simply include the citrus-jmx namespace in the configuration XML files as follows.</p>
@@ -1610,7 +1610,7 @@ The JMX components in Citrus are kept in a separate Maven module. So you should 
 </code></pre>
 <p>Now you are ready to use the customized Http configuration elements with the citrus-jmx namespace prefix.</p>
 <p>Next sections describe the JMX message support in Citrus in more detail.</p>
-<h3 id="jmx-client"><a name="jmx-client" class="plugin-anchor" href="#jmx-client"><span class="fa fa-link"></span></a>JMX client</h3>
+<h3 id="jmx-client">JMX client</h3>
 <p>On the client side we want to call some managed bean by either accessing managed attributes with read/write or by invoking a managed bean operation. For proper mbean server connectivity we should specify a client component for JMX that sends out mbean invocation calls.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-jmx:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;jmxClient&quot;</span>
       <span class="hljs-attribute">server-url</span>=<span class="hljs-value">&quot;platform&quot;</span>/&gt;</span>
@@ -1717,7 +1717,7 @@ The JMX components in Citrus are kept in a separate Maven module. So you should 
 </code></pre>
 <p>In the example above we access a custom managed bean and invoke its operation <strong>sayHello</strong> . We are also using operation parameters for the invocation. This should call the managed bean operation and return its result if any as usual.</p>
 <p>This completes the basic JMX managed bean access as client. Now we also want to discuss the server side were Citrus is able to provide managed beans for others</p>
-<h3 id="jmx-server"><a name="jmx-server" class="plugin-anchor" href="#jmx-server"><span class="fa fa-link"></span></a>JMX server</h3>
+<h3 id="jmx-server">JMX server</h3>
 <p>The server side is always a little bit more tricky because we need to simulate custom managed bean access as a server. First of all Citrus provides a server component that specifies the connection properties for clients such as transport protocols, ports and mbean object names. Lets create a new server that accepts incoming requests via RMI on a remote registry <strong>localhost:1099</strong> .</p>
 <pre><code class="lang-xml">&lt;citrus-jmx:server id=&quot;jmxServer&quot;
       server-url=&quot;service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi&quot;

@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Test-case | citrus-reference</title>
+        <title>Test-case | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Test-case"
         data-filepath="test-case.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,14 +1580,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="test-cases"><a name="test-cases" class="plugin-anchor" href="#test-cases"><span class="fa fa-link"></span></a>Test cases</h2>
+                        <h2 id="test-cases">Test cases</h2>
 <p>Now let us start writing test cases! A test case in Citrus describes all steps for a certain use case in one single file. The Citrus test holds a sequence of test actions. Each action represents a very special purpose such as sending or receiving a message. Typically with message-based enterprise applications the sending and receiving of messages represent the main actions inside a test.</p>
 <p>However you will learn that Citrus is more than just a simple SOAP client for instance. Each test case can hold complex actions such as connecting to the database, transforming data, adding loops and conditional steps. With the default Citrus action set you can accomplish very complex use case integration tests. Later in this guide we will briefly discuss all available test actions and learn how to use various message transports within the test. For now we will concentrate on the basic test case structure.</p>
 <p><img src="images/figure_004.jpg" alt="figure_004.jpg"></p>
 <p>The figure above describes a typical test action sequence in Citrus. A list of sending and receiving test actions composing a typical test case here. Each action references a predefined Citrus endpoint component that we are going to talk about later on.</p>
 <p>So how do we define those test cases? In general Citrus specifies test cases as Java classes. With TestNG or JUnit you can execute the Citrus tests within your Java runtime as you would do within unit testing. You can code the Citrus test in a single Java class doing assertions and using Spring&apos;s dependency injection mechanisms.</p>
 <p>If you are not familiar to writing Java code you can also write Citrus tests as XML files. Whatever test language you choose for Citrus the whole test case description takes place in one single file (Java or XML). This chapter will introduce the custom XML schema language as well as the Java domain specific language so you will be able to write Citrus test cases no matter what knowledge base you belong to.</p>
-<h3 id="writing-test-cases-in-xml"><a name="writing-test-cases-in-xml" class="plugin-anchor" href="#writing-test-cases-in-xml"><span class="fa fa-link"></span></a>Writing test cases in XML</h3>
+<h3 id="writing-test-cases-in-xml">Writing test cases in XML</h3>
 <p>Put simply, a Citrus test case is nothing but a simple Spring XML configuration file. The Spring framework has become a state of the art development framework for enterprise Java applications. As you work with Citrus you will also learn how to use the Spring Ioc (Inversion of control) container and the concepts of dependency injection. So let us have a look at the pure Spring XML configuration syntax first. You are free to write fully compatible test cases for the Citrus framework just using this syntax.</p>
 <p><strong>Spring bean definition syntax</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span>
@@ -1652,18 +1652,18 @@
 </code></pre>
 <p>The sample above is a Java class that represents a valid Citrus Java executable. The Java class has no programming logic as we use a XML test case here. The Java class can also be generated using the Citrus Maven plugin. The Java class extends from basic superclass <strong>AbstractTestNGCitrusTest</strong> and therefore uses TestNG as unit test framework. Citrus also supports JUnit as unit test framework. Read more about this in<a href="run-testng">run-testng</a>and<a href="run-junit">run-junit</a>.</p>
 <p>Up to now it is important to understand that Citrus always needs a Java executable test class. In case we use the XML test representation the Java part is generic, can be generated and contains no programming logic. The XML test defines all steps and is our primary test case definition.</p>
-<h3 id="writing-test-cases-in-java"><a name="writing-test-cases-in-java" class="plugin-anchor" href="#writing-test-cases-in-java"><span class="fa fa-link"></span></a>Writing test cases in Java</h3>
+<h3 id="writing-test-cases-in-java">Writing test cases in Java</h3>
 <p>Before we go into more details on the attributes and actions that take place within a test case we just have a look at how to write test cases with pure Java code. Citrus works with Java and uses the well known JUnit and TestNG framework benefits that you may be used to as a tester. Many users may prefer to write Java code instead of the verbose XML syntax. Therefore you have another possibility for writing Citrus tests in pure Java.</p>
 <p>When using the Citrus Java DSL we need to include a special Maven dependency module to our project that provides the needed API.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-java-dsl<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-title">scope</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Citrus in general differences between two ways of test cases in Java. These are <strong>test-designers</strong> and <strong>test-runners</strong> that we deal with each in the next two sections.</p>
-<h3 id="java-dsl-test-designer"><a name="java-dsl-test-designer" class="plugin-anchor" href="#java-dsl-test-designer"><span class="fa fa-link"></span></a>Java DSL test designer</h3>
+<h3 id="java-dsl-test-designer">Java DSL test designer</h3>
 <p>The first way of defining a Citrus test in Java is the <strong>test-designer</strong> . The Java DSL for a test designer works similar to the XML approach. The whole test case is built with all test actions first. Then the whole test case is executed as a whole Citrus test. This is how to define a Citrus test with designer Java DSL methods:</p>
 <p><strong>Java DSL designer</strong> </p>
 <pre><code class="lang-java"><span class="hljs-keyword">import</span> org.testng.annotations.Test;
@@ -1755,7 +1755,7 @@ INFO            Citrus| TEST SUCCESS LoggingTest
 <p>Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called <strong>test-runner</strong> that we deal with in the next section. Before we continue we have to mention that the <strong>test-designer</strong> approach does also work for JUnit. Although we have only seen TestNG sample code in this section everything is working exactly the same way with JUnit framework. Just use the base class <strong>com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner</strong> instead.</p>
 <p><strong>Important</strong>
 Neither <strong>TestNGCitrusTestDesigner</strong> nor <strong>JUnit4CitrusTestDesigner</strong> implementation is thread safe for parallel test execution. This is simply because the base class is holding state to the current test designer instance in order to delegate method calls to this instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in<a href="testcase-resource-injection">testcase-resource-injection</a>.</p>
-<h3 id="java-dsl-test-runner"><a name="java-dsl-test-runner" class="plugin-anchor" href="#java-dsl-test-runner"><span class="fa fa-link"></span></a>Java DSL test runner</h3>
+<h3 id="java-dsl-test-runner">Java DSL test runner</h3>
 <p>The new test runner concept solves the issues that may come along when working with the test designer. We have already seen a simple example where the test designer requires strict separation of designtime and runtime. The test runner implementation executes each test action immediately. This changes the prerequisites in such that the test action Java DSL method calls can be mixed with usual Java code statements. The the example that we have seen before in a test runner implementation:</p>
 <p><strong>Java DSL runner</strong> </p>
 <pre><code class="lang-java"><span class="hljs-keyword">import</span> org.testng.annotations.Test;
@@ -1787,7 +1787,7 @@ INFO            Citrus| TEST SUCCESS LoggingTest
 <p>In the examples here TestNG was used as unit framework. Of course the exact same approach can also apply to JUnit framework. Just use the base class <strong>com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner</strong> instead. Feel free to choose the base class for <strong>test-designer</strong> or <strong>test-runner</strong> as you like. You can also mix those two approaches in your project. Citrus is able to handle both ways of Java DSL code in a project.</p>
 <p><strong>Important</strong>
 The <strong>TestNGCitrusTestRunner</strong> and <strong>JUnit4CitrusTestRunner</strong> implementation is not thread safe for parallel test execution. This is simply because the base class is holding state to the current test runner instance in order to delegate method calls to this instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in<a href="testcase-resource-injection">testcase-resource-injection</a>.</p>
-<h3 id="designerrunner-injection"><a name="designerrunner-injection" class="plugin-anchor" href="#designerrunner-injection"><span class="fa fa-link"></span></a>Designer/Runner injection</h3>
+<h3 id="designerrunner-injection">Designer/Runner injection</h3>
 <p>In the previous sections we have seen the different approaches for test designer and runner implementations. Up to now the decision which implementation to use was made by extending one of the base classes:</p>
 <ul>
 <li>com.consol.citrus.dsl.testng.TestNGCitrusTestRunner</li>
@@ -1817,7 +1817,7 @@ The <strong>TestNGCitrusTestRunner</strong> and <strong>JUnit4CitrusTestRunner</
 </code></pre>
 <p>The designer or runner instance is injected as Citrus resource to the test method as parameter. This way we can mix designer and runner in a single test. But this is not the real motivation for the resource injection. The clear advantage of this approach with injected designer and runner instances is support for multi threading. In case you want to execute the Citrus tests in parallel using multiple threads you need to use this approach. This is because the usual designer and runner base classes are not thread safe. This <strong>JUnit4CitrusTest</strong> base class is because the resources injected are not kept as state in the base class.</p>
 <p>This is our first Citrus resource injection use case. The framework is able to inject other resources, too. Find out more about this in the next sections.</p>
-<h3 id="test-context-injection"><a name="test-context-injection" class="plugin-anchor" href="#test-context-injection"><span class="fa fa-link"></span></a>Test context injection</h3>
+<h3 id="test-context-injection">Test context injection</h3>
 <p>When running a test case in Citrus we make use of basic framework components and capabilities. One of these capabilities is to use test variables, functions and validation matchers. Up to this point we have not learned about these things. They will be described in the upcoming chapters and sections in more detail. Right now I want to talk about resource injection in Citrus.</p>
 <p>All these feature mentioned above are bound to some important Citrus component: the Citrus test context. The test context holds all variables and is able to resolve functions and matchers. In general you as a tester will not need explicit access to this component as the framework is working with it behind the scenes. In case you need some access for advanced operations with the framework Citrus provides a resource injection. Lets have a look at this so things are getting more clear.</p>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ResourceInjectionIT</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">JUnit4CitrusTestDesigner</span> </span>{
@@ -1843,7 +1843,7 @@ The <strong>TestNGCitrusTestRunner</strong> and <strong>JUnit4CitrusTestRunner</
 }
 </code></pre>
 <p>Some more annotations needed but the result is the same. We have access to the Citrus test context. Of course you can combine the resource injection for different Citrus components. Just add more some <strong>@CitrusResource</strong> annotated method parameters to the test method.</p>
-<h3 id="java-dsl-test-behaviors"><a name="java-dsl-test-behaviors" class="plugin-anchor" href="#java-dsl-test-behaviors"><span class="fa fa-link"></span></a>Java DSL test behaviors</h3>
+<h3 id="java-dsl-test-behaviors">Java DSL test behaviors</h3>
 <p>When using the Java DSL the concept of behaviors is a good way to reuse test action blocks. By putting test actions to a test behavior we can instantiate and apply the behavior to different test cases multiple times. The mechanism is explained best when having a simple sample:</p>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FooBehavior</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTestBehavior</span> </span>{
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">apply</span><span class="hljs-params">()</span> </span>{
@@ -1880,9 +1880,9 @@ The <strong>TestNGCitrusTestRunner</strong> and <strong>JUnit4CitrusTestRunner</
 }
 </code></pre>
 <p>The behavior is applied to the test case by calling the <strong>applyBehavior</strong> method. As a result the behavior is called adding its logic at this point of the test execution. The same behavior can now be called in multiple test cases so we have a reusable set of test actions.</p>
-<h3 id="description"><a name="description" class="plugin-anchor" href="#description"><span class="fa fa-link"></span></a>Description</h3>
+<h3 id="description">Description</h3>
 <p>In the test examples that we have seen so far you may have noticed that a tester can give a detailed test description. The test case description clarifies the testing purpose and perspectives. The description should give a short introduction to the intended use case scenario that will be tested. The user should get a first impression what the test case is all about as well as special information to understand the test scenario. You can use free text in your test description no limit to the number of characters. But be aware of the XML validation rules of well formed XML when using the XML test syntax (e.g. special character escaping, use of CDATA sections may be required)</p>
-<h3 id="test-actions"><a name="test-actions" class="plugin-anchor" href="#test-actions"><span class="fa fa-link"></span></a>Test Actions</h3>
+<h3 id="test-actions">Test Actions</h3>
 <p>Now we get close to the main part of writing an integration test. A Citrus test case defines a sequence of actions that will take place during the test. Actions by default are executed sequentially in the same order as they are defined in the test case definition.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
@@ -1892,7 +1892,7 @@ The <strong>TestNGCitrusTestRunner</strong> and <strong>JUnit4CitrusTestRunner</
 </code></pre>
 <p>All actions have individual names and properties that define the respective behavior. Citrus offers a wide range of test actions from scratch, but you are also able to write your own test actions in Java or Groovy and execute them during a test. <a href="actions">actions</a> gives you a brief description of all available actions that can be part of a test case execution.</p>
 <p>The actions are combined in free sequence to each other so that the tester is able to declare a special action chain inside the test. These actions can be sending or receiving messages, delaying the test, validating the database and so on. Step-by-step the test proceeds through the action chain. In case one single action fails by reason the whole test case is red and declared not successful.</p>
-<h3 id="finally-test-section"><a name="finally-test-section" class="plugin-anchor" href="#finally-test-section"><span class="fa fa-link"></span></a>Finally test section</h3>
+<h3 id="finally-test-section">Finally test section</h3>
 <p>Java developers might be familiar with the concept of doing something in the finally code section. The <strong><em>finally</em></strong> section contains a list of test actions that will be executed guaranteed at the very end of the test case even if errors did occur during the execution before. This is the right place to tidy up things that were previously created by the test like cleaning up the database for instance. The <strong><em>finally</em></strong> section is described in more detail in <a href="finally">finally</a>. However here is the basic syntax inside a test.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">finally</span>&gt;</span>
@@ -1922,7 +1922,7 @@ The <strong>TestNGCitrusTestRunner</strong> and <strong>JUnit4CitrusTestRunner</
         );
 }
 </code></pre>
-<h3 id="test-meta-information"><a name="test-meta-information" class="plugin-anchor" href="#test-meta-information"><span class="fa fa-link"></span></a>Test meta information</h3>
+<h3 id="test-meta-information">Test meta information</h3>
 <p>The user can provide some additional information about the test case. The meta-info section at the very beginning of the test case holds information like author, status or creation date. In detail the meta information is specified like this:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;metaInfoTest&quot;</span>&gt;</span>

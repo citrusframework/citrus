@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Test-suite | citrus-reference</title>
+        <title>Test-suite | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Test-suite"
         data-filepath="test-suite.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="test-suite-actions"><a name="test-suite-actions" class="plugin-anchor" href="#test-suite-actions"><span class="fa fa-link"></span></a>Test suite actions</h2>
+                        <h2 id="test-suite-actions">Test suite actions</h2>
 <p>A test framework should also provide the functionality to do some work before and after the test run. You could think of preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit best into the initialization and cleanup phases of Citrus.</p>
 <p><strong>Note</strong>
 It is important to notice that the Citrus configuration components that we are going to use in the next section belong to a separate XML namespace <strong>citrus-test</strong> . We have to add the namespace declaration to the XML root element of our XML configuration file accordingly.</p>
@@ -1598,7 +1598,7 @@ It is important to notice that the Citrus configuration components that we are g
 
         <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
-<h3 id="before-suite"><a name="before-suite" class="plugin-anchor" href="#before-suite"><span class="fa fa-link"></span></a>Before suite</h3>
+<h3 id="before-suite">Before suite</h3>
 <p>You can influence the behavior of a test run in the initialization phase actually before the tests are executed. See the next code example to find out how it works with actions that take place before the first test is executed:</p>
 <p>XML Config</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsBeforeSuite&quot;</span>&gt;</span>
@@ -1667,7 +1667,7 @@ Citrus offers special startup and shutdown actions that may start and stop serve
   <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
 </code></pre>
-<h3 id="after-suite"><a name="after-suite" class="plugin-anchor" href="#after-suite"><span class="fa fa-link"></span></a>After suite</h3>
+<h3 id="after-suite">After suite</h3>
 <p>A test run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run in actions after the tests are finished. The Spring bean syntax here is not significantly different to those in before suite section:</p>
 <p>XML Config</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsAfterSuite&quot;</span>&gt;</span>
@@ -1734,7 +1734,7 @@ Citrus offers special startup and shutdown actions that may start and stop serve
   <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
 </code></pre>
-<h3 id="before-test"><a name="before-test" class="plugin-anchor" href="#before-test"><span class="fa fa-link"></span></a>Before test</h3>
+<h3 id="before-test">Before test</h3>
 <p>Before each test is executed it also might sound reasonable to purge all JMS queues for instance. In case a previous test fails some messages might be left in the JMS queues. Also the database might be in dirty state. The follow-up test then will be confronted with these invalid messages and data. Purging all JMS destinations before a test is therefore a good idea. Just like we prepared some data in actions before suite we can clean up the data before a test starts to execute.</p>
 <p>XML Config</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultBeforeTest&quot;</span>&gt;</span>
@@ -1788,7 +1788,7 @@ Citrus offers special startup and shutdown actions that may start and stop serve
 <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
 </code></pre>
 <p>We can add filter properties to the before test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package <strong>com.consol.citrus.e2e</strong> . Leave these properties empty for default actions that are executed before all tests.</p>
-<h3 id="after-test"><a name="after-test" class="plugin-anchor" href="#after-test"><span class="fa fa-link"></span></a>After test</h3>
+<h3 id="after-test">After test</h3>
 <p>The same logic that applies to the <strong>before-test</strong> configuration component can be done after each test. The <strong>after-test</strong> configuration component defines test actions executed after each test. Just like we prepared some data in actions before a test we can clean up the data after a test has finished execution.</p>
 <p>XML Config</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultAfterTest&quot;</span>&gt;</span>

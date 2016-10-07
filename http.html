@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Http | citrus-reference</title>
+        <title>Http | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Http"
         data-filepath="http.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,14 +1580,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="http-rest-support"><a name="http-rest-support" class="plugin-anchor" href="#http-rest-support"><span class="fa fa-link"></span></a>HTTP REST support</h2>
+                        <h2 id="http-rest-support">HTTP REST support</h2>
 <p>REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a HTTP client sending HTTP requests usually in JSON data format to a HTTP server. As HTTP is a synchronous protocol by nature the client receives the server response synchronously. Citrus is able to connect with HTTP services and test REST APIs on both client and server side with a powerful JSON message data support. In the next sections you will learn how to invoke HTTP services as a client and how to handle REST HTTP requests in a test case. We deal with setting up a HTTP server in order to accept client requests and provide proper HTTP responses with GET, PUT, DELETE or POST request method.</p>
 <p><strong>Note</strong>
 The http components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-http<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level <strong>beans</strong> element. Simply include the http-config namespace in the configuration XML files as follows.</p>
@@ -1608,7 +1608,7 @@ The http components in Citrus are kept in a separate Maven module. So you should
 <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>Now we are ready to use the customized Citrus HTTP configuration elements with the citrus-http namespace prefix.</p>
-<h3 id="http-rest-client"><a name="http-rest-client" class="plugin-anchor" href="#http-rest-client"><span class="fa fa-link"></span></a>HTTP REST client</h3>
+<h3 id="http-rest-client">HTTP REST client</h3>
 <p>On the client side we have a simple HTTP message client component connecting to the server. The <strong>request-url</strong> attribute defines the HTTP server endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages. Citrus as client waits for the response message from server. After that the response message goes through the validation process as usual. Let us see how a Citrus HTTP client component looks like:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>
           <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
@@ -1732,6 +1732,7 @@ Citrus uses the Spring REST template mechanism for sending out HTTP requests. Th
 <pre><code class="lang-xml">@CitrusTest
 public void httpActionTest() {
     http().client(&quot;httpClient&quot;)
+          .send()
           .post(&quot;/customer&quot;)
           .payload(&quot;<span class="hljs-tag">&lt;<span class="hljs-title">customer</span>&gt;</span>&quot; +
                     &quot;<span class="hljs-tag">&lt;<span class="hljs-title">id</span>&gt;</span>citrus:randomNumber()<span class="hljs-tag">&lt;/<span class="hljs-title">id</span>&gt;</span>&quot; +
@@ -1742,6 +1743,7 @@ public void httpActionTest() {
           .accept(&quot;text/xml, */*&quot;);
 
     http().client(&quot;httpClient&quot;)
+          .receive()
           .response(HttpStatus.OK)
           .payload(&quot;<span class="hljs-tag">&lt;<span class="hljs-title">customerResponse</span>&gt;</span>&quot; +
                     &quot;<span class="hljs-tag">&lt;<span class="hljs-title">success</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">success</span>&gt;</span>&quot; +
@@ -1751,7 +1753,7 @@ public void httpActionTest() {
 }
 </code></pre>
 <p>Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.</p>
-<h3 id="http-rest-server"><a name="http-rest-server" class="plugin-anchor" href="#http-rest-server"><span class="fa fa-link"></span></a>HTTP REST server</h3>
+<h3 id="http-rest-server">HTTP REST server</h3>
 <p>The HTTP client was quite easy and straight forward. Receiving HTTP messages is a little bit more complicated because Citrus has to provide server functionality listening on a local port for client connections. Therefore Citrus offers an embedded HTTP server which is capable of handling incoming HTTP requests. Once a client connection is accepted the HTTP server must also provide a proper HTTP response to the client. In the next few lines you will see how to simulate server side HTTP REST service with Citrus.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
                 <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
@@ -1830,6 +1832,7 @@ The default channel endpoint adapter automatically creates an inbound message ch
 <pre><code class="lang-xml">@CitrusTest
 public void httpServerActionTest() {
     http().server(&quot;helloHttpServer&quot;)
+          .receive()
           .post(&quot;/test&quot;)
           .payload(&quot;&lt;testRequestMessage&gt;&quot; +
                     &quot;&lt;text&lt;Hello HttpServer&lt;/text&gt;&quot; +
@@ -1841,7 +1844,8 @@ public void httpServerActionTest() {
           .extractFromHeader(&quot;X-MessageId&quot;, &quot;message_id&quot;);
 
     http().server(&quot;helloHttpServer&quot;)
-          .respond(HttpStatus.OK)
+          .send()
+          .response(HttpStatus.OK)
           .payload(&quot;&lt;testResponseMessage&gt;&quot; +
                     &quot;&lt;text&lt;Hello Citrus&lt;/text&gt;&quot; +
                   &quot;&lt;/testResponseMessage&gt;&quot;)
@@ -1852,7 +1856,7 @@ public void httpServerActionTest() {
 }
 </code></pre>
 <p>This is the exact same example in Java DSL. We select server actions first and receive client requests. Then we send back a response with a <strong>HttpStatus.OK</strong> status. This completes the server actions on Http message transport. Now we continue with some more Http specific settings and features.</p>
-<h3 id="http-headers"><a name="http-headers" class="plugin-anchor" href="#http-headers"><span class="fa fa-link"></span></a>HTTP headers</h3>
+<h3 id="http-headers">HTTP headers</h3>
 <p>When dealing with HTTP request/response communication we always deal with HTTP specific headers. The HTTP protocol defines a group of header attributes that both client and server need to be able to handle. You can set and validate these HTTP headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some HTTP headers are explicitly set before the request is sent out.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span>&gt;</span>
@@ -1965,7 +1969,7 @@ You do not have to set the reason phrase all the time. It is sufficient to only 
 <p><strong>Tip</strong>
 Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.</p>
 <p>As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.</p>
-<h3 id="http-form-urlencoded-data"><a name="http-form-urlencoded-data" class="plugin-anchor" href="#http-form-urlencoded-data"><span class="fa fa-link"></span></a>HTTP form urlencoded data</h3>
+<h3 id="http-form-urlencoded-data">HTTP form urlencoded data</h3>
 <p>HTML form data can be sent to the server using different methods and content types. One of them is a POST method with <strong>x-www-form-urlencoded</strong> body content. The form data elements are sent to the server using key-value pairs POST data where the form control name is the key and the control data is the url encoded value.</p>
 <p>Form urlencoded form data content could look like this:</p>
 <pre><code class="lang-xml">password=s%21cr%21t&amp;username=foo
@@ -2018,7 +2022,7 @@ Be aware of the slight differences in request URI and context path. The context 
 </code></pre>
 <p>We use a special message type <strong>x-www-form-urlencoded</strong> so the new message validator will take action. The form url encoded message validator is able to handle a special XML representation of the form data. This enables the very powerful XML message validation capabilities of Citrus such as ignoring elements and usage of test variables inline.</p>
 <p>Each form control is translated to a control element with respective name and value properties. The form data is validated in a more comfortable way as the plaintext message validator would be able to offer.</p>
-<h3 id="http-error-handling"><a name="http-error-handling" class="plugin-anchor" href="#http-error-handling"><span class="fa fa-link"></span></a>HTTP error handling</h3>
+<h3 id="http-error-handling">HTTP error handling</h3>
 <p>So far we have received response messages with HTTP status code <strong>200 OK</strong> . How to deal with server errors like <strong>404 Not Found</strong> or <strong>500 Internal server error</strong> ? The default HTTP message client error strategy is to propagate server error response messages to the receive action for validation. We simply check on HTTP status code and status text for error validation.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
@@ -2060,7 +2064,7 @@ Be aware of the slight differences in request URI and context path. The context 
 <span class="hljs-tag">&lt;/<span class="hljs-title">assert</span>&gt;</span>
 </code></pre>
 <p>Both ways of handling HTTP error messages on client side are valid for expecting the server to raise HTTP error codes. Choose the preferred way according to your test project requirements.</p>
-<h3 id="http-client-basic-authentication"><a name="http-client-basic-authentication" class="plugin-anchor" href="#http-client-basic-authentication"><span class="fa fa-link"></span></a>HTTP client basic authentication</h3>
+<h3 id="http-client-basic-authentication">HTTP client basic authentication</h3>
 <p>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication where the credentials are transmitted in the request header section as base64 encoding.</p>
 <p>The easiest approach to set the <strong>Authorization</strong> header for a basic authentication HTTP request would be to set it on your own in the send action definition. Of course you have to use the correct basic authentication header syntax with base64 encoding for the username:password phrase. See this simple example.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
@@ -2109,7 +2113,7 @@ Content-Length: 175
   <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
 </code></pre>
-<h3 id="http-server-basic-authentication"><a name="http-server-basic-authentication" class="plugin-anchor" href="#http-server-basic-authentication"><span class="fa fa-link"></span></a>HTTP server basic authentication</h3>
+<h3 id="http-server-basic-authentication">HTTP server basic authentication</h3>
 <p>Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;basicAuthHttpServer&quot;</span>
                 <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8090&quot;</span>
@@ -2142,7 +2146,7 @@ Content-Length: 175
 <p>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and inspect the settings and properties offered by the security handler interface.</p>
 <p><strong>Tip</strong>
 This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</p>
-<h3 id="http-servlet-context-customization"><a name="http-servlet-context-customization" class="plugin-anchor" href="#http-servlet-context-customization"><span class="fa fa-link"></span></a>HTTP servlet context customization</h3>
+<h3 id="http-servlet-context-customization">HTTP servlet context customization</h3>
 <p>The Citrus HTTP server uses Spring application context loading on startup. For high customizations you can provide a custom servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling incoming requests (GET, PUT, DELETE, POST, etc.).</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;citrusHandlerMapping&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;</span>/&gt;</span>
 

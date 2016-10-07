@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Http-websocket | citrus-reference</title>
+        <title>Http-websocket | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Http-websocket"
         data-filepath="http-websocket.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,13 +1580,13 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="websocket-support"><a name="websocket-support" class="plugin-anchor" href="#websocket-support"><span class="fa fa-link"></span></a>WebSocket support</h2>
+                        <h2 id="websocket-support">WebSocket support</h2>
 <p>The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. Citrus is able to send and receive messages with WebSocket connections as client and server. The Http server implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish and consumer messages via bidirectional WebSocket protocol.</p>
 <p>The new WebSocket support is located in the module <strong>citrus-websocket</strong> . Therefore we need to add this module to our project as dependency when we are about to use the WebSocket features in Citrus.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-websocket<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As Citrus provides a customized WebSocket configuration schema for the Spring application context configuration files we have to add name to the top level <strong>beans</strong> element. Simply include the websocket-config namespace in the configuration XML files as follows.</p>
@@ -1607,7 +1607,7 @@
 <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>Now our project is ready to use the Citrus WebSocket support. First of all let us send a message via WebSocket connection to some server.</p>
-<h3 id="websocket-client"><a name="websocket-client" class="plugin-anchor" href="#websocket-client"><span class="fa fa-link"></span></a>WebSocket client</h3>
+<h3 id="websocket-client">WebSocket client</h3>
 <p>On the client side Citrus offers a client component that goes directly to the Spring bean application context. The client needs a server endpoint uri. This is a WebSocket protocol endpoint uri.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-websocket:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloWebSocketClient&quot;</span>
     <span class="hljs-attribute">url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
@@ -1645,7 +1645,7 @@ Up to now we have used static WebSocket endpoint URIs in our client component co
           <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
 </code></pre>
 <p>The specific send action above will send its message to the dynamic endpoint (ws://localhost:8080/customers/${customerId}) which is set in the header <strong>citrus_endpoint_uri</strong> .</p>
-<h3 id="websocket-server-endpoints"><a name="websocket-server-endpoints" class="plugin-anchor" href="#websocket-server-endpoints"><span class="fa fa-link"></span></a>WebSocket server endpoints</h3>
+<h3 id="websocket-server-endpoints">WebSocket server endpoints</h3>
 <p>On the server side Citrus has a Http server implementation that we can easily start during test runtime. The Http server accepts connections from clients and also supports WebSocket upgrade strategies. This means clients can ask for a upgrade to the WebSocket standard. In this handshake the server will upgrade the connection to WebSocket and afterwards client and server can exchange messages over this connection. This means the connection is kept alive and multiple messages can be exchanged. Lets see how WebSocket endpoints are added to a Http server component in Citrus.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-websocket:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
         <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
@@ -1684,7 +1684,7 @@ Up to now we have used static WebSocket endpoint URIs in our client component co
 <p>As you can see we reference the endpoint id in both receive and send actions. Each WebSocket endpoint holds one or more open connections to its clients. Each message that is sent is pushed to all connected clients. Each client can send messages to the WebSocket endpoint.</p>
 <p>The WebSocket endpoint component handles connection handshakes automatically and caches all open sessions in memory. By default all connected clients will receive the messages pushed from server. This is done completely behind the scenes. The Citrus server is able to handle multiple WebSocket endpoints with different clients connected to it at the same time. This is why we have to choose the WebSocket endpoint on the server by its identifier when sending and receiving messages.</p>
 <p>With this WebSocket endpoints we change the Citrus server behavior so that clients can upgrade to WebSocket connection. Now we have a bidirectional connection where the server can push messages to the client and vice versa.</p>
-<h3 id="websocket-headers"><a name="websocket-headers" class="plugin-anchor" href="#websocket-headers"><span class="fa fa-link"></span></a>WebSocket headers</h3>
+<h3 id="websocket-headers">WebSocket headers</h3>
 <p>The WebSocket standard defines some default headers to use during connection upgrade. These headers are made available to the test case in both directions. Citrus will handle these header values with special care when WebSocket support is activated on a server or client. Now WebSocket messages can also be split into multiple pieces. Each message part is pushed separately to the server but still is considered to be a single message payload. The server has to collect and aggregate all messages until a special message header <strong>isLast</strong> is set in one of the message parts.</p>
 <p>The Citrus WebSocket client can slice messages into several parts.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;webSocketClient&quot;</span>&gt;</span>

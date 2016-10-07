@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Flight Booking Sample | citrus-reference</title>
+        <title>Flight Booking Sample | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Flight Booking Sample"
         data-filepath="samples-flightbooking.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,16 +1580,16 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="the-flightbooking-sample"><a name="the-flightbooking-sample" class="plugin-anchor" href="#the-flightbooking-sample"><span class="fa fa-link"></span></a>The FlightBooking sample</h3>
+                        <h3 id="the-flightbooking-sample">The FlightBooking sample</h3>
 <p>A simple project example should give you the idea how Citrus works. The system under test is a flight booking service that handles travel requests from a travel agency. A travel request consists of a complete travel route including several flights. The FlightBookingService application will split the complete travel booking into separate flight bookings that are sent to the respective airlines in charge. The booking and customer data is persisted in a database.</p>
 <p>The airlines will confirm or deny the flight bookings. The FlightBookingService application consolidates all incoming flight confirmations and combines them to a complete travel confirmation or denial that is sent back to the travel agency. Next picture tries to put the architecture into graphics:</p>
 <p><img src="images/samples/flightbooking/architecture_overview.jpg" alt="samples/flightbooking/architecture_overview.jpg"></p>
 <p>In our example two different airlines are connected to the FlightBookingService application: the SmartAriline over JMS and the RoyalAirline over Http.</p>
-<h3 id="the-use-case"><a name="the-use-case" class="plugin-anchor" href="#the-use-case"><span class="fa fa-link"></span></a>The use case</h3>
+<h3 id="the-use-case">The use case</h3>
 <p>The use case that we would like to test is quite simple. The test should handle a simple travel booking and expect a positive processing to the end. The test case neither simulates business errors nor technical problems. Next picture shows the use case as a sequence diagram.</p>
 <p><img src="images/samples/flightbooking/sequence_diagram.jpg" alt="samples/flightbooking/sequence_diagram.jpg"></p>
 <p>The travel agency puts a travel booking request towards the system. The travel booking contains two separate flights. The flight requests are published to the airlines (SmartAirline and RoyalAirline). Both airlines confirm the flight bookings with a positive answer. The consolidated travel booking response is then sent back to the travel agency.</p>
-<h3 id="configure-the-simulated-systems"><a name="configure-the-simulated-systems" class="plugin-anchor" href="#configure-the-simulated-systems"><span class="fa fa-link"></span></a>Configure the simulated systems</h3>
+<h3 id="configure-the-simulated-systems">Configure the simulated systems</h3>
 <p>Citrus simulates all surrounding applications in their behavior during the test. The simulated applications are: TravelAgency, SmartAirline and RoyalAirline. The simulated systems have to be configured in the Citrus configuration first. The configuration is done in Spring XML configuration files, as Citrus uses Spring to glue all its services together.</p>
 <p>First of all we have a look at the TravelAgency configuration. The TravelAgency is using JMS to connect to our tested system, so we need to configure this JMS connection in Citrus.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;connectionFactory&quot;</span> 
@@ -1641,7 +1641,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue
                           <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${smart.airline.response.queue}&quot;</span>
                           <span class="hljs-attribute">connection-factory</span>=<span class="hljs-value">&quot;smartAirlineConnectionFactory&quot;</span>/&gt;</span>
 </code></pre>
-<h3 id="configure-the-http-adapter"><a name="configure-the-http-adapter" class="plugin-anchor" href="#configure-the-http-adapter"><span class="fa fa-link"></span></a>Configure the Http adapter</h3>
+<h3 id="configure-the-http-adapter">Configure the Http adapter</h3>
 <p>The RoyalAirline is connected to our system using Http request/response communication. This means we have to simulate a Http server in the test that accepts client requests and provides proper responses. Citrus offers a Http server implementation that will listen on a port for client requests. The adapter forwards incoming request to the test engine over JMS and receives a proper response that is forwarded as a Http response to the client. The next picture shows this mechanism in detail.</p>
 <p><img src="images/samples/flightbooking/http_adapter.jpg" alt="samples/flightbooking/http_adapter.jpg"></p>
 <p>The RoyalAirline adapter receives client requests over Http and sends them over JMS to a message receiver as we already know it. The test engine validates the received request and provides a proper response back to the adapter. The adapter will transform the response to Http again and publishes it to the calling client. Citrus offers these kind of adapters for Http and SOAP communication. By writing your own adapters like this you will be able to extend Citrus so it works with protocols that are not supported yet.</p>
@@ -1660,7 +1660,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue
                             <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${royal.airline.request.queue}&quot;</span>/&gt;</span>
 </code></pre>
 <p>We need to configure a Http server instance with a port, a request URI and the endpoint adapter. We define the JMS endpoint adapter to handle request as described. In Addition to the endpoint adapter we also need synchronous JMS message sender and receiver instances. That&apos;s it! We are able to receive Http request in order to simulate the RoyalAirline application. What is missing now? The test case definition itself.</p>
-<h3 id="the-test-case"><a name="the-test-case" class="plugin-anchor" href="#the-test-case"><span class="fa fa-link"></span></a>The test case</h3>
+<h3 id="the-test-case">The test case</h3>
 <p>The test case definition is also a Spring configuration file. Citrus offers a customized XML syntax to define a test case. This XML test defining language is supposed to be easy to understand and more specific to the domain we are dealing with. Next listing shows the whole test case definition. Keep in mind that a test case defines every step in the use case. So we define sending and receiving actions of the use case as described in the sequence diagram we saw earlier.</p>
 <pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span> 

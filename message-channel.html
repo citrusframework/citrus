@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Message-channel | citrus-reference</title>
+        <title>Message-channel | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Message-channel"
         data-filepath="message-channel.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="message-channel-support"><a name="message-channel-support" class="plugin-anchor" href="#message-channel-support"><span class="fa fa-link"></span></a>Message channel support</h2>
+                        <h2 id="message-channel-support">Message channel support</h2>
 <p>Message channels represent the in memory messaging solution in Citrus. Producer and consumer components are linked via channels exchanging messages in memory. As this transport mechanism comes from Spring Integration API (<a href="http://www.springsource.org/spring-integration" target="_blank">http://www.springsource.org/spring-integration</a>) and Citrus itself uses a lot of Spring APIs, especially those from Spring Integration you are able to connect to all Spring messaging adapters via these in memory channels.</p>
 <p>Citrus offers a channel components that can be used both by Citrus and Spring Integration. The conclusion is that Citrus supports the sending and receiving of messages both to and from Spring Integration message channel components. This opens up a lot of great possibilities to interact with the Spring Integration transport adapters for FTP, TCP/IP and so on. In addition to that the message channel support provides us a good way to exchange messages in memory.</p>
 <p>Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous communication. So in this chapter we explain how to setup JMS message endpoints for synchronous and asynchronous outbound and inbound communication</p>
@@ -1600,7 +1600,7 @@ The message channel configuration components use the default &quot;citrus&quot; 
 <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</p>
-<h3 id="channel-endpoint"><a name="channel-endpoint" class="plugin-anchor" href="#channel-endpoint"><span class="fa fa-link"></span></a>Channel endpoint</h3>
+<h3 id="channel-endpoint">Channel endpoint</h3>
 <p>Citrus offers a channel endpoint component that is able to create producer and consumer components. Producer and consumer send and receive messages both to and from a channel endpoint. By default the endpoint is asynchronous when configured in the Citrus application context. With this component you are able to access message channels directly:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloEndpoint&quot;</span> <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;helloChannel&quot;</span>/&gt;</span>
 
@@ -1650,7 +1650,7 @@ The Spring Integration configuration components use a specific namespace that ha
 </code></pre>
 <p>As you can see Citrus is also able to receive messages from the same Spring Integration message channel destination. We just references the same channel-endpoint in the receive action.</p>
 <p>As usual the receiver connects to the message destination and waits for messages to arrive. The user can set a receive timeout which is set to 5000 milliseconds by default. In case no message was received in this time frame the receiver raises timeout errors and the test fails.</p>
-<h3 id="synchronous-channel-endpoints"><a name="synchronous-channel-endpoints" class="plugin-anchor" href="#synchronous-channel-endpoints"><span class="fa fa-link"></span></a>Synchronous channel endpoints</h3>
+<h3 id="synchronous-channel-endpoints">Synchronous channel endpoints</h3>
 <p>The synchronous channel producer publishes messages and waits synchronously for the response to arrive on some reply channel destination. The reply channel name is set in the message&apos;s header attributes so the counterpart in this communication can send its reply to that channel. The basic configuration for a synchronous channel endpoint component looks like follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-sync-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloSyncEndpoint&quot;</span>
                             <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;helloChannel&quot;</span>
@@ -1704,13 +1704,13 @@ By default the channel endpoint uses temporary reply channel destinations. The t
 <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
 </code></pre>
 <p>The synchronous message channel endpoint will handle all reply channel destinations and provide those behind the scenes.</p>
-<h3 id="message-selectors-on-channels"><a name="message-selectors-on-channels" class="plugin-anchor" href="#message-selectors-on-channels"><span class="fa fa-link"></span></a>Message selectors on channels</h3>
+<h3 id="message-selectors-on-channels">Message selectors on channels</h3>
 <p>Unfortunately Spring Integration message channels do not support message selectors on header values as described in<a href="message-selector">message-selector</a>. With Citrus version 1.2 we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel implementation in our configuration.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;orderChannel&quot;</span> <span class="hljs-attribute">capacity</span>=<span class="hljs-value">&quot;5&quot;</span>/&gt;</span>
 </code></pre>
 <p>The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That&apos;s it! Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in<a href="message-selector">message-selector</a>and you will see that it works.</p>
 <p>In addition to that we have implemented other message filter possibilities on message channels that we discuss in the next sections.</p>
-<h3 id="root-qname-message-selector"><a name="root-qname-message-selector" class="plugin-anchor" href="#root-qname-message-selector"><span class="fa fa-link"></span></a>Root QName Message Selector</h3>
+<h3 id="root-qname-message-selector">Root QName Message Selector</h3>
 <p>You can use the XML root QName of your message as selection criteria. Let&apos;s see how this works in a small example:</p>
 <p>We have two different XML messages on a message channel waiting to be picked up by a consumer.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">HelloMessage</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://citrusframework.org/schema&quot;</span>&gt;</span>Hello Citrus<span class="hljs-tag">&lt;/<span class="hljs-title">HelloMessage</span>&gt;</span>
@@ -1739,7 +1739,7 @@ By default the channel endpoint uses temporary reply channel destinations. The t
     <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;root-qname&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;{http://citrusframework.org/schema}GoodbyeMessage&quot;</span>/&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">selector</span>&gt;</span>
 </code></pre>
-<h3 id="xpath-evaluating-message-selector"><a name="xpath-evaluating-message-selector" class="plugin-anchor" href="#xpath-evaluating-message-selector"><span class="fa fa-link"></span></a>XPath Evaluating Message Selector</h3>
+<h3 id="xpath-evaluating-message-selector">XPath Evaluating Message Selector</h3>
 <p>It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message channel. The XPath expression outcome must match an expected value and only then the message is consumed form the channel.</p>
 <p>The syntax for the XPath expression is to be defined as the element name like this:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">selector</span>&gt;</span>

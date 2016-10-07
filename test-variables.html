@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Test-variables | citrus-reference</title>
+        <title>Test-variables | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Test-variables"
         data-filepath="test-variables.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="test-variables"><a name="test-variables" class="plugin-anchor" href="#test-variables"><span class="fa fa-link"></span></a>Test variables</h2>
+                        <h2 id="test-variables">Test variables</h2>
 <p>The usage of test variables is a core concept when writing good maintainable tests. The key identifiers of a test case should be exposed as test variables at the very beginning of a test. This way hard coded identifiers and multiple redundant values inside the test can be avoided from scratch. As a tester you define all test variables at the very beginning of your test.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
@@ -1595,7 +1595,7 @@ variable(&quot;customerId&quot;, &quot;123456789&quot;);
 <p>The concept of test variables is essential when writing complex tests with lots of identifiers and semantic data. Test variables are valid for the whole test case. You can reference them several times using a common variable expression <strong><em>&quot;${variable-name}&quot;</em></strong> . It is good practice to provide all important entities as test variables. This makes the test easier to maintain and more flexible. All essential entities and identifiers are present right at the beginning of the test, which may also give the opportunity to easily create test variants by simply changing the variable values for other test scenarios.</p>
 <p>The name of the variable is arbitrary. Feel free to specify any name you can think of. Of course you need to be careful with special characters and reserved XML entities like &apos;&amp;&apos;, &apos;&lt;&apos;, &apos;&gt;&apos;. If you are familiar with Java or any other programming language simply think of the naming rules there and you will be fine with working on Citrus variables, too. The value of a variable can be any character sequence. But again be aware of special XML characters like &quot;&lt;&quot; that need to be escaped (&quot;&lt;&quot;) when used in variable values.</p>
 <p>The advantage of variables is obvious. Once declared the variables can be referenced many times in the test. This makes it very easy to vary different test cases by adjusting the variables for different means (e.g. use different error codes in test cases).</p>
-<h3 id="global-variables"><a name="global-variables" class="plugin-anchor" href="#global-variables"><span class="fa fa-link"></span></a>Global variables</h3>
+<h3 id="global-variables">Global variables</h3>
 <p>The last section told us to use variables as they are very useful and extend the maintainability of test cases. Now that every test case defines local variables you can also define global variables. The global variables are valid in all tests by default. This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those to the basic Spring application context file. The following example demonstrates how to add global variables in Citrus:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:global-variables</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;projectName&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Citrus Integration Testing&quot;</span>/&gt;</span>
@@ -1615,7 +1615,7 @@ The global variables can have variable expressions and Citrus functions. It is p
 greeting=Hello ${user}!
 date=citrus:currentDate(&apos;yyyy-MM-dd&apos;)
 </code></pre>
-<h3 id="create-variables-with-cdata"><a name="create-variables-with-cdata" class="plugin-anchor" href="#create-variables-with-cdata"><span class="fa fa-link"></span></a>Create variables with CDATA</h3>
+<h3 id="create-variables-with-cdata">Create variables with CDATA</h3>
 <p>When using th XML test case DSL we can not have XML variable values out of the box. This would interfere with the XML DSL elements defined in the Citrus testcase XSD schema. You can use CDATA sections within the variable value element in order to do this though.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;persons&quot;</span>&gt;</span>
@@ -1639,7 +1639,7 @@ date=citrus:currentDate(&apos;yyyy-MM-dd&apos;)
 <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
 </code></pre>
 <p>That is how you can use XML variable values in the XML DSL. In the Java DSL we do not have these problems.</p>
-<h3 id="create-variables-with-groovy"><a name="create-variables-with-groovy" class="plugin-anchor" href="#create-variables-with-groovy"><span class="fa fa-link"></span></a>Create variables with Groovy</h3>
+<h3 id="create-variables-with-groovy">Create variables with Groovy</h3>
 <p>You can also use a script to create variable values. This is extremely handy when you have very complex variable values. Just code a small Groovy script for instance in order to define the variable value. A small sample should give you the idea how that works:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;avg&quot;</span>&gt;</span>

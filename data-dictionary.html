@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Data-dictionary | citrus-reference</title>
+        <title>Data-dictionary | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Data-dictionary"
         data-filepath="data-dictionary.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,10 +1580,10 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="data-dictionaries"><a name="data-dictionaries" class="plugin-anchor" href="#data-dictionaries"><span class="fa fa-link"></span></a>Data dictionaries</h2>
+                        <h2 id="data-dictionaries">Data dictionaries</h2>
 <p>Data dictionaries in Citrus provide a new way to manipulate message payload data before a message is sent or received. The dictionary defines a set of keys and respective values. Just like every other dictionary it is used to translate things. In our case we translate message data elements.</p>
 <p>You can translate common message elements that are used widely throughout your domain model. As Citrus deals with different types of message data (e.g. XML, JSON) we have different dictionary implementations that are described in the next sections.</p>
-<h3 id="xml-data-dictionaries"><a name="xml-data-dictionaries" class="plugin-anchor" href="#xml-data-dictionaries"><span class="fa fa-link"></span></a>XML data dictionaries</h3>
+<h3 id="xml-data-dictionaries">XML data dictionaries</h3>
 <p>XML data dictionaries do apply to XML message format payloads, of course. In general we add a dictionary to the basic Citrus Spring application context in order to make the dictionary visible to all test cases:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:xml-data-dictionary</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;nodeMappingDataDictionary&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">citrus:mappings</span>&gt;</span>
@@ -1630,7 +1630,7 @@ TestMessage.TimeStamp=citrus:currentDate()
 <p>As expected XPath mapping expressions are way more powerful and can also handle very complex scenarios with XML namespaces, attributes and node lists. Just like the node mapping dictionary the XPath mapping dictionary does also support variables, functions and an external mapping file.</p>
 <p>XPath works fine with namespaces. In general it is good practice to define a namespace context where you map namespace URI values with prefix values. So your XPath expression is always exact and evaluation is strict. In Citrus the <strong>NamespaceContextBuilder</strong> which is also added as normal Spring bean to the application context manages namespaces used in your XPath expressions. See our XML and XPAth chapters in this documentation for detailed description how to accomplish fail safe XPath expressions with namespaces.</p>
 <p>This completes the XML data dictionary usage in Citrus. Later on we will see some more advanced data dictionary scenarios where we will discuss the usage of dictionary scopes and mapping strategies. But before that let us have a look at other message formats like JSON messages.</p>
-<h3 id="json-data-dictionaries"><a name="json-data-dictionaries" class="plugin-anchor" href="#json-data-dictionaries"><span class="fa fa-link"></span></a>JSON data dictionaries</h3>
+<h3 id="json-data-dictionaries">JSON data dictionaries</h3>
 <p>JSON data dictionaries complement with XML data dictionaries. As usual we have to add the JSON data dictionary to the basic Spring application context first. Once this is done the data dictionary automatically applies for all JSON message payloads in Citrus. This means that all JSON messages sent and received get translated with the JSON data dictionary implementation.</p>
 <p>Citrus uses message types in order to evaluate which data dictionary may fit to the message that is currently processed. As usual you can define the message type directly in your test case as attribute inside the sending and receiving message action.</p>
 <p>Let us see a simple dictionary for JSON data:</p>
@@ -1657,7 +1657,7 @@ TestMessage.TimeStamp=citrus:currentDate()
   <span class="hljs-tag">&lt;<span class="hljs-title">citrus:mapping</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;TestMessage.Users[1]&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Julia&quot;</span>/&gt;</span>
 </code></pre>
 <p>The <strong>Users</strong> element is a JSON array, so we can access the elements with index. Nesting JSON objects and arrays is also supported so you can also handle more complex JSON data.</p>
-<h3 id="dictionary-scopes"><a name="dictionary-scopes" class="plugin-anchor" href="#dictionary-scopes"><span class="fa fa-link"></span></a>Dictionary scopes</h3>
+<h3 id="dictionary-scopes">Dictionary scopes</h3>
 <p>Now that we have learned how to add data dictionaries to Citrus we need to discuss some advanced topics. Data dictionary scopes do define the boundaries where the dictionary may apply. By default data dictionaries are global scope dictionaries. This means that the data dictionary applies to all messages sent and received with Citrus. Of course message types are considered so XML data dictionaries do only apply to XML message types. However global scope dictionaries will be activated throughout all test cases and actions.</p>
 <p>You can overwrite the dictionary scope. For instance in order to use an explicit scope. When this is done the dictionary wil not apply automatically but the user has to explicitly set the data dictionary in sending or receiving test action. This way you can activate the dictionary to a very special set of test actions.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:xml-data-dictionary</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;specialDataDictionary&quot;</span> <span class="hljs-attribute">global-scope</span>=<span class="hljs-value">&quot;false&quot;</span>&gt;</span>
@@ -1683,7 +1683,7 @@ public void dictionaryTest() {
 }
 </code></pre>
 <p>The sample above is a sending test action with an explicit data dictionary reference set. Before sending the message the dictionary is asked for translation. So all matching message element values will be set by the dictionary accordingly. Other global data dictionaries do also apply for this message but the explicit dictionary will always overwrite the message element values.</p>
-<h3 id="path-mapping-strategies"><a name="path-mapping-strategies" class="plugin-anchor" href="#path-mapping-strategies"><span class="fa fa-link"></span></a>Path mapping strategies</h3>
+<h3 id="path-mapping-strategies">Path mapping strategies</h3>
 <p>Another advanced topic about data dictionaries is the path mapping strategy. When using simple path expressions the default strategy is always <strong>EXACT_MATCH</strong> . This means that the path expression has to evaluate exactly to a message element within the payload data. And only this exact message element is translated.</p>
 <p>You can set your own path mapping strategy in order to change this behavior. For instance another mapping strategy would be <strong>STARS_WITH</strong> . All elements are translated that start with a certain path expression. Let us clarify this with an example:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:xml-data-dictionary</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;nodeMappingDataDictionary&quot;</span> <span class="hljs-attribute">mapping-strategy</span>=<span class="hljs-value">&quot;STARTS_WITH&quot;</span>&gt;</span>

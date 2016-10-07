@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Xhtml | citrus-reference</title>
+        <title>Xhtml | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Xhtml"
         data-filepath="validation-xhtml.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="xhtml-message-validation"><a name="xhtml-message-validation" class="plugin-anchor" href="#xhtml-message-validation"><span class="fa fa-link"></span></a>XHTML message validation</h3>
+                        <h3 id="xhtml-message-validation">XHTML message validation</h3>
 <p>When Citrus receives plain Html messages we likely want to use the powerful XML validation capabilities such as XML tree comparison or XPath support. Unfortunately Html messages do not follow the XML well formed rules very strictly. This implies that XML message validation will fail because of non well formed Html code.</p>
 <p>XHTML closes this gap by automatically fixing the most common Html XML incompatible rule violations such as missing end tags (e.g. <br>).</p>
 <p>Let&apos;s try this with a simple example. Very first thing for us to do is to add a new library dependency to the project. Citrus is using the <strong>jtidy</strong> library in order to prepare the HTML and XHTML messages for validation. As this 3rd party dependency is optional in Citrus we have to add it now to our project dependency list. Just add the <strong>jtidy</strong> dependency to your Maven project POM.</p>

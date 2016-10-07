@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Setup | citrus-reference</title>
+        <title>Setup | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Setup"
         data-filepath="setup.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,14 +1580,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="setup"><a name="setup" class="plugin-anchor" href="#setup"><span class="fa fa-link"></span></a>Setup</h2>
+                        <h2 id="setup">Setup</h2>
 <p>This chapter discusses how to get started with Citrus. It deals with the installation and set up of the framework, so you are ready to start writing test cases after reading this chapter.</p>
 <p>Usually you would use Citrus as a dependency library in your project. In Maven you would just add Citrus as a test-scoped dependency in your POM. When using ANT you can also run Citrus as normal Java application from your build.xml. As Citrus tests are nothing but normal unit tests you could also use JUnit or TestNG ant tasks to execute the Citrus test cases.</p>
 <p>This chapter describes the Citrus project setup possibilities, choose one of them that fits best to include Citrus into your project.</p>
-<h3 id="using-maven"><a name="using-maven" class="plugin-anchor" href="#using-maven"><span class="fa fa-link"></span></a>Using Maven</h3>
+<h3 id="using-maven">Using Maven</h3>
 <p>Citrus uses <a href="Maven">http://maven.apache.org/</a> internally as a project build tool and provides extended support for Maven projects. Maven will ease up your life as it manages project dependencies and provides extended build life cycles and conventions for compiling, testing, packaging and installing your Java project. Therefore it is recommended to use the Citrus Maven project setup. In case you already use Maven it is most suitable for you to include Citrus as a test-scoped dependency.</p>
 <p>As Maven handles all project dependencies automatically you do not need to download any Citrus project artifacts in advance. If you are new to Maven please refer to the official Maven documentation to find out how to set up a Maven project.</p>
-<h3 id="use-citrus-maven-archetype"><a name="use-citrus-maven-archetype" class="plugin-anchor" href="#use-citrus-maven-archetype"><span class="fa fa-link"></span></a>Use Citrus Maven archetype</h3>
+<h3 id="use-citrus-maven-archetype">Use Citrus Maven archetype</h3>
 <p>If you start from scratch or in case you would like to have Citrus operating in a separate Maven module you can use the Citrus Maven archetype to create a new Maven project. The archetype will setup a basic Citrus project structure with basic settings and files.</p>
 <pre><code class="lang-xml">mvn archetype:generate -DarchetypeCatalog=http://citrusframework.org
 
@@ -1619,7 +1619,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest
 </code></pre>
 <p><strong>Note</strong>
 If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on<a href="http://www.citfrusframework.org" target="_blank">http://www.citrusframework.org/tutorials.html</a>.</p>
-<h3 id="add-citrus-to-existing-maven-project"><a name="add-citrus-to-existing-maven-project" class="plugin-anchor" href="#add-citrus-to-existing-maven-project"><span class="fa fa-link"></span></a>Add Citrus to existing Maven project</h3>
+<h3 id="add-citrus-to-existing-maven-project">Add Citrus to existing Maven project</h3>
 <p>In case you already have a proper Maven project you can also integrate Citrus with it. Just add the Citrus project dependencies in your Maven pom.xml as a dependency like follows.</p>
 <ul>
 <li>We add Citrus as test-scoped project dependency to the project POM (pom.xml)</li>
@@ -1627,7 +1627,7 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-core<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-title">scope</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
@@ -1637,7 +1637,7 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-java-dsl<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-title">scope</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
@@ -1647,7 +1647,7 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">plugin</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus.mvn<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">configuration</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">author</span>&gt;</span>Donald Duck<span class="hljs-tag">&lt;/<span class="hljs-title">author</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">targetPackage</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">targetPackage</span>&gt;</span>
@@ -1706,9 +1706,9 @@ mvn integration-test -Dtest=MyFirstCitrusTest
 </code></pre>
 <p><strong>Note</strong>
 If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on<a href="http://www.citfrusframework.org" target="_blank">http://www.citrusframework.org/tutorials.html</a>.</p>
-<h3 id="using-ant"><a name="using-ant" class="plugin-anchor" href="#using-ant"><span class="fa fa-link"></span></a>Using Ant</h3>
+<h3 id="using-ant">Using Ant</h3>
 <p>Ant is a very popular way to compile, test, package and execute Java projects. The Apache project has effectively become a standard in building Java projects. You can run Citrus test cases with Ant as Citrus is nothing but a Java application. This section describes the steps to setup a proper Citrus Ant project.</p>
-<h3 id="preconditions"><a name="preconditions" class="plugin-anchor" href="#preconditions"><span class="fa fa-link"></span></a>Preconditions</h3>
+<h3 id="preconditions">Preconditions</h3>
 <p>Before we start with the Citrus setup be sure to meet the following preconditions. The following software should be installed on your computer, in order to use the Citrus framework:</p>
 <ul>
 <li>Java 7 or higher</li>
@@ -1722,7 +1722,7 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 <li>Ant 1.8 or higher</li>
 </ul>
 <p>Ant (<a href="http://ant.apache.org/" target="_blank">http://ant.apache.org/</a>) will run tests and compile your Citrus code extensions if necessary.</p>
-<h3 id="download"><a name="download" class="plugin-anchor" href="#download"><span class="fa fa-link"></span></a>Download</h3>
+<h3 id="download">Download</h3>
 <p>First of all we need to download the latest Citrus release archive from the official website<a href="http://www.citrusframework.org" target="_blank">http://www.citrusframework.org</a></p>
 <p>Citrus comes to you as a zipped archive in one of the following packages:</p>
 <ul>
@@ -1731,7 +1731,7 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </ul>
 <p>The release package includes the Citrus binaries as well as the reference documentation and some sample applications.</p>
 <p>In case you want to get in touch with developing and debugging Citrus you can also go with the source archive which gives you the complete Citrus Java code sources. The whole Citrus project is also accessible for you on<a href="http://github.com/christophd/citrus" target="_blank">http://github.com/christophd/citrus</a>. This open git repository on GitHub enables you to build Citrus from scratch with Maven and contribute code changes.</p>
-<h3 id="installation"><a name="installation" class="plugin-anchor" href="#installation"><span class="fa fa-link"></span></a>Installation</h3>
+<h3 id="installation">Installation</h3>
 <p>After downloading the Citrus archives we extract those into an appropriate location on the local storage. We are seeking for the Citrus project artifacts coming as normal Java archives (e.g. citrus-core.jar, citrus-ws.jar, etc.)</p>
 <p>You have to include those Citrus Java archives as well as all dependency libraries to your Apache Ant Java classpath. Usually you would copy all libraries into your project&apos;s lib directory and declare those libraries in the Ant build file. As this approach can be very time consuming I recommend to use a dependency management API such as Apache Ivy which gives you automatic dependency resolution like that from Maven. In particular this comes in handy with all the 3rd party dependencies that would be resolved automatically.</p>
 <p>No matter what approach you are using to set up the Apache Ant classpath see the following sample Ant build script which uses the Citrus project artifacts in combination with the TestNG Ant tasks to run the tests.</p>

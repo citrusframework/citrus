@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Changes 1.2 | citrus-reference</title>
+        <title>Changes 1.2 | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -61,7 +61,7 @@
         data-chapter-title="Changes 1.2"
         data-filepath="changes-1-2.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1568,7 +1568,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1578,43 +1578,43 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="changes-in-citrus-12"><a name="changes-in-citrus-12" class="plugin-anchor" href="#changes-in-citrus-12"><span class="fa fa-link"></span></a>Changes in Citrus 1.2</h3>
-<h3 id="spring-version-update"><a name="spring-version-update" class="plugin-anchor" href="#spring-version-update"><span class="fa fa-link"></span></a>Spring version update</h3>
+                        <h3 id="changes-in-citrus-12">Changes in Citrus 1.2</h3>
+<h3 id="spring-version-update">Spring version update</h3>
 <p>We have some major version upgrades in our Spring dependencies. We are now using Spring 3.1.1, Spring Integration 2.1.2 and SpringWS 2.1.0. This upgrade was overdue for some time and is definitely worth it. With these upgrades we had to apply some changes in our API, too. This is because we are using the Spring classes a lot in our code. See the upgrade guide in this chapter for all significant changes that might affect your project.</p>
-<h3 id="new-groovy-features"><a name="new-groovy-features" class="plugin-anchor" href="#new-groovy-features"><span class="fa fa-link"></span></a>New groovy features</h3>
+<h3 id="new-groovy-features">New groovy features</h3>
 <p>Citrus extended the possibilities to work with script languages like Groovy. You can use Groovy&apos;s MarkupBuilder to create XML message payloads. Your Groovy code goes right into the test case or comes from external file. With MarkupBuilder you do not need to care about XML message syntax and overhead. Just focus on the pure message content. You can read the details in<a href="groovy-markupbuilder">groovy-markupbuilder</a>.</p>
 <p>Further Groovy feature goes to the validation capabilities. Instead of working with XML DOM tree comparison and XPath expression validation you can use Groovy XMLSlurper. This is very useful for those of you who need to do complex message validation and do not like the XML/XPath syntax at all. With XMLSlurper you can access the XML DOM tree via named closure operations which feels great. This especially comes in handy for complex generic XML structures as you can search for elements, sort element list and use the powerful contains operation. This is all described in<a href="groovy-xmlslurper">groovy-xmlslurper</a>.</p>
 <p>Some other Groovy support extension comes in SQL result set validation (<a href="actions-database-groovy">actions-database-groovy</a>). When reading data from the database someone is able to validation the resulting data row set with Groovy script. The script code easily accesses the rows and columns with Groovy&apos;s out-of-the-box list and map handling. This adds very powerful validation to multi-row data sets from the database.</p>
-<h3 id="sql-multiline-result-set-validation"><a name="sql-multiline-result-set-validation" class="plugin-anchor" href="#sql-multiline-result-set-validation"><span class="fa fa-link"></span></a>SQL multi-line result set validation</h3>
+<h3 id="sql-multiline-result-set-validation">SQL multi-line result set validation</h3>
 <p>In this new Citrus version the tester can validate SQL Query results that have multiple rows. In the past Citrus could only handle a single row in the result set. Now this new release brings light into the dark. See also the new Groovy SQL result set validation which fits brilliant for complex multi-row SQL result set validation. The details can be found in<a href="actions-database-query">actions-database-query</a></p>
-<h3 id="extended-message-format-support"><a name="extended-message-format-support" class="plugin-anchor" href="#extended-message-format-support"><span class="fa fa-link"></span></a>Extended message format support</h3>
+<h3 id="extended-message-format-support">Extended message format support</h3>
 <p>In previous versions Citrus was primary designed to handle XML message payloads. With this new release Citrus is also able to work with other message formats such as JSON, CSV, PLAINTEXT. This applies to sending messages as well as receiving and particularly validating message payloads. The tester can specify several message validators in Citrus for different message formats. According to the expected message format the proper validator is chosen to perform the message validation.</p>
 <p>We have implemented a JSON message validator capable of ignoring specific JSON entries and handling JSONArrays. We also provide a plain text message validator which is very basic to be honest. The framework is ready to receive new validator implementations so you can add custom validators for your specific needs.</p>
-<h3 id="new-xml-features"><a name="new-xml-features" class="plugin-anchor" href="#new-xml-features"><span class="fa fa-link"></span></a>New XML features</h3>
+<h3 id="new-xml-features">New XML features</h3>
 <p>XML namespace handling is tedious expecially if you have to deal with a lot of XPath expressions in your tests. Before you had need to specify a namespace context for the XPath expression every time you use them in your test - now you can have a central namespace context which declares namespaces you use in your project. These namespaces identified by some prefix are available throughout the test project which is much more maintainable and easy to use. See how it works in<a href="xpath-namespace">xpath-namespace</a>.</p>
-<h3 id="soap-support-improvements"><a name="soap-support-improvements" class="plugin-anchor" href="#soap-support-improvements"><span class="fa fa-link"></span></a>SOAP support improvements</h3>
+<h3 id="soap-support-improvements">SOAP support improvements</h3>
 <p>WsAddressing standard is now supported in Citrus (<a href="soap-ws-adressing">soap-ws-adressing</a>). This means you can declare the specific WsAddressing message headers on message sender level in order to send messages with WsAddressing feature. The header is constructed automatically for all SOAP messages that are sent over the message sender.</p>
 <p>Dynamic SOAP endpoint uri resolver enables you to dynamically address SOAP endpoints during a test. Sometimes a message sender may dynamically have to change the SOAP url for each call (e.g. address different request uri parts). With a endpoint uri resolver set on the message sender you can handle this requirement very easy. The tip for dynamic endpoint resolving was added to<a href="soap-sender">soap-sender</a></p>
 <p>We also simplified the synchronous SOAP HTTP communication within test cases. In previous versions you had to build complex parallel and sequential container constructs in order to continue with test execution while the SOAP message sender is waiting for the synchronous response to arrive. Now you can simply fork the message sending action and continue with further test actions while synchronous SOAP communication takes place. See the<a href="soap-fork-mode">soap-fork-mode</a>for details</p>
 <p>Some really small change introduced with this release is the fact that Citrus now logs SOAP messages in their pure nature. This means that you can see the complete SOAP envelope of messages in the Citrus log files. This is more than helpful when searching for errors inside your test case.</p>
-<h3 id="http-and-restful-webservices"><a name="http-and-restful-webservices" class="plugin-anchor" href="#http-and-restful-webservices"><span class="fa fa-link"></span></a>Http and RESTful WebServices</h3>
+<h3 id="http-and-restful-webservices">Http and RESTful WebServices</h3>
 <p>We have changed Http communication components for full support of RESTful WebServices on client and server side. The Http client now uses Spring&apos;s REST support for Http requests (GET, PUT, DELETE, POST, etc.). The server side has changed, too. The Http server now provides RESTful WebServices and is compliant to the existing SOAP Jetty server implementation in Citrus. If you want to upgrade existing projects to this version you may have to adjust the Spring application context configuration to some extent.</p>
 <p>For details have a look at the upgrade guide (<a href="history-upgrading">history-upgrading</a>) in this chapter or find detailed explanations to the new Http components in <a href="http">http</a>.</p>
-<h3 id="html-reporting"><a name="html-reporting" class="plugin-anchor" href="#html-reporting"><span class="fa fa-link"></span></a>HTML reporting</h3>
+<h3 id="html-reporting">HTML reporting</h3>
 <p>Citrus provides HTML reports after each test run with detailed information on the failed tests. You can immediately see which tests failed in execution and where the test stopped.<a href="reporting-html">reporting-html</a>provides details on this new feature.</p>
-<h3 id="validation-matchers"><a name="validation-matchers" class="plugin-anchor" href="#validation-matchers"><span class="fa fa-link"></span></a>Validation matchers</h3>
+<h3 id="validation-matchers">Validation matchers</h3>
 <p>The new validation matchers will put the message validation mechanisms to a new level. With validation matchers you are able to execute powerful assertions on each message content element. For instance you can use the isNumber validation matcher for checking that a message value is of numeric nature. We added several matcher implementations that are ready for usage in your test but you can also write your custom validation matchers. Have a look at<a href="validation-matchers">validation-matchers</a>for details.</p>
-<h3 id="conditional-container"><a name="conditional-container" class="plugin-anchor" href="#conditional-container"><span class="fa fa-link"></span></a>Conditional container</h3>
+<h3 id="conditional-container">Conditional container</h3>
 <p>The new conditional test action container enables you to execute test actions only in case a boolean expression evaluates to true. So the nested test actions inside the container may be not executed at all in case a condition is not met. See<a href="containers-conditional">containers-conditional</a>for details.</p>
-<h3 id="support-for-message-selectors-on-message-channels"><a name="support-for-message-selectors-on-message-channels" class="plugin-anchor" href="#support-for-message-selectors-on-message-channels"><span class="fa fa-link"></span></a>Support for message selectors on message channels</h3>
+<h3 id="support-for-message-selectors-on-message-channels">Support for message selectors on message channels</h3>
 <p>Spring Integration message channels do not support message selectors like JMS queues do for example. With Citrus 1.2 we implemented a solution for this issue with a special message channel implementation. So you can use the message selector feature also when using message channels. Go to<a href="message-channel-selector-support">message-channel-selector-support</a>for details.</p>
-<h3 id="new-test-actions"><a name="new-test-actions" class="plugin-anchor" href="#new-test-actions"><span class="fa fa-link"></span></a>New test actions</h3>
+<h3 id="new-test-actions">New test actions</h3>
 <p>We introduced some completely new test actions in this release for you. The new actions are listed below:</p>
 <ul>
 <li>Purge message channel action ()</li>
 </ul>
 <p>See <a href="actions">actions</a> for detailed instructions how to use the new actions.</p>
-<h3 id="new-functions"><a name="new-functions" class="plugin-anchor" href="#new-functions"><span class="fa fa-link"></span></a>New functions</h3>
+<h3 id="new-functions">New functions</h3>
 <p>We introduced some new default Citrus functions that will ease the testers life. This includes commonly used functions like encoding/decoding base64 bindary data, escaping XML and generating random Java UUID values. These are the new functions in this release:</p>
 <ul>
 <li>citrus:randomUUID()</li>
@@ -1625,7 +1625,7 @@
 <li>citrus:localHostAddress()</li>
 </ul>
 <p>See <a href="functions">functions</a> for detail descriptions of each function.</p>
-<h3 id="upgrading-from-version-11"><a name="upgrading-from-version-11" class="plugin-anchor" href="#upgrading-from-version-11"><span class="fa fa-link"></span></a>Upgrading from version 1.1</h3>
+<h3 id="upgrading-from-version-11">Upgrading from version 1.1</h3>
 <p>If you are coming from Citrus 1.1 final you may have to look at the following points.</p>
 <ul>
 <li><p><strong>Spring version update</strong> We did some major version upgrades on our Spring dependencies. We are now using Spring 3.1.1, Spring Integration 2.1.2 and SpringWS 2.1.0. These new major releases bring some code changes in our Citrus API which might affect your code and configuration, too. So please update your configuration, it is definitely worth it!</p>

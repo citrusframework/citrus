@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Ssh | citrus-reference</title>
+        <title>Ssh | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Ssh"
         data-filepath="ssh.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="ssh-support"><a name="ssh-support" class="plugin-anchor" href="#ssh-support"><span class="fa fa-link"></span></a>SSH support</h2>
+                        <h2 id="ssh-support">SSH support</h2>
 <p>In the spirit of other Citrus mock services, there is support for simulating an external SSH server as well as for connecting to SSH servers as a client during the test execution. Citrus translates SSH requests and responses to simple XML documents for better validation with the common Citrus mechanisms.</p>
 <p>This means that the Citrus test case does not deal with pure SSH protocol commands. Instead of this we use the powerful XML validation capabilities in Citrus when dealing with the simple XML documents that represent the SSH request/response data.</p>
 <p>Let us clarify this with a little example. Once the real SSH server daemon is fired up within Citrus we accept a SSH EXEC request for instance. The request is translated into a XML message of the following format:</p>
@@ -1611,7 +1611,7 @@
 <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>Both, SSH server and client along with their configuration options are described in the following two sections.</p>
-<h3 id="ssh-client"><a name="ssh-client" class="plugin-anchor" href="#ssh-client"><span class="fa fa-link"></span></a>SSH Client</h3>
+<h3 id="ssh-client">SSH Client</h3>
 <p>A Citrus SSH client is useful for testing against a real SSH server. So Citrus is able to invoke SSH commands on the external server and validate the SSH response accordingly. The test case does not deal with the pure SSH protocol within this communication. The Citrus SSH client component expects a customized XML representation and automatically translates these request messages into a real SSH call to a specific host. Once the synchronous SSH response was received the result gets translated back to the XML response message representation. On this translated response we can easily apply the validation steps by the usual Citrus means.</p>
 <p>The SSH client components receive its configuration in the Spring application context as usual. We can use the special SSH module namespace for easy configuration:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ssh:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;sshClient&quot;</span>
@@ -1661,7 +1661,7 @@
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
 <p>As you can see we use usual send and receive test actions. The XML SSH representation helps us to specify the request and response data for validation. This way you can call SSH commands against an external SSH server and validate the response data.</p>
-<h3 id="ssh-server"><a name="ssh-server" class="plugin-anchor" href="#ssh-server"><span class="fa fa-link"></span></a>SSH Server</h3>
+<h3 id="ssh-server">SSH Server</h3>
 <p>Now that we have used Citrus on the client side we can also use Citrus SSH server module in order to provide a full stacked SSH server deamon. We can accept SSH client connections and provide proper response messages as an answer.</p>
 <p>Given the above SSH module namespace declaration, adding a new SSH server is quite simple:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ssh:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;sshServer&quot;</span>

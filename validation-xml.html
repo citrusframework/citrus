@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Xml | citrus-reference</title>
+        <title>Xml | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Xml"
         data-filepath="validation-xml.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,12 +1580,12 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="xml-message-validation"><a name="xml-message-validation" class="plugin-anchor" href="#xml-message-validation"><span class="fa fa-link"></span></a>Xml message validation</h3>
+                        <h3 id="xml-message-validation">Xml message validation</h3>
 <p>XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message validator implementations that are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema validation. The default XML message validator implementation is active by default and can be overwritten with a custom implementation using the bean id <strong>defaultXmlMessageValidator</strong> .</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultXmlMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;</span>/&gt;</span>
 </code></pre>
 <p>The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces with different prefixes and attributes als well as namespace qualified attributes. See the following sections for a detailed description of all capabilities.</p>
-<h3 id="xml-payload-validation"><a name="xml-payload-validation" class="plugin-anchor" href="#xml-payload-validation"><span class="fa fa-link"></span></a>XML payload validation</h3>
+<h3 id="xml-payload-validation">XML payload validation</h3>
 <p>Once Citrus has received a message the tester can validate the message contents in various ways. First of all the tester can compare the whole message payload to a predefined control message template.</p>
 <p>The receiving action offers following elements for control message templates:</p>
 <ul>
@@ -1609,7 +1609,7 @@
         .header(<span class="hljs-string">&quot;MessageId&quot;</span>, <span class="hljs-string">&quot;${messageId}&quot;</span>);
 }
 </code></pre>
-<h3 id="xml-header-validation"><a name="xml-header-validation" class="plugin-anchor" href="#xml-header-validation"><span class="fa fa-link"></span></a>XML header validation</h3>
+<h3 id="xml-header-validation">XML header validation</h3>
 <p>Now that we have validated the message payload in various ways we are now interested in validating the message header. This is simple as you have to define the header name and the control value that you expect. Just add the following header validation to your receiving action.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
@@ -1655,7 +1655,7 @@ Sometimes message headers may not apply to the name-value pair pattern. For exam
 }
 </code></pre>
 <p>Of course you can use the inline <strong>@ignore@</strong> placeholder in an external file resource, too.</p>
-<h3 id="groovy-xml-validation"><a name="groovy-xml-validation" class="plugin-anchor" href="#groovy-xml-validation"><span class="fa fa-link"></span></a>Groovy XML validation</h3>
+<h3 id="groovy-xml-validation">Groovy XML validation</h3>
 <p>With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the message elements and uses simple code assertions in order to control the message content. Here is an example how to validate messages with Groovy script:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceClient&quot;</span> <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;5000&quot;</span>&gt;</span>

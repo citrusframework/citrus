@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Rmi | citrus-reference</title>
+        <title>Rmi | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Rmi"
         data-filepath="rmi.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="rmi-support"><a name="rmi-support" class="plugin-anchor" href="#rmi-support"><span class="fa fa-link"></span></a>RMI support</h2>
+                        <h2 id="rmi-support">RMI support</h2>
 <p>RMI stands for Remote Method Invocation and is a standard way of calling Java method interfaces where caller and callee (client and server) are not located within the same JVM. So the object passed to the method as argument as well as the method return value are transmitted over the wire.</p>
 <p>As a client Citrus is able to connect to some RMI registry that exposes some remote interfaces. As a server Citrus implements such a RMI registry and handles incoming method calls with providing the respective return value.</p>
 <p><strong>Note</strong>
@@ -1588,7 +1588,7 @@ The RMI components in Citrus are kept in a separate Maven module. So you should 
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-rmi<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As usual Citrus provides a customized rmi configuration schema that is used in Spring configuration files. Simply include the citrus-rmi namespace in the configuration XML files as follows.</p>
@@ -1610,7 +1610,7 @@ The RMI components in Citrus are kept in a separate Maven module. So you should 
 </code></pre>
 <p>Now you are ready to use the customized Http configuration elements with the citrus-rmi namespace prefix.</p>
 <p>Read the next section in order to find out more about the RMI message support in Citrus.</p>
-<h3 id="rmi-client"><a name="rmi-client" class="plugin-anchor" href="#rmi-client"><span class="fa fa-link"></span></a>RMI client</h3>
+<h3 id="rmi-client">RMI client</h3>
 <p>On the client side we want to call e remote interface. We need to specify the method to call as well as all method arguments. The respective method return value is receivable within the test case for validation. Citrus provides a client component for RMI that sends out service invocation calls.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-rmi:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;rmiClient1&quot;</span>
       <span class="hljs-attribute">host</span>=<span class="hljs-value">&quot;localhost&quot;</span>
@@ -1701,7 +1701,7 @@ The RMI components in Citrus are kept in a separate Maven module. So you should 
 <span class="hljs-tag">&lt;<span class="hljs-title">assert</span>/&gt;</span>
 </code></pre>
 <p>We assert the <strong><em>RemoteException</em></strong> to be thrown while calling the remote service method. This is how you can handle some sort of error situation while calling remote services. In the next section we will handle RMI communication where Citrus provides the remote interfaces.</p>
-<h3 id="rmi-server"><a name="rmi-server" class="plugin-anchor" href="#rmi-server"><span class="fa fa-link"></span></a>RMI server</h3>
+<h3 id="rmi-server">RMI server</h3>
 <p>On the server side Citrus needs to provide remote interfaces with methods callable for clients. This means that Citrus needs to support all your remote interfaces with method arguments and return values. The Citrus RMI server is able to bind your remote interfaces to a service registry. All incoming RMI client method calls are automatically accepted and the method arguments are converted into a Citrus XML service invocation representation. The RMI method call is then passed to the running test for validation.</p>
 <p>Let us have a look at the Citrus RMI server component and how you can add it to the Spring application context.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-rmi:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;rmiServer&quot;</span>

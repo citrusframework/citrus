@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Endpoint-adapter | citrus-reference</title>
+        <title>Endpoint-adapter | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Endpoint-adapter"
         data-filepath="endpoint-adapter.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="endpoint-adapter"><a name="endpoint-adapter" class="plugin-anchor" href="#endpoint-adapter"><span class="fa fa-link"></span></a>Endpoint adapter</h2>
+                        <h2 id="endpoint-adapter">Endpoint adapter</h2>
 <p>Endpoint adapter help to customize the behavior of a Citrus server such as HTTP or SOAP web servers. As the servers get started with the Citrus context they are ready to receive incoming client requests. Now there are different ways to process these incoming requests and to provide a proper response message. By default the server will forward the incoming request to a in memory message channel where a test can receive the message and provide a synchronous response. This message channel handling is done automatically behind the scenes so the tester does not care about these things. The tester just uses the server directly as endpoint reference in the test case. This is the default behaviour. In addition to that you can define custom endpoint adapters on the Citrus server in order to change this default behavior.</p>
 <p>You set the custom endpoint adapter directly on the server configuration as follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
@@ -1592,11 +1592,11 @@
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:empty-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>/&gt;</span>
 </code></pre>
 <p>Now let us have a closer look at the provided endpoint adapter implementations.</p>
-<h3 id="empty-response-endpoint-adapter"><a name="empty-response-endpoint-adapter" class="plugin-anchor" href="#empty-response-endpoint-adapter"><span class="fa fa-link"></span></a>Empty response endpoint adapter</h3>
+<h3 id="empty-response-endpoint-adapter">Empty response endpoint adapter</h3>
 <p>This is the simplest endpoint adapter you can think of. It simply provides an empty success response using the HTTP response code <strong>200</strong> . The adapter does not need any configurations or properties as it simply responds with an empty HTTP response.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:empty-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>/&gt;</span>
 </code></pre>
-<h3 id="static-response-endpoint-adapter"><a name="static-response-endpoint-adapter" class="plugin-anchor" href="#static-response-endpoint-adapter"><span class="fa fa-link"></span></a>Static response endpoint adapter</h3>
+<h3 id="static-response-endpoint-adapter">Static response endpoint adapter</h3>
 <p>The next more complex endpoint adapter will always return a static response message.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:static-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;endpointAdapter&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:payload</span>&gt;</span>
@@ -1618,7 +1618,7 @@
  <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:static-response-adapter</span>&gt;</span>
 </code></pre>
 <p>The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same.</p>
-<h3 id="request-dispatching-endpoint-adapter"><a name="request-dispatching-endpoint-adapter" class="plugin-anchor" href="#request-dispatching-endpoint-adapter"><span class="fa fa-link"></span></a>Request dispatching endpoint adapter</h3>
+<h3 id="request-dispatching-endpoint-adapter">Request dispatching endpoint adapter</h3>
 <p>The idea behind the request dispatching endpoint adapter is that the incoming requests are dispatched to several other endpoint adapters. The decision which endpoint adapter should handle the actual request is done depending on some adapter mapping. The mapping is done based on the payload or header data of the incoming request. A mapping strategy evaluates a mapping key using the incoming request. You can think of an XPath expression that evaluates to the mapping key for instance. The endpoint adapter that maps to the mapping key is then called to handle the request.</p>
 <p>So the request dispatching endpoint adapter is able to dynamically call several other endpoint adapters based on the incoming request message at runtime. This is very powerful. The next example uses the request dispatching endpoint adapter with a XPath mapping key extractor.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:dispatching-endpoint-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;dispatchingEndpointAdapter&quot;</span>
@@ -1670,13 +1670,13 @@
 <li><p><strong>ContextLoadingMappingStrategy</strong> : Same as BeanNameMappingStrategy but loads a separate application context defined by external file resource</p>
 </li>
 </ul>
-<h3 id="channel-endpoint-adapter"><a name="channel-endpoint-adapter" class="plugin-anchor" href="#channel-endpoint-adapter"><span class="fa fa-link"></span></a>Channel endpoint adapter</h3>
+<h3 id="channel-endpoint-adapter">Channel endpoint adapter</h3>
 <p>The channel connecting endpoint adapter is the default adapter used in all Citrus server components. Indeed this adapter also provides the most flexibility. This adapter forwards incoming requests to a channel destination. The adapter is waiting for a proper response on a reply destination synchronously. With the channel endpoint components you can read the requests on the channel and provide a proper response on the reply destination.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-endpoint-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;channelEndpointAdapter&quot;</span>
               <span class="hljs-attribute">channel-name</span>=<span class="hljs-value">&quot;inbound.channel&quot;</span>
               <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;2500&quot;</span>/&gt;</span>
 </code></pre>
-<h3 id="jms-endpoint-adapter"><a name="jms-endpoint-adapter" class="plugin-anchor" href="#jms-endpoint-adapter"><span class="fa fa-link"></span></a>JMS endpoint adapter</h3>
+<h3 id="jms-endpoint-adapter">JMS endpoint adapter</h3>
 <p>Another powerful endpoint adapter is the JMS connecting adapter implementation. This adapter forwards incoming requests to a JMS destination and waits for a proper response on a reply destination. A JMS endpoint can access the requests internally and provide a proper response on the reply destination. So this adapter is very flexible to provide proper response messages.</p>
 <p>This special adapter comes with the <strong>citrus-jms</strong> module. So you have to add the module and the special XML namespace for this module to your configuration files. The Maven module for <strong>citrus-jms</strong> goes to the Maven POM file as normal project dependency. The <strong>citrus-jms</strong> namespace goes to the Spring bean XML configuration file as follows:</p>
 <p><strong>Note</strong>

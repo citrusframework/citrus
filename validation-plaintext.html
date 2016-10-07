@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Plaintext | citrus-reference</title>
+        <title>Plaintext | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Plaintext"
         data-filepath="validation-plaintext.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="plain-text-message-validation"><a name="plain-text-message-validation" class="plugin-anchor" href="#plain-text-message-validation"><span class="fa fa-link"></span></a>Plain text message validation</h3>
+                        <h3 id="plain-text-message-validation">Plain text message validation</h3>
 <p>Plain text message validation is the easiest validation in Citrus that you can think of. This validation just performs an exact Java String match of received and expected message payloads.</p>
 <p>As usual a default message validator for plaintext messages is active by default. Citrus will pick this message validator for all messages of <strong>type=&quot;plaintext&quot;</strong> . The default message validator implementation can be overwritten by placing a Spring bean with id <strong>defaultPlaintextMessageValidator</strong> to the Spring application context.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultPlaintextMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.text.PlainTextMessageValidator&quot;</span>/&gt;</span>

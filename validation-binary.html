@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Binary | citrus-reference</title>
+        <title>Binary | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Binary"
         data-filepath="validation-binary.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="binary-message-validation"><a name="binary-message-validation" class="plugin-anchor" href="#binary-message-validation"><span class="fa fa-link"></span></a>Binary message validation</h3>
+                        <h3 id="binary-message-validation">Binary message validation</h3>
 <p>Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. In Citrus the way to compare binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.</p>
 <p>The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation takes place. The binary data can be anything e.g. images, pdf or gzip content.</p>
 <p>The default message validator for binary messages is active by default. Citrus will pick this message validator for all messages of <strong>type=&quot;binary_base64&quot;</strong> . The default message validator implementation can be overwritten by placing a Spring bean with id <strong>defaultBinaryBase64MessageValidator</strong> to the Spring application context.</p>

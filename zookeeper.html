@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Zookeeper | citrus-reference</title>
+        <title>Zookeeper | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Zookeeper"
         data-filepath="zookeeper.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,14 +1580,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="zookeeper-support"><a name="zookeeper-support" class="plugin-anchor" href="#zookeeper-support"><span class="fa fa-link"></span></a>Zookeeper support</h2>
+                        <h2 id="zookeeper-support">Zookeeper support</h2>
 <p>Citrus provides configuration components and test actions for interacting with Zookeeper. The Citrus Zookeeper client component executes commands like create-node, check node-exists, delete-node, get node-data or set node-data. As a user you can execute Zookeeper commands as part of a Citrus test and validate possible command results.</p>
 <p><strong>Note</strong>
 The Zookeeper test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-zookeeper<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Citrus provides a &quot;citrus-zookeeper&quot; configuration namespace and schema definition for Zookeeper related components and actions. Include this namespace into your Spring configuration in order to use the Citrus zookeeper configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
@@ -1605,14 +1605,14 @@ The Zookeeper test components in Citrus are kept in a separate Maven module. If 
       <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</p>
-<h3 id="zookeeper-client"><a name="zookeeper-client" class="plugin-anchor" href="#zookeeper-client"><span class="fa fa-link"></span></a>Zookeeper client</h3>
+<h3 id="zookeeper-client">Zookeeper client</h3>
 <p>Before you can interact with a Zookeeper server you have to configure the Zookeeper client. A sample configuration is provided below describing the configuration options available:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-zookeeper:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;zookeeperClient&quot;</span>
                                <span class="hljs-attribute">url</span>=<span class="hljs-value">&quot;http://localhost:21118&quot;</span>
                                <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;2000&quot;</span>/&gt;</span>
 </code></pre>
 <p>This is a typical client configuration for connecting to a Zookeeper server. Now you are able to execute several commands. These commands will be sent to the Zookeeper server for execution.</p>
-<h3 id="zookeeper-commands"><a name="zookeeper-commands" class="plugin-anchor" href="#zookeeper-commands"><span class="fa fa-link"></span></a>Zookeeper commands</h3>
+<h3 id="zookeeper-commands">Zookeeper commands</h3>
 <p>See below all available Zookeeper commands that a Citrus client is able to execute.</p>
 <pre><code class="lang-xml">info: Retrieves the current state of the client connection
 create: Creates a znode in a specified path of the ZooKeeper namespace

@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Purge-jms | citrus-reference</title>
+        <title>Purge-jms | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Purge-jms"
         data-filepath="actions-purge-jms.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,7 +1580,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="purging-jms-destinations"><a name="purging-jms-destinations" class="plugin-anchor" href="#purging-jms-destinations"><span class="fa fa-link"></span></a>Purging JMS destinations</h3>
+                        <h3 id="purging-jms-destinations">Purging JMS destinations</h3>
 <p>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending messages to the same JMS destinations. A test case should only receive those messages that actually belong to it. Therefore it is a good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some reason are then removed so that the following test case is not offended.</p>
 <p><strong>Note</strong>
 Citrus provides special support for JMS related features. We have to activate those JMS features in our test case by adding a special &quot;jms&quot; namespace and schema definition location to the test case XML.</p>

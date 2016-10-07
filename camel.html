@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Camel | citrus-reference</title>
+        <title>Camel | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Camel"
         data-filepath="camel.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,14 +1580,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="apache-camel-support"><a name="apache-camel-support" class="plugin-anchor" href="#apache-camel-support"><span class="fa fa-link"></span></a>Apache Camel support</h2>
+                        <h2 id="apache-camel-support">Apache Camel support</h2>
 <p>Apache Camel project implements the enterprise integration patterns for building mediation and routing rules in your enterprise application. With the Citrus Camel support you are able to directly interact with the Apache Camel components and route definitions. You can call Camel routes and receive synchronous response messages. You can also simulate the Camel route endpoint with receiving messages and providing simulated response messages.</p>
 <p><strong>Note</strong>
 The camel components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-camel<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Citrus provides a special Apache Camel configuration schema that is used in our Spring configuration files. You have to include the citrus-camel namespace in your Spring configuration XML files as follows.</p>
@@ -1609,7 +1609,7 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 </code></pre>
 <p>Now you are ready to use the Citrus Apache Camel configuration elements using the citrus-camel namespace prefix.</p>
 <p>The next sections explain the Citrus capabilities while working with Apache Camel.</p>
-<h3 id="camel-endpoint"><a name="camel-endpoint" class="plugin-anchor" href="#camel-endpoint"><span class="fa fa-link"></span></a>Camel endpoint</h3>
+<h3 id="camel-endpoint">Camel endpoint</h3>
 <p>Camel and Citrus both use the endpoint pattern in order to define message destinations. Users can interact with these endpoints when creating the mediation and routing logic. The Citrus endpoint component for Camel interaction is defined as follows in your Citrus Spring configuration.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-camel:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;directCamelEndpoint&quot;</span>
       <span class="hljs-attribute">endpoint-uri</span>=<span class="hljs-value">&quot;direct:news&quot;</span>/&gt;</span>
@@ -1648,7 +1648,7 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 <p><strong>Tip</strong>
 Instead of defining a static Citrus camel component you could also use the dynamic endpoint components in Citrus. This would enable you to send your message directly using the endpoint uri <strong>direct:news</strong> in your test case. Read more about this in<a href="endpoint-components">endpoint-components</a>.</p>
 <p>Citrus is able to send and receive messages with Camel route endpoint uri. This enables you to invoke a Camel route. The Camel components used is defined by the endpoint uri as usual. When interacting with Camel routes you might need to send back some response messages in order to simulate boundary applications. We will discuss the synchronous communication in the next section.</p>
-<h3 id="synchronous-camel-endpoint"><a name="synchronous-camel-endpoint" class="plugin-anchor" href="#synchronous-camel-endpoint"><span class="fa fa-link"></span></a>Synchronous Camel endpoint</h3>
+<h3 id="synchronous-camel-endpoint">Synchronous Camel endpoint</h3>
 <p>The synchronous Apache Camel producer sends a message to some route and waits synchronously for the response to arrive. In Camel this communication is represented with the exchange pattern <strong>InOut</strong> . The basic configuration for a synchronous Apache Camel endpoint component looks like follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-camel:sync-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;camelSyncEndpoint&quot;</span>
       <span class="hljs-attribute">endpoint-uri</span>=<span class="hljs-value">&quot;direct:hello&quot;</span>
@@ -1683,7 +1683,7 @@ Instead of defining a static Citrus camel component you could also use the dynam
 <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
 </code></pre>
 <p>This is pretty simple. Citrus takes care on setting the Apache Camel exchange pattern <strong>InOut</strong> while using synchronous communications. The Camel routes do respond and Citrus is able to receive the synchronous messages accordingly. With this pattern you can interact with Apache Camel routes where Citrus simulates synchronous clients and consumers.</p>
-<h3 id="camel-exchange-headers"><a name="camel-exchange-headers" class="plugin-anchor" href="#camel-exchange-headers"><span class="fa fa-link"></span></a>Camel exchange headers</h3>
+<h3 id="camel-exchange-headers">Camel exchange headers</h3>
 <p>Apache Camel uses exchanges when sending and receiving messages to and from routes. These exchanges hold specific information on the communication outcome. Citrus automatically converts these exchange information to special message header entries. You can validate those exchange headers then easily in your test case:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;sedaCamelEndpoint&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
@@ -1700,7 +1700,7 @@ Instead of defining a static Citrus camel component you could also use the dynam
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
 <p>Besides the Camel specific exchange information the Camel exchange does also hold some custom properties. These properties such as <strong>CamelToEndpoint</strong> or <strong>CamelCorrelationId</strong> are also added automatically to the Citrus message header so can expect them in a receive message action.</p>
-<h3 id="camel-exception-handling"><a name="camel-exception-handling" class="plugin-anchor" href="#camel-exception-handling"><span class="fa fa-link"></span></a>Camel exception handling</h3>
+<h3 id="camel-exception-handling">Camel exception handling</h3>
 <p>Let us suppose following route definition:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">camelContext</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;camelContext&quot;</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://camel.apache.org/schema/spring&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">route</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;newsRoute&quot;</span>&gt;</span>
@@ -1742,7 +1742,7 @@ Instead of defining a static Citrus camel component you could also use the dynam
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
 <p>This completes the basic exception handling in Citrus when using the Apache Camel endpoints.</p>
-<h3 id="camel-context-handling"><a name="camel-context-handling" class="plugin-anchor" href="#camel-context-handling"><span class="fa fa-link"></span></a>Camel context handling</h3>
+<h3 id="camel-context-handling">Camel context handling</h3>
 <p>In the previous samples we have used the Apache Camel context as Spring bean context that is automatically loaded when Citrus starts up. Now when using a single Camel context instance Citrus is able to automatically pick this Camel context for route interaction. If you use more that one Camel context you have to tell the Citrus endpoint component which context to use. The endpoint offers an optional attribute called <strong>camel-context</strong> .</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-camel:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;directCamelEndpoint&quot;</span>
     <span class="hljs-attribute">camel-context</span>=<span class="hljs-value">&quot;newsContext&quot;</span>
@@ -1765,7 +1765,7 @@ Instead of defining a static Citrus camel component you could also use the dynam
 <span class="hljs-tag">&lt;/<span class="hljs-title">camelContext</span>&gt;</span>
 </code></pre>
 <p>In the example abpove we have two Camel context instances loaded. The endpoint has to pick the context to use with the attribute <strong>camel-context</strong> which resides to the Spring bean id of the Camel context.</p>
-<h3 id="camel-route-actions"><a name="camel-route-actions" class="plugin-anchor" href="#camel-route-actions"><span class="fa fa-link"></span></a>Camel route actions</h3>
+<h3 id="camel-route-actions">Camel route actions</h3>
 <p>Since Citrus 2.4 we introduced some Camel specific test actions that enable easy interaction with Camel routes and the Camel context. The test actions do follow a specific XML namespace so we have to add this namespace to the test case when using the actions.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
       <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
@@ -1869,7 +1869,7 @@ Instead of defining a static Citrus camel component you could also use the dynam
 }
 </code></pre>
 <p>As you can see we have access to the Camel route builder that adds 1-n new Camel routes to the context. After that we can start, stop and remove the routes within the test case.</p>
-<h3 id="camel-controlbus-actions"><a name="camel-controlbus-actions" class="plugin-anchor" href="#camel-controlbus-actions"><span class="fa fa-link"></span></a>Camel controlbus actions</h3>
+<h3 id="camel-controlbus-actions">Camel controlbus actions</h3>
 <p>The Camel controlbus component is a good way to access route statistics and route status information within a Camel context. Citrus provides controlbus test actions to easily access the controlbus operations at runtime.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CamelControlBusIT&quot;</span>&gt;</span>

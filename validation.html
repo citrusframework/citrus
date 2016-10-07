@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Validation | citrus-reference</title>
+        <title>Validation | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -63,7 +63,7 @@
         data-chapter-title="Validation"
         data-filepath="validation.md"
         data-basepath="."
-        data-revision="Tue Aug 16 2016 23:32:29 GMT+0200 (CEST)"
+        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1570,7 +1570,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >citrus-reference</a>
+        <a href="./" >Citrus Reference Guide</a>
     </h1>
 </div>
 
@@ -1580,9 +1580,9 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="message-validation"><a name="message-validation" class="plugin-anchor" href="#message-validation"><span class="fa fa-link"></span></a>Message validation</h2>
+                        <h2 id="message-validation">Message validation</h2>
 <p>When Citrus receives a message from external applications it is time to verify the message content. This message validation includes syntax rules as well as semantic values that need to be compared to an expected behavior. Citrus provides powerful message validation capabilities. Each incoming message is validated with syntax and semantics. The tester is able to define expected message headers and payloads. Citrus message validator implementations will compare the messages and report differences as test failure. With the upcoming sections we have a closer look at message validation of XML messages with XPath and XML schema validation and further message formats like JSON and plaintext.</p>
-<h3 id="java-dsl-validation-callbacks"><a name="java-dsl-validation-callbacks" class="plugin-anchor" href="#java-dsl-validation-callbacks"><span class="fa fa-link"></span></a>Java DSL validation callbacks</h3>
+<h3 id="java-dsl-validation-callbacks">Java DSL validation callbacks</h3>
 <p>The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation callback functionality. With this feature you can marshal/unmarshal message payloads and code validation steps on Java objects.</p>
 <p><strong>Java DSL designer</strong> </p>
 <pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
@@ -1637,7 +1637,7 @@
 }
 </code></pre>
 <p>The example above creates a <strong>AddBookRequestMessage</strong> object and puts this as payload to a send action. In combination with a marshaller instance Citrus is able to create a proper XML message payload then.</p>
-<h3 id="customize-message-validators"><a name="customize-message-validators" class="plugin-anchor" href="#customize-message-validators"><span class="fa fa-link"></span></a>Customize message validators</h3>
+<h3 id="customize-message-validators">Customize message validators</h3>
 <p>In the previous sections we have already seen some examples on how to overwrite default message validator implementations in Citrus. By default all message validators can be overwritten by placing a Spring bean of the same id to the Spring application context. The default implementations of Citrus are:</p>
 <ul>
 <li><strong>defaultXmlMessageValidator</strong>: com.consol.citrus.validation.xml.DomXmlMessageValidator </li>
