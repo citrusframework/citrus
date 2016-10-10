@@ -21,7 +21,10 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointProperty;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TypeConversionUtils;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -49,6 +52,23 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
      */
     public AbstractEndpointBuilder<T> actor(TestActor actor) {
         getEndpoint().setActor(actor);
+        return this;
+    }
+
+    /**
+     * Sets the Spring application context.
+     * @param applicationContext
+     * @return
+     */
+    public AbstractEndpointBuilder<T> applicationContext(ApplicationContext applicationContext) {
+        if (getEndpoint() instanceof ApplicationContextAware) {
+            ((ApplicationContextAware) getEndpoint()).setApplicationContext(applicationContext);
+        }
+
+        if (getEndpoint() instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) getEndpoint()).setBeanFactory(applicationContext);
+        }
+
         return this;
     }
 
