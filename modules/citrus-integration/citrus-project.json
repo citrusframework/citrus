@@ -1,9 +1,8 @@
 {
   "projectHome" : "/Users/christoph/Projekte/Citrus/citrus/modules/citrus-integration",
-  "name" : "citrus-integration-test",
+  "name" : "citrus-integration",
   "description" : "",
   "version" : "2.6.2-SNAPSHOT",
-  "testCount" : 0,
   "settings" : {
     "basePackage" : "com.consol.citrus",
     "citrusVersion" : "2.6.2-SNAPSHOT",
@@ -12,12 +11,15 @@
     "xmlSrcDirectory" : "src/it/resources/",
     "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
     "xmlFilePattern" : "/**/*Test.xml,/**/*IT.xml",
+    "useConnector" : true,
+    "connectorActive" : true,
     "build" : {
       "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
       "type" : "maven",
       "properties" : [ ],
-      "testPlugin" : "maven-failsafe-plugin",
-      "profiles" : null
+      "testPlugin" : "maven-failsafe",
+      "profiles" : null,
+      "useClean" : false
     }
   }
 }
