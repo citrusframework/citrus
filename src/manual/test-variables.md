@@ -114,6 +114,6 @@ You can also use a script to create variable values. This is extremely handy whe
 </variables>
 ```
 
-We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed within the script. For longer script code the use of ***<![CDATA[ ]]>*** sections is recommended.
+We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed within the script. For longer script code the use of ***`<![CDATA[ ]]>`*** sections is recommended.
 
 Citrus uses the javax ScriptEngine mechanism in order to evaluate the script code. By default Groovy is supported in any Citrus project. So you can add additional ScriptEngine implementations to your project and support other script types, too.

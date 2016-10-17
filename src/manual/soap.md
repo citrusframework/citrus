@@ -538,7 +538,7 @@ Server: Jetty(7.0.0.pre5)
 ```
 
 **Important**
-Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root **<spring:beans>** element where we simply declare the citrus-ws specific namespace like follows.```xml
+Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root **`<spring:beans>`** element where we simply declare the citrus-ws specific namespace like follows.```xml
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
     xmlns:spring="http://www.springframework.org/schema/beans"
     xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"

@@ -70,7 +70,7 @@ The custom XML schema aims to reach the convenience of domain specific languages
 </spring:beans>
 ```
 
-We do need the ***<spring:beans>*** root element as the XML file is read by the Spring IoC container. Inside this root element the Citrus specific namespace definitions take place.
+We do need the ***`<spring:beans>`*** root element as the XML file is read by the Spring IoC container. Inside this root element the Citrus specific namespace definitions take place.
 
 The test case itself gets a mandatory name that must be unique throughout all test cases in a project. You will receive errors when using duplicate test names. The test name has to follow the common Java naming conventions and rules for Java classes. This means names must not contain any whitespace characters but characters like '-', '.', '_' are supported. For example, ***TestFeature_1*** is valid but ***Test Feature 1*** is not as it contains whitespace characters like spaces.
 
