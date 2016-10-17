@@ -477,7 +477,7 @@ Usually we use CDATA sections to define message payload data inside a testcase. 
 <variable name="cdata" value="citrus:cdataSection('payload')"/>
 ```
 
-cdata = **<![CDATA[payload]]>** 
+cdata = **`<![CDATA[payload]]>`** 
 
 ### citrus:digestAuthHeader()
 
@@ -519,7 +519,7 @@ Test cases may use the local host address for some reason (e.g. used as authenti
 
 A possible value is either the host name as used in DNS entry or an IP address value:
 
-address = **<192.168.2.100>** 
+address = **`<192.168.2.100>`** 
 
 ### citrus:changeDate()
 

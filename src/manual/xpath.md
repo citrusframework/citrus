@@ -48,7 +48,7 @@ Some elements in XML message payloads might be of dynamic nature. Just think of 
 
 The program listing above shows ways of setting variable values inside a message template. First of all you can simply place variable expressions inside the message (see how ${messageId} is used). In addition to that you can also use XPath expressions to explicitly overwrite message elements before validation.
 
-***<element path="/TestMessage/CreatedBy" value="${user}"/>*** 
+***`<element path="/TestMessage/CreatedBy" value="${user}"/>`*** 
 
 The XPath expression evaluates and searches for the right element in the message payload. The previously defined variable **${user}** replaces the element value. Of course this works with XML attributes too.
 

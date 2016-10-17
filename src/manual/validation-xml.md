@@ -14,11 +14,11 @@ Once Citrus has received a message the tester can validate the message contents 
 
 The receiving action offers following elements for control message templates:
 
-*  **<payload>** : Defines the message payload as nested XML message template. The whole message payload is defined inside the test case.
+*  **`<payload>`** : Defines the message payload as nested XML message template. The whole message payload is defined inside the test case.
 
-*  **<data>** : Defines an inline XML message template as nested CDATA. Slightly different to the payload variation as we define the whole message payload inside the test case as CDATA section.
+*  **`<data>`** : Defines an inline XML message template as nested CDATA. Slightly different to the payload variation as we define the whole message payload inside the test case as CDATA section.
 
-*  **<resource>** : Defines an expected XML message template via external file resources. This time the payload is loaded at runtime from the external file.
+*  **`<resource>`** : Defines an expected XML message template via external file resources. This time the payload is loaded at runtime from the external file.
 
 
 
