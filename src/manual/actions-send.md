@@ -44,7 +44,7 @@ Now lets have a closer look at the sending action. The **'endpoint'** attribute 
 
 The test case is not aware of any transport details, because it does not have to. The advantages are obvious: On the one hand multiple test cases can reference the message endpoint definition for better reuse. Secondly test cases are independent of message transport details. So connection factories, user credentials, endpoint uri values and so on are not present in the test case.
 
-In other words the **"endpoint"** attribute of the **<send>** element specifies which message endpoint definition to use and therefore where the message should go to. Once again all available message endpoints are configured in a separate Citrus configuration file. We will come to this later on. Be sure to always pick the right message endpoint type in order to publish your message to the right destination.
+In other words the **"endpoint"** attribute of the **`<send>`** element specifies which message endpoint definition to use and therefore where the message should go to. Once again all available message endpoints are configured in a separate Citrus configuration file. We will come to this later on. Be sure to always pick the right message endpoint type in order to publish your message to the right destination.
 
 If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint definition and reference this instance. The same test as shown above in Java DSL looks like this:
 
@@ -165,7 +165,7 @@ The file path prefix indicates the resource type, so the file location is resolv
 The most important thing when dealing with sending actions is to prepare the message payload and header. You are able to construct the message payload either by nested XML child nodes (payload), as inline CDATA (<data>) or external file (<resource>).
 
 **Note**
-Sometimes the nested XML message payload elements may cause XSD schema validation rule violations. This is because of variable values not fitting the XSD schema rules for example. In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the ***<data>*** element in contrast to the ***<payload>*** element that we have used in our examples so far.
+Sometimes the nested XML message payload elements may cause XSD schema validation rule violations. This is because of variable values not fitting the XSD schema rules for example. In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the ***`<data>`*** element in contrast to the ***`<payload>`*** element that we have used in our examples so far.
 
 With this alternative you can skip the XML schema validation from your IDE at design time. Unfortunately you will loose the XSD auto completion features many XML editors offer when constructing your payload.
 
