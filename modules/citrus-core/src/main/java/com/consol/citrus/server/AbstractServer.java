@@ -134,9 +134,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      */
     protected abstract void shutdown();
     
-    /**
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (endpointAdapter == null) {
             if (beanFactory != null && beanFactory.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
@@ -153,7 +151,11 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             channelEndpointConfiguration.setUseObjectMessages(true);
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
             endpointAdapter.getEndpoint().setName(getName());
-            ((AbstractEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
+
+            if (testContextFactory == null && beanFactory != null) {
+                testContextFactory = beanFactory.getBean(TestContextFactory.class);
+            }
+            ((ChannelEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
         }
 
         if (autoStart) {
