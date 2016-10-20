@@ -39,6 +39,7 @@ import org.testng.annotations.*;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -313,8 +314,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             parameterNames = testNgParameters.value();
         } else {
             List<String> methodParameterNames = new ArrayList<>();
-            for (int i = 0; i < method.getParameterTypes().length; i++) {
-                methodParameterNames.add("arg" + i);
+            for (Parameter parameter : method.getParameters()) {
+                methodParameterNames.add(parameter.getName());
             }
             parameterNames = methodParameterNames.toArray(new String[methodParameterNames.size()]);
         }
