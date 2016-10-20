@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -57,7 +58,13 @@ public class MessageCreators {
             }, new ReflectionUtils.MethodFilter() {
                 @Override
                 public boolean matches(Method method) {
-                    return method.getAnnotationsByType(MessageCreator.class).length > 0;
+                    for (Annotation annotation : method.getDeclaredAnnotations()) {
+                        if (annotation.annotationType().equals(MessageCreator.class)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
             });
         }
