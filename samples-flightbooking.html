@@ -63,7 +63,7 @@
         data-chapter-title="Flight Booking Sample"
         data-filepath="samples-flightbooking.md"
         data-basepath="."
-        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
+        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1900,7 +1900,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue
 <pre><code>&lt;correlationId&gt;${correlationId}&lt;/correlationId&gt; 
 &lt;id&gt;${customerId}&lt;/id&gt;
 </code></pre><p>The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic Spring configuration we have done before.</p>
-<p><strong><em><send endpoint="travelAgencyBookingRequestEndpoint"></send></em></strong> </p>
+<p><strong><em><code>send endpoint=&quot;travelAgencyBookingRequestEndpoint&quot;</code></em></strong> </p>
 <p>The sending action chooses a message sender to actually send the message using a message transport (JMS, Http, SOAP, etc.). After sending this first &quot;TravelBookingRequestMessage&quot; request the test case expects the first &quot;FlightBookingRequestMessage&quot; message on the SmartAirline JMS destination. In case this message is not arriving in time the test will fail with errors. In positive case our FlightBookingService works well and the message arrives in time. The received message is validated against a defined expected message template. Only in case all content validation steps are successful the test continues with the action chain. And so the test case proceeds and works through the use case until every message is sent respectively received and validated. The use case is done automatically without human interaction. Citrus simulates all surrounding applications and provides detailed validation possibilities of messages.</p>
 
                     

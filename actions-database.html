@@ -63,7 +63,7 @@
         data-chapter-title="Database"
         data-filepath="actions-database.md"
         data-basepath="."
-        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
+        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1748,7 +1748,7 @@ The validation with <strong><em>&quot;<validate column="..." value="...">&quot;<
       <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-title">sql</span>&gt;</span>
 </code></pre>
-<p>For the validation of multiple rows the <strong><em><validate></validate></em></strong> element is able to host a list of control values for a column. As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. Functions and variables are supported as usual.</p>
+<p>For the validation of multiple rows the <strong><em><code>&lt;validate&gt;</code></em></strong> element is able to host a list of control values for a column. As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. Functions and variables are supported as usual.</p>
 <p><strong>Important</strong>
 It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add &quot;order by&quot; SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.</p>
 <h3 id="groovy-sql-result-set-validation">Groovy SQL result set validation</h3>

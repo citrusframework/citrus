@@ -63,7 +63,7 @@
         data-chapter-title="Test-case"
         data-filepath="test-case.md"
         data-basepath="."
-        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
+        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1635,7 +1635,7 @@
     <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">spring:beans</span>&gt;</span>
 </code></pre>
-<p>We do need the <strong><em><spring:beans></spring:beans></em></strong> root element as the XML file is read by the Spring IoC container. Inside this root element the Citrus specific namespace definitions take place.</p>
+<p>We do need the <strong><em><code>&lt;spring:beans&gt;</code></em></strong> root element as the XML file is read by the Spring IoC container. Inside this root element the Citrus specific namespace definitions take place.</p>
 <p>The test case itself gets a mandatory name that must be unique throughout all test cases in a project. You will receive errors when using duplicate test names. The test name has to follow the common Java naming conventions and rules for Java classes. This means names must not contain any whitespace characters but characters like &apos;-&apos;, &apos;.&apos;, &apos;_&apos; are supported. For example, <strong><em>TestFeature_1</em></strong> is valid but <strong><em>Test Feature 1</em></strong> is not as it contains whitespace characters like spaces.</p>
 <p>Now that we have an XML definition that describes the steps of our test we need a Java executable for the test. The Java executable is needed for the framework in order to run the test. See the following sample Java class that represents a simple Citrus Java test:</p>
 <pre><code class="lang-java"><span class="hljs-keyword">import</span> org.testng.annotations.Test;

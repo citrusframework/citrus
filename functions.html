@@ -63,7 +63,7 @@
         data-chapter-title="Functions"
         data-filepath="functions.md"
         data-basepath="."
-        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
+        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1879,7 +1879,7 @@ Vt567JkA32
 <p>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;cdata&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:cdataSection(&apos;payload&apos;)&quot;</span>/&gt;</span>
 </code></pre>
-<p>cdata = <strong>&lt;![CDATA[payload]]&gt;</strong> </p>
+<p>cdata = <strong><code>&lt;![CDATA[payload]]&gt;</code></strong> </p>
 <h3 id="citrusdigestauthheader">citrus:digestAuthHeader()</h3>
 <p>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;digest&quot;</span> 
@@ -1903,7 +1903,7 @@ Vt567JkA32
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;address&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:localHostAddress()&quot;</span>/&gt;</span>
 </code></pre>
 <p>A possible value is either the host name as used in DNS entry or an IP address value:</p>
-<p>address = <strong><192.168.2.100></192.168.2.100></strong> </p>
+<p>address = <strong><code>&lt;192.168.2.100&gt;</code></strong> </p>
 <h3 id="citruschangedate">citrus:changeDate()</h3>
 <p>This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</p>
 <p>Let us clarify this with a simple example for this function:</p>

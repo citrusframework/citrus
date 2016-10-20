@@ -63,7 +63,7 @@
         data-chapter-title="Xpath"
         data-filepath="xpath.md"
         data-basepath="."
-        data-revision="Fri Oct 07 2016 15:37:27 GMT+0200 (CEST)"
+        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
         data-innerlanguage="">
     
 
@@ -1618,7 +1618,7 @@
 <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
 </code></pre>
 <p>The program listing above shows ways of setting variable values inside a message template. First of all you can simply place variable expressions inside the message (see how ${messageId} is used). In addition to that you can also use XPath expressions to explicitly overwrite message elements before validation.</p>
-<p><strong><em><element path="/TestMessage/CreatedBy" value="${user}"></element></em></strong> </p>
+<p><strong><em><code>&lt;element path=&quot;/TestMessage/CreatedBy&quot; value=&quot;${user}&quot;/&gt;</code></em></strong> </p>
 <p>The XPath expression evaluates and searches for the right element in the message payload. The previously defined variable <strong>${user}</strong> replaces the element value. Of course this works with XML attributes too.</p>
 <p>Both ways via XPath or inline variable expressions are equal to each other. With respect to the complexity of XML namespaces and XPath you may find the inline variable expression more comfortable to use. Anyway feel free to choose the way that fits best for you. This is how we can add dynamic variable values to the control template in order to increase maintainability and robustness of message validation.</p>
 <p><strong>Tip</strong>
