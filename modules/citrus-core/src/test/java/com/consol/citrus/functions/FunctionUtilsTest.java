@@ -61,15 +61,25 @@ public class FunctionUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWithCommaValue() {
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:upperCase(Yes), ' ', citrus:upperCase(I like Citrus!))", context), "YES I LIKE CITRUS!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Monday, Tuesday, wednesday')", context), "MONDAY, TUESDAY, WEDNESDAY");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Monday, Tuesday', ' Wednesday')", context), "Monday, Tuesday Wednesday");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!)", context), "'YES, I LIKE CITRUS!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase(''Yes, I like Citrus!)", context), "''YES, I LIKE CITRUS!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase(Yes I like Citrus!')", context), "YES I LIKE CITRUS!'");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus!')", context), "YES, I LIKE CITRUS!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes, I like Citrus, and this is great!')", context), "YES, I LIKE CITRUS, AND THIS IS GREAT!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes,I like Citrus!')", context), "YES,I LIKE CITRUS!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:upperCase('Yes', 'I like Citrus!')", context), "YES");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!')", context), "Hello Yes, I like Citrus!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus!')", context), "Hello Yes,I like Citrus!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes,I like Citrus, and this is great!')", context), "Hello Yes,I like Citrus, and this is great!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes , I like Citrus!')", context), "Hello Yes , I like Citrus!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!', 'Hello Yes,we like Citrus!')", context), "Hello Yes, I like Citrus!Hello Yes,we like Citrus!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus, and this is great!', 'Hello Yes,we like Citrus, and this is great!')", context), "Hello Yes, I like Citrus, and this is great!Hello Yes,we like Citrus, and this is great!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes, I like Citrus!</Message>')", context), "&lt;Message&gt;Hello Yes, I like Citrus!&lt;/Message&gt;");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes , I like Citrus!</Message>')", context), "&lt;Message&gt;Hello Yes , I like Citrus!&lt;/Message&gt;");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes,I like Citrus, and this is great!</Message>')", context), "&lt;Message&gt;Hello Yes,I like Citrus, and this is great!&lt;/Message&gt;");
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})

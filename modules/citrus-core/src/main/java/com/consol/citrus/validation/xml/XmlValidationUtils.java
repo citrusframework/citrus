@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
 import java.util.Set;
@@ -111,12 +112,16 @@ public abstract class XmlValidationUtils {
          */
         for (String expression : ignoreExpressions) {
             if (XPathUtils.isXPathExpression(expression)) {
-                Node foundNode = XPathUtils.evaluateAsNode(received.getOwnerDocument(),
+                NodeList foundNodes = XPathUtils.evaluateAsNodeList(received.getOwnerDocument(),
                         expression,
                         namespaceContext);
 
-                if (foundNode != null && foundNode.isSameNode(received)) {
-                    return true;
+                if (foundNodes != null) {
+                    for (int i = 0; i < foundNodes.getLength(); i++) {
+                        if (foundNodes.item(i) != null && foundNodes.item(i).isSameNode(received)) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
