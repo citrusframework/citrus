@@ -50,22 +50,32 @@ public final class FunctionParameterHelper {
         List<String> postProcessed = new ArrayList<>();
         for (int i = 0; i < parameterList.size(); i++) {
             int next = i + 1;
-            if (parameterList.get(i).startsWith("'") && !parameterList.get(i).endsWith("'")
-                    && next < parameterList.size() && parameterList.get(next).endsWith("'")) {
-                if (parameterString.contains(parameterList.get(i) + ", " + parameterList.get(next))) {
-                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + ", " + parameterList.get(next)));
-                } else if (parameterString.contains(parameterList.get(i) + "," + parameterList.get(next))) {
-                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + "," + parameterList.get(next)));
-                } else if (parameterString.contains(parameterList.get(i) + " , " + parameterList.get(next))) {
-                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + " , " + parameterList.get(next)));
-                } else {
-                    postProcessed.add(cutOffSingleQuotes(parameterList.get(i) + parameterList.get(next)));
+
+            String processed = parameterList.get(i);
+
+            if (processed.startsWith("'") && !processed.endsWith("'")) {
+                while (next < parameterList.size()) {
+                    if (parameterString.contains(processed + ", " + parameterList.get(next))) {
+                        processed += ", " + parameterList.get(next);
+                    } else if (parameterString.contains(processed + "," + parameterList.get(next))) {
+                        processed += "," + parameterList.get(next);
+                    } else if (parameterString.contains(processed + " , " + parameterList.get(next))) {
+                        processed += " , " + parameterList.get(next);
+                    } else {
+                        processed += parameterList.get(next);
+                    }
+
+                    i++;
+                    if (parameterList.get(next).endsWith("'")) {
+                        break;
+                    } else {
+                        next++;
+                    }
                 }
 
-                i++;
-            } else {
-                postProcessed.add(parameterList.get(i));
             }
+
+            postProcessed.add(cutOffSingleQuotes(processed));
         }
 
         return postProcessed;
@@ -76,7 +86,7 @@ public final class FunctionParameterHelper {
             return "";
         }
 
-        if (param.charAt(0) == '\'' && param.charAt(param.length()-1) == '\'') {
+        if (param.length() > 1 && param.charAt(0) == '\'' && param.charAt(param.length()-1) == '\'') {
             return param.substring(1, param.length()-1);
         }
 
