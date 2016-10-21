@@ -496,7 +496,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         doElementNamespaceValidation(received, source);
 
         //check if element is ignored either by xpath or by ignore placeholder in source message
-        if(XmlValidationUtils.isElementIgnored(source, received, validationContext.getIgnoreExpressions(), namespaceContext)) {
+        if (XmlValidationUtils.isElementIgnored(source, received, validationContext.getIgnoreExpressions(), namespaceContext)) {
             return;
         }
 
