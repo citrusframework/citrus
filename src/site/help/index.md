@@ -9,7 +9,7 @@ Need help with Citrus? Try these resources.
 
 Our guide to Citrus covering installation, writing, customization, deployment, and more.
 
-### [Samples](${site.path}/samples/overview/)
+### [Samples](${site.path}/samples/)
 
 Our samples provide detailed code examples for various test scenarios.
 
