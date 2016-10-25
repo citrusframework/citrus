@@ -17,11 +17,11 @@
     }
   },
 
-  "plugins": ["edit-link@2.0.2", "anchors@0.7.1", "code_tomorrow_scheme@0.1.3" ],
+  "plugins": ["edit-link@2.0.2", "anchors@0.6.0", "code_tomorrow_scheme@0.1.3" ],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/christophd/citrus/edit/master/src/manual",
-      "label": "Edit This Page"
+      "label": "Improve This Page"
     }
   },
 
