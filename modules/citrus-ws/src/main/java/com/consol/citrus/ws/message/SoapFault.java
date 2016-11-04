@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetailElement;
@@ -52,6 +53,29 @@ public class SoapFault extends SoapMessage {
 
     /** List of fault detail elements */
     private List<String> faultDetails = new ArrayList<String>();
+
+    /**
+     * Default constructor.
+     */
+    public SoapFault() {
+        super();
+    }
+
+    /**
+     * Default constructor using parent message.
+     * @param message
+     */
+    public SoapFault(Message message) {
+        super(message);
+    }
+
+    /**
+     * Default constructor using payload.
+     * @param payload
+     */
+    public SoapFault(Object payload) {
+        super(payload);
+    }
 
     /**
      * Returns fault code as qualified name.

@@ -133,13 +133,13 @@ a *XmlConfigurer* Spring bean to the Citrus application context.
 <bean id="xmlConfigurer" class="com.consol.citrus.xml.XmlConfigurer">
     <property name="parseSettings">
         <map>
-            <entry key="validate-if-schema" value="false"/>
+            <entry key="validate-if-schema" value="false" value-type="java.lang.Boolean"/>
         </map>
     </property>
     <property name="serializeSettings">
         <map>
-            <entry key="comments" value="false"/>
-            <entry key="format-pretty-print" value="false"/>
+            <entry key="comments" value="false" value-type="java.lang.Boolean"/>
+            <entry key="format-pretty-print" value="false" value-type="java.lang.Boolean"/>
         </map>
     </property>
 </bean>
