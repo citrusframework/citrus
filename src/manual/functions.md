@@ -576,3 +576,109 @@ Let's see this function in action:
 
 The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance. This is a very powerful way to extract large message parts to separate file resources. Just add the **readFile** function somewhere to the message content and Citrus will load the extra file content and place it right into the message payload for you.
 
+### citrus:message()
+
+When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
+that have been sent or received within the test case. The **message** function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
+the message name. Now we can load the message payload with that name.
+
+Let's see this function in action:
+
+```xml
+<echo>
+    <message>citrus:message(myRequest.payload())</message>
+</echo>
+```
+
+The function above loads the message named **myRequest** from the local memory store. This requires a send or receive action to have handled the message before in the same test case.
+
+**XML DSL** 
+
+```xml
+<send endpoint="someEndpoint">
+  <message name="myRequest">
+    <payload>Some payload</payload>
+  </message>
+</send>
+```
+
+**Java DSL** 
+
+```java
+send("someEndpoint")
+    .name("myRequest")
+    .payload("Some payload");
+```
+
+The name of the message is important. Otherwise the message can not be found in the local message store. Note: a message can either be received or sent with a name in order to be stored
+in the local message store. The **message** function is then able to access the message by its name. In the first example the **payload()** has been loaded. Of course we can also access header information.
+ 
+```xml
+<echo>
+    <message>citrus:message(myRequest.header('Operation'))</message>
+</echo>
+``` 
+
+The sample above loads the header **Operation** of the message.
+
+In Java DSL the message store is also accessible over the TestContext.
+
+### citrus:xpath()
+
+The **xpath** function evaluates a Xpath expressions on some XML source and returns the expression result as String.
+
+```xml
+<echo>
+    <message><![CDATA[citrus:xpath('<message><id>1000</id></text>Some text content</text></message>', '/message/id')]]></message>
+</echo>
+```
+
+The XML source is given as first function parameter and can be loaded in different ways. In the example above a static XML source has been used. We could load the XML content from
+external file or just use a test variable.
+
+```xml
+<echo>
+    <message><![CDATA[citrus:xpath(citrus:readFile('some/path/to/file.xml'), '/message/id')]]></message>
+</echo>
+```
+
+Also accessing the local message store is valid here:
+
+```xml
+<echo>
+    <message><![CDATA[citrus:xpath(citrus:message(myRequest.payload()), '/message/id')]]></message>
+</echo>
+```
+
+This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
+becomes very easy then.
+
+### citrus:jsonPath()
+
+The **jsonPath** function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.
+
+```xml
+<echo>
+    <message><![CDATA[citrus:jsonPath('{ "message": { "id": 1000, "text": "Some text content" } }', '$.message.id')]]></message>
+</echo>
+```
+
+The JSON source is given as first function parameter and can be loaded in different ways. In the example above a static JSON source has been used. We could load the JSON content from
+external file or just use a test variable.
+
+```xml
+<echo>
+    <message><![CDATA[citrus:jsonPath(${jsonSource}, '$.message.id')]]></message>
+</echo>
+```
+
+Also accessing the local message store is valid here:
+
+```xml
+<echo>
+    <message><![CDATA[citrus:jsonPath(citrus:message(myRequest.payload()), '$.message.id')]]></message>
+</echo>
+```
+
+This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
+becomes very easy then.
