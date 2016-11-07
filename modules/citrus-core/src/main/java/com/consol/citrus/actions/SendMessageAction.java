@@ -88,8 +88,15 @@ public class SendMessageAction extends AbstractTestAction {
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(message, context);
         }
-        
+
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
+
+        if (StringUtils.hasText(message.getName())) {
+            context.getMessageStore().storeMessage(message.getName(), message);
+        } else {
+            context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, messageEndpoint), message);
+        }
+
         if (forkMode) {
             log.debug("Forking message sending action ...");
 

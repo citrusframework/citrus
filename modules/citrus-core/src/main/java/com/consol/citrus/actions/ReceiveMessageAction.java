@@ -187,20 +187,34 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         if (validationCallback != null) {
-            validationCallback.validate(receivedMessage, context);
-        } else if (validator != null) {
-            validator.validateMessage(receivedMessage, createControlMessage(context, messageType), context, validationContexts);
-        } else {
-            Message controlMessage = createControlMessage(context, messageType);
-            List<MessageValidator<? extends ValidationContext>> validators =
-                                context.getMessageValidatorRegistry().findMessageValidators(messageType, receivedMessage, validationContexts);
-
-            if (controlMessage.getPayload() != null && validators.isEmpty()) {
-                log.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
+            if (StringUtils.hasText(receivedMessage.getName())) {
+                context.getMessageStore().storeMessage(receivedMessage.getName(), receivedMessage);
+            } else {
+                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), receivedMessage);
             }
 
-            for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                messageValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+            validationCallback.validate(receivedMessage, context);
+        } else {
+            Message controlMessage = createControlMessage(context, messageType);
+            if (StringUtils.hasText(controlMessage.getName())) {
+                context.getMessageStore().storeMessage(controlMessage.getName(), receivedMessage);
+            } else {
+                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), receivedMessage);
+            }
+
+            if (validator != null) {
+                validator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+            } else {
+                List<MessageValidator<? extends ValidationContext>> validators =
+                        context.getMessageValidatorRegistry().findMessageValidators(messageType, receivedMessage, validationContexts);
+
+                if (controlMessage.getPayload() != null && validators.isEmpty()) {
+                    log.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
+                }
+
+                for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
+                    messageValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+                }
             }
         }
     }

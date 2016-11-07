@@ -23,7 +23,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.validation.MessageValidatorRegistry;
@@ -59,6 +59,9 @@ public class TestContext {
     
     /** Global variables */
     private GlobalVariables globalVariables;
+
+    /** Message store */
+    private MessageStore messageStore = new DefaultMessageStore();
     
     /** Function registry holding all available functions */
     private FunctionRegistry functionRegistry = new FunctionRegistry();
@@ -366,7 +369,25 @@ public class TestContext {
     public Map<String, Object> getGlobalVariables() {
         return globalVariables.getVariables();
     }
-    
+
+    /**
+     * Sets the messageStore property.
+     *
+     * @param messageStore
+     */
+    public void setMessageStore(MessageStore messageStore) {
+        this.messageStore = messageStore;
+    }
+
+    /**
+     * Gets the value of the messageStore property.
+     *
+     * @return the messageStore
+     */
+    public MessageStore getMessageStore() {
+        return messageStore;
+    }
+
     /**
      * Get the current function registry.
      * @return the functionRegistry

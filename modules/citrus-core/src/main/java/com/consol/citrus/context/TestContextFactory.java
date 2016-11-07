@@ -49,7 +49,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     
     @Autowired(required = false)
     private GlobalVariables globalVariables = new GlobalVariables();
-    
+
     @Autowired
     private MessageValidatorRegistry messageValidatorRegistry;
 

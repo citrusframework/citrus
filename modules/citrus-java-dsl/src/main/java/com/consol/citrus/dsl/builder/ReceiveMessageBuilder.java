@@ -164,6 +164,16 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
         }
     }
+
+    /**
+     * Sets the message name.
+     * @param name
+     * @return
+     */
+    public T name(String name) {
+        getMessageContentBuilder().setMessageName(name);
+        return self;
+    }
     
     /**
      * Expect this message payload data in received message.

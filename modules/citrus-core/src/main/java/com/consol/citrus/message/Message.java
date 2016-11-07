@@ -33,6 +33,18 @@ public interface Message extends Serializable {
     String getId();
 
     /**
+     * Gets the message name for internal use;
+     * @return
+     */
+    String getName();
+
+    /**
+     * Sets the message name for internal use.
+     * @param name
+     */
+    void setName(String name);
+
+    /**
      * Gets the message header value by its header name.
      * @param headerName
      * @return

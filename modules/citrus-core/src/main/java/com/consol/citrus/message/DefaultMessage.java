@@ -18,8 +18,6 @@ package com.consol.citrus.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TypeConversionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -45,8 +43,8 @@ public class DefaultMessage implements Message {
     /** Message headers */
     private final Map<String, Object> headers;
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultMessage.class);
+    /** The message name for internal use */
+    private String name;
 
     /**
      * Empty constructor initializing with empty message payload.
@@ -62,6 +60,7 @@ public class DefaultMessage implements Message {
     public DefaultMessage(Message message) {
         this(message.getPayload());
 
+        this.setName(message.getName());
         this.headers.putAll(message.getHeaders());
 
         for (String data : message.getHeaderData()) {
@@ -165,5 +164,15 @@ public class DefaultMessage implements Message {
     @Override
     public Map<String, Object> getHeaders() {
         return headers;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

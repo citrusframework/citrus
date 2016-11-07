@@ -90,6 +90,10 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement).trim());
             }
         }
+
+        if (scriptMessageBuilder != null && messageElement.hasAttribute("name")) {
+            scriptMessageBuilder.setMessageName(messageElement.getAttribute("name"));
+        }
         
         return scriptMessageBuilder;
     }
@@ -116,6 +120,10 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         }
         
         if (messageBuilder != null) {
+            if (messageElement.hasAttribute("name")) {
+                messageBuilder.setMessageName(messageElement.getAttribute("name"));
+            }
+
             Map<String, String> overwriteXpath = new HashMap<>();
             Map<String, String> overwriteJsonPath = new HashMap<>();
             List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
@@ -155,6 +163,10 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
         if (payloadElement != null) {
             messageBuilder = new PayloadTemplateMessageBuilder();
+
+            if (messageElement.hasAttribute("name")) {
+                messageBuilder.setMessageName(messageElement.getAttribute("name"));
+            }
 
             List<Element> payload = DomUtils.getChildElements(payloadElement);
             if (CollectionUtils.isEmpty(payload)) {
