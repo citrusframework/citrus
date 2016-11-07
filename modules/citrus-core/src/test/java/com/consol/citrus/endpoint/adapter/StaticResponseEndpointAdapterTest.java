@@ -16,8 +16,11 @@
 
 package com.consol.citrus.endpoint.adapter;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,12 +30,17 @@ import java.util.Map;
 /**
  * @author Christoph Deppisch
  */
-public class StaticResponseEndpointAdapterTest {
+public class StaticResponseEndpointAdapterTest extends AbstractTestNGUnitTest {
+
+    @Autowired
+    private TestContextFactory testContextFactory;
 
     @Test
     public void testHandleMessage() {
         StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
-        Map<String, Object> header = new HashMap<String, Object>();
+        endpointAdapter.setTestContextFactory(testContextFactory);
+
+        Map<String, Object> header = new HashMap<>();
         header.put("Operation", "UnitTest");
 
         endpointAdapter.setMessageHeader(header);
@@ -49,7 +57,9 @@ public class StaticResponseEndpointAdapterTest {
     @Test
     public void testHandleMessageResource() {
         StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
-        Map<String, Object> header = new HashMap<String, Object>();
+        endpointAdapter.setTestContextFactory(testContextFactory);
+
+        Map<String, Object> header = new HashMap<>();
         header.put("Operation", "UnitTest");
 
         endpointAdapter.setMessageHeader(header);
@@ -61,5 +71,38 @@ public class StaticResponseEndpointAdapterTest {
         Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");
         Assert.assertNotNull(response.getHeader("Operation"));
         Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
+    }
+
+    @Test
+    public void testHandleMessageMapValues() {
+        StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+        endpointAdapter.setTestContextFactory(testContextFactory);
+
+        testContextFactory.getGlobalVariables().getVariables().put("responseId", "123456789");
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Operation", "citrus:upperCase('UnitTest')");
+        header.put("RequestId", "citrus:message(request.header('Id'))");
+        header.put("ResponseId", "${responseId}");
+
+        endpointAdapter.setMessageHeader(header);
+        endpointAdapter.setMessagePayload("<TestResponse>" +
+                    "<Text>Hello citrus:xpath(citrus:message(request.payload()), '/TestRequest/User')!</Text>" +
+                "</TestResponse>");
+
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestRequest>" +
+                            "<User>Christoph</User>" +
+                            "<Text>Hello World!</Text>" +
+                        "</TestRequest>")
+                .setHeader("Id", "987654321"));
+
+        Assert.assertEquals(response.getPayload(), "<TestResponse><Text>Hello Christoph!</Text></TestResponse>");
+        Assert.assertNotNull(response.getHeader("Operation"));
+        Assert.assertEquals(response.getHeader("Operation"), "UNITTEST");
+        Assert.assertNotNull(response.getHeader("RequestId"));
+        Assert.assertEquals(response.getHeader("RequestId"), "987654321");
+        Assert.assertNotNull(response.getHeader("ResponseId"));
+        Assert.assertEquals(response.getHeader("ResponseId"), "123456789");
     }
 }
