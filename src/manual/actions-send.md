@@ -19,7 +19,7 @@ A message consists of a message header (name-value pairs) and a message payload.
 
     <actions>
         <send endpoint="helloServiceEndpoint">
-            <message>
+            <message name="helloMessage">
                 <payload>
                     <TestMessage>
                         <Text>${text}</Text>
@@ -35,6 +35,7 @@ A message consists of a message header (name-value pairs) and a message payload.
 </testcase>
 ```
 
+The message name is optional and defines the message identifier in the local message store. This message name is very useful when accessing the message content later on during the test case. The local message store is handled per test case and contains all exchanged messages. 
 The sample uses both header and payload as message parts to send. In both parts you can use variable definitions (see **${text}** and **${messageId}**). So first of all let us recap what variables do. Test variables are defined at the very beginning of the test case and are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the expression ***${variable-name}*** .
 
 **Tip**
@@ -67,6 +68,7 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
         variable("messageId", "Mx1x123456789");
 
         send("helloServiceEndpoint")
+                .name("helloMessage")
                 .payload("<TestMessage>" +
                     "<Text>${text}</Text>" +
                     "</TestMessage>")
@@ -93,6 +95,7 @@ public class SendMessageTestRunner extends TestNGCitrusTestRunner {
         variable("messageId", "Mx1x123456789");
 
         send(action -> action.endpoint("helloServiceEndpoint")
+                .name("helloMessage")
                 .payload("<TestMessage>" +
                         "<Text>${text}</Text>" +
                     "</TestMessage>")
@@ -107,28 +110,12 @@ Instead of using the XML tags for send we use methods from **TestNGCitrusTestDes
 Now that the message sender pattern is clear we can concentrate on how to specify the message content to be sent. There are several possibilities for you to define message content in Citrus:
 
 *  **message** : This element constructs the message to be sent. There are several child elements available:
-
 *  **payload** : Nested XML payload as direct child node.
-
 *  **data** : Inline CDATA definition of the message payload
-
-*  **resource** : External file resource holding the message payload
-
-The syntax would be: <resource file="classpath:com/consol/citrus/messages/TestRequest.xml" />
-
-The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:) or classpath resource (classpath:).
-
+*  **resource** : External file resource holding the message payload The syntax would be: `<resource file="classpath:com/consol/citrus/messages/TestRequest.xml" />` The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:) or classpath resource (classpath:).
 *  **element** : Explicitly overwrite values in the XML message payload using XPath. You can replace message content with dynamic values before sending. Each <element> entry provides a "path" and "value" attribute. The "path" gives a XPath expression evaluating to a XML node element or attribute in the message. The "value" can be a variable expression or any other static value. Citrus will replace the value before sending the message.
-
-
-
 *  **header** : Defines a header for the message (e.g. JMS header information or SOAP header):
-
 *  **element** : Each header receives a "name" and "value". The "name" will be the name of the header entry and "value" its respective value. Again the usage of variable expressions as value is supported here, too.
-
-
-
-
 
 **XML DSL** 
 
