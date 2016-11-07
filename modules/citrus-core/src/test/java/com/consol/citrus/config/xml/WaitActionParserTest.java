@@ -17,9 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.actions.WaitAction;
-import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
-import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.condition.*;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,7 +38,7 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         String httpUrl = "http://some.url/";
         String filePath = "/some/path";
 
-        assertActionCount(4);
+        assertActionCount(5);
         assertActionClassAndName(WaitAction.class, "wait");
 
         WaitAction action = getNextTestActionFromTest();
@@ -58,11 +56,21 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         condition = getHttpCondition(httpUrl, "503", "2000");
         ((HttpCondition)condition).setMethod("GET");
         validateWaitAction(action, null, "3000", DEFAULT_INTERVAL, condition);
+
+        action = getNextTestActionFromTest();
+        condition = getMessageCondition("request");
+        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
     }
 
     private Condition getFileCondition(String path) {
         FileCondition condition = new FileCondition();
         condition.setFilePath(path);
+        return condition;
+    }
+
+    private Condition getMessageCondition(String name) {
+        MessageCondition condition = new MessageCondition();
+        condition.setMessageName(name);
         return condition;
     }
 
@@ -93,6 +101,11 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
             Assert.assertNotNull(condition);
             Assert.assertEquals(condition.getName(), expectedCondition.getName());
             Assert.assertEquals(condition.getFilePath(), ((FileCondition) expectedCondition).getFilePath());
+        } else if (expectedCondition instanceof MessageCondition) {
+            MessageCondition condition = (MessageCondition) action.getCondition();
+            Assert.assertNotNull(condition);
+            Assert.assertEquals(condition.getName(), expectedCondition.getName());
+            Assert.assertEquals(condition.getMessageName(), ((MessageCondition) expectedCondition).getMessageName());
         }
     }
 }
