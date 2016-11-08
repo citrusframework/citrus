@@ -8,7 +8,7 @@ As already mentioned before a message consists of a message header (name-value p
 
 ```xml
 <receive endpoint="helloServiceEndpoint">
-    <message>
+    <message name="helloRequest">
         <payload>
             <TestMessage>
                 <Text>${text}</Text>
@@ -22,7 +22,10 @@ As already mentioned before a message consists of a message header (name-value p
 </receive>
 ```
 
-Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload and header values. We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:
+Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload and header values. The message name is optional and defines the message identifier in the local message store. 
+This message name is very useful when accessing the message content later on during the test case. The local message store is handled per test case and contains all exchanged messages. 
+
+We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:
 
 **Java DSL designer** 
 
@@ -30,6 +33,7 @@ Overall the receive message action looks quite similar to the send message actio
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
+        .name("helloRequest")
         .payload("<TestMessage>" +
                     "<Text>${text}</Text>" +
                 "</TestMessage>")
@@ -44,6 +48,7 @@ public void messagingTest() {
 @CitrusTest
 public void messagingTest() {
     receive(action -> action.endpoint("helloServiceEndpoint")
+                .name("helloRequest")
                 .payload("<TestMessage>" +
                       "<Text>${text}</Text>" +
                     "</TestMessage>")

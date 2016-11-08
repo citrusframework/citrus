@@ -23,6 +23,9 @@
   <xs:element name="description" type="xs:string"/>
 
   <xs:element name="purge-jms-queues">
+    <xs:annotation>
+      <xs:documentation>Continuously receives messages from a destination until no more messages are left - emulating the purge operation</xs:documentation>
+    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>

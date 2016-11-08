@@ -75,11 +75,13 @@ public class Template extends AbstractTestAction {
         } else {
             innerContext = new TestContext();
             innerContext.setFunctionRegistry(context.getFunctionRegistry());
+
             GlobalVariables globalVariables = new GlobalVariables();
             globalVariables.getVariables().putAll(context.getGlobalVariables());
             innerContext.setGlobalVariables(globalVariables);
             innerContext.getVariables().putAll(context.getVariables());
-            
+
+            innerContext.setMessageStore(context.getMessageStore());
             innerContext.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
             innerContext.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
             innerContext.setTestListeners(context.getTestListeners());

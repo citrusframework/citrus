@@ -1,6 +1,7 @@
 channel=com.consol.citrus.channel.ChannelEndpointComponent
 jms=com.consol.citrus.jms.endpoint.JmsEndpointComponent
 http=com.consol.citrus.http.client.HttpEndpointComponent
+https=com.consol.citrus.http.client.HttpsEndpointComponent
 soap=com.consol.citrus.ws.client.WebServiceEndpointComponent
 ftp=com.consol.citrus.ftp.client.FtpEndpointComponent
 mail=com.consol.citrus.mail.client.MailEndpointComponent

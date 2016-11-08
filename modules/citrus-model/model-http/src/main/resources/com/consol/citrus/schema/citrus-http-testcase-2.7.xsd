@@ -165,6 +165,7 @@
             <xs:attribute name="schema-repository" type="xs:string"/>
             <xs:attribute name="validator" type="xs:string"/>
             <xs:attribute name="data-dictionary" type="xs:string"/>
+            <xs:attribute name="name" type="xs:string"/>
             <xs:attribute name="type" default="xml" type="xs:string"/>
           </xs:complexType>
         </xs:element>
@@ -303,6 +304,7 @@
                 </xs:element>
               </xs:choice>
             </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
             <xs:attribute name="type" default="xml" type="xs:string"/>
           </xs:complexType>
         </xs:element>
@@ -339,6 +341,7 @@
               </xs:element>
             </xs:choice>
           </xs:sequence>
+          <xs:attribute name="name" type="xs:string"/>
           <xs:attribute name="type" default="xml" type="xs:string"/>
         </xs:complexType>
       </xs:element>
@@ -440,6 +443,7 @@
           <xs:attribute name="schema-repository" type="xs:string"/>
           <xs:attribute name="validator" type="xs:string"/>
           <xs:attribute name="data-dictionary" type="xs:string"/>
+          <xs:attribute name="name" type="xs:string"/>
           <xs:attribute name="type" default="xml" type="xs:string"/>
         </xs:complexType>
       </xs:element>

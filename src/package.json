@@ -6,7 +6,7 @@
     "gitbook-cli": "2.3.0",
     "gitbook-plugin-edit-link": "2.0.2",
     "gitbook-plugin-code_tomorrow_scheme": "0.1.3",
-    "gitbook-plugin-anchors": "0.7.1"
+    "gitbook-plugin-anchors": "0.6.0"
   },
 
   "scripts": {

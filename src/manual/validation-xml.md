@@ -1,4 +1,4 @@
-### Xml message validation
+### XML message validation
 
 XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message validator implementations that are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema validation. The default XML message validator implementation is active by default and can be overwritten with a custom implementation using the bean id **defaultXmlMessageValidator** .
 
@@ -78,7 +78,7 @@ The timestamp value in our next example will dynamically change from test run to
 **XML DSL** 
 
 ```xml
- <message>
+<message>
     <payload>
         <TestMessage>
             <MessageId>${messageId}</MessageId>
@@ -108,6 +108,45 @@ public void receiveMessageTest() {
 ```
 
 Of course you can use the inline **@ignore@** placeholder in an external file resource, too.
+
+### Customize XML parser and serializer
+
+When working with XML data format parsing and serializing is a common task. XML structures are parsed to a DOM (Document Object Model) representation in order
+to process elements, attributes and text nodes. Also DOM node objects get serialized to a String message payload representation. The XML parser and serializer is customizable
+to a certain level. By default Citrus uses the [DOM Level 3 Load and Save](https://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/) implementation with following settings:
+ 
+*Parser settings*
+* **cdata-sections** = **true**
+* **split-cdata-sections** = **false**
+* **validate-if-schema** = **true**
+* **element-content-whitespace** = **false**
+
+*Serializer settings* 
+* **format-pretty-print** = **true**
+* **split-cdata-sections** = **false**
+* **element-content-whitespace** = **true**
+
+The parameters are also described in [W3C DOM configuration](https://www.w3.org/TR/DOM-Level-3-Core/core.html#DOMConfiguration) documentation. We can customize the default settings by adding
+a *XmlConfigurer* Spring bean to the Citrus application context.
+
+```xml
+<bean id="xmlConfigurer" class="com.consol.citrus.xml.XmlConfigurer">
+    <property name="parseSettings">
+        <map>
+            <entry key="validate-if-schema" value="false" value-type="java.lang.Boolean"/>
+        </map>
+    </property>
+    <property name="serializeSettings">
+        <map>
+            <entry key="comments" value="false" value-type="java.lang.Boolean"/>
+            <entry key="format-pretty-print" value="false" value-type="java.lang.Boolean"/>
+        </map>
+    </property>
+</bean>
+```
+
+**Note**
+This configuration is of global nature. All XML processing operations will be affected with this configuration.
 
 ### Groovy XML validation
 

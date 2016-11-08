@@ -22,6 +22,10 @@
       <wait milliseconds="3000">
         <http url="http://some.url/" method="GET" status="503" timeout="2000" />
       </wait>
+
+      <wait>
+        <message name="request"/>
+      </wait>
     </actions>
   </testcase>
 

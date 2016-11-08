@@ -17,9 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.actions.WaitAction;
-import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
-import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.condition.*;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.xerces.util.DOMUtil;
@@ -62,6 +60,8 @@ public class WaitActionParser implements BeanDefinitionParser {
                 condition = parseHttpCondition(conditionElement);
             } else if (conditionName.equals("file")) {
                 condition = parseFileCondition(conditionElement);
+            } else if (conditionName.equals("message")) {
+                condition = parseMessageCondition(conditionElement);
             } else {
                 throw new CitrusRuntimeException(String.format("Invalid 'wait' action configuration. Unknown condition '%s'", conditionName));
             }
@@ -93,6 +93,18 @@ public class WaitActionParser implements BeanDefinitionParser {
         if (StringUtils.hasText(timeout)) {
             condition.setTimeout(timeout);
         }
+        return condition;
+    }
+
+    /**
+     * Parse message store condition.
+     * @param element
+     * @return
+     */
+    private Condition parseMessageCondition(Element element) {
+        MessageCondition condition = new MessageCondition();
+        condition.setMessageName(element.getAttribute("name"));
+
         return condition;
     }
 

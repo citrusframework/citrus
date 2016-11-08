@@ -36,7 +36,7 @@ public class HttpEndpointComponent extends AbstractEndpointComponent {
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         HttpClient client = new HttpClient();
 
-        client.getEndpointConfiguration().setRequestUrl("http://" + resourcePath + getParameterString(parameters, HttpEndpointConfiguration.class));
+        client.getEndpointConfiguration().setRequestUrl(getScheme() + resourcePath + getParameterString(parameters, HttpEndpointConfiguration.class));
 
         if (parameters.containsKey("requestMethod")) {
             String method = parameters.remove("requestMethod");
@@ -51,5 +51,13 @@ public class HttpEndpointComponent extends AbstractEndpointComponent {
         enrichEndpointConfiguration(client.getEndpointConfiguration(),
                 getEndpointConfigurationParameters(parameters, HttpEndpointConfiguration.class), context);
         return client;
+    }
+
+    /**
+     * Gets http uri scheme.
+     * @return
+     */
+    protected String getScheme() {
+        return "http://";
     }
 }

@@ -56,6 +56,9 @@ public class FunctionConfig {
     private final LocalHostAddressFunction localHostAddressFunction = new LocalHostAddressFunction();
     private final ChangeDateFunction changeDateFunction = new ChangeDateFunction();
     private final ReadFileResourceFunction readFileResourceFunction = new ReadFileResourceFunction();
+    private final LoadMessageFunction loadMessageFunction = new LoadMessageFunction();
+    private final XpathFunction xpathFunction = new XpathFunction();
+    private final JsonPathFunction jsonPathFunction = new JsonPathFunction();
 
     @Bean(name = "functionRegistry")
     public FunctionRegistry getFunctionRegistry() {
@@ -98,6 +101,9 @@ public class FunctionConfig {
         citrusFunctionLibrary.getMembers().put("localHostAddress", localHostAddressFunction);
         citrusFunctionLibrary.getMembers().put("changeDate", changeDateFunction);
         citrusFunctionLibrary.getMembers().put("readFile", readFileResourceFunction);
+        citrusFunctionLibrary.getMembers().put("message", loadMessageFunction);
+        citrusFunctionLibrary.getMembers().put("xpath", xpathFunction);
+        citrusFunctionLibrary.getMembers().put("jsonPath", jsonPathFunction);
 
         return citrusFunctionLibrary;
     }

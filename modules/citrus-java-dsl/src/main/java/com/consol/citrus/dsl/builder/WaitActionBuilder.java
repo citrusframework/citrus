@@ -68,6 +68,17 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	}
 
 	/**
+	 * The message condition to wait for during execution.
+	 * @param name
+	 * @return
+	 */
+	public WaitConditionBuilder message(String name) {
+		MessageCondition condition = new MessageCondition();
+		condition.setMessageName(name);
+		return condition(condition);
+	}
+
+	/**
 	 * The file condition to wait for during execution.
 	 * @param path
 	 * @return

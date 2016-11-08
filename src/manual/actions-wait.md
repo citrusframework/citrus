@@ -5,10 +5,8 @@ With this action you can make your test wait until a certain condition is satisf
 If the check does not exceed within the defined overall waiting time then the test execution fails with an appropriate error message. There are different types of conditions to check.
 
 *  **http** : This condition is based on a Http request call on a server endpoint. Citrus will wait until the Http response is as defined (e.g. Http 200 OK). This is useful when you want to wait for a server to start.
-
 *  **file** : This condition checks for the existence of a file on the local file system. Citrus will wait until the file is present.
-
-
+*  **message** : This condition checks for the existence of a message in the local message store of the current test case. Citrus will wait until the message with the given name is present.
 
 Next let us have a look at a simple example:
 
@@ -59,6 +57,32 @@ public void waitTest() {
 ```
 
 Citrus checks for the file to exist under the given path. Only if the file exists the test will continue with further test actions.
+
+Next let us have a look at the message condition usage:
+
+**XML DSL** 
+
+```xml
+<testcase name="waitTest">
+    <actions>
+        <wait seconds="10" interval="2000" >
+          <message name="helloRequest" />
+        <wait/>
+    </actions>
+</testcase>
+```
+
+**Java DSL designer and runner** 
+
+```java
+@CitrusTest
+public void waitTest() {
+    waitFor().message("helloRequest");
+}
+```
+
+Citrus checks for the message with the name **helloRequest** in the local message store. Only if the message with the given name is found the test will continue with further test actions. The local message
+store is automatically filled with all exchanged messages (send or receive) in a test case. The message names are defined in the respective send or receive operations in the test.
 
 When should somebody use this action? This action is very useful when you want your test to wait for a certain event to occur before continuing with the test execution. For example if you wish that your test waits until a Docker container is started or for an application to create a log file before continuing, then use this action. You can also create your own condition statements and bind it to the test action.
 

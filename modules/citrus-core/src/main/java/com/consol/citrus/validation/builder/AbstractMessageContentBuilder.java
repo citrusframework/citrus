@@ -34,6 +34,9 @@ import java.util.*;
  */
 public abstract class AbstractMessageContentBuilder implements MessageContentBuilder {
 
+    /** Optional message name */
+    private String messageName = "";
+
     /** The control headers expected for this message */
     private Map<String, Object> messageHeaders = new HashMap<>();
 
@@ -59,6 +62,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
 
         try {
             Message message = new DefaultMessage(payload, buildMessageHeaders(context));
+            message.setName(messageName);
 
             if (payload != null) {
                 if (dataDictionary != null) {
@@ -113,6 +117,24 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
+    }
+
+    /**
+     * Sets the messageName property.
+     *
+     * @param messageName
+     */
+    public void setMessageName(String messageName) {
+        this.messageName = messageName;
+    }
+
+    /**
+     * Gets the value of the messageName property.
+     *
+     * @return the messageName
+     */
+    public String getMessageName() {
+        return messageName;
     }
 
     @Override

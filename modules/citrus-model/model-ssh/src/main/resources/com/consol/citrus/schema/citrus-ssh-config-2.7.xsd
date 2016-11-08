@@ -21,6 +21,9 @@
      attributeFormDefault="unqualified">
     
     <xs:element name="server">
+        <xs:annotation>
+          <xs:documentation>SSH server component</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
           <xs:attribute name="id" type="xs:ID" use="required"/>
           <xs:attribute name="port" type="xs:string">
