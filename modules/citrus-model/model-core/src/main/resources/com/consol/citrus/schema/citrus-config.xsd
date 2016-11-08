@@ -453,18 +453,27 @@
     </xs:element>
 
     <xs:element name="empty-response-adapter">
+      <xs:annotation>
+        <xs:documentation>Generates empty response message</xs:documentation>
+      </xs:annotation>
       <xs:complexType>
         <xs:attribute name="id" type="xs:ID"/>
       </xs:complexType>
     </xs:element>
 
     <xs:element name="timeout-producing-adapter">
+      <xs:annotation>
+        <xs:documentation>Adapter will not respond to calling clients forcing a timeout.</xs:documentation>
+      </xs:annotation>
       <xs:complexType>
         <xs:attribute name="id" type="xs:ID"/>
       </xs:complexType>
     </xs:element>
 
     <xs:element name="static-response-adapter">
+      <xs:annotation>
+        <xs:documentation>Uses static response message with given payload and header information.</xs:documentation>
+      </xs:annotation>
       <xs:complexType>
         <xs:sequence>
           <xs:element name="payload" type="xs:string" minOccurs="0"/>
