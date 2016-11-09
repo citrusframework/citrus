@@ -93,6 +93,17 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
     }
+
+    @Test
+    public void testMessageBuilderWithPayloadResourceGzip() {
+        messageBuilder = new PayloadTemplateMessageBuilder();
+
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/button.png");
+
+        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.GZIP.name());
+
+        Assert.assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
+    }
     
     @Test
     public void testMessageBuilderWithHeaders() {

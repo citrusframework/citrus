@@ -29,6 +29,8 @@ public enum MessageType {
     PLAINTEXT,
     BINARY,
     BINARY_BASE64,
+    GZIP,
+    GZIP_BASE64,
     MSCONS;
 
     /**

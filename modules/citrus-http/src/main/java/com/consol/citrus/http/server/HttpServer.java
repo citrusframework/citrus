@@ -18,8 +18,7 @@ package com.consol.citrus.http.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageConverter;
-import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
-import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import com.consol.citrus.http.servlet.*;
 import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -142,6 +141,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             }
 
             addRequestCachingFilter();
+            addGzipFilter();
 
             contextHandler.setServletHandler(servletHandler);
             
@@ -202,6 +202,19 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
         FilterHolder filterHolder = new FilterHolder(new RequestCachingServletFilter());
         filterHolder.setName("request-caching-filter");
+        servletHandler.addFilter(filterHolder, filterMapping);
+    }
+
+    /**
+     * Adds gzip filter for automatic response messages compressing.
+     */
+    private void addGzipFilter() {
+        FilterMapping filterMapping = new FilterMapping();
+        filterMapping.setFilterName("gzip-filter");
+        filterMapping.setPathSpec("/*");
+
+        FilterHolder filterHolder = new FilterHolder(new GzipServletFilter());
+        filterHolder.setName("gzip-filter");
         servletHandler.addFilter(filterHolder, filterMapping);
     }
 

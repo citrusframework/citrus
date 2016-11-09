@@ -112,6 +112,24 @@ public abstract class TypeConversionUtils {
             }
         }
 
+        if (InputStream.class.isAssignableFrom(type)) {
+            if (target instanceof byte[]) {
+                return (T) new ByteArrayInputStream((byte[]) target);
+            } else if (target instanceof String) {
+                try {
+                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes(Citrus.CITRUS_FILE_ENCODING));
+                } catch (UnsupportedEncodingException e) {
+                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes());
+                }
+            } else {
+                try {
+                    return (T) new ByteArrayInputStream(target.toString().getBytes(Citrus.CITRUS_FILE_ENCODING));
+                } catch (UnsupportedEncodingException e) {
+                    return (T) new ByteArrayInputStream(target.toString().getBytes());
+                }
+            }
+        }
+
         try {
             return new SimpleTypeConverter().convertIfNecessary(target, type);
         } catch (ConversionNotSupportedException e) {

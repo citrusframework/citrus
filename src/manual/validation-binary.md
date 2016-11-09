@@ -15,14 +15,24 @@ In the test case receiving action we tell Citrus to use binary base64 message va
 ```xml
 <receive endpoint="httpMessageEndpoint">
     <message type="binary_base64">
-        <data></data>
+        <data>citrus:encodeBase64('Hello World!')</data>
     </message>
 </receive>
 ```
 
 With the message format type **type="binary_base64"** Citrus performs the base64 character sequence validation. Incoming message content is automatically encoded as base64 String and compared to the expected data. This way we can make sure that the binary content is as expected.
 
-By the way sending binary base64 messages in Citrus is also very easy. Just use the binary base64 encoding function to do so.
+By the way sending binary messages in Citrus is also very easy. Just use the **type="binary"** message type in the send operation. Citrus now converts the message payload to a binary stream as payload.
+
+```xml
+<send endpoint="httpMessageEndpoint">
+    <message type="binary">
+        <data>Hello World!</data>
+    </message>
+</send>
+```
+
+Base64 encoding is also supported in outbound messages. Just use the **encodeBase64** function in Citrus. The result is a base64 encoded String as message payload.
 
 ```xml
 <send endpoint="httpMessageEndpoint">
@@ -31,4 +41,3 @@ By the way sending binary base64 messages in Citrus is also very easy. Just use 
     </message>
 </send>
 ```
-

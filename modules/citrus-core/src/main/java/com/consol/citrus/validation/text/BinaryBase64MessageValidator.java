@@ -34,7 +34,6 @@ public class BinaryBase64MessageValidator extends PlainTextMessageValidator {
     @Override
     public void validateMessagePayload(Message receivedMessage, Message controlMessage,
                                        ValidationContext validationContext, TestContext context) throws ValidationException {
-
         if (receivedMessage.getPayload() instanceof byte[]) {
             receivedMessage.setPayload(Base64.encodeBase64String(receivedMessage.getPayload(byte[].class)));
         }

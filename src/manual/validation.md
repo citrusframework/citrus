@@ -81,6 +81,7 @@ In the previous sections we have already seen some examples on how to overwrite 
 *  **defaultJsonPathMessageValidator**: com.consol.citrus.validation.json.JsonPathMessageValidator 
 *  **defaultPlaintextMessageValidator**: com.consol.citrus.validation.text.PlainTextMessageValidator 
 *  **defaultBinaryBase64MessageValidator**: com.consol.citrus.validation.text.BinaryBase64MessageValidator 
+*  **defaultGzipBinaryBase64MessageValidator**: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator 
 *  **defaultXhtmlMessageValidator**: com.consol.citrus.validation.xhtml.XhtmlMessageValidator 
 *  **defaultGroovyXmlMessageValidator**: com.consol.citrus.validation.script.GroovyXmlMessageValidator 
 *  **defaultGroovyJsonMessageValidator**: com.consol.citrus.validation.script.GroovyJsonMessageValidator 
@@ -94,6 +95,7 @@ Overwriting a single message validator with a custom implementation is then very
     <citrus:validator ref="defaultGroovyXmlMessageValidator"/>
     <citrus:validator ref="defaultPlaintextMessageValidator"/>
     <citrus:validator ref="defaultBinaryBase64MessageValidator"/>
+    <citrus:validator ref="defaultGzipBinaryBase64MessageValidator"/>
     <citrus:validator class="com.consol.citrus.validation.custom.CustomMessageValidator"/>
     <citrus:validator ref="defaultJsonMessageValidator"/>
     <citrus:validator ref="defaultJsonPathMessageValidator"/>
