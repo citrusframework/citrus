@@ -117,3 +117,20 @@ You can also use a script to create variable values. This is extremely handy whe
 We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed within the script. For longer script code the use of ***`<![CDATA[ ]]>`*** sections is recommended.
 
 Citrus uses the javax ScriptEngine mechanism in order to evaluate the script code. By default Groovy is supported in any Citrus project. So you can add additional ScriptEngine implementations to your project and support other script types, too.
+
+### Escaping variables expression
+
+The test variables expression syntax ***"${variable-name}"*** is preserved to evaluate to a test variable within the current test context. However the same syntax may be part of a message content
+as is. So you need to somehow escape the syntax from beeing interpreted as test variable syntax. You can do this by using the variable expression escaping **//** character sequence wrapping the actual variable name like this
+
+```
+This is a escaped variable expression ${//escaped//} and should not lead to unknown variable exceptions within Citrus.
+```
+
+The escaped expression **${//escaped//}** above will result in the string **${escaped}** where *escaped* is not treated as a test variable name but as a normal string in the message payload. This way you are able to have the same variable syntax in a
+message content without interfering with the Citrus variable expression syntax. As a result Citrus will not complain about not finding the test variable **escaped** in the current context. The variable syntax escaping characters **//** are automatically 
+removed when the expression is processed by Citrus. So we will get the following result after processing.
+
+```
+This is a escaped variable expression ${escaped} and should not lead to unknown variable exceptions within Citrus.
+```

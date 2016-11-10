@@ -69,6 +69,19 @@ public final class VariableUtils {
 
         return variable;
     }
+
+    /**
+     * Cut off variables escaping
+     * @param variable
+     * @return
+     */
+    public static String cutOffVariablesEscaping(String variable) {
+        if (variable.startsWith(Citrus.VARIABLE_ESCAPE) && variable.endsWith(Citrus.VARIABLE_ESCAPE)) {
+            return variable.substring(Citrus.VARIABLE_ESCAPE.length(), variable.length() - Citrus.VARIABLE_ESCAPE.length());
+        }
+
+        return variable;
+    }
     
     /**
      * Checks whether a given expression is a variable name.
