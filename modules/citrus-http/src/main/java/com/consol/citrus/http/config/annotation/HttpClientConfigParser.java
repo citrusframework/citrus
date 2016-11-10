@@ -82,6 +82,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
             builder.endpointResolver(getReferenceResolver().resolve(annotation.endpointResolver(), EndpointUriResolver.class));
         }
 
+        builder.defaultAcceptHeader(annotation.defaultAcceptHeader());
         builder.charset(annotation.charset());
         builder.contentType(annotation.contentType());
         builder.pollingInterval(annotation.pollingInterval());

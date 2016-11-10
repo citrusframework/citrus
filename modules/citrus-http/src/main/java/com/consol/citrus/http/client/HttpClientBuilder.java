@@ -125,6 +125,16 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     /**
+     * Sets the default accept header.
+     * @param flag
+     * @return
+     */
+    public HttpClientBuilder defaultAcceptHeader(boolean flag) {
+        endpoint.getEndpointConfiguration().setDefaultAcceptHeader(flag);
+        return this;
+    }
+
+    /**
      * Sets the content type.
      * @param contentType
      * @return

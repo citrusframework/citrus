@@ -73,10 +73,10 @@ Citrus uses the Spring REST template mechanism for sending out HTTP requests. Th
 
 ```xml
 <citrus-http:client id="helloHttpClient"
-                               request-url="http://localhost:8080/hello"
-                               request-method="GET"
-                               content-type="text/plain"
-                               rest-template="customizedRestTemplate"/>
+                   request-url="http://localhost:8080/hello"
+                   request-method="GET"
+                   content-type="text/plain"
+                   rest-template="customizedRestTemplate"/>
                                
 <!-- Customized rest template -->
 <bean name="customizedRestTemplate" class="org.springframework.web.client.RestTemplate">
@@ -128,7 +128,7 @@ The test case is now ready to use the specific Http test actions by using the pr
 <http:send-request client="httpClient">
   <http:POST path="/customer">
     <http:headers content-type="application/xml" accept="application/xml, */*">
-      <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+      <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
     </http:headers>
     <http:body>
       <http:data>
@@ -169,7 +169,7 @@ Of course when sending Http client requests we are also interested in receiving 
 ```xml
 <http:receive-response client="httpClient">
   <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
-    <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+    <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
   </http:headers>
   <http:body>
     <http:data>
@@ -199,7 +199,7 @@ public void httpActionTest() {
                     "<id>citrus:randomNumber()</id>" +
                     "<name>testuser</name>" +
                   "</customer>")
-          .header("CustomHeaderId", "${custom_header_id}")
+          .header("X-CustomHeaderId", "${custom_header_id}")
           .contentType("text/xml")
           .accept("text/xml, */*");
 
@@ -209,10 +209,38 @@ public void httpActionTest() {
           .payload("<customerResponse>" +
                     "<success>true</success>" +
                   "</customerResponse>")
-          .header("CustomHeaderId", "${custom_header_id}")
+          .header("X-CustomHeaderId", "${custom_header_id}")
           .version("HTTP/1.1");
 }
 ```
+
+There is one more setting on the client to be aware of. By default the client component will add the **Accept** http header and set its value to a list of all supported encodings on the host operating system. As
+this list can get very long you may want to not set this default accept header. The setting is done in the Spring RestTemplate:
+ 
+```xml
+<bean name="customizedRestTemplate" class="org.springframework.web.client.RestTemplate">
+    <property name="messageConverters">
+        <util:list id="converter">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="writeAcceptCharset" value="false"/>
+            </bean>
+        </util:list>
+    </property>
+</bean>
+``` 
+
+You would have add this custom RestTemplate configuration and set it to the client component with **rest-template** property. But fortunately the Citrus client component provides a separate setting **default-accept-header** which
+is a Boolean setting. By default it is set to **true** so the default accept header is automatically added to all requests. If you set this flag to **false** the header is not set:
+
+```xml
+<citrus-http:client id="helloHttpClient"
+                   request-url="http://localhost:8080/hello"
+                   request-method="GET"
+                   content-type="text/plain"
+                   default-accept-header="false"/>
+```
+
+Of course you can set the **Accept** header on each send operation in order to tell the server what kind of content types are supported in response messages.
 
 Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.
 
@@ -266,7 +294,7 @@ So lets get back to our mission of providing response messages as server to conn
 <http:receive-request server="helloHttpServer">
   <http:POST path="/test">
     <http:headers content-type="application/xml" accept="application/xml, */*">
-      <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+      <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
       <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
     </http:headers>
     <http:body>
@@ -287,7 +315,7 @@ So lets get back to our mission of providing response messages as server to conn
 <http:send-response server="helloHttpServer">
   <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
     <http:header name="X-MessageId" value="${message_id}"/>
-    <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+    <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
     <http:header name="Content-Type" value="application/xml"/>
   </http:headers>
   <http:body>
@@ -321,7 +349,7 @@ public void httpServerActionTest() {
                   "</testRequestMessage>")
           .contentType("application/xml")
           .accept("application/xml, */*")
-          .header("CustomHeaderId", "${custom_header_id}")
+          .header("X-CustomHeaderId", "${custom_header_id}")
           .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
           .extractFromHeader("X-MessageId", "message_id");
 
@@ -333,7 +361,7 @@ public void httpServerActionTest() {
                   "</testResponseMessage>")
           .version("HTTP/1.1")
           .contentType("application/xml")
-          .header("CustomHeaderId", "${custom_header_id}")
+          .header("X-CustomHeaderId", "${custom_header_id}")
           .header("X-MessageId", "${message_id}");
 }
 ```
@@ -348,7 +376,7 @@ When dealing with HTTP request/response communication we always deal with HTTP s
 <http:send-request client="httpClient">
   <http:POST>
     <http:headers>
-        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
         <http:header name="Content-Type" value="text/xml"/>
         <http:header name="Accept" value="text/xml,*/*"/>
     </http:headers>
@@ -363,13 +391,13 @@ When dealing with HTTP request/response communication we always deal with HTTP s
 </http:send-request>
 ```
 
-We are able to set custom headers (**CustomHeaderId**) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as **Content-Type** . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:
+We are able to set custom headers (**X-CustomHeaderId**) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as **Content-Type** . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:
 
 ```xml
 POST /test HTTP/1.1
 Accept: text/xml, */*
 Content-Type: text/xml
-CustomHeaderId: 123456789
+X-CustomHeaderId: 123456789
 Accept-Charset: macroman
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8091
@@ -385,7 +413,7 @@ On server side testers are interested in validating the HTTP headers. Within Cit
 <http:receive-request server="httpServer">
   <http:POST>
     <http:headers>
-        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
         <http:header name="Content-Type" value="text/xml"/>
         <http:header name="Accept" value="text/xml,*/*"/>
     </http:headers>
@@ -407,7 +435,7 @@ Now that we have accepted the client request and validated the contents we are a
 ```xml
 <http:send-response server="httpServer">
     <http:headers status="200" reason-phrase="OK">
-        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
         <http:header name="Content-Type" value="text/xml"/>
     </http:headers>
     <http:body>
@@ -420,7 +448,7 @@ Now that we have accepted the client request and validated the contents we are a
 </http:send-response>
 ```
 
-Once more we set the custom header entry (**CustomHeaderId**) and a HTTP reserved header (**Content-Type**) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names **status** in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:
+Once more we set the custom header entry (**X-CustomHeaderId**) and a HTTP reserved header (**Content-Type**) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names **status** in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:
 
 ```xml
 HTTP/1.1 200 OK
@@ -441,7 +469,7 @@ The only thing that is missing right now is the validation of HTTP status codes 
 ```xml
 <http:receive-response client="httpClient">
     <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
-        <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+        <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
     </http:headers>
     <http:body>
         <http:payload>

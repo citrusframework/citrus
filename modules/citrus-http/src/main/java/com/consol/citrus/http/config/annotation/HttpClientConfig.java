@@ -80,6 +80,12 @@ public @interface HttpClientConfig {
     String charset() default "UTF-8";
 
     /**
+     * Default accept header.
+     * @return
+     */
+    boolean defaultAcceptHeader() default true;
+
+    /**
      * Content type.
      * @return
      */

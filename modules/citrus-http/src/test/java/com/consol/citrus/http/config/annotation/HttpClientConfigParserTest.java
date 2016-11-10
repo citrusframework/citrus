@@ -52,6 +52,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
             requestMethod=HttpMethod.GET,
             contentType="text/xml",
             charset="ISO-8859-1",
+            defaultAcceptHeader=false,
             timeout=10000L,
             messageConverter="messageConverter",
             requestFactory="soapRequestFactory",
@@ -117,6 +118,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient1.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().size(), 0L);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader(), true);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getTimeout(), 5000L);
 
@@ -131,6 +133,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getMessageConverter(), messageConverter);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getEndpointUriResolver(), endpointResolver);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader(), false);
 
         // 3rd message sender
         Assert.assertNotNull(httpClient3.getEndpointConfiguration().getRestTemplate());

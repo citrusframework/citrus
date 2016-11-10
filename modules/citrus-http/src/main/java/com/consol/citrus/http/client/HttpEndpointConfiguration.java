@@ -24,6 +24,7 @@ import com.consol.citrus.message.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.*;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.web.client.RestTemplate;
@@ -71,6 +72,9 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
+
+    /** Auto add default accept header with os supported content-types */
+    private boolean defaultAcceptHeader = true;
 
     /**
      * Get the complete request URL.
@@ -186,6 +190,14 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
             restTemplate.setRequestFactory(getRequestFactory());
         }
 
+        if (!defaultAcceptHeader) {
+            for (org.springframework.http.converter.HttpMessageConverter messageConverter: restTemplate.getMessageConverters()) {
+                if (messageConverter instanceof StringHttpMessageConverter) {
+                    ((StringHttpMessageConverter) messageConverter).setWriteAcceptCharset(defaultAcceptHeader);
+                }
+            }
+        }
+
         return restTemplate;
     }
 
@@ -274,4 +286,21 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
         this.messageConverter = messageConverter;
     }
 
+    /**
+     * Sets the defaultAcceptHeader property.
+     *
+     * @param defaultAcceptHeader
+     */
+    public void setDefaultAcceptHeader(boolean defaultAcceptHeader) {
+        this.defaultAcceptHeader = defaultAcceptHeader;
+    }
+
+    /**
+     * Gets the value of the defaultAcceptHeader property.
+     *
+     * @return the defaultAcceptHeader
+     */
+    public boolean isDefaultAcceptHeader() {
+        return defaultAcceptHeader;
+    }
 }
