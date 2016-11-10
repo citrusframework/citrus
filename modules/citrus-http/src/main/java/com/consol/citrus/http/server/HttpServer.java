@@ -33,10 +33,12 @@ import org.springframework.context.*;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -76,6 +78,12 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Set list of custom connectors with custom configuration options */
     private Connector[] connectors;
+
+    /** Set of custom servlet filters */
+    private Map<String, Filter> filters = new HashMap<>();
+
+    /** Set of custom servlet filter mappings */
+    private Map<String, String> filterMappings = new HashMap<>();
 
     /** Servlet mapping path */
     private String servletMappingPath = "/*";
@@ -140,8 +148,23 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 addDispatcherServlet();
             }
 
-            addRequestCachingFilter();
-            addGzipFilter();
+            for (Map.Entry<String, Filter> filterEntry : filters.entrySet()) {
+                String filterMappingPathSpec = filterMappings.get(filterEntry.getKey());
+                FilterMapping filterMapping = new FilterMapping();
+                filterMapping.setFilterName(filterEntry.getKey());
+                filterMapping.setPathSpec(StringUtils.hasText(filterMappingPathSpec) ? filterMappingPathSpec : "/*");
+
+                FilterHolder filterHolder = new FilterHolder();
+                filterHolder.setName(filterEntry.getKey());
+                filterHolder.setFilter(filterEntry.getValue());
+
+                servletHandler.addFilter(filterHolder, filterMapping);
+            }
+
+            if (CollectionUtils.isEmpty(filters)) {
+                addRequestCachingFilter();
+                addGzipFilter();
+            }
 
             contextHandler.setServletHandler(servletHandler);
             
@@ -444,6 +467,42 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setConnector(Connector connector) {
         this.connector = connector;
+    }
+
+    /**
+     * Sets the filters property.
+     *
+     * @param filters
+     */
+    public void setFilters(Map<String, Filter> filters) {
+        this.filters = filters;
+    }
+
+    /**
+     * Gets the value of the filters property.
+     *
+     * @return the filters
+     */
+    public Map<String, Filter> getFilters() {
+        return filters;
+    }
+
+    /**
+     * Sets the filterMappings property.
+     *
+     * @param filterMappings
+     */
+    public void setFilterMappings(Map<String, String> filterMappings) {
+        this.filterMappings = filterMappings;
+    }
+
+    /**
+     * Gets the value of the filterMappings property.
+     *
+     * @return the filterMappings
+     */
+    public Map<String, String> getFilterMappings() {
+        return filterMappings;
     }
 
     /**

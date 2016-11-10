@@ -20,6 +20,7 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
@@ -28,6 +29,9 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.Filter;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -73,6 +77,23 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
         builder.rootParentContext(annotation.rootParentContext());
 
         builder.connectors(getReferenceResolver().resolve(annotation.connectors(), Connector.class));
+
+        List<Filter> filterBeans = getReferenceResolver().resolve(annotation.filters(), Filter.class);
+        Map<String, Filter> filters = new HashMap<>();
+        for (int i = 0; i < annotation.filters().length; i++) {
+            filters.put(annotation.filters()[i], filterBeans.get(i));
+        }
+        builder.filters(filters);
+
+        Map<String, String> filterMappings = new HashMap<>();
+        for (String filterMapping : annotation.filterMappings()) {
+            String[] pair = filterMapping.split("=");
+            if (pair.length != 2) {
+                throw new CitrusRuntimeException("Invalid filter mapping: " + filterMapping);
+            }
+            filterMappings.put(pair[0], pair[1]);
+        }
+        builder.filterMappings(filterMappings);
 
         if (StringUtils.hasText(annotation.connector())) {
             builder.connector(getReferenceResolver().resolve(annotation.connector(), Connector.class));
