@@ -36,7 +36,7 @@
       </http:send-request>
 
       <echo>
-        <message>Receive gzip compressed as base64 encoded text</message>
+        <message>Receive gzip compressed text</message>
       </echo>
 
       <http:receive-request server="echoHttpServer">
@@ -64,7 +64,7 @@
       </http:send-response>
 
       <echo>
-        <message>Receive gzip compressed as base64 encoded text</message>
+        <message>Receive gzip compressed text</message>
       </echo>
 
       <http:receive-response client="echoHttpClient">
@@ -74,6 +74,55 @@
         <http:body type="plaintext">
           <http:data>${text}</http:data>
         </http:body>
+      </http:receive-response>
+
+      <echo>
+        <message>Send Http client request with gzip compressed data</message>
+      </echo>
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:headers content-type="text/html">
+            <http:header name="Content-Encoding" value="gzip"/>
+          </http:headers>
+          <http:body>
+            <http:data>${text}</http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <echo>
+        <message>Receive gzip compressed data</message>
+      </echo>
+
+      <http:receive-request server="echoHttpServer">
+        <http:POST path="/echo">
+          <http:headers>
+            <http:header name="Content-Encoding" value="gzip"/>
+          </http:headers>
+          <http:body type="plaintext">
+            <http:data>${text}</http:data>
+          </http:body>
+        </http:POST>
+      </http:receive-request>
+
+      <echo>
+        <message>Send Http server response</message>
+      </echo>
+
+      <http:send-response server="echoHttpServer">
+        <http:headers status="200" reason-phrase="OK">
+          <http:header name="Content-Encoding" value="gzip"/>
+          <http:header name="Content-Type" value="text/plain"/>
+        </http:headers>
+      </http:send-response>
+
+      <echo>
+        <message>Receive server response</message>
+      </echo>
+
+      <http:receive-response client="echoHttpClient">
+        <http:headers status="200" reason-phrase="OK"/>
       </http:receive-response>
     </actions>
     

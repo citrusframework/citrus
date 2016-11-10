@@ -707,6 +707,82 @@ You can customize the security handler for your very specific needs (e.g. load u
 **Tip**
 This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.
 
+### HTTP Gzip compression
+
+Gzip is a very popular compression mechanism for optimizing the message transportation for large content. The Citrus http client and server components support gzip compression out of the box. This means
+that you only need to set the specific encoding headers in your http request/response message.
+
+* **Accept-Encoding=gzip** Setting for clients when requesting gzip compressed response content. The Http server must support gzip compression then in order to provide the response as zipped byte stream. The Citrus http server component automatically recognizes this header in a request and applies gzip compression to the response.
+* **Content-Encoding=gzip** When a http server sends compressed message content to the client this header is set to **gzip** in order to mark the compression. The Http client must support gzip compression then in order to unzip the message content. The Citrus http client component automatically recognizes this header in a response and applies gzip unzip logic before passing the message to the test case.
+
+The Citrus client and server automatically take care on gzip compression when those headers are set. In the test case you do not need to zip or unzip the content then as it is automatically done before.
+
+This means that you can request gzipped content from a server with just adding the message header **Accept-Encoding** in your http request operation.
+
+```xml
+<echo>
+  <message>Send Http client request for gzip compressed data</message>
+</echo>
+
+<http:send-request client="gzipClient">
+    <http:POST>
+      <http:headers content-type="text/html">
+        <http:header name="Accept-Encoding" value="gzip"/>
+        <http:header name="Accept" value="text/plain"/>
+      </http:headers>
+</http:POST>
+</http:send-request>
+
+<echo>
+  <message>Receive text automatically gzip unzipped</message>
+</echo>
+
+<http:receive-response client="gzipClient">
+    <http:headers status="200" reason-phrase="OK">
+      <http:header name="Content-Type" value="text/plain"/>
+    </http:headers>
+    <http:body type="plaintext">
+      <http:data>${text}</http:data>
+    </http:body>
+</http:receive-response>
+```
+
+On the server side if we receive a message and the response should be compressed with Gzip we just have to set the **Content-Encoding** header in the response operation.
+
+```xml
+<echo>
+  <message>Receive gzip compressed as base64 encoded text</message>
+</echo>
+
+<http:receive-request server="echoHttpServer">
+    <http:POST path="/echo">
+      <http:headers>
+        <http:header name="Content-Type" value="text/html"/>
+        <http:header name="Accept-Encoding" value="gzip"/>
+        <http:header name="Accept" value="text/plain"/>
+      </http:headers>
+    </http:POST>
+</http:receive-request>
+
+<echo>
+  <message>Send Http server gzip compressed response</message>
+</echo>
+
+<http:send-response server="echoHttpServer">
+    <http:headers status="200" reason-phrase="OK">
+      <http:header name="Content-Encoding" value="gzip"/>
+      <http:header name="Content-Type" value="text/plain"/>
+    </http:headers>
+    <http:body>
+      <http:data>${text}</http:data>
+    </http:body>
+</http:send-response>
+```
+
+So the Citrus server will automatically add gzip compression to the response for us.
+
+Of course you can also send gzipped content as a client. Then you would just set the **Content-Encoding** header to **gzip** in your request. The client will automatically apply compression for you.
+
 ### HTTP servlet context customization
 
 The Citrus HTTP server uses Spring application context loading on startup. For high customizations you can provide a custom servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling incoming requests (GET, PUT, DELETE, POST, etc.).
