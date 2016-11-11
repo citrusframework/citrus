@@ -2,6 +2,50 @@
 
 Citrus 2.6 comes with a set of new modules that enable completely new aspects of integration testing. Namely these are the new modules for Cucumber behavior driven development and Zookeeper support. Just have a look at the following features that are shipped within the 2.6 box.
 
+### Gzip compression
+
+Citrus now supports Gzip message compression. For Http client server endpoints we introduced special compression filters that automatically tak care on compression
+when the http header **Accept-Encoding=gzip** or **Content-Encoding=gzip** is set. For other endpoints we introduced the message type **gzip** and the message validator
+**gzip-base64** which automatically compresses and decompresses message payloads and enables base64 String comparison for validation purpose. The new compression features are
+described in [http](http) and [validation-gzip](validation-gzip).
+
+### Custom servlet filters
+
+The Citrus http server component now accepts custom servlet filter implementations. This is useful for implementing custom logic on request/response processing such as
+automatic message compression or caching. You can set one or many custom filter implementations and map those to request paths for the server. Read about this in chapter [http](http).
+
+### Escape test variable syntax
+
+Citrus uses test variables and looks for the expressions of type **${variable-name}**. Now when this same syntax is part of a message content we run into errors as Citrus
+wants to find a test variable. At the end Citrus complains about the unknown variable. Therefore we introduced an escape syntax for variables so you can skip the Citrus variable expression evaluation.
+You can do this by using **${//escaped//}** syntax. Read more about this in [test-variables](test-variables).
+
+### Configurable XML serializer
+
+We often deal with XML message format and therefore need to parse and serialize XML data. The default XML serializer uses **pretty print** format and **cdata section** support. Now
+sometimes it is mandatory to customize these settings which is possible with the new version. You can add a custom XML serializer in the Spring application context and Citrus will automatically use this
+implementation and configuration. You can see how it works in chapter [validation-xml](validation-xml).
+
+### Local message store
+
+We introduced a local message store that automatically saves all exchanged messages (inbound and outbound). This message store can be used to get exchanged messages during and after the test.
+Test actions as well as test listeners can access the local message store. Read more about this in chapters [endpoints](endpoints), [actions-send](actions-send) and [actions-receive](actions-receive).
+
+### Wait message condition
+
+The wait test action has a new condition. Besides waiting for files to exist and http requests to be responded you can now wait for messages in the local message store. This way you 
+can wait for a certain message to arrive. This is described in chapter [actions-wait](actions-wait).
+
+### Xpath and JsonPath Function
+
+There are new functions available to evaluate some Xpath or JsonPath expression on a XML/Json source. The source can be a static structure coming from an external file or a message payload stored in the local 
+storage. See how to use this functions in chapter [functions](functions).
+
+### Static response adapter variables support
+
+Server components can use static response adapters that automatically send response messages to any calling client. The response adapter is now able to use test variables and functions. In addition to that
+you can map values from the actual request message that has triggered the response adapter by using the local message store in combination with Xpath or JsonPath. Read about this in [endpoint-adapter](endpoint-adapter).
+
 ### Cucumber BDD support
 
 Behavior driven development is more and more coming up also in the integration testing environment. Cucumber is a fantastic behavior driven development library that provides support for BDD concepts with Gherkin. The new Citrus integration with Cucumber enables the mix of Gherkin syntax feature scenarios with Citrus test case execution. You write feature stories as usual and create Citrus test cases with lots of actions for the integration test. See details for this feature in [cucumber](cucumber).
