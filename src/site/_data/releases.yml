@@ -88,7 +88,7 @@
     author: christophd
 
 - version: 2.6.1
-  date: 2016-09-23
+  date: 2016-10-07
   tag: v2-6-1
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
