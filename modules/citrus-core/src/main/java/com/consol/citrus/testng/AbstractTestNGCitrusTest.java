@@ -60,7 +60,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     @Override
     public void run(IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
-
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
             List<TestLoader> methodTestLoaders = createTestLoadersForMethod(method);
 
@@ -114,13 +113,35 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param invocationCount
      * @return
      */
-    protected Object[] resolveParameter(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
+    protected Object[] resolveParameter(ITestResult testResult, final Method method, TestCase testCase, TestContext context, int invocationCount) {
         Object[] dataProviderParams = null;
         if (method.getAnnotation(Test.class) != null &&
                 StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
-            Method dataProvider = ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider());
-            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(dataProvider, this,
-                    resolveParameter(testResult, dataProvider, testCase, context, -1));
+            final Method[] dataProvider = new Method[1];
+            ReflectionUtils.doWithMethods(method.getDeclaringClass(), new ReflectionUtils.MethodCallback() {
+                @Override
+                public void doWith(Method current) throws IllegalArgumentException, IllegalAccessException {
+                    if (StringUtils.hasText(current.getAnnotation(DataProvider.class).name()) &&
+                            current.getAnnotation(DataProvider.class).name().equals(method.getAnnotation(Test.class).dataProvider())) {
+                        dataProvider[0] = current;
+                    } else if (current.getName().equals(method.getAnnotation(Test.class).dataProvider())) {
+                        dataProvider[0] = current;
+                    }
+
+                }
+            }, new ReflectionUtils.MethodFilter() {
+                @Override
+                public boolean matches(Method method) {
+                    return method.getAnnotation(DataProvider.class) != null;
+                }
+            });
+
+            if (dataProvider[0] == null) {
+                throw new CitrusRuntimeException("Unable to find data provider: " + method.getAnnotation(Test.class).dataProvider());
+            }
+
+            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(dataProvider[0], this,
+                    resolveParameter(testResult, dataProvider[0], testCase, context, -1));
             if (parameters != null) {
                 dataProviderParams = parameters[invocationCount % parameters.length];
                 injectTestParameters(method, testCase, dataProviderParams);

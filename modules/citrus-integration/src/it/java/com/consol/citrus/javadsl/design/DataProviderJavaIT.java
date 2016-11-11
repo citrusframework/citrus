@@ -38,11 +38,29 @@ public class DataProviderJavaIT extends TestNGCitrusTestDesigner {
         echo("${delay}");
     }
 
+    @CitrusTest
+    @CitrusParameters( {"message", "delay"} )
+    @Test(dataProvider = "namedDataProvider")
+    public void dataProviderName(String message, Long sleep) {
+        echo(message);
+        sleep(sleep);
+
+        echo("${message}");
+        echo("${delay}");
+    }
+
     @DataProvider
     public Object[][] sampleDataProvider() {
         return new Object[][] {
                 { "Hello World!", 300L },
                 { "Hallo Welt!", 1000L },
+                { "Hallo Citrus!", 500L },
+        };
+    }
+
+    @DataProvider(name = "namedDataProvider")
+    public Object[][] dataProvider() {
+        return new Object[][] {
                 { "Hallo Citrus!", 500L },
         };
     }

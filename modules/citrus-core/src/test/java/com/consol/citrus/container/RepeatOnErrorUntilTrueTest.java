@@ -41,7 +41,6 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
     public void testSuccessOnFirstIteration(String expression) {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
 
-
         reset(action);
 
         repeat.setActions(Collections.singletonList(action));
