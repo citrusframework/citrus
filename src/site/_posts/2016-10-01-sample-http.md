@@ -1,7 +1,7 @@
 ---
 layout: sample
 title: Http REST sample
-sample: sample-rest
+sample: sample-http
 description: Shows REST API calls as a client
 categories: [samples]
 permalink: /samples/http/
