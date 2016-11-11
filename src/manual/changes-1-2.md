@@ -6,15 +6,15 @@ We have some major version upgrades in our Spring dependencies. We are now using
 
 ### New groovy features
 
-Citrus extended the possibilities to work with script languages like Groovy. You can use Groovy's MarkupBuilder to create XML message payloads. Your Groovy code goes right into the test case or comes from external file. With MarkupBuilder you do not need to care about XML message syntax and overhead. Just focus on the pure message content. You can read the details in[groovy-markupbuilder](groovy-markupbuilder).
+Citrus extended the possibilities to work with script languages like Groovy. You can use Groovy's MarkupBuilder to create XML message payloads. Your Groovy code goes right into the test case or comes from external file. With MarkupBuilder you do not need to care about XML message syntax and overhead. Just focus on the pure message content. You can read the details in [groovy-markupbuilder](groovy-markupbuilder).
 
-Further Groovy feature goes to the validation capabilities. Instead of working with XML DOM tree comparison and XPath expression validation you can use Groovy XMLSlurper. This is very useful for those of you who need to do complex message validation and do not like the XML/XPath syntax at all. With XMLSlurper you can access the XML DOM tree via named closure operations which feels great. This especially comes in handy for complex generic XML structures as you can search for elements, sort element list and use the powerful contains operation. This is all described in[groovy-xmlslurper](groovy-xmlslurper).
+Further Groovy feature goes to the validation capabilities. Instead of working with XML DOM tree comparison and XPath expression validation you can use Groovy XMLSlurper. This is very useful for those of you who need to do complex message validation and do not like the XML/XPath syntax at all. With XMLSlurper you can access the XML DOM tree via named closure operations which feels great. This especially comes in handy for complex generic XML structures as you can search for elements, sort element list and use the powerful contains operation. This is all described in [groovy-xmlslurper](groovy-xmlslurper).
 
 Some other Groovy support extension comes in SQL result set validation ([actions-database-groovy](actions-database-groovy)). When reading data from the database someone is able to validation the resulting data row set with Groovy script. The script code easily accesses the rows and columns with Groovy's out-of-the-box list and map handling. This adds very powerful validation to multi-row data sets from the database.
 
 ### SQL multi-line result set validation
 
-In this new Citrus version the tester can validate SQL Query results that have multiple rows. In the past Citrus could only handle a single row in the result set. Now this new release brings light into the dark. See also the new Groovy SQL result set validation which fits brilliant for complex multi-row SQL result set validation. The details can be found in[actions-database-query](actions-database-query)
+In this new Citrus version the tester can validate SQL Query results that have multiple rows. In the past Citrus could only handle a single row in the result set. Now this new release brings light into the dark. See also the new Groovy SQL result set validation which fits brilliant for complex multi-row SQL result set validation. The details can be found in [actions-database-query](actions-database-query)
 
 ### Extended message format support
 
@@ -24,15 +24,15 @@ We have implemented a JSON message validator capable of ignoring specific JSON e
 
 ### New XML features
 
-XML namespace handling is tedious expecially if you have to deal with a lot of XPath expressions in your tests. Before you had need to specify a namespace context for the XPath expression every time you use them in your test - now you can have a central namespace context which declares namespaces you use in your project. These namespaces identified by some prefix are available throughout the test project which is much more maintainable and easy to use. See how it works in[xpath-namespace](xpath-namespace).
+XML namespace handling is tedious expecially if you have to deal with a lot of XPath expressions in your tests. Before you had need to specify a namespace context for the XPath expression every time you use them in your test - now you can have a central namespace context which declares namespaces you use in your project. These namespaces identified by some prefix are available throughout the test project which is much more maintainable and easy to use. See how it works in [xpath-namespace](xpath-namespace).
 
 ### SOAP support improvements
 
 WsAddressing standard is now supported in Citrus ([soap-ws-adressing](soap-ws-adressing)). This means you can declare the specific WsAddressing message headers on message sender level in order to send messages with WsAddressing feature. The header is constructed automatically for all SOAP messages that are sent over the message sender.
 
-Dynamic SOAP endpoint uri resolver enables you to dynamically address SOAP endpoints during a test. Sometimes a message sender may dynamically have to change the SOAP url for each call (e.g. address different request uri parts). With a endpoint uri resolver set on the message sender you can handle this requirement very easy. The tip for dynamic endpoint resolving was added to[soap-sender](soap-sender)
+Dynamic SOAP endpoint uri resolver enables you to dynamically address SOAP endpoints during a test. Sometimes a message sender may dynamically have to change the SOAP url for each call (e.g. address different request uri parts). With a endpoint uri resolver set on the message sender you can handle this requirement very easy. The tip for dynamic endpoint resolving was added to [soap-sender](soap-sender)
 
-We also simplified the synchronous SOAP HTTP communication within test cases. In previous versions you had to build complex parallel and sequential container constructs in order to continue with test execution while the SOAP message sender is waiting for the synchronous response to arrive. Now you can simply fork the message sending action and continue with further test actions while synchronous SOAP communication takes place. See the[soap-fork-mode](soap-fork-mode)for details
+We also simplified the synchronous SOAP HTTP communication within test cases. In previous versions you had to build complex parallel and sequential container constructs in order to continue with test execution while the SOAP message sender is waiting for the synchronous response to arrive. Now you can simply fork the message sending action and continue with further test actions while synchronous SOAP communication takes place. See the [soap-fork-mode](soap-fork-mode)for details
 
 Some really small change introduced with this release is the fact that Citrus now logs SOAP messages in their pure nature. This means that you can see the complete SOAP envelope of messages in the Citrus log files. This is more than helpful when searching for errors inside your test case.
 
@@ -44,19 +44,19 @@ For details have a look at the upgrade guide ([history-upgrading](history-upgrad
 
 ### HTML reporting
 
-Citrus provides HTML reports after each test run with detailed information on the failed tests. You can immediately see which tests failed in execution and where the test stopped.[reporting-html](reporting-html)provides details on this new feature.
+Citrus provides HTML reports after each test run with detailed information on the failed tests. You can immediately see which tests failed in execution and where the test stopped. [reporting-html](reporting-html)provides details on this new feature.
 
 ### Validation matchers
 
-The new validation matchers will put the message validation mechanisms to a new level. With validation matchers you are able to execute powerful assertions on each message content element. For instance you can use the isNumber validation matcher for checking that a message value is of numeric nature. We added several matcher implementations that are ready for usage in your test but you can also write your custom validation matchers. Have a look at[validation-matchers](validation-matchers)for details.
+The new validation matchers will put the message validation mechanisms to a new level. With validation matchers you are able to execute powerful assertions on each message content element. For instance you can use the isNumber validation matcher for checking that a message value is of numeric nature. We added several matcher implementations that are ready for usage in your test but you can also write your custom validation matchers. Have a look at [validation-matchers](validation-matchers)for details.
 
 ### Conditional container
 
-The new conditional test action container enables you to execute test actions only in case a boolean expression evaluates to true. So the nested test actions inside the container may be not executed at all in case a condition is not met. See[containers-conditional](containers-conditional)for details.
+The new conditional test action container enables you to execute test actions only in case a boolean expression evaluates to true. So the nested test actions inside the container may be not executed at all in case a condition is not met. See [containers-conditional](containers-conditional)for details.
 
 ### Support for message selectors on message channels
 
-Spring Integration message channels do not support message selectors like JMS queues do for example. With Citrus 1.2 we implemented a solution for this issue with a special message channel implementation. So you can use the message selector feature also when using message channels. Go to[message-channel-selector-support](message-channel-selector-support)for details.
+Spring Integration message channels do not support message selectors like JMS queues do for example. With Citrus 1.2 we implemented a solution for this issue with a special message channel implementation. So you can use the message selector feature also when using message channels. Go to [message-channel-selector-support](message-channel-selector-support)for details.
 
 ### New test actions
 

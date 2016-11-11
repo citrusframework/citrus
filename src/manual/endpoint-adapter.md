@@ -49,7 +49,37 @@ The next more complex endpoint adapter will always return a static response mess
  </citrus:static-response-adapter>
 ```
 
-The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same.
+The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same. You can add dynamic
+values by using Citrus functions such as **randomString** or **randomNumber**. Also we are able to use values of the actual request message that has triggered the
+response adapter. The request is available via the local message store. In combination with Xpath or JsonPath functions we can map values from the actual request.
+
+```xml
+<citrus:static-response-adapter id="endpointAdapter">
+    <citrus:payload>
+        <![CDATA[
+          <HelloResponse
+            xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+              <MessageId>citrus:randomNumber(10)</MessageId>
+              <CorrelationId>citrus:xpath(citrus:message(request.payload()), '/hello:HelloRequest/hello:CorrelationId')</CorrelationId>
+              <Text>Hello User</Text>
+          </HelloResponse>
+        ]]>
+    </citrus:payload>
+    <citrus:header>
+        <citrus:element name="{http://www.consol.de/schemas/samples}h1:Operation"
+                  value="sayHello"/>
+        <citrus:element name="{http://www.consol.de/schemas/samples}h1:MessageId"
+                  value="citrus:randomNumber(10)"/>
+    </citrus:header>
+ </citrus:static-response-adapter>
+```
+
+The example above maps the **CorrelationId** of the **HelloRequest** message to the response with Xpath function. The local message store automatically has the message named
+**request** stored so we can access the payload with this message name.
+ 
+**Note**
+XML is namespace specific so we need to use the namespace prefix **hello** in the Xpath expression. The namespace prefix should evaluate to a global namespace entry in the global
+Citrus [xpath-namespace](xpath-namespace).
 
 ### Request dispatching endpoint adapter
 
