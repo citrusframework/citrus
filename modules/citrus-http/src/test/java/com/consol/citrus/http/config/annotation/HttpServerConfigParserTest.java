@@ -35,6 +35,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.servlet.Filter;
+
 import static org.mockito.Mockito.when;
 
 /**
@@ -63,7 +65,9 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
     @CitrusEndpoint
     @HttpServerConfig(autoStart=false,
             port=8083,
-            connectors={"connector1", "connector2"})
+            connectors={"connector1", "connector2"},
+            filters={"filter1", "filter2"},
+            filterMappings={"filter2=/filter2/*"})
     private HttpServer httpServer3;
 
     @CitrusEndpoint
@@ -94,6 +98,10 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private Connector connector2 = Mockito.mock(Connector.class);
     @Mock
+    private Filter filter1 = Mockito.mock(Filter.class);
+    @Mock
+    private Filter filter2 = Mockito.mock(Filter.class);
+    @Mock
     private SecurityHandler securityHandler = Mockito.mock(SecurityHandler.class);
     @Mock
     private HttpMessageConverter messageConverter = Mockito.mock(HttpMessageConverter.class);
@@ -122,6 +130,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         when(applicationContext.getBean("connector", Connector.class)).thenReturn(connector1);
         when(applicationContext.getBean("connector1", Connector.class)).thenReturn(connector1);
         when(applicationContext.getBean("connector2", Connector.class)).thenReturn(connector2);
+        when(applicationContext.getBean("filter1", Filter.class)).thenReturn(filter1);
+        when(applicationContext.getBean("filter2", Filter.class)).thenReturn(filter2);
         when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
         when(applicationContext.getBean("clientInterceptor1", HandlerInterceptor.class)).thenReturn(clientInterceptor1);
         when(applicationContext.getBean("clientInterceptor2", HandlerInterceptor.class)).thenReturn(clientInterceptor2);
@@ -137,6 +147,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(httpServer1.getServletHandler());
         Assert.assertNull(httpServer1.getSecurityHandler());
         Assert.assertEquals(httpServer1.getConnectors().length, 0);
+        Assert.assertEquals(httpServer1.getFilters().size(), 0);
+        Assert.assertEquals(httpServer1.getFilterMappings().size(), 0);
         Assert.assertEquals(httpServer1.getName(), "httpServer1");
         Assert.assertEquals(httpServer1.getPort(), 8081);
         Assert.assertEquals(httpServer1.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
@@ -152,6 +164,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer2.getMessageConverter(), messageConverter);
         Assert.assertEquals(httpServer2.getConnector(), connector1);
         Assert.assertEquals(httpServer2.getConnectors().length, 0);
+        Assert.assertEquals(httpServer2.getFilters().size(), 0);
+        Assert.assertEquals(httpServer2.getFilterMappings().size(), 0);
         Assert.assertEquals(httpServer2.getName(), "httpServer2");
         Assert.assertEquals(httpServer2.getPort(), 8082);
         Assert.assertEquals(httpServer2.getContextConfigLocation(), "classpath:com/consol/citrus/http/servlet-context.xml");
@@ -166,6 +180,10 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(httpServer3.getConnector());
         Assert.assertNotNull(httpServer3.getConnectors());
         Assert.assertEquals(httpServer3.getConnectors().length, 2L);
+        Assert.assertNotNull(httpServer3.getFilters());
+        Assert.assertEquals(httpServer3.getFilters().size(), 2L);
+        Assert.assertNotNull(httpServer3.getFilterMappings());
+        Assert.assertEquals(httpServer3.getFilterMappings().size(), 1L);
         Assert.assertEquals(httpServer3.getName(), "httpServer3");
         Assert.assertEquals(httpServer3.getPort(), 8083);
         Assert.assertEquals(httpServer3.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");

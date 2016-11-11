@@ -16,6 +16,7 @@
 
 package com.consol.citrus.context;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.endpoint.EndpointFactory;
@@ -127,8 +128,10 @@ public class TestContext {
      */
     public Object getVariableObject(final String variableExpression) {
         String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
-        
-        if (variables.containsKey(variableName)) {
+
+        if (variableName.startsWith(Citrus.VARIABLE_ESCAPE) && variableName.endsWith(Citrus.VARIABLE_ESCAPE)) {
+            return Citrus.VARIABLE_PREFIX + VariableUtils.cutOffVariablesEscaping(variableName) + Citrus.VARIABLE_SUFFIX;
+        } else if (variables.containsKey(variableName)) {
             return variables.get(variableName);
         } else if (variableName.contains(".")) {
             String objectName = variableName.substring(0, variableName.indexOf("."));

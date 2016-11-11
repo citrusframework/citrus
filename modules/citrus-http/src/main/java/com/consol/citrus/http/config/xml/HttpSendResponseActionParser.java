@@ -76,6 +76,18 @@ public class HttpSendResponseActionParser extends SendMessageActionParser {
         }
 
         Element body = DomUtils.getChildElementByTagName(element, "body");
+        if (body != null) {
+            String messageType = body.getAttribute("type");
+            if (StringUtils.hasText(messageType)) {
+                builder.addPropertyValue("messageType", messageType);
+            }
+
+            String dataDictionary = body.getAttribute("data-dictionary");
+            if (StringUtils.hasText(dataDictionary)) {
+                builder.addPropertyReference("dataDictionary", dataDictionary);
+            }
+        }
+
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);
         Map<String, Object> messageHeaders = httpMessage.getHeaders();
         messageHeaders.remove(MessageHeaders.ID);

@@ -59,6 +59,7 @@ public class HttpClientParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("request-url"), "requestUrl");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("default-accept-header"), "defaultAcceptHeader");
 
         String requestMethod = element.getAttribute("request-method");
         if (StringUtils.hasText(requestMethod)) {

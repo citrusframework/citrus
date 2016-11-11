@@ -26,8 +26,10 @@
     <citrus-http:server id="httpServer3"
                         auto-start="false"
                         port="8083"
-                        connectors="connectors"/>
-                        
+                        connectors="connectors"
+                        filters="filters"
+                        filter-mappings="filterMappings"/>
+
     <citrus-http:server id="httpServer4"
                         auto-start="false"
                         port="8084"
@@ -56,7 +58,24 @@
             <constructor-arg value="org.eclipse.jetty.server.Connector"/>
         </bean>
     </util:list>
-  
+
+    <util:map id="filters">
+        <entry key="filter1">
+            <bean id="filter1" class="org.mockito.Mockito" factory-method="mock">
+                <constructor-arg value="javax.servlet.Filter"/>
+            </bean>
+        </entry>
+        <entry key="filter2">
+            <bean id="filter2" class="org.mockito.Mockito" factory-method="mock">
+                <constructor-arg value="javax.servlet.Filter"/>
+            </bean>
+        </entry>
+    </util:map>
+
+    <util:map id="filterMappings">
+        <entry key="filter2" value="/filter2/*"/>
+    </util:map>
+
     <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
     </bean>

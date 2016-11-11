@@ -21,6 +21,8 @@ You need following software on your computer, in order to use the Citrus Framewo
   Citrus tests will be executed with the [Apache Ant](http://ant.apache.org/) build tool. But it is not required to use Ant only. 
   You can also run tests via [Apache Maven](http://maven.apache.org) for example.
   
+### ANT project 
+  
 So now lets start to set up a new Citrus Java project. In contrast to a Maven generated project we have to create our project 
 structure ourself when using Ant. A good starting point is the samples folder coming with the Citrus release distribution. 
 Here you can see several sample Citrus projects with given folder structure. So lets have a look at a usual Citrus project 

@@ -14,6 +14,7 @@
   - [Xhtml](validation-xhtml.md)
   - [Plaintext](validation-plaintext.md)
   - [Binary](validation-binary.md)
+  - [Gzip](validation-gzip.md)
 * [Xpath](xpath.md)
 * [Json-path](json-path.md)
 * [Actions](actions.md)

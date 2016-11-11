@@ -174,7 +174,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
         Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('citrus', ':citrus')"), "citrus:citrus");
         Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('citrus:citrus')"), "citrus:citrus");
-        
+
         Assert.assertEquals(context.replaceDynamicContentInString("Variable test is: ${test}", true), "Variable test is: '456'");
         Assert.assertEquals(context.replaceDynamicContentInString("${test} is the value of variable test", true), "'456' is the value of variable test");
         Assert.assertEquals(context.replaceDynamicContentInString("123${test}789", true), "123'456'789");
@@ -190,6 +190,17 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(context.replaceDynamicContentInString("123 ${test}789"), "123 456789");
         Assert.assertEquals(context.replaceDynamicContentInString("123 ${test}789", true), "123 '456'789");
+    }
+
+    @Test
+    public void testVariableExpressionEscaped() {
+        Assert.assertEquals(context.replaceDynamicContentInString("${//escaped//}"), "${escaped}");
+        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('${////escaped////}', ' That is ok!')"), "${escaped} That is ok!");
+
+        context.setVariable("/value/", "123");
+        context.setVariable("value", "456");
+        Assert.assertEquals(context.replaceDynamicContentInString("${/value/}"), "123");
+        Assert.assertEquals(context.replaceDynamicContentInString("${//value//}"), "${value}");
     }
     
     @Test

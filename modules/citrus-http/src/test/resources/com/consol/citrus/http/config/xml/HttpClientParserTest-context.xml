@@ -18,6 +18,7 @@
                           content-type="text/xml"
                           charset="ISO-8859-1"
                           timeout="10000"
+                          default-accept-header="false"
                           message-converter="messageConverter"
                           request-factory="soapRequestFactory"
                           endpoint-resolver="endpointResolver"/>

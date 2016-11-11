@@ -24,7 +24,9 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.servlet.Filter;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -107,6 +109,26 @@ public class HttpServerBuilder extends AbstractEndpointBuilder<HttpServer> {
      */
     public HttpServerBuilder connector(Connector connector) {
         endpoint.setConnector(connector);
+        return this;
+    }
+
+    /**
+     * Sets the filters.
+     * @param filters
+     * @return
+     */
+    public HttpServerBuilder filters(Map<String, Filter> filters) {
+        endpoint.setFilters(filters);
+        return this;
+    }
+
+    /**
+     * Sets the filterMappings.
+     * @param filterMappings
+     * @return
+     */
+    public HttpServerBuilder filterMappings(Map<String, String> filterMappings) {
+        endpoint.setFilterMappings(filterMappings);
         return this;
     }
 

@@ -66,6 +66,18 @@ public @interface HttpServerConfig {
     String connector() default "";
 
     /**
+     * Filter references.
+     * @return
+     */
+    String[] filters() default {};
+
+    /**
+     * Filter mapping references.
+     * @return
+     */
+    String[] filterMappings() default {};
+
+    /**
      * Servlet name.
      * @return
      */
