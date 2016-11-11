@@ -133,7 +133,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getMessageConverter(), messageConverter);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getEndpointUriResolver(), endpointResolver);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader(), false);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader(), false);
 
         // 3rd message sender
         Assert.assertNotNull(httpClient3.getEndpointConfiguration().getRestTemplate());
