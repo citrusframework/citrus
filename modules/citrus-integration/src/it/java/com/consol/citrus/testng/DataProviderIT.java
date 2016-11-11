@@ -36,7 +36,7 @@ public class DataProviderIT extends AbstractTestNGCitrusTest {
     public void dataProviderIT(String message) {
         executeTest();
     }
-    
+
     @DataProvider
     public Object[][] citrusDataProvider() {
         return new Object[][] {
@@ -45,4 +45,18 @@ public class DataProviderIT extends AbstractTestNGCitrusTest {
             { "Hallo Citrus!" },
         };
     }
+
+    @CitrusXmlTest(name = "DataProviderIT")
+    @CitrusParameters( "message" )
+    @Test(dataProvider = "namedDataProvider")
+    public void DataProviderNameIT(String message) {
+    }
+
+    @DataProvider(name = "namedDataProvider")
+    public Object[][] dataProvider() {
+        return new Object[][] {
+            { "Hallo Citrus!" },
+        };
+    }
+
 }

@@ -103,7 +103,15 @@ public class SendMessageAction extends AbstractTestAction {
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(new Runnable() {
                 public void run() {
-                    messageEndpoint.createProducer().send(message, context);
+                    try {
+                        messageEndpoint.createProducer().send(message, context);
+                    } catch (Exception e) {
+                        if (e instanceof CitrusRuntimeException) {
+                            context.addException((CitrusRuntimeException) e);
+                        } else {
+                            context.addException(new CitrusRuntimeException(e));
+                        }
+                    }
                 }
             });
         } else {

@@ -19,6 +19,7 @@ package com.consol.citrus;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -86,6 +87,38 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
             }
         });
         
+        testcase.execute(context);
+    }
+
+    @Test(expectedExceptions = {TestCaseFailedException.class})
+    public void testExceptionInContext() {
+        TestCase testcase = new TestCase();
+        testcase.setName("MyTestCase");
+
+        testcase.addTestAction(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                context.addException(new CitrusRuntimeException("This failed in forked action"));
+            }
+        });
+
+        testcase.addTestAction(new EchoAction().setMessage("Everything is fine!"));
+
+        testcase.execute(context);
+    }
+
+    @Test(expectedExceptions = {TestCaseFailedException.class})
+    public void testExceptionInContextInFinish() {
+        TestCase testcase = new TestCase();
+        testcase.setName("MyTestCase");
+
+        testcase.addTestAction(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                context.addException(new CitrusRuntimeException("This failed in forked action"));
+            }
+        });
+
         testcase.execute(context);
     }
     

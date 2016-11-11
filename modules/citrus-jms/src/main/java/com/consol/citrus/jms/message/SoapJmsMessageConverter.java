@@ -56,8 +56,10 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     /** Special SOAP action header */
-    private static final String INTERNAL_SOAP_ACTION_HEADER = MessageHeaders.PREFIX + "_soap_action";
-    private static final String SOAP_ACTION_HEADER = "SOAPAction";
+    private static final String SOAP_ACTION_HEADER = MessageHeaders.PREFIX + "soap_action";
+
+    /** The JMS SOAP action header name */
+    private String jmsSoapActionHeader = "SOAPJMS_soapAction";
 
     @Override
     public com.consol.citrus.message.Message convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
@@ -68,6 +70,11 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
 
             StringResult payload = new StringResult();
             transformerFactory.newTransformer().transform(soapMessage.getPayloadSource(), payload);
+
+            // Translate SOAP action header if present
+            if (message.getHeader(jmsSoapActionHeader) != null) {
+                message.setHeader(SOAP_ACTION_HEADER, message.getHeader(jmsSoapActionHeader));
+            }
 
             message.setPayload(payload.toString());
             return message;
@@ -96,9 +103,9 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
             message.setPayload(new String(bos.toByteArray()));
 
             // Translate SOAP action header if present
-            if (message.getHeader(INTERNAL_SOAP_ACTION_HEADER) != null) {
-                message.setHeader(SOAP_ACTION_HEADER, message.getHeader(INTERNAL_SOAP_ACTION_HEADER));
-                message.removeHeader(INTERNAL_SOAP_ACTION_HEADER);
+            if (message.getHeader(SOAP_ACTION_HEADER) != null) {
+                message.setHeader(jmsSoapActionHeader, message.getHeader(SOAP_ACTION_HEADER));
+                message.removeHeader(SOAP_ACTION_HEADER);
             }
 
             return super.createJmsMessage(message, session, endpointConfiguration, context);
@@ -107,5 +114,23 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to write SOAP message content", e);
         }
+    }
+
+    /**
+     * Sets the jmsSoapActionHeader property.
+     *
+     * @param jmsSoapActionHeader
+     */
+    public void setJmsSoapActionHeader(String jmsSoapActionHeader) {
+        this.jmsSoapActionHeader = jmsSoapActionHeader;
+    }
+
+    /**
+     * Gets the value of the jmsSoapActionHeader property.
+     *
+     * @return the jmsSoapActionHeader
+     */
+    public String getJmsSoapActionHeader() {
+        return jmsSoapActionHeader;
     }
 }

@@ -48,6 +48,9 @@
 						]]>
           </data>
         </message>
+        <header>
+          <element name="SOAPJMS_soapAction" value="sayHello"/>
+        </header>
       </send>
 
       <receive endpoint="helloSoapServiceResponseJmsEndpoint">
@@ -69,6 +72,9 @@
 						]]>
           </data>
         </message>
+        <header>
+          <element name="SOAPJMS_soapAction" value="sayHello"/>
+        </header>
       </receive>
 
       <echo>
@@ -89,6 +95,9 @@
 						]]>
           </data>
         </message>
+        <header>
+          <element name="citrus_soap_action" value="sayHello"/>
+        </header>
       </send>
 
       <receive endpoint="helloServiceResponseSoapJmsEndpoint">
@@ -105,6 +114,9 @@
 						]]>
           </data>
         </message>
+        <header>
+          <element name="citrus_soap_action" value="sayHello"/>
+        </header>
       </receive>
 
     </actions>
