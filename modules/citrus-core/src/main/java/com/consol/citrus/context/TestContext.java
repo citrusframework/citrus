@@ -16,12 +16,10 @@
 
 package com.consol.citrus.context;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.endpoint.EndpointFactory;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.VariableNullValueException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.*;
@@ -96,6 +94,9 @@ public class TestContext {
 
     /** Timers registered in test context, that can be stopped */
     protected Map<String, StopTimer> timers = new ConcurrentHashMap<>();
+
+    /** List of exceptions that actions raised during execution of forked operations */
+    private List<CitrusRuntimeException> exceptions = new ArrayList<>();
 
     /**
      * Default constructor
@@ -613,5 +614,23 @@ public class TestContext {
         for (String timerId : timers.keySet()) {
             stopTimer(timerId);
         }
+    }
+
+    /**
+     * Add new exception to the context marking the test as failed. This
+     * is usually used by actions to mark exceptions during forked operations.
+     * @param exception
+     */
+    public void addException(CitrusRuntimeException exception) {
+        this.exceptions.add(exception);
+    }
+
+    /**
+     * Gets the value of the exceptions property.
+     *
+     * @return the exceptions
+     */
+    public List<CitrusRuntimeException> getExceptions() {
+        return exceptions;
     }
 }

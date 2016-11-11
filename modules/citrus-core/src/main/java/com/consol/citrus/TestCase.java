@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -137,7 +138,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
             try {
                 start(context);
-
                 for (TestAction action: actions) {
                     executeAction(action, context);
                 }
@@ -152,7 +152,15 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 testResult = TestResult.failed(getName(), e);
                 throw new TestCaseFailedException(e);
             } finally {
-                finish(context);
+                try {
+                    if (!CollectionUtils.isEmpty(context.getExceptions())) {
+                        CitrusRuntimeException ex = context.getExceptions().remove(0);
+                        testResult = TestResult.failed(getName(), ex);
+                        throw new TestCaseFailedException(ex);
+                    }
+                } finally {
+                    finish(context);
+                }
             }
         } else {
             testResult = TestResult.skipped(getName());
@@ -206,6 +214,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param context
      */
     public void executeAction(TestAction action, TestContext context) {
+        if (!CollectionUtils.isEmpty(context.getExceptions())) {
+            throw context.getExceptions().remove(0);
+        }
+
         try {
             if (!action.isDisabled(context)) {
                 testActionListeners.onTestActionStart(this, action);
@@ -446,5 +458,13 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public boolean isTestRunner() {
         return testRunner;
+    }
+
+    /**
+     * Sets the test result from outside.
+     * @param testResult
+     */
+    public void setTestResult(TestResult testResult) {
+        this.testResult = testResult;
     }
 }
