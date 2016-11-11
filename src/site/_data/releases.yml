@@ -3,6 +3,85 @@
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+  - title: Escape variable expression syntax
+    id: 160
+    type: Update
+    author: christophd
+  - title: Add custom servlet filters to http server
+    id: 159
+    type: Add
+    author: christophd
+  - title: Support Gzip message compression
+    id: 158
+    type: Add
+    author: christophd
+  - title: Add message wait condition
+    id: 156
+    type: Add
+    author: christophd
+  - title: Add JsonPath function
+    id: 155
+    type: Add
+    author: christophd
+  - title: Add Xpath function
+    id: 154
+    type: Add
+    author: christophd
+  - title: Improve XSD schema documentation
+    id: 147
+    type: Update
+    author: christophd
+  - title: Exception handling bug on forked actions
+    id: 146
+    type: Fix
+    author: christophd
+  - title: Gradle sample
+    id: 145
+    type: Add
+    author: christophd
+  - title: DataProvider explicit name support
+    id: 142
+    type: Fix
+    author: christophd
+  - title: Validation of JMS SoapAction not working
+    id: 141
+    type: Fix
+    author: christophd
+  - title: Support dynamic endpoints uri for https
+    id: 137
+    type: Update
+    author: christophd
+  - title: ignore Xpath only matches first element
+    id: 130
+    type: Fix
+    author: christophd
+  - title: escapeXml function still buggy
+    id: 128
+    type: Fix
+    author: christophd
+  - title: Add variables and test context support in static response adapter
+    id: 122
+    type: Update
+    author: christophd
+  - title: EscapeXml function not working with comments
+    id: 118
+    type: Fix
+    author: christophd
+  - title: Add configurable XML serializer
+    id: 113
+    type: Update
+    author: christophd
+  - title: Allow Http accept header setting
+    id: 112
+    type: Update
+    author: christophd
+
+- version: 2.6.1
+  date: 2016-10-07
+  tag: v2-6-1
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
   - title: Support variable object path
     id: 132
     type: Add
