@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Actions | Citrus Reference Guide</title>
+        <title>Gzip | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -47,10 +47,10 @@
         
     
     
-    <link rel="next" href="./actions-send.html" />
+    <link rel="next" href="./xpath.html" />
     
     
-    <link rel="prev" href="./json-path.html" />
+    <link rel="prev" href="./validation-binary.html" />
     
 
         
@@ -59,9 +59,9 @@
         
         
     <div class="book"
-        data-level="13"
-        data-chapter-title="Actions"
-        data-filepath="actions.md"
+        data-level="10.7"
+        data-chapter-title="Gzip"
+        data-filepath="validation-gzip.md"
         data-basepath="."
         data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
@@ -333,7 +333,7 @@
             
         </li>
     
-        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+        <li class="chapter active" data-level="10.7" data-path="validation-gzip.html">
             
                 
                     <a href="./validation-gzip.html">
@@ -383,7 +383,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="13" data-path="actions.html">
+        <li class="chapter " data-level="13" data-path="actions.html">
             
                 
                     <a href="./actions.html">
@@ -1595,8 +1595,37 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="test-actions"><a name="test-actions" class="plugin-anchor" href="#test-actions"><span class="fa fa-link"></span></a>Test actions</h2>
-<p>This chapter gives a brief description to all test actions that a tester can incorporate into the test case. Besides sending and receiving messages the tester may access these actions in order to build a more complex test scenario that fits the desired use case.</p>
+                        <h3 id="gzip-message-validation"><a name="gzip-message-validation" class="plugin-anchor" href="#gzip-message-validation"><span class="fa fa-link"></span></a>Gzip message validation</h3>
+<p>Gzip is a famous message compression library. When dealing with large message content the compression might be a good way to optimize the message transportation.
+Citrus is able to handle gzipped message payloads on send and receive operations. When sending compressed data we just have to use the message type <strong>gzip</strong>.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;messageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;gzip&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>Hello World!<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>Just use the <strong>type=&quot;gzip&quot;</strong> message type in the send operation. Citrus now converts the message payload to a gzip binary stream as payload.</p>
+<p>When validating gzip binary message content the messages are compared with a given control message in binary base64 String representation. The gzip binary data is 
+automatically unzipped and encoded as base64 character sequence in order to compare with an expected content.</p>
+<p>The received message content is using gzip format but the actual message content does not have to be base64 encoded. Citrus is doing this conversion automatically 
+before validation takes place. The binary data can be anything e.g. images, pdf or plaintext content.</p>
+<p>The default message validator for gzip messages is active by default. Citrus will pick this message validator for all messages of <strong>type=&quot;gzip_base64&quot;</strong> . The default message validator implementation 
+can be overwritten by placing a Spring bean with id <strong>defaultGzipBinaryBase64MessageValidator</strong> to the Spring application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultGzipBinaryBase64MessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator&quot;</span>/&gt;</span>
+</code></pre>
+<p>In the test case receiving action we tell Citrus to use gzip message validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;messageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;gzip_base64&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>citrus:encodeBase64(&apos;Hello World!&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>With the message format type <strong>type=&quot;gzip_base64&quot;</strong> Citrus performs the gzip base64 character sequence validation. Incoming message content is automatically unzipped and encoded as base64 String and 
+compared to the expected data. This way we can make sure that the binary content is as expected.</p>
+<p><strong>Note</strong>
+If you are using http client and server components the gzip compression support is built in with the underlying Spring and http commons libraries. So in http communication
+you just have to set the header <strong>Accept-Encoding=gzip</strong> or <strong>Content-Encoding=gzip</strong>. The message data is then automatically zipped/unzipped before Citrus gets the message data
+for validation. Read more about this http specific gzip compression in <a href="http.html">chapter http</a>.</p>
 
                     
                     </section>
@@ -1607,10 +1636,10 @@
         </div>
 
         
-        <a href="./json-path.html" class="navigation navigation-prev " aria-label="Previous page: Json-path"><i class="fa fa-angle-left"></i></a>
+        <a href="./validation-binary.html" class="navigation navigation-prev " aria-label="Previous page: Binary"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./actions-send.html" class="navigation navigation-next " aria-label="Next page: Send"><i class="fa fa-angle-right"></i></a>
+        <a href="./xpath.html" class="navigation navigation-next " aria-label="Next page: Xpath"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

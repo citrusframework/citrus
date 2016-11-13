@@ -63,7 +63,7 @@
         data-chapter-title="Mail"
         data-filepath="mail.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="mail-support">Mail support</h2>
+                        <h2 id="mail-support"><a name="mail-support" class="plugin-anchor" href="#mail-support"><span class="fa fa-link"></span></a>Mail support</h2>
 <p>Sending and receiving mails is the next interest we are going to talk about. When dealing with mail communication you most certainly need to interact with some sort of IMAP or POP mail server. But in Citrus we do not want to manage mails in a personal inbox. We just need to be able to exchange mail messages the persisting in a user inbox is not part of our business.</p>
 <p>This is why Citrus provides <strong>just</strong> a SMTP mail server which accepts mail messages from clients. Once the SMTP server has accepted an incoming mail it forwards those data to the running test case. In the test case you can receive the incoming mail message and perform message validation as usual. The mail sending part is easy as Citrus offers a mail client that connects to some SMTP server for sending mails to the outside world.</p>
 <p><strong>Note</strong>
@@ -1588,7 +1603,7 @@ The mail components in Citrus are kept in a separate Maven module. So you should
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-mail<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As usual Citrus provides a customized mail configuration schema that is used in Spring configuration files. Simply include the citrus-mail namespace in the configuration XML files as follows.</p>
@@ -1610,7 +1625,7 @@ The mail components in Citrus are kept in a separate Maven module. So you should
 </code></pre>
 <p>Now you are ready to use the customized Http configuration elements with the citrus-mail namespace prefix.</p>
 <p>Read the next section in order to find out more about the mail message support in Citrus.</p>
-<h3 id="mail-client">Mail client</h3>
+<h3 id="mail-client"><a name="mail-client" class="plugin-anchor" href="#mail-client"><span class="fa fa-link"></span></a>Mail client</h3>
 <p>The mail sending part is quite easy and straight forward. We just need to send a mail message to some SMTP server. So Citrus provides a mail client that sends out mail messages.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-mail:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;simpleMailClient&quot;</span>
       <span class="hljs-attribute">host</span>=<span class="hljs-value">&quot;localhost&quot;</span>
@@ -1688,7 +1703,7 @@ The mail components in Citrus are kept in a separate Maven module. So you should
 <span class="hljs-tag">&lt;<span class="hljs-title">assert</span>/&gt;</span>
 </code></pre>
 <p>We assert the <strong><em>MailSendException</em></strong> from Spring to be thrown while sending the mail message to the SMTP server. With exception message validation you are able to expect very specific mail send errors on the client side. This is how you can handle some sort of error situation returned by the mail server. Speaking of mail servers we need to also talk about providing a mail server endpoint in Citrus for clients. This is part of our next section.</p>
-<h3 id="mail-server">Mail server</h3>
+<h3 id="mail-server"><a name="mail-server" class="plugin-anchor" href="#mail-server"><span class="fa fa-link"></span></a>Mail server</h3>
 <p>Consuming mail messages is a more complicated task as we need to have some sort of server that clients can connect to. In your mail client software you typically point to some IMAP or POP inbox and receive mails from that endpoint. In Citrus we do not want to manage a whole personal mail inbox such as IMAP or POP would provide. We just need a SMTP server endpoint for clients to send mails to. The SMTP server accepts mail messages and forwards those to a running test case for further validation.</p>
 <p><strong>Note</strong>
 We have no user inbox where incoming mails are stored. The mail server just forwards incoming mails to the running test for validation. After the test the incoming mail message is gone.</p>
@@ -1851,7 +1866,7 @@ We have no user inbox where incoming mails are stored. The mail server just forw
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

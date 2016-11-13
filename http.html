@@ -63,7 +63,7 @@
         data-chapter-title="Http"
         data-filepath="http.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,14 +1595,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="http-rest-support">HTTP REST support</h2>
+                        <h2 id="http-rest-support"><a name="http-rest-support" class="plugin-anchor" href="#http-rest-support"><span class="fa fa-link"></span></a>HTTP REST support</h2>
 <p>REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a HTTP client sending HTTP requests usually in JSON data format to a HTTP server. As HTTP is a synchronous protocol by nature the client receives the server response synchronously. Citrus is able to connect with HTTP services and test REST APIs on both client and server side with a powerful JSON message data support. In the next sections you will learn how to invoke HTTP services as a client and how to handle REST HTTP requests in a test case. We deal with setting up a HTTP server in order to accept client requests and provide proper HTTP responses with GET, PUT, DELETE or POST request method.</p>
 <p><strong>Note</strong>
 The http components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-http<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level <strong>beans</strong> element. Simply include the http-config namespace in the configuration XML files as follows.</p>
@@ -1608,7 +1623,7 @@ The http components in Citrus are kept in a separate Maven module. So you should
 <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>Now we are ready to use the customized Citrus HTTP configuration elements with the citrus-http namespace prefix.</p>
-<h3 id="http-rest-client">HTTP REST client</h3>
+<h3 id="http-rest-client"><a name="http-rest-client" class="plugin-anchor" href="#http-rest-client"><span class="fa fa-link"></span></a>HTTP REST client</h3>
 <p>On the client side we have a simple HTTP message client component connecting to the server. The <strong>request-url</strong> attribute defines the HTTP server endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages. Citrus as client waits for the response message from server. After that the response message goes through the validation process as usual. Let us see how a Citrus HTTP client component looks like:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>
           <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
@@ -1635,10 +1650,10 @@ The http components in Citrus are kept in a separate Maven module. So you should
 <p><strong>Tip</strong>
 Citrus uses the Spring REST template mechanism for sending out HTTP requests. This means you have great customizing opportunities with a special REST template configuration. You can think of basic HTTP authentication, read timeouts and special message factory implementations. Just use the custom REST template attribute in client configuration like this:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>
-                               <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
-                               <span class="hljs-attribute">request-method</span>=<span class="hljs-value">&quot;GET&quot;</span>
-                               <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/plain&quot;</span>
-                               <span class="hljs-attribute">rest-template</span>=<span class="hljs-value">&quot;customizedRestTemplate&quot;</span>/&gt;</span>
+                   <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
+                   <span class="hljs-attribute">request-method</span>=<span class="hljs-value">&quot;GET&quot;</span>
+                   <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/plain&quot;</span>
+                   <span class="hljs-attribute">rest-template</span>=<span class="hljs-value">&quot;customizedRestTemplate&quot;</span>/&gt;</span>
 
 <span class="hljs-comment">&lt;!-- Customized rest template --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;customizedRestTemplate&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.client.RestTemplate&quot;</span>&gt;</span>
@@ -1682,7 +1697,7 @@ Citrus uses the Spring REST template mechanism for sending out HTTP requests. Th
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/customer&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/xml&quot;</span> <span class="hljs-attribute">accept</span>=<span class="hljs-value">&quot;application/xml, */*&quot;</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>
@@ -1713,7 +1728,7 @@ Citrus uses the Spring REST template mechanism for sending out HTTP requests. Th
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-response</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span> <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;HTTP/1.1&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>
@@ -1738,7 +1753,7 @@ public void httpActionTest() {
                     &quot;<span class="hljs-tag">&lt;<span class="hljs-title">id</span>&gt;</span>citrus:randomNumber()<span class="hljs-tag">&lt;/<span class="hljs-title">id</span>&gt;</span>&quot; +
                     &quot;<span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>testuser<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>&quot; +
                   &quot;<span class="hljs-tag">&lt;/<span class="hljs-title">customer</span>&gt;</span>&quot;)
-          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .header(&quot;X-CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
           .contentType(&quot;text/xml&quot;)
           .accept(&quot;text/xml, */*&quot;);
 
@@ -1748,12 +1763,33 @@ public void httpActionTest() {
           .payload(&quot;<span class="hljs-tag">&lt;<span class="hljs-title">customerResponse</span>&gt;</span>&quot; +
                     &quot;<span class="hljs-tag">&lt;<span class="hljs-title">success</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">success</span>&gt;</span>&quot; +
                   &quot;<span class="hljs-tag">&lt;/<span class="hljs-title">customerResponse</span>&gt;</span>&quot;)
-          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .header(&quot;X-CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
           .version(&quot;HTTP/1.1&quot;);
 }
 </code></pre>
+<p>There is one more setting on the client to be aware of. By default the client component will add the <strong>Accept</strong> http header and set its value to a list of all supported encodings on the host operating system. As
+this list can get very long you may want to not set this default accept header. The setting is done in the Spring RestTemplate:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;customizedRestTemplate&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.client.RestTemplate&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;messageConverters&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;converter&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;writeAcceptCharset&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;false&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>You would have add this custom RestTemplate configuration and set it to the client component with <strong>rest-template</strong> property. But fortunately the Citrus client component provides a separate setting <strong>default-accept-header</strong> which
+is a Boolean setting. By default it is set to <strong>true</strong> so the default accept header is automatically added to all requests. If you set this flag to <strong>false</strong> the header is not set:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>
+                   <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
+                   <span class="hljs-attribute">request-method</span>=<span class="hljs-value">&quot;GET&quot;</span>
+                   <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/plain&quot;</span>
+                   <span class="hljs-attribute">default-accept-header</span>=<span class="hljs-value">&quot;false&quot;</span>/&gt;</span>
+</code></pre>
+<p>Of course you can set the <strong>Accept</strong> header on each send operation in order to tell the server what kind of content types are supported in response messages.</p>
 <p>Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.</p>
-<h3 id="http-rest-server">HTTP REST server</h3>
+<h3 id="http-rest-server"><a name="http-rest-server" class="plugin-anchor" href="#http-rest-server"><span class="fa fa-link"></span></a>HTTP REST server</h3>
 <p>The HTTP client was quite easy and straight forward. Receiving HTTP messages is a little bit more complicated because Citrus has to provide server functionality listening on a local port for client connections. Therefore Citrus offers an embedded HTTP server which is capable of handling incoming HTTP requests. Once a client connection is accepted the HTTP server must also provide a proper HTTP response to the client. In the next few lines you will see how to simulate server side HTTP REST service with Citrus.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
                 <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
@@ -1790,7 +1826,7 @@ The default channel endpoint adapter automatically creates an inbound message ch
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/test&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/xml&quot;</span> <span class="hljs-attribute">accept</span>=<span class="hljs-value">&quot;application/xml, */*&quot;</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Authorization&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
@@ -1811,7 +1847,7 @@ The default channel endpoint adapter automatically creates an inbound message ch
 <span class="hljs-tag">&lt;<span class="hljs-title">http:send-response</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span> <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;HTTP/1.1&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-MessageId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${message_id}&quot;</span>/&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;application/xml&quot;</span>/&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
@@ -1839,7 +1875,7 @@ public void httpServerActionTest() {
                   &quot;&lt;/testRequestMessage&gt;&quot;)
           .contentType(&quot;application/xml&quot;)
           .accept(&quot;application/xml, */*&quot;)
-          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .header(&quot;X-CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
           .header(&quot;Authorization&quot;, &quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;)
           .extractFromHeader(&quot;X-MessageId&quot;, &quot;message_id&quot;);
 
@@ -1851,17 +1887,17 @@ public void httpServerActionTest() {
                   &quot;&lt;/testResponseMessage&gt;&quot;)
           .version(&quot;HTTP/1.1&quot;)
           .contentType(&quot;application/xml&quot;)
-          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .header(&quot;X-CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
           .header(&quot;X-MessageId&quot;, &quot;${message_id}&quot;);
 }
 </code></pre>
 <p>This is the exact same example in Java DSL. We select server actions first and receive client requests. Then we send back a response with a <strong>HttpStatus.OK</strong> status. This completes the server actions on Http message transport. Now we continue with some more Http specific settings and features.</p>
-<h3 id="http-headers">HTTP headers</h3>
+<h3 id="http-headers"><a name="http-headers" class="plugin-anchor" href="#http-headers"><span class="fa fa-link"></span></a>HTTP headers</h3>
 <p>When dealing with HTTP request/response communication we always deal with HTTP specific headers. The HTTP protocol defines a group of header attributes that both client and server need to be able to handle. You can set and validate these HTTP headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some HTTP headers are explicitly set before the request is sent out.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml&quot;</span>/&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml,*/*&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
@@ -1875,11 +1911,11 @@ public void httpServerActionTest() {
   <span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
 </code></pre>
-<p>We are able to set custom headers (<strong>CustomHeaderId</strong>) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as <strong>Content-Type</strong> . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:</p>
+<p>We are able to set custom headers (<strong>X-CustomHeaderId</strong>) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as <strong>Content-Type</strong> . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:</p>
 <pre><code class="lang-xml">POST /test HTTP/1.1
 Accept: text/xml, */*
 Content-Type: text/xml
-CustomHeaderId: 123456789
+X-CustomHeaderId: 123456789
 Accept-Charset: macroman
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8091
@@ -1892,7 +1928,7 @@ Content-Length: 175
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml&quot;</span>/&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml,*/*&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
@@ -1910,7 +1946,7 @@ Content-Length: 175
 <p>Now that we have accepted the client request and validated the contents we are able to send back a proper HTTP response message. Same thing here with HTTP specific headers. The HTTP protocol defines several headers marking the success or failure of the server operation. In the test case you can set those headers for the response message with conventional Citrus header names. See the following example to find out how that works for you.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-response</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
@@ -1922,7 +1958,7 @@ Content-Length: 175
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">http:send-response</span>&gt;</span>
 </code></pre>
-<p>Once more we set the custom header entry (<strong>CustomHeaderId</strong>) and a HTTP reserved header (<strong>Content-Type</strong>) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names <strong>status</strong> in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:</p>
+<p>Once more we set the custom header entry (<strong>X-CustomHeaderId</strong>) and a HTTP reserved header (<strong>Content-Type</strong>) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names <strong>status</strong> in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:</p>
 <pre><code class="lang-xml">HTTP/1.1 200 OK
 Content-Type: text/xml;charset=UTF-8
 Accept-Charset: macroman
@@ -1937,7 +1973,7 @@ You do not have to set the reason phrase all the time. It is sufficient to only 
 <p>The only thing that is missing right now is the validation of HTTP status codes when receiving the server response in a Citrus test case. It is very easy as you can use the Citrus reserved header names for validation, too.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-response</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span> <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;HTTP/1.1&quot;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
@@ -1969,7 +2005,7 @@ You do not have to set the reason phrase all the time. It is sufficient to only 
 <p><strong>Tip</strong>
 Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.</p>
 <p>As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.</p>
-<h3 id="http-form-urlencoded-data">HTTP form urlencoded data</h3>
+<h3 id="http-form-urlencoded-data"><a name="http-form-urlencoded-data" class="plugin-anchor" href="#http-form-urlencoded-data"><span class="fa fa-link"></span></a>HTTP form urlencoded data</h3>
 <p>HTML form data can be sent to the server using different methods and content types. One of them is a POST method with <strong>x-www-form-urlencoded</strong> body content. The form data elements are sent to the server using key-value pairs POST data where the form control name is the key and the control data is the url encoded value.</p>
 <p>Form urlencoded form data content could look like this:</p>
 <pre><code class="lang-xml">password=s%21cr%21t&amp;username=foo
@@ -2022,7 +2058,7 @@ Be aware of the slight differences in request URI and context path. The context 
 </code></pre>
 <p>We use a special message type <strong>x-www-form-urlencoded</strong> so the new message validator will take action. The form url encoded message validator is able to handle a special XML representation of the form data. This enables the very powerful XML message validation capabilities of Citrus such as ignoring elements and usage of test variables inline.</p>
 <p>Each form control is translated to a control element with respective name and value properties. The form data is validated in a more comfortable way as the plaintext message validator would be able to offer.</p>
-<h3 id="http-error-handling">HTTP error handling</h3>
+<h3 id="http-error-handling"><a name="http-error-handling" class="plugin-anchor" href="#http-error-handling"><span class="fa fa-link"></span></a>HTTP error handling</h3>
 <p>So far we have received response messages with HTTP status code <strong>200 OK</strong> . How to deal with server errors like <strong>404 Not Found</strong> or <strong>500 Internal server error</strong> ? The default HTTP message client error strategy is to propagate server error response messages to the receive action for validation. We simply check on HTTP status code and status text for error validation.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
@@ -2064,7 +2100,7 @@ Be aware of the slight differences in request URI and context path. The context 
 <span class="hljs-tag">&lt;/<span class="hljs-title">assert</span>&gt;</span>
 </code></pre>
 <p>Both ways of handling HTTP error messages on client side are valid for expecting the server to raise HTTP error codes. Choose the preferred way according to your test project requirements.</p>
-<h3 id="http-client-basic-authentication">HTTP client basic authentication</h3>
+<h3 id="http-client-basic-authentication"><a name="http-client-basic-authentication" class="plugin-anchor" href="#http-client-basic-authentication"><span class="fa fa-link"></span></a>HTTP client basic authentication</h3>
 <p>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication where the credentials are transmitted in the request header section as base64 encoding.</p>
 <p>The easiest approach to set the <strong>Authorization</strong> header for a basic authentication HTTP request would be to set it on your own in the send action definition. Of course you have to use the correct basic authentication header syntax with base64 encoding for the username:password phrase. See this simple example.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
@@ -2113,7 +2149,7 @@ Content-Length: 175
   <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
 </code></pre>
-<h3 id="http-server-basic-authentication">HTTP server basic authentication</h3>
+<h3 id="http-server-basic-authentication"><a name="http-server-basic-authentication" class="plugin-anchor" href="#http-server-basic-authentication"><span class="fa fa-link"></span></a>HTTP server basic authentication</h3>
 <p>Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;basicAuthHttpServer&quot;</span>
                 <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8090&quot;</span>
@@ -2146,7 +2182,73 @@ Content-Length: 175
 <p>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and inspect the settings and properties offered by the security handler interface.</p>
 <p><strong>Tip</strong>
 This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</p>
-<h3 id="http-servlet-context-customization">HTTP servlet context customization</h3>
+<h3 id="http-gzip-compression"><a name="http-gzip-compression" class="plugin-anchor" href="#http-gzip-compression"><span class="fa fa-link"></span></a>HTTP Gzip compression</h3>
+<p>Gzip is a very popular compression mechanism for optimizing the message transportation for large content. The Citrus http client and server components support gzip compression out of the box. This means
+that you only need to set the specific encoding headers in your http request/response message.</p>
+<ul>
+<li><strong>Accept-Encoding=gzip</strong> Setting for clients when requesting gzip compressed response content. The Http server must support gzip compression then in order to provide the response as zipped byte stream. The Citrus http server component automatically recognizes this header in a request and applies gzip compression to the response.</li>
+<li><strong>Content-Encoding=gzip</strong> When a http server sends compressed message content to the client this header is set to <strong>gzip</strong> in order to mark the compression. The Http client must support gzip compression then in order to unzip the message content. The Citrus http client component automatically recognizes this header in a response and applies gzip unzip logic before passing the message to the test case.</li>
+</ul>
+<p>The Citrus client and server automatically take care on gzip compression when those headers are set. In the test case you do not need to zip or unzip the content then as it is automatically done before.</p>
+<p>This means that you can request gzipped content from a server with just adding the message header <strong>Accept-Encoding</strong> in your http request operation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Send Http client request for gzip compressed data<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;gzipClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/html&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept-Encoding&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;gzip&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/plain&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Receive text automatically gzip unzipped<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">http:receive-response</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;gzipClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/plain&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>${text}<span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-response</span>&gt;</span>
+</code></pre>
+<p>On the server side if we receive a message and the response should be compressed with Gzip we just have to set the <strong>Content-Encoding</strong> header in the response operation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Receive gzip compressed as base64 encoded text<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;echoHttpServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/echo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/html&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept-Encoding&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;gzip&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/plain&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-request</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>Send Http server gzip compressed response<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">http:send-response</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;echoHttpServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Encoding&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;gzip&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/plain&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>${text}<span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-response</span>&gt;</span>
+</code></pre>
+<p>So the Citrus server will automatically add gzip compression to the response for us.</p>
+<p>Of course you can also send gzipped content as a client. Then you would just set the <strong>Content-Encoding</strong> header to <strong>gzip</strong> in your request. The client will automatically apply compression for you.</p>
+<h3 id="http-servlet-context-customization"><a name="http-servlet-context-customization" class="plugin-anchor" href="#http-servlet-context-customization"><span class="fa fa-link"></span></a>HTTP servlet context customization</h3>
 <p>The Citrus HTTP server uses Spring application context loading on startup. For high customizations you can provide a custom servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling incoming requests (GET, PUT, DELETE, POST, etc.).</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;citrusHandlerMapping&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;</span>/&gt;</span>
 
@@ -2230,7 +2332,7 @@ This mechanism is not restricted to basic authentication only. With other settin
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

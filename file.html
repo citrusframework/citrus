@@ -63,7 +63,7 @@
         data-chapter-title="File"
         data-filepath="file.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,9 +1595,9 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="file-support">File support</h2>
+                        <h2 id="file-support"><a name="file-support" class="plugin-anchor" href="#file-support"><span class="fa fa-link"></span></a>File support</h2>
 <p>In chapter<a href="message-channel">message-channel</a>we discussed the native Spring Integration channel support which enables Citrus to interact with all Spring Integration messaging adapter implementations. This is a fantastic way to extend Citrus for additional transports. This interaction now comes handy when writing and reading files from the file system in Citrus.</p>
-<h3 id="write-files">Write files</h3>
+<h3 id="write-files"><a name="write-files" class="plugin-anchor" href="#write-files"><span class="fa fa-link"></span></a>Write files</h3>
 <p>We want to use the Spring Integration file adapter for both reading and writing files with a local directory. Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to message channels that are connected to the Spring Integration file adapters.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileEndpoint&quot;</span> <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>/&gt;</span>
 
@@ -1611,7 +1626,7 @@ The Spring Integration file adapter configuration components add a new namespace
         http://www.springframework.org/schema/integration/file/spring-integration-file.xsd&quot;</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
-<h3 id="read-files">Read files</h3>
+<h3 id="read-files"><a name="read-files" class="plugin-anchor" href="#read-files"><span class="fa fa-link"></span></a>Read files</h3>
 <p>The next program listing shows a possible inbound file communication. So the Spring Integration file inbound adapter will read files from a storage directory and publish the file contents to a message channel. Citrus can then receive those files as messages in a test case via the channel endpoint and validate the file contents for instance.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">file:inbound-channel-adapter</span>  <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;fileInboundAdapter&quot;</span>
         <span class="hljs-attribute">channel</span>=<span class="hljs-value">&quot;fileChannel&quot;</span>
@@ -1686,7 +1701,7 @@ The file inbound adapter constructs Java file objects as the message payload by 
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

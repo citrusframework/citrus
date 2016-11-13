@@ -63,7 +63,7 @@
         data-chapter-title="Changes-new"
         data-filepath="changes-new.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,19 +1595,47 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="whats-new-in-citrus-26">What&apos;s new in Citrus 2.6?!</h2>
+                        <h2 id="whats-new-in-citrus-26"><a name="whats-new-in-citrus-26" class="plugin-anchor" href="#whats-new-in-citrus-26"><span class="fa fa-link"></span></a>What&apos;s new in Citrus 2.6?!</h2>
 <p>Citrus 2.6 comes with a set of new modules that enable completely new aspects of integration testing. Namely these are the new modules for Cucumber behavior driven development and Zookeeper support. Just have a look at the following features that are shipped within the 2.6 box.</p>
-<h3 id="cucumber-bdd-support">Cucumber BDD support</h3>
+<h3 id="gzip-compression"><a name="gzip-compression" class="plugin-anchor" href="#gzip-compression"><span class="fa fa-link"></span></a>Gzip compression</h3>
+<p>Citrus now supports Gzip message compression. For Http client server endpoints we introduced special compression filters that automatically tak care on compression
+when the http header <strong>Accept-Encoding=gzip</strong> or <strong>Content-Encoding=gzip</strong> is set. For other endpoints we introduced the message type <strong>gzip</strong> and the message validator
+<strong>gzip-base64</strong> which automatically compresses and decompresses message payloads and enables base64 String comparison for validation purpose. The new compression features are
+described in <a href="http">http</a> and <a href="validation-gzip">validation-gzip</a>.</p>
+<h3 id="custom-servlet-filters"><a name="custom-servlet-filters" class="plugin-anchor" href="#custom-servlet-filters"><span class="fa fa-link"></span></a>Custom servlet filters</h3>
+<p>The Citrus http server component now accepts custom servlet filter implementations. This is useful for implementing custom logic on request/response processing such as
+automatic message compression or caching. You can set one or many custom filter implementations and map those to request paths for the server. Read about this in chapter <a href="http">http</a>.</p>
+<h3 id="escape-test-variable-syntax"><a name="escape-test-variable-syntax" class="plugin-anchor" href="#escape-test-variable-syntax"><span class="fa fa-link"></span></a>Escape test variable syntax</h3>
+<p>Citrus uses test variables and looks for the expressions of type <strong>${variable-name}</strong>. Now when this same syntax is part of a message content we run into errors as Citrus
+wants to find a test variable. At the end Citrus complains about the unknown variable. Therefore we introduced an escape syntax for variables so you can skip the Citrus variable expression evaluation.
+You can do this by using <strong>${//escaped//}</strong> syntax. Read more about this in <a href="test-variables">test-variables</a>.</p>
+<h3 id="configurable-xml-serializer"><a name="configurable-xml-serializer" class="plugin-anchor" href="#configurable-xml-serializer"><span class="fa fa-link"></span></a>Configurable XML serializer</h3>
+<p>We often deal with XML message format and therefore need to parse and serialize XML data. The default XML serializer uses <strong>pretty print</strong> format and <strong>cdata section</strong> support. Now
+sometimes it is mandatory to customize these settings which is possible with the new version. You can add a custom XML serializer in the Spring application context and Citrus will automatically use this
+implementation and configuration. You can see how it works in chapter <a href="validation-xml">validation-xml</a>.</p>
+<h3 id="local-message-store"><a name="local-message-store" class="plugin-anchor" href="#local-message-store"><span class="fa fa-link"></span></a>Local message store</h3>
+<p>We introduced a local message store that automatically saves all exchanged messages (inbound and outbound). This message store can be used to get exchanged messages during and after the test.
+Test actions as well as test listeners can access the local message store. Read more about this in chapters <a href="endpoints">endpoints</a>, <a href="actions-send">actions-send</a> and <a href="actions-receive">actions-receive</a>.</p>
+<h3 id="wait-message-condition"><a name="wait-message-condition" class="plugin-anchor" href="#wait-message-condition"><span class="fa fa-link"></span></a>Wait message condition</h3>
+<p>The wait test action has a new condition. Besides waiting for files to exist and http requests to be responded you can now wait for messages in the local message store. This way you 
+can wait for a certain message to arrive. This is described in chapter <a href="actions-wait">actions-wait</a>.</p>
+<h3 id="xpath-and-jsonpath-function"><a name="xpath-and-jsonpath-function" class="plugin-anchor" href="#xpath-and-jsonpath-function"><span class="fa fa-link"></span></a>Xpath and JsonPath Function</h3>
+<p>There are new functions available to evaluate some Xpath or JsonPath expression on a XML/Json source. The source can be a static structure coming from an external file or a message payload stored in the local 
+storage. See how to use this functions in chapter <a href="functions">functions</a>.</p>
+<h3 id="static-response-adapter-variables-support"><a name="static-response-adapter-variables-support" class="plugin-anchor" href="#static-response-adapter-variables-support"><span class="fa fa-link"></span></a>Static response adapter variables support</h3>
+<p>Server components can use static response adapters that automatically send response messages to any calling client. The response adapter is now able to use test variables and functions. In addition to that
+you can map values from the actual request message that has triggered the response adapter by using the local message store in combination with Xpath or JsonPath. Read about this in <a href="endpoint-adapter">endpoint-adapter</a>.</p>
+<h3 id="cucumber-bdd-support"><a name="cucumber-bdd-support" class="plugin-anchor" href="#cucumber-bdd-support"><span class="fa fa-link"></span></a>Cucumber BDD support</h3>
 <p>Behavior driven development is more and more coming up also in the integration testing environment. Cucumber is a fantastic behavior driven development library that provides support for BDD concepts with Gherkin. The new Citrus integration with Cucumber enables the mix of Gherkin syntax feature scenarios with Citrus test case execution. You write feature stories as usual and create Citrus test cases with lots of actions for the integration test. See details for this feature in <a href="cucumber">cucumber</a>.</p>
-<h3 id="zookeeper-support">Zookeeper support</h3>
+<h3 id="zookeeper-support"><a name="zookeeper-support" class="plugin-anchor" href="#zookeeper-support"><span class="fa fa-link"></span></a>Zookeeper support</h3>
 <p>Zookeeper from Apache lets you manage configuration with distributed coordination. As a user you create and edit values on a Zookeeper server. Other clients then can retrieve this information. With Citrus you are able to access this information from within a test case. The Zookeeper Citrus client lets you manage information on the Zookeeper server. See details for this feature in <a href="zookeeper">zookeeper</a>.</p>
-<h3 id="spring-restdocs-support">Spring Restdocs support</h3>
+<h3 id="spring-restdocs-support"><a name="spring-restdocs-support" class="plugin-anchor" href="#spring-restdocs-support"><span class="fa fa-link"></span></a>Spring Restdocs support</h3>
 <p>Restdocs is a fantastic way of generating documentation for RESTful APIs. While exchanging request/response data with the server Restdocs creates documentation information on the data. The documentation includes field descriptions, headers and snippets for body content. With new Citrus version Http clients in Citrus can add Restdoc interceptors that generate the documentation while executing the test cases. This way you are able to document what messages were exchanged in tests. The Restdocs support is also available for the SOAP Http client in Citrus. See details in <a href="restdocs">restdocs</a>.</p>
-<h3 id="hamcrest-matcher-conditions">Hamcrest matcher conditions</h3>
+<h3 id="hamcrest-matcher-conditions"><a name="hamcrest-matcher-conditions" class="plugin-anchor" href="#hamcrest-matcher-conditions"><span class="fa fa-link"></span></a>Hamcrest matcher conditions</h3>
 <p>Iterating test action containers in Citrus evaluate boolean expressions for determination of how to execute the nested actions in a loop. Also the conditional container executes nested actions based on boolean expression evaluation. The Citrus boolean expression support is limited to very basic operations such as lower than or greater than. Furthermore the combination of boolean expressions with variables has not been supported. Following from that we have improved the boolean expression evaluation mechanism with extension to Hamcrest matchers. So now you can evaluate matchers in iterating conditions. This feature is described in<a href="containers-conditional">containers-conditional</a>and<a href="containers-iterate">containers-iterate</a>.</p>
-<h3 id="soap-java-dsl">SOAP Java DSL</h3>
+<h3 id="soap-java-dsl"><a name="soap-java-dsl" class="plugin-anchor" href="#soap-java-dsl"><span class="fa fa-link"></span></a>SOAP Java DSL</h3>
 <p>Citrus provides a new Java fluent API for sending and receiving SOAP related message content. The Java DSL enhancements are based on those of Http. Now you can define SOAP messages with special SOAP action headers more easily. On top of that you can handle SOAP faults on client and server with the fluent API. Checkout<a href="soap-webservices">soap-webservices</a>for details.</p>
-<h3 id="refactoring">Refactoring</h3>
+<h3 id="refactoring"><a name="refactoring" class="plugin-anchor" href="#refactoring"><span class="fa fa-link"></span></a>Refactoring</h3>
 <p>Refactoring in terms of simplification and standardization is part of our daily life as a developer. We have been working on improving the Java DSL fluent API for SOAP. We also introduced a more common way of handling the test action containers like iterate, parallel and so on. This leads to some classes and methods that were marked as deprecated. So please have a look at your Java DSL code and if you see some usage of deprecated stuff please use the new approaches as soon as possible. The deprecated stuff will definitely disappear in upcoming releases.</p>
 <p>Some of the changes that we have made might hit you right away. These changes are:</p>
 <ul>
@@ -1602,7 +1645,7 @@
 </li>
 </ul>
 <p>You may face some missing dependencies errors when running the Maven project. As a result you need to include the Citrus modules (e.g. citrus-http, citrus-docker, and so on) in your project Maven POM explicitly.</p>
-<h3 id="bugfixes">Bugfixes</h3>
+<h3 id="bugfixes"><a name="bugfixes" class="plugin-anchor" href="#bugfixes"><span class="fa fa-link"></span></a>Bugfixes</h3>
 <p>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in JIRA (<a href="http://www.citrusframework.org/changes-report.html" target="_blank">http://www.citrusframework.org/changes-report.html</a>).</p>
 
                     
@@ -1655,7 +1698,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

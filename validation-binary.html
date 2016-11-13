@@ -47,7 +47,7 @@
         
     
     
-    <link rel="next" href="./xpath.html" />
+    <link rel="next" href="./validation-gzip.html" />
     
     
     <link rel="prev" href="./validation-plaintext.html" />
@@ -63,7 +63,7 @@
         data-chapter-title="Binary"
         data-filepath="validation-binary.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="binary-message-validation">Binary message validation</h3>
+                        <h3 id="binary-message-validation"><a name="binary-message-validation" class="plugin-anchor" href="#binary-message-validation"><span class="fa fa-link"></span></a>Binary message validation</h3>
 <p>Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. In Citrus the way to compare binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.</p>
 <p>The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation takes place. The binary data can be anything e.g. images, pdf or gzip content.</p>
 <p>The default message validator for binary messages is active by default. Citrus will pick this message validator for all messages of <strong>type=&quot;binary_base64&quot;</strong> . The default message validator implementation can be overwritten by placing a Spring bean with id <strong>defaultBinaryBase64MessageValidator</strong> to the Spring application context.</p>
@@ -1589,12 +1604,19 @@
 <p>In the test case receiving action we tell Citrus to use binary base64 message validation.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;binary_base64&quot;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>citrus:encodeBase64(&apos;Hello World!&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
 <p>With the message format type <strong>type=&quot;binary_base64&quot;</strong> Citrus performs the base64 character sequence validation. Incoming message content is automatically encoded as base64 String and compared to the expected data. This way we can make sure that the binary content is as expected.</p>
-<p>By the way sending binary base64 messages in Citrus is also very easy. Just use the binary base64 encoding function to do so.</p>
+<p>By the way sending binary messages in Citrus is also very easy. Just use the <strong>type=&quot;binary&quot;</strong> message type in the send operation. Citrus now converts the message payload to a binary stream as payload.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;binary&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>Hello World!<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>Base64 encoding is also supported in outbound messages. Just use the <strong>encodeBase64</strong> function in Citrus. The result is a base64 encoded String as message payload.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpMessageEndpoint&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>citrus:encodeBase64(&apos;Hello World!&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
@@ -1614,7 +1636,7 @@
         <a href="./validation-plaintext.html" class="navigation navigation-prev " aria-label="Previous page: Plaintext"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./xpath.html" class="navigation navigation-next " aria-label="Next page: Xpath"><i class="fa fa-angle-right"></i></a>
+        <a href="./validation-gzip.html" class="navigation navigation-next " aria-label="Next page: Gzip"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
@@ -1652,7 +1674,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

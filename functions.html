@@ -63,7 +63,7 @@
         data-chapter-title="Functions"
         data-filepath="functions.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="functions">Functions</h2>
+                        <h2 id="functions"><a name="functions" class="plugin-anchor" href="#functions"><span class="fa fa-link"></span></a>Functions</h2>
 <p>The test framework will offer several functions that are useful throughout the test execution. The functions will always return a string value that is ready for use as variable value or directly inside a text message.</p>
 <p>A set of functions is usually combined to a function library. The library has a prefix that will identify the functions inside the test case. The default test framework function library uses a default prefix (citrus). You can write your own function library using your own prefix in order to extend the test framework functionality whenever you want.</p>
 <p>The library is built in the Spring configuration and contains a set of functions that are of public use.</p>
@@ -1598,7 +1613,7 @@
 </code></pre>
 <p><strong>Tip</strong>
 You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library uses the <strong>citrus:</strong> prefix.In the next chapters the default functions offered by the framework will be described in detail.</p>
-<h3 id="citrusconcat">citrus:concat()</h3>
+<h3 id="citrusconcat"><a name="citrusconcat" class="plugin-anchor" href="#citrusconcat"><span class="fa fa-link"></span></a>citrus:concat()</h3>
 <p>The function will combine several string tokens to a single string value. This means that you can combine a static text value with a variable value for instance. A first example should clarify the usage:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;concatFunctionTest&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
@@ -1626,7 +1641,7 @@ You can add custom function implementations and custom function libraries. Just 
     <span class="hljs-tag">&lt;<span class="hljs-title">validate</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;//element/element&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:concat(&apos;Cx1x&apos;, ${generatedId})&quot;</span>/&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
 </code></pre>
-<h3 id="citrussubstring">citrus:substring()</h3>
+<h3 id="citrussubstring"><a name="citrussubstring" class="plugin-anchor" href="#citrussubstring"><span class="fa fa-link"></span></a>citrus:substring()</h3>
 <p>The function will have three parameters.</p>
 <ol>
 <li>String to work on</li>
@@ -1648,7 +1663,7 @@ You can add custom function implementations and custom function libraries. Just 
 <p>Function output:</p>
 <pre><code>Test Framework 
 Hello
-</code></pre><h3 id="citrusstringlength">citrus:stringLength()</h3>
+</code></pre><h3 id="citrusstringlength"><a name="citrusstringlength" class="plugin-anchor" href="#citrusstringlength"><span class="fa fa-link"></span></a>citrus:stringLength()</h3>
 <p>The function will calculate the number of characters in a string representation and return the number.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:stringLength(&apos;Hello Test Framework&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
@@ -1656,7 +1671,7 @@ Hello
 </code></pre>
 <p>Function output:</p>
 <p><strong>20</strong> </p>
-<h3 id="citrustranslate">citrus:translate()</h3>
+<h3 id="citrustranslate"><a name="citrustranslate" class="plugin-anchor" href="#citrustranslate"><span class="fa fa-link"></span></a>citrus:translate()</h3>
 <p>This function will replace regular expression matching values inside a string representation with a specified replacement string.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
@@ -1667,7 +1682,7 @@ Hello
 <p>Note that the second parameter will be a regular expression. The third parameter will be a simple replacement string value.</p>
 <p>Function output:</p>
 <p><strong>Hello Test Framework</strong> </p>
-<h3 id="citrussubstringbefore">citrus:substringBefore()</h3>
+<h3 id="citrussubstringbefore"><a name="citrussubstringbefore" class="plugin-anchor" href="#citrussubstringbefore"><span class="fa fa-link"></span></a>citrus:substringBefore()</h3>
 <p>The function will search for the first occurrence of a specified string and will return the substring before that occurrence. Let us have a closer look in a simple example:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
@@ -1678,7 +1693,7 @@ Hello
 <p>In the specific example the function will search for the &#x2018;/&#x2019; character and return the string before that index.</p>
 <p>Function output:</p>
 <p><strong>Test</strong> </p>
-<h3 id="citrussubstringafter">citrus:substringAfter()</h3>
+<h3 id="citrussubstringafter"><a name="citrussubstringafter" class="plugin-anchor" href="#citrussubstringafter"><span class="fa fa-link"></span></a>citrus:substringAfter()</h3>
 <p>The function will search for the first occurrence of a specified string and will return the substring after that occurrence. Let us clarify this with a simple example:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
@@ -1689,7 +1704,7 @@ Hello
 <p>Similar to the substringBefore function the &#x2018;/&#x2019; character is found in the string. But now the remaining string is returned by the function meaning the substring after this character index.</p>
 <p>Function output:</p>
 <p><strong>Framework</strong> </p>
-<h3 id="citrusround">citrus:round()</h3>
+<h3 id="citrusround"><a name="citrusround" class="plugin-anchor" href="#citrusround"><span class="fa fa-link"></span></a>citrus:round()</h3>
 <p>This is a simple mathematic function that will round decimal numbers representations to their nearest non decimal number.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:round(&apos;3.14&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
@@ -1697,7 +1712,7 @@ Hello
 </code></pre>
 <p>Function output:</p>
 <p><strong>3</strong> </p>
-<h3 id="citrusfloor">citrus:floor()</h3>
+<h3 id="citrusfloor"><a name="citrusfloor" class="plugin-anchor" href="#citrusfloor"><span class="fa fa-link"></span></a>citrus:floor()</h3>
 <p>This function will round down decimal number values.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:floor(&apos;3.14&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
@@ -1705,7 +1720,7 @@ Hello
 </code></pre>
 <p>Function output:</p>
 <p><strong>3.0</strong> </p>
-<h3 id="citrusceiling">citrus:ceiling()</h3>
+<h3 id="citrusceiling"><a name="citrusceiling" class="plugin-anchor" href="#citrusceiling"><span class="fa fa-link"></span></a>citrus:ceiling()</h3>
 <p>Similar to floor function, but now the function will round up the decimal number values.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:ceiling(&apos;3.14&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
@@ -1713,7 +1728,7 @@ Hello
 </code></pre>
 <p>Function output:</p>
 <p><strong>4.0</strong> </p>
-<h3 id="citrusrandomnumber">citrus:randomNumber()</h3>
+<h3 id="citrusrandomnumber"><a name="citrusrandomnumber" class="plugin-anchor" href="#citrusrandomnumber"><span class="fa fa-link"></span></a>citrus:randomNumber()</h3>
 <p>The random number function will provide you the opportunity to generate random number strings containing positive number letters. There is a singular Boolean parameter for that function describing whether the generated number should have exactly the amount of digits. Default value for this padding flag will be true.</p>
 <p>Next example will show the function usage:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
@@ -1728,7 +1743,7 @@ Hello
 5003485980 
 6387650 
 65
-</code></pre><h3 id="citrusrandomstring">citrus:randomString()</h3>
+</code></pre><h3 id="citrusrandomstring"><a name="citrusrandomstring" class="plugin-anchor" href="#citrusrandomstring"><span class="fa fa-link"></span></a>citrus:randomString()</h3>
 <p>This function will generate a random string representation with a defined length. A second parameter for this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows also digit characters in the generated string. By default digit charaters are not allowed.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString0&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${citrus:randomString(10)}&quot;</span>/&gt;</span>
@@ -1745,7 +1760,7 @@ AgSSwedetG
 JSDFUTTRKU 
 dtkhirtsuz 
 Vt567JkA32
-</code></pre><h3 id="citrusrandomenumvalue">citrus:randomEnumValue()</h3>
+</code></pre><h3 id="citrusrandomenumvalue"><a name="citrusrandomenumvalue" class="plugin-anchor" href="#citrusrandomenumvalue"><span class="fa fa-link"></span></a>citrus:randomEnumValue()</h3>
 <p>This function returns one of its supplied arguments. Furthermore you can specify a custom function with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments. This promotes code reuse and facilitates refactoring.</p>
 <p>In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpStatusCode&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomEnumValue(&apos;200&apos;, &apos;401&apos;, &apos;500&apos;)&quot;</span> /&gt;</span>
@@ -1768,7 +1783,7 @@ Vt567JkA32
 <p>We have added a custom function library with a custom function definition. The custom function &quot;randomHttpStatusCode&quot; randomly chooses an HTTP status code each time it is called. Inside the test you can use the function like this:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpStatusCode&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;custom:randomHttpStatusCode()&quot;</span> /&gt;</span>
 </code></pre>
-<h3 id="citruscurrentdate">citrus:currentDate()</h3>
+<h3 id="citruscurrentdate"><a name="citruscurrentdate" class="plugin-anchor" href="#citruscurrentdate"><span class="fa fa-link"></span></a>citrus:currentDate()</h3>
 <p>This function will definitely help you when accessing the current date. Some examples will show the usage in detail:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate()<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
@@ -1788,7 +1803,7 @@ Vt567JkA32
 2009-09-01 
 2009-09-01 12:00:00 
 2009-09-01T12:00:00
-</code></pre><h3 id="citrusuppercase">citrus:upperCase()</h3>
+</code></pre><h3 id="citrusuppercase"><a name="citrusuppercase" class="plugin-anchor" href="#citrusuppercase"><span class="fa fa-link"></span></a>citrus:upperCase()</h3>
 <p>This function converts any string to upper case letters.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:upperCase(&apos;Hello Test Framework&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
@@ -1796,7 +1811,7 @@ Vt567JkA32
 </code></pre>
 <p>Function output:</p>
 <p><strong>HELLO TEST FRAMEWORK</strong> </p>
-<h3 id="citruslowercase">citrus:lowerCase()</h3>
+<h3 id="citruslowercase"><a name="citruslowercase" class="plugin-anchor" href="#citruslowercase"><span class="fa fa-link"></span></a>citrus:lowerCase()</h3>
 <p>This function converts any string to lower case letters.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:lowerCase(&apos;Hello Test Framework&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
@@ -1804,32 +1819,32 @@ Vt567JkA32
 </code></pre>
 <p>Function output:</p>
 <p><strong>hello test framework</strong> </p>
-<h3 id="citrusaverage">citrus:average()</h3>
+<h3 id="citrusaverage"><a name="citrusaverage" class="plugin-anchor" href="#citrusaverage"><span class="fa fa-link"></span></a>citrus:average()</h3>
 <p>The function will sum up all specified number values and divide the result through the number of values.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;avg&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:average(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>avg = <strong>4.0</strong> </p>
-<h3 id="citrusminimum">citrus:minimum()</h3>
+<h3 id="citrusminimum"><a name="citrusminimum" class="plugin-anchor" href="#citrusminimum"><span class="fa fa-link"></span></a>citrus:minimum()</h3>
 <p>This function returns the minimum value in a set of number values.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;min&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:minimum(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>min = <strong>3.0</strong> </p>
-<h3 id="citrusmaximum">citrus:maximum()</h3>
+<h3 id="citrusmaximum"><a name="citrusmaximum" class="plugin-anchor" href="#citrusmaximum"><span class="fa fa-link"></span></a>citrus:maximum()</h3>
 <p>This function returns the maximum value in a set of number values.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;max&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:maximum(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>max = <strong>5.0</strong> </p>
-<h3 id="citrussum">citrus:sum()</h3>
+<h3 id="citrussum"><a name="citrussum" class="plugin-anchor" href="#citrussum"><span class="fa fa-link"></span></a>citrus:sum()</h3>
 <p>The function will sum up all number values. The number values can also be negative.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;sum&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:sum(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>sum = <strong>12.0</strong> </p>
-<h3 id="citrusabsolute">citrus:absolute()</h3>
+<h3 id="citrusabsolute"><a name="citrusabsolute" class="plugin-anchor" href="#citrusabsolute"><span class="fa fa-link"></span></a>citrus:absolute()</h3>
 <p>The function will return the absolute number value.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;abs&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:absolute(&apos;-3&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>abs = <strong>3.0</strong> </p>
-<h3 id="citrusmapvalue">citrus:mapValue()</h3>
+<h3 id="citrusmapvalue"><a name="citrusmapvalue" class="plugin-anchor" href="#citrusmapvalue"><span class="fa fa-link"></span></a>citrus:mapValue()</h3>
 <p>This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen at runtime and the corresponding value is not defined during the design time.</p>
 <p>The following function library defines a custom function for mapping HTTP status codes to the corresponding messages:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:function-library</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myCustomFunctionLibrary&quot;</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">&quot;custom:&quot;</span>&gt;</span>
@@ -1849,22 +1864,22 @@ Vt567JkA32
 <p>In this example the function sets the variable httpStatusMessage to the &apos;Internal Server Error&apos; string dynamically at runtime. The test only knows the HTTP status code and does not care about spelling and message locales.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpStatusCodeMessage&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;custom:getHttpStatusMessage(&apos;500&apos;)&quot;</span> /&gt;</span>
 </code></pre>
-<h3 id="citrusrandomuuid">citrus:randomUUID()</h3>
+<h3 id="citrusrandomuuid"><a name="citrusrandomuuid" class="plugin-anchor" href="#citrusrandomuuid"><span class="fa fa-link"></span></a>citrus:randomUUID()</h3>
 <p>The function will generate a random Java UUID.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;uuid&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomUUID()&quot;</span>/&gt;</span>
 </code></pre>
 <p>uuid = <strong>98fbd7b0-832e-4b85-b9d2-e0113ee88356</strong> </p>
-<h3 id="citrusencodebase64">citrus:encodeBase64()</h3>
+<h3 id="citrusencodebase64"><a name="citrusencodebase64" class="plugin-anchor" href="#citrusencodebase64"><span class="fa fa-link"></span></a>citrus:encodeBase64()</h3>
 <p>The function will encode a string to binary data using base64 hexadecimal encoding.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;encoded&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:encodeBase64(&apos;Hallo Testframework&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>encoded = <strong>VGVzdCBGcmFtZXdvcms=</strong> </p>
-<h3 id="citrusdecodebase64">citrus:decodeBase64()</h3>
+<h3 id="citrusdecodebase64"><a name="citrusdecodebase64" class="plugin-anchor" href="#citrusdecodebase64"><span class="fa fa-link"></span></a>citrus:decodeBase64()</h3>
 <p>The function will decode binary data to a character sequence using base64 hexadecimal decoding.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;decoded&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:decodeBase64(&apos;VGVzdCBGcmFtZXdvcms=&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>decoded = <strong>Hallo Testframework</strong> </p>
-<h3 id="citrusescapexml">citrus:escapeXml()</h3>
+<h3 id="citrusescapexml"><a name="citrusescapexml" class="plugin-anchor" href="#citrusescapexml"><span class="fa fa-link"></span></a>citrus:escapeXml()</h3>
 <p>If you want to deal with escaped XML in your test case you may want to use this function. It automatically escapes all XML special characters.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
@@ -1875,12 +1890,12 @@ Vt567JkA32
 <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
 </code></pre>
 <p><strong>&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;</strong> </p>
-<h3 id="citruscdatasection">citrus:cdataSection()</h3>
+<h3 id="citruscdatasection"><a name="citruscdatasection" class="plugin-anchor" href="#citruscdatasection"><span class="fa fa-link"></span></a>citrus:cdataSection()</h3>
 <p>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;cdata&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:cdataSection(&apos;payload&apos;)&quot;</span>/&gt;</span>
 </code></pre>
 <p>cdata = <strong><code>&lt;![CDATA[payload]]&gt;</code></strong> </p>
-<h3 id="citrusdigestauthheader">citrus:digestAuthHeader()</h3>
+<h3 id="citrusdigestauthheader"><a name="citrusdigestauthheader" class="plugin-anchor" href="#citrusdigestauthheader"><span class="fa fa-link"></span></a>citrus:digestAuthHeader()</h3>
 <p>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;digest&quot;</span> 
   <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:digestAuthHeader(&apos;username&apos;, &apos;password&apos;, &apos;authRealm&apos;, &apos;acegi&apos;, 
@@ -1898,13 +1913,13 @@ Vt567JkA32
 <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
 </code></pre>
 <p>This will set a Http Authorization header with the respective digest in the request message. So your test is ready for client digest authentication.</p>
-<h3 id="citruslocalhostaddress">citrus:localHostAddress()</h3>
+<h3 id="citruslocalhostaddress"><a name="citruslocalhostaddress" class="plugin-anchor" href="#citruslocalhostaddress"><span class="fa fa-link"></span></a>citrus:localHostAddress()</h3>
 <p>Test cases may use the local host address for some reason (e.g. used as authentication principle). As the tests may run on different machines at the same time we can not use static host addresses. The provided function localHostAddress() reads the local host name dynamically at runtime.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;address&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:localHostAddress()&quot;</span>/&gt;</span>
 </code></pre>
 <p>A possible value is either the host name as used in DNS entry or an IP address value:</p>
 <p>address = <strong><code>&lt;192.168.2.100&gt;</code></strong> </p>
-<h3 id="citruschangedate">citrus:changeDate()</h3>
+<h3 id="citruschangedate"><a name="citruschangedate" class="plugin-anchor" href="#citruschangedate"><span class="fa fa-link"></span></a>citrus:changeDate()</h3>
 <p>This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</p>
 <p>Let us clarify this with a simple example for this function:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
@@ -1925,7 +1940,7 @@ Vt567JkA32
 <p>Function output:</p>
 <pre><code>1999-12-09
 </code></pre><p>With this you are able to manipulate all date values of static or dynamic nature at test runtime.</p>
-<h3 id="citrusreadfile">citrus:readFile()</h3>
+<h3 id="citrusreadfile"><a name="citrusreadfile" class="plugin-anchor" href="#citrusreadfile"><span class="fa fa-link"></span></a>citrus:readFile()</h3>
 <p>The <strong>readFile</strong> function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values and other functions.</p>
 <p>Let&apos;s see this function in action:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
@@ -1936,6 +1951,74 @@ Vt567JkA32
 <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
 </code></pre>
 <p>The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance. This is a very powerful way to extract large message parts to separate file resources. Just add the <strong>readFile</strong> function somewhere to the message content and Citrus will load the extra file content and place it right into the message payload for you.</p>
+<h3 id="citrusmessage"><a name="citrusmessage" class="plugin-anchor" href="#citrusmessage"><span class="fa fa-link"></span></a>citrus:message()</h3>
+<p>When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
+that have been sent or received within the test case. The <strong>message</strong> function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
+the message name. Now we can load the message payload with that name.</p>
+<p>Let&apos;s see this function in action:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:message(myRequest.payload())<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The function above loads the message named <strong>myRequest</strong> from the local memory store. This requires a send or receive action to have handled the message before in the same test case.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;someEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myRequest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>Some payload<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-java">send(<span class="hljs-string">&quot;someEndpoint&quot;</span>)
+    .name(<span class="hljs-string">&quot;myRequest&quot;</span>)
+    .payload(<span class="hljs-string">&quot;Some payload&quot;</span>);
+</code></pre>
+<p>The name of the message is important. Otherwise the message can not be found in the local message store. Note: a message can either be received or sent with a name in order to be stored
+in the local message store. The <strong>message</strong> function is then able to access the message by its name. In the first example the <strong>payload()</strong> has been loaded. Of course we can also access header information.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:message(myRequest.header(&apos;Operation&apos;))<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The sample above loads the header <strong>Operation</strong> of the message.</p>
+<p>In Java DSL the message store is also accessible over the TestContext.</p>
+<h3 id="citrusxpath"><a name="citrusxpath" class="plugin-anchor" href="#citrusxpath"><span class="fa fa-link"></span></a>citrus:xpath()</h3>
+<p>The <strong>xpath</strong> function evaluates a Xpath expressions on some XML source and returns the expression result as String.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:xpath(&apos;&lt;message&gt;&lt;id&gt;1000&lt;/id&gt;&lt;/text&gt;Some text content&lt;/text&gt;&lt;/message&gt;&apos;, &apos;/message/id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The XML source is given as first function parameter and can be loaded in different ways. In the example above a static XML source has been used. We could load the XML content from
+external file or just use a test variable.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:xpath(citrus:readFile(&apos;some/path/to/file.xml&apos;), &apos;/message/id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Also accessing the local message store is valid here:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:xpath(citrus:message(myRequest.payload()), &apos;/message/id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
+becomes very easy then.</p>
+<h3 id="citrusjsonpath"><a name="citrusjsonpath" class="plugin-anchor" href="#citrusjsonpath"><span class="fa fa-link"></span></a>citrus:jsonPath()</h3>
+<p>The <strong>jsonPath</strong> function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:jsonPath(&apos;{ &quot;message&quot;: { &quot;id&quot;: 1000, &quot;text&quot;: &quot;Some text content&quot; } }&apos;, &apos;$.message.id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The JSON source is given as first function parameter and can be loaded in different ways. In the example above a static JSON source has been used. We could load the JSON content from
+external file or just use a test variable.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:jsonPath(${jsonSource}, &apos;$.message.id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Also accessing the local message store is valid here:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:jsonPath(citrus:message(myRequest.payload()), &apos;$.message.id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
+becomes very easy then.</p>
 
                     
                     </section>
@@ -1987,7 +2070,7 @@ Vt567JkA32
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

@@ -63,7 +63,7 @@
         data-chapter-title="Wait"
         data-filepath="actions-wait.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,14 +1595,13 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="wait">Wait</h3>
+                        <h3 id="wait"><a name="wait" class="plugin-anchor" href="#wait"><span class="fa fa-link"></span></a>Wait</h3>
 <p>With this action you can make your test wait until a certain condition is satisfied. The attribute <strong>seconds</strong> defines the amount of time to wait in seconds. You can also use the milliseconds attribute for a more fine grained time value. The attribute <strong>interval</strong> defines the amount of time to wait <strong>between</strong> each check. The interval is always specified as millisecond time interval.</p>
 <p>If the check does not exceed within the defined overall waiting time then the test execution fails with an appropriate error message. There are different types of conditions to check.</p>
 <ul>
-<li><p><strong>http</strong> : This condition is based on a Http request call on a server endpoint. Citrus will wait until the Http response is as defined (e.g. Http 200 OK). This is useful when you want to wait for a server to start.</p>
-</li>
-<li><p><strong>file</strong> : This condition checks for the existence of a file on the local file system. Citrus will wait until the file is present.</p>
-</li>
+<li><strong>http</strong> : This condition is based on a Http request call on a server endpoint. Citrus will wait until the Http response is as defined (e.g. Http 200 OK). This is useful when you want to wait for a server to start.</li>
+<li><strong>file</strong> : This condition checks for the existence of a file on the local file system. Citrus will wait until the file is present.</li>
+<li><strong>message</strong> : This condition checks for the existence of a message in the local message store of the current test case. Citrus will wait until the message with the given name is present.</li>
 </ul>
 <p>Next let us have a look at a simple example:</p>
 <p><strong>XML DSL</strong> </p>
@@ -1623,6 +1637,24 @@
 }
 </code></pre>
 <p>Citrus checks for the file to exist under the given path. Only if the file exists the test will continue with further test actions.</p>
+<p>Next let us have a look at the message condition usage:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;waitTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wait</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;10&quot;</span> <span class="hljs-attribute">interval</span>=<span class="hljs-value">&quot;2000&quot;</span> &gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;helloRequest&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wait</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL designer and runner</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">waitTest</span><span class="hljs-params">()</span> </span>{
+    waitFor().message(<span class="hljs-string">&quot;helloRequest&quot;</span>);
+}
+</code></pre>
+<p>Citrus checks for the message with the name <strong>helloRequest</strong> in the local message store. Only if the message with the given name is found the test will continue with further test actions. The local message
+store is automatically filled with all exchanged messages (send or receive) in a test case. The message names are defined in the respective send or receive operations in the test.</p>
 <p>When should somebody use this action? This action is very useful when you want your test to wait for a certain event to occur before continuing with the test execution. For example if you wish that your test waits until a Docker container is started or for an application to create a log file before continuing, then use this action. You can also create your own condition statements and bind it to the test action.</p>
 
                     
@@ -1675,7 +1707,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

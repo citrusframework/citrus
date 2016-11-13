@@ -63,7 +63,7 @@
         data-chapter-title="Database"
         data-filepath="actions-database.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="database-actions">Database actions</h3>
+                        <h3 id="database-actions"><a name="database-actions" class="plugin-anchor" href="#database-actions"><span class="fa fa-link"></span></a>Database actions</h3>
 <p>In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent 
 data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this 
 using the two database actions that are described in the following sections.</p>
@@ -1590,7 +1605,7 @@ INSERT, UPDATE, DELETE. </p>
 <p><strong>Important</strong>
 Do not mix statements of type <strong><em>SELECT</em></strong> with others in a single sql test action. This will lead to errors because validation steps are not valid
 for statements other than SELECT. Please use separate test actions for update statements.</p>
-<h3 id="sql-update-insert-delete">SQL update, insert, delete</h3>
+<h3 id="sql-update-insert-delete"><a name="sql-update-insert-delete" class="plugin-anchor" href="#sql-update-insert-delete"><span class="fa fa-link"></span></a>SQL update, insert, delete</h3>
 <p>The <sql> action simply executes a group of SQL statements in order to change data in a database. Typically the action is used to prepare the database at the beginning of a test or to clean up the database at the end of a test. You can specify SQL statements like INSERT, UPDATE, DELETE, CREATE TABLE, ALTER TABLE and many more.</sql></p>
 <p>On the one hand you can specify the statements as inline SQL or stored in an external SQL resource file as shown in the next two examples.</p>
 <p><strong>XML DSL</strong> </p>
@@ -1646,7 +1661,7 @@ You have to pay attention to some rules when dealing with external SQL resources
 <p><strong>Note</strong>
 The external file is referenced either as file system resource or class path resource, by using the &quot;file:&quot; or &quot;classpath:&quot; prefix.</p>
 <p>Both examples use the &quot;datasource&quot; attribute. This value defines the database data source to be used. The connection to a data source is mandatory, because the test case does not know about user credentials or database names. The &apos;datasource&apos; attribute references predefined data sources that are located in a separate Spring configuration file.</p>
-<h3 id="sql-query">SQL query</h3>
+<h3 id="sql-query"><a name="sql-query" class="plugin-anchor" href="#sql-query"><span class="fa fa-link"></span></a>SQL query</h3>
 <p>The <sql> query action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to read data from a database. The query results are validated against expected data as shown in the next example.</sql></p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">sql</span> <span class="hljs-attribute">datasource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>&gt;</span>
@@ -1751,7 +1766,7 @@ The validation with <strong><em>&quot;<validate column="..." value="...">&quot;<
 <p>For the validation of multiple rows the <strong><em><code>&lt;validate&gt;</code></em></strong> element is able to host a list of control values for a column. As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. Functions and variables are supported as usual.</p>
 <p><strong>Important</strong>
 It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add &quot;order by&quot; SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.</p>
-<h3 id="groovy-sql-result-set-validation">Groovy SQL result set validation</h3>
+<h3 id="groovy-sql-result-set-validation"><a name="groovy-sql-result-set-validation" class="plugin-anchor" href="#groovy-sql-result-set-validation"><span class="fa fa-link"></span></a>Groovy SQL result set validation</h3>
 <p>Groovy provides great support for accessing Java list objects and maps. As a Java SQL result set is nothing but a list of map representations, where each entry in the list defines a row in the result set and each map entry represents the columns and values. So with Groovy&apos;s list and map access we have great possibilities to validate a SQL result set - out of the box.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">sql</span> <span class="hljs-attribute">datasource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>&gt;</span>
@@ -1783,7 +1798,7 @@ It is important, that the control values are defined in the correct order, becau
 <p>As you can see Groovy provides fantastic access methods to the SQL result set. We can browse the result set with named column values and check the size of the result set. We are also able to search for an entry, iterate over the result set and have other helpful operations. For a detailed description of the list and map handling in Groovy my advice for you is to have a look at the official Groovy documentation.</p>
 <p><strong>Note</strong>
 In general other script languages do also support this kind of list and map access. For now we just have implemented the Groovy script support, but the framework is ready to work with all other great script languages out there, too (e.g. Scala, Clojure, Fantom, etc.). So if you prefer to work with another language join and help us implement those features.</p>
-<h3 id="save-result-set-values">Save result set values</h3>
+<h3 id="save-result-set-values"><a name="save-result-set-values" class="plugin-anchor" href="#save-result-set-values"><span class="fa fa-link"></span></a>Save result set values</h3>
 <p>Now the validation of database entries is a very powerful feature but sometimes we simply do not know the persisted content values. The test may want to read database entries into test variables without validation. Citrus is able to do that with the following <extract> expressions:</extract></p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">sql</span> <span class="hljs-attribute">datasource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>&gt;</span>
@@ -1856,7 +1871,7 @@ In general other script languages do also support this kind of list and map acce
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

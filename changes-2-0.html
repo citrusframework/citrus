@@ -63,7 +63,7 @@
         data-chapter-title="Changes 2.0"
         data-filepath="changes-2-0.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,9 +1595,9 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="changes-in-citrus-20">Changes in Citrus 2.0</h3>
+                        <h3 id="changes-in-citrus-20"><a name="changes-in-citrus-20" class="plugin-anchor" href="#changes-in-citrus-20"><span class="fa fa-link"></span></a>Changes in Citrus 2.0</h3>
 <p>Citrus 2.0 is a major version upgrade and therefore big things should be happening. In the following sections we shortly describe the Citrus evolution. We want you to get a quick overview of what has happened and all the new things in Citrus. So hopefully you can spot your favorite new feature.</p>
-<h3 id="refactoring">Refactoring</h3>
+<h3 id="refactoring"><a name="refactoring" class="plugin-anchor" href="#refactoring"><span class="fa fa-link"></span></a>Refactoring</h3>
 <p>In Citrus 1.4 we began to refactor the configuration components in Citrus. This refactoring was finalized in Citrus 2.0 which means that all deprecated classes and api are no longer supported. The classes were removed so you get compilation errors when using those old stuff. If you still use the old configuration see this<a href="migration-sheet">http://citrusframework.org/migration-sheet.html</a>in order to learn how to upgrade to the new configuration. It is worth to do so! In addition to that we did refactoring in following fields:</p>
 <ul>
 <li><p><strong>Reply message correlation</strong> In synchronous communication scenarios Citrus optionally correlated messages across send and receive test actions. In default setting the message correlation was disabled. With 2.0 release we changed this behavior to the opposite. Now message correlation is done by default with a default correlation algorithm. So in case you used the DefaultReplyMessageCorrelator in Citrus before you will not have to do so in future as this is done by default. The message correlation gives us more robust tests especially when executing tests in parallel. In the test case you do not have to do anything for proper message correlation.</p>
@@ -1602,25 +1617,25 @@
 <li><p><strong>WebServiceEndpoint class renamed</strong> In terms of package refactoring the <strong>com.consol.citrus.ws.WebServiceEndpoint</strong> was renamed to <strong>com.consol.citrus.ws.server.WebServiceEndpoint</strong> </p>
 </li>
 </ul>
-<h3 id="spring-framework-4x">Spring framework 4.x</h3>
+<h3 id="spring-framework-4x"><a name="spring-framework-4x" class="plugin-anchor" href="#spring-framework-4x"><span class="fa fa-link"></span></a>Spring framework 4.x</h3>
 <p>In terms of upgrading the Citrus API dependencies we introduced Spring 4.x versions. This includes the core Spring framework libraries as well as the Spring Integration and Spring WebService project artifacts. So with the major version upgrade lots of API changes were also done in Citrus code in order to meet the new Spring 4.x API. So we recommend for you to also use Spring 4.x version in your Citrus projects.</p>
-<h3 id="ftp-support">FTP support</h3>
+<h3 id="ftp-support"><a name="ftp-support" class="plugin-anchor" href="#ftp-support"><span class="fa fa-link"></span></a>FTP support</h3>
 <p>New member of the Citrus family deals with FTP connectivity. The new <strong>citrus-ftp</strong> module provides a neat ftp server and client implementation so you can send and receive messages vie FTP message transport. <a href="ftp">ftp</a> describes the new functionality in detail.</p>
-<h3 id="functions-with-test-context-access">Functions with test context access</h3>
+<h3 id="functions-with-test-context-access"><a name="functions-with-test-context-access" class="plugin-anchor" href="#functions-with-test-context-access"><span class="fa fa-link"></span></a>Functions with test context access</h3>
 <p>Functions are now able to access the test context. This enables you to access all test variables and other central test related components in a function implementation. Therefore the function Java interface has now an additional test context parameter. Refactor your custom written functions accordingly to meet the new interface rules. See<a href="how to write custom functions">http://www.citrusframework.org/tutorials-functions.html</a>for details.</p>
-<h3 id="validation-matcher-with-test-context-access">Validation matcher with test context access</h3>
+<h3 id="validation-matcher-with-test-context-access"><a name="validation-matcher-with-test-context-access" class="plugin-anchor" href="#validation-matcher-with-test-context-access"><span class="fa fa-link"></span></a>Validation matcher with test context access</h3>
 <p>Just like functions now validation matchers are able to access the test context. This enables you to access all test variables and other central test related components in a validation matcher implementation. The validation matcher Java interface has changed accordingly with an additional test context parameter. Refactor your custom written matcher implementation accordingly to meet the new interface rules.</p>
-<h3 id="message-listener-with-test-context-access">Message listener with test context access</h3>
+<h3 id="message-listener-with-test-context-access"><a name="message-listener-with-test-context-access" class="plugin-anchor" href="#message-listener-with-test-context-access"><span class="fa fa-link"></span></a>Message listener with test context access</h3>
 <p>Message listeners do now also have access to the test context. This is more powerful as you can access test variables and other central components within the test context.</p>
-<h3 id="soap-over-jms">SOAP over JMS</h3>
+<h3 id="soap-over-jms"><a name="soap-over-jms" class="plugin-anchor" href="#soap-over-jms"><span class="fa fa-link"></span></a>SOAP over JMS</h3>
 <p>SOAP over JMS was supported in Citrus from the very beginning. Unfortunately you had to always specify the whole SOAP envelope in your test case. SOAP envelope handling is now done automatically by Citrus when using the new <strong>SoapJmsMessageConverter</strong> . The converter takes care on constructing a proper SOAP envelope message. See<a href="jms-soap">jms-soap</a>for details.</p>
-<h3 id="multiple-soap-attachments">Multiple SOAP attachments</h3>
+<h3 id="multiple-soap-attachments"><a name="multiple-soap-attachments" class="plugin-anchor" href="#multiple-soap-attachments"><span class="fa fa-link"></span></a>Multiple SOAP attachments</h3>
 <p>When sending and receiving SOAP messages with Citrus as client or server you can add one to many attachments to the message. Before it was only possible to have one single attachment in a message. Now you have no limits in defining SOAP attachments. See<a href="soap-webservices">soap-webservices</a>for details.</p>
-<h3 id="multiple-soap-xml-header-fragments">Multiple SOAP XML header fragments</h3>
+<h3 id="multiple-soap-xml-header-fragments"><a name="multiple-soap-xml-header-fragments" class="plugin-anchor" href="#multiple-soap-xml-header-fragments"><span class="fa fa-link"></span></a>Multiple SOAP XML header fragments</h3>
 <p>The SOAP header can hold multiple XML header fragments with different namespaces and content. With Citrus 2.0 you are able to construct such a SOAP message with multiple header contents. See<a href="soap-webservices">soap-webservices</a>for details.</p>
-<h3 id="create-variable-validation-matcher">Create variable validation matcher</h3>
+<h3 id="create-variable-validation-matcher"><a name="create-variable-validation-matcher" class="plugin-anchor" href="#create-variable-validation-matcher"><span class="fa fa-link"></span></a>Create variable validation matcher</h3>
 <p>A new validation matcher implementation is able to create a new variable on the fly. The actual field name is used as variable name and the element value as variable value. The variable name can slo be customized with optional validation matcher parameter. This is a great alternative to the XPath expression evaluating variable extraction. Also very handsome to use this validation matcher in Json message payloads. See<a href="validation-matcher-variable">validation-matcher-variable</a>for details.</p>
-<h3 id="new-configuration-components">New configuration components</h3>
+<h3 id="new-configuration-components"><a name="new-configuration-components" class="plugin-anchor" href="#new-configuration-components"><span class="fa fa-link"></span></a>New configuration components</h3>
 <p>A major part of the Citrus configuration is done in a Spring bean application context. Central Citrus components and features are added as Spring beans to the application context. Now with Citrus 2.0 we have added special configuration components for almost all features. This means that you can easily add configuration using the new XML schema components. See which components are available:</p>
 <ul>
 <li><p><strong>Function library</strong> Custom function libraries with custom function implementations are now configured with the <strong>function-library</strong> XML schema components in the Spring application context configuration. See <a href="functions">functions</a> for details.</p>
@@ -1632,9 +1647,9 @@
 <li><p><strong>Namespace context</strong> Configuration of a global namespace context is necessary for XML message payloads and XPath expressions used in the test cases. The <strong>namespace-context</strong> XML schema component is used in the Spring application context configuration and simplifies the configuration. See <a href="xpath">xpath</a> for details.</p>
 </li>
 </ul>
-<h3 id="beforeafter-suite-components">Before/after suite components</h3>
+<h3 id="beforeafter-suite-components"><a name="beforeafter-suite-components" class="plugin-anchor" href="#beforeafter-suite-components"><span class="fa fa-link"></span></a>Before/after suite components</h3>
 <p>When executing test actions before the actual test run you can use the sequence before suite components. We have improved these components to use a special XML schema. This enables easy configuration of both before and after suite actions. In addition to that you can bind the suite actions to special packages, test names or suite names. So you can now have more than one sequence before suite at the same time. According to the environment settings the before suite actions are executed or left out. Last not least we have done the same improvement to the before test actions and we have introduced a after test sequence component for execution after each test. See how this is done in <a href="testsuite">testsuite</a>.</p>
-<h3 id="citrus-jms-module">Citrus JMS module</h3>
+<h3 id="citrus-jms-module"><a name="citrus-jms-module" class="plugin-anchor" href="#citrus-jms-module"><span class="fa fa-link"></span></a>Citrus JMS module</h3>
 <p>JMS support has been a major part of Citrus from the very beginning. Up to now the JMS features were located in <strong>citrus-core</strong> Maven module. With Citrus 2.0 we introduced a separate <strong>citrus-jms</strong> Maven module. This means that you might have to add proper Maven dependency of this new module in your existing project when using JMS. See how this is done in <a href="jms">jms</a>.</p>
 
                     
@@ -1687,7 +1702,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

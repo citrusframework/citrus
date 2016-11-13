@@ -63,7 +63,7 @@
         data-chapter-title="Xml"
         data-filepath="validation-xml.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,12 +1595,12 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="xml-message-validation">Xml message validation</h3>
+                        <h3 id="xml-message-validation"><a name="xml-message-validation" class="plugin-anchor" href="#xml-message-validation"><span class="fa fa-link"></span></a>XML message validation</h3>
 <p>XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message validator implementations that are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema validation. The default XML message validator implementation is active by default and can be overwritten with a custom implementation using the bean id <strong>defaultXmlMessageValidator</strong> .</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultXmlMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;</span>/&gt;</span>
 </code></pre>
 <p>The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces with different prefixes and attributes als well as namespace qualified attributes. See the following sections for a detailed description of all capabilities.</p>
-<h3 id="xml-payload-validation">XML payload validation</h3>
+<h3 id="xml-payload-validation"><a name="xml-payload-validation" class="plugin-anchor" href="#xml-payload-validation"><span class="fa fa-link"></span></a>XML payload validation</h3>
 <p>Once Citrus has received a message the tester can validate the message contents in various ways. First of all the tester can compare the whole message payload to a predefined control message template.</p>
 <p>The receiving action offers following elements for control message templates:</p>
 <ul>
@@ -1609,7 +1624,7 @@
         .header(<span class="hljs-string">&quot;MessageId&quot;</span>, <span class="hljs-string">&quot;${messageId}&quot;</span>);
 }
 </code></pre>
-<h3 id="xml-header-validation">XML header validation</h3>
+<h3 id="xml-header-validation"><a name="xml-header-validation" class="plugin-anchor" href="#xml-header-validation"><span class="fa fa-link"></span></a>XML header validation</h3>
 <p>Now that we have validated the message payload in various ways we are now interested in validating the message header. This is simple as you have to define the header name and the control value that you expect. Just add the following header validation to your receiving action.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
@@ -1631,7 +1646,7 @@ Sometimes message headers may not apply to the name-value pair pattern. For exam
 <p>Some elements in the message payload might not apply for validation at all. Just think of communication timestamps an dynamic values inside a message:</p>
 <p>The timestamp value in our next example will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.</p>
 <p><strong>XML DSL</strong> </p>
-<pre><code class="lang-xml"> <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">TestMessage</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">MessageId</span>&gt;</span>${messageId}<span class="hljs-tag">&lt;/<span class="hljs-title">MessageId</span>&gt;</span>
@@ -1655,7 +1670,42 @@ Sometimes message headers may not apply to the name-value pair pattern. For exam
 }
 </code></pre>
 <p>Of course you can use the inline <strong>@ignore@</strong> placeholder in an external file resource, too.</p>
-<h3 id="groovy-xml-validation">Groovy XML validation</h3>
+<h3 id="customize-xml-parser-and-serializer"><a name="customize-xml-parser-and-serializer" class="plugin-anchor" href="#customize-xml-parser-and-serializer"><span class="fa fa-link"></span></a>Customize XML parser and serializer</h3>
+<p>When working with XML data format parsing and serializing is a common task. XML structures are parsed to a DOM (Document Object Model) representation in order
+to process elements, attributes and text nodes. Also DOM node objects get serialized to a String message payload representation. The XML parser and serializer is customizable
+to a certain level. By default Citrus uses the <a href="https://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/" target="_blank">DOM Level 3 Load and Save</a> implementation with following settings:</p>
+<p><em>Parser settings</em></p>
+<ul>
+<li><strong>cdata-sections</strong> = <strong>true</strong></li>
+<li><strong>split-cdata-sections</strong> = <strong>false</strong></li>
+<li><strong>validate-if-schema</strong> = <strong>true</strong></li>
+<li><strong>element-content-whitespace</strong> = <strong>false</strong></li>
+</ul>
+<p><em>Serializer settings</em> </p>
+<ul>
+<li><strong>format-pretty-print</strong> = <strong>true</strong></li>
+<li><strong>split-cdata-sections</strong> = <strong>false</strong></li>
+<li><strong>element-content-whitespace</strong> = <strong>true</strong></li>
+</ul>
+<p>The parameters are also described in <a href="https://www.w3.org/TR/DOM-Level-3-Core/core.html#DOMConfiguration" target="_blank">W3C DOM configuration</a> documentation. We can customize the default settings by adding
+a <em>XmlConfigurer</em> Spring bean to the Citrus application context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;xmlConfigurer&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.xml.XmlConfigurer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;parseSettings&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;validate-if-schema&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;false&quot;</span> <span class="hljs-attribute">value-type</span>=<span class="hljs-value">&quot;java.lang.Boolean&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">map</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;serializeSettings&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;comments&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;false&quot;</span> <span class="hljs-attribute">value-type</span>=<span class="hljs-value">&quot;java.lang.Boolean&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;format-pretty-print&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;false&quot;</span> <span class="hljs-attribute">value-type</span>=<span class="hljs-value">&quot;java.lang.Boolean&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">map</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong>
+This configuration is of global nature. All XML processing operations will be affected with this configuration.</p>
+<h3 id="groovy-xml-validation"><a name="groovy-xml-validation" class="plugin-anchor" href="#groovy-xml-validation"><span class="fa fa-link"></span></a>Groovy XML validation</h3>
 <p>With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the message elements and uses simple code assertions in order to control the message content. Here is an example how to validate messages with Groovy script:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceClient&quot;</span> <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;5000&quot;</span>&gt;</span>
@@ -1784,7 +1834,7 @@ For further information on the Groovy XmlSlurper please see the official Groovy 
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

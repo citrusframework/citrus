@@ -63,7 +63,7 @@
         data-chapter-title="Run"
         data-filepath="run.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="running-tests">Running tests</h2>
+                        <h2 id="running-tests"><a name="running-tests" class="plugin-anchor" href="#running-tests"><span class="fa fa-link"></span></a>Running tests</h2>
 <p>Citrus test cases are nothing but Java classes that get executed within a Java runtime environment. Each Citrus test therefore relates to a Java class representing a JUnit or TestNG unit test. As optional add on a Citrus test can have a XML test declaration file. This is for those of you that do not want to code in Java. In this case the XML part holds all actions to tell Citrus what should happen in the test case. The Java part will then just be responsible for test execution and is not likely to be changed at all. In the following sections we concentrate on the Java part and the test execution mechanism.</p>
 <p>If you create new test cases in Citrus - for instance via Maven plugin or ANT build script - Citrus generates both parts in your test directory. For example: if you create a new test named <strong>MyFirstCitrusTest</strong> you will find these two files as a result:</p>
 <pre><code>src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml 
@@ -1591,7 +1606,7 @@ If you prefer to just write Java code you can throw away the XML part immediatel
 <p>So why is Citrus related to Unit tests although it is intended to be a framework for integration testing? The answer to this question is quite simple: This is because Citrus wants to benefit from both JUnit and TestNG for Java test execution. Both the JUnit and TestNG Java APIs offer various ways of execution and both frameworks are widely supported by other tools (e.g. continuous build, build lifecycle, development IDE).</p>
 <p>Users might already know one of these frameworks and the chances are good that they are familiar with at least one of them. Everything you can do with JUnit and TestNG test cases you can do with Citrus tests also. Include them into your Maven build lifecycle. Execute tests from your IDE (Eclipse, IDEA or NetBeans). Include them into a continuous build tool (e.g. Jenkins). Generate test execution reports and test coverage reports with Sonar, Cobertura and so on. The possibilities with JUnit and TestNG are amazing.</p>
 <p>So let us have a closer look at the Citrus TestNG and JUnit integration.</p>
-<h3 id="run-with-testng">Run with TestNG</h3>
+<h3 id="run-with-testng"><a name="run-with-testng" class="plugin-anchor" href="#run-with-testng"><span class="fa fa-link"></span></a>Run with TestNG</h3>
 <p>TestNG stands for next generation testing and has had a great influence in adding Java annotations to the unit test community. Citrus is able to generate TestNG Java classes that are executable as test cases. See the following standard template that Citrus will generate when having new test cases:</p>
 <pre><code class="lang-java"><span class="hljs-keyword">package</span> com.consol.citrus.samples;
 
@@ -1635,7 +1650,7 @@ If you prefer to just write Java code you can throw away the XML part immediatel
 <p>You see the class is quite similar to the XML test variation. Now we extend a Citrus test designer class which enables the Java DSL features in addition to the TestNG test execution for us. The basic <strong>@Test</strong> annotation for TestNG has not changed. We still have a usual TestNG class with the possibility of several methods each representing a separate unit test.</p>
 <p>Now what has changed is the <strong>@CitrusTest</strong> annotation. Now the Citrus test logic is placed directly as the method body with using the Java domain specific language features. The XML Citrus test part is not necessary anymore. If you are wondering about the designer super class and the Java DSL methods for adding the test logic to your test please be patient we will learn more about the Java DSL features in this reference guide later on.</p>
 <p>Up to now we just concentrate on the TestNG integration that is quite easy isn&apos;t it.</p>
-<h3 id="using-testng-dataproviders">Using TestNG DataProviders</h3>
+<h3 id="using-testng-dataproviders"><a name="using-testng-dataproviders" class="plugin-anchor" href="#using-testng-dataproviders"><span class="fa fa-link"></span></a>Using TestNG DataProviders</h3>
 <p>TestNG as a framework comes with lots of great features such as data providers. Data providers execute a test case several times. Each test execution gets a specific parameter value. With Citrus you can use those data provider parameters inside the test as variables. See the next listing on how to use TestNG data providers in Citrus:</p>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DataProviderIT</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTestNGCitrusTest</span> </span>{
 
@@ -1656,7 +1671,7 @@ If you prefer to just write Java code you can throw away the XML part immediatel
 }
 </code></pre>
 <p>Above test case method is annotated with TestNG data provider called <strong>messageDataProvider</strong> . In the same class you can write the data provider that returns a list of parameter values. TestNG will execute the test case several times according to the provided parameter list. Each execution is shipped with the respective parameter value. According to the <strong>@CitrusParameter</strong> annotation the test will have a test variable called <strong>message</strong> that is accessible as usual.</p>
-<h3 id="run-with-junit">Run with JUnit</h3>
+<h3 id="run-with-junit"><a name="run-with-junit" class="plugin-anchor" href="#run-with-junit"><span class="fa fa-link"></span></a>Run with JUnit</h3>
 <p>JUnit is a very popular unit test framework for Java applications widely accepted and widely supported by many tools. In general Citrus supports both JUnit and TestNG as test execution frameworks. Although the TestNG customization features are slightly more powerful than those offered by JUnit you as a Citrus user should be able to use the framework of your choice. The complete support for executing test cases with package scans and multiple annotated methods is given for both frameworks. If you choose <strong>junit</strong> as execution framework Citrus generates a Java file that looks like this:</p>
 <pre><code class="lang-java"><span class="hljs-keyword">package</span> com.consol.citrus.samples;
 
@@ -1711,7 +1726,7 @@ So now we know both TestNG and JUnit support in Citrus. Which framework should s
 <p>The Java DSL test case looks quite familiar as we also use the JUnit4 <strong>@Test</strong> annotation in order to mark our test for unit test execution. In addition to that we add a <strong>@CitrusTest</strong> annotation and extend from a basic JUnit4 Citrus test designer which enables the Java domain specific language features. The Citrus test logic goes directly to the method block. There is no need for a XML test file anymore.</p>
 <p>As you can see the <strong>@CitrusTest</strong> annotation supports multiple test methods in one single class. Each test is prepared and executed separately just as you know it from JUnit. You can define an explicit Citrus test name that is used in Citrus test reports. If no explicit test name is given the test method name will be used as a test name.</p>
 <p>If you need to know more details about the test designer and on how to use the Citrus Java DSL just continue with this reference guide. We will describe the capabilities in detail later on.</p>
-<h3 id="running-xml-tests">Running XML tests</h3>
+<h3 id="running-xml-tests"><a name="running-xml-tests" class="plugin-anchor" href="#running-xml-tests"><span class="fa fa-link"></span></a>Running XML tests</h3>
 <p>Now we also use the @CitrusXmlTest annotation in the Java class. This annotation makes Citrus search for a XML file that represents the Citrus test within your classpath. Later on we will also discuss another Citrus annotation (<strong>@CitrusTest</strong>) which stands for defining the Citrus test just with Java domain specific language features. For now we continue to deal with the XML Citrus test execution.</p>
 <p>The default naming convention requires a XML file with the tests name in the same package that the Java class is placed in. In the basic example above this means that Citrus searches for a XML test file in <strong>com/consol/citrus/samples/SampleIT.xml</strong> . You tell Citrus to search for another XML file by using the @CitrusXmlTest annotation properties. Following annotation properties are valid:</p>
 <ul>
@@ -1791,7 +1806,7 @@ When test execution takes place each test method annotation is evaluated in sequ
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

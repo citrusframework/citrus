@@ -63,7 +63,7 @@
         data-chapter-title="Validation Matchers"
         data-filepath="validation-matchers.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="validation-matcher">Validation matcher</h2>
+                        <h2 id="validation-matcher"><a name="validation-matcher" class="plugin-anchor" href="#validation-matcher"><span class="fa fa-link"></span></a>Validation matcher</h2>
 <p>Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. With test variables we are able to check for simple value equality. We ensure that message entries are equal to predefined expected values. Validation matcher add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform more complex assertions like <strong>contains</strong> or <strong>isNumber</strong> in your validation statements.</p>
 <p>The following sections describe the Citrus default validation matcher implementations that are ready for usage. The matcher implementations should cover the basic assertions on character sequences and numbers. Of course you can add custom validation matcher implementations in order to meet your very specific validation assertions, too.</p>
 <p>First of all let us have a look at a validation matcher statement in action so we understand how to use them in a test case.</p>
@@ -1617,7 +1632,7 @@ You can use validation matcher with all validation mechanisms - not only with XM
 </code></pre>
 <p><strong>Tip</strong>
 You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.</p>
-<h3 id="matchesxml">matchesXml()</h3>
+<h3 id="matchesxml"><a name="matchesxml" class="plugin-anchor" href="#matchesxml"><span class="fa fa-link"></span></a>matchesXml()</h3>
 <p>The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive following XML message payload for validation:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">GetCustomerMessage</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">CustomerDetails</span>&gt;</span>
@@ -1656,43 +1671,43 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 <p>This matcher implementation checks for equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence to check for.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@equalsIgnoreCase(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="contains">contains()</h3>
+<h3 id="contains"><a name="contains" class="plugin-anchor" href="#contains"><span class="fa fa-link"></span></a>contains()</h3>
 <p>This matcher searches for a character sequence inside the actual value. If the character sequence is not found somewhere the matcher starts complaining.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@contains(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
 <p>The validation matcher also exist in a case insensitive variant.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@containsIgnoreCase(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="startswith">startsWith()</h3>
+<h3 id="startswith"><a name="startswith" class="plugin-anchor" href="#startswith"><span class="fa fa-link"></span></a>startsWith()</h3>
 <p>The matcher implementation asserts that the given value starts with a character sequence otherwise the matcher will arise some error.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@startsWith(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="endswith">endsWith()</h3>
+<h3 id="endswith"><a name="endswith" class="plugin-anchor" href="#endswith"><span class="fa fa-link"></span></a>endsWith()</h3>
 <p>Ends with matcher validates a value to end with a given character sequence.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@endsWith(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="matches">matches()</h3>
+<h3 id="matches"><a name="matches" class="plugin-anchor" href="#matches"><span class="fa fa-link"></span></a>matches()</h3>
 <p>You can check a value to meet a regular expression with this validation matcher. This is for instance very useful for email address validation.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@matches(&apos;[a-z0-9]&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="matchesdatepattern">matchesDatePattern()</h3>
+<h3 id="matchesdatepattern"><a name="matchesdatepattern" class="plugin-anchor" href="#matchesdatepattern"><span class="fa fa-link"></span></a>matchesDatePattern()</h3>
 <p>Date values are always difficult to check for equality. Especially when you have millisecond timestamps to deal with. Therefore the date pattern validation matcher should have some improvement for you. You simply validate the date format pattern instead of checking for total equality.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@matchesDatePattern(&apos;yyyy-MM-dd&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
 <p>The example listing uses a date format pattern that is expected. The actual date value is parsed according to this pattern and may cause errors in case the value is no valid date matching the desired format.</p>
-<h3 id="isnumber">isNumber()</h3>
+<h3 id="isnumber"><a name="isnumber" class="plugin-anchor" href="#isnumber"><span class="fa fa-link"></span></a>isNumber()</h3>
 <p>Checking on values to be of numeric nature is essential. The actual value must be a numeric number otherwise the matcher raises errors. The matcher implementation does not evaluate any parameters.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@isNumber()@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="lowerthan">lowerThan()</h3>
+<h3 id="lowerthan"><a name="lowerthan" class="plugin-anchor" href="#lowerthan"><span class="fa fa-link"></span></a>lowerThan()</h3>
 <p>This matcher checks a number to be lower than a given threshold value.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@lowerThan(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="greaterthan">greaterThan()</h3>
+<h3 id="greaterthan"><a name="greaterthan" class="plugin-anchor" href="#greaterthan"><span class="fa fa-link"></span></a>greaterThan()</h3>
 <p>The matcher implementation will check on numeric values to be greater than a minimum value.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@greaterThan(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
-<h3 id="isweekday">isWeekday()</h3>
+<h3 id="isweekday"><a name="isweekday" class="plugin-anchor" href="#isweekday"><span class="fa fa-link"></span></a>isWeekday()</h3>
 <p>The matcher works on date values and checks that a given date evaluates to the expected day of the week. The user defines the expected day by its name in uppercase characters. The matcher fails in case the given date is another week day than expected.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@isWeekday(&apos;MONDAY&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
 </code></pre>
@@ -1701,7 +1716,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@isWeekday(MONDAY(&apos;yyyy-MM-dd&apos;))@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
 </code></pre>
 <p>Now the matcher uses the custom date format in order to parse the date value for evaluation. The validation matcher also works with date time values. In this case you have to give a valid date time format respectively (e.g. FRIDAY(&apos;yyyy-MM-dd&apos;T&apos;hh:mm:ss&apos;)).</p>
-<h3 id="variable">variable()</h3>
+<h3 id="variable"><a name="variable" class="plugin-anchor" href="#variable"><span class="fa fa-link"></span></a>variable()</h3>
 <p>This is a very special validation matcher. Instead of performing a validation logic you can save the actual value passed to the validation matcher as new test variable. This comes very handy as you can use the matcher wherever you want: JSON message payloads, XML message payloads, headers and so on.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@variable(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
 </code></pre>
@@ -1709,7 +1724,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">date</span>&gt;</span>@variable()@<span class="hljs-tag">&lt;/<span class="hljs-title">date</span>&gt;</span>
 </code></pre>
 <p>This creates a new variable <strong>date</strong> with the actual element value as variable value.</p>
-<h3 id="daterange">dateRange()</h3>
+<h3 id="daterange"><a name="daterange" class="plugin-anchor" href="#daterange"><span class="fa fa-link"></span></a>dateRange()</h3>
 <p>The matcher works on date values and checks that a given date is within the expected date range. The user defines the expected date range by specifying a from-date, a to-date and optionally a date format. The matcher fails when the given date lies outside the expected date range.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@dateRange(&apos;01-12-2015&apos;, &apos;31-12-2015&apos;, &apos;dd-MM-yyyy&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
 </code></pre>
@@ -1717,7 +1732,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 <p>The date-format is optional and when omitted it is assumed that all dates match the default date format <strong>yyyy-MM-dd</strong> . When specifying a custom date format use java&apos;s date format as a reference for valid date formats. Only dates were used in the example above but we could just as easily used date and time as shown in the example below</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@dateRange(&apos;2015.12.01 07:00:00&apos;, &apos;2015.12.01 19:00:00&apos;, &apos;yyyy.MM.dd HH:mm:ss&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
 </code></pre>
-<h3 id="assertthat">assertThat()</h3>
+<h3 id="assertthat"><a name="assertthat" class="plugin-anchor" href="#assertthat"><span class="fa fa-link"></span></a>assertThat()</h3>
 <p>Hamcrest is a very powerful matcher library with extraordinary matcher implementations. You can use Hamcrest matchers also as Citrus validation matcher.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalTo(foo))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
 </code></pre>
@@ -1801,7 +1816,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

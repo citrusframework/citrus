@@ -63,7 +63,7 @@
         data-chapter-title="Endpoint-adapter"
         data-filepath="endpoint-adapter.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="endpoint-adapter">Endpoint adapter</h2>
+                        <h2 id="endpoint-adapter"><a name="endpoint-adapter" class="plugin-anchor" href="#endpoint-adapter"><span class="fa fa-link"></span></a>Endpoint adapter</h2>
 <p>Endpoint adapter help to customize the behavior of a Citrus server such as HTTP or SOAP web servers. As the servers get started with the Citrus context they are ready to receive incoming client requests. Now there are different ways to process these incoming requests and to provide a proper response message. By default the server will forward the incoming request to a in memory message channel where a test can receive the message and provide a synchronous response. This message channel handling is done automatically behind the scenes so the tester does not care about these things. The tester just uses the server directly as endpoint reference in the test case. This is the default behaviour. In addition to that you can define custom endpoint adapters on the Citrus server in order to change this default behavior.</p>
 <p>You set the custom endpoint adapter directly on the server configuration as follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
@@ -1592,11 +1607,11 @@
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:empty-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>/&gt;</span>
 </code></pre>
 <p>Now let us have a closer look at the provided endpoint adapter implementations.</p>
-<h3 id="empty-response-endpoint-adapter">Empty response endpoint adapter</h3>
+<h3 id="empty-response-endpoint-adapter"><a name="empty-response-endpoint-adapter" class="plugin-anchor" href="#empty-response-endpoint-adapter"><span class="fa fa-link"></span></a>Empty response endpoint adapter</h3>
 <p>This is the simplest endpoint adapter you can think of. It simply provides an empty success response using the HTTP response code <strong>200</strong> . The adapter does not need any configurations or properties as it simply responds with an empty HTTP response.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:empty-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>/&gt;</span>
 </code></pre>
-<h3 id="static-response-endpoint-adapter">Static response endpoint adapter</h3>
+<h3 id="static-response-endpoint-adapter"><a name="static-response-endpoint-adapter" class="plugin-anchor" href="#static-response-endpoint-adapter"><span class="fa fa-link"></span></a>Static response endpoint adapter</h3>
 <p>The next more complex endpoint adapter will always return a static response message.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:static-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;endpointAdapter&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:payload</span>&gt;</span>
@@ -1617,8 +1632,34 @@
     <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:header</span>&gt;</span>
  <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:static-response-adapter</span>&gt;</span>
 </code></pre>
-<p>The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same.</p>
-<h3 id="request-dispatching-endpoint-adapter">Request dispatching endpoint adapter</h3>
+<p>The endpoint adapter is configured with a static message payload and static response header values. The response to the client is therefore always the same. You can add dynamic
+values by using Citrus functions such as <strong>randomString</strong> or <strong>randomNumber</strong>. Also we are able to use values of the actual request message that has triggered the
+response adapter. The request is available via the local message store. In combination with Xpath or JsonPath functions we can map values from the actual request.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:static-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;endpointAdapter&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:payload</span>&gt;</span>
+        <span class="hljs-cdata">&lt;![CDATA[
+          &lt;HelloResponse
+            xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+              &lt;MessageId&gt;citrus:randomNumber(10)&lt;/MessageId&gt;
+              &lt;CorrelationId&gt;citrus:xpath(citrus:message(request.payload()), &apos;/hello:HelloRequest/hello:CorrelationId&apos;)&lt;/CorrelationId&gt;
+              &lt;Text&gt;Hello User&lt;/Text&gt;
+          &lt;/HelloResponse&gt;
+        ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;{http://www.consol.de/schemas/samples}h1:Operation&quot;</span>
+                  <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;{http://www.consol.de/schemas/samples}h1:MessageId&quot;</span>
+                  <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomNumber(10)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:header</span>&gt;</span>
+ <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:static-response-adapter</span>&gt;</span>
+</code></pre>
+<p>The example above maps the <strong>CorrelationId</strong> of the <strong>HelloRequest</strong> message to the response with Xpath function. The local message store automatically has the message named
+<strong>request</strong> stored so we can access the payload with this message name.</p>
+<p><strong>Note</strong>
+XML is namespace specific so we need to use the namespace prefix <strong>hello</strong> in the Xpath expression. The namespace prefix should evaluate to a global namespace entry in the global
+Citrus <a href="xpath-namespace">xpath-namespace</a>.</p>
+<h3 id="request-dispatching-endpoint-adapter"><a name="request-dispatching-endpoint-adapter" class="plugin-anchor" href="#request-dispatching-endpoint-adapter"><span class="fa fa-link"></span></a>Request dispatching endpoint adapter</h3>
 <p>The idea behind the request dispatching endpoint adapter is that the incoming requests are dispatched to several other endpoint adapters. The decision which endpoint adapter should handle the actual request is done depending on some adapter mapping. The mapping is done based on the payload or header data of the incoming request. A mapping strategy evaluates a mapping key using the incoming request. You can think of an XPath expression that evaluates to the mapping key for instance. The endpoint adapter that maps to the mapping key is then called to handle the request.</p>
 <p>So the request dispatching endpoint adapter is able to dynamically call several other endpoint adapters based on the incoming request message at runtime. This is very powerful. The next example uses the request dispatching endpoint adapter with a XPath mapping key extractor.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:dispatching-endpoint-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;dispatchingEndpointAdapter&quot;</span>
@@ -1670,13 +1711,13 @@
 <li><p><strong>ContextLoadingMappingStrategy</strong> : Same as BeanNameMappingStrategy but loads a separate application context defined by external file resource</p>
 </li>
 </ul>
-<h3 id="channel-endpoint-adapter">Channel endpoint adapter</h3>
+<h3 id="channel-endpoint-adapter"><a name="channel-endpoint-adapter" class="plugin-anchor" href="#channel-endpoint-adapter"><span class="fa fa-link"></span></a>Channel endpoint adapter</h3>
 <p>The channel connecting endpoint adapter is the default adapter used in all Citrus server components. Indeed this adapter also provides the most flexibility. This adapter forwards incoming requests to a channel destination. The adapter is waiting for a proper response on a reply destination synchronously. With the channel endpoint components you can read the requests on the channel and provide a proper response on the reply destination.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:channel-endpoint-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;channelEndpointAdapter&quot;</span>
               <span class="hljs-attribute">channel-name</span>=<span class="hljs-value">&quot;inbound.channel&quot;</span>
               <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;2500&quot;</span>/&gt;</span>
 </code></pre>
-<h3 id="jms-endpoint-adapter">JMS endpoint adapter</h3>
+<h3 id="jms-endpoint-adapter"><a name="jms-endpoint-adapter" class="plugin-anchor" href="#jms-endpoint-adapter"><span class="fa fa-link"></span></a>JMS endpoint adapter</h3>
 <p>Another powerful endpoint adapter is the JMS connecting adapter implementation. This adapter forwards incoming requests to a JMS destination and waits for a proper response on a reply destination. A JMS endpoint can access the requests internally and provide a proper response on the reply destination. So this adapter is very flexible to provide proper response messages.</p>
 <p>This special adapter comes with the <strong>citrus-jms</strong> module. So you have to add the module and the special XML namespace for this module to your configuration files. The Maven module for <strong>citrus-jms</strong> goes to the Maven POM file as normal project dependency. The <strong>citrus-jms</strong> namespace goes to the Spring bean XML configuration file as follows:</p>
 <p><strong>Note</strong>
@@ -1756,7 +1797,7 @@ Citrus provides a &quot;citrus-jms&quot; configuration namespace and schema defi
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

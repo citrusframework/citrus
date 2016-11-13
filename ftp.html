@@ -63,7 +63,7 @@
         data-chapter-title="Ftp"
         data-filepath="ftp.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,14 +1595,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="ftp-support">FTP support</h2>
+                        <h2 id="ftp-support"><a name="ftp-support" class="plugin-anchor" href="#ftp-support"><span class="fa fa-link"></span></a>FTP support</h2>
 <p>Citrus is able to start a little ftp server accepting incoming client requests. Also Citrus is able to call FTP commands as a client. The next sections deal with FTP connectivity.</p>
 <p><strong>Note</strong>
 The FTP components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-ftp<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>As Citrus provides a customized FTP configuration schema for the Spring application context configuration files we have to add name to the top level <strong>beans</strong> element. Simply include the ftp-config namespace in the configuration XML files as follows.</p>
@@ -1608,7 +1623,7 @@ The FTP components in Citrus are kept in a separate Maven module. So you should 
       <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>Now we are ready to use the customized Citrus FTP configuration elements with the citrus-ftp namespace prefix.</p>
-<h3 id="ftp-client">FTP client</h3>
+<h3 id="ftp-client"><a name="ftp-client" class="plugin-anchor" href="#ftp-client"><span class="fa fa-link"></span></a>FTP client</h3>
 <p>We want to use Citrus fo connect to dome FTP server as a client sending commands such as creating a directory or listing all files. Citrus offers a client component doing exactly this FTP client connection.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ftp:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;ftpClient&quot;</span>
       <span class="hljs-attribute">host</span>=<span class="hljs-value">&quot;localhost&quot;</span>
@@ -1642,7 +1657,7 @@ The FTP components in Citrus are kept in a separate Maven module. So you should 
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
 <p>As you can see most of the ftp communication parameters are specified as special header elements in the message. Citrus automatically converts those information to proper FTP commands and response messages.</p>
-<h3 id="ftp-server">FTP server</h3>
+<h3 id="ftp-server"><a name="ftp-server" class="plugin-anchor" href="#ftp-server"><span class="fa fa-link"></span></a>FTP server</h3>
 <p>Now that we are able to access FTP as a client we might also want to simulate the server side. Therefore Citrus offers a server component that is listening on a port for incoming FTP connections. The server has a default home directory on the local file system specified. But you can also define home directories per user. For now let us have a look at the server configuration component:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ftp:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;ftpServer&quot;</span>&gt;</span>
       port=&quot;22222&quot;
@@ -1765,7 +1780,7 @@ ftpserver.user.anonymous.downloadrate=4800
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

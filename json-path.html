@@ -63,7 +63,7 @@
         data-chapter-title="Json-path"
         data-filepath="json-path.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="using-jsonpath">Using JSONPath</h2>
+                        <h2 id="using-jsonpath"><a name="using-jsonpath" class="plugin-anchor" href="#using-jsonpath"><span class="fa fa-link"></span></a>Using JSONPath</h2>
 <p>JSONPath is the JSON equivalent to XPath in the XML message world. With JSONPath expressions you can query and manipulate entries of a JSON message structure. The JSONPath expressions evaluate against a JSON message where the JSON object structure is represented in a dot notated syntax.</p>
 <p>You will see that JSONPath is a very powerful technology when it comes to find object entries in a complex JSON hierarchy structure. Also JSONPath can help to do message manipulations before a message is sent out for instance. Citrus supports JSONPath expressions in various scenarios:</p>
 <ul>
@@ -1589,7 +1604,7 @@
 <li>&lt;extract&gt;&lt;message path=&quot;[JSONPath-Expression]&quot;&gt;&lt;/extract&gt;</li>
 <li>&lt;ignore path=&quot;[JSONPath-Expression]&quot;/&gt;</li>
 </ul>
-<h3 id="manipulate-with-jsonpath">Manipulate with JSONPath</h3>
+<h3 id="manipulate-with-jsonpath"><a name="manipulate-with-jsonpath" class="plugin-anchor" href="#manipulate-with-jsonpath"><span class="fa fa-link"></span></a>Manipulate with JSONPath</h3>
 <p>First thing we want to do with JSONPath is to manipulate a message content before it is actually sent out. This is very useful when working with message file resources that are reused accross multiple test cases. Each test case can manipulate the message content individually with JSONPath before sending. Lets have a look at this simple sample:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;file:path/to/user.json&quot;</span> /&gt;</span>
@@ -1644,7 +1659,7 @@
 </code></pre>
 <p>The JSONPath expressions have set the user name to <strong>Admin</strong> . The <strong>admin</strong> boolean property was set to <strong>true</strong> and all project status values were set to <strong>closed</strong> . Now the message is ready to be sent out. In case a JSONPath expression should fail to find a matching element within the message structure the test case will fail.</p>
 <p>With this JSONPath mechanism ou are able to manipulate message content before it is sent or received within Citrus. This makes life very easy when using message resource files that are reused across multiple test cases.</p>
-<h3 id="validate-with-jsonpath">Validate with JSONPath</h3>
+<h3 id="validate-with-jsonpath"><a name="validate-with-jsonpath" class="plugin-anchor" href="#validate-with-jsonpath"><span class="fa fa-link"></span></a>Validate with JSONPath</h3>
 <p>Lets continue to use JSONPath expressions when validating a receive message in Citrus:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
@@ -1703,7 +1718,7 @@ JSONPath expressions will only work on JSON message formats. This is why we have
     .validate(&quot;$.user.aliases.size()&quot;, allOf(greaterThan(0), lessThan(5)));
 </code></pre>
 <p>When using the XML DSL we have to use the <strong>assertThat</strong> validation matcher syntax for defining the Hamcrest matchers. You can combine matcher implementation as seen in the <strong>allOf(greaterThan(0), lessThan(5))</strong> expression. When using the Java DSL you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected. This is a very powerful validation mechanism as it combines the Hamcrest matcher capabilities with JSON message validation.</p>
-<h3 id="extract-variables-with-jsonpath">Extract variables with JSONPath</h3>
+<h3 id="extract-variables-with-jsonpath"><a name="extract-variables-with-jsonpath" class="plugin-anchor" href="#extract-variables-with-jsonpath"><span class="fa fa-link"></span></a>Extract variables with JSONPath</h3>
 <p>Citrus is able to save message content to test variables at test runtime. When an incoming message is passing the message validation the user can extract some values of that received message to new test variables for later use in the test. This is especially handsome when having to send back some dynamic values. So lets save some values using JSONPath:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
@@ -1729,7 +1744,7 @@ userAliases=[&quot;penny&quot;,&quot;chef&quot;,&quot;master&quot;]
 adminPassword=secret
 </code></pre>
 <p>As you can see we can also extract complex JSONObject items or JSONArray items. The test variable value is a String representation of the complex object.</p>
-<h3 id="ignore-with-jsonpath">Ignore with JSONPath</h3>
+<h3 id="ignore-with-jsonpath"><a name="ignore-with-jsonpath" class="plugin-anchor" href="#ignore-with-jsonpath"><span class="fa fa-link"></span></a>Ignore with JSONPath</h3>
 <p>The next usage scenario for JSONPath expressions in Citrus is the ignoring of elements during message validation. As you already know Citrus provides powerful validation mechanisms for XML and JSON message format. The framework is able to compare received and expected message contents with powerful validator implementations. Now it this time we want to use a JSONPath expression for ignoring a very specific entry in the JSON object structure.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
@@ -1809,7 +1824,7 @@ adminPassword=secret
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

@@ -63,7 +63,7 @@
         data-chapter-title="Arquillian"
         data-filepath="arquillian.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,13 +1595,13 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="arquillian-support">Arquillian support</h2>
+                        <h2 id="arquillian-support"><a name="arquillian-support" class="plugin-anchor" href="#arquillian-support"><span class="fa fa-link"></span></a>Arquillian support</h2>
 <p>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries.</p>
 <p>Read the next section in order to find out more about the Citrus Arquillian extension.</p>
-<h3 id="citrus-arquillian-extension">Citrus Arquillian extension</h3>
+<h3 id="citrus-arquillian-extension"><a name="citrus-arquillian-extension" class="plugin-anchor" href="#citrus-arquillian-extension"><span class="fa fa-link"></span></a>Citrus Arquillian extension</h3>
 <p>Arquillian offers a fine mechanism for extensions adding features to the Arquillian test setup and test execution. The Citrus extension respectively adds Citrus framework instance creation and Citrus test execution to the Arquillian world. First of all lets have a look at the extension descriptor properties settable via <strong>arquillian.xml</strong> :</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">extension</span> <span class="hljs-attribute">qualifier</span>=<span class="hljs-value">&quot;citrus&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrusVersion&quot;</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrusVersion&quot;</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;autoPackage&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;suiteName&quot;</span>&gt;</span>citrus-arquillian-suite<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">extension</span>&gt;</span>
@@ -1606,12 +1621,12 @@ Spring application context.
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-arquillian<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-title">scope</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Now everything is set up to use Citrus within Arquillian. Lets use Citrus functionality in a Arquillian test case.</p>
-<h3 id="client-side-testing">Client side testing</h3>
+<h3 id="client-side-testing"><a name="client-side-testing" class="plugin-anchor" href="#client-side-testing"><span class="fa fa-link"></span></a>Client side testing</h3>
 <p>Arquillian separates client and container side testing. When using client side testing the test case is executed outside of the application container deployment. This means that your test case has no direct access to container managed resources such as JNDI resources. On the plus side it is not necessary to include your test in the container deployment. The test case interacts with the container deployment as a normal client would do. Lets have a look at a first example:</p>
 <pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Arquillian.class)
 <span class="hljs-annotation">@RunAsClient</span>
@@ -1673,7 +1688,7 @@ Spring application context.
 <p>The Citrus test designer provides Java DSL methods for building the test logic. Please note that the designer will aggregate all actions such as send or receive until the designer is called to build the test case with <strong>build()</strong> method invocation. The resulting test case object can be executed by the Citrus framework instance with <strong>run()</strong> method.</p>
 <p>When the Citrus test case is executed the messages are sent over the wire. The respective response message is received with well known Citrus receive message logic. We can validate the response messages accordingly and make sure the client call was done right. In case something goes wrong within Citrus test execution the framework will raise exceptions accordingly. As a result the JUnit test method is successful or failed with errors coming from Citrus test execution.</p>
 <p>This is how Citrus and Arquillian can interact in a test scenario where the test deployment is managed by Arquillian and the client side actions take place within Citrus. This is a great way to combine both frameworks with Citrus being able to call different service API endpoints in addition with validating the outcome. This was a client side test case where the test logic was executed outside of the application container. Arquillian also supports container remote test cases where we have direct access to container managed resources. The following section describes how this works with Citrus.</p>
-<h3 id="container-side-testing">Container side testing</h3>
+<h3 id="container-side-testing"><a name="container-side-testing" class="plugin-anchor" href="#container-side-testing"><span class="fa fa-link"></span></a>Container side testing</h3>
 <p>In previous sections we have seen how to combine Citrus with Arquillian in a client side test case. This is the way to go for all test cases that do not need to have access on container managed resources. Lets have a look at a sample where we want to gain access to a JMS queue and connection managed by the application container.</p>
 <pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Arquillian.class)
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EchoServiceTest</span> </span>{
@@ -1733,7 +1748,7 @@ Spring application context.
 <p>As you can see the test case accesses two container managed resources via JNDI. This is a JMS queue and a JMS connection that get automatically injected as resources. In a before test annotated method we can use these resources to build up a proper Citrus JMS endpoint. Inside the test method we can use the JMS endpoint for sending and receiving JMS messages via Citrus. As usual response messages received are validated and compared to an expected message. As usual we use the Citrus <strong>TestDesigner</strong> method parameter that is injected by the framework. The designer is able to build Citrus test logic with Java DSL methods. Once the complete test is designed we can build the test case and run the test case with the framework instance. After the test we should close the JMS connection in order to avoid exceptions when the application container is shutting down after the test.</p>
 <p>The test is now part of the test deployment and is executed within the application container boundaries. As usual we can use the Citrus extension to automatically inject the Citrus framework instance as well as the Citrus test builder instance for building the Citrus test logic.</p>
 <p>This is how to combine Citrus and Arquillian in order to build integration tests on Java EE services in a real application container environment. With Citrus you are able to set up more complex test scenarios with simulated services such as mail or ftp servers. We can build Citrus endpoints with container managed resources.</p>
-<h3 id="test-runners">Test runners</h3>
+<h3 id="test-runners"><a name="test-runners" class="plugin-anchor" href="#test-runners"><span class="fa fa-link"></span></a>Test runners</h3>
 <p>In the previous sections we have used the Citrus <strong>TestDesigner</strong> in order to construct a Citrus test case to execute within the Arquillian boundaries. The nature of the test designer is to aggregate all Java DSL method calls in order to build a complete Citrus test case before execution is done via the Citrus framework. This approach can cause some unexpected behavior when mixing the Citrus Java DSL method calls with Arquillian test logic. Lets describe this by having a look at an example where th mixture of test designer and pure Java test logic causes unseen problems.</p>
 <pre><code class="lang-xml">@Test
 @CitrusTest
@@ -1912,7 +1927,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

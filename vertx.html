@@ -63,7 +63,7 @@
         data-chapter-title="Vertx"
         data-filepath="vertx.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,14 +1595,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="vertx-event-bus-support">Vert.x event bus support</h2>
+                        <h2 id="vertx-event-bus-support"><a name="vertx-event-bus-support" class="plugin-anchor" href="#vertx-event-bus-support"><span class="fa fa-link"></span></a>Vert.x event bus support</h2>
 <p>Vert.x is an application platform for the JVM that provides a network event bus for lightweight scalable messaging solutions. The Citrus Vert.x components do participate on that event bus messaging as producer or consumer. With these components you can access Vert.x instances available in your network in order to test those Vert.x applications in some integration test scenario.</p>
 <p><strong>Note</strong>
 The Vert.x components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-vertx<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Citrus provides a special Vert.x configuration schema that is used in our Spring configuration files. You have to include the citrus-vertx namespace in your Spring configuration XML files as follows.</p>
@@ -1609,7 +1624,7 @@ The Vert.x components in Citrus are kept in a separate Maven module. So you shou
 </code></pre>
 <p>Now you are ready to use the Citrus Vert.x configuration elements using the citrus-vertx namespace prefix.</p>
 <p>The next sections discuss sending and receiving operations on the Vert.x event bus with Citrus.</p>
-<h3 id="vertx-endpoint">Vert.x endpoint</h3>
+<h3 id="vertx-endpoint"><a name="vertx-endpoint" class="plugin-anchor" href="#vertx-endpoint"><span class="fa fa-link"></span></a>Vert.x endpoint</h3>
 <p>As usual Citrus uses an endpoint component in order to specify some message destination to send and receive messages to and from. The Vert.x endpoint component is defined as follows in your Citrus Spring configuration.</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-vertx:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;simpleVertxEndpoint&quot;</span>
       <span class="hljs-attribute">host</span>=<span class="hljs-value">&quot;localhost&quot;</span>
@@ -1640,7 +1655,7 @@ The Vert.x components in Citrus are kept in a separate Maven module. So you shou
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
 <p>Citrus automatically adds some special message headers to the message, so you can validate the Vert.x event bus address. This completes the simple send and receive operations on a Vert.x event bus. Now lets move on to synchronous endpoints where Citrus waits for a reply on the event bus.</p>
-<h3 id="synchronous-vertx-endpoint">Synchronous Vert.x endpoint</h3>
+<h3 id="synchronous-vertx-endpoint"><a name="synchronous-vertx-endpoint" class="plugin-anchor" href="#synchronous-vertx-endpoint"><span class="fa fa-link"></span></a>Synchronous Vert.x endpoint</h3>
 <p>The synchronous Vert.x event bus producer sends a message and waits synchronously for the response to arrive on some reply address destination. The reply address name is generated automatically and set in the request message header attributes so the receiving counterpart in this communication can send its reply to that event bus address. The basic configuration for a synchronous Vert.x endpoint component looks like follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-vertx:sync-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;vertxSyncEndpoint&quot;</span>
       <span class="hljs-attribute">address</span>=<span class="hljs-value">&quot;hello&quot;</span>
@@ -1678,7 +1693,7 @@ The Vert.x endpoint uses temporary reply address destinations. The temporary rep
 <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
 </code></pre>
 <p>The synchronous message endpoint for Vert.x event bus communication will handle all reply address destinations and provide those behind the scenes.</p>
-<h3 id="vertx-instance-factory">Vert.x instance factory</h3>
+<h3 id="vertx-instance-factory"><a name="vertx-instance-factory" class="plugin-anchor" href="#vertx-instance-factory"><span class="fa fa-link"></span></a>Vert.x instance factory</h3>
 <p>Citrus starts an embedded Vert.x instance at runtime in order to participate in the Vert.x cluster. Within this cluster multiple Vert.x instances are connected via the event bus. For starting the Vert.x event bus Citrus uses a cluster hostname and port definition. You can customize this cluster host in order to connect to a very special cluster in your network.</p>
 <p>Now Citrus needs to manage the Vert.x instances created during the test run. By default Citrus will look for a instance factory bean named <strong>vertxInstanceFactory</strong> . You can choose the factory implementation to use in your project. By default you can use the caching factory implementation that caches the Vert.x instances so we do not connect more than one Vert.x instance to the same cluster host. Citrus offers following instance factory implementations:</p>
 <ul>
@@ -1746,7 +1761,7 @@ The Vert.x endpoint uses temporary reply address destinations. The temporary rep
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

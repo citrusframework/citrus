@@ -63,7 +63,7 @@
         data-chapter-title="Changes 2.2"
         data-filepath="changes-2-2.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,17 +1595,17 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="changes-in-citrus-22">Changes in Citrus 2.2?!</h3>
+                        <h3 id="changes-in-citrus-22"><a name="changes-in-citrus-22" class="plugin-anchor" href="#changes-in-citrus-22"><span class="fa fa-link"></span></a>Changes in Citrus 2.2?!</h3>
 <p>Citrus 2.2 is a release mostly adding new features as well as improvements to given Citrus features. Bugfixes of course are also part of the package. See the following overview on what has changed.</p>
-<h3 id="arquillian-support">Arquillian support</h3>
+<h3 id="arquillian-support"><a name="arquillian-support" class="plugin-anchor" href="#arquillian-support"><span class="fa fa-link"></span></a>Arquillian support</h3>
 <p>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries. See <a href="arquillian">arquillian</a> for details.</p>
-<h3 id="junit-support">JUnit support</h3>
+<h3 id="junit-support"><a name="junit-support" class="plugin-anchor" href="#junit-support"><span class="fa fa-link"></span></a>JUnit support</h3>
 <p>Citrus supports both major players in unit testing TestNG and JUnit. Unfortunately we did not offer the same feature support for JUnit as it was done for TestNG. Now with Citrus 2.2 we improved the JUnit support in Citrus so you are able to use all features with both frameworks. This is especially related to using the <strong>@CitrusTest</strong> and <strong>@CitrusXmlTest</strong> method annotations in test classes. See<a href="run-junit">run-junit</a>how it works.</p>
-<h3 id="startstop-server-action">Start/Stop server action</h3>
+<h3 id="startstop-server-action"><a name="startstop-server-action" class="plugin-anchor" href="#startstop-server-action"><span class="fa fa-link"></span></a>Start/Stop server action</h3>
 <p>Citrus was missing a dedicated test action to start and stop Citrus server components at tet runtime. With the newly added test actions you are able to start and stop server components as you like within your test case. See<a href="actions-manage-server">actions-manage-server</a>with a detailed description.</p>
-<h3 id="citrus-ant-tasks">Citrus Ant tasks</h3>
+<h3 id="citrus-ant-tasks"><a name="citrus-ant-tasks" class="plugin-anchor" href="#citrus-ant-tasks"><span class="fa fa-link"></span></a>Citrus Ant tasks</h3>
 <p>We discontinue to support the Citrus Ant tasks. The Ant tasks were not very stable an lacked full feature support when executing test cases with JUnit in Apache Ant. Instead we added a brief description on how to execute Citrus tests with the well documented and stable default JUnit and TestNG ant tasks. See<a href="setup-using-ant">setup-using-ant</a>how it works.</p>
-<h3 id="bugfixes">Bugfixes</h3>
+<h3 id="bugfixes"><a name="bugfixes" class="plugin-anchor" href="#bugfixes"><span class="fa fa-link"></span></a>Bugfixes</h3>
 <p>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in JIRA (<a href="http://www.citrusframework.org/changes-report.html" target="_blank">http://www.citrusframework.org/changes-report.html</a>).</p>
 
                     
@@ -1643,7 +1658,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

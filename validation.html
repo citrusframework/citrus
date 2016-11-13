@@ -63,7 +63,7 @@
         data-chapter-title="Validation"
         data-filepath="validation.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,9 +1595,9 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="message-validation">Message validation</h2>
+                        <h2 id="message-validation"><a name="message-validation" class="plugin-anchor" href="#message-validation"><span class="fa fa-link"></span></a>Message validation</h2>
 <p>When Citrus receives a message from external applications it is time to verify the message content. This message validation includes syntax rules as well as semantic values that need to be compared to an expected behavior. Citrus provides powerful message validation capabilities. Each incoming message is validated with syntax and semantics. The tester is able to define expected message headers and payloads. Citrus message validator implementations will compare the messages and report differences as test failure. With the upcoming sections we have a closer look at message validation of XML messages with XPath and XML schema validation and further message formats like JSON and plaintext.</p>
-<h3 id="java-dsl-validation-callbacks">Java DSL validation callbacks</h3>
+<h3 id="java-dsl-validation-callbacks"><a name="java-dsl-validation-callbacks" class="plugin-anchor" href="#java-dsl-validation-callbacks"><span class="fa fa-link"></span></a>Java DSL validation callbacks</h3>
 <p>The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation callback functionality. With this feature you can marshal/unmarshal message payloads and code validation steps on Java objects.</p>
 <p><strong>Java DSL designer</strong> </p>
 <pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
@@ -1637,7 +1652,7 @@
 }
 </code></pre>
 <p>The example above creates a <strong>AddBookRequestMessage</strong> object and puts this as payload to a send action. In combination with a marshaller instance Citrus is able to create a proper XML message payload then.</p>
-<h3 id="customize-message-validators">Customize message validators</h3>
+<h3 id="customize-message-validators"><a name="customize-message-validators" class="plugin-anchor" href="#customize-message-validators"><span class="fa fa-link"></span></a>Customize message validators</h3>
 <p>In the previous sections we have already seen some examples on how to overwrite default message validator implementations in Citrus. By default all message validators can be overwritten by placing a Spring bean of the same id to the Spring application context. The default implementations of Citrus are:</p>
 <ul>
 <li><strong>defaultXmlMessageValidator</strong>: com.consol.citrus.validation.xml.DomXmlMessageValidator </li>
@@ -1646,6 +1661,7 @@
 <li><strong>defaultJsonPathMessageValidator</strong>: com.consol.citrus.validation.json.JsonPathMessageValidator </li>
 <li><strong>defaultPlaintextMessageValidator</strong>: com.consol.citrus.validation.text.PlainTextMessageValidator </li>
 <li><strong>defaultBinaryBase64MessageValidator</strong>: com.consol.citrus.validation.text.BinaryBase64MessageValidator </li>
+<li><strong>defaultGzipBinaryBase64MessageValidator</strong>: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator </li>
 <li><strong>defaultXhtmlMessageValidator</strong>: com.consol.citrus.validation.xhtml.XhtmlMessageValidator </li>
 <li><strong>defaultGroovyXmlMessageValidator</strong>: com.consol.citrus.validation.script.GroovyXmlMessageValidator </li>
 <li><strong>defaultGroovyJsonMessageValidator</strong>: com.consol.citrus.validation.script.GroovyJsonMessageValidator </li>
@@ -1657,6 +1673,7 @@
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyXmlMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultPlaintextMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultBinaryBase64MessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGzipBinaryBase64MessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.custom.CustomMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonPathMessageValidator&quot;</span>/&gt;</span>
@@ -1724,7 +1741,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

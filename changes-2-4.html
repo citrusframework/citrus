@@ -63,7 +63,7 @@
         data-chapter-title="Changes 2.4"
         data-filepath="changes-2-4.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,19 +1595,19 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="changes-in-citrus-24">Changes in Citrus 2.4?!</h3>
+                        <h3 id="changes-in-citrus-24"><a name="changes-in-citrus-24" class="plugin-anchor" href="#changes-in-citrus-24"><span class="fa fa-link"></span></a>Changes in Citrus 2.4?!</h3>
 <p>Citrus 2.4 comes with a set of new features especially regarding Apache Camel and Docker integrations. Bugfixes of course are also part of the package. See the following overview on what has changed.</p>
-<h3 id="docker-support">Docker support</h3>
+<h3 id="docker-support"><a name="docker-support" class="plugin-anchor" href="#docker-support"><span class="fa fa-link"></span></a>Docker support</h3>
 <p>Docker and Microservices are frequent topics in software development recently. We have added interaction with Docker in Citrus so the user can manage Docker containers within a test case. Citrus now provides special Docker test actions for building, starting, stopping and inspecting Docker images and containers in a test. See <a href="docker">docker</a> for details.</p>
-<h3 id="http-rest-actions">Http REST actions</h3>
+<h3 id="http-rest-actions"><a name="http-rest-actions" class="plugin-anchor" href="#http-rest-actions"><span class="fa fa-link"></span></a>Http REST actions</h3>
 <p>We have significantly improved the Http REST support in Citrus. The focus is on simplifying the Http REST usage in Citrus test cases. With new Http specific test actions on client and server we can send and receive Http REST messages very easy. See <a href="http">http</a> for details.</p>
-<h3 id="wait-test-action">Wait test action</h3>
+<h3 id="wait-test-action"><a name="wait-test-action" class="plugin-anchor" href="#wait-test-action"><span class="fa fa-link"></span></a>Wait test action</h3>
 <p>With the new wait test action we can explicitly wait for some remote condition to become true inside of a test case. The conditions supported at the moment are Http url requests and file based conditions. A user can invoke a Http server url and wait for it to return a success <strong>Http 200 OK</strong> response. This is an awesome feature when waiting for a server to start up before the test continues. We can also think of waiting for a Docker container to start up before continuing. Or you can wait until a file is present on the local file system. See<a href="actions-wait">actions-wait</a>for details.</p>
-<h3 id="camel-actions">Camel actions</h3>
+<h3 id="camel-actions"><a name="camel-actions" class="plugin-anchor" href="#camel-actions"><span class="fa fa-link"></span></a>Camel actions</h3>
 <p>Citrus has already had support for Apache Camel routes and Camel context loading. Now with 2.4 version we have added some special Apache Camel test actions for interacting with a Camel context and its routes. This enables the tester to create and use a new Camel route on the fly inside a test case. Also Citrus is now able to interact with the Camel control bus accessing route statistics and status information. Also possible are start, stop, suspend, resume operations on a Camel route. See<a href="camel-actions">camel-actions</a>and<a href="camel-controlbus">camel-controlbus</a>for details.</p>
-<h3 id="purge-endpoints-action">Purge endpoints action</h3>
+<h3 id="purge-endpoints-action"><a name="purge-endpoints-action" class="plugin-anchor" href="#purge-endpoints-action"><span class="fa fa-link"></span></a>Purge endpoints action</h3>
 <p>Purging JMS queues and in memory channels at test runtime has become a widely used feature especially when aiming to make tests more stable in terms of independent tests. We have added a purge endpoint test action that works on any consumer endpoint. So you do not need to separate between endpoint implementations anymore and more important you can purge server in memory channel components very easy. See<a href="actions-purge-endpoints">actions-purge-endpoints</a>for details.</p>
-<h3 id="release-to-maven-central">Release to Maven Central</h3>
+<h3 id="release-to-maven-central"><a name="release-to-maven-central" class="plugin-anchor" href="#release-to-maven-central"><span class="fa fa-link"></span></a>Release to Maven Central</h3>
 <p>This is not a new feature but also worth to tell here as it is a significant improvement on the whole framework project. We can now release the Citrus artifacts to Maven central repository. So you do not need the additional <strong>labs.consol.de</strong> repository in your Maven POM anymore. The <strong>labs.consol.de</strong> repository will continue to exist though as we will release SNAPSHOT versions of Citrus here in future.</p>
 
                     
@@ -1645,7 +1660,7 @@
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

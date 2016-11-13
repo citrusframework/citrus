@@ -63,7 +63,7 @@
         data-chapter-title="Send"
         data-filepath="actions-send.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,7 +1595,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="sending-messages">Sending messages</h3>
+                        <h3 id="sending-messages"><a name="sending-messages" class="plugin-anchor" href="#sending-messages"><span class="fa fa-link"></span></a>Sending messages</h3>
 <p>In a integration test scenario we want to trigger processes and call interface services on the system under test. In order to do this we need to be able to send messages to various message transports. Therefore the send message test action in Citrus is one of the most important test actions. First of all let us have a look at the Citrus message definition in Citrus:</p>
 <p><img src="images/figure_001.jpg" alt="figure_001.jpg"></p>
 <p>A message consists of a message header (name-value pairs) and a message payload. Later in this section we will see different ways of constructing a message with payload and header values. But first of all let&apos;s concentrate on a simple sending message action inside a test case.</p>
@@ -1595,7 +1610,7 @@
 
     <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;helloMessage&quot;</span>&gt;</span>
                 <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
                     <span class="hljs-tag">&lt;<span class="hljs-title">TestMessage</span>&gt;</span>
                         <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>${text}<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
@@ -1610,7 +1625,8 @@
     <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
 </code></pre>
-<p>The sample uses both header and payload as message parts to send. In both parts you can use variable definitions (see <strong>${text}</strong> and <strong>${messageId}</strong>). So first of all let us recap what variables do. Test variables are defined at the very beginning of the test case and are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the expression <strong><em>${variable-name}</em></strong> .</p>
+<p>The message name is optional and defines the message identifier in the local message store. This message name is very useful when accessing the message content later on during the test case. The local message store is handled per test case and contains all exchanged messages. 
+The sample uses both header and payload as message parts to send. In both parts you can use variable definitions (see <strong>${text}</strong> and <strong>${messageId}</strong>). So first of all let us recap what variables do. Test variables are defined at the very beginning of the test case and are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the expression <strong><em>${variable-name}</em></strong> .</p>
 <p><strong>Tip</strong>
 Use variables wherever you can! At least the important entities of a test should be defined as variables at the beginning. The test case improves maintainability and flexibility when using variables.</p>
 <p>Now lets have a closer look at the sending action. The <strong>&apos;endpoint&apos;</strong> attribute might catch your attention first. This attribute references a message endpoint in Citrus configuration by name. As previously mentioned the message endpoint definition lives in a separate configuration file and contains the actual message transport settings. In this example the <strong>&quot;helloServiceEndpoint&quot;</strong> is referenced which is a message endpoint for sending out messages via JMS or HTTP for instance.</p>
@@ -1634,6 +1650,7 @@ Use variables wherever you can! At least the important entities of a test should
         variable(<span class="hljs-string">&quot;messageId&quot;</span>, <span class="hljs-string">&quot;Mx1x123456789&quot;</span>);
 
         send(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+                .name(<span class="hljs-string">&quot;helloMessage&quot;</span>)
                 .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
                     <span class="hljs-string">&quot;&lt;Text&gt;${text}&lt;/Text&gt;&quot;</span> +
                     <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
@@ -1657,6 +1674,7 @@ Use variables wherever you can! At least the important entities of a test should
         variable(<span class="hljs-string">&quot;messageId&quot;</span>, <span class="hljs-string">&quot;Mx1x123456789&quot;</span>);
 
         send(action -&gt; action.endpoint(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+                .name(<span class="hljs-string">&quot;helloMessage&quot;</span>)
                 .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
                         <span class="hljs-string">&quot;&lt;Text&gt;${text}&lt;/Text&gt;&quot;</span> +
                     <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
@@ -1668,25 +1686,13 @@ Use variables wherever you can! At least the important entities of a test should
 <p>Instead of using the XML tags for send we use methods from <strong>TestNGCitrusTestDesigner</strong> class. The same message endpoint is referenced within the send message action.</p>
 <p>Now that the message sender pattern is clear we can concentrate on how to specify the message content to be sent. There are several possibilities for you to define message content in Citrus:</p>
 <ul>
-<li><p><strong>message</strong> : This element constructs the message to be sent. There are several child elements available:</p>
-</li>
-<li><p><strong>payload</strong> : Nested XML payload as direct child node.</p>
-</li>
-<li><p><strong>data</strong> : Inline CDATA definition of the message payload</p>
-</li>
-<li><p><strong>resource</strong> : External file resource holding the message payload</p>
-</li>
-</ul>
-<p>The syntax would be: <resource file="classpath:com/consol/citrus/messages/TestRequest.xml"></resource></p>
-<p>The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:) or classpath resource (classpath:).</p>
-<ul>
+<li><strong>message</strong> : This element constructs the message to be sent. There are several child elements available:</li>
+<li><strong>payload</strong> : Nested XML payload as direct child node.</li>
+<li><strong>data</strong> : Inline CDATA definition of the message payload</li>
+<li><strong>resource</strong> : External file resource holding the message payload The syntax would be: <code>&lt;resource file=&quot;classpath:com/consol/citrus/messages/TestRequest.xml&quot; /&gt;</code> The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:) or classpath resource (classpath:).</li>
 <li><strong>element</strong> : Explicitly overwrite values in the XML message payload using XPath. You can replace message content with dynamic values before sending. Each <element> entry provides a &quot;path&quot; and &quot;value&quot; attribute. The &quot;path&quot; gives a XPath expression evaluating to a XML node element or attribute in the message. The &quot;value&quot; can be a variable expression or any other static value. Citrus will replace the value before sending the message.</element></li>
-</ul>
-<ul>
-<li><p><strong>header</strong> : Defines a header for the message (e.g. JMS header information or SOAP header):</p>
-</li>
-<li><p><strong>element</strong> : Each header receives a &quot;name&quot; and &quot;value&quot;. The &quot;name&quot; will be the name of the header entry and &quot;value&quot; its respective value. Again the usage of variable expressions as value is supported here, too.</p>
-</li>
+<li><strong>header</strong> : Defines a header for the message (e.g. JMS header information or SOAP header):</li>
+<li><strong>element</strong> : Each header receives a &quot;name&quot; and &quot;value&quot;. The &quot;name&quot; will be the name of the header entry and &quot;value&quot; its respective value. Again the usage of variable expressions as value is supported here, too.</li>
 </ul>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
@@ -1844,7 +1850,7 @@ Sometimes the nested XML message payload elements may cause XSD schema validatio
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

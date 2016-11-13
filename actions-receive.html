@@ -63,7 +63,7 @@
         data-chapter-title="Receive"
         data-filepath="actions-receive.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,12 +1595,12 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="receiving-messages">Receiving messages</h3>
+                        <h3 id="receiving-messages"><a name="receiving-messages" class="plugin-anchor" href="#receiving-messages"><span class="fa fa-link"></span></a>Receiving messages</h3>
 <p>Just like sending messages the receiving part is a very important action in an integration test. Honestly the receive action is even more important in Citrus as we also want to validate the incoming message contents. We are writing a test so we also need assertions and checks that everything works as expected.</p>
 <p>As already mentioned before a message consists of a message header (name-value pairs) and a message payload. Later in this document we will see how to validate incoming messages with payload and header values. We start with a very simple example:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;helloRequest&quot;</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">TestMessage</span>&gt;</span>
                 <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>${text}<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
@@ -1598,11 +1613,14 @@
     <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
 </code></pre>
-<p>Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload and header values. We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:</p>
+<p>Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload and header values. The message name is optional and defines the message identifier in the local message store. 
+This message name is very useful when accessing the message content later on during the test case. The local message store is handled per test case and contains all exchanged messages. </p>
+<p>We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:</p>
 <p><strong>Java DSL designer</strong> </p>
 <pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
     receive(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+        .name(<span class="hljs-string">&quot;helloRequest&quot;</span>)
         .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
                     <span class="hljs-string">&quot;&lt;Text&gt;${text}&lt;/Text&gt;&quot;</span> +
                 <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
@@ -1614,6 +1632,7 @@
 <pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">messagingTest</span><span class="hljs-params">()</span> </span>{
     receive(action -&gt; action.endpoint(<span class="hljs-string">&quot;helloServiceEndpoint&quot;</span>)
+                .name(<span class="hljs-string">&quot;helloRequest&quot;</span>)
                 .payload(<span class="hljs-string">&quot;&lt;TestMessage&gt;&quot;</span> +
                       <span class="hljs-string">&quot;&lt;Text&gt;${text}&lt;/Text&gt;&quot;</span> +
                     <span class="hljs-string">&quot;&lt;/TestMessage&gt;&quot;</span>)
@@ -1627,7 +1646,7 @@
 <p>In general the validation component (validator) in Citrus works hand in hand with a message receiving component as the following figure shows:</p>
 <p><img src="images/figure_005.jpg" alt="figure_005.jpg"></p>
 <p>The message receiving component passes the message to the validator where the individual validation steps are performed. Let us have a closer look at the validation options and features step by step.</p>
-<h3 id="validate-message-payloads">Validate message payloads</h3>
+<h3 id="validate-message-payloads"><a name="validate-message-payloads" class="plugin-anchor" href="#validate-message-payloads"><span class="fa fa-link"></span></a>Validate message payloads</h3>
 <p>The most detailed validation of incoming messages is to define some expected message payload. The Citrus message validator will then perform a detailed message payload comparison. The incoming message has to match exactly to the expected message payload. The different message validator implementations in Citrus provide deep comparison of message structures such as XML, JSON and so on.</p>
 <p>So by defining an expected message payload we validate the incoming message in syntax and semantics. In case a difference is identified by the message validator the validation and the test case fails with respective exceptions. This is how you can define message payloads in receive action:</p>
 <p><strong>XML DSL</strong> </p>
@@ -1698,7 +1717,7 @@ Sometimes the nested XML message payload elements may cause XSD schema validatio
 <p>Now Citrus will marshal the message payload with the message marshaller bean named <strong>myMessageMarshallerBean</strong> . This way you can have multiple message marshaller implementations active in your project (XML, JSON, and so on).</p>
 <p>Last not least the message can be defined as Citrus message object. Here you can choose one of the different message implementations used in Citrus for SOAP, Http or JMS messages. Or you just use the default message implementation or maybe a custom implementation.</p>
 <p>In general the expected message content can be manipulated using XPath (<a href="xpath">xpath</a>) or JSONPath (<a href="json-path">json-path</a>). In addition to that you can ignore some elements that are skipped in comparison. We will describe this later on in this section. Now lets continue with message header validation.</p>
-<h3 id="validate-message-headers">Validate message headers</h3>
+<h3 id="validate-message-headers"><a name="validate-message-headers" class="plugin-anchor" href="#validate-message-headers"><span class="fa fa-link"></span></a>Validate message headers</h3>
 <p>Message headers are used widely in enterprise messaging solution: The message headers are part of the message semantics and need to be validated, too. Citrus can validate message header by name and value.</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
@@ -1737,7 +1756,7 @@ Sometimes the nested XML message payload elements may cause XSD schema validatio
 }
 </code></pre>
 <p>Header definition in Java DSL is straight forward as we just define name and value as usual. This completes the message validation when receiving a message in Citrus. The message validator implementations may add additional validation capabilities such as XML schema validation or XPath and JSONPath validation. Please refer to the respective chapters in this guide to learn more about that.</p>
-<h3 id="message-selectors">Message selectors</h3>
+<h3 id="message-selectors"><a name="message-selectors" class="plugin-anchor" href="#message-selectors"><span class="fa fa-link"></span></a>Message selectors</h3>
 <p>The <strong><code>&lt;selector&gt;</code></strong> element inside the receiving action defines key-value pairs in order to filter the messages being received. The filter applies to the message headers. This means that a receiver will only accept messages matching a header element value. In messaging applications the header information often holds message ids, correlation ids, operation names and so on. With this information given you can explicitly listen for messages that belong to your test case. This is very helpful to avoid receiving messages that are still available on the message destination.</p>
 <p>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry situations where the application error handling automatically tries to solve a communication problem that occurred during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not valid any more for the currently running test case. The test case might fail because the received message does not apply to the actual use case. So we will definitely run into validation errors as the expected message control values do not match.</p>
 <p>Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages that apply for the use case that is being tested. The Java Messaging System (JMS) came up with a message header selector that will only accept messages that fit the expected header values.</p>
@@ -1774,7 +1793,7 @@ Sometimes the nested XML message payload elements may cause XSD schema validatio
 In case you want to run tests in parallel message selectors become essential in your test cases. The different tests running at the same time will steal messages from each other when you lack of message selection mechanisms.</p>
 <p><strong>Important</strong>
 Previously only JMS message destinations offered support for message selectors! With Citrus version 1.2 we introduced message selector support for Spring Integration message channels, too (see<a href="message-channel-selector-support">message-channel-selector-support</a>).</p>
-<h3 id="groovy-markupbuilder">Groovy MarkupBuilder</h3>
+<h3 id="groovy-markupbuilder"><a name="groovy-markupbuilder" class="plugin-anchor" href="#groovy-markupbuilder"><span class="fa fa-link"></span></a>Groovy MarkupBuilder</h3>
 <p>With the Groovy MarkupBuilder you can build XML message payloads in a simple way, without having to write the typical XML overhead. For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML section or the nested payload XML data we write a Groovy script snippet. The Groovy MarkupBuilder generates the XML message payload with exactly the same result:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span>&gt;</span>
@@ -1878,7 +1897,7 @@ Previously only JMS message destinations offered support for message selectors! 
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>

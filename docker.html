@@ -63,7 +63,7 @@
         data-chapter-title="Docker"
         data-filepath="docker.md"
         data-basepath="."
-        data-revision="Thu Oct 20 2016 11:44:15 GMT+0200 (CEST)"
+        data-revision="Sun Nov 13 2016 17:12:53 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -328,6 +328,21 @@
                             <b>10.6.</b>
                         
                         Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
                     </a>
             
             
@@ -1580,14 +1595,14 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="docker-support">Docker support</h2>
+                        <h2 id="docker-support"><a name="docker-support" class="plugin-anchor" href="#docker-support"><span class="fa fa-link"></span></a>Docker support</h2>
 <p>Citrus provides configuration components and test actions for interaction with a Docker deamon. The Citrus docker client component will execute Docker commands for container management such as start, stop, build, inspect and so on. The Docker client by default uses the Docker remote REST API. As a user you can execute Docker commands as part of a Citrus test and validate possible command results.</p>
 <p><strong>Note</strong>
 The Docker test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-docker<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Citrus provides a &quot;citrus-docker&quot; configuration namespace and schema definition for Docker related components and actions. Include this namespace into your Spring configuration in order to use the Citrus Docker configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
@@ -1605,7 +1620,7 @@ The Docker test components in Citrus are kept in a separate Maven module. If not
 <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
 </code></pre>
 <p>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</p>
-<h3 id="docker-client">Docker client</h3>
+<h3 id="docker-client"><a name="docker-client" class="plugin-anchor" href="#docker-client"><span class="fa fa-link"></span></a>Docker client</h3>
 <p>Citrus operates with the Docker remote REST API in order to interact with the Docker deamon. The Docker client is defined as Spring bean component in the configuration as follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-docker:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;dockerClient&quot;</span>/&gt;</span>
 </code></pre>
@@ -1632,7 +1647,7 @@ The Docker test components in Citrus are kept in a separate Maven module. If not
             <span class="hljs-attribute">config-path</span>=<span class="hljs-value">&quot;/path/to/some/config/directory&quot;</span>/&gt;</span>
 </code></pre>
 <p>Now Citrus is able to access the Docker remote API for executing commands such as start, stop, build, inspect and so on.</p>
-<h3 id="docker-commands">Docker commands</h3>
+<h3 id="docker-commands"><a name="docker-commands" class="plugin-anchor" href="#docker-commands"><span class="fa fa-link"></span></a>Docker commands</h3>
 <p>We have several Citrus test actions each representing a Docker command. These actions can be part of a test case where you can manage Docker containers inside the test. As a prerequisite we have to enable the Docker specific test actions in our XML test as follows:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
         <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
@@ -1807,7 +1822,7 @@ The Docker test components in Citrus are kept in a separate Maven module. If not
 
 <script>
 require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
     gitbook.start(config);
 });
 </script>
