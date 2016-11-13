@@ -293,7 +293,7 @@
   <files>
     <!-- PDF reference documentation -->
     <file>
-      <source>target/site/reference/pdf/citrus-reference-2.6.2-SNAPSHOT.pdf</source>
+      <source>target/site/reference/pdf/citrus-reference-2.6.2.pdf</source>
       <outputDirectory>docs/reference/pdf</outputDirectory>
     </file>
   </files>
