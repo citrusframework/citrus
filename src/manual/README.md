@@ -6,7 +6,7 @@ Christoph Deppisch, Martin Maher
 
 ## Version
 
-**2.6.2**
+**2.6.3-SNAPSHOT**
 
 **Copyright © 2016 ConSol Software GmbH**
 
