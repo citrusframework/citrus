@@ -176,7 +176,7 @@ The first test action sends the request to the HTTP server. The action basically
 - method(HttpMethod.POST) -> using HTTP's _POST_ method
 - path("/users/${username}") -> to URI to send the HTTP request to
 
-The syntax ${..} is a variable placeholder used in citrus that gets resolved to the value of the variable at runtime. In the example above I use it for adding the variable _username_ to the URI.
+The syntax `${variable-name}` is a variable placeholder used in citrus that gets resolved to the value of the variable at runtime. In the example above I use it for adding the variable _username_ to the URI.
 
 The second action is used for verifying that the server processes the request successfully. It expects a HTTP 200 code to be returned from the server.
 
