@@ -26,28 +26,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testParallelBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                parallel(echo("${var}"), 
-                        sleep(2000),
-                        echo("ASDF"));
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Parallel.class);
-        assertEquals(test.getActions().get(0).getName(), "parallel");
-        
-        Parallel container = (Parallel)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 3);
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
-    }
 
     @Test
     public void testParallelBuilder() {
@@ -106,42 +84,5 @@ public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
 
         assertEquals(container.getTestAction(2).getClass(), EchoAction.class);
         assertEquals(((EchoAction) container.getTestAction(2)).getMessage(), "3.0");
-    }
-
-    @Test
-    public void testParallelBuilderNestedContainersDeprecated() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                parallel(echo("1.0"),
-                        sequential(echo("2.1"), echo("2.2")),
-                        echo("3.0"));
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Parallel.class);
-        assertEquals(test.getActions().get(0).getName(), "parallel");
-
-        Parallel container = (Parallel)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 3);
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
-        assertEquals(((EchoAction) container.getTestAction(0)).getMessage(), "1.0");
-        assertEquals(container.getTestAction(1).getClass(), Sequence.class);
-
-        Sequence sequence = (Sequence) container.getTestAction(1);
-        assertEquals(sequence.getActionCount(), 2);
-        assertEquals(sequence.getTestAction(0).getClass(), EchoAction.class);
-        assertEquals(((EchoAction) sequence.getTestAction(0)).getMessage(), "2.1");
-        assertEquals(sequence.getTestAction(1).getClass(), EchoAction.class);
-        assertEquals(((EchoAction) sequence.getTestAction(1)).getMessage(), "2.2");
-
-        assertEquals(container.getTestAction(2).getClass(), EchoAction.class);
-        assertEquals(((EchoAction) container.getTestAction(2)).getMessage(), "3.0");
-
-        assertEquals(container.getTestAction(2).getClass(), EchoAction.class);
     }
 }

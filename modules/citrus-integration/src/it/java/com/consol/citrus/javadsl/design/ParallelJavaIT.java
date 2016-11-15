@@ -28,39 +28,6 @@ import org.testng.annotations.Test;
 public class ParallelJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void parallelContainerNested() {
-        parallel(
-            sleep(150),
-            sequential(
-                sleep(100),
-                echo("1")
-            ),
-            echo("2"),
-            echo("3"),
-            iterate(
-                echo("10")
-            ).condition("i lt= 5").index("i")
-        );
-        
-        assertException(
-            parallel(
-                sleep(150),
-                sequential(
-                    sleep(100),
-                    fail("This went wrong too"),
-                    echo("1")
-                ),
-                echo("2"),
-                fail("This went wrong too"),
-                echo("3"),
-                iterate(
-                    echo("10")
-                ).condition("i lt= 5").index("i")
-            )
-        ).exception(CitrusRuntimeException.class);
-    }
-
-    @CitrusTest
     public void parallelContainer() {
         parallel().actions(
             sleep(150),

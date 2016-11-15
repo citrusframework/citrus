@@ -32,7 +32,7 @@ public class JmsTopicJavaIT extends TestNGCitrusTestDesigner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        parallel(
+        parallel().actions(
            receive("helloTopicRequestReceiver")
                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -55,7 +55,7 @@ public class JmsTopicJavaIT extends TestNGCitrusTestDesigner {
                .header("CorrelationId", "${correlationId}")
                .timeout(5000)
                .description("Receive asynchronous hello response: HelloService -> TestFramework"),
-           sequential(
+           sequential().actions(
                sleep(1000L),
                send("helloTopicRequestSender")
                    .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +

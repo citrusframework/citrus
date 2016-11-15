@@ -27,39 +27,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class CatchTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testCatchBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                catchException(echo("${var}"))
-                    .exception(CitrusRuntimeException.class.getName());
-                
-                catchException(echo("${var}"), sleep(100L))
-                    .exception(CitrusRuntimeException.class);
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 2);
-        assertEquals(test.getActions().get(0).getClass(), Catch.class);
-        assertEquals(test.getActions().get(0).getName(), "catch");
-        assertEquals(test.getActions().get(1).getClass(), Catch.class);
-        assertEquals(test.getActions().get(1).getName(), "catch");
-        
-        Catch container = (Catch)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(container.getException(), CitrusRuntimeException.class.getName());
-        assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");
-        
-        container = (Catch)test.getActions().get(1);
-        assertEquals(container.getActionCount(), 2);
-        assertEquals(container.getException(), CitrusRuntimeException.class.getName());
-        assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");
-        assertEquals(((SleepAction)(container.getActions().get(1))).getMilliseconds(), "100");
-    }
 
     @Test
     public void testCatchBuilder() {

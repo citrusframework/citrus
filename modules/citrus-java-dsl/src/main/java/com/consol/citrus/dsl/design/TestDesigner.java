@@ -294,26 +294,6 @@ public interface TestDesigner extends ApplicationContextAware {
     SendMessageBuilder send(String messageEndpointName);
 
     /**
-     * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     *
-     * @param messageEndpointName
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#soap()}
-     */
-    SendSoapFaultBuilder sendSoapFault(String messageEndpointName);
-
-    /**
-     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     *
-     * @param messageEndpoint
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#soap()}
-     */
-    SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint);
-
-    /**
      * Add sleep action with default delay time.
      * @return
      */
@@ -438,27 +418,9 @@ public interface TestDesigner extends ApplicationContextAware {
 
     /**
      * Assert exception to happen in nested test action.
-     *
-     * @param testAction the nested testAction
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#assertException()}
-     */
-    AssertExceptionBuilder assertException(TestAction testAction);
-
-    /**
-     * Assert exception to happen in nested test action.
      * @return
      */
     AssertExceptionBuilder assertException();
-
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#catchException()}
-     */
-    CatchExceptionBuilder catchException(TestAction... actions);
 
     /**
      * Action catches possible exceptions in nested test actions.
@@ -468,27 +430,9 @@ public interface TestDesigner extends ApplicationContextAware {
 
     /**
      * Assert SOAP fault during action execution.
-     *
-     * @param testAction
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#assertSoapFault()}
-     */
-    AssertSoapFaultBuilder assertSoapFault(TestAction testAction);
-
-    /**
-     * Assert SOAP fault during action execution.
      * @return
      */
     AssertSoapFaultBuilder assertSoapFault();
-
-    /**
-     * Adds conditional container with nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#conditional()}
-     */
-    ConditionalBuilder conditional(TestAction... actions);
 
     /**
      * Adds conditional container with nested test actions.
@@ -498,27 +442,9 @@ public interface TestDesigner extends ApplicationContextAware {
 
     /**
      * Adds iterate container with nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#iterate()}
-     */
-    IterateBuilder iterate(TestAction... actions);
-
-    /**
-     * Adds iterate container with nested test actions.
      * @return
      */
     IterateBuilder iterate();
-
-    /**
-     * Adds parallel container with nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#parallel()}
-     */
-    ParallelBuilder parallel(TestAction... actions);
 
     /**
      * Adds parallel container with nested test actions.
@@ -528,42 +454,15 @@ public interface TestDesigner extends ApplicationContextAware {
 
     /**
      * Adds repeat on error until true container with nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#repeatOnError()}
-     */
-    RepeatOnErrorBuilder repeatOnError(TestAction... actions);
-
-    /**
-     * Adds repeat on error until true container with nested test actions.
      * @return
      */
     RepeatOnErrorBuilder repeatOnError();
 
     /**
      * Adds repeat until true container with nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#repeat()}
-     */
-    RepeatBuilder repeat(TestAction... actions);
-
-    /**
-     * Adds repeat until true container with nested test actions.
      * @return
      */
     RepeatBuilder repeat();
-
-    /**
-     * Adds sequential container with nested test actions.
-     *
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#sequential()}
-     */
-    SequenceBuilder sequential(TestAction... actions);
 
     /**
      * Adds sequential container with nested test actions.
@@ -576,14 +475,6 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      */
     TimerBuilder timer();
-
-    /**
-     * Adds a timer container with nested test actions.
-     * @param actions
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#timer()}
-     */
-    TimerBuilder timer(TestAction... actions);
 
     /**
      * Stops the timer matching the supplied timerId
@@ -633,14 +524,6 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      */
     TemplateBuilder applyTemplate(String name);
-
-    /**
-     * Adds sequence of test actions to finally block.
-     *
-     * @param actions
-     * @deprecated since 2.6 in favor of using {@link TestDesigner#doFinally()}
-     */
-    FinallySequenceBuilder doFinally(TestAction... actions);
 
     /**
      * Adds sequence of test actions to finally block.

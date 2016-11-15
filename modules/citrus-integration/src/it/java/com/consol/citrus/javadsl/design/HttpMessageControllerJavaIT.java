@@ -35,7 +35,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         
         echo("First request without query parameter and context path variables.");
         
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .get()
@@ -45,7 +45,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                     .contentType("text/html")
                     .accept("application/xml;charset=UTF-8")),
                 
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .get()
@@ -66,7 +66,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         
         echo("Use context path variables.");
         
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .get()
@@ -76,7 +76,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                     .contentType("text/html")
                     .accept("application/xml;charset=UTF-8")),
 
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .get("/test/user/${id}")
@@ -96,7 +96,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
         
         echo("Use query parameter and context path variables.");
         
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .get()
@@ -109,7 +109,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                     .accept("application/xml;charset=UTF-8"))
                 .path("user"),
 
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .get("/test/user")
@@ -127,105 +127,6 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
-            .version("HTTP/1.1");
-    }
-
-    @CitrusTest(name = "HttpMessageControllerJavaDeprecatedIT")
-    public void httpMessageControllerDeprecatedIT() {
-        variable("id", "123456789");
-
-        echo("First request without query parameter and context path variables.");
-
-        parallel(
-            send("httpClient")
-                .http()
-                .uri("http://localhost:8072")
-                .message(new HttpMessage()
-                    .method(HttpMethod.GET)
-                    .contentType("text/html")
-                    .accept("application/xml;charset=UTF-8")),
-
-            sequential(
-                receive("httpServerRequestEndpoint")
-                    .message(new HttpMessage()
-                        .method(HttpMethod.GET)
-                        .contentType("text/html")
-                        .header("Host", "localhost:8072")
-                        .accept("application/xml;charset=UTF-8"))
-                    .http().uri("/").contextPath("")
-            )
-        );
-
-        receive("httpClient")
-            .timeout(2000L)
-            .http()
-            .status(HttpStatus.OK)
-            .version("HTTP/1.1");
-
-
-        echo("Use context path variables.");
-
-        parallel(
-            send("httpClient")
-                .http()
-                .uri("http://localhost:8072/test/user/${id}")
-                .message(new HttpMessage()
-                    .method(HttpMethod.GET)
-                    .contentType("text/html")
-                    .accept("application/xml;charset=UTF-8")),
-
-            sequential(
-                receive("httpServerRequestEndpoint")
-                    .http()
-                    .message(new HttpMessage()
-                        .contentType("text/html")
-                        .method(HttpMethod.GET)
-                        .header("Host", "localhost:8072")
-                        .accept("application/xml;charset=UTF-8"))
-                    .uri("/test/user/${id}")
-                    .contextPath("")
-            )
-        );
-
-        receive("httpClient")
-            .timeout(2000L)
-            .http()
-            .status(HttpStatus.OK)
-            .version("HTTP/1.1");
-
-        echo("Use query parameter and context path variables.");
-
-        parallel(
-            send("httpClient")
-                .http()
-                .uri("http://localhost:8072/test")
-                .message(new HttpMessage()
-                    .method(HttpMethod.GET)
-                    .contentType("text/html")
-                    .queryParam("id", "${id}")
-                    .queryParam("name", "TestUser")
-                    .accept("application/xml;charset=UTF-8"))
-                .path("user"),
-
-            sequential(
-                receive("httpServerRequestEndpoint")
-                    .http()
-                    .message(new HttpMessage()
-                        .method(HttpMethod.GET)
-                        .contentType("text/html")
-                        .header("Host", "localhost:8072")
-                        .accept("application/xml;charset=UTF-8"))
-                    .uri("/test/user")
-                    .contextPath("")
-                    .queryParam("id", "${id}")
-                    .queryParam("name", "TestUser")
-            )
-        );
-
-        receive("httpClient")
-            .timeout(2000L)
-            .http()
-            .status(HttpStatus.OK)
             .version("HTTP/1.1");
     }
 }

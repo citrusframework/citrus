@@ -71,49 +71,4 @@ public class AssertSoapFaultTestRunnerIT extends TestNGCitrusTestRunner {
                     }
                 }));
     }
-
-    @CitrusTest
-    public void assertSoapFaultActionDeprecated() {
-        variable("soapFaultCode", "TEC-1001");
-        variable("soapFaultString", "Invalid request");
-        
-        assertSoapFault().faultString("Invalid request")
-                        .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
-                .when(send(new BuilderSupport<SendMessageBuilder>() {
-                    @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("webServiceHelloClient")
-                                .soap()
-                                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<ns0:Message>This is invalid</ns0:Message>" +
-                                        "</ns0:SoapFaultForcingRequest>");
-                    }
-                }));
-        
-        assertSoapFault().faultString("@ignore@")
-                        .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
-                .when(send(new BuilderSupport<SendMessageBuilder>() {
-                    @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("webServiceHelloClient")
-                                .soap()
-                                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<ns0:Message>This is invalid</ns0:Message>" +
-                                        "</ns0:SoapFaultForcingRequest>");
-                    }
-                }));
-
-        assertSoapFault().faultString("${soapFaultString}")
-                        .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
-                .when(send(new BuilderSupport<SendMessageBuilder>() {
-                     @Override
-                     public void configure(SendMessageBuilder builder) {
-                         builder.endpoint("webServiceHelloClient")
-                                 .soap()
-                                 .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                         "<ns0:Message>This is invalid</ns0:Message>" +
-                                         "</ns0:SoapFaultForcingRequest>");
-                     }
-                }));
-    }
 }

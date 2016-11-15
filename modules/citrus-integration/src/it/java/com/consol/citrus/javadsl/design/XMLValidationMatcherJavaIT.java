@@ -31,7 +31,7 @@ public class XMLValidationMatcherJavaIT extends TestNGCitrusTestDesigner {
     public void xmlValidationMatcher() {
         variable("greetingText", "Hello Citrus");      
         
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -43,7 +43,7 @@ public class XMLValidationMatcherJavaIT extends TestNGCitrusTestDesigner {
                         "</testRequestMessage>")
                 .contentType("text/xml")
                 .accept("text/xml, */*"),
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .post("/test")

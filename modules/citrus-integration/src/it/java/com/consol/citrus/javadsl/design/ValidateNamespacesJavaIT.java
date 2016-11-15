@@ -83,8 +83,9 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusTestDesigner {
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>");
         
-        assertException(
-            receive("testMessageReceiver")
+        assertException()
+            .exception(ValidationException.class)
+            .when(receive("testMessageReceiver")
                 .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
@@ -92,7 +93,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusTestDesigner {
                 .validateNamespace("trq", "http://www.consol.de/schemas/test")
                 .validateNamespace("missing", "http://www.consol.de/schemas/missing")
                 .timeout(5000)
-        ).exception(ValidationException.class);
+        );
         
         echo("Test: Failure because of wrong namespace prefix");
         
@@ -101,15 +102,16 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusTestDesigner {
                             "<Message>Hello</Message>" +
                         "</wrong:TestRequest>");
         
-        assertException(
-            receive("testMessageReceiver")
+        assertException()
+            .exception(ValidationException.class)
+            .when(receive("testMessageReceiver")
                 .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
                 .schemaValidation(false)
                 .validateNamespace("trq", "http://www.consol.de/schemas/test")
                 .timeout(5000)
-        ).exception(ValidationException.class);
+        );
         
         echo("Test: Failure because of wrong namespace uri");
         
@@ -118,14 +120,15 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusTestDesigner {
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>");
         
-        assertException(
-            receive("testMessageReceiver")
+        assertException()
+            .exception(ValidationException.class)
+            .when(receive("testMessageReceiver")
                 .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
                 .schemaValidation(false)
                 .validateNamespace("trq", "http://www.consol.de/schemas/test")
                 .timeout(5000)
-        ).exception(ValidationException.class);
+        );
     }
 }

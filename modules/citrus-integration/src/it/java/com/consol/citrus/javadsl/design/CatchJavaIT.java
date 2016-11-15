@@ -29,14 +29,6 @@ public class CatchJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void catchAction() {
-        catchException(fail("Fail!"));
-        
-        catchException(fail("Fail!"))
-            .exception(CitrusRuntimeException.class.getName());
-        
-        catchException(fail("Fail!"))
-            .exception(CitrusRuntimeException.class);
-
         catchException().when(fail("Fail!"));
 
         catchException()

@@ -34,7 +34,6 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
@@ -648,66 +647,6 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     public T withApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         return self;
-    }
-
-    /**
-     * Enable SOAP specific properties on this receiving message action.
-     * @return
-     * @deprecated since 2.6 in favor of using {@link SoapActionBuilder}
-     */
-    public ReceiveSoapMessageBuilder soap() {
-        ReceiveSoapMessageAction receiveSoapMessageAction = new ReceiveSoapMessageAction();
-        
-        receiveSoapMessageAction.setActor(getAction().getActor());
-        receiveSoapMessageAction.setDescription(getAction().getDescription());
-        receiveSoapMessageAction.setEndpoint(getAction().getEndpoint());
-        receiveSoapMessageAction.setEndpointUri(getAction().getEndpointUri());
-        receiveSoapMessageAction.setMessageSelector(getAction().getMessageSelector());
-        receiveSoapMessageAction.setMessageSelectorString(getAction().getMessageSelectorString());
-        receiveSoapMessageAction.setMessageType(getAction().getMessageType());
-        receiveSoapMessageAction.setMessageBuilder(getAction().getMessageBuilder());
-        receiveSoapMessageAction.setReceiveTimeout(getAction().getReceiveTimeout());
-        receiveSoapMessageAction.setValidationCallback(getAction().getValidationCallback());
-        receiveSoapMessageAction.setValidationContexts(getAction().getValidationContexts());
-        receiveSoapMessageAction.setValidator(getAction().getValidator());
-        receiveSoapMessageAction.setVariableExtractors(getAction().getVariableExtractors());
-
-        action.setDelegate(receiveSoapMessageAction);
-
-        ReceiveSoapMessageBuilder builder = new ReceiveSoapMessageBuilder(action);
-        builder.withApplicationContext(applicationContext);
-        builder.setMessageType(messageType);
-        builder.setDefaultValidationContext(defaultValidationContext);
-        builder.setXmlMessageValidationContext(xmlMessageValidationContext);
-        builder.setJsonPathValidationContext(jsonPathValidationContext);
-        builder.setScriptValidationContext(scriptValidationContext);
-        builder.setJsonPathValidationContext(jsonPathValidationContext);
-        builder.setHeaderExtractor(headerExtractor);
-        builder.setXpathExtractor(xpathExtractor);
-        builder.setJsonPathExtractor(jsonPathExtractor);
-
-        return builder;
-    }
-
-    /**
-     * Enable HTTP specific properties on this receiving message action.
-     * @return
-     * @deprecated since 2.6 in favor of using {@link HttpActionBuilder}
-     */
-    public ReceiveHttpMessageBuilder http() {
-        ReceiveHttpMessageBuilder builder = new ReceiveHttpMessageBuilder(action);
-        builder.withApplicationContext(applicationContext);
-        builder.setMessageType(messageType);
-        builder.setDefaultValidationContext(defaultValidationContext);
-        builder.setXmlMessageValidationContext(xmlMessageValidationContext);
-        builder.setJsonPathValidationContext(jsonPathValidationContext);
-        builder.setScriptValidationContext(scriptValidationContext);
-        builder.setJsonPathValidationContext(jsonPathValidationContext);
-        builder.setHeaderExtractor(headerExtractor);
-        builder.setXpathExtractor(xpathExtractor);
-        builder.setJsonPathExtractor(jsonPathExtractor);
-
-        return builder;
     }
 
     /**

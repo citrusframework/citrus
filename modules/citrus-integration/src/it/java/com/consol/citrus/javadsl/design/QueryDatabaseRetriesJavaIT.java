@@ -36,17 +36,18 @@ public class QueryDatabaseRetriesJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void sqlQueryRetries() {
-        parallel(
-            sequential(
+        parallel().actions(
+            sequential().actions(
                 sql(dataSource)
                     .sqlResource("classpath:com/consol/citrus/actions/script.sql"),
-                repeatOnError(
-                    query(dataSource)
+                repeatOnError()
+                    .autoSleep(100).index("i").until("i = 5")
+                    .actions(query(dataSource)
                         .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
                         .validate("CUSTOMER_CNT", "0")
-                ).autoSleep(100).index("i").until("i = 5")
+                )
             ),
-            sequential(
+            sequential().actions(
                 sleep(300),
                 sql(dataSource)
                     .statement("DELETE FROM CUSTOMERS")

@@ -31,7 +31,6 @@ import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
@@ -478,49 +477,6 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
 
         getAction().setDataDictionary(dictionary);
         return self;
-    }
-
-    /**
-     * Enable SOAP specific properties on this message sending action.
-     * @return
-     * @deprecated since 2.6 in favor of using {@link SoapActionBuilder}
-     */
-    public SendSoapMessageBuilder soap() {
-        SendSoapMessageAction sendSoapMessageAction = new SendSoapMessageAction();
-        sendSoapMessageAction.setActor(getAction().getActor());
-        sendSoapMessageAction.setMessageType(messageType);
-        sendSoapMessageAction.setDescription(getAction().getDescription());
-        sendSoapMessageAction.setMessageBuilder(getAction().getMessageBuilder());
-        sendSoapMessageAction.setEndpoint(getAction().getEndpoint());
-        sendSoapMessageAction.setEndpointUri(getAction().getEndpointUri());
-        sendSoapMessageAction.setVariableExtractors(getAction().getVariableExtractors());
-
-        action.setDelegate(sendSoapMessageAction);
-
-        SendSoapMessageBuilder builder = new SendSoapMessageBuilder(action);
-        builder.withApplicationContext(applicationContext);
-
-        return builder;
-    }
-
-    /**
-     * Enable features specific for an HTTP REST endpoint. This includes setting the
-     * HTTP method and the endpoint URI.
-     *
-     * Example:
-     * <pre>
-     *     send("httpClient").method(HttpMethod.GET).uri("http://localhost:8080/jolokia");
-     * </pre>
-     *
-     *
-     * @return HTTP specific builder.
-     * @deprecated since 2.6 in favor of using {@link HttpActionBuilder}
-     */
-    public SendHttpMessageBuilder http() {
-        SendHttpMessageBuilder builder = new SendHttpMessageBuilder(action);
-        builder.withApplicationContext(applicationContext);
-
-        return builder;
     }
 
     /**

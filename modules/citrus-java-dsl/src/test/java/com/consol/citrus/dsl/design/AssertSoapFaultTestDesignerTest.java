@@ -48,42 +48,6 @@ public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
-    public void testAssertSoapFaultBuilderNested() {
-        reset(applicationContextMock);
-
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(true);
-        when(applicationContextMock.getBean(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
-            @Override
-            public void configure() {
-                assertSoapFault(echo("${foo}"))
-                        .faultCode(SOAP_ENV_SERVER_ERROR)
-                        .faultString(INTERNAL_SERVER_ERROR);
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
-
-        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
-
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
-        Assert.assertEquals(container.getFaultCode(), SOAP_ENV_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
-
-    }
-
-    @Test
     public void testAssertSoapFaultBuilder() {
         reset(applicationContextMock);
 

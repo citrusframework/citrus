@@ -30,12 +30,12 @@ public class PlainTextValidationJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void plainTextValidation() {
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
                 .payload("Hello, World!"),
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                    .receive()
                    .post()

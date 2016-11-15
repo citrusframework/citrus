@@ -33,55 +33,6 @@ import java.io.IOException;
 public class AssertJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void assertActionNested() {
-        variable("failMessage", "Something went wrong!");
-        
-        assertException(fail("Fail once"))
-                .exception(CitrusRuntimeException.class);
-        
-        assertException(fail("Fail again"))
-                .exception(CitrusRuntimeException.class)
-                .message("Fail again");
-        
-        assertException(fail("${failMessage}"))
-                .exception(CitrusRuntimeException.class)
-                .message("${failMessage}");
-        
-        assertException(fail("${failMessage}"))
-                .exception(CitrusRuntimeException.class)
-                .message("@contains('wrong')@");
-        
-        assertException(
-                assertException(fail("Fail another time"))
-                    .exception(IOException.class))
-                .exception(ValidationException.class);
-        
-        assertException(
-                assertException(fail("Fail with nice error message"))
-                    .exception(CitrusRuntimeException.class)
-                    .message("Fail again"))
-                .exception(ValidationException.class);
-        
-        assertException(
-                assertException(echo("Nothing fails here"))
-                    .exception(CitrusRuntimeException.class))
-                .exception(ValidationException.class);
-        
-        assertException(
-                assertException(echo("Nothing fails here either"))
-                    .exception(CitrusRuntimeException.class)
-                    .message("Must be failing"))
-                .exception(ValidationException.class);
-
-        assertException(new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                context.getVariable("foo");
-            }
-        }).exception(CitrusRuntimeException.class).message("Unknown variable 'foo'");
-    }
-
-    @CitrusTest
     public void assertAction() {
         variable("failMessage", "Something went wrong!");
 

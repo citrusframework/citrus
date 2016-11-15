@@ -33,7 +33,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
         
         echo("Send Http message and respond with 200 OK");
         
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -44,7 +44,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                 .contentType("text/xml")
                 .accept("text/xml, */*"),
             
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .post("/test")
@@ -81,7 +81,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
 
         echo("Send Http request and respond with 404 status code");
         
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -92,7 +92,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                 .contentType("text/xml")
                 .accept("text/xml, */*"),
             
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .post()

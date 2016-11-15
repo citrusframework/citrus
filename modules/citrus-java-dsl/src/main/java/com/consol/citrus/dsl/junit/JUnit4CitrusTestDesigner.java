@@ -273,18 +273,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    @Deprecated
-    public SendSoapFaultBuilder sendSoapFault(String messageEndpointName) {
-        return testDesigner.sendSoapFault(messageEndpointName);
-    }
-
-    @Override
-    @Deprecated
-    public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
-        return testDesigner.sendSoapFault(messageEndpoint);
-    }
-
-    @Override
     public SleepAction sleep() {
         return testDesigner.sleep();
     }
@@ -360,20 +348,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    @Deprecated
-    public AssertExceptionBuilder assertException(TestAction testAction) {
-        return testDesigner.assertException(testAction);
-    }
-
-    @Override
     public AssertExceptionBuilder assertException() {
         return testDesigner.assertException();
-    }
-
-    @Override
-    @Deprecated
-    public CatchExceptionBuilder catchException(TestAction ... actions) {
-        return testDesigner.catchException(actions);
     }
 
     @Override
@@ -382,20 +358,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    @Deprecated
-    public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
-        return testDesigner.assertSoapFault(testAction);
-    }
-
-    @Override
     public AssertSoapFaultBuilder assertSoapFault() {
         return testDesigner.assertSoapFault();
-    }
-
-    @Override
-    @Deprecated
-    public ConditionalBuilder conditional(TestAction ... actions) {
-        return testDesigner.conditional(actions);
     }
 
     @Override
@@ -404,20 +368,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    @Deprecated
-    public IterateBuilder iterate(TestAction ... actions) {
-        return testDesigner.iterate(actions);
-    }
-
-    @Override
     public IterateBuilder iterate() {
         return testDesigner.iterate();
-    }
-
-    @Override
-    @Deprecated
-    public ParallelBuilder parallel(TestAction ... actions) {
-        return testDesigner.parallel(actions);
     }
 
     @Override
@@ -426,20 +378,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    @Deprecated
-    public RepeatOnErrorBuilder repeatOnError(TestAction ... actions) {
-        return testDesigner.repeatOnError(actions);
-    }
-
-    @Override
     public RepeatOnErrorBuilder repeatOnError() {
         return testDesigner.repeatOnError();
-    }
-
-    @Override
-    @Deprecated
-    public RepeatBuilder repeat(TestAction ... actions) {
-        return testDesigner.repeat(actions);
     }
 
     @Override
@@ -448,20 +388,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    @Deprecated
-    public SequenceBuilder sequential(TestAction ... actions) {
-        return testDesigner.sequential(actions);
-    }
-
-    @Override
     public SequenceBuilder sequential() {
         return testDesigner.sequential();
-    }
-
-    @Override
-    @Deprecated
-    public TimerBuilder timer(TestAction ... actions) {
-        return testDesigner.timer(actions);
     }
 
     @Override
@@ -507,12 +435,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     public TemplateBuilder applyTemplate(String name) {
         return testDesigner.applyTemplate(name);
-    }
-
-    @Override
-    @Deprecated
-    public FinallySequenceBuilder doFinally(TestAction ... actions) {
-        return testDesigner.doFinally(actions);
     }
 
     @Override

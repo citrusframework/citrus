@@ -47,7 +47,7 @@ public class FinallyBlockJavaIT extends TestNGCitrusTestDesigner {
 
         echo("ORDER creation time: ${date}");
         
-        doFinally(
+        doFinally().actions(
                 sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
                 echo("ORDER deletion time: ${date}")
         );

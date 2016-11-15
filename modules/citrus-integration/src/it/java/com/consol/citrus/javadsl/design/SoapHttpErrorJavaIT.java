@@ -32,9 +32,11 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusTestDesigner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        parallel(
-            assertException(
-                send("webServiceClient")
+        parallel().actions(
+            assertException()
+                .exception(org.springframework.ws.client.WebServiceTransportException.class)
+                .message("Server Error [500]")
+                .when(send("webServiceClient")
                     .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                   "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -44,9 +46,8 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusTestDesigner {
                     .header("{http://citrusframework.org/test}Operation", "sayHello")
                     .header("citrus_http_operation", "sayHello")
                     .header("citrus_soap_action", "sayHello")
-            ).exception(org.springframework.ws.client.WebServiceTransportException.class)
-            .message("Server Error [500]"),
-            sequential(
+            ),
+            sequential().actions(
                 receive("webServiceRequestReceiver")
                     .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +

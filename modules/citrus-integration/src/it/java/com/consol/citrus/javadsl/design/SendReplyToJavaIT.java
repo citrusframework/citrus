@@ -32,7 +32,7 @@ public class SendReplyToJavaIT extends TestNGCitrusTestDesigner {
         variable("operation", "GetDate");
         variable("conversationId", "123456789");
         
-        parallel(
+        parallel().actions(
             send("syncGetDateRequestSender")
                 .payload("<GetDateRequestMessage>" +
                             "<MessageHeader>" +
@@ -47,7 +47,7 @@ public class SendReplyToJavaIT extends TestNGCitrusTestDesigner {
                 .header("ConversationId", "${conversationId}")
                 .extractFromHeader(MessageHeaders.ID, "syncRequestCorrelatorId"),
                 
-            sequential(
+            sequential().actions(
                 receive("syncGetDateRequestReceiver")
                     .payload("<GetDateRequestMessage>" +
                             "<MessageHeader>" +

@@ -25,46 +25,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class RepeatOnErrorTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testRepeatOnErrorUntilTrueBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                repeatOnError(echo("${var}"), sleep(3000), echo("${var}"))
-                    .autoSleep(2000)
-                    .until("i gt 5");
-
-                repeatOnError(echo("${var}"))
-                    .autoSleep(200)
-                    .index("k")
-                    .startsWith(2)
-                    .until("k gt= 5");
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 2);
-        assertEquals(test.getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
-        assertEquals(test.getActions().get(0).getName(), "repeat-on-error");
-        
-        RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 3);
-        assertEquals(container.getAutoSleep(), Long.valueOf(2000L));
-        assertEquals(container.getCondition(), "i gt 5");
-        assertEquals(container.getStart(), 1);
-        assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
-
-        container = (RepeatOnErrorUntilTrue)test.getActions().get(1);
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(container.getAutoSleep(), Long.valueOf(200L));
-        assertEquals(container.getCondition(), "k gt= 5");
-        assertEquals(container.getStart(), 2);
-        assertEquals(container.getIndexName(), "k");
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
-    }
 
     @Test
     public void testRepeatOnErrorUntilTrueBuilder() {

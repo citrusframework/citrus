@@ -254,16 +254,6 @@ public interface TestRunner extends ApplicationContextAware {
     SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer);
 
     /**
-     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     *
-     * @param configurer
-     * @return
-     * @deprecated since 2.6 in favor of using {@link TestRunner#soap(BuilderSupport)} )}
-     */
-    TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer);
-
-    /**
      * Add sleep action with default delay time.
      * @return
      */

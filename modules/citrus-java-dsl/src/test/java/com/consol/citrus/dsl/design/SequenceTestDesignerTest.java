@@ -31,26 +31,6 @@ import static org.testng.Assert.assertTrue;
  * @since 1.3
  */
 public class SequenceTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testSequenceBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                sequential(echo("${var}"), sleep(5000L));
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Sequence.class);
-        assertEquals(test.getActions().get(0).getName(), "sequential");
-        
-        Sequence container = (Sequence)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 2);
-        assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-    }
 
     @Test
     public void testSequenceBuilder() {
@@ -71,44 +51,6 @@ public class SequenceTestDesignerTest extends AbstractTestNGUnitTest {
         Sequence container = (Sequence)test.getActions().get(0);
         assertEquals(container.getActionCount(), 2);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-    }
-
-    @Test
-    public void testSequenceBuilderWithAnonymousActionNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                sequential(
-                        echo("${var}"),
-                        new AbstractTestAction() {
-                            @Override
-                            public void doExecute(TestContext context) {
-                                context.setVariable("anonymous", "anonymous");
-                            }
-                        },
-                        sleep(5000L),
-                        new AbstractTestAction() {
-                            @Override
-                            public void doExecute(TestContext context) {
-                                context.getVariable("anonymous");
-                            }
-                        });
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Sequence.class);
-        assertEquals(test.getActions().get(0).getName(), "sequential");
-
-        Sequence container = (Sequence)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 4);
-        assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-        assertTrue(container.getActions().get(1).getClass().isAnonymousClass());
-        assertEquals(container.getActions().get(2).getClass(), SleepAction.class);
-        assertTrue(container.getActions().get(3).getClass().isAnonymousClass());
     }
 
     @Test

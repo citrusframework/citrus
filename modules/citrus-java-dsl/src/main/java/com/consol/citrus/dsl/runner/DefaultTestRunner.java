@@ -328,15 +328,6 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    @Deprecated
-    public TestAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
-        SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
-                .withApplicationContext(applicationContext);
-        configurer.configure(builder);
-        return run(builder.build().getDelegate());
-    }
-
-    @Override
     public SleepAction sleep() {
         return run(new SleepAction());
     }

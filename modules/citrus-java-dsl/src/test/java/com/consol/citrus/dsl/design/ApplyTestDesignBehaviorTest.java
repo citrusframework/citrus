@@ -70,7 +70,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
                 echo("test");
 
-                doFinally(
+                doFinally().actions(
                     echo("finally")
                 );
 
@@ -79,7 +79,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
                     public void apply() {
                         echo("behavior");
 
-                        doFinally(
+                        doFinally().actions(
                             echo("behaviorFinally")
                         );
                     }
@@ -151,7 +151,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                doFinally(
+                doFinally().actions(
                     echo("finally")
                 );
 

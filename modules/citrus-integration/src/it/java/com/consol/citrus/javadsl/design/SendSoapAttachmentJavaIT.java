@@ -29,14 +29,14 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusTestDesigner {
 
     @CitrusTest
     public void sendSoapAttachment() {
-        parallel(
+        parallel().actions(
                 soap().client("webServiceClient")
                         .send()
                         .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
                         .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt")),
-                sequential(
+                sequential().actions(
                         soap().server("webServiceRequestReceiver")
                                 .receive()
                                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
@@ -64,14 +64,14 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusTestDesigner {
                         "</ns0:SoapMessageWithAttachmentResponse>")
                 .schemaValidation(false);
 
-        parallel(
+        parallel().actions(
                 soap().client("webServiceClient")
                         .send()
                         .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
                         .attachment("MySoapAttachment", "text/plain", "This is an attachment!"),
-                sequential(
+                sequential().actions(
                         soap().server("webServiceRequestReceiver")
                                 .receive()
                                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
@@ -98,74 +98,5 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusTestDesigner {
                         "<ns0:Success>true</ns0:Success>" +
                         "</ns0:SoapMessageWithAttachmentResponse>")
                 .schemaValidation(false);
-    }
-
-    @CitrusTest
-    public void sendSoapAttachmentDeprecated() {
-        parallel(
-            send("webServiceClient")
-                .soap()
-                .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                    "</ns0:SoapMessageWithAttachmentRequest>")
-                .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt")),
-            sequential(
-                receive("webServiceRequestReceiver")
-                    .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                "</ns0:SoapMessageWithAttachmentRequest>")
-                    .schemaValidation(false)
-                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
-                    .soap()
-                    .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
-                    .timeout(5000L),
-                send("webServiceResponseSender")
-                    .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                    "<ns0:Success>true</ns0:Success>" +
-                                "</ns0:SoapMessageWithAttachmentResponse>")
-                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
-            )
-        );
-        
-        receive("webServiceClient")
-            .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                            "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                            "<ns0:Success>true</ns0:Success>" +
-                        "</ns0:SoapMessageWithAttachmentResponse>")
-            .schemaValidation(false);
-        
-        parallel(
-            send("webServiceClient")
-                .soap()
-                .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                    "</ns0:SoapMessageWithAttachmentRequest>")
-                .attachment("MySoapAttachment", "text/plain", "This is an attachment!"),
-            sequential(
-                receive("webServiceRequestReceiver")
-                    .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                "</ns0:SoapMessageWithAttachmentRequest>")
-                    .schemaValidation(false)
-                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
-                    .soap()
-                    .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
-                    .timeout(5000L),
-                send("webServiceResponseSender")
-                    .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                    "<ns0:Success>true</ns0:Success>" +
-                                "</ns0:SoapMessageWithAttachmentResponse>")
-                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
-            )
-        );
-        
-        receive("webServiceClient")
-            .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                            "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                            "<ns0:Success>true</ns0:Success>" +
-                        "</ns0:SoapMessageWithAttachmentResponse>")
-            .schemaValidation(false);
     }
 }

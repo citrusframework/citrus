@@ -120,8 +120,9 @@ public class JmsSendReceiveJavaIT extends AbstractJmsTestDesigner {
         
         echo("Test 4: Receive JMS message timeout response");
         
-        assertException(
-            receive("helloResponseJmsMessageReceiver")
+        assertException()
+            .exception(com.consol.citrus.exceptions.ActionTimeoutException.class)
+            .when(receive("helloResponseJmsMessageReceiver")
                 .selector(Collections.singletonMap("CorrelationId", "doesNotExist"))
                 .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                               "<MessageId>?</MessageId>" +
@@ -130,7 +131,6 @@ public class JmsSendReceiveJavaIT extends AbstractJmsTestDesigner {
                               "<Text>Hello ?</Text>" +
                           "</HelloResponse>")
                 .header("Operation", "sayHello")
-                .timeout(300))
-            .exception(com.consol.citrus.exceptions.ActionTimeoutException.class);
+                .timeout(300));
     }
 }

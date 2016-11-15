@@ -33,7 +33,7 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void jsonGroovyValidation() {
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -43,7 +43,7 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
                     "\"attribute\" : \"HeapMemoryUsage\"," +
                     "\"path\" : \"used\"" +
                   "}"),
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                    .receive()
                    .post("/")

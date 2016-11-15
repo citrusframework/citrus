@@ -27,26 +27,6 @@ import org.testng.annotations.Test;
 import static org.hamcrest.Matchers.is;
 
 public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testConditionalBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                conditional(echo("${var}")).when("${var} = 5");
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
-        
-        Conditional container = (Conditional)test.getActions().get(0);
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertEquals(container.getCondition(), "${var} = 5");
-    }
 
     @Test
     public void testConditionalBuilder() {

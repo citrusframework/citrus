@@ -30,14 +30,14 @@ public class SequentialJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void sequentialContainer() {
-        sequential(
+        sequential().actions(
             stopTime(),
             sleep(500),
             echo("Hello Citrus"),
             stopTime()
         );
 
-        sequential(
+        sequential().actions(
             echo("Hello Citrus"),
             new AbstractTestAction() {
                 @Override

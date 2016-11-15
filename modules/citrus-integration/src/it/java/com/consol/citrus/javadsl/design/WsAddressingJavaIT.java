@@ -31,8 +31,9 @@ public class WsAddressingJavaIT extends TestNGCitrusTestDesigner {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         
-        assertSoapFault(
-            send("wsAddressingHelloClient")
+        assertSoapFault().faultString("One or more mandatory SOAP header blocks not understood")
+            .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand")
+            .when(send("wsAddressingHelloClient")
                 .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -41,7 +42,6 @@ public class WsAddressingJavaIT extends TestNGCitrusTestDesigner {
                             "</ns0:HelloStandaloneRequest>")
                 .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
                 .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello")
-        ).faultString("One or more mandatory SOAP header blocks not understood")
-        .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand");
+        );
     }
 }

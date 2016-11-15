@@ -32,7 +32,7 @@ public class WebServiceServerJavaIT extends TestNGCitrusTestDesigner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        parallel(
+        parallel().actions(
         send("webServiceClient")
             .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                           "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -41,7 +41,7 @@ public class WebServiceServerJavaIT extends TestNGCitrusTestDesigner {
                           "<ns0:Text>Hello WebServer</ns0:Text>" +
                       "</ns0:HelloRequest>")
             .header("{http://citrusframework.org/test}Operation", "sayHello"),
-            sequential(
+            sequential().actions(
                 receive("webServiceRequestReceiver")
                     .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +

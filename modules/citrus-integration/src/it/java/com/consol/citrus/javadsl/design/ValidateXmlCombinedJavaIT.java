@@ -72,8 +72,9 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}");
         
-        assertException(
-            receive("helloResponseReceiver")
+        assertException()
+                .exception(ValidationException.class)
+                .when(receive("helloResponseReceiver")
                 .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -87,7 +88,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
                 .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}")
-        ).exception(ValidationException.class);
+        );
         
         echo("Test: Failure because of XML groovy script validation");
         
@@ -101,8 +102,9 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}");
         
-        assertException(
-            receive("helloResponseReceiver")
+        assertException()
+            .exception(ValidationException.class)
+            .when(receive("helloResponseReceiver")
                 .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                "<MessageId>${messageId}</MessageId>" +
                                "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -116,7 +118,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
                 .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}")
-        ).exception(ValidationException.class);
+        );
         
         echo("Test: Failure because of XML xpath validation");
         
@@ -130,8 +132,9 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}");
         
-        assertException(
-            receive("helloResponseReceiver")
+        assertException()
+            .exception(ValidationException.class)
+            .when(receive("helloResponseReceiver")
                 .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                "<MessageId>${messageId}</MessageId>" +
                                "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -145,6 +148,6 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
                 .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}")
-        ).exception(ValidationException.class);
+        );
     }
 }

@@ -420,27 +420,6 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    @Deprecated
-    public SendSoapFaultBuilder sendSoapFault(String messageEndpointUri) {
-        SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
-                .endpoint(messageEndpointUri)
-                .withApplicationContext(getApplicationContext());
-        action(builder);
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
-        SendSoapFaultBuilder builder = new SendSoapFaultBuilder()
-                .endpoint(messageEndpoint)
-                .withApplicationContext(getApplicationContext());
-
-        action(builder);
-        return builder;
-    }
-
-    @Override
     public SleepAction sleep() {
         SleepAction action = new SleepAction();
         action(action);
@@ -557,30 +536,9 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    @Deprecated
-    public AssertExceptionBuilder assertException(TestAction testAction) {
-        AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
-        removeNestedActions(testAction);
-        containers.push(builder.build());
-        builder.actions(testAction);
-        return builder;
-    }
-
-    @Override
     public AssertExceptionBuilder assertException() {
         AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
         containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public CatchExceptionBuilder catchException(TestAction... actions) {
-        CatchExceptionBuilder builder = new CatchExceptionBuilder(this)
-                .exception(CitrusRuntimeException.class.getName());
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
         return builder;
     }
 
@@ -589,19 +547,6 @@ public class DefaultTestDesigner implements TestDesigner {
         CatchExceptionBuilder builder = new CatchExceptionBuilder(this)
                 .exception(CitrusRuntimeException.class.getName());
         containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this)
-                .withApplicationContext(applicationContext);
-
-        removeNestedActions(testAction);
-        containers.push(builder.build());
-        builder.actions(testAction);
-
         return builder;
     }
 
@@ -615,29 +560,9 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    @Deprecated
-    public ConditionalBuilder conditional(TestAction... actions) {
-        ConditionalBuilder builder = new ConditionalBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
-        return builder;
-    }
-
-    @Override
     public ConditionalBuilder conditional() {
         ConditionalBuilder builder = new ConditionalBuilder(this);
         containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public IterateBuilder iterate(TestAction... actions) {
-        IterateBuilder builder = new IterateBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
         return builder;
     }
 
@@ -649,29 +574,9 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    @Deprecated
-    public ParallelBuilder parallel(TestAction... actions) {
-        ParallelBuilder builder = new ParallelBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
-        return builder;
-    }
-
-    @Override
     public ParallelBuilder parallel() {
         ParallelBuilder builder = new ParallelBuilder(this);
         containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public RepeatOnErrorBuilder repeatOnError(TestAction... actions) {
-        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
         return builder;
     }
 
@@ -683,29 +588,9 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    @Deprecated
-    public RepeatBuilder repeat(TestAction... actions) {
-        RepeatBuilder builder = new RepeatBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
-        return builder;
-    }
-
-    @Override
     public RepeatBuilder repeat() {
         RepeatBuilder builder = new RepeatBuilder(this);
         containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public SequenceBuilder sequential(TestAction... actions) {
-        SequenceBuilder builder = new SequenceBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
         return builder;
     }
 
@@ -720,16 +605,6 @@ public class DefaultTestDesigner implements TestDesigner {
     public TimerBuilder timer() {
         TimerBuilder builder = new TimerBuilder(this);
         containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public TimerBuilder timer(TestAction... actions) {
-        TimerBuilder builder = new TimerBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
         return builder;
     }
 
@@ -794,16 +669,6 @@ public class DefaultTestDesigner implements TestDesigner {
         TemplateBuilder builder = new TemplateBuilder(template)
                 .load(getApplicationContext());
         action(builder);
-        return builder;
-    }
-
-    @Override
-    @Deprecated
-    public FinallySequenceBuilder doFinally(TestAction... actions) {
-        FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
-        removeNestedActions(actions);
-        containers.push(builder.build());
-        builder.actions(actions);
         return builder;
     }
 

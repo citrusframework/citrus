@@ -32,8 +32,8 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        parallel(
-            sequential(
+        parallel().actions(
+            sequential().actions(
                 sleep(1000L),
                 send("syncJmsTopicEndpoint")
                     .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
@@ -45,8 +45,8 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
                     .header("Operation", "sayHello")
                     .header("CorrelationId", "${correlationId}")
             ),
-            sequential(
-                parallel(
+            sequential().actions(
+                parallel().actions(
                     receive("syncJmsTopicSubscriberEndpoint")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +

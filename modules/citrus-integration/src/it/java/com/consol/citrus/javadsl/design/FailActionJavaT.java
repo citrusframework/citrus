@@ -16,8 +16,8 @@
 
 package com.consol.citrus.javadsl.design;
 
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
 
@@ -29,13 +29,16 @@ public class FailActionJavaT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void failAction() {
-        assertException(fail("Failing IT"))
+        assertException()
             .exception(CitrusRuntimeException.class)
-            .message("Failing IT");
-        
-        assertException(
-                assertException(sleep(500))
-                    .exception(CitrusRuntimeException.class)
-        ).exception(CitrusRuntimeException.class).message("@startsWith('Missing asserted exception')@");
+            .message("Failing IT")
+            .when(fail("Failing IT"));
+
+        assertException()
+                .exception(CitrusRuntimeException.class).message("@startsWith('Missing asserted exception')@")
+                .when(assertException()
+                        .exception(CitrusRuntimeException.class)
+                        .when(sleep(500))
+        );
     }
 }

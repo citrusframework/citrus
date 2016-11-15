@@ -30,7 +30,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void jsonTextValidation() {
-        parallel(
+        parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -40,7 +40,7 @@ public class JsonTextValidationJavaIT extends TestNGCitrusTestDesigner {
                     "\"attribute\" : \"HeapMemoryUsage\"," +
                     "\"path\" : \"used\"" +
                   "}"),
-            sequential(
+            sequential().actions(
                 http().server("httpServerRequestEndpoint")
                    .receive()
                    .post()

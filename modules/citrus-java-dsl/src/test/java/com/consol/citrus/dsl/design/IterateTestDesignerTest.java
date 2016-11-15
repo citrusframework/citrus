@@ -28,44 +28,18 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testIterateBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                iterate(createVariable("index", "${i}"))
-                    .index("i")
-                    .startsWith(0)
-                    .step(1)
-                    .condition("i lt 5");
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Iterate.class);
-        assertEquals(test.getActions().get(0).getName(), "iterate");
-        
-        Iterate container = (Iterate)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getCondition(), "i lt 5");
-        assertEquals(container.getStep(), 1);
-        assertEquals(container.getStart(), 0);
-    }
 
     @Test
     public void testIterateBuilder() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                iterate(createVariable("index", "${i}"))
-                        .index("i")
-                        .startsWith(0)
-                        .step(1)
-                        .condition("i lt 5");
+                iterate()
+                    .index("i")
+                    .startsWith(0)
+                    .step(1)
+                    .condition("i lt 5")
+                    .actions(createVariable("index", "${i}"));
             }
         };
 
@@ -99,11 +73,12 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
                     }
                 };
 
-                iterate(createVariable("index", "${i}"), anonymous)
-                        .index("i")
-                        .startsWith(0)
-                        .step(1)
-                        .condition("i lt 5");
+                iterate()
+                    .index("i")
+                    .startsWith(0)
+                    .step(1)
+                    .condition("i lt 5")
+                    .actions(createVariable("index", "${i}"), anonymous);
             }
         };
 

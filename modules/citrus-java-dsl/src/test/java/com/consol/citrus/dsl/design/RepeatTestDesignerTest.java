@@ -25,32 +25,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
-    @Test
-    public void testRepeatUntilTrueBuilderNested() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
-            @Override
-            public void configure() {
-                repeat(echo("${var}"), sleep(3000), echo("${var}"))
-                    .index("i")
-                    .startsWith(2)
-                    .until("i lt 5");
-            }
-        };
-
-        builder.configure();
-
-        TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
-        assertEquals(test.getActions().get(0).getName(), "repeat");
-        
-        RepeatUntilTrue container = (RepeatUntilTrue)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 3);
-        assertEquals(container.getCondition(), "i lt 5");
-        assertEquals(container.getStart(), 2);
-        assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
-    }
 
     @Test
     public void testRepeatUntilTrueBuilder() {
