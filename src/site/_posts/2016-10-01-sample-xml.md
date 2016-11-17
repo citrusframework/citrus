@@ -8,7 +8,7 @@ permalink: /samples/xml/
 ---
 
 This sample deals with XML message payloads when sending and receiving messages to the todo sample
-application. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/index.html#validation-xml)
+application. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/validation-xml.html)
 
 Objectives
 ---------
