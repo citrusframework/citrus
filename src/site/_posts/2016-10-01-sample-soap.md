@@ -8,7 +8,7 @@ permalink: /samples/soap/
 ---
 
 This sample uses SOAP web services to add new todo entries on the todo app system under test. You can read more about the 
-Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/index.html#soap)
+Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/soap.html)
 
 Objectives
 ---------

@@ -8,7 +8,7 @@ permalink: /samples/cucumber-spring/
 ---
 
 The sample uses Cucumber behavior driven development (BDD) library. The tests combine BDD feature stories with the famous 
-Gherkin syntax and Citrus integration test capabilities. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/index.html#cucumber)
+Gherkin syntax and Citrus integration test capabilities. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/cucumber.html)
  
 Objectives
 ---------
