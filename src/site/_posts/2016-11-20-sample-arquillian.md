@@ -7,21 +7,21 @@ categories: [samples]
 permalink: /samples/arquillian/
 ---
 
-The JavaEE sample project is uses Arquillian test framework in order to create a micro deployment for in container tests. 
-With Arquillian the tests are executed within the application container boundaries. The sample uses the Wildfly application server
-as container and provides access to RJB resources, Mail services and JNDI JMS destinations.
+The JavaEE sample project uses the Arquillian framework in order to create a micro deployment for in-container testing. 
+With Arquillian the tests are executed within application container boundaries. The sample uses the Wildfly application server
+as container and provides access to EJB resources, Mail services and JNDI JMS resources such as destinations and connection factories.
 
-The sample integrates with Citrus and Arquillian for automated integration testing of JavaEE code. You can read more about how
-Citrus and Arquillian integration in [reference guide](http://www.citrusframework.org/reference/html/arquillian.html).
-
+The sample integrates with Citrus and Arquillian for automated integration testing of JavaEE applications. You can read more about the
+cooperation of Citrus and Arquillian in [reference guide](http://www.citrusframework.org/reference/html/arquillian.html).
+  
 Objectives
 ---------
 
-The system under test is a JavaEE EJB application that manages employees. We can add, edit and remove employees in a registry over
-multiple APIs. The application provides a REST and JMS API for managing the list of employees in the registry.
+The system under test is a JavaEE EJB application that manages employees in a company. We can add, edit and remove employees in a registry over
+multiple APIs. The application provides a REST and JMS API for managing the list of employees known to the system.
 
 In a test scenario the needed classes are deployed as Shrinkwrap micro deployments in the Wildfly application container. The Arquillian
-test framework gives access to JNDI resources and dependency injection via CDI.
+framework gives access to container managed resources such as JNDI resources and dependency injection via CDI.
 
 The Maven project POM includes the Arquillian dependencies in combination with an managed Wildfly container.
 
@@ -113,8 +113,8 @@ In **citrus-context.xml** we define the Citrus client and server components that
                   timeout="5000"/>
 {% endhighlight %}
 
-These components are used during the tests. Now lets have a look at a first sample arquillian test with its 
-shrinkwrap JavaEE deployments.
+These components are used during the tests. The EJB JavaEE application connects to those services as client during the test. 
+Now lets have a look at a first sample arquillian test with its Shrinkwrap JavaEE deployments.
 
 {% highlight java %}
 public class Deployments {
@@ -158,7 +158,7 @@ public class Deployments {
 }
 {% endhighlight %}
 
-The tests can use the deployment in combination with Arquillian and Citrus resources. These resources are automatically injected to the
+The tests use the Arquillian and Citrus resources with annotation based injection. All resources are automatically injected to the
 test before it is executed.
 
 {% highlight java %}
@@ -237,8 +237,8 @@ public class EmployeeResourceTest {
 }
 {% endhighlight %}
 
-This is how we can integrate Citrus with Arquillian. Both frameworks are cooperating to make JavaEE applications testable 
-in automated deployments.
+This is how we can integrate Citrus with Arquillian. Both frameworks cooperate with each other in order to make JavaEE applications testable 
+with automated in-container deployments.
 
 Run
 ---------
