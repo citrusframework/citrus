@@ -55,7 +55,7 @@ The XPath expression evaluates and searches for the right element in the message
 Both ways via XPath or inline variable expressions are equal to each other. With respect to the complexity of XML namespaces and XPath you may find the inline variable expression more comfortable to use. Anyway feel free to choose the way that fits best for you. This is how we can add dynamic variable values to the control template in order to increase maintainability and robustness of message validation.
 
 **Tip**
-Validation matchers put validation mechanisms to a new level offering dynamic assertion statements for validation. Have a look at the possibilities with assertion statements in[validation-matchers](validation-matchers)### Validate with XPath
+Validation matchers put validation mechanisms to a new level offering dynamic assertion statements for validation. Have a look at the possibilities with assertion statements in [validation-matchers](validation-matchers)### Validate with XPath
 
 We have already seen how to validate whole XML structures with control message templates. All elements are validated and compared one after another. In some cases this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements. The definition of control templates in combination with several ignore statements is not appropriate in this case. You would rather want to use explicit element validation.
 

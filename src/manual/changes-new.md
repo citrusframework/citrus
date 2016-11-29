@@ -60,11 +60,11 @@ Restdocs is a fantastic way of generating documentation for RESTful APIs. While 
 
 ### Hamcrest matcher conditions
 
-Iterating test action containers in Citrus evaluate boolean expressions for determination of how to execute the nested actions in a loop. Also the conditional container executes nested actions based on boolean expression evaluation. The Citrus boolean expression support is limited to very basic operations such as lower than or greater than. Furthermore the combination of boolean expressions with variables has not been supported. Following from that we have improved the boolean expression evaluation mechanism with extension to Hamcrest matchers. So now you can evaluate matchers in iterating conditions. This feature is described in[containers-conditional](containers-conditional)and[containers-iterate](containers-iterate).
+Iterating test action containers in Citrus evaluate boolean expressions for determination of how to execute the nested actions in a loop. Also the conditional container executes nested actions based on boolean expression evaluation. The Citrus boolean expression support is limited to very basic operations such as lower than or greater than. Furthermore the combination of boolean expressions with variables has not been supported. Following from that we have improved the boolean expression evaluation mechanism with extension to Hamcrest matchers. So now you can evaluate matchers in iterating conditions. This feature is described in [containers-conditional](containers-conditional)and [containers-iterate](containers-iterate).
 
 ### SOAP Java DSL
 
-Citrus provides a new Java fluent API for sending and receiving SOAP related message content. The Java DSL enhancements are based on those of Http. Now you can define SOAP messages with special SOAP action headers more easily. On top of that you can handle SOAP faults on client and server with the fluent API. Checkout[soap-webservices](soap-webservices)for details.
+Citrus provides a new Java fluent API for sending and receiving SOAP related message content. The Java DSL enhancements are based on those of Http. Now you can define SOAP messages with special SOAP action headers more easily. On top of that you can handle SOAP faults on client and server with the fluent API. Checkout [soap-webservices](soap-webservices)for details.
 
 ### Refactoring
 

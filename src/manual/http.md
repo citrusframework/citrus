@@ -283,7 +283,7 @@ The figure above shows the basic setup with inbound channel and reply channel. Y
 </testcase>
 ```
 
-As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling HTTP client. In most cases this is exactly what we want to do - send back a response message that is specified inside the test. The HTTP server component by default uses a channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Http server component provides some more customization possibilities when it comes to endpoint adapter implementations. This topic is discussed in a separate section[endpoint-adapter](endpoint-adapter). Up to now we keep it simple by synchronously receiving and sending messages in the test case.
+As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling HTTP client. In most cases this is exactly what we want to do - send back a response message that is specified inside the test. The HTTP server component by default uses a channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Http server component provides some more customization possibilities when it comes to endpoint adapter implementations. This topic is discussed in a separate section [endpoint-adapter](endpoint-adapter). Up to now we keep it simple by synchronously receiving and sending messages in the test case.
 
 **Tip**
 The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention **{serverName}.inbound** where **{serverName}** is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
@@ -643,7 +643,7 @@ The easiest approach to set the **Authorization** header for a basic authenticat
 </http:headers>
 ```
 
-Citrus will add this header to the HTTP requests and the server will read the **Authorization** username and password. For more convenient base64 encoding you can also use a Citrus function, see[functions-encode-base64](functions-encode-base64)
+Citrus will add this header to the HTTP requests and the server will read the **Authorization** username and password. For more convenient base64 encoding you can also use a Citrus function, see [functions-encode-base64](functions-encode-base64)
 
 Now there is a more comfortable way to set the basic authentication header in all the Citrus requests. As Citrus uses Spring's REST support with the RestTemplate and ClientHttpRequestFactory the basic authentication is already covered there in a more generic way. You simply have to configure the basic authentication credentials on the RestTemplate's ClientHttpRequestFactory. Just see the following example and learn how to do that.
 

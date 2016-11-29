@@ -162,13 +162,13 @@ The synchronous message channel endpoint will handle all reply channel destinati
 
 ### Message selectors on channels
 
-Unfortunately Spring Integration message channels do not support message selectors on header values as described in[message-selector](message-selector). With Citrus version 1.2 we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel implementation in our configuration.
+Unfortunately Spring Integration message channels do not support message selectors on header values as described in [message-selector](message-selector). With Citrus version 1.2 we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel implementation in our configuration.
 
 ```xml
 <citrus:channel id="orderChannel" capacity="5"/>
 ```
 
-The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That's it! Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in[message-selector](message-selector)and you will see that it works.
+The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That's it! Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in [message-selector](message-selector)and you will see that it works.
 
 In addition to that we have implemented other message filter possibilities on message channels that we discuss in the next sections.
 

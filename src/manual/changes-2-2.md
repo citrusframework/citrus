@@ -8,15 +8,15 @@ Arquillian is a well known integration test framework that comes with a great fe
 
 ### JUnit support
 
-Citrus supports both major players in unit testing TestNG and JUnit. Unfortunately we did not offer the same feature support for JUnit as it was done for TestNG. Now with Citrus 2.2 we improved the JUnit support in Citrus so you are able to use all features with both frameworks. This is especially related to using the **@CitrusTest** and **@CitrusXmlTest** method annotations in test classes. See[run-junit](run-junit)how it works.
+Citrus supports both major players in unit testing TestNG and JUnit. Unfortunately we did not offer the same feature support for JUnit as it was done for TestNG. Now with Citrus 2.2 we improved the JUnit support in Citrus so you are able to use all features with both frameworks. This is especially related to using the **@CitrusTest** and **@CitrusXmlTest** method annotations in test classes. See [run-junit](run-junit)how it works.
 
 ### Start/Stop server action
 
-Citrus was missing a dedicated test action to start and stop Citrus server components at tet runtime. With the newly added test actions you are able to start and stop server components as you like within your test case. See[actions-manage-server](actions-manage-server)with a detailed description.
+Citrus was missing a dedicated test action to start and stop Citrus server components at tet runtime. With the newly added test actions you are able to start and stop server components as you like within your test case. See [actions-manage-server](actions-manage-server)with a detailed description.
 
 ### Citrus Ant tasks
 
-We discontinue to support the Citrus Ant tasks. The Ant tasks were not very stable an lacked full feature support when executing test cases with JUnit in Apache Ant. Instead we added a brief description on how to execute Citrus tests with the well documented and stable default JUnit and TestNG ant tasks. See[setup-using-ant](setup-using-ant)how it works.
+We discontinue to support the Citrus Ant tasks. The Ant tasks were not very stable an lacked full feature support when executing test cases with JUnit in Apache Ant. Instead we added a brief description on how to execute Citrus tests with the well documented and stable default JUnit and TestNG ant tasks. See [setup-using-ant](setup-using-ant)how it works.
 
 ### Bugfixes
 

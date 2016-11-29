@@ -54,7 +54,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest
 ```
 
 **Note**
-If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on[http://www.citrusframework.org/tutorials.html](http://www.citfrusframework.org).
+If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on [http://www.citrusframework.org/tutorials.html](http://www.citfrusframework.org).
 
 ### Add Citrus to existing Maven project
 
@@ -161,7 +161,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest
 ```
 
 **Note**
-If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on[http://www.citrusframework.org/tutorials.html](http://www.citfrusframework.org).
+If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on [http://www.citrusframework.org/tutorials.html](http://www.citfrusframework.org).
 
 ### Using Ant
 
@@ -185,7 +185,7 @@ Ant ([http://ant.apache.org/](http://ant.apache.org/)) will run tests and compil
 
 ### Download
 
-First of all we need to download the latest Citrus release archive from the official website[http://www.citrusframework.org](http://www.citrusframework.org)
+First of all we need to download the latest Citrus release archive from the official website [http://www.citrusframework.org](http://www.citrusframework.org)
 
 Citrus comes to you as a zipped archive in one of the following packages:
 
@@ -194,7 +194,7 @@ Citrus comes to you as a zipped archive in one of the following packages:
 
 The release package includes the Citrus binaries as well as the reference documentation and some sample applications.
 
-In case you want to get in touch with developing and debugging Citrus you can also go with the source archive which gives you the complete Citrus Java code sources. The whole Citrus project is also accessible for you on[http://github.com/christophd/citrus](http://github.com/christophd/citrus). This open git repository on GitHub enables you to build Citrus from scratch with Maven and contribute code changes.
+In case you want to get in touch with developing and debugging Citrus you can also go with the source archive which gives you the complete Citrus Java code sources. The whole Citrus project is also accessible for you on [http://github.com/christophd/citrus](http://github.com/christophd/citrus). This open git repository on GitHub enables you to build Citrus from scratch with Maven and contribute code changes.
 
 ### Installation
 
@@ -270,5 +270,5 @@ No matter what approach you are using to set up the Apache Ant classpath see the
 ```
 
 **Note**
-If you need detailed assistance for building Citrus with Ant do also visit our tutorials section on[http://www.citrusframework.org](http://www.citrusframework.org). There you can find a tutorial which describes the Citrus Java project set up with Ant from scratch.
+If you need detailed assistance for building Citrus with Ant do also visit our tutorials section on [http://www.citrusframework.org](http://www.citrusframework.org). There you can find a tutorial which describes the Citrus Java project set up with Ant from scratch.
 

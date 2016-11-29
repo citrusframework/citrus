@@ -4,11 +4,11 @@ We have added lots of new features and improvements with Citrus 2.5. Namely thes
 
 ### Hamcrest matcher support
 
-Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations for message validation purpose. Citrus now supports these matchers coming from Hamcrest library. On the one hand you can use Hamcrest matchers as a Citrus validation matcher as described in[validation-matcher-hamcrest](validation-matcher-hamcrest). On the other hand you can use Hamcrest matchers now directly using the Citrus Java DSL. See details for this feature in[json-path-validate](json-path-validate).
+Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations for message validation purpose. Citrus now supports these matchers coming from Hamcrest library. On the one hand you can use Hamcrest matchers as a Citrus validation matcher as described in [validation-matcher-hamcrest](validation-matcher-hamcrest). On the other hand you can use Hamcrest matchers now directly using the Citrus Java DSL. See details for this feature in [json-path-validate](json-path-validate).
 
 ### Binary base64 message validator
 
-There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message payload. See[validation-binary](validation-binary)how this is working for you.
+There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message payload. See [validation-binary](validation-binary)how this is working for you.
 
 ### RMI support
 
@@ -20,23 +20,23 @@ Similar to RMI JMX can be used to connect to remote bean invocation. This time w
 
 ### Resource injection
 
-With 2.5 we have added mechanisms for injecting Citrus components to your Java DSL test methods. This is very useful when needing access to the Citrus test context for instance. Also we are able to use new injection of test designer and runner instances in order to support parallel test execution with multiple threads. See the explanations in[testcase-resource-injection](testcase-resource-injection)and[testcase-context-injection](testcase-context-injection).
+With 2.5 we have added mechanisms for injecting Citrus components to your Java DSL test methods. This is very useful when needing access to the Citrus test context for instance. Also we are able to use new injection of test designer and runner instances in order to support parallel test execution with multiple threads. See the explanations in [testcase-resource-injection](testcase-resource-injection)and [testcase-context-injection](testcase-context-injection).
 
 ### Http x-www-form-urlencoded message validator
 
-HTML form data can be transmitted with different methods and content types. One of the most common ways is to use **x-www-form-urlencoded** form data content. As validation can be tricky we have added a special message validator for that. See[http-www-form-urlencoded](http-www-form-urlencoded)for details.
+HTML form data can be transmitted with different methods and content types. One of the most common ways is to use **x-www-form-urlencoded** form data content. As validation can be tricky we have added a special message validator for that. See [http-www-form-urlencoded](http-www-form-urlencoded)for details.
 
 ### Date range validation matcher
 
-Added a new validation matcher implementation that is able to check that a date value is between a certain date range (from and to) The date range is able to focus on days as well as additional time (hour, minute, second) specifications. See[validation-matcher-daterange](validation-matcher-daterange)for details.
+Added a new validation matcher implementation that is able to check that a date value is between a certain date range (from and to) The date range is able to focus on days as well as additional time (hour, minute, second) specifications. See [validation-matcher-daterange](validation-matcher-daterange)for details.
 
 ### Read file resource function
 
-A new function implementation offers you the possibilities to read file resource contents as inline data. The function is called and returns the file content as return value. The file content is then placed right where the function was called e.g. inside of a message paylaod element or as message header value. See[functions-read-file](functions-read-file)for details.
+A new function implementation offers you the possibilities to read file resource contents as inline data. The function is called and returns the file content as return value. The file content is then placed right where the function was called e.g. inside of a message paylaod element or as message header value. See [functions-read-file](functions-read-file)for details.
 
 ### Timer container
 
-The new timer test action container repeats its execution based on a time expression (e.g. every 5 seconds). With this timer we can repeat test actions with a fixed time delay or constantly execute test actions with time schedule. See[containers-timer](containers-timer)and[actions-stop-timer](actions-stop-timer)for details.
+The new timer test action container repeats its execution based on a time expression (e.g. every 5 seconds). With this timer we can repeat test actions with a fixed time delay or constantly execute test actions with time schedule. See [containers-timer](containers-timer)and [actions-stop-timer](actions-stop-timer)for details.
 
 ### Upgrade to Vert.x 3.2.0
 

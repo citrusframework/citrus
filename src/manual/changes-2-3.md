@@ -8,11 +8,11 @@ One of the biggest issues with the Citrus Java DSL is the fact that the Citrus J
 
 ### WebSocket support
 
-The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. With this release Citrus users are able to send and receive messages with WebSocket connections. The Http server implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish messages to the server via bidirectional WebSocket protocol. See[http-websocket](http-websocket)for details.
+The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. With this release Citrus users are able to send and receive messages with WebSocket connections. The Http server implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish messages to the server via bidirectional WebSocket protocol. See [http-websocket](http-websocket)for details.
 
 ### JSONPath support
 
-Citrus is able to work with Xpath expressions in several fields within the testing domain (overwrite elements, ignore elements, extract values from payloads). Now this support of manipulating message payloads via expressions is extended with JSONPath. Similar to Xpath the JSONPath expression statements enable you to find elements and values within a message payload. Not very surprising the JSONPath expressions work with Json message payloads. With the new release you can overwrite, ignore and manipulate Json elements using JSONPath expressions. See[json-path](json-path)for details.
+Citrus is able to work with Xpath expressions in several fields within the testing domain (overwrite elements, ignore elements, extract values from payloads). Now this support of manipulating message payloads via expressions is extended with JSONPath. Similar to Xpath the JSONPath expression statements enable you to find elements and values within a message payload. Not very surprising the JSONPath expressions work with Json message payloads. With the new release you can overwrite, ignore and manipulate Json elements using JSONPath expressions. See [json-path](json-path)for details.
 
 ### Customize message validators
 

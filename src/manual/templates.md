@@ -105,7 +105,7 @@ Template parameters may contain more complex values like XML fragments. The call
 ```
 
 **Important**
-When a template works on variable values and parameters changes to these variables will automatically affect the variables in the whole test. So if you change a variable's value inside a template and the variable is defined inside the test case the changes will affect the variable in a global context. We have to be careful with this when executing a template several times in a test, especially in combination with parallel containers (see[containers-parallel](containers-parallel)).
+When a template works on variable values and parameters changes to these variables will automatically affect the variables in the whole test. So if you change a variable's value inside a template and the variable is defined inside the test case the changes will affect the variable in a global context. We have to be careful with this when executing a template several times in a test, especially in combination with parallel containers (see [containers-parallel](containers-parallel)).
 
 ```xml
 <parallel>
