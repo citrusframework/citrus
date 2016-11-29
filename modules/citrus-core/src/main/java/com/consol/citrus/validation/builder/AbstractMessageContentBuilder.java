@@ -65,11 +65,11 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             message.setName(messageName);
 
             if (payload != null) {
+                message = context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
+
                 if (dataDictionary != null) {
                     message = dataDictionary.interceptMessageConstruction(message, messageType, context);
                 }
-
-                message = context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
 
                 for (MessageConstructionInterceptor modifyer : messageInterceptors) {
                     message = modifyer.interceptMessageConstruction(message, messageType, context);
