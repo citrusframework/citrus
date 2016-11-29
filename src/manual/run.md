@@ -51,7 +51,7 @@ The good news is that we can still use the fantastic TestNG features in our test
 
 For more information on TestNG please visit the official homepage, where you find a complete reference documentation.
 
-You might have noticed that the example above loads test cases from XML. This is why we are using the **@CitrusXmlTest** annotation. Again this approach is for people that want to write no Java code. The test logic is then provided in the XML test definition. We discuss XML tests in Citrus in more detail in[run-xml-tests](run-xml-tests). Next lets have a look at a TestNG Java DSL test.
+You might have noticed that the example above loads test cases from XML. This is why we are using the **@CitrusXmlTest** annotation. Again this approach is for people that want to write no Java code. The test logic is then provided in the XML test definition. We discuss XML tests in Citrus in more detail in [run-xml-tests](run-xml-tests). Next lets have a look at a TestNG Java DSL test.
 
 When writing tests in pure Java we have pretty much the exact same logic that applies to executing Citrus test cases. The Citrus test extends from a TestNG base class and uses the normal **@Test** annotations on method or class level. Here is a short sample TestNG Java class for this:
 
@@ -135,7 +135,7 @@ The Java JUnit classes are simply responsible for loading and executing the Citr
 **Tip**
 So now we know both TestNG and JUnit support in Citrus. Which framework should someone choose? To be honest, there is no easy answer to this question. The basic features are equivalent, but TestNG offers better possibilities for designing more complex test setup with test groups and tasks before and after a group of tests. This is why TestNG is the default option in Citrus. But in the end you have to decide on your own which framework fits best for your project.
 
-The first example seen here is using **@CitrusXmlTest** annotation in order to load a XML file as test. The Java part is then just an empty envelope for executing the test with JUnit. This approach is for those of you that are not familiar with Java at all. You can find more information on loading XML files as Citrus tests in[run-xml-tests](run-xml-tests). Secondly of course we also have the possibility to use the Citrus Java DSL with JUnit. See the following example on how this looks like:
+The first example seen here is using **@CitrusXmlTest** annotation in order to load a XML file as test. The Java part is then just an empty envelope for executing the test with JUnit. This approach is for those of you that are not familiar with Java at all. You can find more information on loading XML files as Citrus tests in [run-xml-tests](run-xml-tests). Secondly of course we also have the possibility to use the Citrus Java DSL with JUnit. See the following example on how this looks like:
 
 ```java
 package com.consol.citrus.samples;

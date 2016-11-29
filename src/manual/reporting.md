@@ -62,5 +62,5 @@ The HTML reports are customizable by system properties. Use following properties
 *  **citrus.html.report.detail.template** : Template file for detailed test results.
 *  **citrus.html.report.logo** : File resource path pointing to a image that is added to top of HTML report.
 
-The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in[https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report](report-templates sources).
+The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in [https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report](report-templates sources).
 

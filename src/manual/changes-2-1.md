@@ -4,7 +4,7 @@ Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes 
 
 ### SOAP MTOM support
 
-SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See[soap-attachment-mtom](soap-attachment-mtom)for details.
+SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See [soap-attachment-mtom](soap-attachment-mtom)for details.
 
 ### SOAP envelope handling
 
@@ -12,11 +12,11 @@ In its default behavior Citrus will remove the SOAP envelope for incoming SOAP r
 
 ### SOAP 1.2 message factory
 
-The Citrus SOAP server component was missing a setting for the SOAP message factory to use. The SOAP message factory implementation decides which SOAP version to use 1.1 or 1.2. Now you can set the message factory on the server component and define the SOAP version to use. See[soap-12](soap-12)for details.
+The Citrus SOAP server component was missing a setting for the SOAP message factory to use. The SOAP message factory implementation decides which SOAP version to use 1.1 or 1.2. Now you can set the message factory on the server component and define the SOAP version to use. See [soap-12](soap-12)for details.
 
 ### TestNG data provider handling
 
-We improved the TestNG data provider handling in Citrus. Now you can use the usual TestNG data provider annotations in your test methods. TestNG will call the Citrus test case several times with respective parameters provided as test variables. This replaces the old **citrusDataProvider** mechanism that tried to make things working in a kind of workaround. The new provider handling also supports multiple data providers in a test class.[run-testng-data-providers](run-testng-data-providers) describes how this is working for you.
+We improved the TestNG data provider handling in Citrus. Now you can use the usual TestNG data provider annotations in your test methods. TestNG will call the Citrus test case several times with respective parameters provided as test variables. This replaces the old **citrusDataProvider** mechanism that tried to make things working in a kind of workaround. The new provider handling also supports multiple data providers in a test class. [run-testng-data-providers](run-testng-data-providers) describes how this is working for you.
 
 ### Mail message namespace
 

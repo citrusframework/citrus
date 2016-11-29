@@ -117,7 +117,7 @@ Given the above SSH module namespace declaration, adding a new SSH server is qui
              endpoint-adapter="sshEndpointAdapter"/>
 ```
 
-**endpoint-adapter** is the handler which receives the SSH request as messages (in the request format described above). Endpoint adapter implementations are fully described in[http-server](http-server)All adapters described there are supported in SSH server module, too.
+**endpoint-adapter** is the handler which receives the SSH request as messages (in the request format described above). Endpoint adapter implementations are fully described in [http-server](http-server)All adapters described there are supported in SSH server module, too.
 
 The **`<citrus-ssh:server>`** supports the following attributes:
 

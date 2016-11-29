@@ -278,7 +278,7 @@ Instead of using several elements in the selector you can also define a selector
 In case you want to run tests in parallel message selectors become essential in your test cases. The different tests running at the same time will steal messages from each other when you lack of message selection mechanisms.
 
 **Important**
-Previously only JMS message destinations offered support for message selectors! With Citrus version 1.2 we introduced message selector support for Spring Integration message channels, too (see[message-channel-selector-support](message-channel-selector-support)).
+Previously only JMS message destinations offered support for message selectors! With Citrus version 1.2 we introduced message selector support for Spring Integration message channels, too (see [message-channel-selector-support](message-channel-selector-support)).
 
 ### Groovy MarkupBuilder
 

@@ -90,7 +90,7 @@ public class MyFirstTest extends AbstractTestNGCitrusTest {
 }
 ```
 
-The sample above is a Java class that represents a valid Citrus Java executable. The Java class has no programming logic as we use a XML test case here. The Java class can also be generated using the Citrus Maven plugin. The Java class extends from basic superclass **AbstractTestNGCitrusTest** and therefore uses TestNG as unit test framework. Citrus also supports JUnit as unit test framework. Read more about this in[run-testng](run-testng)and[run-junit](run-junit).
+The sample above is a Java class that represents a valid Citrus Java executable. The Java class has no programming logic as we use a XML test case here. The Java class can also be generated using the Citrus Maven plugin. The Java class extends from basic superclass **AbstractTestNGCitrusTest** and therefore uses TestNG as unit test framework. Citrus also supports JUnit as unit test framework. Read more about this in [run-testng](run-testng)and [run-junit](run-junit).
 
 Up to now it is important to understand that Citrus always needs a Java executable test class. In case we use the XML test representation the Java part is generic, can be generated and contains no programming logic. The XML test defines all steps and is our primary test case definition.
 
@@ -230,7 +230,7 @@ INFO            Citrus| TEST SUCCESS LoggingTest
 Now this is not easy to understand and people did struggle with this separation of designtime and runtime of a Citrus Java DSL test. This is why we have implemented a new Java DSL base class called **test-runner** that we deal with in the next section. Before we continue we have to mention that the **test-designer** approach does also work for JUnit. Although we have only seen TestNG sample code in this section everything is working exactly the same way with JUnit framework. Just use the base class **com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner** instead.
 
 **Important**
-Neither **TestNGCitrusTestDesigner** nor **JUnit4CitrusTestDesigner** implementation is thread safe for parallel test execution. This is simply because the base class is holding state to the current test designer instance in order to delegate method calls to this instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in[testcase-resource-injection](testcase-resource-injection).
+Neither **TestNGCitrusTestDesigner** nor **JUnit4CitrusTestDesigner** implementation is thread safe for parallel test execution. This is simply because the base class is holding state to the current test designer instance in order to delegate method calls to this instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in [testcase-resource-injection](testcase-resource-injection).
 
 ### Java DSL test runner
 
@@ -273,7 +273,7 @@ In contrary to the test designer the test runner implementation will not build t
 In the examples here TestNG was used as unit framework. Of course the exact same approach can also apply to JUnit framework. Just use the base class **com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner** instead. Feel free to choose the base class for **test-designer** or **test-runner** as you like. You can also mix those two approaches in your project. Citrus is able to handle both ways of Java DSL code in a project.
 
 **Important**
-The **TestNGCitrusTestRunner** and **JUnit4CitrusTestRunner** implementation is not thread safe for parallel test execution. This is simply because the base class is holding state to the current test runner instance in order to delegate method calls to this instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in[testcase-resource-injection](testcase-resource-injection).
+The **TestNGCitrusTestRunner** and **JUnit4CitrusTestRunner** implementation is not thread safe for parallel test execution. This is simply because the base class is holding state to the current test runner instance in order to delegate method calls to this instance. Therefore parallel test method execution is not available. Fortunately we have added a threadsafe base class implementation that uses resource injection. Read more about this in [testcase-resource-injection](testcase-resource-injection).
 
 ### Designer/Runner injection
 

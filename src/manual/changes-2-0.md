@@ -4,21 +4,21 @@ Citrus 2.0 is a major version upgrade and therefore big things should be happeni
 
 ### Refactoring
 
-In Citrus 1.4 we began to refactor the configuration components in Citrus. This refactoring was finalized in Citrus 2.0 which means that all deprecated classes and api are no longer supported. The classes were removed so you get compilation errors when using those old stuff. If you still use the old configuration see this[http://citrusframework.org/migration-sheet.html](migration-sheet)in order to learn how to upgrade to the new configuration. It is worth to do so! In addition to that we did refactoring in following fields:
+In Citrus 1.4 we began to refactor the configuration components in Citrus. This refactoring was finalized in Citrus 2.0 which means that all deprecated classes and api are no longer supported. The classes were removed so you get compilation errors when using those old stuff. If you still use the old configuration see this [http://citrusframework.org/migration-sheet.html](migration-sheet)in order to learn how to upgrade to the new configuration. It is worth to do so! In addition to that we did refactoring in following fields:
 
 *  **Reply message correlation** In synchronous communication scenarios Citrus optionally correlated messages across send and receive test actions. In default setting the message correlation was disabled. With 2.0 release we changed this behavior to the opposite. Now message correlation is done by default with a default correlation algorithm. So in case you used the DefaultReplyMessageCorrelator in Citrus before you will not have to do so in future as this is done by default. The message correlation gives us more robust tests especially when executing tests in parallel. In the test case you do not have to do anything for proper message correlation.
 
 *  **Citrus message API** We have refactored the Citrus message API to use custom message objects in endpoints, consumers and producers. This has no affect on your tests or configuration unless you have written endpoint extensions or custom endpoints on your own. You might have to refector your code accordingly. Have a look at the Citrus endpoint implementations in order to see how the new message API works for you.
 
-*  **Sleep time in milliseconds** This is something that we definitely carry around since the beginning of Citrus. The time values in sleep test action were done in seconds, which is inconvenient when using time periods below one second or non natural numbers. Now you can choose to use milliseconds which is more likely how you should configure time periods anyway. See[actions-sleep](actions-sleep)for details
+*  **Sleep time in milliseconds** This is something that we definitely carry around since the beginning of Citrus. The time values in sleep test action were done in seconds, which is inconvenient when using time periods below one second or non natural numbers. Now you can choose to use milliseconds which is more likely how you should configure time periods anyway. See [actions-sleep](actions-sleep)for details
 
-*  **Auto sleep time in milliseconds** We used seconds when using auto sleep in repeat on error container. This led to the fact that we were not able to sleep time periods below one second. Also it was not possible to specify non natural numbers such as 1.5 seconds auto sleep time. We changed to milliseconds which is more likely how you are used to configure time periods anyway. See[containers-repeat-onerror](containers-repeat-onerror)for details
+*  **Auto sleep time in milliseconds** We used seconds when using auto sleep in repeat on error container. This led to the fact that we were not able to sleep time periods below one second. Also it was not possible to specify non natural numbers such as 1.5 seconds auto sleep time. We changed to milliseconds which is more likely how you are used to configure time periods anyway. See [containers-repeat-onerror](containers-repeat-onerror)for details
 
-*  **Message handler vs. endpoint adapter** In previous releases prior to 1.4 we had message handlers on server side that were able to forward in coming requests to message channels or jms destinations. The old message handler implementations were removed in 2.0. Instead you should use the **endpoint-adapter** implementations. See[endpoint-adapter](endpoint-adapter)how that works.
+*  **Message handler vs. endpoint adapter** In previous releases prior to 1.4 we had message handlers on server side that were able to forward in coming requests to message channels or jms destinations. The old message handler implementations were removed in 2.0. Instead you should use the **endpoint-adapter** implementations. See [endpoint-adapter](endpoint-adapter)how that works.
 
 *  **XML endpoint reference attribute** In a XML test case you reference the message endpoint in the send and receive actions with a special attribute called **with** . This attribute is no longer supported and was removed. Instead you should use the **endpoint** attribute which was introduced in Citrus 1.4 and has the exact same functionality.
 
-*  **Removed citrus-adapter module** The Maven module **citrus-adapter** was removed. Classes and API moved to **citrus-core** module. For endpoint adapters do use the new configuration components that were introduced in Citrus 1.4. See[endpoint-adapter](endpoint-adapter)for details.
+*  **Removed citrus-adapter module** The Maven module **citrus-adapter** was removed. Classes and API moved to **citrus-core** module. For endpoint adapters do use the new configuration components that were introduced in Citrus 1.4. See [endpoint-adapter](endpoint-adapter)for details.
 
 *  **WebServiceEndpoint class renamed** In terms of package refactoring the **com.consol.citrus.ws.WebServiceEndpoint** was renamed to **com.consol.citrus.ws.server.WebServiceEndpoint** 
 
@@ -34,7 +34,7 @@ New member of the Citrus family deals with FTP connectivity. The new **citrus-ft
 
 ### Functions with test context access
 
-Functions are now able to access the test context. This enables you to access all test variables and other central test related components in a function implementation. Therefore the function Java interface has now an additional test context parameter. Refactor your custom written functions accordingly to meet the new interface rules. See[http://www.citrusframework.org/tutorials-functions.html](how to write custom functions)for details.
+Functions are now able to access the test context. This enables you to access all test variables and other central test related components in a function implementation. Therefore the function Java interface has now an additional test context parameter. Refactor your custom written functions accordingly to meet the new interface rules. See [http://www.citrusframework.org/tutorials-functions.html](how to write custom functions)for details.
 
 ### Validation matcher with test context access
 
@@ -46,19 +46,19 @@ Message listeners do now also have access to the test context. This is more powe
 
 ### SOAP over JMS
 
-SOAP over JMS was supported in Citrus from the very beginning. Unfortunately you had to always specify the whole SOAP envelope in your test case. SOAP envelope handling is now done automatically by Citrus when using the new **SoapJmsMessageConverter** . The converter takes care on constructing a proper SOAP envelope message. See[jms-soap](jms-soap)for details.
+SOAP over JMS was supported in Citrus from the very beginning. Unfortunately you had to always specify the whole SOAP envelope in your test case. SOAP envelope handling is now done automatically by Citrus when using the new **SoapJmsMessageConverter** . The converter takes care on constructing a proper SOAP envelope message. See [jms-soap](jms-soap)for details.
 
 ### Multiple SOAP attachments
 
-When sending and receiving SOAP messages with Citrus as client or server you can add one to many attachments to the message. Before it was only possible to have one single attachment in a message. Now you have no limits in defining SOAP attachments. See[soap-webservices](soap-webservices)for details.
+When sending and receiving SOAP messages with Citrus as client or server you can add one to many attachments to the message. Before it was only possible to have one single attachment in a message. Now you have no limits in defining SOAP attachments. See [soap-webservices](soap-webservices)for details.
 
 ### Multiple SOAP XML header fragments
 
-The SOAP header can hold multiple XML header fragments with different namespaces and content. With Citrus 2.0 you are able to construct such a SOAP message with multiple header contents. See[soap-webservices](soap-webservices)for details.
+The SOAP header can hold multiple XML header fragments with different namespaces and content. With Citrus 2.0 you are able to construct such a SOAP message with multiple header contents. See [soap-webservices](soap-webservices)for details.
 
 ### Create variable validation matcher
 
-A new validation matcher implementation is able to create a new variable on the fly. The actual field name is used as variable name and the element value as variable value. The variable name can slo be customized with optional validation matcher parameter. This is a great alternative to the XPath expression evaluating variable extraction. Also very handsome to use this validation matcher in Json message payloads. See[validation-matcher-variable](validation-matcher-variable)for details.
+A new validation matcher implementation is able to create a new variable on the fly. The actual field name is used as variable name and the element value as variable value. The variable name can slo be customized with optional validation matcher parameter. This is a great alternative to the XPath expression evaluating variable extraction. Also very handsome to use this validation matcher in Json message payloads. See [validation-matcher-variable](validation-matcher-variable)for details.
 
 ### New configuration components
 
