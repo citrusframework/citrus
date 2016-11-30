@@ -36,13 +36,13 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implem
     private static Logger log = LoggerFactory.getLogger(JsonMappingDataDictionary.class);
 
     @Override
-    public String translate(String jsonPath, String value, TestContext context) {
+    public <T> T translate(String jsonPath, T value, TestContext context) {
         if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT_MATCH)) {
             if (mappings.containsKey(jsonPath)) {
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
                 }
-                return context.replaceDynamicContentInString(mappings.get(jsonPath));
+                return convertIfNecessary(context.replaceDynamicContentInString(mappings.get(jsonPath)), value);
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
@@ -50,7 +50,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implem
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
-                    return context.replaceDynamicContentInString(entry.getValue());
+                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
                 }
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.STARTS_WITH)) {
@@ -59,7 +59,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implem
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
-                    return context.replaceDynamicContentInString(entry.getValue());
+                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
                 }
             }
         }

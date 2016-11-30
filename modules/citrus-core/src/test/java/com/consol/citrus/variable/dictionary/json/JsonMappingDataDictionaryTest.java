@@ -33,7 +33,7 @@ import java.util.Map;
 public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     @Test
     public void testTranslateExactMatchStrategy() {
-        Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
+        Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\", \"OtherNumber\": 10}}");
 
         Map<String, String> mappings = new HashMap<>();
         mappings.put("Something.Else", "NotFound");
@@ -43,7 +43,7 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");
+        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}");
     }
 
     @Test
@@ -147,6 +147,20 @@ public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
 
         Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":null}}");
+    }
+
+    @Test
+    public void testTranslateWithNumberValues() {
+        Message message = new DefaultMessage("{\"TestMessage\":{\"Number\":0,\"OtherNumber\":100}}");
+
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("TestMessage.Number", "99");
+
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Number\":99,\"OtherNumber\":100}}");
     }
 
     @Test

@@ -48,7 +48,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     private static Logger log = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
 
     @Override
-    public String translate(Node node, String value, TestContext context) {
+    public <T> T translate(Node node, T value, TestContext context) {
         for (Map.Entry<String, String> expressionEntry : mappings.entrySet()) {
             String expression = expressionEntry.getKey();
 
@@ -58,7 +58,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' value: %s", XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
                 }
-                return context.replaceDynamicContentInString(expressionEntry.getValue());
+                return convertIfNecessary(context.replaceDynamicContentInString(expressionEntry.getValue()), value);
             }
         }
 
