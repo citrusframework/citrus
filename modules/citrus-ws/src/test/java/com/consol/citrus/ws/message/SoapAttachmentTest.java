@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.*;
+import java.nio.file.*;
 import java.nio.charset.Charset;
 
 import static org.mockito.Mockito.*;
@@ -96,13 +97,17 @@ public class SoapAttachmentTest {
 
     @Test
     public void testFileResourceBinaryContent() throws Exception {
+        String imageUrl = "/com/consol/citrus/ws/actions/test-attachment.png";
+
         SoapAttachment soapAttachment = new SoapAttachment();
-        soapAttachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
+        soapAttachment.setContentResourcePath("classpath:" + imageUrl);
         soapAttachment.setContentType("image/png");
 
-        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("<TestAttachment><Message>Hello World!</Message></TestAttachment>".getBytes(Charset.forName("UTF-8"))));
-        Assert.assertNotNull(soapAttachment.getDataHandler());
-        Assert.assertEquals(soapAttachment.getSize(), 64L);
+        String attachmentContent = soapAttachment.getContent();
+        byte[] resourceContent = Files.readAllBytes(Paths.get(getClass().getResource(imageUrl).toURI()));
+
+        Assert.assertEquals(attachmentContent, Base64.encodeBase64String(resourceContent));
+        Assert.assertEquals(soapAttachment.getSize(), resourceContent.length);
     }
 
     private class StaticTextDataSource implements DataSource {
