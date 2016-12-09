@@ -87,7 +87,7 @@ public void purgeTest() {
 }
 ```
 
-Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. See[testsuite-before-test](testsuite-before-test)for more information about this.
+Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. See [testsuite-before-test](testsuite-before-test)for more information about this.
 
 As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration that get purged before a test is executed.
 

@@ -56,4 +56,13 @@ public class MessageConstructionInterceptors implements MessageConstructionInter
     public boolean supportsMessageType(String messageType) {
         return true;
     }
+
+    /**
+     * Sets the messageConstructionInterceptors property.
+     *
+     * @param messageConstructionInterceptors
+     */
+    public void setMessageConstructionInterceptors(List<MessageConstructionInterceptor> messageConstructionInterceptors) {
+        this.messageConstructionInterceptors = messageConstructionInterceptors;
+    }
 }

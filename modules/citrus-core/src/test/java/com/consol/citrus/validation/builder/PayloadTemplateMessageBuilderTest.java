@@ -23,12 +23,12 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -249,5 +249,49 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(resultingMessage.getPayload(), "InterceptedMessagePayload");
         Assert.assertNotNull(resultingMessage.getHeader("NewHeader"));
+    }
+
+    @Test
+    public void testMessageBuilderWithGlobalDataDictionary() {
+        JsonMappingDataDictionary dataDictionary = new JsonMappingDataDictionary();
+        dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
+
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.<MessageConstructionInterceptor>singletonList(dataDictionary));
+        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+
+        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
+
+        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":\"20\"}}");
+    }
+
+    @Test
+    public void testMessageBuilderWithExplicitDataDictionary() {
+        JsonMappingDataDictionary dataDictionary = new JsonMappingDataDictionary();
+        dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
+        messageBuilder.setDataDictionary(dataDictionary);
+
+        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }");
+
+        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
+
+        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+    }
+
+    @Test
+    public void testMessageBuilderWithGlobalAndExplicitDataDictionary() {
+        JsonMappingDataDictionary globalDataDictionary = new JsonMappingDataDictionary();
+        globalDataDictionary.setMappings(Collections.singletonMap("person.name", "global_value"));
+
+        JsonMappingDataDictionary dataDictionary = new JsonMappingDataDictionary();
+        dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
+
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.<MessageConstructionInterceptor>singletonList(globalDataDictionary));
+        messageBuilder.setDataDictionary(dataDictionary);
+
+        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }");
+
+        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
+
+        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
     }
 }
