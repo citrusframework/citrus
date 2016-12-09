@@ -223,16 +223,16 @@ public class TestContext {
      * @param map optionally having variable entries.
      * @return the constructed map without variable entries.
      */
-    public Map<String, Object> resolveDynamicValuesInMap(final Map<String, Object> map) {
-        Map<String, Object> target = new HashMap<>(map.size());
+    public <T> Map<String, T> resolveDynamicValuesInMap(final Map<String, T> map) {
+        Map<String, T> target = new HashMap<>(map.size());
 
-        for (Entry<String, Object> entry : map.entrySet()) {
+        for (Entry<String, T> entry : map.entrySet()) {
             String key = entry.getKey();
-            Object value = entry.getValue();
+            T value = entry.getValue();
 
             if (value instanceof String) {
                 //put value into target map, but check if value is variable or function first
-                target.put(key, replaceDynamicContentInString((String) value));
+                target.put(key, (T) replaceDynamicContentInString((String) value));
             } else {
                 target.put(key, value);
             }
@@ -247,12 +247,14 @@ public class TestContext {
      * @param list having optional variable entries.
      * @return the constructed list without variable entries.
      */
-    public List<String> resolveDynamicValuesInList(final List<String> list) {
-        List<String> variableFreeList = new ArrayList<>(list.size());
+    public <T> List<T> resolveDynamicValuesInList(final List<T> list) {
+        List<T> variableFreeList = new ArrayList<>(list.size());
 
-        for (String entry : list) {
-            //add new value after check if it is variable or function
-            variableFreeList.add(replaceDynamicContentInString(entry));
+        for (T value : list) {
+            if (value instanceof String) {
+                //add new value after check if it is variable or function
+                variableFreeList.add((T) replaceDynamicContentInString((String) value));
+            }
         }
         return variableFreeList;
     }

@@ -26,6 +26,7 @@
     <module>model-camel</module>
     <module>model-ftp</module>
     <module>model-docker</module>
+    <module>model-kubernetes</module>
     <module>model-rmi</module>
     <module>model-jmx</module>
     <module>model-cucumber</module>

@@ -1,0 +1,73 @@
+<!--
+  ~ Copyright 2006-2016 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/kubernetes/testcase
+                                  http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd
+                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="KubernetesExecuteIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2015-09-14</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-09-14T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test kubernetes container command execution with kubernetes client.</description>
+
+    <variables>
+      <variable name="podLabel" value="app"></variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Validate kubernetes API version</message>
+      </echo>
+
+      <k8s:info>
+        <k8s:expect>
+          <k8s:result>{ "clientVersion": "1.3.100", "apiVersion": "v1", "masterUrl": "https://cvm14106.osp.consol.de:8443/", "namespace": "cde" }</k8s:result>
+        </k8s:expect>
+      </k8s:info>
+
+      <echo>
+        <message>List all pods</message>
+      </echo>
+
+      <k8s:list-pods/>
+      <k8s:list-services/>
+      <k8s:list-endpoints/>
+      <k8s:list-events/>
+
+      <echo>
+        <message>List pods '${podLabel}'</message>
+      </echo>
+
+      <k8s:list-pods label="${podLabel}"/>
+
+    </actions>
+
+  </testcase>
+</spring:beans>

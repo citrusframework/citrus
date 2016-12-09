@@ -1,0 +1,52 @@
+<!--
+  ~ Copyright 2006-2016 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+          version="2.1"
+          extensionBindingPrefixes="xjc">
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-kubernetes-config.xsd">
+    <globalBindings>
+      <xjc:javaType
+              name="java.util.Calendar"
+              xmlType="xs:dateTime"
+              adapter="org.w3._2001.xmlschema.Adapter1" />
+      <xjc:javaType
+              name="java.util.Calendar"
+              xmlType="xs:date"
+              adapter="org.w3._2001.xmlschema.Adapter2" />
+      <xjc:simple />
+    </globalBindings>
+    <schemaBindings>
+      <package name="com.consol.citrus.model.config.kubernetes"/>
+      <nameXmlTransform>
+        <elementName prefix="Kubernetes" suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-kubernetes-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.kubernetes"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+</bindings>
