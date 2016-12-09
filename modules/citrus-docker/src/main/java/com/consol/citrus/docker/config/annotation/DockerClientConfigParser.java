@@ -74,6 +74,6 @@ public class DockerClientConfigParser extends AbstractAnnotationConfigParser<Doc
             builder.configPath(annotation.configPath());
         }
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }

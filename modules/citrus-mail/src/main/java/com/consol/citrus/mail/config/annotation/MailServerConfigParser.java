@@ -74,6 +74,6 @@ public class MailServerConfigParser extends AbstractAnnotationConfigParser<MailS
             builder.javaMailProperties(getReferenceResolver().resolve(annotation.javaMailProperties(), Properties.class));
         }
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }

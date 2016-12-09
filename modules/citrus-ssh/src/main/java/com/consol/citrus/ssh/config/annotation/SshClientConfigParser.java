@@ -90,6 +90,6 @@ public class SshClientConfigParser extends AbstractAnnotationConfigParser<SshCli
             builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
         }
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }

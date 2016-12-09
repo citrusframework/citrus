@@ -110,6 +110,6 @@ public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<
 
         builder.pollingInterval(annotation.pollingInterval());
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }
