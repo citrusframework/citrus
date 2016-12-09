@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.*;
         "body"
 })
 @XmlRootElement(name = "mail-message")
-public class MailMessage {
+public class MailRequest {
 
     @XmlElement(required = true)
     protected String from;

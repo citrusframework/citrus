@@ -31,7 +31,7 @@ public class MailMarshaller extends Jaxb2Marshaller {
     private static Logger log = LoggerFactory.getLogger(MailMarshaller.class);
 
     public MailMarshaller() {
-        setClassesToBeBound(MailMessage.class,
+        setClassesToBeBound(MailRequest.class,
                 MailResponse.class,
                 AcceptRequest.class,
                 AcceptResponse.class);

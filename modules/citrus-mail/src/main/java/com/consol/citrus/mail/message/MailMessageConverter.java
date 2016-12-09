@@ -54,7 +54,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     @Override
     public MimeMailMessage convertOutbound(Message message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
-        MailMessage mailMessage = getMailMessage(message, endpointConfiguration);
+        MailRequest mailMessage = getMailRequest(message, endpointConfiguration);
 
         try {
             MimeMessage mimeMessage = endpointConfiguration.getJavaMailSender().createMimeMessage();
@@ -70,27 +70,27 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
     @Override
     public void convertOutbound(MimeMailMessage mimeMailMessage, Message message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
-        MailMessage mailMessage = getMailMessage(message, endpointConfiguration);
+        MailRequest mailRequest = getMailRequest(message, endpointConfiguration);
 
         try {
-            mimeMailMessage.setFrom(mailMessage.getFrom());
-            mimeMailMessage.setTo(StringUtils.commaDelimitedListToStringArray(mailMessage.getTo()));
+            mimeMailMessage.setFrom(mailRequest.getFrom());
+            mimeMailMessage.setTo(StringUtils.commaDelimitedListToStringArray(mailRequest.getTo()));
 
-            if (StringUtils.hasText(mailMessage.getCc())) {
-                mimeMailMessage.setCc(StringUtils.commaDelimitedListToStringArray(mailMessage.getCc()));
+            if (StringUtils.hasText(mailRequest.getCc())) {
+                mimeMailMessage.setCc(StringUtils.commaDelimitedListToStringArray(mailRequest.getCc()));
             }
 
-            if (StringUtils.hasText(mailMessage.getBcc())) {
-                mimeMailMessage.setBcc(StringUtils.commaDelimitedListToStringArray(mailMessage.getBcc()));
+            if (StringUtils.hasText(mailRequest.getBcc())) {
+                mimeMailMessage.setBcc(StringUtils.commaDelimitedListToStringArray(mailRequest.getBcc()));
             }
 
-            mimeMailMessage.setReplyTo(mailMessage.getReplyTo() != null ? mailMessage.getReplyTo() : mailMessage.getFrom());
+            mimeMailMessage.setReplyTo(mailRequest.getReplyTo() != null ? mailRequest.getReplyTo() : mailRequest.getFrom());
             mimeMailMessage.setSentDate(new Date());
-            mimeMailMessage.setSubject(mailMessage.getSubject());
-            mimeMailMessage.setText(mailMessage.getBody().getContent());
+            mimeMailMessage.setSubject(mailRequest.getSubject());
+            mimeMailMessage.setText(mailRequest.getBody().getContent());
 
-            if (mailMessage.getBody().hasAttachments()) {
-                for (AttachmentPart attachmentPart : mailMessage.getBody().getAttachments().getAttachments()) {
+            if (mailRequest.getBody().hasAttachments()) {
+                for (AttachmentPart attachmentPart : mailRequest.getBody().getAttachments().getAttachments()) {
                     mimeMailMessage.getMimeMessageHelper().addAttachment(attachmentPart.getFileName(),
                             new ByteArrayResource(attachmentPart.getContent().getBytes(Charset.forName(attachmentPart.getCharsetName()))),
                             attachmentPart.getContentType());
@@ -105,10 +105,10 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     public Message convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             Map<String, Object> messageHeaders = createMessageHeaders(message);
-            MailMessage mailMessage = createMailMessage(messageHeaders);
-            mailMessage.setBody(handlePart(message.getMimeMessage()));
+            MailRequest mailRequest = createMailRequest(messageHeaders);
+            mailRequest.setBody(handlePart(message.getMimeMessage()));
 
-            return new DefaultMessage(mailMessage, messageHeaders);
+            return new DefaultMessage(mailRequest, messageHeaders);
         } catch (MessagingException e) {
             throw new CitrusRuntimeException("Failed to convert mail mime message", e);
         } catch (IOException e) {
@@ -121,8 +121,8 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * @param messageHeaders
      * @return
      */
-    protected MailMessage createMailMessage(Map<String, Object> messageHeaders) {
-        MailMessage message = new MailMessage();
+    protected MailRequest createMailRequest(Map<String, Object> messageHeaders) {
+        MailRequest message = new MailRequest();
         message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString());
         message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString());
         message.setCc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());
@@ -331,23 +331,23 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * @param endpointConfiguration
      * @return
      */
-    private MailMessage getMailMessage(Message message, MailEndpointConfiguration endpointConfiguration) {
+    private MailRequest getMailRequest(Message message, MailEndpointConfiguration endpointConfiguration) {
         Object payload = message.getPayload();
 
-        MailMessage mailMessage = null;
+        MailRequest mailRequest = null;
         if (payload != null) {
-            if (payload instanceof MailMessage) {
-                mailMessage = (MailMessage) payload;
+            if (payload instanceof MailRequest) {
+                mailRequest = (MailRequest) payload;
             } else {
-                mailMessage = (MailMessage) endpointConfiguration.getMailMarshaller()
+                mailRequest = (MailRequest) endpointConfiguration.getMailMarshaller()
                         .unmarshal(message.getPayload(Source.class));
             }
         }
 
-        if (mailMessage == null) {
+        if (mailRequest == null) {
             throw new CitrusRuntimeException("Unable to create proper mail message from payload: " + payload);
         }
 
-        return mailMessage;
+        return mailRequest;
     }
 }

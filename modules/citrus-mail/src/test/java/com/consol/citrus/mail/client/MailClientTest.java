@@ -17,7 +17,7 @@
 package com.consol.citrus.mail.client;
 
 import com.consol.citrus.mail.model.MailMarshaller;
-import com.consol.citrus.mail.model.MailMessage;
+import com.consol.citrus.mail.model.MailRequest;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -55,7 +55,7 @@ public class MailClientTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendMailMessageObject() throws Exception {
-        MailMessage mailMessage = (MailMessage) new MailMarshaller().unmarshal(new StreamSource(
+        MailRequest mailRequest = (MailRequest) new MailMarshaller().unmarshal(new StreamSource(
             new ClassPathResource("text_mail.xml", MailServer.class).getInputStream()));
 
         reset(javaMailSender);
@@ -78,13 +78,13 @@ public class MailClientTest extends AbstractTestNGUnitTest {
             }
         }).when(javaMailSender).send(any(MimeMessage.class));
 
-        mailClient.send(new DefaultMessage(mailMessage), context);
+        mailClient.send(new DefaultMessage(mailRequest), context);
 
     }
 
     @Test
     public void testSendMultipartMailMessageObject() throws Exception {
-        MailMessage mailMessage = (MailMessage) new MailMarshaller().unmarshal(new StreamSource(
+        MailRequest mailRequest = (MailRequest) new MailMarshaller().unmarshal(new StreamSource(
                 new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream()));
 
         reset(javaMailSender);
@@ -117,7 +117,7 @@ public class MailClientTest extends AbstractTestNGUnitTest {
             }
         }).when(javaMailSender).send(any(MimeMessage.class));
 
-        mailClient.send(new DefaultMessage(mailMessage), context);
+        mailClient.send(new DefaultMessage(mailRequest), context);
 
     }
 

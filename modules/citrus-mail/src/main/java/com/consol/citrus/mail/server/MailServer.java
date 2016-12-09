@@ -150,13 +150,13 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param request
      */
     protected Message invokeEndpointAdapter(Message request) {
-        MailMessage mailMessage = (MailMessage) request.getPayload();
+        MailRequest mailRequest = (MailRequest) request.getPayload();
 
         if (splitMultipart) {
-            return split(mailMessage.getBody(), request.getHeaders());
+            return split(mailRequest.getBody(), request.getHeaders());
         } else {
             StringResult result = new StringResult();
-            marshaller.marshal(mailMessage, result);
+            marshaller.marshal(mailRequest, result);
             return getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), request.getHeaders()));
         }
     }
@@ -170,18 +170,18 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param messageHeaders
      */
     private Message split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
-        MailMessage mailMessage = createMailMessage(messageHeaders);
-        mailMessage.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
+        MailRequest mailRequest = createMailMessage(messageHeaders);
+        mailRequest.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
 
         StringResult result = new StringResult();
         Stack<Message> responseStack = new Stack<Message>();
         if (bodyPart instanceof AttachmentPart) {
-            marshaller.marshal(mailMessage, result);
+            marshaller.marshal(mailRequest, result);
             fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
                     .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())), responseStack);
         } else {
-            marshaller.marshal(mailMessage, result);
+            marshaller.marshal(mailRequest, result);
             fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())), responseStack);
         }
@@ -206,8 +206,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param messageHeaders
      * @return
      */
-    protected MailMessage createMailMessage(Map<String, Object> messageHeaders) {
-        MailMessage message = new MailMessage();
+    protected MailRequest createMailMessage(Map<String, Object> messageHeaders) {
+        MailRequest message = new MailRequest();
         message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString());
         message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString());
         message.setCc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());

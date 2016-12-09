@@ -57,10 +57,10 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link MailMessage }
+     * Create an instance of {@link MailRequest }
      */
-    public MailMessage createMailMessage() {
-        return new MailMessage();
+    public MailRequest createMailMessage() {
+        return new MailRequest();
     }
 
     /**
