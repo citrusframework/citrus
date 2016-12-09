@@ -56,6 +56,22 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
     }
 
     /**
+     * Initializes the endpoint.
+     * @return
+     */
+    public AbstractEndpointBuilder<T> initialize() {
+        if (getEndpoint() instanceof InitializingBean) {
+            try {
+                ((InitializingBean) getEndpoint()).afterPropertiesSet();
+            } catch (Exception e) {
+                throw new CitrusRuntimeException("Failed to initialize endpoint", e);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Sets the Spring application context.
      * @param applicationContext
      * @return
@@ -88,17 +104,7 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
 
     @Override
     public T build() {
-        T endpoint = getEndpoint();
-
-        if (endpoint instanceof InitializingBean) {
-            try {
-                ((InitializingBean) endpoint).afterPropertiesSet();
-            } catch (Exception e) {
-                throw new CitrusRuntimeException("Failed to build endpoint", e);
-            }
-        }
-
-        return endpoint;
+        return getEndpoint();
     }
 
     /**

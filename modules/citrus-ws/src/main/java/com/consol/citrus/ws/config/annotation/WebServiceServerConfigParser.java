@@ -116,6 +116,6 @@ public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser
             builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), WebServiceMessageConverter.class));
         }
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }

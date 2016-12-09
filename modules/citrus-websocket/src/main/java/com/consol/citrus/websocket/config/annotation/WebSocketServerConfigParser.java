@@ -125,6 +125,7 @@ public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<
             builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), HttpMessageConverter.class));
         }
 
+        builder.initialize();
         return builder.build();
     }
 }

@@ -69,6 +69,6 @@ public class VertxEndpointConfigParser extends AbstractAnnotationConfigParser<Ve
             builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
         }
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }

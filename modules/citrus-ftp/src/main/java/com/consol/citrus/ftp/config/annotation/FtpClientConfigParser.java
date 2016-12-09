@@ -68,6 +68,6 @@ public class FtpClientConfigParser extends AbstractAnnotationConfigParser<FtpCli
             builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
         }
 
-        return builder.build();
+        return builder.initialize().build();
     }
 }
