@@ -85,12 +85,12 @@ public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<
                     if (jsonArray.get(i) instanceof JSONObject) {
                         traverseJsonData((JSONObject) jsonArray.get(i), String.format((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()) + "[%s]", i), context);
                     } else {
-                        jsonArray.set(i, translate(String.format((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()) + "[%s]", i), jsonArray.get(i).toString(), context));
+                        jsonArray.set(i, translate(String.format((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()) + "[%s]", i), jsonArray.get(i), context));
                     }
                 }
             } else {
                 jsonEntry.setValue(translate((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()),
-                                              jsonEntry.getValue() != null ? jsonEntry.getValue().toString() : null, context));
+                                              jsonEntry.getValue() != null ? jsonEntry.getValue() : null, context));
             }
         }
     }

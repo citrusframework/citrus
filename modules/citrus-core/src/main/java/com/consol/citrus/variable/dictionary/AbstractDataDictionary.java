@@ -17,6 +17,7 @@
 package com.consol.citrus.variable.dictionary;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,21 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
 
     /** Kind of mapping strategy how to identify dictionary item */
     private PathMappingStrategy pathMappingStrategy = PathMappingStrategy.EXACT_MATCH;
+
+    /**
+     * Convert to original value type if necessary.
+     * @param value
+     * @param originalValue
+     * @param <T>
+     * @return
+     */
+    protected <T> T convertIfNecessary(String value, T originalValue) {
+        if (originalValue == null) {
+            return (T) value;
+        }
+
+        return TypeConversionUtils.convertIfNecessary(value, (Class<T>) originalValue.getClass());
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

@@ -38,7 +38,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
     private static Logger log = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
 
     @Override
-    public String translate(Node node, String value, TestContext context) {
+    public <T> T translate(Node node, T value, TestContext context) {
         String nodePath = XMLUtils.getNodesPathName(node);
 
         if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT_MATCH)) {
@@ -46,7 +46,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
                 }
-                return context.replaceDynamicContentInString(mappings.get(nodePath));
+                return convertIfNecessary(context.replaceDynamicContentInString(mappings.get(nodePath)), value);
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
@@ -54,7 +54,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
-                    return context.replaceDynamicContentInString(entry.getValue());
+                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
                 }
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.STARTS_WITH)) {
@@ -63,7 +63,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
-                    return context.replaceDynamicContentInString(entry.getValue());
+                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
                 }
             }
         }

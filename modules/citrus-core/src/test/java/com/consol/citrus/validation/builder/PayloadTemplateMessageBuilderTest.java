@@ -270,11 +270,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
         messageBuilder.setDataDictionary(dataDictionary);
 
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }");
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
 
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":\"20\"}}");
+        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
     }
 
     @Test
@@ -288,10 +288,10 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.<MessageConstructionInterceptor>singletonList(globalDataDictionary));
         messageBuilder.setDataDictionary(dataDictionary);
 
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }");
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
 
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":\"20\"}}");
+        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
     }
 }

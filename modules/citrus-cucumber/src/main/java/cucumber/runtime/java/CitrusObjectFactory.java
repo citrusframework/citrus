@@ -23,13 +23,17 @@ import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import cucumber.runtime.CucumberException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusObjectFactory extends DefaultJavaObjectFactory {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusObjectFactory.class);
 
     /** Test designer */
     private TestDesigner designer;
@@ -55,11 +59,19 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
 
     @Override
     public boolean addClass(Class<?> clazz) {
-        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, mode);
+        InjectionMode fallback;
+        if (mode == null) {
+            fallback = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+        } else {
+            fallback = mode;
+        }
+
+        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, fallback);
         if (mode == null) {
             mode = requiredMode;
         } else if (!mode.equals(requiredMode)) {
-            throw new CucumberException("Illegal mix of test designer and runner mode within test run");
+            log.warn(String.format("Ignoring class of injection type '%s' as current injection mode is '%s'", requiredMode, mode));
+            return false;
         }
 
         return super.addClass(clazz);

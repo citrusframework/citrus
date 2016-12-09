@@ -37,7 +37,7 @@ public interface DataDictionary<T> extends MessageConstructionInterceptor {
      * @param context the current test context
      * @return
      */
-    String translate(T key, String value, TestContext context);
+    <R> R translate(T key, R value, TestContext context);
 
     /**
      * Gets the data dictionary name.

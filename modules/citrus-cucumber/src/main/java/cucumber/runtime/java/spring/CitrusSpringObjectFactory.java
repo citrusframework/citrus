@@ -26,12 +26,17 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.runtime.CucumberException;
 import cucumber.runtime.java.CitrusBackend;
 import cucumber.runtime.java.InjectionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusSpringObjectFactory extends SpringFactory {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusSpringObjectFactory.class);
 
     /** Test designer */
     private TestDesigner designer;
@@ -57,11 +62,19 @@ public class CitrusSpringObjectFactory extends SpringFactory {
 
     @Override
     public boolean addClass(Class<?> clazz) {
-        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, mode);
+        InjectionMode fallback;
+        if (mode == null) {
+            fallback = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+        } else {
+            fallback = mode;
+        }
+
+        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, fallback);
         if (mode == null) {
             mode = requiredMode;
         } else if (!mode.equals(requiredMode)) {
-            throw new CucumberException("Illegal mix of test designer and runner mode within test run");
+            log.warn(String.format("Ignoring class of injection type '%s' as current injection mode is '%s'", requiredMode, mode));
+            return false;
         }
 
         return super.addClass(clazz);
@@ -88,8 +101,13 @@ public class CitrusSpringObjectFactory extends SpringFactory {
     @Override
     public <T> T getInstance(Class<T> type) {
         if (context == null) {
-            context = super.getInstance(TestContext.class);
-            CitrusBackend.initializeCitrus(context.getApplicationContext());
+            try {
+                context = super.getInstance(TestContext.class);
+                CitrusBackend.initializeCitrus(context.getApplicationContext());
+            } catch (CucumberException e) {
+                log.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
+                context = CitrusBackend.getCitrus().createTestContext();
+            }
 
             if (TestContext.class.isAssignableFrom(type)) {
                 return (T) context;
