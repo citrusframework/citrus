@@ -631,6 +631,13 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public KubernetesActionBuilder kubernetes() {
+        KubernetesActionBuilder builder = new KubernetesActionBuilder();
+        action(builder);
+        return builder;
+    }
+
+    @Override
     public HttpActionBuilder http() {
         HttpActionBuilder builder = new HttpActionBuilder()
                 .withApplicationContext(getApplicationContext());

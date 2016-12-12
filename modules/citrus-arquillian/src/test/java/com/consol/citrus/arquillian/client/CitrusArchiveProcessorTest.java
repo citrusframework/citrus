@@ -71,6 +71,7 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-ftp-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-camel-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-docker-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-kubernetes-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-cucumber-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-zookeeper-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-rmi-.*jar");
@@ -101,6 +102,7 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-ftp-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-camel-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-docker-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-kubernetes-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-cucumber-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-zookeeper-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-rmi-.*jar");
@@ -125,6 +127,7 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-ftp-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-camel-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-docker-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-kubernetes-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-cucumber-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-zookeeper-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-rmi-.*jar");

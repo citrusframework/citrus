@@ -347,6 +347,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
+    public TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer) {
+        return testRunner.kubernetes(configurer);
+    }
+
+    @Override
     public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
         return testRunner.http(configurer);
     }

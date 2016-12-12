@@ -505,6 +505,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer) {
+        KubernetesActionBuilder builder = new KubernetesActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
+    }
+
+    @Override
     public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
         HttpActionBuilder builder = new HttpActionBuilder()
                     .withApplicationContext(applicationContext);

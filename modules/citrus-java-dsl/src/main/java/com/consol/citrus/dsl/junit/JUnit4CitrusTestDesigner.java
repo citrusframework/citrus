@@ -413,6 +413,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    public KubernetesActionBuilder kubernetes() {
+        return testDesigner.kubernetes();
+    }
+
+    @Override
     public HttpActionBuilder http() {
         return testDesigner.http();
     }

@@ -78,7 +78,7 @@ public abstract class AbstractKubernetesCommand<R> implements KubernetesCommand 
      * Sets the command result if any.
      * @param commandResult
      */
-    public void setCommandResult(R commandResult) {
+    protected void setCommandResult(R commandResult) {
         this.commandResult = commandResult;
     }
 

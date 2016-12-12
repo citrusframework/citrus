@@ -75,6 +75,10 @@ Module providing utility classes and helper for Arquillian test framework integr
 
 Module providing utility classes and helper for Docker integration with Citrus.
 
+### citrus-kubernetes (JAR)
+
+Module providing utility classes and helper for Kubernetes integration with Citrus.
+
 ### citrus-rmi (JAR)
 
 Module providing client and server implementations for Java RMI integration with Citrus.

@@ -23,6 +23,7 @@
         <include>com.consol.citrus:citrus-mail</include>
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-docker</include>
+        <include>com.consol.citrus:citrus-kubernetes</include>
         <include>com.consol.citrus:citrus-cucumber</include>
         <include>com.consol.citrus:citrus-zookeeper</include>
         <include>com.consol.citrus:citrus-rmi</include>

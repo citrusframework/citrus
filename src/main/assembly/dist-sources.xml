@@ -71,6 +71,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-model/model-kubernetes/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>modules/citrus-model/model-cucumber/target</directory>
       <outputDirectory></outputDirectory>
       <includes>
@@ -156,6 +163,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-docker/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-kubernetes/target</directory>
       <outputDirectory></outputDirectory>
       <includes>
         <include>*sources.jar</include>

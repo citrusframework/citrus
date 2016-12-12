@@ -440,6 +440,12 @@ public interface TestRunner extends ApplicationContextAware {
     TestAction docker(BuilderSupport<DockerActionBuilder> configurer);
 
     /**
+     * Run kubernetes command action.
+     * @return
+     */
+    TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer);
+
+    /**
      * Run http command action.
      * @return
      */

@@ -27,6 +27,7 @@ import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
 import com.consol.citrus.jmx.client.JmxClientBuilder;
 import com.consol.citrus.jmx.server.JmxServerBuilder;
+import com.consol.citrus.kubernetes.client.KubernetesClientBuilder;
 import com.consol.citrus.mail.client.MailClientBuilder;
 import com.consol.citrus.mail.server.MailServerBuilder;
 import com.consol.citrus.rmi.client.RmiClientBuilder;
@@ -143,6 +144,20 @@ public abstract class CitrusEndpoints {
             @Override
             public EndpointBuilder<? extends Endpoint> server() {
                 throw new UnsupportedOperationException("Citrus Docker stack has no support for server implementation");
+            }
+        };
+    }
+
+    /**
+     * Creates new KubernetesClient builder.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static ClientServerEndpointBuilder<KubernetesClientBuilder, KubernetesClientBuilder> kubernetes() {
+        return new ClientServerEndpointBuilder(new KubernetesClientBuilder(), new KubernetesClientBuilder()) {
+            @Override
+            public EndpointBuilder<? extends Endpoint> server() {
+                throw new UnsupportedOperationException("Citrus Kubernetes stack has no support for server implementation");
             }
         };
     }

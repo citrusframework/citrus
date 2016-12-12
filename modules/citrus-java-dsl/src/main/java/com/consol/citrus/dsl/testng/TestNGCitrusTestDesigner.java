@@ -414,6 +414,11 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    public KubernetesActionBuilder kubernetes() {
+        return testDesigner.kubernetes();
+    }
+
+    @Override
     public HttpActionBuilder http() {
         return testDesigner.http();
     }

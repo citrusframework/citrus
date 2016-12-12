@@ -496,6 +496,12 @@ public interface TestDesigner extends ApplicationContextAware {
     DockerActionBuilder docker();
 
     /**
+     * Creates a new kubernetes execute action.
+     * @return
+     */
+    KubernetesActionBuilder kubernetes();
+
+    /**
      *
      */
     HttpActionBuilder http();

@@ -1705,6 +1705,42 @@
                 </goals>
               </execution>
               <execution>
+                <id>copy-citrus-kubernetes-schemas</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/kubernetes/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-kubernetes/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-kubernetes-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-kubernetes-test-schemas</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/kubernetes/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-kubernetes/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-kubernetes-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
                 <id>copy-citrus-cucumber-test-schemas</id>
                 <phase>package</phase>
                 <configuration>
