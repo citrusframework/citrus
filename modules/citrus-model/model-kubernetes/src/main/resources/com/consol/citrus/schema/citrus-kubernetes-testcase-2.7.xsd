@@ -124,7 +124,13 @@
       <xs:documentation>Expects and validates a command result</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="result" type="xs:string"/>
+      <xs:element name="result" minOccurs="0"  type="xs:string"/>
+      <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="path" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

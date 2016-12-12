@@ -46,6 +46,10 @@ public class KubernetesExecuteActionParserTest extends AbstractActionParserTest<
         Assert.assertNotNull(action.getCommand());
         Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assert.assertEquals(action.getCommandResult(), "{}");
+        Assert.assertEquals(action.getCommandResultExpressions().size(), 2L);
+        Assert.assertEquals(action.getCommandResultExpressions().get("$.apiVersion"), "v1");
+        Assert.assertEquals(action.getCommandResultExpressions().get("$..name.toString()"), "[a,b,c,d]");
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());

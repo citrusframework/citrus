@@ -29,6 +29,8 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.util.*;
+
 /**
  * Bean definition parser for kubernetes client action in test case.
  * 
@@ -66,7 +68,21 @@ public class KubernetesExecuteActionParser implements BeanDefinitionParser {
 
         Element expectCmdResult = DomUtils.getChildElementByTagName(element, "expect");
         if (expectCmdResult != null) {
-            beanDefinition.addPropertyValue("expectedCommandResult", DomUtils.getTextValue(DomUtils.getChildElementByTagName(expectCmdResult, "result")));
+            Element resultElement = DomUtils.getChildElementByTagName(expectCmdResult, "result");
+            if (resultElement != null) {
+                beanDefinition.addPropertyValue("commandResult", DomUtils.getTextValue(resultElement));
+            }
+
+            Map<String, Object> pathExpressions = new HashMap<>();
+            List<?> pathElements = DomUtils.getChildElementsByTagName(expectCmdResult, "element");
+            for (Iterator<?> iter = pathElements.iterator(); iter.hasNext();) {
+                Element messageValue = (Element) iter.next();
+                pathExpressions.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
+            }
+
+            if (!pathExpressions.isEmpty()) {
+                beanDefinition.addPropertyValue("commandResultExpressions", pathExpressions);
+            }
         }
 
         beanDefinition.addPropertyValue("command", command);

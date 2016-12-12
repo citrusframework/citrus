@@ -18,20 +18,22 @@ package com.consol.citrus.kubernetes.actions;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.kubernetes.client.KubernetesClient;
-import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.kubernetes.client.KubernetesClient;
+import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.consol.citrus.validation.json.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * Executes kubernetes command with given kubernetes client implementation. Possible command result is stored within command object.
@@ -50,7 +52,10 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     private KubernetesCommand command;
 
     /** Expected command result for validation */
-    private String expectedCommandResult;
+    private String commandResult;
+
+    /** Expected path expressions in command result */
+    private Map<String, Object> commandResultExpressions;
 
     @Autowired(required = false)
     @Qualifier("k8sCommandResultMapper")
@@ -59,6 +64,9 @@ public class KubernetesExecuteAction extends AbstractTestAction {
 
     @Autowired
     private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
+
+    @Autowired
+    private JsonPathMessageValidator jsonPathMessageValidator = new JsonPathMessageValidator();
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(KubernetesExecuteAction.class);
@@ -98,16 +106,24 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             log.debug("Starting Kubernetes command result validation");
         }
 
-        if (StringUtils.hasText(expectedCommandResult)) {
+        if (StringUtils.hasText(commandResult) || !CollectionUtils.isEmpty(commandResultExpressions)) {
             if (command.getCommandResult() == null) {
                 throw new ValidationException("Missing Kubernetes command result");
             }
 
             try {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
-                JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, validationContext);
-                log.info("Kubernetes command result validation successful - all values OK!");
+                if (StringUtils.hasText(commandResult)) {
+                    jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, new JsonMessageValidationContext());
+                    log.info("Kubernetes command result validation successful - all values OK!");
+                }
+
+                if (!CollectionUtils.isEmpty(commandResultExpressions)) {
+                    JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+                    validationContext.setJsonPathExpressions(commandResultExpressions);
+                    jsonPathMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, validationContext);
+                    log.info("Kubernetes command result path validation successful - all values OK!");
+                }
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);
             }
@@ -157,17 +173,33 @@ public class KubernetesExecuteAction extends AbstractTestAction {
      * Gets the expected command result data.
      * @return
      */
-    public String getExpectedCommandResult() {
-        return expectedCommandResult;
+    public String getCommandResult() {
+        return commandResult;
     }
 
     /**
      * Sets the expected command result data.
      * @param expectedCommandResult
      */
-    public KubernetesExecuteAction setExpectedCommandResult(String expectedCommandResult) {
-        this.expectedCommandResult = expectedCommandResult;
+    public KubernetesExecuteAction setCommandResult(String expectedCommandResult) {
+        this.commandResult = expectedCommandResult;
         return this;
+    }
+
+    /**
+     * Gets the expected command result expressions such as JsonPath expressions.
+     * @return
+     */
+    public Map<String, Object> getCommandResultExpressions() {
+        return commandResultExpressions;
+    }
+
+    /**
+     * Sets the expected command result expressions for path validation.
+     * @param commandResultExpressions
+     */
+    public void setCommandResultExpressions(Map<String, Object> commandResultExpressions) {
+        this.commandResultExpressions = commandResultExpressions;
     }
 
     /**

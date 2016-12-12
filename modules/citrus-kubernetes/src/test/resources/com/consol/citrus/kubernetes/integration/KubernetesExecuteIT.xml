@@ -22,7 +22,7 @@
     <description>Test kubernetes container command execution with kubernetes client.</description>
 
     <variables>
-      <variable name="podLabel" value="app"></variable>
+      <variable name="podLabel" value="app"/>
     </variables>
 
     <actions>
@@ -34,26 +34,69 @@
         <k8s:expect>
           <k8s:result>{
             "clientVersion": "1.4.27",
-            "apiVersion": "v1",
-            "masterUrl": "https://cvm14106.osp.consol.de:8443/",
-            "namespace": "cde" }</k8s:result>
+            "apiVersion": "${apiVersion}",
+            "masterUrl": "${masterUrl}",
+            "namespace": "${namespace}" }</k8s:result>
         </k8s:expect>
       </k8s:info>
+
+      <echo>
+        <message>List all services</message>
+      </echo>
+
+      <k8s:list-services>
+        <k8s:expect>
+          <k8s:result>{
+            "apiVersion":"${apiVersion}",
+            "kind":"ServiceList",
+            "metadata":"@ignore@",
+            "items":[]
+          }</k8s:result>
+          <k8s:element path="$.items.size()" value="0"/>
+        </k8s:expect>
+      </k8s:list-services>
 
       <echo>
         <message>List all pods</message>
       </echo>
 
-      <k8s:list-pods/>
-      <k8s:list-services/>
-      <k8s:list-endpoints/>
+      <k8s:list-pods>
+        <k8s:expect>
+          <k8s:result>{
+            "apiVersion":"${apiVersion}",
+            "kind":"PodList",
+            "metadata":"@ignore@",
+            "items":[]
+            }</k8s:result>
+          <k8s:element path="$.items.size()" value="0"/>
+        </k8s:expect>        
+      </k8s:list-pods>
+
+      <echo>
+        <message>List all endpoints</message>
+      </echo>
+      
+      <k8s:list-endpoints>
+        <k8s:expect>
+          <k8s:result>{
+            "apiVersion":"${apiVersion}",
+            "kind":"EndpointsList",
+            "metadata":"@ignore@",
+            "items":[]
+            }</k8s:result>
+        </k8s:expect>
+      </k8s:list-endpoints>
       <k8s:list-events/>
 
       <echo>
-        <message>List pods '${podLabel}'</message>
+        <message>List pods by '${podLabel}'</message>
       </echo>
 
-      <k8s:list-pods label="${podLabel}"/>
+      <k8s:list-pods label="${podLabel}">
+        <k8s:expect>
+          <k8s:element path="$.items.size()" value="0"/>
+        </k8s:expect>              
+      </k8s:list-pods>        
 
     </actions>
 

@@ -15,6 +15,9 @@
   <!-- Global variables -->
   <citrus:global-variables>
     <citrus:variable name="project.name" value="Citrus Kubernetes Integration Testing"/>
+    <citrus:variable name="apiVersion" value="v1"/>
+    <citrus:variable name="masterUrl" value="https://cvm14106.osp.consol.de:8443/"/>
+    <citrus:variable name="namespace" value="cde"/>
   </citrus:global-variables>
 
   <!-- Test Listeners -->
