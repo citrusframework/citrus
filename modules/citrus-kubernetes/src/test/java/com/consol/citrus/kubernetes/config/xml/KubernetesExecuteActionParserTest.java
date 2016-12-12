@@ -39,7 +39,7 @@ public class KubernetesExecuteActionParserTest extends AbstractActionParserTest<
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());
         Assert.assertEquals(action.getCommand().getClass(), Info.class);
-        Assert.assertEquals(action.getKubernetesClient(), beanDefinitionContext.getBean("myKubernetesClient", KubernetesClient.class));
+        Assert.assertEquals(action.getKubernetesClient(), beanDefinitionContext.getBean("myK8sClient", KubernetesClient.class));
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
 
         action = getNextTestActionFromTest();

@@ -20,8 +20,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.fasterxml.jackson.annotation.*;
 import io.fabric8.kubernetes.client.Version;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 
@@ -30,9 +28,6 @@ import javax.validation.constraints.NotNull;
  * @since 2.7
  */
 public class Info extends AbstractKubernetesCommand<Info.InfoModel> {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Info.class);
 
     /**
      * Default constructor initializing the command name.

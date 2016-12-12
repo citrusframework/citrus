@@ -42,7 +42,7 @@ import org.springframework.util.StringUtils;
 public class KubernetesExecuteAction extends AbstractTestAction {
 
     @Autowired(required = false)
-    @Qualifier("kubernetesClient")
+    @Qualifier("k8sClient")
     /** Kubernetes client instance  */
     private KubernetesClient kubernetesClient = new KubernetesClient();
 
@@ -53,7 +53,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     private String expectedCommandResult;
 
     @Autowired(required = false)
-    @Qualifier("kubernetesCommandResultMapper")
+    @Qualifier("k8sCommandResultMapper")
     /** JSON data binding */
     private ObjectMapper jsonMapper = new ObjectMapper();
 

@@ -35,17 +35,17 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(clients.size(), 2);
 
         // 1st client
-        KubernetesClient kubernetesClient = clients.get("kubernetesClient1");
-        Assert.assertNotNull(kubernetesClient.getEndpointConfiguration().getKubernetesClient());
+        KubernetesClient client = clients.get("k8sClient1");
+        Assert.assertNotNull(client.getEndpointConfiguration().getKubernetesClient());
 
         // 2nd client
-        kubernetesClient = clients.get("kubernetesClient2");
-        Assert.assertNotNull(kubernetesClient.getEndpointConfiguration().getKubernetesClient());
-        Assert.assertEquals(kubernetesClient.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8843/");
-        Assert.assertEquals(kubernetesClient.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        Assert.assertEquals(kubernetesClient.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
-        Assert.assertEquals(kubernetesClient.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
-        Assert.assertEquals(kubernetesClient.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        Assert.assertEquals(kubernetesClient.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.cert");
+        client = clients.get("k8sClient2");
+        Assert.assertNotNull(client.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8843/");
+        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
+        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
+        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
+        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
+        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.cert");
     }
 }

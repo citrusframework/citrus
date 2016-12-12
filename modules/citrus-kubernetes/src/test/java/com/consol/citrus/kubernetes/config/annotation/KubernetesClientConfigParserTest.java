@@ -32,9 +32,9 @@ import org.testng.annotations.Test;
  */
 public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
-    @CitrusEndpoint(name = "kubernetesClient1")
+    @CitrusEndpoint(name = "k8sClient1")
     @KubernetesClientConfig()
-    private KubernetesClient kubernetesClient1;
+    private KubernetesClient client1;
 
     @CitrusEndpoint
     @KubernetesClientConfig(url = "http://localhost:8443",
@@ -43,7 +43,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
             password="s!cr!t",
             namespace="user_namespace",
             certFile="/path/to/some/cert/ca.pem")
-    private KubernetesClient kubernetesClient2;
+    private KubernetesClient client2;
 
     @Autowired
     private SpringBeanReferenceResolver referenceResolver;
@@ -59,15 +59,15 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st client
-        Assert.assertNotNull(kubernetesClient1.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertNotNull(client1.getEndpointConfiguration().getKubernetesClient());
 
         // 2nd client
-        Assert.assertNotNull(kubernetesClient2.getEndpointConfiguration().getKubernetesClient());
-        Assert.assertEquals(kubernetesClient2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8443/");
-        Assert.assertEquals(kubernetesClient2.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        Assert.assertEquals(kubernetesClient2.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
-        Assert.assertEquals(kubernetesClient2.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
-        Assert.assertEquals(kubernetesClient2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        Assert.assertEquals(kubernetesClient2.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.pem");
+        Assert.assertNotNull(client2.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8443/");
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.pem");
     }
 }

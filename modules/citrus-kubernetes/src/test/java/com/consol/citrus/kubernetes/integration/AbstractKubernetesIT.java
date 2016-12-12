@@ -49,7 +49,7 @@ public class AbstractKubernetesIT extends AbstractTestNGCitrusTest {
 
             future.get(5000, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
-            log.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!");
+            log.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
             return;
         }
 

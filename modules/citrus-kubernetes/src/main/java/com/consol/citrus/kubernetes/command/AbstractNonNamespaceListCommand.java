@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.7
  */
 public abstract class AbstractNonNamespaceListCommand<R> extends AbstractListCommand<R> {
 

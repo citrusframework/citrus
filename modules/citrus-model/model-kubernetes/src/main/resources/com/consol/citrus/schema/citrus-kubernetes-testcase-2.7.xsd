@@ -31,7 +31,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -44,7 +44,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -58,7 +58,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -72,7 +72,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -86,7 +86,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -100,7 +100,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -114,7 +114,7 @@
         <xs:element ref="description" minOccurs="0"/>
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="kubernetes-client" type="xs:string"/>
+      <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>

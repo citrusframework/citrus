@@ -54,12 +54,12 @@ public class KubernetesExecuteActionParser implements BeanDefinitionParser {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(KubernetesExecuteAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
-        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("kubernetes-client"), "kubernetesClient");
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("client"), "kubernetesClient");
 
         KubernetesCommand command = createCommand(commandType);
         for (int i = 0; i < element.getAttributes().getLength(); i++) {
             Node attribute = element.getAttributes().item(i);
-            if (!attribute.getNodeName().equals("kubernetes-client")) {
+            if (!attribute.getNodeName().equals("client")) {
                 command.getParameters().put(attribute.getNodeName(), attribute.getNodeValue());
             }
         }
