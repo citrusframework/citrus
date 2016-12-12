@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.client;
+package com.consol.citrus.kubernetes.endpoint;
 
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;

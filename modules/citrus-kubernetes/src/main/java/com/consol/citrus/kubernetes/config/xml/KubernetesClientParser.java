@@ -20,7 +20,7 @@ import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
-import com.consol.citrus.kubernetes.client.KubernetesEndpointConfiguration;
+import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;

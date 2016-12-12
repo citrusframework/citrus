@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
