@@ -27,13 +27,13 @@ import javax.validation.constraints.NotNull;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class Info extends AbstractKubernetesCommand<Info.InfoModel> {
+public class Info extends AbstractKubernetesCommand<Info.InfoModel, Info> {
 
     /**
      * Default constructor initializing the command name.
      */
     public Info() {
-        super("kubernetes:info");
+        super("info");
     }
 
     @Override

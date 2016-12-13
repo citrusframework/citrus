@@ -18,24 +18,24 @@ package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.*;
+import io.fabric8.kubernetes.api.model.ReplicationControllerList;
+import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNamespaces extends AbstractNonNamespaceListCommand<NamespaceList, ListNamespaces> {
+public class ListReplicationControllers extends AbstractListCommand<ReplicationControllerList, ListReplicationControllers> {
 
     /**
      * Default constructor initializing the command name.
      */
-    public ListNamespaces() {
-        super("namespaces");
+    public ListReplicationControllers() {
+        super("replicationControllers");
     }
 
     @Override
-    protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().namespaces();
+    protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
+        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().replicationControllers();
     }
 }

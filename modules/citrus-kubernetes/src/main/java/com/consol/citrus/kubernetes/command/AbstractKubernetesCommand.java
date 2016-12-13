@@ -18,15 +18,28 @@ package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractKubernetesCommand<R> implements KubernetesCommand {
+public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesCommand> implements KubernetesCommand {
+
+    /** Logger */
+    protected Logger log = LoggerFactory.getLogger(getClass());
+
+    /** Self reference for generics support */
+    private final T self;
+
+    /** Parameter namea */
+    protected static final String LABEL = "label";
+    protected static final String NAME = "name";
+    protected static final String NAMESPACE = "namespace";
 
     /** Command name */
     private final String name;
@@ -45,7 +58,8 @@ public abstract class AbstractKubernetesCommand<R> implements KubernetesCommand 
      * @param name
      */
     public AbstractKubernetesCommand(String name) {
-        this.name = name;
+        this.name = String.format("kubernetes:%s", name);
+        this.self = (T) this;
     }
 
     /**
@@ -106,9 +120,9 @@ public abstract class AbstractKubernetesCommand<R> implements KubernetesCommand 
      * @param value
      * @return
      */
-    public AbstractKubernetesCommand withParam(String name, String value) {
+    public T withParam(String name, String value) {
         parameters.put(name, value);
-        return this;
+        return self;
     }
 
     /**
@@ -116,9 +130,9 @@ public abstract class AbstractKubernetesCommand<R> implements KubernetesCommand 
      * @param callback
      * @return
      */
-    public AbstractKubernetesCommand validateCommandResult(CommandResultCallback<R> callback) {
+    public T validateCommandResult(CommandResultCallback<R> callback) {
         this.resultCallback = callback;
-        return this;
+        return self;
     }
 
     /**
@@ -127,5 +141,127 @@ public abstract class AbstractKubernetesCommand<R> implements KubernetesCommand 
      */
     public CommandResultCallback<R> getResultCallback() {
         return resultCallback;
+    }
+
+    /**
+     * Reads labels from expression string.
+     * @param labelExpression
+     * @param context
+     * @return
+     */
+    protected Map<String, String> getLabels(String labelExpression, TestContext context) {
+        Map<String, String> labels = new HashMap<>();
+
+        Set<String> values = StringUtils.commaDelimitedListToSet(labelExpression);
+        for (String item : values) {
+            if (item.contains("!=")) {
+                continue;
+            } else if (item.contains("=")) {
+                labels.put(context.replaceDynamicContentInString(item.substring(0, item.indexOf("="))), context.replaceDynamicContentInString(item.substring(item.indexOf("=") + 1)));
+            } else if (!item.startsWith("!")) {
+                labels.put(context.replaceDynamicContentInString(item), null);
+            }
+        }
+
+        return labels;
+    }
+
+    /**
+     * Reads without labels from expression string.
+     * @param labelExpression
+     * @param context
+     * @return
+     */
+    protected Map<String, String> getWithoutLabels(String labelExpression, TestContext context) {
+        Map<String, String> labels = new HashMap<>();
+
+        Set<String> values = StringUtils.commaDelimitedListToSet(labelExpression);
+        for (String item : values) {
+            if (item.contains("!=")) {
+                labels.put(context.replaceDynamicContentInString(item.substring(0, item.indexOf("!="))), context.replaceDynamicContentInString(item.substring(item.indexOf("!=") + 2)));
+            } else if (item.startsWith("!")) {
+                labels.put(context.replaceDynamicContentInString(item.substring(1)), null);
+            }
+        }
+
+        return labels;
+    }
+
+    /**
+     * Sets the label parameter.
+     * @param key
+     * @param value
+     * @return
+     */
+    public T label(String key, String value) {
+        if (!hasParameter(LABEL)) {
+            getParameters().put(LABEL, key + "=" + value);
+        } else {
+            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key + "=" + value);
+        }
+        return self;
+    }
+
+    /**
+     * Sets the label parameter.
+     * @param key
+     * @return
+     */
+    public T label(String key) {
+        if (!hasParameter(LABEL)) {
+            getParameters().put(LABEL, key);
+        } else {
+            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key);
+        }
+        return self;
+    }
+
+    /**
+     * Sets the namespace parameter.
+     * @param key
+     * @return
+     */
+    public T namespace(String key) {
+        getParameters().put(NAMESPACE, key);
+        return self;
+    }
+
+    /**
+     * Sets the name parameter.
+     * @param key
+     * @return
+     */
+    public T name(String key) {
+        getParameters().put(NAME, key);
+        return self;
+    }
+
+    /**
+     * Sets the without label parameter.
+     * @param key
+     * @param value
+     * @return
+     */
+    public T withoutLabel(String key, String value) {
+        if (!hasParameter(LABEL)) {
+            getParameters().put(LABEL, key + "!=" + value);
+        } else {
+            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key + "!=" + value);
+        }
+        return self;
+    }
+
+    /**
+     * Sets the without label parameter.
+     * @param key
+     * @return
+     */
+    public T withoutLabel(String key) {
+        if (!hasParameter(LABEL)) {
+            getParameters().put(LABEL, "!" + key);
+        } else {
+            getParameters().put(LABEL, getParameters().get(LABEL) + ",!" + key);
+        }
+        return self;
     }
 }

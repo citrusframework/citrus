@@ -16,25 +16,13 @@
 
 package com.consol.citrus.kubernetes.command;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractListCommand<R> extends AbstractKubernetesCommand<R> {
-
-    protected static final String LABEL = "label";
-
-    /** Logger */
-    private Logger log = LoggerFactory.getLogger(getClass());
+public abstract class AbstractListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation, R, T> {
 
     /**
      * Default constructor initializing the command name.
@@ -42,133 +30,11 @@ public abstract class AbstractListCommand<R> extends AbstractKubernetesCommand<R
      * @param name
      */
     public AbstractListCommand(String name) {
-        super(String.format("kubernetes:%s:list", name));
+        super(name + ":list");
     }
 
     @Override
-    public void execute(KubernetesClient kubernetesClient, TestContext context) {
-        ClientMixedOperation operation = listOperation(kubernetesClient, context);
-
-        if (hasParameter(LABEL)) {
-            operation.withLabels(getLabels(getParameters().get(LABEL).toString(), context));
-            operation.withoutLabels(getWithoutLabels(getParameters().get(LABEL).toString(), context));
-        }
-
+    public void execute(ClientMixedOperation operation) {
         setCommandResult((R) operation.list());
-
-        if (getCommandResult() != null) {
-            log.debug(getCommandResult().toString());
-        }
     }
-
-    /**
-     * Subclasses provide operation to call.
-     * @param kubernetesClient
-     * @param context
-     * @return
-     */
-    protected abstract ClientMixedOperation listOperation(KubernetesClient kubernetesClient, TestContext context);
-
-    /**
-     * Reads labels from expression string.
-     * @param labelExpression
-     * @param context
-     * @return
-     */
-    protected Map<String, String> getLabels(String labelExpression, TestContext context) {
-        Map<String, String> labels = new HashMap<>();
-
-        Set<String> values = StringUtils.commaDelimitedListToSet(labelExpression);
-        for (String item : values) {
-            if (item.contains("!=")) {
-                continue;
-            } else if (item.contains("=")) {
-                labels.put(context.replaceDynamicContentInString(item.substring(0, item.indexOf("="))), context.replaceDynamicContentInString(item.substring(item.indexOf("=") + 1)));
-            } else if (!item.startsWith("!")) {
-                labels.put(context.replaceDynamicContentInString(item), null);
-            }
-        }
-
-        return labels;
-    }
-
-    /**
-     * Reads without labels from expression string.
-     * @param labelExpression
-     * @param context
-     * @return
-     */
-    protected Map<String, String> getWithoutLabels(String labelExpression, TestContext context) {
-        Map<String, String> labels = new HashMap<>();
-
-        Set<String> values = StringUtils.commaDelimitedListToSet(labelExpression);
-        for (String item : values) {
-            if (item.contains("!=")) {
-                labels.put(context.replaceDynamicContentInString(item.substring(0, item.indexOf("!="))), context.replaceDynamicContentInString(item.substring(item.indexOf("!=") + 2)));
-            } else if (item.startsWith("!")) {
-                labels.put(context.replaceDynamicContentInString(item.substring(1)), null);
-            }
-        }
-
-        return labels;
-    }
-
-    /**
-     * Sets the pod label parameter.
-     * @param key
-     * @param value
-     * @return
-     */
-    public AbstractListCommand label(String key, String value) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, key + "=" + value);
-        } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key + "=" + value);
-        }
-        return this;
-    }
-
-    /**
-     * Sets the pod label parameter.
-     * @param key
-     * @return
-     */
-    public AbstractListCommand label(String key) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, key);
-        } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key);
-        }
-        return this;
-    }
-
-    /**
-     * Sets the without pod label parameter.
-     * @param key
-     * @param value
-     * @return
-     */
-    public AbstractListCommand withoutLabel(String key, String value) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, key + "!=" + value);
-        } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key + "!=" + value);
-        }
-        return this;
-    }
-
-    /**
-     * Sets the without pod label parameter.
-     * @param key
-     * @return
-     */
-    public AbstractListCommand withoutLabel(String key) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, "!" + key);
-        } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + ",!" + key);
-        }
-        return this;
-    }
-
 }

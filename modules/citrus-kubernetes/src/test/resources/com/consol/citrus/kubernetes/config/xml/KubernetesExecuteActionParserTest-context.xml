@@ -22,10 +22,17 @@
 
             <k8s:list-events/>
             <k8s:list-pods label="pod_label"/>
-            <k8s:list-services label="!pod_label"/>
-            <k8s:list-nodes label="pod_label=active"/>
-            <k8s:list-endpoints label="pod_label!=active"/>
-            <k8s:list-namespaces label="pod_label1!=active,pod_label2=active"/>
+            <k8s:list-services label="!service_label" namespace="myNamespace"/>
+            <k8s:list-replication-controllers namespace="myNamespace"/>
+            <k8s:list-nodes label="node_label=active"/>
+            <k8s:list-endpoints label="endpoint_label!=active"/>
+            <k8s:list-namespaces label="namespace_label1!=active,namespace_label2=active"/>
+
+            <k8s:watch-pods label="pod_label"/>
+            <k8s:watch-services label="!service_label" namespace="myNamespace" name="myService"/>
+            <k8s:watch-replication-controllers namespace="myNamespace" name="myController"/>
+            <k8s:watch-nodes label="node_label"/>
+            <k8s:watch-namespaces label="namespace_label"/>
         </actions>
     </testcase>
     

@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListPods extends AbstractListCommand<PodList> {
+public class ListPods extends AbstractListCommand<PodList, ListPods> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +35,7 @@ public class ListPods extends AbstractListCommand<PodList> {
     }
 
     @Override
-    protected ClientMixedOperation listOperation(KubernetesClient kubernetesClient, TestContext context) {
+    protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getEndpointConfiguration().getKubernetesClient().pods();
     }
 }

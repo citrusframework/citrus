@@ -31,8 +31,14 @@ public class CitrusKubernetesTestcaseNamespaceHandler extends NamespaceHandlerSu
         registerBeanDefinitionParser("list-events", new KubernetesExecuteActionParser(ListEvents.class));
         registerBeanDefinitionParser("list-endpoints", new KubernetesExecuteActionParser(ListEndpoints.class));
         registerBeanDefinitionParser("list-nodes", new KubernetesExecuteActionParser(ListNodes.class));
+        registerBeanDefinitionParser("watch-nodes", new KubernetesExecuteActionParser(WatchNodes.class));
         registerBeanDefinitionParser("list-services", new KubernetesExecuteActionParser(ListServices.class));
+        registerBeanDefinitionParser("watch-services", new KubernetesExecuteActionParser(WatchServices.class));
+        registerBeanDefinitionParser("list-replication-controllers", new KubernetesExecuteActionParser(ListReplicationControllers.class));
+        registerBeanDefinitionParser("watch-replication-controllers", new KubernetesExecuteActionParser(WatchReplicationControllers.class));
         registerBeanDefinitionParser("list-namespaces", new KubernetesExecuteActionParser(ListNamespaces.class));
+        registerBeanDefinitionParser("watch-namespaces", new KubernetesExecuteActionParser(WatchNamespaces.class));
         registerBeanDefinitionParser("list-pods", new KubernetesExecuteActionParser(ListPods.class));
+        registerBeanDefinitionParser("watch-pods", new KubernetesExecuteActionParser(WatchPods.class));
     }
 }

@@ -14,28 +14,38 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.command;
+package com.consol.citrus.kubernetes.model;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.*;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNamespaces extends AbstractNonNamespaceListCommand<NamespaceList, ListNamespaces> {
+public class WatchError<R> extends WatchEvent<R> {
+
+    private KubernetesClientException cause;
 
     /**
-     * Default constructor initializing the command name.
+     * Default constructor.
      */
-    public ListNamespaces() {
-        super("namespaces");
+    public WatchError() {
+        super();
     }
 
-    @Override
-    protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().namespaces();
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
+    public WatchError(KubernetesClientException cause) {
+        this.cause = cause;
+    }
+
+    public KubernetesClientException getCause() {
+        return cause;
+    }
+
+    public void setCause(KubernetesClientException cause) {
+        this.cause = cause;
     }
 }

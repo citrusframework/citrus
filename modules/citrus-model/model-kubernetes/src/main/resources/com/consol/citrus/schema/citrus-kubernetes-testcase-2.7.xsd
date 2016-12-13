@@ -46,6 +46,23 @@
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="watch-pods">
+    <xs:annotation>
+      <xs:documentation>Watch kubernetes pods</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -60,6 +77,54 @@
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="watch-services">
+    <xs:annotation>
+      <xs:documentation>Watch kubernetes service</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list-replication-controllers">
+    <xs:annotation>
+      <xs:documentation>List kubernetes replication controller</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="watch-replication-controllers">
+    <xs:annotation>
+      <xs:documentation>Watch kubernetes replication controller</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -74,6 +139,7 @@
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -91,9 +157,37 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="watch-nodes">
+    <xs:annotation>
+      <xs:documentation>Watch kubernetes nodes</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="list-namespaces">
     <xs:annotation>
       <xs:documentation>List kubernetes namespaces</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="watch-namespaces">
+    <xs:annotation>
+      <xs:documentation>Watch kubernetes namespaces</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>

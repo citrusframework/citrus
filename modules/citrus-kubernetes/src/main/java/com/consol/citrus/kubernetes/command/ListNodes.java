@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNodes extends AbstractNonNamespaceListCommand<NodeList> {
+public class ListNodes extends AbstractNonNamespaceListCommand<NodeList, ListNodes> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +35,7 @@ public class ListNodes extends AbstractNonNamespaceListCommand<NodeList> {
     }
 
     @Override
-    protected ClientNonNamespaceOperation listNonNamespaceOperation(KubernetesClient kubernetesClient, TestContext context) {
+    protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getEndpointConfiguration().getKubernetesClient().nodes();
     }
 }

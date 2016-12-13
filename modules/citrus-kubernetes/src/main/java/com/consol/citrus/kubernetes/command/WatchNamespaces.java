@@ -18,19 +18,19 @@ package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.*;
+import io.fabric8.kubernetes.api.model.Namespace;
+import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNamespaces extends AbstractNonNamespaceListCommand<NamespaceList, ListNamespaces> {
+public class WatchNamespaces extends AbstractNonNamespaceWatchCommand<Namespace, WatchNamespaces> {
 
     /**
      * Default constructor initializing the command name.
      */
-    public ListNamespaces() {
+    public WatchNamespaces() {
         super("namespaces");
     }
 

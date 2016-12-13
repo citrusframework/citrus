@@ -78,10 +78,46 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     }
 
     /**
+     * Use a watch pods command.
+     */
+    public WatchPods watchPods() {
+		WatchPods command = new WatchPods();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
      * Use a list services command.
      */
     public ListServices listServices() {
 		ListServices command = new ListServices();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Use a watch services command.
+     */
+    public WatchServices watchServices() {
+		WatchServices command = new WatchServices();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Use a list replication controllers command.
+     */
+    public ListReplicationControllers listReplicationControllers() {
+		ListReplicationControllers command = new ListReplicationControllers();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Use a watch replication controllers command.
+     */
+    public WatchReplicationControllers watchReplicationControllers() {
+		WatchReplicationControllers command = new WatchReplicationControllers();
         action.setCommand(command);
         return command;
     }
@@ -114,10 +150,28 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     }
 
     /**
+     * Use a watch nodes command.
+     */
+    public WatchNodes watchNodes() {
+		WatchNodes command = new WatchNodes();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
      * Use a list namespaces command.
      */
     public ListNamespaces listNamespaces() {
 		ListNamespaces command = new ListNamespaces();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Use a watch namespaces command.
+     */
+    public WatchNamespaces watchNamespaces() {
+		WatchNamespaces command = new WatchNamespaces();
         action.setCommand(command);
         return command;
     }

@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListServices extends AbstractListCommand<ServiceList> {
+public class ListServices extends AbstractListCommand<ServiceList, ListServices> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +35,7 @@ public class ListServices extends AbstractListCommand<ServiceList> {
     }
 
     @Override
-    protected ClientMixedOperation listOperation(KubernetesClient kubernetesClient, TestContext context) {
+    protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getEndpointConfiguration().getKubernetesClient().services();
     }
 }

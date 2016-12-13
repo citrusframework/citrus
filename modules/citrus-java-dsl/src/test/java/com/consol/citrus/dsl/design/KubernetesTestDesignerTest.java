@@ -20,7 +20,9 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.command.*;
+import com.consol.citrus.kubernetes.model.WatchEvent;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import io.fabric8.kubernetes.api.model.Service;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -49,13 +51,26 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
                 kubernetes().listPods()
                             .withoutLabel("running")
                             .label("app", "myApp");
+
+                kubernetes().watchNodes()
+                            .label("new");
+
+                kubernetes().watchServices()
+                        .name("myService")
+                        .namespace("myNamespace")
+                        .validateCommandResult(new CommandResultCallback<WatchEvent<Service>>() {
+                            @Override
+                            public void doWithCommandResult(WatchEvent<Service> event, TestContext context) {
+                                Assert.assertNotNull(event);
+                            }
+                        });
             }
         };
 
         builder.configure();
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 4);
+        Assert.assertEquals(test.getActionCount(), 6);
         Assert.assertEquals(test.getActions().get(0).getClass(), KubernetesExecuteAction.class);
 
         KubernetesExecuteAction action = (KubernetesExecuteAction)test.getActions().get(0);
@@ -75,5 +90,16 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
         Assert.assertEquals(action.getCommand().getParameters().get("label"), "!running,app=myApp");
+
+        action = (KubernetesExecuteAction)test.getActions().get(4);
+        Assert.assertEquals(action.getName(), "kubernetes-execute");
+        Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
+        Assert.assertEquals(action.getCommand().getParameters().get("label"), "new");
+
+        action = (KubernetesExecuteAction)test.getActions().get(5);
+        Assert.assertEquals(action.getName(), "kubernetes-execute");
+        Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
+        Assert.assertEquals(action.getCommand().getParameters().get("name"), "myService");
+        Assert.assertEquals(action.getCommand().getParameters().get("namespace"), "myNamespace");
     }
 }

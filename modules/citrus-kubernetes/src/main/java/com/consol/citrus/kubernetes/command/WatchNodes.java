@@ -25,17 +25,17 @@ import io.fabric8.kubernetes.client.dsl.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNamespaces extends AbstractNonNamespaceListCommand<NamespaceList, ListNamespaces> {
+public class WatchNodes extends AbstractNonNamespaceWatchCommand<Node, WatchNodes> {
 
     /**
      * Default constructor initializing the command name.
      */
-    public ListNamespaces() {
-        super("namespaces");
+    public WatchNodes() {
+        super("nodes");
     }
 
     @Override
     protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().namespaces();
+        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().nodes();
     }
 }

@@ -106,13 +106,14 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             log.debug("Starting Kubernetes command result validation");
         }
 
+        Object result = command.getCommandResult();
         if (StringUtils.hasText(commandResult) || !CollectionUtils.isEmpty(commandResultExpressions)) {
-            if (command.getCommandResult() == null) {
+            if (result == null) {
                 throw new ValidationException("Missing Kubernetes command result");
             }
 
             try {
-                String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
+                String commandResultJson = jsonMapper.writeValueAsString(result);
                 if (StringUtils.hasText(commandResult)) {
                     jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, new JsonMessageValidationContext());
                     log.info("Kubernetes command result validation successful - all values OK!");
@@ -129,8 +130,8 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             }
         }
 
-        if (command.getResultCallback() != null) {
-            command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
+        if (command.getResultCallback() != null && result != null) {
+            command.getResultCallback().doWithCommandResult(result, context);
         }
     }
 

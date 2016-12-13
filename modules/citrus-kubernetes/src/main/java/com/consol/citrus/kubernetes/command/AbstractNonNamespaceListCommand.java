@@ -16,21 +16,13 @@
 
 package com.consol.citrus.kubernetes.command;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractNonNamespaceListCommand<R> extends AbstractListCommand<R> {
-
-    /** Logger */
-    private Logger log = LoggerFactory.getLogger(getClass());
+public abstract class AbstractNonNamespaceListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
 
     /**
      * Default constructor initializing the command name.
@@ -38,36 +30,11 @@ public abstract class AbstractNonNamespaceListCommand<R> extends AbstractListCom
      * @param name
      */
     public AbstractNonNamespaceListCommand(String name) {
-        super(name);
+        super(name + ":list");
     }
 
     @Override
-    public void execute(KubernetesClient kubernetesClient, TestContext context) {
-        ClientNonNamespaceOperation operation = listNonNamespaceOperation(kubernetesClient, context);
-
-        if (hasParameter(LABEL)) {
-            operation.withLabels(getLabels(getParameters().get(LABEL).toString(), context));
-            operation.withoutLabels(getWithoutLabels(getParameters().get(LABEL).toString(), context));
-        }
-
+    public void execute(ClientNonNamespaceOperation operation) {
         setCommandResult((R) operation.list());
-
-        if (getCommandResult() != null) {
-            log.debug(getCommandResult().toString());
-        }
     }
-
-    @Override
-    protected final ClientMixedOperation listOperation(KubernetesClient kubernetesClient, TestContext context) {
-        throw new UnsupportedOperationException("Non namespace command not allowed to create namespace operation");
-    }
-
-    /**
-     * Subclasses provide operation to call.
-     * @param kubernetesClient
-     * @param context
-     * @return
-     */
-    protected abstract ClientNonNamespaceOperation listNonNamespaceOperation(KubernetesClient kubernetesClient, TestContext context);
-
 }
