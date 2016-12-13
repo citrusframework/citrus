@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.command.*;
-import com.consol.citrus.kubernetes.model.WatchEvent;
+import com.consol.citrus.kubernetes.command.WatchEvent;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import io.fabric8.kubernetes.api.model.Service;
 import org.testng.Assert;

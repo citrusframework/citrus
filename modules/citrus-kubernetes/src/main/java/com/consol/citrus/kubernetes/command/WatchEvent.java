@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.model;
+package com.consol.citrus.kubernetes.command;
 
-import io.fabric8.kubernetes.client.Watcher;
+import io.fabric8.kubernetes.client.*;
 
 /**
  * @author Christoph Deppisch
@@ -24,8 +24,12 @@ import io.fabric8.kubernetes.client.Watcher;
  */
 public class WatchEvent<T> {
 
+    private Watch watch;
+
     private T target;
     private Watcher.Action action;
+
+    private KubernetesClientException error;
 
     /**
      * Default constructor.
@@ -44,6 +48,14 @@ public class WatchEvent<T> {
         this.action = action;
     }
 
+    /**
+     * Constructor using error.
+     * @param error
+     */
+    public WatchEvent(KubernetesClientException error) {
+        this.error = error;
+    }
+
     public T getTarget() {
         return target;
     }
@@ -58,5 +70,21 @@ public class WatchEvent<T> {
 
     public void setAction(Watcher.Action action) {
         this.action = action;
+    }
+
+    public KubernetesClientException getError() {
+        return error;
+    }
+
+    public void setError(KubernetesClientException error) {
+        this.error = error;
+    }
+
+    public Watch getWatch() {
+        return watch;
+    }
+
+    public void setWatch(Watch watch) {
+        this.watch = watch;
     }
 }

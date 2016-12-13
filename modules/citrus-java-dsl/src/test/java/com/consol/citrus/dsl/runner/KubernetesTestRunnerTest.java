@@ -21,7 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.*;
-import com.consol.citrus.kubernetes.model.WatchEvent;
+import com.consol.citrus.kubernetes.command.WatchEvent;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import io.fabric8.kubernetes.api.model.*;

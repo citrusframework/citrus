@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNodes extends AbstractNonNamespaceListCommand<NodeList, ListNodes> {
+public class ListNodes extends AbstractListCommand<NodeList, ListNodes> {
 
     /**
      * Default constructor initializing the command name.

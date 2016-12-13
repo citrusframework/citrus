@@ -16,13 +16,13 @@
 
 package com.consol.citrus.kubernetes.command;
 
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation, R, T> {
+public abstract class AbstractListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
 
     /**
      * Default constructor initializing the command name.
@@ -34,7 +34,7 @@ public abstract class AbstractListCommand<R, T extends AbstractClientCommand> ex
     }
 
     @Override
-    public void execute(ClientMixedOperation operation) {
+    public void execute(ClientNonNamespaceOperation operation) {
         setCommandResult((R) operation.list());
     }
 }

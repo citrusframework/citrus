@@ -40,33 +40,23 @@ public abstract class AbstractClientCommand<O, R, T extends AbstractClientComman
     public final void execute(KubernetesClient kubernetesClient, TestContext context) {
         O operation = operation(kubernetesClient, context);
 
-        if (hasParameter(LABEL)) {
-            if (operation instanceof ClientMixedOperation) {
-                ((ClientMixedOperation) operation).withLabels(getLabels(getParameters().get(LABEL).toString(), context));
-                ((ClientMixedOperation) operation).withoutLabels(getWithoutLabels(getParameters().get(LABEL).toString(), context));
-            }
-
-            if (operation instanceof ClientNonNamespaceOperation) {
+        if (operation instanceof ClientNonNamespaceOperation) {
+            if (hasParameter(LABEL)) {
                 ((ClientNonNamespaceOperation) operation).withLabels(getLabels(getParameters().get(LABEL).toString(), context));
                 ((ClientNonNamespaceOperation) operation).withoutLabels(getWithoutLabels(getParameters().get(LABEL).toString(), context));
             }
+
+            if (hasParameter(NAME)) {
+                ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(NAME).toString()));
+            }
         }
 
-        if (hasParameter(NAMESPACE)) {
-            if (operation instanceof ClientMixedOperation) {
+        if (operation instanceof ClientMixedOperation) {
+            if (hasParameter(NAMESPACE)) {
                 ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(NAMESPACE).toString()));
             }
         }
 
-        if (hasParameter(NAME)) {
-            if (operation instanceof ClientMixedOperation) {
-                ((ClientMixedOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(NAME).toString()));
-            }
-
-            if (operation instanceof ClientNonNamespaceOperation) {
-                ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(NAME).toString()));
-            }
-        }
 
         execute(operation);
     }

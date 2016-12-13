@@ -16,11 +16,8 @@
 
 package com.consol.citrus.kubernetes.command;
 
-import com.consol.citrus.kubernetes.model.WatchError;
-import com.consol.citrus.kubernetes.model.WatchEvent;
-import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.fabric8.kubernetes.client.Watcher;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.*;
+import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -28,7 +25,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation, WatchEvent<R>, T> {
+public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, WatchEvent<R>, T> {
+
+    /** Watch handle */
+    private Watch watch;
 
     private ConcurrentLinkedQueue<WatchEvent<R>> results = new ConcurrentLinkedQueue<>();
 
@@ -42,8 +42,8 @@ public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> e
     }
 
     @Override
-    public void execute(ClientMixedOperation operation) {
-        operation.watch(new Watcher<R>() {
+    public void execute(ClientNonNamespaceOperation operation) {
+        watch = (Watch) operation.watch(new Watcher<R>() {
             @Override
             public void eventReceived(Action action, R resource) {
                 results.add(new WatchEvent<>(resource, action));
@@ -51,13 +51,26 @@ public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> e
 
             @Override
             public void onClose(KubernetesClientException cause) {
-                results.add(new WatchError<>(cause));
+                results.add(new WatchEvent<>(cause));
             }
         });
     }
 
     @Override
     public WatchEvent<R> getCommandResult() {
-        return results.poll();
+        WatchEvent watchEvent = results.poll();
+
+        if (watchEvent != null) {
+            watchEvent.setWatch(watch);
+        }
+        return watchEvent;
+    }
+
+    /**
+     * Gets the watch handle.
+     * @return
+     */
+    public Watch getWatch() {
+        return watch;
     }
 }

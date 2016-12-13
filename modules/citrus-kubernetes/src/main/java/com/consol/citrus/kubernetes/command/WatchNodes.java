@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class WatchNodes extends AbstractNonNamespaceWatchCommand<Node, WatchNodes> {
+public class WatchNodes extends AbstractWatchCommand<Node, WatchNodes> {
 
     /**
      * Default constructor initializing the command name.

@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class WatchNamespaces extends AbstractNonNamespaceWatchCommand<Namespace, WatchNamespaces> {
+public class WatchNamespaces extends AbstractWatchCommand<Namespace, WatchNamespaces> {
 
     /**
      * Default constructor initializing the command name.
