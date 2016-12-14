@@ -21,11 +21,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
+import com.consol.citrus.kubernetes.command.CommandResult;
 import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.validation.json.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +56,6 @@ public class KubernetesExecuteAction extends AbstractTestAction {
 
     /** Expected path expressions in command result */
     private Map<String, Object> commandResultExpressions;
-
-    @Autowired(required = false)
-    @Qualifier("k8sCommandResultMapper")
-    /** JSON data binding */
-    private ObjectMapper jsonMapper = new ObjectMapper();
 
     @Autowired
     private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
@@ -106,14 +101,15 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             log.debug("Starting Kubernetes command result validation");
         }
 
-        Object result = command.getCommandResult();
+        CommandResult<?> result = command.getCommandResult();
         if (StringUtils.hasText(commandResult) || !CollectionUtils.isEmpty(commandResultExpressions)) {
             if (result == null) {
                 throw new ValidationException("Missing Kubernetes command result");
             }
 
             try {
-                String commandResultJson = jsonMapper.writeValueAsString(result);
+                String commandResultJson = kubernetesClient.getEndpointConfiguration()
+                        .getResultMapper().writeValueAsString(result);
                 if (StringUtils.hasText(commandResult)) {
                     jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, new JsonMessageValidationContext());
                     log.info("Kubernetes command result validation successful - all values OK!");
@@ -201,14 +197,5 @@ public class KubernetesExecuteAction extends AbstractTestAction {
      */
     public void setCommandResultExpressions(Map<String, Object> commandResultExpressions) {
         this.commandResultExpressions = commandResultExpressions;
-    }
-
-    /**
-     * Sets the JSON object mapper.
-     * @param jsonMapper
-     */
-    public KubernetesExecuteAction setJsonMapper(ObjectMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
-        return this;
     }
 }

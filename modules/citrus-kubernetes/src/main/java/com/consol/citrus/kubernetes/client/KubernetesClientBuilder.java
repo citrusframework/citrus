@@ -17,6 +17,8 @@
 package com.consol.citrus.kubernetes.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
+import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 
 /**
@@ -97,6 +99,26 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
      */
     public KubernetesClientBuilder certFile(String certFile) {
         config.withCaCertFile(certFile);
+        return this;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     * @return
+     */
+    public KubernetesClientBuilder messageConverter(KubernetesMessageConverter messageConverter) {
+        endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
+        return this;
+    }
+
+    /**
+     * Sets the result mapper.
+     * @param resultMapper
+     * @return
+     */
+    public KubernetesClientBuilder resultMapper(ObjectMapper resultMapper) {
+        endpoint.getEndpointConfiguration().setResultMapper(resultMapper);
         return this;
     }
 }

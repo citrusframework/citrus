@@ -17,7 +17,9 @@
 package com.consol.citrus.kubernetes.config.xml;
 
 import com.consol.citrus.kubernetes.client.KubernetesClient;
+import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -47,5 +49,8 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.cert");
+        Assert.assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
+        Assert.assertEquals(client.getEndpointConfiguration().getResultMapper(), beanDefinitionContext.getBean("resultMapper", ObjectMapper.class));
+
     }
 }

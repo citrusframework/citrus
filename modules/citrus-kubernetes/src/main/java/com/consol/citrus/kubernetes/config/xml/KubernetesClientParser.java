@@ -16,6 +16,7 @@
 
 package com.consol.citrus.kubernetes.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
@@ -65,6 +66,9 @@ public class KubernetesClientParser extends AbstractEndpointParser {
         }
 
         endpointConfiguration.addPropertyValue("kubernetesClientConfig", config.build());
+
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("result-mapper"), "resultMapper");
     }
 
     @Override

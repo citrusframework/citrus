@@ -20,12 +20,17 @@ import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
+import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.MockitoAnnotations;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -42,16 +47,28 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
             username="user",
             password="s!cr!t",
             namespace="user_namespace",
+            messageConverter="messageConverter",
+            resultMapper="resultMapper",
             certFile="/path/to/some/cert/ca.pem")
     private KubernetesClient client2;
 
+    @Mock
+    private KubernetesMessageConverter messageConverter = Mockito.mock(KubernetesMessageConverter.class);
+    @Mock
+    private ObjectMapper resultMapper = Mockito.mock(ObjectMapper.class);
     @Autowired
     private SpringBeanReferenceResolver referenceResolver;
+    @Mock
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
         referenceResolver.setApplicationContext(applicationContext);
+
+        when(applicationContext.getBean("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
+        when(applicationContext.getBean("resultMapper", ObjectMapper.class)).thenReturn(resultMapper);
     }
 
     @Test
@@ -63,11 +80,13 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 2nd client
         Assert.assertNotNull(client2.getEndpointConfiguration().getKubernetesClient());
-        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8443/");
+        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8443/");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.pem");
+        Assert.assertEquals(client2.getEndpointConfiguration().getMessageConverter(), messageConverter);
+        Assert.assertEquals(client2.getEndpointConfiguration().getResultMapper(), resultMapper);
     }
 }

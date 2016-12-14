@@ -35,6 +35,6 @@ public abstract class AbstractListCommand<R, T extends AbstractClientCommand> ex
 
     @Override
     public void execute(ClientNonNamespaceOperation operation) {
-        setCommandResult((R) operation.list());
+        setCommandResult(new CommandResult<>((R) operation.list()));
     }
 }

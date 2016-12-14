@@ -21,7 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.*;
-import com.consol.citrus.kubernetes.command.WatchEvent;
+import com.consol.citrus.kubernetes.command.WatchEventResult;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -93,10 +93,10 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                     .info()
                     .validateCommandResult(new CommandResultCallback<InfoResult>() {
                         @Override
-                        public void doWithCommandResult(InfoResult result, TestContext context1) {
-                            Assert.assertEquals(result.getApiVersion(), "v1");
-                            Assert.assertEquals(result.getMasterUrl(), "https://localhost:8443");
-                            Assert.assertEquals(result.getNamespace(), "test");
+                        public void doWithCommandResult(CommandResult<InfoResult> commandResult, TestContext context) {
+                            Assert.assertEquals(commandResult.getResult().getApiVersion(), "v1");
+                            Assert.assertEquals(commandResult.getResult().getMasterUrl(), "https://localhost:8443");
+                            Assert.assertEquals(commandResult.getResult().getNamespace(), "test");
                         }
                     }));
 
@@ -109,8 +109,8 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                     .listNodes()
                     .validateCommandResult(new CommandResultCallback<NodeList>() {
                         @Override
-                        public void doWithCommandResult(NodeList result, TestContext context12) {
-                            Assert.assertNotNull(result);
+                        public void doWithCommandResult(CommandResult<NodeList> commandResult, TestContext context) {
+                            Assert.assertNotNull(commandResult.getResult());
                         }
                     }));
 
@@ -118,8 +118,8 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                     .listNamespaces()
                     .validateCommandResult(new CommandResultCallback<NamespaceList>() {
                         @Override
-                        public void doWithCommandResult(NamespaceList result, TestContext context13) {
-                            Assert.assertNotNull(result);
+                        public void doWithCommandResult(CommandResult<NamespaceList> commandResult, TestContext context) {
+                            Assert.assertNotNull(commandResult.getResult());
                         }
                     }));
 
@@ -131,12 +131,12 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                         .watchServices()
                         .name("myService")
                         .namespace("myNamespace")
-                        .validateCommandResult(new CommandResultCallback<WatchEvent<Service>>() {
+                        .validateCommandResult(new CommandResultCallback<Service>() {
                             @Override
-                            public void doWithCommandResult(WatchEvent<Service> event, TestContext context) {
-                                Assert.assertNotNull(event);
-                                Assert.assertEquals(event.getAction(), Watcher.Action.MODIFIED);
-                                Assert.assertNotNull(event.getTarget());
+                            public void doWithCommandResult(CommandResult<Service> commandResult, TestContext context) {
+                                Assert.assertNotNull(commandResult);
+                                Assert.assertNotNull(commandResult.getResult());
+                                Assert.assertEquals(((WatchEventResult) commandResult).getAction(), Watcher.Action.MODIFIED);
                             }
                         }));
 

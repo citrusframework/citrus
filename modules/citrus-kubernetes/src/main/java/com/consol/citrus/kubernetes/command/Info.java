@@ -41,6 +41,6 @@ public class Info extends AbstractKubernetesCommand<InfoResult, Info> {
         model.setMasterUrl(kubernetesClient.getEndpointConfiguration().getKubernetesClient().getMasterUrl().toString());
         model.setNamespace(kubernetesClient.getEndpointConfiguration().getKubernetesClient().getNamespace());
 
-        setCommandResult(model);
+        setCommandResult(new CommandResult<>(model));
     }
 }

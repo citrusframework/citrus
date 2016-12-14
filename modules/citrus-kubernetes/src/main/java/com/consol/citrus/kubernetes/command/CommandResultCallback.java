@@ -29,5 +29,5 @@ public interface CommandResultCallback<R> {
      * @param result
      * @param context
      */
-    void doWithCommandResult(R result, TestContext context);
+    void doWithCommandResult(CommandResult<R> result, TestContext context);
 }

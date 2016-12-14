@@ -50,7 +50,7 @@ public interface KubernetesCommand<R> {
      * Provides access to this command result if any.
      * @return
      */
-    R getCommandResult();
+    CommandResult<R> getCommandResult();
 
     /**
      * Gets the command result callback.

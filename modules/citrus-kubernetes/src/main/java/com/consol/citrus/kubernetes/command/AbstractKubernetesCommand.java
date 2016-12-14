@@ -44,7 +44,7 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
     private Map<String, Object> parameters = new HashMap<>();
 
     /** Command result if any */
-    private R commandResult;
+    private CommandResult<R> commandResult;
 
     /** Optional command result validation */
     private CommandResultCallback<R> resultCallback;
@@ -80,7 +80,7 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
     }
 
     @Override
-    public R getCommandResult() {
+    public CommandResult<R> getCommandResult() {
         return commandResult;
     }
 
@@ -88,7 +88,7 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * Sets the command result if any.
      * @param commandResult
      */
-    protected void setCommandResult(R commandResult) {
+    protected void setCommandResult(CommandResult<R> commandResult) {
         this.commandResult = commandResult;
     }
 

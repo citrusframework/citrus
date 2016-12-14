@@ -25,12 +25,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, WatchEvent<R>, T> {
+public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
 
     /** Watch handle */
     private Watch watch;
 
-    private ConcurrentLinkedQueue<WatchEvent<R>> results = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<WatchEventResult<R>> results = new ConcurrentLinkedQueue<>();
 
     /**
      * Default constructor initializing the command name.
@@ -46,24 +46,24 @@ public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> e
         watch = (Watch) operation.watch(new Watcher<R>() {
             @Override
             public void eventReceived(Action action, R resource) {
-                results.add(new WatchEvent<>(resource, action));
+                results.add(new WatchEventResult<>(resource, action));
             }
 
             @Override
             public void onClose(KubernetesClientException cause) {
-                results.add(new WatchEvent<>(cause));
+                results.add(new WatchEventResult<>(cause));
             }
         });
     }
 
     @Override
-    public WatchEvent<R> getCommandResult() {
-        WatchEvent watchEvent = results.poll();
+    public WatchEventResult<R> getCommandResult() {
+        WatchEventResult watchEventResult = results.poll();
 
-        if (watchEvent != null) {
-            watchEvent.setWatch(watch);
+        if (watchEventResult != null) {
+            watchEventResult.setWatch(watch);
         }
-        return watchEvent;
+        return watchEventResult;
     }
 
     /**

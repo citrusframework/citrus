@@ -20,10 +20,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kubernetes.command.*;
 import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
-import com.consol.citrus.kubernetes.model.InfoMessage;
+import com.consol.citrus.kubernetes.model.*;
 import com.consol.citrus.message.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.transform.Source;
 import java.util.HashMap;
@@ -34,9 +32,6 @@ import java.util.Map;
  * @since 2.7
  */
 public class KubernetesMessageConverter implements MessageConverter<KubernetesCommand<?>, KubernetesEndpointConfiguration> {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(KubernetesMessageConverter.class);
 
     @Override
     public KubernetesCommand<?> convertOutbound(Message message, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
@@ -163,10 +158,50 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
     }
 
     private KubernetesCommand<?> createCommandFromModel(Object model) {
+        KubernetesCommand<?> command;
+
         if (model instanceof InfoMessage) {
-            return new Info();
+            command = new Info();
+        } else if (model instanceof ListPods) {
+            command = new ListPods();
+        } else if (model instanceof WatchPods) {
+            command = new WatchPods();
+        } else if (model instanceof ListNodes) {
+            command = new ListNodes();
+        } else if (model instanceof WatchNodes) {
+            command = new WatchNodes();
+        } else if (model instanceof ListNamespaces) {
+            command = new ListNamespaces();
+        } else if (model instanceof WatchNamespaces) {
+            command = new WatchNamespaces();
+        } else if (model instanceof ListServices) {
+            command = new ListServices();
+        } else if (model instanceof WatchServices) {
+            command = new WatchServices();
+        } else if (model instanceof ListReplicationControllers) {
+            command = new ListReplicationControllers();
+        } else if (model instanceof WatchReplicationControllers) {
+            command = new WatchReplicationControllers();
+        } else if (model instanceof ListEvents) {
+            command = new ListEvents();
+        } else if (model instanceof ListEndpoints) {
+            command = new ListEndpoints();
+        } else {
+            throw new CitrusRuntimeException("Failed to read kubernetes command from message model type: " + model.getClass().getName());
         }
 
-        return null;
+        if (model instanceof Nameable) {
+            command.getParameters().put(KubernetesMessageHeaders.NAME, ((Nameable) model).getName());
+        }
+
+        if (model instanceof Namespaced) {
+            command.getParameters().put(KubernetesMessageHeaders.NAMESPACE, ((Namespaced) model).getNamespace());
+        }
+
+        if (model instanceof Labled) {
+            command.getParameters().put(KubernetesMessageHeaders.LABEL, ((Labled) model).getLabel());
+        }
+
+        return command;
     }
 }

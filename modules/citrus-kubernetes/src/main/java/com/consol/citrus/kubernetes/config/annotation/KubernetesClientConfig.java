@@ -65,4 +65,16 @@ public @interface KubernetesClientConfig {
      */
     String certFile() default "";
 
+    /**
+     * Message converter.
+     * @return
+     */
+    String messageConverter() default  "";
+
+    /**
+     * Result mapper.
+     * @return
+     */
+    String resultMapper() default  "";
+
 }

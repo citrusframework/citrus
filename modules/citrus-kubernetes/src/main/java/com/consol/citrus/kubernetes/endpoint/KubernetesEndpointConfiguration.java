@@ -21,6 +21,7 @@ import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
 import com.consol.citrus.kubernetes.model.KubernetesMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.*;
 
 /**
@@ -37,6 +38,9 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
+
+    /** JSON data binding for command result */
+    private ObjectMapper resultMapper = new ObjectMapper();
 
     /** Message marshaller converts from XML to kubernetes message object */
     private KubernetesMarshaller marshaller = new KubernetesMarshaller();
@@ -139,5 +143,21 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public void setMessageConverter(KubernetesMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the command result mapper.
+     * @return
+     */
+    public ObjectMapper getResultMapper() {
+        return resultMapper;
+    }
+
+    /**
+     * Sets the command result mapper.
+     * @param resultMapper
+     */
+    public void setResultMapper(ObjectMapper resultMapper) {
+        this.resultMapper = resultMapper;
     }
 }

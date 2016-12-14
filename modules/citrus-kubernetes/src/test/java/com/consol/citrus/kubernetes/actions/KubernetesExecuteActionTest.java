@@ -65,7 +65,8 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
     }
 
     @Test
@@ -99,7 +100,8 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,pod_label=active");
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
     }
 
     @Test
@@ -133,7 +135,8 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!app,pod_label!=inactive");
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
     }
 
     @Test
@@ -180,6 +183,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,!running,with=active,without!=inactive");
-        Assert.assertEquals(action.getCommand().getCommandResult(), response);
+        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
     }
 }

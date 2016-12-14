@@ -20,6 +20,8 @@ import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.client.KubernetesClientBuilder;
+import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 
 /**
@@ -62,6 +64,14 @@ public class KubernetesClientConfigParser extends AbstractAnnotationConfigParser
 
         if (StringUtils.hasText(annotation.certFile())) {
             builder.certFile(annotation.certFile());
+        }
+
+        if (StringUtils.hasText(annotation.messageConverter())) {
+            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), KubernetesMessageConverter.class));
+        }
+
+        if (StringUtils.hasText(annotation.resultMapper())) {
+            builder.resultMapper(getReferenceResolver().resolve(annotation.resultMapper(), ObjectMapper.class));
         }
 
         return builder.build();

@@ -22,29 +22,26 @@ import io.fabric8.kubernetes.client.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class WatchEvent<T> {
+public class WatchEventResult<R> extends CommandResult<R> {
 
     private Watch watch;
 
-    private T target;
     private Watcher.Action action;
-
-    private KubernetesClientException error;
 
     /**
      * Default constructor.
      */
-    public WatchEvent() {
+    public WatchEventResult() {
         super();
     }
 
     /**
      * Constructor using fields.
-     * @param target
+     * @param result
      * @param action
      */
-    public WatchEvent(T target, Watcher.Action action) {
-        this.target = target;
+    public WatchEventResult(R result, Watcher.Action action) {
+        super(result);
         this.action = action;
     }
 
@@ -52,16 +49,8 @@ public class WatchEvent<T> {
      * Constructor using error.
      * @param error
      */
-    public WatchEvent(KubernetesClientException error) {
-        this.error = error;
-    }
-
-    public T getTarget() {
-        return target;
-    }
-
-    public void setTarget(T target) {
-        this.target = target;
+    public WatchEventResult(KubernetesClientException error) {
+        super(error);
     }
 
     public Watcher.Action getAction() {
@@ -70,14 +59,6 @@ public class WatchEvent<T> {
 
     public void setAction(Watcher.Action action) {
         this.action = action;
-    }
-
-    public KubernetesClientException getError() {
-        return error;
-    }
-
-    public void setError(KubernetesClientException error) {
-        this.error = error;
     }
 
     public Watch getWatch() {
