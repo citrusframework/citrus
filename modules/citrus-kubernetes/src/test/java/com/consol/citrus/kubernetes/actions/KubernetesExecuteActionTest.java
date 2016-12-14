@@ -18,6 +18,7 @@ package com.consol.citrus.kubernetes.actions;
 
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.ListPods;
+import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
@@ -97,7 +98,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "app,pod_label=active");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,pod_label=active");
         Assert.assertEquals(action.getCommand().getCommandResult(), response);
     }
 
@@ -131,7 +132,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "!app,pod_label!=inactive");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!app,pod_label!=inactive");
         Assert.assertEquals(action.getCommand().getCommandResult(), response);
     }
 
@@ -178,7 +179,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "app,!running,with=active,without!=inactive");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,!running,with=active,without!=inactive");
         Assert.assertEquals(action.getCommand().getCommandResult(), response);
     }
 }

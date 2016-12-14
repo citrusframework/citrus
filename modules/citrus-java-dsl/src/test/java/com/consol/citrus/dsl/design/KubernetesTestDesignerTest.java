@@ -17,12 +17,10 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.command.*;
-import com.consol.citrus.kubernetes.command.WatchEvent;
+import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import io.fabric8.kubernetes.api.model.Service;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,12 +36,7 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 kubernetes().info()
-                    .validateCommandResult(new CommandResultCallback<Info.InfoModel>() {
-                        @Override
-                        public void doWithCommandResult(Info.InfoModel result, TestContext context) {
-                            Assert.assertNotNull(result);
-                        }
-                    });
+                    .validateCommandResult((result, context) -> Assert.assertNotNull(result));
 
                 kubernetes().listNamespaces();
                 kubernetes().listNodes();
@@ -58,12 +51,7 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
                 kubernetes().watchServices()
                         .name("myService")
                         .namespace("myNamespace")
-                        .validateCommandResult(new CommandResultCallback<WatchEvent<Service>>() {
-                            @Override
-                            public void doWithCommandResult(WatchEvent<Service> event, TestContext context) {
-                                Assert.assertNotNull(event);
-                            }
-                        });
+                        .validateCommandResult((event, context) -> Assert.assertNotNull(event));
             }
         };
 
@@ -89,17 +77,17 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
         action = (KubernetesExecuteAction)test.getActions().get(3);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "!running,app=myApp");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!running,app=myApp");
 
         action = (KubernetesExecuteAction)test.getActions().get(4);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "new");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "new");
 
         action = (KubernetesExecuteAction)test.getActions().get(5);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
-        Assert.assertEquals(action.getCommand().getParameters().get("name"), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get("namespace"), "myNamespace");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
     }
 }

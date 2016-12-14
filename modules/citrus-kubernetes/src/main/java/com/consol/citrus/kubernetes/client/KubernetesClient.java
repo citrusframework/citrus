@@ -17,11 +17,10 @@
 package com.consol.citrus.kubernetes.client;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
@@ -57,7 +56,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
     public KubernetesClient(KubernetesEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -75,16 +74,12 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
             log.debug("Sending Kubernetes request to: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
         }
 
-        KubernetesCommand command = message.getPayload(KubernetesCommand.class);
+        KubernetesCommand command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         command.execute(this, context);
 
         log.info("Kubernetes request was sent to endpoint: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
 
         correlationManager.store(correlationKey, command);
-
-        if (command.getResultCallback() != null) {
-            command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
-        }
     }
 
     @Override
@@ -112,7 +107,11 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
             throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from http server");
         }
 
-        return new DefaultMessage(command.getCommandResult());
+        if (command.getResultCallback() != null) {
+            command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
+        }
+
+        return getEndpointConfiguration().getMessageConverter().convertInbound(command, getEndpointConfiguration(), context);
     }
 
     @Override

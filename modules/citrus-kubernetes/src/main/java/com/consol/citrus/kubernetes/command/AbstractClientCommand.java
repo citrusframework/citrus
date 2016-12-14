@@ -18,6 +18,7 @@ package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
+import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
@@ -41,19 +42,19 @@ public abstract class AbstractClientCommand<O, R, T extends AbstractClientComman
         O operation = operation(kubernetesClient, context);
 
         if (operation instanceof ClientNonNamespaceOperation) {
-            if (hasParameter(LABEL)) {
-                ((ClientNonNamespaceOperation) operation).withLabels(getLabels(getParameters().get(LABEL).toString(), context));
-                ((ClientNonNamespaceOperation) operation).withoutLabels(getWithoutLabels(getParameters().get(LABEL).toString(), context));
+            if (hasParameter(KubernetesMessageHeaders.LABEL)) {
+                ((ClientNonNamespaceOperation) operation).withLabels(getLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
+                ((ClientNonNamespaceOperation) operation).withoutLabels(getWithoutLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
             }
 
-            if (hasParameter(NAME)) {
-                ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(NAME).toString()));
+            if (hasParameter(KubernetesMessageHeaders.NAME)) {
+                ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString()));
             }
         }
 
         if (operation instanceof ClientMixedOperation) {
-            if (hasParameter(NAMESPACE)) {
-                ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(NAMESPACE).toString()));
+            if (hasParameter(KubernetesMessageHeaders.NAMESPACE)) {
+                ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString()));
             }
         }
 

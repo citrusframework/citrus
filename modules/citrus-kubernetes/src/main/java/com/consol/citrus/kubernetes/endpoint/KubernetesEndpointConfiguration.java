@@ -17,6 +17,8 @@
 package com.consol.citrus.kubernetes.endpoint;
 
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
+import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
+import com.consol.citrus.kubernetes.model.KubernetesMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import io.fabric8.kubernetes.client.*;
@@ -35,6 +37,12 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
+
+    /** Message marshaller converts from XML to kubernetes message object */
+    private KubernetesMarshaller marshaller = new KubernetesMarshaller();
+
+    /** Kubernetes message converter */
+    private KubernetesMessageConverter messageConverter = new KubernetesMessageConverter();
 
     /**
      * Creates new Kubernetes client instance with configuration.
@@ -99,5 +107,37 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public MessageCorrelator getCorrelator() {
         return correlator;
+    }
+
+    /**
+     * Gets the kubernetes message marshaller implementation.
+     * @return
+     */
+    public KubernetesMarshaller getKubernetesMarshaller() {
+        return marshaller;
+    }
+
+    /**
+     * Sets the kubernetes message marshaller implementation.
+     * @param marshaller
+     */
+    public void setKubernetesMarshaller(KubernetesMarshaller marshaller) {
+        this.marshaller = marshaller;
+    }
+
+    /**
+     * Gets the kubernetes message converter.
+     * @return
+     */
+    public KubernetesMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the kubernetes message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(KubernetesMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

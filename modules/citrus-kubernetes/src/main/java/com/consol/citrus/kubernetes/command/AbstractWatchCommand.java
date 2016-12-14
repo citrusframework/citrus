@@ -38,7 +38,7 @@ public abstract class AbstractWatchCommand<R, T extends AbstractClientCommand> e
      * @param name
      */
     public AbstractWatchCommand(String name) {
-        super(name + ":watch");
+        super("watch-" + name);
     }
 
     @Override

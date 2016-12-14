@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.command;
+package com.consol.citrus.kubernetes.model;
 
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import javax.xml.bind.annotation.*;
 
 /**
- * @author Christoph Deppisch
- * @since 2.7
+ * <p>Java-Klasse für anonymous complex type.
+ * 
+ * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * 
+ * <pre>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
+ * </pre>
+ *
  */
-public abstract class AbstractListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
-
-    /**
-     * Default constructor initializing the command name.
-     *
-     * @param name
-     */
-    public AbstractListCommand(String name) {
-        super("list-" + name);
-    }
-
-    @Override
-    public void execute(ClientNonNamespaceOperation operation) {
-        setCommandResult((R) operation.list());
-    }
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "info")
+public class InfoMessage {
 }

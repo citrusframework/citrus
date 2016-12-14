@@ -105,6 +105,7 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         addCitrusSchema("citrus-ssh-message");
         addCitrusSchema("citrus-rmi-message");
         addCitrusSchema("citrus-jmx-message");
+        addCitrusSchema("citrus-kubernetes-message");
     }
 
     /**

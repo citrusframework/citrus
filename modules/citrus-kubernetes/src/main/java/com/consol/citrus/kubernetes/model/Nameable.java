@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.command;
-
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+package com.consol.citrus.kubernetes.model;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+public interface Nameable {
 
     /**
-     * Default constructor initializing the command name.
-     *
-     * @param name
+     * Gets the name
+     * @return
      */
-    public AbstractListCommand(String name) {
-        super("list-" + name);
-    }
-
-    @Override
-    public void execute(ClientNonNamespaceOperation operation) {
-        setCommandResult((R) operation.list());
-    }
+    String getName();
 }

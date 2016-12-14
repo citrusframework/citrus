@@ -20,6 +20,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.command.KubernetesCommand;
+import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -62,7 +63,7 @@ public class KubernetesExecuteActionParser implements BeanDefinitionParser {
         for (int i = 0; i < element.getAttributes().getLength(); i++) {
             Node attribute = element.getAttributes().item(i);
             if (!attribute.getNodeName().equals("client")) {
-                command.getParameters().put(attribute.getNodeName(), attribute.getNodeValue());
+                command.getParameters().put(KubernetesMessageHeaders.KUBERNETES_PREFIX + attribute.getNodeName(), attribute.getNodeValue());
             }
         }
 

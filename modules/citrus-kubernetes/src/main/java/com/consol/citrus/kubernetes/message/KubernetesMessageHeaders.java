@@ -32,5 +32,11 @@ public class KubernetesMessageHeaders {
 
     public static final String KUBERNETES_PREFIX = MessageHeaders.PREFIX + "kubernetes_";
 
+    public static final String COMMAND = KUBERNETES_PREFIX + "command";
     public static final String API_VERSION_ID = KUBERNETES_PREFIX + "apiVersion";
+
+    /** Parameter names */
+    public static final String LABEL = KUBERNETES_PREFIX + "label";
+    public static final String NAME = KUBERNETES_PREFIX + "name";
+    public static final String NAMESPACE = KUBERNETES_PREFIX + "namespace";
 }

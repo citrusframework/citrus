@@ -22,6 +22,7 @@ import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.*;
 import com.consol.citrus.kubernetes.command.WatchEvent;
+import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import io.fabric8.kubernetes.api.model.*;
@@ -90,9 +91,9 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 kubernetes(action -> action.client(client)
                     .info()
-                    .validateCommandResult(new CommandResultCallback<Info.InfoModel>() {
+                    .validateCommandResult(new CommandResultCallback<InfoResult>() {
                         @Override
-                        public void doWithCommandResult(Info.InfoModel result, TestContext context1) {
+                        public void doWithCommandResult(InfoResult result, TestContext context1) {
                             Assert.assertEquals(result.getApiVersion(), "v1");
                             Assert.assertEquals(result.getMasterUrl(), "https://localhost:8443");
                             Assert.assertEquals(result.getNamespace(), "test");
@@ -154,8 +155,8 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         action = (KubernetesExecuteAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().get("name"), "myPod");
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "active");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myPod");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "active");
 
         action = (KubernetesExecuteAction)test.getActions().get(2);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
@@ -169,12 +170,12 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         action = (KubernetesExecuteAction)test.getActions().get(4);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
-        Assert.assertEquals(action.getCommand().getParameters().get("label"), "new");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "new");
 
         action = (KubernetesExecuteAction)test.getActions().get(5);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
-        Assert.assertEquals(action.getCommand().getParameters().get("name"), "myService");
-        Assert.assertEquals(action.getCommand().getParameters().get("namespace"), "myNamespace");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
     }
 }

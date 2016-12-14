@@ -18,6 +18,7 @@ package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -35,11 +36,6 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
 
     /** Self reference for generics support */
     private final T self;
-
-    /** Parameter namea */
-    protected static final String LABEL = "label";
-    protected static final String NAME = "name";
-    protected static final String NAMESPACE = "namespace";
 
     /** Command name */
     private final String name;
@@ -194,10 +190,10 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * @return
      */
     public T label(String key, String value) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, key + "=" + value);
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            getParameters().put(KubernetesMessageHeaders.LABEL, key + "=" + value);
         } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key + "=" + value);
+            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key + "=" + value);
         }
         return self;
     }
@@ -208,10 +204,10 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * @return
      */
     public T label(String key) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, key);
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            getParameters().put(KubernetesMessageHeaders.LABEL, key);
         } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key);
+            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key);
         }
         return self;
     }
@@ -222,7 +218,7 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * @return
      */
     public T namespace(String key) {
-        getParameters().put(NAMESPACE, key);
+        getParameters().put(KubernetesMessageHeaders.NAMESPACE, key);
         return self;
     }
 
@@ -232,7 +228,7 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * @return
      */
     public T name(String key) {
-        getParameters().put(NAME, key);
+        getParameters().put(KubernetesMessageHeaders.NAME, key);
         return self;
     }
 
@@ -243,10 +239,10 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * @return
      */
     public T withoutLabel(String key, String value) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, key + "!=" + value);
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            getParameters().put(KubernetesMessageHeaders.LABEL, key + "!=" + value);
         } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + "," + key + "!=" + value);
+            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key + "!=" + value);
         }
         return self;
     }
@@ -257,10 +253,10 @@ public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesC
      * @return
      */
     public T withoutLabel(String key) {
-        if (!hasParameter(LABEL)) {
-            getParameters().put(LABEL, "!" + key);
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            getParameters().put(KubernetesMessageHeaders.LABEL, "!" + key);
         } else {
-            getParameters().put(LABEL, getParameters().get(LABEL) + ",!" + key);
+            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + ",!" + key);
         }
         return self;
     }
