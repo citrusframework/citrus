@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.*;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;attribute name="label" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="namespace" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -36,13 +36,13 @@ import javax.xml.bind.annotation.*;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "watch-nodes")
-public class WatchNodesMessage implements Nameable, Labled {
+@XmlRootElement(name = "list-pods")
+public class ListPodsRequest implements KubernetesRequest, Namespaced, Labled {
 
     @XmlAttribute(name = "label")
     protected String label;
-    @XmlAttribute(name = "name")
-    protected String name;
+    @XmlAttribute(name = "namespace")
+    protected String namespace;
 
     /**
      * Ruft den Wert der label-Eigenschaft ab.
@@ -69,27 +69,27 @@ public class WatchNodesMessage implements Nameable, Labled {
     }
 
     /**
-     * Ruft den Wert der name-Eigenschaft ab.
+     * Ruft den Wert der namespace-Eigenschaft ab.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getNamespace() {
+        return namespace;
     }
 
     /**
-     * Legt den Wert der name-Eigenschaft fest.
+     * Legt den Wert der namespace-Eigenschaft fest.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setNamespace(String value) {
+        this.namespace = value;
     }
 
 }

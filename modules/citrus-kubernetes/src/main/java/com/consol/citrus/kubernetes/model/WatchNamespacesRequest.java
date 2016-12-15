@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "watch-namespaces")
-public class WatchNamespacesMessage implements Nameable, Labled {
+public class WatchNamespacesRequest implements KubernetesRequest, Nameable, Labled {
 
     @XmlAttribute(name = "label")
     protected String label;

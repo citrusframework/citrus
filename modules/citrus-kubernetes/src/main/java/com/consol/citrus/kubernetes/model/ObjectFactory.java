@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlRegistry;
 @XmlRegistry
 public class ObjectFactory {
 
-
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.consol.citrus.kubernetes.model
      */
@@ -29,107 +28,211 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link InfoMessage }
+     * Create an instance of {@link InfoRequest }
      *
      */
-    public InfoMessage createInfoMessage() {
-        return new InfoMessage();
+    public InfoRequest createInfoRequest() {
+        return new InfoRequest();
     }
 
     /**
-     * Create an instance of {@link ListPodsMessage }
+     * Create an instance of {@link InfoResponse }
      *
      */
-    public ListPodsMessage createListPodsMessage() {
-        return new ListPodsMessage();
+    public InfoResponse createInfoResponse() {
+        return new InfoResponse();
     }
 
     /**
-     * Create an instance of {@link WatchPodsMessage }
+     * Create an instance of {@link ListPodsRequest }
      *
      */
-    public WatchPodsMessage createWatchPodsMessage() {
-        return new WatchPodsMessage();
+    public ListPodsRequest createListPodsRequest() {
+        return new ListPodsRequest();
     }
 
     /**
-     * Create an instance of {@link ListReplicationControllersMessage }
+     * Create an instance of {@link ListPodsResponse }
      *
      */
-    public ListReplicationControllersMessage createListReplicationControllersMessage() {
-        return new ListReplicationControllersMessage();
+    public ListPodsResponse createListPodsResponse() {
+        return new ListPodsResponse();
     }
 
     /**
-     * Create an instance of {@link WatchReplicationControllersMessage }
+     * Create an instance of {@link WatchPodsRequest }
      *
      */
-    public WatchReplicationControllersMessage createWatchReplicationControllersMessage() {
-        return new WatchReplicationControllersMessage();
+    public WatchPodsRequest createWatchPodsRequest() {
+        return new WatchPodsRequest();
     }
 
     /**
-     * Create an instance of {@link ListServicesMessage }
+     * Create an instance of {@link WatchPodsResponse }
      *
      */
-    public ListServicesMessage createListServicesMessage() {
-        return new ListServicesMessage();
+    public WatchPodsResponse createWatchPodsResponse() {
+        return new WatchPodsResponse();
     }
 
     /**
-     * Create an instance of {@link WatchServicesMessage }
+     * Create an instance of {@link ListReplicationControllersRequest }
      *
      */
-    public WatchServicesMessage createWatchServicesMessage() {
-        return new WatchServicesMessage();
+    public ListReplicationControllersRequest createListReplicationControllersRequest() {
+        return new ListReplicationControllersRequest();
     }
 
     /**
-     * Create an instance of {@link ListNodesMessage }
+     * Create an instance of {@link ListReplicationControllersResponse }
      *
      */
-    public ListNodesMessage createListNodesMessage() {
-        return new ListNodesMessage();
+    public ListReplicationControllersResponse createListReplicationControllersResponse() {
+        return new ListReplicationControllersResponse();
     }
 
     /**
-     * Create an instance of {@link WatchNodesMessage }
+     * Create an instance of {@link WatchReplicationControllersRequest }
      *
      */
-    public WatchNodesMessage createWatchNodesMessage() {
-        return new WatchNodesMessage();
+    public WatchReplicationControllersRequest createWatchReplicationControllersRequest() {
+        return new WatchReplicationControllersRequest();
     }
 
     /**
-     * Create an instance of {@link ListNamespacesMessage }
+     * Create an instance of {@link WatchReplicationControllersResponse }
      *
      */
-    public ListNamespacesMessage createListNamespacesMessage() {
-        return new ListNamespacesMessage();
+    public WatchReplicationControllersResponse createWatchReplicationControllersResponse() {
+        return new WatchReplicationControllersResponse();
     }
 
     /**
-     * Create an instance of {@link WatchNamespacesMessage }
+     * Create an instance of {@link ListServicesRequest }
      *
      */
-    public WatchNamespacesMessage createWatchNamespacesMessage() {
-        return new WatchNamespacesMessage();
+    public ListServicesRequest createListServicesRequest() {
+        return new ListServicesRequest();
     }
 
     /**
-     * Create an instance of {@link ListEventsMessage }
+     * Create an instance of {@link ListServicesResponse }
      *
      */
-    public ListEventsMessage createListEventsMessage() {
-        return new ListEventsMessage();
+    public ListServicesResponse createListServicesResponse() {
+        return new ListServicesResponse();
     }
 
     /**
-     * Create an instance of {@link ListEndpointsMessage }
+     * Create an instance of {@link WatchServicesRequest }
      *
      */
-    public ListEndpointsMessage createListEndpointsMessage() {
-        return new ListEndpointsMessage();
+    public WatchServicesRequest createWatchServicesRequest() {
+        return new WatchServicesRequest();
+    }
+
+    /**
+     * Create an instance of {@link WatchServicesResponse }
+     *
+     */
+    public WatchServicesResponse createWatchServicesResponse() {
+        return new WatchServicesResponse();
+    }
+
+    /**
+     * Create an instance of {@link ListNodesRequest }
+     *
+     */
+    public ListNodesRequest createListNodesRequest() {
+        return new ListNodesRequest();
+    }
+
+    /**
+     * Create an instance of {@link ListNodesResponse }
+     *
+     */
+    public ListNodesResponse createListNodesResponse() {
+        return new ListNodesResponse();
+    }
+
+    /**
+     * Create an instance of {@link WatchNodesRequest }
+     *
+     */
+    public WatchNodesRequest createWatchNodesRequest() {
+        return new WatchNodesRequest();
+    }
+
+    /**
+     * Create an instance of {@link WatchNodesResponse }
+     *
+     */
+    public WatchNodesResponse createWatchNodesResponse() {
+        return new WatchNodesResponse();
+    }
+
+    /**
+     * Create an instance of {@link ListNamespacesRequest }
+     *
+     */
+    public ListNamespacesRequest createListNamespacesRequest() {
+        return new ListNamespacesRequest();
+    }
+
+    /**
+     * Create an instance of {@link ListNamespacesResponse }
+     *
+     */
+    public ListNamespacesResponse createListNamespacesResponse() {
+        return new ListNamespacesResponse();
+    }
+
+    /**
+     * Create an instance of {@link WatchNamespacesRequest }
+     *
+     */
+    public WatchNamespacesRequest createWatchNamespacesRequest() {
+        return new WatchNamespacesRequest();
+    }
+
+    /**
+     * Create an instance of {@link WatchNamespacesResponse }
+     *
+     */
+    public WatchNamespacesResponse createWatchNamespacesResponse() {
+        return new WatchNamespacesResponse();
+    }
+
+    /**
+     * Create an instance of {@link ListEventsRequest }
+     *
+     */
+    public ListEventsRequest createListEventsRequest() {
+        return new ListEventsRequest();
+    }
+
+    /**
+     * Create an instance of {@link ListEventsResponse }
+     *
+     */
+    public ListEventsResponse createListEventsResponse() {
+        return new ListEventsResponse();
+    }
+
+    /**
+     * Create an instance of {@link ListEndpointsRequest }
+     *
+     */
+    public ListEndpointsRequest createListEndpointsRequest() {
+        return new ListEndpointsRequest();
+    }
+
+    /**
+     * Create an instance of {@link ListEndpointsResponse }
+     *
+     */
+    public ListEndpointsResponse createListEndpointsResponse() {
+        return new ListEndpointsResponse();
     }
 
 }

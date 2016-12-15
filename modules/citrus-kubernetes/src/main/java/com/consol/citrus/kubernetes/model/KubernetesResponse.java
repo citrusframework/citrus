@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.message;
-
-import com.consol.citrus.message.MessageHeaders;
+package com.consol.citrus.kubernetes.model;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesMessageHeaders {
+public interface KubernetesResponse {
 
     /**
-     * Prevent instantiation.
+     * Sets the command result.
+     * @param result
      */
-    private KubernetesMessageHeaders() {
-    }
+    void setResult(String result);
 
-    public static final String KUBERNETES_PREFIX = MessageHeaders.PREFIX + "kubernetes_";
-
-    public static final String COMMAND = KUBERNETES_PREFIX + "command";
-    public static final String ACTION = KUBERNETES_PREFIX + "action";
-
-    /** Parameter names */
-    public static final String LABEL = KUBERNETES_PREFIX + "label";
-    public static final String NAME = KUBERNETES_PREFIX + "name";
-    public static final String NAMESPACE = KUBERNETES_PREFIX + "namespace";
+    /**
+     * Sets the error message.
+     * @param message
+     */
+    void setError(String message);
 }

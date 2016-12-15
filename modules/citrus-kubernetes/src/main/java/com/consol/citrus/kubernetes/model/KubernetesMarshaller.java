@@ -31,18 +31,30 @@ public class KubernetesMarshaller extends Jaxb2Marshaller {
     private static Logger log = LoggerFactory.getLogger(KubernetesMarshaller.class);
 
     public KubernetesMarshaller() {
-        setClassesToBeBound(InfoMessage.class,
-                ListPodsMessage.class,
-                ListServicesMessage.class,
-                ListNodesMessage.class,
-                ListNamespacesMessage.class,
-                ListReplicationControllersMessage.class,
-                ListEventsMessage.class,
-                ListEndpointsMessage.class,
-                WatchServicesMessage.class,
-                WatchNodesMessage.class,
-                WatchNamespacesMessage.class,
-                WatchReplicationControllersMessage.class);
+        setClassesToBeBound(InfoRequest.class,
+                InfoResponse.class,
+                ListPodsRequest.class,
+                ListPodsResponse.class,
+                ListServicesRequest.class,
+                ListServicesResponse.class,
+                ListNodesRequest.class,
+                ListNodesResponse.class,
+                ListNamespacesRequest.class,
+                ListNamespacesResponse.class,
+                ListReplicationControllersRequest.class,
+                ListReplicationControllersResponse.class,
+                ListEventsRequest.class,
+                ListEventsResponse.class,
+                ListEndpointsRequest.class,
+                ListEndpointsResponse.class,
+                WatchServicesRequest.class,
+                WatchServicesResponse.class,
+                WatchNodesRequest.class,
+                WatchNodesResponse.class,
+                WatchNamespacesRequest.class,
+                WatchNamespacesResponse.class,
+                WatchReplicationControllersRequest.class,
+                WatchReplicationControllersResponse.class);
 
         setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-kubernetes-message.xsd"));
 

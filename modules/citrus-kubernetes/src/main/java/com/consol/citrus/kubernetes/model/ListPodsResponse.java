@@ -19,16 +19,22 @@ package com.consol.citrus.kubernetes.model;
 import javax.xml.bind.annotation.*;
 
 /**
- * <p>Java-Klasse für anonymous complex type.
+ * Represents command result
+ * 
+ * <p>Java-Klasse für ResponseType complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType&gt;
+ * &lt;complexType name="ResponseType"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attribute name="label" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="namespace" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;sequence&gt;
+ *         &lt;choice&gt;
+ *           &lt;element name="result" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *           &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;/choice&gt;
+ *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -36,60 +42,62 @@ import javax.xml.bind.annotation.*;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "list-services")
-public class ListServicesMessage implements Namespaced, Labled {
+@XmlType(name = "", propOrder = {
+    "error",
+    "result"
+})
+@XmlRootElement(name = "list-pods-response")
+public class ListPodsResponse implements KubernetesResponse {
 
-    @XmlAttribute(name = "label")
-    protected String label;
-    @XmlAttribute(name = "namespace")
-    protected String namespace;
+    protected String error;
+    protected String result;
 
     /**
-     * Ruft den Wert der label-Eigenschaft ab.
+     * Ruft den Wert der error-Eigenschaft ab.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getLabel() {
-        return label;
+    public String getError() {
+        return error;
     }
 
     /**
-     * Legt den Wert der label-Eigenschaft fest.
+     * Legt den Wert der error-Eigenschaft fest.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setLabel(String value) {
-        this.label = value;
+    public void setError(String value) {
+        this.error = value;
     }
 
     /**
-     * Ruft den Wert der namespace-Eigenschaft ab.
+     * Ruft den Wert der result-Eigenschaft ab.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getNamespace() {
-        return namespace;
+    public String getResult() {
+        return result;
     }
 
     /**
-     * Legt den Wert der namespace-Eigenschaft fest.
+     * Legt den Wert der result-Eigenschaft fest.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setNamespace(String value) {
-        this.namespace = value;
+    public void setResult(String value) {
+        this.result = value;
     }
 
 }

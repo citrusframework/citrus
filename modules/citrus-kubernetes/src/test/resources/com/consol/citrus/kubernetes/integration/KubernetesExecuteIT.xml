@@ -13,10 +13,10 @@
   <testcase name="KubernetesExecuteIT">
     <meta-info>
       <author>Christoph Deppisch</author>
-      <creationdate>2015-09-14</creationdate>
+      <creationdate>2016-12-15</creationdate>
       <status>FINAL</status>
       <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2015-09-14T00:00:00</last-updated-on>
+      <last-updated-on>2016-12-15T00:00:00</last-updated-on>
     </meta-info>
 
     <description>Test kubernetes container command execution with kubernetes client.</description>
@@ -33,10 +33,13 @@
       <k8s:info>
         <k8s:expect>
           <k8s:result>{
-            "clientVersion": "1.4.27",
-            "apiVersion": "${apiVersion}",
-            "masterUrl": "${masterUrl}",
-            "namespace": "${namespace}" }</k8s:result>
+            "result": {
+              "clientVersion": "1.4.27",
+              "apiVersion": "${apiVersion}",
+              "masterUrl": "${masterUrl}",
+              "namespace": "${namespace}"
+            }
+          }</k8s:result>
         </k8s:expect>
       </k8s:info>
 
@@ -47,12 +50,14 @@
       <k8s:list-services>
         <k8s:expect>
           <k8s:result>{
-            "apiVersion":"${apiVersion}",
-            "kind":"ServiceList",
-            "metadata":"@ignore@",
-            "items":[]
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"ServiceList",
+              "metadata":"@ignore@",
+              "items":[]
+            }
           }</k8s:result>
-          <k8s:element path="$.items.size()" value="0"/>
+          <k8s:element path="$.result.items.size()" value="0"/>
         </k8s:expect>
       </k8s:list-services>
 
@@ -63,12 +68,14 @@
       <k8s:list-pods>
         <k8s:expect>
           <k8s:result>{
-            "apiVersion":"${apiVersion}",
-            "kind":"PodList",
-            "metadata":"@ignore@",
-            "items":[]
-            }</k8s:result>
-          <k8s:element path="$.items.size()" value="0"/>
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"PodList",
+              "metadata":"@ignore@",
+              "items":[]
+            }
+          }</k8s:result>
+          <k8s:element path="$.result.items.size()" value="0"/>
         </k8s:expect>        
       </k8s:list-pods>
 
@@ -79,11 +86,13 @@
       <k8s:list-endpoints>
         <k8s:expect>
           <k8s:result>{
-            "apiVersion":"${apiVersion}",
-            "kind":"EndpointsList",
-            "metadata":"@ignore@",
-            "items":[]
-            }</k8s:result>
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"EndpointsList",
+              "metadata":"@ignore@",
+              "items":[]
+            }
+          }</k8s:result>
         </k8s:expect>
       </k8s:list-endpoints>
       <k8s:list-events/>
@@ -94,7 +103,7 @@
 
       <k8s:list-pods label="${podLabel}">
         <k8s:expect>
-          <k8s:element path="$.items.size()" value="0"/>
+          <k8s:element path="$.result.items.size()" value="0"/>
         </k8s:expect>              
       </k8s:list-pods>        
 

@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.kubernetes.model;
+package com.consol.citrus.kubernetes.integration;
 
-import javax.xml.bind.annotation.*;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import org.testng.annotations.Test;
 
 /**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
+ * Only execute integration tests if Kubernetes is available on host system.
  *
+ * @author Christoph Deppisch
+ * @since 2.7
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "info")
-public class InfoMessage {
+@Test
+public class KubernetesSendReceiveIT extends AbstractKubernetesIT {
+
+    @CitrusXmlTest(name = "KubernetesSendReceiveIT")
+    public void kubernetesSendReceiveIT() {
+    }
 }

@@ -16,18 +16,23 @@
 
 package com.consol.citrus.kubernetes.command;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommandResult<R> {
 
     /** The result model */
+    @JsonProperty("result")
     private R result;
 
     /** Optional error on this result */
+    @JsonProperty("error")
     private KubernetesClientException error;
 
     /**

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/message"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/kubernetes/message
+                                  http://www.citrusframework.org/schema/kubernetes/message/citrus-kubernetes-message.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="KubernetesSendReceiveIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2016-12-15</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2016-12-15T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test kubernetes container command execution with kubernetes client.</description>
+
+    <variables>
+      <variable name="podLabel" value="app"/>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Validate kubernetes API version</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:info></k8s:info>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:info-response>
+              <k8s:result>{
+                "clientVersion": "1.4.27",
+                "apiVersion": "${apiVersion}",
+                "masterUrl": "${masterUrl}",
+                "namespace": "${namespace}"
+              }</k8s:result>
+            </k8s:info-response>
+            </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>List all services</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:list-services></k8s:list-services>
+          </payload>
+         </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:list-services-response>
+              <k8s:result>{
+                  "apiVersion":"${apiVersion}",
+                  "kind":"ServiceList",
+                  "metadata":"@ignore@",
+                  "items":[]
+              }</k8s:result>
+            </k8s:list-services-response>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>List all pods</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:list-pods></k8s:list-pods>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:list-pods-response>
+              <k8s:result>{
+                  "apiVersion":"${apiVersion}",
+                  "kind":"PodList",
+                  "metadata":"@ignore@",
+                  "items":[]
+              }</k8s:result>
+              </k8s:list-pods-response>
+            </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>List all endpoints</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:list-endpoints></k8s:list-endpoints>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message>
+          <payload>
+            <k8s:list-endpoints-response>
+              <k8s:result>{
+                  "apiVersion":"${apiVersion}",
+                  "kind":"EndpointsList",
+                  "metadata":"@ignore@",
+                  "items":[]
+              }</k8s:result>
+            </k8s:list-endpoints-response>
+          </payload>
+        </message>
+      </receive>
+    </actions>
+
+  </testcase>
+</spring:beans>

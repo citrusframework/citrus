@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.*;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;attribute name="label" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="namespace" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -35,11 +37,15 @@ import javax.xml.bind.annotation.*;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "list-events")
-public class ListEventsMessage implements Labled {
+@XmlRootElement(name = "watch-pods")
+public class WatchPodsRequest implements KubernetesRequest, Nameable, Labled, Namespaced {
 
     @XmlAttribute(name = "label")
     protected String label;
+    @XmlAttribute(name = "namespace")
+    protected String namespace;
+    @XmlAttribute(name = "name")
+    protected String name;
 
     /**
      * Ruft den Wert der label-Eigenschaft ab.
@@ -63,6 +69,54 @@ public class ListEventsMessage implements Labled {
      */
     public void setLabel(String value) {
         this.label = value;
+    }
+
+    /**
+     * Ruft den Wert der namespace-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * Legt den Wert der namespace-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setNamespace(String value) {
+        this.namespace = value;
+    }
+
+    /**
+     * Ruft den Wert der name-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Legt den Wert der name-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setName(String value) {
+        this.name = value;
     }
 
 }

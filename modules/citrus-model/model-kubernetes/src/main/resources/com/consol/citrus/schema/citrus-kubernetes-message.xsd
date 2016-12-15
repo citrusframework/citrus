@@ -22,7 +22,13 @@
 
   <xs:element name="info">
     <xs:annotation>
-      <xs:documentation>Executes info command on kubernetes and print result to console</xs:documentation>
+      <xs:documentation>Executes info command on kubernetes</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="info-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>Info command results</xs:documentation>
     </xs:annotation>
   </xs:element>
 
@@ -36,6 +42,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="list-pods-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List pods command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="watch-pods">
     <xs:annotation>
       <xs:documentation>Watch kubernetes pods</xs:documentation>
@@ -47,6 +59,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="watch-pods-response" type="WatchResponseType">
+    <xs:annotation>
+      <xs:documentation>Watch pods command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="list-services">
     <xs:annotation>
       <xs:documentation>List kubernetes service</xs:documentation>
@@ -55,6 +73,12 @@
       <xs:attribute name="label" type="xs:string"/>
       <xs:attribute name="namespace" type="xs:string"/>
     </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list-services-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List services command results</xs:documentation>
+    </xs:annotation>
   </xs:element>
 
   <xs:element name="watch-services">
@@ -68,6 +92,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="watch-services-response" type="WatchResponseType">
+    <xs:annotation>
+      <xs:documentation>Watch services command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="list-replication-controllers">
     <xs:annotation>
       <xs:documentation>List kubernetes replication controller</xs:documentation>
@@ -76,6 +106,12 @@
       <xs:attribute name="label" type="xs:string"/>
       <xs:attribute name="namespace" type="xs:string"/>
     </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list-replication-controllers-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List replication controllers command results</xs:documentation>
+    </xs:annotation>
   </xs:element>
 
   <xs:element name="watch-replication-controllers">
@@ -89,6 +125,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="watch-replication-controllers-response" type="WatchResponseType">
+    <xs:annotation>
+      <xs:documentation>Watch replication controllers command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="list-endpoints">
     <xs:annotation>
       <xs:documentation>List kubernetes endpoints</xs:documentation>
@@ -99,6 +141,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="list-endpoints-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List endpoints command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="list-nodes">
     <xs:annotation>
       <xs:documentation>List kubernetes nodes</xs:documentation>
@@ -106,6 +154,12 @@
     <xs:complexType>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list-nodes-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List nodes command results</xs:documentation>
+    </xs:annotation>
   </xs:element>
 
   <xs:element name="watch-nodes">
@@ -118,6 +172,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="watch-nodes-response" type="WatchResponseType">
+    <xs:annotation>
+      <xs:documentation>Watch nodes command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="list-namespaces">
     <xs:annotation>
       <xs:documentation>List kubernetes namespaces</xs:documentation>
@@ -125,6 +185,12 @@
     <xs:complexType>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list-namespaces-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List namespaces command results</xs:documentation>
+    </xs:annotation>
   </xs:element>
 
   <xs:element name="watch-namespaces">
@@ -137,6 +203,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="watch-namespaces-response" type="WatchResponseType">
+    <xs:annotation>
+      <xs:documentation>Watch namespaces command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
   <xs:element name="list-events">
     <xs:annotation>
       <xs:documentation>List kubernetes events</xs:documentation>
@@ -145,4 +217,33 @@
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="list-events-response" type="ResponseType">
+    <xs:annotation>
+      <xs:documentation>List events command results</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="ResponseType">
+    <xs:annotation>
+      <xs:documentation>Represents command result</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="result" type="xs:string"/>
+        <xs:element name="error" type="xs:string"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="WatchResponseType">
+    <xs:annotation>
+      <xs:documentation>Represents watch command result</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="ResponseType">
+        <xs:attribute name="action" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 </xs:schema>
