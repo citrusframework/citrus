@@ -18,7 +18,6 @@ package com.consol.citrus.kubernetes.endpoint;
 
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
-import com.consol.citrus.kubernetes.model.KubernetesMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,9 +40,6 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
 
     /** JSON data binding for command result */
     private ObjectMapper resultMapper = new ObjectMapper();
-
-    /** Message marshaller converts from XML to kubernetes message object */
-    private KubernetesMarshaller marshaller = new KubernetesMarshaller();
 
     /** Kubernetes message converter */
     private KubernetesMessageConverter messageConverter = new KubernetesMessageConverter();
@@ -111,22 +107,6 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public MessageCorrelator getCorrelator() {
         return correlator;
-    }
-
-    /**
-     * Gets the kubernetes message marshaller implementation.
-     * @return
-     */
-    public KubernetesMarshaller getKubernetesMarshaller() {
-        return marshaller;
-    }
-
-    /**
-     * Sets the kubernetes message marshaller implementation.
-     * @param marshaller
-     */
-    public void setKubernetesMarshaller(KubernetesMarshaller marshaller) {
-        this.marshaller = marshaller;
     }
 
     /**

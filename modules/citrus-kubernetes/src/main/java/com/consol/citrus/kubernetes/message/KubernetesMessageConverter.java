@@ -20,13 +20,13 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kubernetes.command.*;
 import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
-import com.consol.citrus.kubernetes.model.*;
+import com.consol.citrus.kubernetes.model.KubernetesRequest;
+import com.consol.citrus.kubernetes.model.KubernetesResponse;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.util.StringUtils;
 
-import javax.xml.transform.Source;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,39 +50,12 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
 
     @Override
     public Message convertInbound(KubernetesCommand<?> command, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
-        KubernetesResponse response;
-        if (command instanceof Info) {
-            response = new InfoResponse();
-        } else if (command instanceof ListPods) {
-            response = new ListPodsResponse();
-        } else if (command instanceof WatchPods) {
-            response = new WatchPodsResponse();
-        } else if (command instanceof ListNodes) {
-            response = new ListNodesResponse();
-        } else if (command instanceof WatchNodes) {
-            response = new WatchNodesResponse();
-        } else if (command instanceof ListNamespaces) {
-            response = new ListNamespacesResponse();
-        } else if (command instanceof WatchNamespaces) {
-            response = new WatchNamespacesResponse();
-        } else if (command instanceof ListServices) {
-            response = new ListServicesResponse();
-        } else if (command instanceof WatchServices) {
-            response = new WatchServicesResponse();
-        } else if (command instanceof ListReplicationControllers) {
-            response = new ListReplicationControllersResponse();
-        } else if (command instanceof WatchReplicationControllers) {
-            response = new WatchReplicationControllersResponse();
-        } else if (command instanceof ListEvents) {
-            response = new ListEventsResponse();
-        } else if (command instanceof ListEndpoints) {
-            response = new ListEndpointsResponse();
-        } else {
-            throw new CitrusRuntimeException("Failed to create kubernetes response from command type: " + command.getClass().getName());
-        }
-
+        KubernetesResponse response = new KubernetesResponse();
         KubernetesMessage message = KubernetesMessage.response(response);
-        message.setHeader(KubernetesMessageHeaders.COMMAND, command.getName().substring("kubernetes:".length()));
+
+        response.setCommand(command.getName().substring("kubernetes:".length()));
+
+        message.setHeader(KubernetesMessageHeaders.COMMAND, response.getCommand());
         for (Map.Entry<String, Object> header : createMessageHeaders(command).entrySet()) {
             message.setHeader(header.getKey(), header.getValue());
         }
@@ -90,11 +63,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
         CommandResult<?> commandResult = command.getCommandResult();
         if (commandResult != null) {
             if (commandResult.getResult() != null) {
-                try {
-                    response.setResult(endpointConfiguration.getResultMapper().writeValueAsString(commandResult.getResult()));
-                } catch (JsonProcessingException e) {
-                    throw new CitrusRuntimeException(e);
-                }
+                response.setResult(commandResult.getResult());
             }
 
             if (commandResult.hasError()) {
@@ -102,9 +71,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
             }
 
             if (commandResult instanceof WatchEventResult) {
-                if (response instanceof KubernetesWatchResponse) {
-                    ((KubernetesWatchResponse) response).setAction(((WatchEventResult) commandResult).getAction().name());
-                }
+                response.setAction(((WatchEventResult) commandResult).getAction().name());
                 message.setHeader(KubernetesMessageHeaders.ACTION, ((WatchEventResult) commandResult).getAction().name());
             }
         }
@@ -114,60 +81,43 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
 
     /**
      * Creates a new kubernetes command message model object from message headers.
-     * @param messageHeaders
+     * @param commandName
      * @return
      */
-    protected KubernetesCommand<?> createCommand(Map<String, Object> messageHeaders) {
-        if (messageHeaders.containsKey(KubernetesMessageHeaders.COMMAND)) {
-            KubernetesCommand<?> command;
+    private KubernetesCommand<?> getCommandByName(String commandName) {
+        if (!StringUtils.hasText(commandName)) {
+            throw new CitrusRuntimeException("Missing command name property");
+        }
 
-            switch (messageHeaders.get(KubernetesMessageHeaders.COMMAND).toString()) {
-                case "info":
-                    command = new Info();
-                    break;
-                case "list-events":
-                    command = new ListEvents();
-                    break;
-                case "list-endpoints":
-                    command = new ListEndpoints();
-                    break;
-                case "list-pods":
-                    command = new ListPods();
-                    break;
-                case "watch-pods":
-                    command = new WatchPods();
-                    break;
-                case "list-namespaces":
-                    command = new ListNamespaces();
-                    break;
-                case "watch-namespaces":
-                    command = new WatchNamespaces();
-                    break;
-                case "list-nodes":
-                    command = new ListNodes();
-                    break;
-                case "watch-nodes":
-                    command = new WatchNodes();
-                    break;
-                case "list-replication-controllers":
-                    command = new ListReplicationControllers();
-                    break;
-                case "watch-replication-controllers":
-                    command = new WatchReplicationControllers();
-                    break;
-                case "list-services":
-                    command = new ListServices();
-                    break;
-                case "watch-services":
-                    command = new WatchServices();
-                    break;
-                default:
-                    command = new Info();
-            }
-
-            return command;
-        } else {
-            return null;
+        switch (commandName) {
+            case "info":
+                return new Info();
+            case "list-events":
+                return new ListEvents();
+            case "list-endpoints":
+                return new ListEndpoints();
+            case "list-pods":
+                return new ListPods();
+            case "watch-pods":
+                return new WatchPods();
+            case "list-namespaces":
+                return new ListNamespaces();
+            case "watch-namespaces":
+                return new WatchNamespaces();
+            case "list-nodes":
+                return new ListNodes();
+            case "watch-nodes":
+                return new WatchNodes();
+            case "list-replication-controllers":
+                return new ListReplicationControllers();
+            case "watch-replication-controllers":
+                return new WatchReplicationControllers();
+            case "list-services":
+                return new ListServices();
+            case "watch-services":
+                return new WatchServices();
+            default:
+                throw new CitrusRuntimeException("Unknown kubernetes command: " + commandName);
         }
     }
 
@@ -176,7 +126,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
      * @param command
      * @return
      */
-    protected Map<String,Object> createMessageHeaders(KubernetesCommand<?> command) {
+    private Map<String,Object> createMessageHeaders(KubernetesCommand<?> command) {
         Map<String, Object> headers = new HashMap<String, Object>();
 
         headers.put(KubernetesMessageHeaders.COMMAND, command.getName().substring("kubernetes:".length()));
@@ -202,13 +152,19 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
         KubernetesCommand<?> command;
         if (message instanceof KubernetesMessage) {
             command = createCommandFromRequest(message.getPayload(KubernetesRequest.class));
-        } else if (payload == null || !StringUtils.hasText(payload.toString())) {
-            command = createCommand(message.getHeaders());
+        } else if (message.getHeaders().containsKey(KubernetesMessageHeaders.COMMAND) &&
+                (payload == null || !StringUtils.hasText(payload.toString()))) {
+            command = getCommandByName(message.getHeader(KubernetesMessageHeaders.COMMAND).toString());
         } else if (payload instanceof KubernetesCommand) {
             command = (KubernetesCommand) payload;
         } else {
-            KubernetesRequest request = (KubernetesRequest) endpointConfiguration.getKubernetesMarshaller().unmarshal(message.getPayload(Source.class));
-            command = createCommandFromRequest(request);
+            try {
+                KubernetesRequest request = endpointConfiguration.getResultMapper()
+                        .readValue(message.getPayload(String.class), KubernetesRequest.class);
+                command = createCommandFromRequest(request);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read kubernetes request from payload", e);
+            }
         }
 
         if (command == null) {
@@ -219,48 +175,18 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
     }
 
     private KubernetesCommand<?> createCommandFromRequest(KubernetesRequest request) {
-        KubernetesCommand<?> command;
+        KubernetesCommand<?> command = getCommandByName(request.getCommand());
 
-        if (request instanceof InfoRequest) {
-            command = new Info();
-        } else if (request instanceof ListPodsRequest) {
-            command = new ListPods();
-        } else if (request instanceof WatchPodsRequest) {
-            command = new WatchPods();
-        } else if (request instanceof ListNodesRequest) {
-            command = new ListNodes();
-        } else if (request instanceof WatchNodesRequest) {
-            command = new WatchNodes();
-        } else if (request instanceof ListNamespacesRequest) {
-            command = new ListNamespaces();
-        } else if (request instanceof WatchNamespacesRequest) {
-            command = new WatchNamespaces();
-        } else if (request instanceof ListServicesRequest) {
-            command = new ListServices();
-        } else if (request instanceof WatchServicesRequest) {
-            command = new WatchServices();
-        } else if (request instanceof ListReplicationControllersRequest) {
-            command = new ListReplicationControllers();
-        } else if (request instanceof WatchReplicationControllersRequest) {
-            command = new WatchReplicationControllers();
-        } else if (request instanceof ListEventsRequest) {
-            command = new ListEvents();
-        } else if (request instanceof ListEndpointsRequest) {
-            command = new ListEndpoints();
-        } else {
-            throw new CitrusRuntimeException("Failed to read kubernetes command from message request type: " + request.getClass().getName());
+        if (StringUtils.hasText(request.getName())) {
+            command.getParameters().put(KubernetesMessageHeaders.NAME, request.getName());
         }
 
-        if (request instanceof Nameable) {
-            command.getParameters().put(KubernetesMessageHeaders.NAME, ((Nameable) request).getName());
+        if (StringUtils.hasText(request.getNamespace())) {
+            command.getParameters().put(KubernetesMessageHeaders.NAMESPACE, request.getNamespace());
         }
 
-        if (request instanceof Namespaced) {
-            command.getParameters().put(KubernetesMessageHeaders.NAMESPACE, ((Namespaced) request).getNamespace());
-        }
-
-        if (request instanceof Labled) {
-            command.getParameters().put(KubernetesMessageHeaders.LABEL, ((Labled) request).getLabel());
+        if (StringUtils.hasText(request.getLabel())) {
+            command.getParameters().put(KubernetesMessageHeaders.LABEL, request.getLabel());
         }
 
         return command;

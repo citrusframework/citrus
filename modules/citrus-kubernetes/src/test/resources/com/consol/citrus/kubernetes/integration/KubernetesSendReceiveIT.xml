@@ -32,24 +32,23 @@
 
       <send endpoint="k8sClient">
         <message>
-          <payload>
-            <k8s:info></k8s:info>
-          </payload>
+          <data>
+            { "command": "info" }
+          </data>
         </message>
       </send>
 
       <receive endpoint="k8sClient">
-        <message>
-          <payload>
-            <k8s:info-response>
-              <k8s:result>{
+        <message type="json">
+          <data>{
+            "command": "info",
+            "result": {
                 "clientVersion": "1.4.27",
                 "apiVersion": "${apiVersion}",
                 "masterUrl": "${masterUrl}",
                 "namespace": "${namespace}"
-              }</k8s:result>
-            </k8s:info-response>
-            </payload>
+              }
+            }</data>
         </message>
       </receive>
 
@@ -59,24 +58,24 @@
 
       <send endpoint="k8sClient">
         <message>
-          <payload>
-            <k8s:list-services></k8s:list-services>
-          </payload>
+          <data>
+            { "command": "list-services" }
+          </data>
          </message>
       </send>
 
       <receive endpoint="k8sClient">
-        <message>
-          <payload>
-            <k8s:list-services-response>
-              <k8s:result>{
+        <message type="json">
+          <data>{
+            "command": "list-services",
+            "result": {
                   "apiVersion":"${apiVersion}",
                   "kind":"ServiceList",
                   "metadata":"@ignore@",
                   "items":[]
-              }</k8s:result>
-            </k8s:list-services-response>
-          </payload>
+              }
+          }</data>
+          <validate path="$.result.items.size()" value="0"/>
         </message>
       </receive>
 
@@ -86,24 +85,24 @@
 
       <send endpoint="k8sClient">
         <message>
-          <payload>
-            <k8s:list-pods></k8s:list-pods>
-          </payload>
+          <data>
+            { "command": "list-pods" }
+          </data>
         </message>
       </send>
 
       <receive endpoint="k8sClient">
-        <message>
-          <payload>
-            <k8s:list-pods-response>
-              <k8s:result>{
+        <message type="json">
+          <data>{
+            "command": "list-pods",
+            "result": {
                   "apiVersion":"${apiVersion}",
                   "kind":"PodList",
                   "metadata":"@ignore@",
                   "items":[]
-              }</k8s:result>
-              </k8s:list-pods-response>
-            </payload>
+              }
+          }</data>
+          <validate path="$.result.items.size()" value="0"/>
         </message>
       </receive>
 
@@ -113,24 +112,45 @@
 
       <send endpoint="k8sClient">
         <message>
-          <payload>
-            <k8s:list-endpoints></k8s:list-endpoints>
-          </payload>
+          <data>
+            { "command": "list-endpoints" }
+          </data>
         </message>
       </send>
 
       <receive endpoint="k8sClient">
-        <message>
-          <payload>
-            <k8s:list-endpoints-response>
-              <k8s:result>{
+        <message type="json">
+          <data>{
+            "command": "list-endpoints",
+            "result": {
                   "apiVersion":"${apiVersion}",
                   "kind":"EndpointsList",
                   "metadata":"@ignore@",
                   "items":[]
-              }</k8s:result>
-            </k8s:list-endpoints-response>
-          </payload>
+              }
+          }</data>
+          <validate path="$.result.items.size()" value="0"/>
+        </message>
+      </receive>
+
+      <echo>
+        <message>List pods by '${podLabel}'</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <data>
+            {
+              "command": "list-pods",
+              "label": "${podLabel}"
+            }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message type="json">
+          <validate path="$.result.items.size()" value="0"/>
         </message>
       </receive>
     </actions>

@@ -16,11 +16,13 @@
 
 package com.consol.citrus.kubernetes.message;
 
-import com.consol.citrus.kubernetes.model.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.kubernetes.model.KubernetesRequest;
+import com.consol.citrus.kubernetes.model.KubernetesResponse;
 import com.consol.citrus.message.DefaultMessage;
-import org.springframework.xml.transform.StringResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.xml.transform.Source;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -29,7 +31,7 @@ import java.util.Map;
  */
 public class KubernetesMessage extends DefaultMessage {
 
-    private KubernetesMarshaller marshaller = new KubernetesMarshaller();
+    private ObjectMapper mapper = new ObjectMapper();
 
     private KubernetesRequest request;
     private KubernetesResponse response;
@@ -84,27 +86,28 @@ public class KubernetesMessage extends DefaultMessage {
 
     @Override
     public <T> T getPayload(Class<T> type) {
-        if (KubernetesRequest.class.isAssignableFrom(type)) {
-            if (getPayload() instanceof KubernetesRequest) {
-                return (T) getPayload();
-            }
+        try {
+            if (KubernetesRequest.class.isAssignableFrom(type)) {
+                if (getPayload() instanceof KubernetesRequest) {
+                    return (T) getPayload();
+                }
 
-            return (T) marshaller.unmarshal(getPayload(Source.class));
-        } else if (KubernetesResponse.class.isAssignableFrom(type)) {
-            if (getPayload() instanceof KubernetesResponse) {
-                return (T) getPayload();
-            }
+                return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
+            } else if (KubernetesResponse.class.isAssignableFrom(type)) {
+                if (getPayload() instanceof KubernetesResponse) {
+                    return (T) getPayload();
+                }
 
-            return (T) marshaller.unmarshal(getPayload(Source.class));
-        } else if (String.class.equals(type)) {
-            StringResult payloadResult = new StringResult();
-            if (request != null) {
-                marshaller.marshal(request, payloadResult);
-                return (T) payloadResult.toString();
-            } else if (response != null) {
-                marshaller.marshal(response, payloadResult);
-                return (T) payloadResult.toString();
+                return (T) mapper.readValue(getPayload(String.class), KubernetesRequest.class);
+            } else if (String.class.equals(type)) {
+                if (request != null) {
+                    return (T) mapper.writeValueAsString(request);
+                } else if (response != null) {
+                    return (T) mapper.writeValueAsString(response);
+                }
             }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to convert payload to required type: " + type, e);
         }
 
         return super.getPayload(type);

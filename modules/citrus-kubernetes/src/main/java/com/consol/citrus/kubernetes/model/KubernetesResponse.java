@@ -16,21 +16,93 @@
 
 package com.consol.citrus.kubernetes.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface KubernetesResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class KubernetesResponse {
+
+    /** The command */
+    @JsonProperty("command")
+    private String command;
+
+    /** The result model */
+    @JsonProperty("result")
+    private Object result;
+
+    /** Optional error on this result */
+    @JsonProperty("error")
+    private String error;
+
+    /** Optional action of watch response */
+    @JsonProperty("action")
+    protected String action;
 
     /**
-     * Sets the command result.
-     * @param result
+     * Gets the command property.
+     * @return
      */
-    void setResult(String result);
+    public String getCommand() {
+        return command;
+    }
 
     /**
-     * Sets the error message.
-     * @param message
+     * Sets the command property.
+     * @param command
      */
-    void setError(String message);
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
+    /**
+     * Gets the error property.
+     * @return
+     */
+    public String getError() {
+        return error;
+    }
+
+    /**
+     * Sets the error property.
+     * @param value
+     */
+    public void setError(String value) {
+        this.error = value;
+    }
+
+    /**
+     * Gets the result property.
+     * @return
+     */
+    public Object getResult() {
+        return result;
+    }
+
+    /**
+     * Sets the result property.
+     * @param value
+     */
+    public void setResult(Object value) {
+        this.result = value;
+    }
+
+    /**
+     * Gets the action property.
+     * @return
+     */
+    public String getAction() {
+        return action;
+    }
+
+    /**
+     * Sets the action property.
+     * @param value
+     */
+    public void setAction(String value) {
+        this.action = value;
+    }
 }
