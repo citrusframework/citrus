@@ -109,7 +109,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
 
             try {
                 String commandResultJson = kubernetesClient.getEndpointConfiguration()
-                        .getResultMapper().writeValueAsString(result);
+                        .getObjectMapper().writeValueAsString(result);
                 if (StringUtils.hasText(commandResult)) {
                     jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, new JsonMessageValidationContext());
                     log.info("Kubernetes command result validation successful - all values OK!");

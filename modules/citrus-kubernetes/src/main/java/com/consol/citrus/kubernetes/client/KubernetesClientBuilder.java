@@ -113,12 +113,12 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     /**
-     * Sets the result mapper.
-     * @param resultMapper
+     * Sets the object mapper.
+     * @param objectMapper
      * @return
      */
-    public KubernetesClientBuilder resultMapper(ObjectMapper resultMapper) {
-        endpoint.getEndpointConfiguration().setResultMapper(resultMapper);
+    public KubernetesClientBuilder objectMapper(ObjectMapper objectMapper) {
+        endpoint.getEndpointConfiguration().setObjectMapper(objectMapper);
         return this;
     }
 }

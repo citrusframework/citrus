@@ -68,7 +68,7 @@ public class KubernetesClientParser extends AbstractEndpointParser {
         endpointConfiguration.addPropertyValue("kubernetesClientConfig", config.build());
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("result-mapper"), "resultMapper");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("object-mapper"), "objectMapper");
     }
 
     @Override

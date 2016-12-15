@@ -50,7 +50,7 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.cert");
         Assert.assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        Assert.assertEquals(client.getEndpointConfiguration().getResultMapper(), beanDefinitionContext.getBean("resultMapper", ObjectMapper.class));
+        Assert.assertEquals(client.getEndpointConfiguration().getObjectMapper(), beanDefinitionContext.getBean("objectMapper", ObjectMapper.class));
 
     }
 }

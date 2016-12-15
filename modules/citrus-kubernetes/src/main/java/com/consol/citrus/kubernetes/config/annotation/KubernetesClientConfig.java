@@ -72,9 +72,9 @@ public @interface KubernetesClientConfig {
     String messageConverter() default  "";
 
     /**
-     * Result mapper.
+     * Object mapper.
      * @return
      */
-    String resultMapper() default  "";
+    String objectMapper() default  "";
 
 }

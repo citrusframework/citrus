@@ -14,14 +14,14 @@
                           password="s!cr!t"
                           namespace="user_namespace"
                           message-converter="messageConverter"
-                          result-mapper="resultMapper"
+                          object-mapper="objectMapper"
                           cert-file="/path/to/some/cert/ca.cert"/>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.kubernetes.message.KubernetesMessageConverter"/>
   </bean>
 
-  <bean id="resultMapper" class="org.mockito.Mockito" factory-method="mock">
+  <bean id="objectMapper" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.fasterxml.jackson.databind.ObjectMapper"/>
   </bean>
 

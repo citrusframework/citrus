@@ -48,14 +48,14 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
             password="s!cr!t",
             namespace="user_namespace",
             messageConverter="messageConverter",
-            resultMapper="resultMapper",
+            objectMapper="objectMapper",
             certFile="/path/to/some/cert/ca.pem")
     private KubernetesClient client2;
 
     @Mock
     private KubernetesMessageConverter messageConverter = Mockito.mock(KubernetesMessageConverter.class);
     @Mock
-    private ObjectMapper resultMapper = Mockito.mock(ObjectMapper.class);
+    private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
     @Autowired
     private SpringBeanReferenceResolver referenceResolver;
     @Mock
@@ -68,7 +68,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         referenceResolver.setApplicationContext(applicationContext);
 
         when(applicationContext.getBean("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("resultMapper", ObjectMapper.class)).thenReturn(resultMapper);
+        when(applicationContext.getBean("objectMapper", ObjectMapper.class)).thenReturn(objectMapper);
     }
 
     @Test
@@ -87,6 +87,6 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "/path/to/some/cert/ca.pem");
         Assert.assertEquals(client2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(client2.getEndpointConfiguration().getResultMapper(), resultMapper);
+        Assert.assertEquals(client2.getEndpointConfiguration().getObjectMapper(), objectMapper);
     }
 }

@@ -70,8 +70,8 @@ public class KubernetesClientConfigParser extends AbstractAnnotationConfigParser
             builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), KubernetesMessageConverter.class));
         }
 
-        if (StringUtils.hasText(annotation.resultMapper())) {
-            builder.resultMapper(getReferenceResolver().resolve(annotation.resultMapper(), ObjectMapper.class));
+        if (StringUtils.hasText(annotation.objectMapper())) {
+            builder.objectMapper(getReferenceResolver().resolve(annotation.objectMapper(), ObjectMapper.class));
         }
 
         return builder.build();

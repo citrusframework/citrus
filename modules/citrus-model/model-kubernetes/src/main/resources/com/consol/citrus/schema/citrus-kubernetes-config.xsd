@@ -32,7 +32,7 @@
       <xs:attribute name="password" type="xs:string"/>
       <xs:attribute name="namespace" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>
-      <xs:attribute name="result-mapper" type="xs:string"/>
+      <xs:attribute name="object-mapper" type="xs:string"/>
       <xs:attribute name="cert-file" type="xs:string"/>
     </xs:complexType>
   </xs:element>

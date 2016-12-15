@@ -39,7 +39,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
     /** JSON data binding for command result */
-    private ObjectMapper resultMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     /** Kubernetes message converter */
     private KubernetesMessageConverter messageConverter = new KubernetesMessageConverter();
@@ -126,18 +126,18 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
     }
 
     /**
-     * Gets the command result mapper.
+     * Gets the command object mapper.
      * @return
      */
-    public ObjectMapper getResultMapper() {
-        return resultMapper;
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 
     /**
-     * Sets the command result mapper.
-     * @param resultMapper
+     * Sets the command object mapper.
+     * @param objectMapper
      */
-    public void setResultMapper(ObjectMapper resultMapper) {
-        this.resultMapper = resultMapper;
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 }
