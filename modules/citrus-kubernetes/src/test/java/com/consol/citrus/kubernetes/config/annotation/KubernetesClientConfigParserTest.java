@@ -48,8 +48,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
             password="s!cr!t",
             namespace="user_namespace",
             messageConverter="messageConverter",
-            objectMapper="objectMapper",
-            certFile="src/test/resources/cert/ca.pem")
+            objectMapper="objectMapper")
     private KubernetesClient client2;
 
     @Mock
@@ -85,7 +84,6 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getCaCertFile(), "src/test/resources/cert/ca.pem");
         Assert.assertEquals(client2.getEndpointConfiguration().getMessageConverter(), messageConverter);
         Assert.assertEquals(client2.getEndpointConfiguration().getObjectMapper(), objectMapper);
     }
