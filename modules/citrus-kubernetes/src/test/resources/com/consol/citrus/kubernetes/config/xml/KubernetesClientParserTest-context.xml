@@ -15,7 +15,7 @@
                           namespace="user_namespace"
                           message-converter="messageConverter"
                           object-mapper="objectMapper"
-                          cert-file="/path/to/some/cert/ca.cert"/>
+                          cert-file="src/test/resource/cert/ca.pem"/>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.kubernetes.message.KubernetesMessageConverter"/>
