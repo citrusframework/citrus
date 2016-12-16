@@ -17,10 +17,14 @@
 package com.consol.citrus.kubernetes.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.kubernetes.command.*;
 import com.consol.citrus.kubernetes.model.KubernetesRequest;
 import com.consol.citrus.kubernetes.model.KubernetesResponse;
 import com.consol.citrus.message.DefaultMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.fabric8.kubernetes.client.Watcher;
 
 import java.io.IOException;
 import java.util.Map;
@@ -76,11 +80,89 @@ public class KubernetesMessage extends DefaultMessage {
     }
 
     /**
+     * Response generating instantiation.
+     * @param command
+     * @param result
+     * @return
+     */
+    public static KubernetesMessage response(String command, KubernetesResource<?> result) {
+        KubernetesResponse response = new KubernetesResponse();
+        response.setCommand(command);
+        response.setResult(result);
+
+        return new KubernetesMessage(response);
+    }
+
+    /**
+     * Response generating instantiation.
+     * @param command
+     * @param action
+     * @param result
+     * @return
+     */
+    public static KubernetesMessage response(String command, Watcher.Action action, KubernetesResource<?> result) {
+        KubernetesResponse response = new KubernetesResponse();
+        response.setCommand(command);
+        response.setResult(result);
+        response.setAction(action.name());
+
+        return new KubernetesMessage(response);
+    }
+
+    /**
+     * Error generating instantiation.
+     * @param error
+     * @return
+     */
+    public static KubernetesMessage response(String command, KubernetesClientException error) {
+        return response(command, error.getMessage());
+    }
+
+    /**
+     * Error generating instantiation.
+     * @param error
+     * @return
+     */
+    public static KubernetesMessage response(String command, String error) {
+        KubernetesResponse response = new KubernetesResponse();
+        response.setCommand(command);
+        response.setError(error);
+
+        return new KubernetesMessage(response);
+    }
+
+    /**
      * Request generating instantiation.
      * @param request
      * @return
      */
     public static KubernetesMessage request(KubernetesRequest request) {
+        return new KubernetesMessage(request);
+    }
+
+    /**
+     * Request generating instantiation.
+     * @param command
+     * @return
+     */
+    public static KubernetesMessage request(KubernetesCommand<?> command) {
+        KubernetesRequest request = new KubernetesRequest();
+        request.setCommand(command.getName().substring("kubernetes:".length()));
+
+        for (Map.Entry<String, Object> entry : command.getParameters().entrySet()) {
+            if (entry.getKey().equals(KubernetesMessageHeaders.NAME)) {
+                request.setName(entry.getValue().toString());
+            }
+
+            if (entry.getKey().equals(KubernetesMessageHeaders.NAMESPACE)) {
+                request.setNamespace(entry.getValue().toString());
+            }
+
+            if (entry.getKey().equals(KubernetesMessageHeaders.LABEL)) {
+                request.setLabel(entry.getValue().toString());
+            }
+        }
+
         return new KubernetesMessage(request);
     }
 

@@ -18,6 +18,7 @@ package com.consol.citrus.kubernetes.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +33,7 @@ public class KubernetesResponse {
 
     /** The result model */
     @JsonProperty("result")
-    private Object result;
+    private KubernetesResource<?> result;
 
     /** Optional error on this result */
     @JsonProperty("error")
@@ -78,7 +79,7 @@ public class KubernetesResponse {
      * Gets the result property.
      * @return
      */
-    public Object getResult() {
+    public KubernetesResource<?> getResult() {
         return result;
     }
 
@@ -86,7 +87,7 @@ public class KubernetesResponse {
      * Sets the result property.
      * @param value
      */
-    public void setResult(Object value) {
+    public void setResult(KubernetesResource<?> value) {
         this.result = value;
     }
 

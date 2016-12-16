@@ -19,6 +19,7 @@ package com.consol.citrus.kubernetes.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -29,7 +30,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractKubernetesCommand<R, T extends AbstractKubernetesCommand> implements KubernetesCommand {
+public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T extends AbstractKubernetesCommand> implements KubernetesCommand {
 
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());

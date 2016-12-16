@@ -17,12 +17,13 @@
 package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface CommandResultCallback<R> {
+public interface CommandResultCallback<R extends KubernetesResource> {
 
     /**
      * Callback method called with command result.

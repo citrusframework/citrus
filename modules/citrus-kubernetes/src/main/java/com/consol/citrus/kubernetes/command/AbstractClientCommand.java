@@ -19,6 +19,7 @@ package com.consol.citrus.kubernetes.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
@@ -26,7 +27,7 @@ import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractClientCommand<O, R, T extends AbstractClientCommand> extends AbstractKubernetesCommand<R, T> {
+public abstract class AbstractClientCommand<O, R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractKubernetesCommand<R, T> {
 
     /**
      * Default constructor initializing the command name.

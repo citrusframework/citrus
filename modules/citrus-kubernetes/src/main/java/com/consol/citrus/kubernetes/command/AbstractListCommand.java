@@ -16,13 +16,14 @@
 
 package com.consol.citrus.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractListCommand<R, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+public abstract class AbstractListCommand<R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
 
     /**
      * Default constructor initializing the command name.

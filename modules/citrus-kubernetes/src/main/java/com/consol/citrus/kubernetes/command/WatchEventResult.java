@@ -16,13 +16,14 @@
 
 package com.consol.citrus.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class WatchEventResult<R> extends CommandResult<R> {
+public class WatchEventResult<R extends KubernetesResource> extends CommandResult<R> {
 
     private Watch watch;
 

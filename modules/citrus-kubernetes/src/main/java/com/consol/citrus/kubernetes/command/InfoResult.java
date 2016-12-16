@@ -17,6 +17,7 @@
 package com.consol.citrus.kubernetes.command;
 
 import com.fasterxml.jackson.annotation.*;
+import io.fabric8.kubernetes.api.model.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -28,10 +29,15 @@ import javax.validation.constraints.NotNull;
 @JsonPropertyOrder({
         "clientVersion",
         "apiVersion",
+        "kind",
         "masterUrl",
         "namespace"
 })
-public class InfoResult {
+public class InfoResult implements HasMetadata {
+    @NotNull
+    @JsonProperty("kind")
+    private String kind = "Pod";
+
     @NotNull
     @JsonProperty("apiVersion")
     private String apiVersion = "v1";
@@ -47,6 +53,11 @@ public class InfoResult {
     @NotNull
     @JsonProperty("namespace")
     private String namespace;
+
+    @Override
+    public String getKind() {
+        return "Info";
+    }
 
     /**
      * Gets the value of the apiVersion property.
@@ -118,5 +129,14 @@ public class InfoResult {
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+
+    @Override
+    public ObjectMeta getMetadata() {
+        return null;
+    }
+
+    @Override
+    public void setMetadata(ObjectMeta objectMeta) {
     }
 }

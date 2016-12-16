@@ -18,6 +18,7 @@ package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface KubernetesCommand<R> {
+public interface KubernetesCommand<R extends KubernetesResource> {
 
     /**
      * Executes command with given kubernetes client and test context.
