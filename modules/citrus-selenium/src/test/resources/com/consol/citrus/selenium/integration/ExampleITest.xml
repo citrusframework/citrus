@@ -31,8 +31,6 @@
 
       <web:goto url="http://www.example.com" client="webBrowser"/>
 
-      <web:goto url="test" client="webBrowser"/>
-
       <web:validate client="webBrowser">
         <web:element by="tagName" select="h1" value="@contains('Domain')@" />
       </web:validate>
