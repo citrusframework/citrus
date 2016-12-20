@@ -104,7 +104,7 @@ As you can see we use usual send and receive test actions. The XML SSH represent
 
 ### SSH Server
 
-Now that we have used Citrus on the client side we can also use Citrus SSH server module in order to provide a full stacked SSH server deamon. We can accept SSH client connections and provide proper response messages as an answer.
+Now that we have used Citrus on the client side we can also use Citrus SSH server module in order to provide a full stacked SSH server daemon. We can accept SSH client connections and provide proper response messages as an answer.
 
 Given the above SSH module namespace declaration, adding a new SSH server is quite simple:
 
