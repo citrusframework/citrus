@@ -18,6 +18,7 @@ package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -46,6 +47,12 @@ public class StartBrowserAction extends AbstractSeleniumAction {
 
         log.info("Opening browser of type {}", browser.getEndpointConfiguration().getBrowserType());
         browser.start();
+
+        if (StringUtils.hasText(getBrowser().getEndpointConfiguration().getStartPageUrl())) {
+            NavigateAction openStartPage = new NavigateAction();
+            openStartPage.setPage(getBrowser().getEndpointConfiguration().getStartPageUrl());
+            openStartPage.execute(browser, context);
+        }
 
         context.setVariable("selenium_browser", browser.getName());
     }

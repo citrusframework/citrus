@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/selenium/testcase
+                                  http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd
+                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="SeleniumIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2017-01-02</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2017-01-02T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test selenium command execution with browser client.</description>
+
+    <actions>
+      <echo>
+        <message>Validate Selenium browser commands</message>
+      </echo>
+
+      <selenium:start browser="webBrowser"/>
+
+      <selenium:navigate page="http://localhost:19090"/>
+
+      <selenium:find>
+        <selenium:element tag-name="h1"/>
+      </selenium:find>
+
+      <selenium:click>
+        <selenium:element id="open-alert"/>
+      </selenium:click>
+
+      <sleep milliseconds="1000"/>
+
+      <selenium:alert action="accept"/>
+
+      <selenium:click>
+        <selenium:element link-text="Say Hello!"/>
+      </selenium:click>
+
+      <sleep milliseconds="500"/>
+
+      <selenium:alert action="accept"/>
+
+      <selenium:stop browser="webBrowser"/>
+
+    </actions>
+
+  </testcase>
+</spring:beans>

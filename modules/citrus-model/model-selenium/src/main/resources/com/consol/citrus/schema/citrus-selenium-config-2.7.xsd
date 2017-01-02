@@ -31,6 +31,7 @@
           <xs:restriction base="xs:string">
             <xs:enumeration value="htmlunit"/>
             <xs:enumeration value="firefox"/>
+            <xs:enumeration value="safari"/>
             <xs:enumeration value="chrome"/>
             <xs:enumeration value="googlechrome"/>
             <xs:enumeration value="internet explorer"/>

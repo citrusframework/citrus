@@ -3,12 +3,14 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns:citrus="http://www.citrusframework.org/schema/config"
      xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
+     xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
      xmlns:context="http://www.springframework.org/schema/context"
      xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/selenium/config http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+       http://www.citrusframework.org/schema/selenium/config http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd
+       http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
 
   <context:property-placeholder location="classpath:citrus.properties"
                   ignore-unresolvable="true"/>
@@ -20,5 +22,17 @@
   <!-- HtmlUnit webdriver -->
   <citrus-selenium:browser id="webBrowser"
                            type="htmlunit"/>
+
+  <citrus-http:server id="webServer"
+                      port="19090"
+                      auto-start="true"
+                      endpoint-adapter="indexPageAdapter"/>
+
+   <citrus:static-response-adapter id="indexPageAdapter">
+     <citrus:resource file="templates/index.html"/>
+     <citrus:header>
+       <citrus:element name="Content-Type" value="text/html"/>
+     </citrus:header>
+   </citrus:static-response-adapter>
 
 </beans>

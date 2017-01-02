@@ -30,6 +30,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.*;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.slf4j.Logger;
@@ -173,6 +174,8 @@ public class SeleniumBrowser extends AbstractEndpoint {
                 return new FirefoxDriver(defaults);
             case BrowserType.IE:
                 return new InternetExplorerDriver();
+            case BrowserType.SAFARI:
+                return new SafariDriver();
             case BrowserType.CHROME:
                 return new ChromeDriver();
             case BrowserType.GOOGLECHROME:
