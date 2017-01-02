@@ -53,6 +53,7 @@
     <module>modules/citrus-cucumber</module>
     <module>modules/citrus-zookeeper</module>
     <module>modules/citrus-arquillian</module>
+    <module>modules/citrus-selenium</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
   </modules>
@@ -571,6 +572,13 @@
             <artifactId>junit</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <!-- Citrus Selenium dependencies -->
+      <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>2.52.0</version>
       </dependency>
 
       <!-- JaxB Bindings (API and implementation) -->

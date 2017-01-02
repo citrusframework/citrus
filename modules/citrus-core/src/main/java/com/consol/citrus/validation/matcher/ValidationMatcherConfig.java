@@ -43,6 +43,10 @@ public class ValidationMatcherConfig {
     private final CreateVariableValidationMatcher createVariablesValidationMatcher = new CreateVariableValidationMatcher();
     private final DateRangeValidationMatcher dateRangeValidationMatcher = new DateRangeValidationMatcher();
     private final HamcrestValidationMatcher hamcrestValidationMatcher = new HamcrestValidationMatcher();
+    private final EmptyValidationMatcher emptyValidationMatcher = new EmptyValidationMatcher();
+    private final NotEmptyValidationMatcher notEmptyValidationMatcher = new NotEmptyValidationMatcher();
+    private final NullValidationMatcher nullValidationMatcher = new NullValidationMatcher();
+    private final NotNullValidationMatcher notNullValidationMatcher = new NotNullValidationMatcher();
 
     @Bean(name = "validationMatcherRegistry")
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
@@ -76,6 +80,10 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.getMembers().put("variable", createVariablesValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("dateRange", dateRangeValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("assertThat", hamcrestValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("empty", emptyValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("notEmpty", notEmptyValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("null", nullValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("notNull", notNullValidationMatcher);
 
         return citrusValidationMatcherLibrary;
     }

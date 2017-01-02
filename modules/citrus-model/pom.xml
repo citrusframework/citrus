@@ -31,6 +31,7 @@
     <module>model-jmx</module>
     <module>model-cucumber</module>
     <module>model-zookeeper</module>
+    <module>model-selenium</module>
   </modules>
 
   <dependencies>

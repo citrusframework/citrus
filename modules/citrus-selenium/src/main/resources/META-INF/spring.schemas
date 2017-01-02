@@ -1,0 +1,4 @@
+http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-2.7.xsd=com/consol/citrus/schema/citrus-selenium-config-2.7.xsd
+http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd=com/consol/citrus/schema/citrus-selenium-config.xsd
+http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-2.7.xsd=com/consol/citrus/schema/citrus-selenium-testcase-2.7.xsd
+http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd=com/consol/citrus/schema/citrus-selenium-testcase.xsd
