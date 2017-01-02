@@ -18,26 +18,26 @@ package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
-import com.consol.citrus.selenium.actions.SetInputAction;
+import com.consol.citrus.selenium.actions.CheckInputAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * @author Tamer Erdogan, Christoph Deppisch
+ * @author Christoph Deppisch
  * @since 2.7
  */
-public class SetInputActionParser extends FindElementActionParser {
+public class CheckInputActionParser extends FindElementActionParser {
 
     @Override
     protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
         super.parseAction(beanDefinition, element, parserContext);
 
-        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("value"), "value");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("checked"), "checked");
     }
 
     @Override
     protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return SetInputAction.class;
+        return CheckInputAction.class;
     }
 }

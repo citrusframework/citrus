@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.selenium.config.handler;
+package com.consol.citrus.selenium.actions;
 
-import com.consol.citrus.selenium.config.xml.SeleniumBrowserParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumConfigNamespaceHandler extends NamespaceHandlerSupport {
+public class ClearBrowserCacheAction extends AbstractSeleniumAction {
+
+    /**
+     * Default constructor.
+     */
+    public ClearBrowserCacheAction() {
+        super("clear-cache");
+    }
 
     @Override
-    public void init() {
-        registerBeanDefinitionParser("browser", new SeleniumBrowserParser());
+    protected void execute(SeleniumBrowser browser, TestContext context) {
+        browser.getWebDriver().manage().deleteAllCookies();
     }
 }

@@ -20,22 +20,27 @@ import com.consol.citrus.selenium.config.xml.*;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * @author Tamer Erdogan
+ * @author Tamer Erdogan, Christoph Deppisch
+ * @since 2.7
  */
 public class SeleniumTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
-    @Override
     public void init() {
-        registerBeanDefinitionParser("page", new PageActionParser());
-        registerBeanDefinitionParser("validate", new ValidateActionParser());
-        registerBeanDefinitionParser("goto", new GotoActionParser());
-        registerBeanDefinitionParser("start", new StartActionParser());
-        registerBeanDefinitionParser("stop", new StopActionParser());
-        registerBeanDefinitionParser("clearCache", new ClearCacheActionParser());
+        registerBeanDefinitionParser("start", new StartBrowserActionParser());
+        registerBeanDefinitionParser("stop", new StopBrowserActionParser());
+        registerBeanDefinitionParser("open-window", new OpenWindowActionParser());
+        registerBeanDefinitionParser("close-window", new CloseWindowActionParser());
+        registerBeanDefinitionParser("switch-window", new SwitchWindowActionParser());
+        registerBeanDefinitionParser("clear-cache", new ClearBrowserCacheActionParser());
+        registerBeanDefinitionParser("find", new FindElementActionParser());
         registerBeanDefinitionParser("click", new ClickActionParser());
-        registerBeanDefinitionParser("setInput", new SetInputActionParser());
-        registerBeanDefinitionParser("browser", new BrowserActionParser());
-        registerBeanDefinitionParser("extract", new ExtractActionParser());
+        registerBeanDefinitionParser("set-input", new SetInputActionParser());
+        registerBeanDefinitionParser("check-input", new CheckInputActionParser());
+        registerBeanDefinitionParser("dropdown-select", new DropDownSelectActionParser());
+        registerBeanDefinitionParser("wait", new WaitUntilActionParser());
+        registerBeanDefinitionParser("javascript", new JavaScriptActionParser());
+        registerBeanDefinitionParser("screenshot", new MakeScreenshotActionParser());
+        registerBeanDefinitionParser("navigate", new NavigateActionParser());
+        registerBeanDefinitionParser("alert", new AlertActionParser());
     }
-
 }

@@ -17,17 +17,8 @@
     <citrus:variable name="project.name" value="Citrus Selenium Web Integration Testing"/>
   </citrus:global-variables>
 
-  <citrus:validation-matcher-library id="seleniumMatcherLibrary" prefix="web:">
-    <citrus:matcher name="empty" class="com.consol.citrus.validation.matcher.core.EmptyValidationMatcher"/>
-    <citrus:matcher name="notEmpty" class="com.consol.citrus.validation.matcher.core.NotEmptyValidationMatcher"/>
-    <citrus:matcher name="null" class="com.consol.citrus.validation.matcher.core.NullValidationMatcher"/>
-    <citrus:matcher name="notNull" class="com.consol.citrus.validation.matcher.core.NotNullValidationMatcher"/>
-  </citrus:validation-matcher-library>
-
-  <!-- Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
-
   <!-- HtmlUnit webdriver -->
-  <citrus-selenium:client id="webBrowser" browser-type="HTML_UNIT"/>
+  <citrus-selenium:browser id="webBrowser"
+                           type="htmlunit"/>
 
 </beans>

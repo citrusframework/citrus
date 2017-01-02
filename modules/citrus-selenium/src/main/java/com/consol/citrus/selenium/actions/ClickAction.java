@@ -14,19 +14,29 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.selenium.config.handler;
+package com.consol.citrus.selenium.actions;
 
-import com.consol.citrus.selenium.config.xml.SeleniumBrowserParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import org.openqa.selenium.WebElement;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumConfigNamespaceHandler extends NamespaceHandlerSupport {
+public class ClickAction extends FindElementAction {
+
+    /**
+     * Default constructor.
+     */
+    public ClickAction() {
+        super("click");
+    }
 
     @Override
-    public void init() {
-        registerBeanDefinitionParser("browser", new SeleniumBrowserParser());
+    protected void execute(WebElement webElement, SeleniumBrowser browser, TestContext context) {
+        super.execute(webElement, browser, context);
+
+        webElement.click();
     }
 }

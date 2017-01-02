@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.citrusframework.org/schema/selenium/config http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
+
+  <citrus-selenium:browser id="htmlUnitBrowser"/>
+
+  <citrus-selenium:browser id="firefoxBrowser"
+                          type="firefox"
+                          version="1.0"
+                          event-listeners="eventListeners"
+                          javascript="false"
+                          start-page="http://citrusframework.org"
+                          timeout="10000"/>
+
+  <citrus-selenium:browser id="remoteBrowser"
+                          type="internet explorer"
+                          remote-server="http://localhost:9090/selenium"/>
+
+  <util:list id="eventListeners">
+    <ref bean="eventListener"/>
+  </util:list>
+
+  <bean id="eventListener" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.openqa.selenium.support.events.WebDriverEventListener"/>
+  </bean>
+
+</beans>

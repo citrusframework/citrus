@@ -19,7 +19,16 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.selenium"/>
       <nameXmlTransform>
-        <elementName prefix="Selenium" suffix="Definition" />
+        <elementName prefix="Selenium" suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-selenium-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.selenium"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>

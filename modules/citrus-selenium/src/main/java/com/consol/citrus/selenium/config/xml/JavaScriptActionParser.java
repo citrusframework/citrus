@@ -18,26 +18,43 @@ package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
-import com.consol.citrus.selenium.actions.SetInputAction;
+import com.consol.citrus.selenium.actions.JavaScriptAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class SetInputActionParser extends FindElementActionParser {
+public class JavaScriptActionParser extends AbstractBrowserActionParser {
 
     @Override
     protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
-        super.parseAction(beanDefinition, element, parserContext);
+        Element scriptElement = DomUtils.getChildElementByTagName(element, "script");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, DomUtils.getTextValue(scriptElement), "script");
 
-        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("value"), "value");
+        List<String> errors = new ArrayList<>();
+        Element errorsElement = DomUtils.getChildElementByTagName(element, "errors");
+        if (errorsElement != null) {
+            List<Element> errorElements = DomUtils.getChildElementsByTagName(errorsElement, "error");
+            if (!CollectionUtils.isEmpty(errorElements)) {
+                for (Element error : errorElements) {
+                    errors.add(DomUtils.getTextValue(error));
+                }
+            }
+        }
+
+        beanDefinition.addPropertyValue("expectedErrors", errors);
     }
 
     @Override
     protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return SetInputAction.class;
+        return JavaScriptAction.class;
     }
 }

@@ -16,33 +16,25 @@
 
 package com.consol.citrus.selenium.config.xml;
 
-import com.consol.citrus.selenium.action.ClickAction;
-import org.openqa.selenium.By;
-import org.springframework.beans.factory.config.BeanDefinition;
+import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
+import com.consol.citrus.selenium.actions.ClickAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- *
- * @author Tamer Erdogan
+ * @author Tamer Erdogan, Christoph Deppisch
+ * @since 2.7
  */
-public class ClickActionParser extends WebActionParser {
+public class ClickActionParser extends FindElementActionParser {
 
-    /**
-     * @param element
-     * @param parserContext
-     * @return
-     */
     @Override
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        actionClass = ClickAction.class;
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(actionClass);
-        this.doParse(element, builder);
+    protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
+        super.parseAction(beanDefinition, element, parserContext);
+    }
 
-        By by = getByFromElement(element);
-        builder.addPropertyValue("by", by);
-
-        return builder.getBeanDefinition();
+    @Override
+    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
+        return ClickAction.class;
     }
 }

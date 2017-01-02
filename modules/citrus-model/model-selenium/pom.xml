@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -35,14 +35,18 @@
         </executions>
         <configuration>
           <extension>true</extension>
-          <wsdl>false</wsdl>
-          <xmlschema>true</xmlschema>
-          <schemaDirectory>src/main/resources</schemaDirectory>
-          <bindingDirectory>src/main/resources</bindingDirectory>
-          <schemaFiles>**/citrus-selenium-config.xsd</schemaFiles>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-selenium-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-selenium-testcase.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
         </configuration>
       </plugin>
 
     </plugins>
   </build>
+
 </project>

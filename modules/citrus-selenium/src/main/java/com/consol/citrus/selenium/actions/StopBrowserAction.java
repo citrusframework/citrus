@@ -14,19 +14,29 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.selenium.config.handler;
+package com.consol.citrus.selenium.actions;
 
-import com.consol.citrus.selenium.config.xml.SeleniumBrowserParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumConfigNamespaceHandler extends NamespaceHandlerSupport {
+public class StopBrowserAction extends AbstractSeleniumAction {
+
+    /**
+     * Default constructor.
+     */
+    public StopBrowserAction() {
+        super("stop");
+    }
 
     @Override
-    public void init() {
-        registerBeanDefinitionParser("browser", new SeleniumBrowserParser());
+    protected void execute(SeleniumBrowser browser, TestContext context) {
+        log.info("Stopping browser of type {}", browser.getEndpointConfiguration().getBrowserType());
+        browser.stop();
+
+        context.getVariables().remove("selenium_browser");
     }
 }
