@@ -16,12 +16,16 @@
 
 package com.consol.citrus.selenium.actions;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.TakesScreenshot;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -29,7 +33,8 @@ import java.io.File;
  */
 public class MakeScreenshotAction extends AbstractSeleniumAction {
 
-    private File screenshot;
+    /** Storage to save screenshot to */
+    private String outputDir;
 
     /**
      * Default constructor.
@@ -40,17 +45,48 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
-        if (browser.getWebDriver() instanceof RemoteWebDriver) {
-            screenshot = ((RemoteWebDriver) browser.getWebDriver()).getScreenshotAs(OutputType.FILE);
-            context.setVariable("screenshot", screenshot);
+        File screenshot = null;
+        if (browser.getWebDriver() instanceof TakesScreenshot){
+            screenshot = ((TakesScreenshot) browser.getWebDriver()).getScreenshotAs(OutputType.FILE);
+        } else {
+            log.warn("Skip screenshot action because web driver is missing screenshot features");
+        }
+
+        if (screenshot != null) {
+            String testName = "Test";
+            if (context.getVariables().containsKey(Citrus.TEST_NAME_VARIABLE)) {
+                testName = context.getVariable(Citrus.TEST_NAME_VARIABLE);
+            }
+
+            context.setVariable("screenshot", testName + "_" + screenshot.getName());
+
+            if (StringUtils.hasText(outputDir)) {
+                try {
+                    FileCopyUtils.copy(screenshot, new File(outputDir + File.separator + testName + "_" + screenshot.getName()));
+                } catch (IOException e) {
+                    log.error("Failed to save screenshot to target storage", e);
+                }
+            } else {
+                browser.storeFile(screenshot);
+            }
         }
     }
 
-    public void setScreenshot(File screenshot) {
-        this.screenshot = screenshot;
+    /**
+     * Gets the outputDir.
+     *
+     * @return
+     */
+    public String getOutputDir() {
+        return outputDir;
     }
 
-    public File getScreenshot() {
-        return screenshot;
+    /**
+     * Sets the outputDir.
+     *
+     * @param outputDir
+     */
+    public void setOutputDir(String outputDir) {
+        this.outputDir = outputDir;
     }
 }

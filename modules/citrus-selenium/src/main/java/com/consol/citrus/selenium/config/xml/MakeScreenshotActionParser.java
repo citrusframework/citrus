@@ -16,6 +16,7 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.MakeScreenshotAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -30,6 +31,7 @@ public class MakeScreenshotActionParser extends AbstractBrowserActionParser {
 
     @Override
     protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("output-dir"), "outputDir");
     }
 
     @Override

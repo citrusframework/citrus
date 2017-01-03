@@ -120,7 +120,15 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="screenshot" type="BrowserActionType"/>
+  <xs:element name="screenshot">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BrowserActionType">
+          <xs:attribute name="output-dir" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="navigate">
     <xs:complexType>

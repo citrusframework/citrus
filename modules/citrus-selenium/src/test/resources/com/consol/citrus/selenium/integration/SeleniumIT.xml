@@ -60,6 +60,8 @@
         <selenium:element id="age"/>
       </selenium:dropdown-select>
 
+      <selenium:screenshot output-dir="target"/>
+
       <sleep milliseconds="500"/>
 
       <selenium:click>

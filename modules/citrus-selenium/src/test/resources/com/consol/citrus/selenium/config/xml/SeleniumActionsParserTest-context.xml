@@ -52,7 +52,7 @@
                 </selenium:errors>
             </selenium:javascript>
 
-            <selenium:screenshot browser="mockBrowser"/>
+            <selenium:screenshot browser="mockBrowser" output-dir="/tmp/storage"/>
 
             <selenium:navigate page="back"/>
 

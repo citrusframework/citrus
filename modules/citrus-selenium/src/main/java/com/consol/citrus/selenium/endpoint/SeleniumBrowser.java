@@ -133,17 +133,27 @@ public class SeleniumBrowser extends AbstractEndpoint {
      * @return String containing the filename to which the file is uploaded to.
      */
     public String storeFile(String fileLocation) {
-        try {
-            File resourceFile = new File(fileLocation);
-            Path dir = temporaryStorage.getFileName();
-            File newFile = new File(dir.toFile(), resourceFile.getName());
+        return storeFile(new File(fileLocation));
+    }
 
-            log.info("Copy " + resourceFile + " to " + newFile);
-            FileUtils.copyFile(resourceFile, newFile);
+    /**
+     * Deploy resource object from resource folder and return path of deployed
+     * file
+     *
+     * @param file Resource to deploy to temporary storage
+     * @return String containing the filename to which the file is uploaded to.
+     */
+    public String storeFile(File file) {
+        try {
+            Path dir = temporaryStorage.getFileName();
+            File newFile = new File(dir.toFile(), file.getName());
+
+            log.info("Copy " + file + " to " + newFile);
+            FileUtils.copyFile(file, newFile);
 
             return newFile.getCanonicalPath();
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to store file: " + fileLocation, e);
+            throw new CitrusRuntimeException("Failed to store file: " + file, e);
         }
     }
 

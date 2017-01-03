@@ -99,6 +99,7 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         MakeScreenshotAction screenshotAction = (MakeScreenshotAction) getNextTestActionFromTest();
         Assert.assertNotNull(screenshotAction.getBrowser());
         Assert.assertEquals(screenshotAction.getName(), "selenium:screenshot");
+        Assert.assertEquals(screenshotAction.getOutputDir(), "/tmp/storage");
 
         NavigateAction navigateAction = (NavigateAction) getNextTestActionFromTest();
         Assert.assertNull(navigateAction.getBrowser());
