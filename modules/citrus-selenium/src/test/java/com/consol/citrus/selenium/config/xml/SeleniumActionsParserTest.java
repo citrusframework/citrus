@@ -17,6 +17,7 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.selenium.actions.*;
+import com.consol.citrus.selenium.pages.UserFormPage;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
 
     @Test
     public void testActionParser() {
-        assertActionCount(17);
+        assertActionCount(19);
 
         StartBrowserAction startAction = (StartBrowserAction) getNextTestActionFromTest();
         Assert.assertNotNull(startAction.getBrowser());
@@ -53,6 +54,25 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         Assert.assertEquals(findElementAction.getStyles().get("color"), "#000000");
         Assert.assertTrue(findElementAction.isDisplayed());
         Assert.assertFalse(findElementAction.isEnabled());
+
+        PageAction pageAction = (PageAction) getNextTestActionFromTest();
+        Assert.assertNull(pageAction.getBrowser());
+        Assert.assertEquals(pageAction.getName(), "selenium:page");
+        Assert.assertEquals(pageAction.getAction(), "setUserName");
+        Assert.assertEquals(pageAction.getPage(), beanDefinitionContext.getBean("userForm"));
+        Assert.assertNull(pageAction.getType());
+        Assert.assertEquals(pageAction.getArguments().size(), 1L);
+        Assert.assertEquals(pageAction.getArguments().get(0), "${username}");
+        Assert.assertNull(pageAction.getValidator());
+
+        pageAction = (PageAction) getNextTestActionFromTest();
+        Assert.assertNull(pageAction.getBrowser());
+        Assert.assertEquals(pageAction.getName(), "selenium:page");
+        Assert.assertEquals(pageAction.getAction(), "validate");
+        Assert.assertNull(pageAction.getPage());
+        Assert.assertEquals(pageAction.getType(), UserFormPage.class.getName());
+        Assert.assertEquals(pageAction.getArguments().size(), 0L);
+        Assert.assertEquals(pageAction.getValidator(), beanDefinitionContext.getBean("pageValidator"));
 
         ClickAction clickAction = (ClickAction) getNextTestActionFromTest();
         Assert.assertNull(clickAction.getBrowser());

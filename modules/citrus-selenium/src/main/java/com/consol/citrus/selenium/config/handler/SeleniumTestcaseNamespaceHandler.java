@@ -33,6 +33,7 @@ public class SeleniumTestcaseNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("switch-window", new SwitchWindowActionParser());
         registerBeanDefinitionParser("clear-cache", new ClearBrowserCacheActionParser());
         registerBeanDefinitionParser("find", new FindElementActionParser());
+        registerBeanDefinitionParser("page", new PageActionParser());
         registerBeanDefinitionParser("click", new ClickActionParser());
         registerBeanDefinitionParser("set-input", new SetInputActionParser());
         registerBeanDefinitionParser("check-input", new CheckInputActionParser());

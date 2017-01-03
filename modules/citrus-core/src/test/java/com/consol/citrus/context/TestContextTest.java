@@ -276,6 +276,19 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(replaceValues.get(1), "123");
         Assert.assertEquals(replaceValues.get(2), "test");
     }
+
+    @Test
+    public void testReplaceVariablesInArray() {
+        context.getVariables().put("test", "123");
+
+        String[] testArray = new String[] { "Hello TestFramework!", "${test}", "test" };
+
+        String[] replaceValues = context.resolveDynamicValuesInArray(testArray);
+
+        Assert.assertEquals(replaceValues[0], "Hello TestFramework!");
+        Assert.assertEquals(replaceValues[1], "123");
+        Assert.assertEquals(replaceValues[2], "test");
+    }
     
     @Test
     public void testResolveDynamicValue() {

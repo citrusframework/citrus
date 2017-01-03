@@ -101,6 +101,28 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="page">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BrowserActionType">
+          <xs:sequence>
+            <xs:element name="arguments" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="argument" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="name" type="xs:string"/>
+          <xs:attribute name="type" type="xs:string"/>
+          <xs:attribute name="validator" type="xs:string"/>
+          <xs:attribute name="action" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="click" type="ElementActionType"/>
 
   <xs:element name="set-input">

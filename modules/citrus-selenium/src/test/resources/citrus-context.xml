@@ -60,4 +60,7 @@
     </citrus:header>
   </citrus:static-response-adapter>
 
+  <!-- Web page objects -->
+  <bean id="userForm" class="com.consol.citrus.selenium.pages.UserFormPage" scope="prototype"/>
+
 </beans>

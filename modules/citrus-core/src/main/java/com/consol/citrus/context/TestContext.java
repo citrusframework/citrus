@@ -258,6 +258,17 @@ public class TestContext {
         }
         return variableFreeList;
     }
+
+    /**
+     * Replaces variables and functions in array with respective values and
+     * returns the new array representation.
+     *
+     * @param array having optional variable entries.
+     * @return the constructed list without variable entries.
+     */
+    public <T> T[] resolveDynamicValuesInArray(final T[] array) {
+        return resolveDynamicValuesInList(Arrays.asList(array)).toArray(Arrays.copyOf(array, array.length));
+    }
     
     /**
      * Clears variables in this test context. Initially adds all global variables.

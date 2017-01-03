@@ -56,8 +56,22 @@
 
       <selenium:navigate page="form"/>
 
+      <create-variables>
+        <variable name="username" value="Selenium"></variable>
+      </create-variables>
+
+      <selenium:page name="userForm" action="setUserName">
+        <selenium:arguments>
+          <selenium:argument>${username}</selenium:argument>
+        </selenium:arguments>
+      </selenium:page>
+
+      <selenium:page name="userForm" action="validate"/>
+
+      <sleep milliseconds="300"/>
+
       <selenium:set-input value="Citrus">
-        <selenium:element id="user"/>
+        <selenium:element id="username"/>
       </selenium:set-input>
 
       <selenium:dropdown-select option="adult">

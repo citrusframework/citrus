@@ -24,6 +24,16 @@
                 </selenium:element>
             </selenium:find>
 
+            <selenium:page name="userForm" action="setUserName">
+                <selenium:arguments>
+                    <selenium:argument>${username}</selenium:argument>
+                </selenium:arguments>
+            </selenium:page>
+
+            <selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+                           action="validate"
+                           validator="pageValidator"/>
+
             <selenium:click>
                 <selenium:element id="edit-link"/>
             </selenium:click>
@@ -72,7 +82,13 @@
             <selenium:stop browser="mockBrowser"/>
         </actions>
     </testcase>
-    
+
+    <spring:bean id="userForm" class="com.consol.citrus.selenium.pages.UserFormPage"/>
+
+    <spring:bean id="pageValidator" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg value="com.consol.citrus.selenium.model.PageValidator"/>
+    </spring:bean>
+
     <spring:bean id="mockBrowser" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.selenium.endpoint.SeleniumBrowser"/>
     </spring:bean>
