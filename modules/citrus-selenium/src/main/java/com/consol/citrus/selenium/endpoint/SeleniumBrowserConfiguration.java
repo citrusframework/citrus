@@ -17,6 +17,8 @@
 package com.consol.citrus.selenium.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 
@@ -44,7 +46,14 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
     /** Browser version */
     private String version = "FIREFOX_38";
 
+    /** Web driver event listeners */
     private List<WebDriverEventListener> eventListeners = new ArrayList<>();
+
+    /** Custom web driver instance */
+    private WebDriver webDriver;
+
+    /** Optional firefox profile */
+    private FirefoxProfile firefoxProfile;
 
     /**
      * Gets the javaScript enabled property.
@@ -140,5 +149,57 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /**
+     * Gets the webDriver.
+     * @return
+     */
+    public WebDriver getWebDriver() {
+        return webDriver;
+    }
+
+    /**
+     * Sets the webDriver.
+     * @param webDriver
+     */
+    public void setWebDriver(WebDriver webDriver) {
+        this.webDriver = webDriver;
+    }
+
+    /**
+     * Gets the firefoxProfile.
+     *
+     * @return
+     */
+    public FirefoxProfile getFirefoxProfile() {
+        if (firefoxProfile == null) {
+            firefoxProfile = new FirefoxProfile();
+
+            firefoxProfile.setAcceptUntrustedCertificates(true);
+            firefoxProfile.setAssumeUntrustedCertificateIssuer(false);
+
+            /* default download folder, set to 2 to use custom download folder */
+            firefoxProfile.setPreference("browser.download.folderList", 2);
+
+            /* comma separated list if MIME types to save without asking */
+            firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain");
+
+            /* do not show download manager */
+            firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
+
+            firefoxProfile.setEnableNativeEvents(true);
+        }
+
+        return firefoxProfile;
+    }
+
+    /**
+     * Sets the firefoxProfile.
+     *
+     * @param firefoxProfile
+     */
+    public void setFirefoxProfile(FirefoxProfile firefoxProfile) {
+        this.firefoxProfile = firefoxProfile;
     }
 }

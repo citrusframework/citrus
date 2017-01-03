@@ -82,7 +82,9 @@ public class SeleniumBrowser extends AbstractEndpoint {
      */
     public void start() {
         if (!isStarted()) {
-            if (StringUtils.hasText(getEndpointConfiguration().getRemoteServerUrl())) {
+            if (getEndpointConfiguration().getWebDriver() != null) {
+                webDriver = getEndpointConfiguration().getWebDriver();
+            } if (StringUtils.hasText(getEndpointConfiguration().getRemoteServerUrl())) {
                 webDriver = createRemoteWebDriver(getEndpointConfiguration().getBrowserType(), getEndpointConfiguration().getRemoteServerUrl());
             } else {
                 webDriver = createLocalWebDriver(getEndpointConfiguration().getBrowserType());
@@ -169,8 +171,13 @@ public class SeleniumBrowser extends AbstractEndpoint {
     private WebDriver createLocalWebDriver(String browserType) {
         switch (browserType) {
             case BrowserType.FIREFOX:
+                FirefoxProfile firefoxProfile = getEndpointConfiguration().getFirefoxProfile();
+
+                /* set custom download folder */
+                firefoxProfile.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
+
                 DesiredCapabilities defaults = DesiredCapabilities.firefox();
-                defaults.setCapability(FirefoxDriver.PROFILE, createFireFoxProfile());
+                defaults.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
                 return new FirefoxDriver(defaults);
             case BrowserType.IE:
                 return new InternetExplorerDriver();
@@ -217,7 +224,7 @@ public class SeleniumBrowser extends AbstractEndpoint {
             switch (browserType) {
                 case BrowserType.FIREFOX:
                     DesiredCapabilities defaultsFF = DesiredCapabilities.firefox();
-                    defaultsFF.setCapability(FirefoxDriver.PROFILE, createFireFoxProfile());
+                    defaultsFF.setCapability(FirefoxDriver.PROFILE, getEndpointConfiguration().getFirefoxProfile());
                     return new RemoteWebDriver(new URL(serverAddress), defaultsFF);
                 case BrowserType.IE:
                     DesiredCapabilities defaultsIE = DesiredCapabilities.internetExplorer();
@@ -237,33 +244,6 @@ public class SeleniumBrowser extends AbstractEndpoint {
         } catch (MalformedURLException e) {
             throw new CitrusRuntimeException("Failed to access remote server", e);
         }
-    }
-
-    /**
-     * Create new default Firefox profile.
-     * @return
-     */
-    private FirefoxProfile createFireFoxProfile() {
-        FirefoxProfile fp = new FirefoxProfile();
-
-        fp.setAcceptUntrustedCertificates(true);
-        fp.setAssumeUntrustedCertificateIssuer(false);
-
-        /* set custom download folder */
-        fp.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
-
-        /* default download folder, set to 2 to use custom download folder */
-        fp.setPreference("browser.download.folderList", 2);
-
-        /* comma separated list if MIME types to save without asking */
-        fp.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain");
-
-        /* do not show download manager */
-        fp.setPreference("browser.download.manager.showWhenStarting", false);
-
-        fp.setEnableNativeEvents(true);
-
-        return fp;
     }
 
     /**

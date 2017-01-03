@@ -29,6 +29,7 @@
       <xs:attribute name="type">
         <xs:simpleType>
           <xs:restriction base="xs:string">
+            <xs:enumeration value="custom"/>
             <xs:enumeration value="htmlunit"/>
             <xs:enumeration value="firefox"/>
             <xs:enumeration value="safari"/>
@@ -43,6 +44,8 @@
       <xs:attribute name="remote-server" type="xs:string"/>
       <xs:attribute name="javascript" type="xs:boolean"/>
       <xs:attribute name="version" type="xs:string"/>
+      <xs:attribute name="web-driver" type="xs:string"/>
+      <xs:attribute name="firefox-profile" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
   </xs:element>

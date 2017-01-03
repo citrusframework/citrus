@@ -44,6 +44,9 @@ public class SeleniumBrowserParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("remote-server"), "remoteServerUrl");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("javascript"), "javaScript");
 
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("web-driver"), "webDriver");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("firefox-profile"), "firefoxProfile");
+
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("event-listeners"), "eventListeners");
     }
 

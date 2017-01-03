@@ -14,6 +14,8 @@
                           version="1.0"
                           event-listeners="eventListeners"
                           javascript="false"
+                          web-driver="webDriver"
+                          firefox-profile="firefoxProfile"
                           start-page="http://citrusframework.org"
                           timeout="10000"/>
 
@@ -24,6 +26,14 @@
   <util:list id="eventListeners">
     <ref bean="eventListener"/>
   </util:list>
+
+  <bean id="webDriver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.openqa.selenium.WebDriver"/>
+  </bean>
+
+  <bean id="firefoxProfile" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.openqa.selenium.firefox.FirefoxProfile"/>
+  </bean>
 
   <bean id="eventListener" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.openqa.selenium.support.events.WebDriverEventListener"/>

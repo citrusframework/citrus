@@ -42,6 +42,8 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNull(browser.getEndpointConfiguration().getStartPageUrl());
         Assert.assertTrue(browser.getEndpointConfiguration().getEventListeners().isEmpty());
         Assert.assertEquals(browser.getEndpointConfiguration().isJavaScript(), true);
+        Assert.assertNull(browser.getEndpointConfiguration().getWebDriver());
+        Assert.assertNotNull(browser.getEndpointConfiguration().getFirefoxProfile());
         Assert.assertNull(browser.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser.getEndpointConfiguration().getTimeout(), 5000L);
 
@@ -51,6 +53,8 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(browser.getEndpointConfiguration().getStartPageUrl(), "http://citrusframework.org");
         Assert.assertEquals(browser.getEndpointConfiguration().getEventListeners().size(), 1L);
         Assert.assertEquals(browser.getEndpointConfiguration().getEventListeners().get(0), beanDefinitionContext.getBean("eventListener"));
+        Assert.assertEquals(browser.getEndpointConfiguration().getWebDriver(), beanDefinitionContext.getBean("webDriver"));
+        Assert.assertEquals(browser.getEndpointConfiguration().getFirefoxProfile(), beanDefinitionContext.getBean("firefoxProfile"));
         Assert.assertEquals(browser.getEndpointConfiguration().isJavaScript(), false);
         Assert.assertNull(browser.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser.getEndpointConfiguration().getTimeout(), 10000L);
