@@ -31,14 +31,18 @@
       <selenium:navigate page="http://localhost:19090"/>
 
       <selenium:find>
-        <selenium:element tag-name="h1"/>
+        <selenium:element tag-name="h1" text="Welcome!">
+          <selenium:styles>
+            <selenium:style name="font-size" value="20pt"/>
+          </selenium:styles>
+        </selenium:element>
       </selenium:find>
 
       <selenium:click>
         <selenium:element id="open-alert"/>
       </selenium:click>
 
-      <sleep milliseconds="1000"/>
+      <sleep milliseconds="500"/>
 
       <selenium:alert action="accept"/>
 

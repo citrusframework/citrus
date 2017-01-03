@@ -23,6 +23,9 @@
   <xs:element name="description" type="xs:string"/>
 
   <xs:complexType name="BrowserActionType">
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:sequence>
       <xs:attribute name="browser" type="xs:string"/>
   </xs:complexType>
 
@@ -30,26 +33,74 @@
     <xs:complexContent>
         <xs:extension base="BrowserActionType">
           <xs:sequence>
-            <xs:element name="element">
-              <xs:complexType>
-                <xs:attribute name="id" type="xs:string"/>
-                <xs:attribute name="name" type="xs:string"/>
-                <xs:attribute name="tag-name" type="xs:string"/>
-                <xs:attribute name="class-name" type="xs:string"/>
-                <xs:attribute name="css-selector" type="xs:string"/>
-                <xs:attribute name="link-text" type="xs:string"/>
-                <xs:attribute name="xpath" type="xs:string"/>
-              </xs:complexType>
-            </xs:element>
+            <xs:element name="element" type="ElementType"/>
           </xs:sequence>
         </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="ElementType">
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="tag-name" type="xs:string"/>
+    <xs:attribute name="class-name" type="xs:string"/>
+    <xs:attribute name="css-selector" type="xs:string"/>
+    <xs:attribute name="link-text" type="xs:string"/>
+    <xs:attribute name="xpath" type="xs:string"/>
+  </xs:complexType>
+
   <xs:element name="start" type="BrowserActionType"/>
   <xs:element name="stop" type="BrowserActionType"/>
   <xs:element name="clear-cache" type="BrowserActionType"/>
-  <xs:element name="find" type="ElementActionType"/>
+
+  <xs:element name="find">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BrowserActionType">
+          <xs:sequence>
+            <xs:element name="element">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ElementType">
+                    <xs:sequence>
+                      <xs:element name="attributes" minOccurs="0">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+                              <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="styles" minOccurs="0">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="style" minOccurs="1" maxOccurs="unbounded">
+                              <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="text" type="xs:string"/>
+                    <xs:attribute name="displayed" type="xs:boolean"/>
+                    <xs:attribute name="enabled" type="xs:boolean"/>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="click" type="ElementActionType"/>
 
   <xs:element name="set-input">

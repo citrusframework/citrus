@@ -14,7 +14,14 @@
             <selenium:alert action="accept"/>
 
             <selenium:find>
-                <selenium:element class-name="clickable"/>
+                <selenium:element class-name="clickable" tag-name="button" text="Ok" displayed="true" enabled="false">
+                    <selenium:attributes>
+                        <selenium:attribute name="type" value="submit"/>
+                    </selenium:attributes>
+                    <selenium:styles>
+                        <selenium:style name="color" value="#000000"/>
+                    </selenium:styles>
+                </selenium:element>
             </selenium:find>
 
             <selenium:click>

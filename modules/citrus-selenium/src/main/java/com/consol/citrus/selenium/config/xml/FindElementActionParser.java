@@ -16,12 +16,15 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.FindElementAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.*;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -31,36 +34,63 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
 
     @Override
     protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
-        Element target = DomUtils.getChildElementByTagName(element, "element");
-        if (target != null) {
+        Element webElement = DomUtils.getChildElementByTagName(element, "element");
+        if (webElement != null) {
             String selector = null;
             String selectorType = null;
 
-            if (target.hasAttribute("id")) {
+            if (webElement.hasAttribute("id")) {
                 selectorType = "id";
-                selector = target.getAttribute("id");
-            } else if (target.hasAttribute("name")) {
+                selector = webElement.getAttribute("id");
+            } else if (webElement.hasAttribute("name")) {
                 selectorType = "name";
-                selector = target.getAttribute("name");
-            } else if (target.hasAttribute("tag-name")) {
-                selectorType = "tag-name";
-                selector = target.getAttribute("tag-name");
-            } else if (target.hasAttribute("class-name")) {
+                selector = webElement.getAttribute("name");
+            } else if (webElement.hasAttribute("class-name")) {
                 selectorType = "class-name";
-                selector = target.getAttribute("class-name");
-            } else if (target.hasAttribute("css-selector")) {
+                selector = webElement.getAttribute("class-name");
+            } else if (webElement.hasAttribute("css-selector")) {
                 selectorType = "css-selector";
-                selector = target.getAttribute("css-selector");
-            } else if (target.hasAttribute("link-text")) {
+                selector = webElement.getAttribute("css-selector");
+            } else if (webElement.hasAttribute("link-text")) {
                 selectorType = "link-text";
-                selector = target.getAttribute("link-text");
-            } else if (target.hasAttribute("xpath")) {
+                selector = webElement.getAttribute("link-text");
+            } else if (webElement.hasAttribute("xpath")) {
                 selectorType = "xpath";
-                selector = target.getAttribute("xpath");
+                selector = webElement.getAttribute("xpath");
+            } else if (webElement.hasAttribute("tag-name")) {
+                selectorType = "tag-name";
+                selector = webElement.getAttribute("tag-name");
             }
 
             beanDefinition.addPropertyValue("selectorType", selectorType);
             beanDefinition.addPropertyValue("select", selector);
+
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("tag-name"), "tagName");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("text"), "text");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("displayed"), "displayed");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("enabled"), "enabled");
+
+            Element attributesContainerElement = DomUtils.getChildElementByTagName(webElement, "attributes");
+            if (attributesContainerElement != null) {
+                Map<String, String> attributes = new HashMap<>();
+                List<Element> attributeElements = DomUtils.getChildElementsByTagName(attributesContainerElement, "attribute");
+                for (Element attribute : attributeElements) {
+                    attributes.put(attribute.getAttribute("name"), attribute.getAttribute("value"));
+                }
+
+                beanDefinition.addPropertyValue("attributes", attributes);
+            }
+
+            Element stylesContainerElement = DomUtils.getChildElementByTagName(webElement, "styles");
+            if (stylesContainerElement != null) {
+                Map<String, String> styles = new HashMap<>();
+                List<Element> styleElements = DomUtils.getChildElementsByTagName(stylesContainerElement, "style");
+                for (Element style : styleElements) {
+                    styles.put(style.getAttribute("name"), style.getAttribute("value"));
+                }
+
+                beanDefinition.addPropertyValue("styles", styles);
+            }
         }
     }
 

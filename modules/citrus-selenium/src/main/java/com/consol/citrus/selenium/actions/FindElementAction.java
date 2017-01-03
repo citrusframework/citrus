@@ -19,8 +19,14 @@ package com.consol.citrus.selenium.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -30,6 +36,13 @@ public class FindElementAction extends AbstractSeleniumAction {
 
     private String selectorType;
     private String select;
+
+    private String tagName;
+    private Map<String, String> attributes = new HashMap<>();
+    private Map<String, String> styles = new HashMap<>();
+    private boolean displayed = true;
+    private boolean enabled = true;
+    private String text;
 
     /**
      * Default constructor.
@@ -54,7 +67,52 @@ public class FindElementAction extends AbstractSeleniumAction {
             throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", selectorType + "=" + select));
         }
 
+        validate(element, browser, context);
+
         execute(element, browser, context);
+    }
+
+    /**
+     * Validates found web element with expected content.
+     * @param element
+     * @param browser
+     * @param context
+     */
+    protected void validate(WebElement element, SeleniumBrowser browser, TestContext context) {
+        validateElementProperty("tag-name", tagName, element.getTagName(), context);
+        validateElementProperty("text", text, element.getText(), context);
+
+        Assert.isTrue(displayed == element.isDisplayed(), String.format("Selenium web element validation failed, " +
+                "property 'displayed' expected '%s', but was '%s'", displayed, element.isDisplayed()));
+        Assert.isTrue(enabled == element.isEnabled(), String.format("Selenium web element validation failed, " +
+                "property 'enabled' expected '%s', but was '%s'", enabled, element.isEnabled()));
+
+        for (Map.Entry<String, String> attributeEntry : attributes.entrySet()) {
+            validateElementProperty(String.format("attribute '%s'", attributeEntry.getKey()), attributeEntry.getValue(), element.getAttribute(attributeEntry.getKey()), context);
+        }
+
+        for (Map.Entry<String, String> styleEntry : styles.entrySet()) {
+            validateElementProperty(String.format("css style '%s'", styleEntry.getKey()), styleEntry.getValue(), element.getCssValue(styleEntry.getKey()), context);
+        }
+    }
+
+    /**
+     * Validates web element property value with validation matcher support.
+     * @param propertyName
+     * @param controlValue
+     * @param resultValue
+     * @param context
+     */
+    private void validateElementProperty(String propertyName, String controlValue, String resultValue, TestContext context) {
+        if (StringUtils.hasText(controlValue)) {
+            String control = context.replaceDynamicContentInString(controlValue);
+
+            if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
+                ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, control, context);
+            } else {
+                Assert.isTrue(control.equals(resultValue), String.format("Selenium web element validation failed, %s expected '%s', but was '%s'", propertyName, control, resultValue));
+            }
+        }
     }
 
     /**
@@ -92,19 +150,148 @@ public class FindElementAction extends AbstractSeleniumAction {
         throw new CitrusRuntimeException("Unknown selector type: " + selectorType);
     }
 
-    public void setSelectorType(String selectorType) {
-        this.selectorType = selectorType;
-    }
 
+    /**
+     * Gets the selectorType.
+     *
+     * @return
+     */
     public String getSelectorType() {
         return selectorType;
     }
 
+    /**
+     * Sets the selectorType.
+     *
+     * @param selectorType
+     */
+    public void setSelectorType(String selectorType) {
+        this.selectorType = selectorType;
+    }
+
+    /**
+     * Gets the select.
+     *
+     * @return
+     */
+    public String getSelect() {
+        return select;
+    }
+
+    /**
+     * Sets the select.
+     *
+     * @param select
+     */
     public void setSelect(String select) {
         this.select = select;
     }
 
-    public String getSelect() {
-        return select;
+    /**
+     * Gets the tagName.
+     *
+     * @return
+     */
+    public String getTagName() {
+        return tagName;
+    }
+
+    /**
+     * Sets the tagName.
+     *
+     * @param tagName
+     */
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
+
+    /**
+     * Gets the attributes.
+     *
+     * @return
+     */
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    /**
+     * Sets the attributes.
+     *
+     * @param attributes
+     */
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
+    /**
+     * Gets the styles.
+     *
+     * @return
+     */
+    public Map<String, String> getStyles() {
+        return styles;
+    }
+
+    /**
+     * Sets the styles.
+     *
+     * @param styles
+     */
+    public void setStyles(Map<String, String> styles) {
+        this.styles = styles;
+    }
+
+    /**
+     * Gets the displayed.
+     *
+     * @return
+     */
+    public boolean isDisplayed() {
+        return displayed;
+    }
+
+    /**
+     * Sets the displayed.
+     *
+     * @param displayed
+     */
+    public void setDisplayed(boolean displayed) {
+        this.displayed = displayed;
+    }
+
+    /**
+     * Gets the enabled.
+     *
+     * @return
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets the enabled.
+     *
+     * @param enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
+     * Gets the text.
+     *
+     * @return
+     */
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * Sets the text.
+     *
+     * @param text
+     */
+    public void setText(String text) {
+        this.text = text;
     }
 }

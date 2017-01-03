@@ -45,6 +45,14 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         Assert.assertEquals(findElementAction.getName(), "selenium:find");
         Assert.assertEquals(findElementAction.getSelectorType(), "class-name");
         Assert.assertEquals(findElementAction.getSelect(), "clickable");
+        Assert.assertEquals(findElementAction.getTagName(), "button");
+        Assert.assertEquals(findElementAction.getText(), "Ok");
+        Assert.assertEquals(findElementAction.getAttributes().size(), 1L);
+        Assert.assertEquals(findElementAction.getAttributes().get("type"), "submit");
+        Assert.assertEquals(findElementAction.getStyles().size(), 1L);
+        Assert.assertEquals(findElementAction.getStyles().get("color"), "#000000");
+        Assert.assertTrue(findElementAction.isDisplayed());
+        Assert.assertFalse(findElementAction.isEnabled());
 
         ClickAction clickAction = (ClickAction) getNextTestActionFromTest();
         Assert.assertNull(clickAction.getBrowser());
