@@ -41,28 +41,22 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Executing Selenium browser command '%s'", getName()));
-            }
-
-            if (browser == null) {
-                if (context.getVariables().containsKey("selenium_browser")) {
-                    browser = context.getApplicationContext().getBean(context.getVariable("selenium_browser"), SeleniumBrowser.class);
-                } else {
-                    throw new CitrusRuntimeException("Failed to get active browser instance, " +
-                            "either set explicit browser for action or start browser instance");
-                }
-            }
-
-            execute(browser, context);
-
-            log.info(String.format("Selenium browser command execution successful: '%s'", getName()));
-        } catch (CitrusRuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Unable to perform Selenium browser command", e);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Executing Selenium browser command '%s'", getName()));
         }
+
+        if (browser == null) {
+            if (context.getVariables().containsKey("selenium_browser")) {
+                browser = context.getApplicationContext().getBean(context.getVariable("selenium_browser"), SeleniumBrowser.class);
+            } else {
+                throw new CitrusRuntimeException("Failed to get active browser instance, " +
+                        "either set explicit browser for action or start browser instance");
+            }
+        }
+
+        execute(browser, context);
+
+        log.info(String.format("Selenium browser command execution successful: '%s'", getName()));
     }
 
     protected abstract void execute(SeleniumBrowser browser, TestContext context);

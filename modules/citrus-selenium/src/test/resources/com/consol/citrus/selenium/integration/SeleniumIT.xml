@@ -50,6 +50,24 @@
 
       <selenium:alert action="accept"/>
 
+      <selenium:navigate page="form"/>
+
+      <selenium:set-input value="Citrus">
+        <selenium:element id="user"/>
+      </selenium:set-input>
+
+      <selenium:dropdown-select option="adult">
+        <selenium:element id="age"/>
+      </selenium:dropdown-select>
+
+      <sleep milliseconds="500"/>
+
+      <selenium:click>
+        <selenium:element xpath="//button[@type = 'submit']"/>
+      </selenium:click>
+
+      <sleep milliseconds="500"/>
+
       <selenium:stop browser="webBrowser"/>
 
     </actions>

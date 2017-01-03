@@ -26,13 +26,38 @@
   <citrus-http:server id="webServer"
                       port="19090"
                       auto-start="true"
-                      endpoint-adapter="indexPageAdapter"/>
+                      endpoint-adapter="templateSelectingAdapter"/>
 
-   <citrus:static-response-adapter id="indexPageAdapter">
-     <citrus:resource file="templates/index.html"/>
-     <citrus:header>
-       <citrus:element name="Content-Type" value="text/html"/>
-     </citrus:header>
-   </citrus:static-response-adapter>
+  <citrus:dispatching-endpoint-adapter id="templateSelectingAdapter"
+                                       mapping-key-extractor="requestPathMappingKeyExtractor"
+                                       mapping-strategy="simpleMappingStrategy"
+                                       fallback-adapter="index"/>
+
+  <bean id="simpleMappingStrategy" class="com.consol.citrus.endpoint.adapter.mapping.SimpleMappingStrategy">
+    <property name="adapterMappings">
+      <map>
+        <entry key="/" value-ref="index"/>
+        <entry key="/form" value-ref="form"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="requestPathMappingKeyExtractor" class="com.consol.citrus.endpoint.adapter.mapping.HeaderMappingKeyExtractor">
+    <property name="headerName" value="citrus_http_request_uri"/>
+  </bean>
+
+  <citrus:static-response-adapter id="index">
+    <citrus:resource file="templates/index.html"/>
+    <citrus:header>
+      <citrus:element name="Content-Type" value="text/html"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+  <citrus:static-response-adapter id="form">
+    <citrus:resource file="templates/form.html"/>
+    <citrus:header>
+      <citrus:element name="Content-Type" value="text/html"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
 
 </beans>
