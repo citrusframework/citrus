@@ -14,7 +14,7 @@
             <selenium:alert accept="true"/>
 
             <selenium:alert accept="false">
-                <selenium:text>This is a warning message!</selenium:text>
+                <selenium:alert-text>This is a warning message!</selenium:alert-text>
             </selenium:alert>
 
             <selenium:find>

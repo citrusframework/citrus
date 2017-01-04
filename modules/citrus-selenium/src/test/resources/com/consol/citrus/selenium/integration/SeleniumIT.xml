@@ -44,7 +44,9 @@
 
       <sleep milliseconds="500"/>
 
-      <selenium:alert action="accept"/>
+      <selenium:alert accept="true">
+        <selenium:alert-text>Hello</selenium:alert-text>
+      </selenium:alert>
 
       <selenium:click>
         <selenium:element link-text="Say Hello!"/>
@@ -52,7 +54,7 @@
 
       <sleep milliseconds="500"/>
 
-      <selenium:alert action="accept"/>
+      <selenium:alert accept="true"/>
 
       <selenium:navigate page="form"/>
 

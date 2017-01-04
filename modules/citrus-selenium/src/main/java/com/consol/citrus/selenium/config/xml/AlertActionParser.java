@@ -35,7 +35,7 @@ public class AlertActionParser extends AbstractBrowserActionParser {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("accept"), "accept");
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("text"), "text");
 
-        Element textElement = DomUtils.getChildElementByTagName(element, "text");
+        Element textElement = DomUtils.getChildElementByTagName(element, "alert-text");
         if (textElement != null) {
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, DomUtils.getTextValue(textElement), "text");
         }

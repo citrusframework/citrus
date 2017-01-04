@@ -251,9 +251,9 @@
       <xs:complexContent>
         <xs:extension base="BrowserActionType">
           <xs:sequence>
-            <xs:element name="text" type="xs:string" minOccurs="0"/>
+            <xs:element name="alert-text" type="xs:string" minOccurs="0"/>
           </xs:sequence>
-          <xs:attribute name="text" type="xs:boolean"/>
+          <xs:attribute name="text" type="xs:string"/>
           <xs:attribute name="accept" type="xs:boolean" use="required"/>
         </xs:extension>
       </xs:complexContent>
