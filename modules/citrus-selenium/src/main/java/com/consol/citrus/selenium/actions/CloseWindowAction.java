@@ -57,6 +57,15 @@ public class CloseWindowAction extends AbstractSeleniumAction {
 
         if (browser.getWebDriver().getWindowHandle().equals((context.getVariable(windowName)))) {
             browser.getWebDriver().close();
+
+            log.info("Switch back to main window!");
+            if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW)) {
+                browser.getWebDriver().switchTo().window(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));
+                context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));
+            } else {
+                browser.getWebDriver().switchTo().defaultContent();
+                context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, browser.getWebDriver().getWindowHandle());
+            }
         } else {
             String activeWindow = browser.getWebDriver().getWindowHandle();
 
@@ -69,13 +78,6 @@ public class CloseWindowAction extends AbstractSeleniumAction {
                 browser.getWebDriver().switchTo().window(activeWindow);
                 context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, activeWindow);
             }
-        }
-
-        log.info("Switch back to main window!");
-        if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW)) {
-            browser.getWebDriver().switchTo().window(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));
-        } else {
-            browser.getWebDriver().switchTo().defaultContent();
         }
     }
 

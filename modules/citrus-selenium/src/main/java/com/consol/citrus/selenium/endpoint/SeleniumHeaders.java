@@ -37,5 +37,6 @@ public class SeleniumHeaders {
     public static final String SELENIUM_ACTIVE_WINDOW = SELENIUM_PREFIX + "active_window";
     public static final String SELENIUM_LAST_WINDOW = SELENIUM_PREFIX + "last_window";
     public static final String SELENIUM_JS_ERRORS = SELENIUM_PREFIX + "js_errors";
+    public static final String SELENIUM_SCREENSHOT = SELENIUM_PREFIX + "screenshot";
 
 }

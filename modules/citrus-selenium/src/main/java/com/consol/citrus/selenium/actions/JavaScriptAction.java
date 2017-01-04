@@ -39,7 +39,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     private String script;
 
     /** Optional arguments */
-    private List<?> arguments;
+    private List<?> arguments = new ArrayList<>();
 
     /** JavaScript errors to validate */
     List<String> expectedErrors = new ArrayList<>();
@@ -54,21 +54,27 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
         try {
-            JavascriptExecutor jsEngine = ((JavascriptExecutor) browser.getWebDriver());
-            jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInList(arguments));
+            if (browser.getWebDriver() instanceof JavascriptExecutor) {
+                JavascriptExecutor jsEngine = ((JavascriptExecutor) browser.getWebDriver());
+                jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInArray(arguments.toArray()));
 
-            List<String> errors = new ArrayList<>();
-            List<Object> errorObjects = (List<Object>) jsEngine.executeScript("return window._selenide_jsErrors", new Object[] {});
-            for (Object error : errorObjects) {
-                errors.add(error.toString());
-            }
-
-            context.setVariable(SeleniumHeaders.SELENIUM_JS_ERRORS, errors);
-
-            for (String expected : expectedErrors) {
-                if (!errors.contains(expected)) {
-                    throw new ValidationException("Missing JavaScript error " + expected);
+                List<String> errors = new ArrayList<>();
+                List<Object> errorObjects = (List<Object>) jsEngine.executeScript("return window._selenide_jsErrors", new Object[]{});
+                if (errorObjects != null) {
+                    for (Object error : errorObjects) {
+                        errors.add(error.toString());
+                    }
                 }
+
+                context.setVariable(SeleniumHeaders.SELENIUM_JS_ERRORS, errors);
+
+                for (String expected : expectedErrors) {
+                    if (!errors.contains(expected)) {
+                        throw new ValidationException("Missing JavaScript error " + expected);
+                    }
+                }
+            } else {
+                log.warn("Skip javascript action because web driver is missing javascript features");
             }
         } catch (WebDriverException e) {
             throw new CitrusRuntimeException("Failed to execute JavaScript code", e);

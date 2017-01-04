@@ -19,6 +19,7 @@ package com.consol.citrus.selenium.actions;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.springframework.util.FileCopyUtils;
@@ -58,7 +59,7 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
                 testName = context.getVariable(Citrus.TEST_NAME_VARIABLE);
             }
 
-            context.setVariable("screenshot", testName + "_" + screenshot.getName());
+            context.setVariable(SeleniumHeaders.SELENIUM_SCREENSHOT, testName + "_" + screenshot.getName());
 
             if (StringUtils.hasText(outputDir)) {
                 try {

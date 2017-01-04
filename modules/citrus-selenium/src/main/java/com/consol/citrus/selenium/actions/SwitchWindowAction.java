@@ -30,7 +30,7 @@ import java.util.Set;
 public class SwitchWindowAction extends AbstractSeleniumAction {
 
     /** Window to select */
-    private String windowName = SeleniumHeaders.SELENIUM_PREFIX + "_popup_window";
+    private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
 
     /**
      * Default constructor.
@@ -45,18 +45,23 @@ public class SwitchWindowAction extends AbstractSeleniumAction {
             throw new CitrusRuntimeException("Failed to find window handle for window " + windowName);
         }
 
+        String targetWindow = context.getVariable(windowName);
         Set<String> handles = browser.getWebDriver().getWindowHandles();
-        if (!handles.contains(context.getVariable(windowName))) {
+        if (!handles.contains(targetWindow)) {
             throw new CitrusRuntimeException("Failed to find window for handle " + context.getVariable(windowName));
         }
 
         String lastWindow = browser.getWebDriver().getWindowHandle();
-        context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
+        if (!lastWindow.equals(targetWindow)) {
+            context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
-        browser.getWebDriver().switchTo().window(context.getVariable(windowName));
-        log.info("Switch window focus to " + windowName);
+            browser.getWebDriver().switchTo().window(targetWindow);
+            log.info("Switch window focus to " + windowName);
 
-        context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, context.getVariable(windowName));
+            context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, targetWindow);
+        } else {
+            log.info("Skip switch window action as window is already focused");
+        }
     }
 
     /**

@@ -18,7 +18,6 @@ package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
@@ -50,37 +49,33 @@ public class AlertAction extends AbstractSeleniumAction {
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
-        try {
-            Alert alert = browser.getWebDriver().switchTo().alert();
-            if (alert == null) {
-                throw new ValidationException("Failed to access alert dialog - not found");
-            }
+        Alert alert = browser.getWebDriver().switchTo().alert();
+        if (alert == null) {
+            throw new CitrusRuntimeException("Failed to access alert dialog - not found");
+        }
 
-            if (StringUtils.hasText(text)) {
-                log.info("Validating alert text");
+        if (StringUtils.hasText(text)) {
+            log.info("Validating alert text");
 
-                String alertText = context.replaceDynamicContentInString(text);
+            String alertText = context.replaceDynamicContentInString(text);
 
-                if (ValidationMatcherUtils.isValidationMatcherExpression(alertText)) {
-                    ValidationMatcherUtils.resolveValidationMatcher("alertText", alert.getText(), alertText, context);
-                } else {
-                    Assert.isTrue(alertText.equals(alert.getText()),
-                            String.format("Failed to validate alert dialog text, " +
-                                    "expected '%s', but was '%s'", alertText, alert.getText()));
-
-                }
-                log.info("Alert text validation successful - All values Ok");
-            }
-
-            context.setVariable(SeleniumHeaders.SELENIUM_ALERT_TEXT, alert.getText());
-
-            if (accept) {
-                alert.accept();
+            if (ValidationMatcherUtils.isValidationMatcherExpression(alertText)) {
+                ValidationMatcherUtils.resolveValidationMatcher("alertText", alert.getText(), alertText, context);
             } else {
-                alert.dismiss();
+                Assert.isTrue(alertText.equals(alert.getText()),
+                        String.format("Failed to validate alert dialog text, " +
+                                "expected '%s', but was '%s'", alertText, alert.getText()));
+
             }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to access alert box.", e);
+            log.info("Alert text validation successful - All values Ok");
+        }
+
+        context.setVariable(SeleniumHeaders.SELENIUM_ALERT_TEXT, alert.getText());
+
+        if (accept) {
+            alert.accept();
+        } else {
+            alert.dismiss();
         }
     }
 

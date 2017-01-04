@@ -70,7 +70,7 @@ public class NavigateAction extends AbstractSeleniumAction {
                     if (StringUtils.hasText(browser.getEndpointConfiguration().getStartPageUrl())) {
                         baseUrl = browser.getEndpointConfiguration().getStartPageUrl();
                     } else {
-                        throw new CitrusRuntimeException("Failed to create a valid URL", ex);
+                        throw new CitrusRuntimeException("Failed to create relative page URL - must set start page on browser", ex);
                     }
                 }
                 String lastChar = baseUrl.substring(baseUrl.length() - 1);

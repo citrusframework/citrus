@@ -127,7 +127,9 @@ public class FindElementAction extends AbstractSeleniumAction {
      * @param context
      */
     protected void execute(WebElement element, SeleniumBrowser browser, TestContext context) {
-        context.setVariable(element.getTagName(), element);
+        if (StringUtils.hasText(element.getTagName())) {
+            context.setVariable(element.getTagName(), element);
+        }
     }
 
     /**

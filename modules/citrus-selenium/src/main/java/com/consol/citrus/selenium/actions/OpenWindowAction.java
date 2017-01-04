@@ -48,7 +48,9 @@ public class OpenWindowAction extends AbstractSeleniumAction {
         String lastWindow = browser.getWebDriver().getWindowHandle();
         context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
-        ((JavascriptExecutor) browser.getWebDriver()).executeScript("window.open();");
+        if (browser.getWebDriver() instanceof JavascriptExecutor) {
+            ((JavascriptExecutor) browser.getWebDriver()).executeScript("window.open();");
+        }
 
         Set<String> newWindowHandles = browser.getWebDriver().getWindowHandles();
 

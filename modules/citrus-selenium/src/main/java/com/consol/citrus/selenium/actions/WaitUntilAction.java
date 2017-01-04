@@ -46,7 +46,7 @@ public class WaitUntilAction extends FindElementAction {
 
     @Override
     protected void execute(WebElement webElement, SeleniumBrowser browser, TestContext context) {
-        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), timeout);
+        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Math.round(timeout / 1000));
 
         if (condition.equals("hidden")) {
             q.until(ExpectedConditions.invisibilityOfElementLocated(createBy(context)));
@@ -55,6 +55,10 @@ public class WaitUntilAction extends FindElementAction {
         } else {
             throw new CitrusRuntimeException("Unknown wait condition");
         }
+    }
+
+    @Override
+    protected void validate(WebElement element, SeleniumBrowser browser, TestContext context) {
     }
 
     /**
