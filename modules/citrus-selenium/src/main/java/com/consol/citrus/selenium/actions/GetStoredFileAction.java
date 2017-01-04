@@ -25,6 +25,7 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
  */
 public class GetStoredFileAction extends AbstractSeleniumAction {
 
+    /** File name to look for */
     private String fileName;
 
     /**
@@ -39,11 +40,21 @@ public class GetStoredFileAction extends AbstractSeleniumAction {
         browser.getStoredFile(context.replaceDynamicContentInString(fileName));
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
+    /**
+     * Gets the fileName.
+     *
+     * @return
+     */
     public String getFileName() {
         return fileName;
+    }
+
+    /**
+     * Sets the fileName.
+     *
+     * @param fileName
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

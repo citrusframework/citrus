@@ -19,6 +19,7 @@ package com.consol.citrus.selenium.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +31,8 @@ import java.util.Set;
  */
 public class OpenWindowAction extends AbstractSeleniumAction {
 
-    private String windowName = "selenium_popup_window";
+    /** Window name to open */
+    private String windowName = SeleniumHeaders.SELENIUM_PREFIX + "popup_window";
 
     /**
      * Default constructor.
@@ -44,7 +46,7 @@ public class OpenWindowAction extends AbstractSeleniumAction {
         Set<String> windowHandles = browser.getWebDriver().getWindowHandles();
         String newWindow = null;
         String lastWindow = browser.getWebDriver().getWindowHandle();
-        context.setVariable("selenium_last_window", lastWindow);
+        context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
         ((JavascriptExecutor) browser.getWebDriver()).executeScript("window.open();");
 
@@ -59,7 +61,7 @@ public class OpenWindowAction extends AbstractSeleniumAction {
         if (!StringUtils.isEmpty(newWindow)) {
             browser.getWebDriver().switchTo().window(newWindow);
             log.info("Open window: " + newWindow);
-            context.setVariable("selenium_active_window", newWindow);
+            context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, newWindow);
             context.setVariable(windowName, newWindow);
         } else {
             throw new CitrusRuntimeException("Failed to open new window");
@@ -67,11 +69,21 @@ public class OpenWindowAction extends AbstractSeleniumAction {
 
     }
 
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
-    }
-
+    /**
+     * Gets the windowName.
+     *
+     * @return
+     */
     public String getWindowName() {
         return windowName;
+    }
+
+    /**
+     * Sets the windowName.
+     *
+     * @param windowName
+     */
+    public void setWindowName(String windowName) {
+        this.windowName = windowName;
     }
 }

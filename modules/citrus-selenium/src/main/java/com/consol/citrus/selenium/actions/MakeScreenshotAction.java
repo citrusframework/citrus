@@ -62,7 +62,7 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
 
             if (StringUtils.hasText(outputDir)) {
                 try {
-                    FileCopyUtils.copy(screenshot, new File(outputDir + File.separator + testName + "_" + screenshot.getName()));
+                    FileCopyUtils.copy(screenshot, new File(context.replaceDynamicContentInString(outputDir) + File.separator + testName + "_" + screenshot.getName()));
                 } catch (IOException e) {
                     log.error("Failed to save screenshot to target storage", e);
                 }

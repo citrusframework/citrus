@@ -20,6 +20,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractSeleniumAction extends AbstractTestAction {
+public abstract class AbstractSeleniumAction extends AbstractTestAction implements SeleniumAction {
 
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -46,8 +47,8 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction {
         }
 
         if (browser == null) {
-            if (context.getVariables().containsKey("selenium_browser")) {
-                browser = context.getApplicationContext().getBean(context.getVariable("selenium_browser"), SeleniumBrowser.class);
+            if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER)) {
+                browser = context.getApplicationContext().getBean(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), SeleniumBrowser.class);
             } else {
                 throw new CitrusRuntimeException("Failed to get active browser instance, " +
                         "either set explicit browser for action or start browser instance");

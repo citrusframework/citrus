@@ -18,6 +18,7 @@ package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -37,6 +38,6 @@ public class StopBrowserAction extends AbstractSeleniumAction {
         log.info("Stopping browser of type {}", browser.getEndpointConfiguration().getBrowserType());
         browser.stop();
 
-        context.getVariables().remove("selenium_browser");
+        context.getVariables().remove(SeleniumHeaders.SELENIUM_BROWSER);
     }
 }

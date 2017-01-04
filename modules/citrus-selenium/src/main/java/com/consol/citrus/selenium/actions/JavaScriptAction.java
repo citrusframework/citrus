@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Executes javascript code on current page and validates errors.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
@@ -52,7 +55,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     protected void execute(SeleniumBrowser browser, TestContext context) {
         try {
             JavascriptExecutor jsEngine = ((JavascriptExecutor) browser.getWebDriver());
-            jsEngine.executeScript(script, arguments);
+            jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInList(arguments));
 
             List<String> errors = new ArrayList<>();
             List<Object> errorObjects = (List<Object>) jsEngine.executeScript("return window._selenide_jsErrors", new Object[] {});
@@ -60,7 +63,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
                 errors.add(error.toString());
             }
 
-            context.setVariable("selenium_js_errors", errors);
+            context.setVariable(SeleniumHeaders.SELENIUM_JS_ERRORS, errors);
 
             for (String expected : expectedErrors) {
                 if (!errors.contains(expected)) {
@@ -72,27 +75,57 @@ public class JavaScriptAction extends AbstractSeleniumAction {
         }
     }
 
-    public void setScript(String script) {
-        this.script = script;
-    }
-
+    /**
+     * Gets the script.
+     *
+     * @return
+     */
     public String getScript() {
         return script;
     }
 
-    public void setArguments(List<?> arguments) {
-        this.arguments = arguments;
+    /**
+     * Sets the script.
+     *
+     * @param script
+     */
+    public void setScript(String script) {
+        this.script = script;
     }
 
+    /**
+     * Gets the arguments.
+     *
+     * @return
+     */
     public List<?> getArguments() {
         return arguments;
     }
 
-    public void setExpectedErrors(List<String> expectedErrors) {
-        this.expectedErrors = expectedErrors;
+    /**
+     * Sets the arguments.
+     *
+     * @param arguments
+     */
+    public void setArguments(List<?> arguments) {
+        this.arguments = arguments;
     }
 
+    /**
+     * Gets the expectedErrors.
+     *
+     * @return
+     */
     public List<String> getExpectedErrors() {
         return expectedErrors;
+    }
+
+    /**
+     * Sets the expectedErrors.
+     *
+     * @param expectedErrors
+     */
+    public void setExpectedErrors(List<String> expectedErrors) {
+        this.expectedErrors = expectedErrors;
     }
 }

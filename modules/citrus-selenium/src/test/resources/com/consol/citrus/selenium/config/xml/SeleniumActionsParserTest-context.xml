@@ -11,7 +11,11 @@
         <actions>
             <selenium:start browser="mockBrowser"/>
 
-            <selenium:alert action="accept"/>
+            <selenium:alert accept="true"/>
+
+            <selenium:alert accept="false">
+                <selenium:text>This is a warning message!</selenium:text>
+            </selenium:alert>
 
             <selenium:find>
                 <selenium:element class-name="clickable" tag-name="button" text="Ok" displayed="true" enabled="false">

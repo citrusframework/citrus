@@ -24,13 +24,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
+ * Waits until element is visible or hidden.
+ *
  * @author Christoph Deppisch
  * @since 2.7
  */
 public class WaitUntilAction extends FindElementAction {
 
+    /** Wait timeout */
     private Long timeout = 5000L;
 
+    /** Wait condition on element */
     private String condition;
 
     /**
@@ -53,19 +57,39 @@ public class WaitUntilAction extends FindElementAction {
         }
     }
 
-    public void setTimeout(Long timeout) {
-        this.timeout = timeout;
-    }
-
+    /**
+     * Gets the timeout.
+     *
+     * @return
+     */
     public Long getTimeout() {
         return timeout;
     }
 
-    public void setCondition(String condition) {
-        this.condition = condition;
+    /**
+     * Sets the timeout.
+     *
+     * @param timeout
+     */
+    public void setTimeout(Long timeout) {
+        this.timeout = timeout;
     }
 
+    /**
+     * Gets the condition.
+     *
+     * @return
+     */
     public String getCondition() {
         return condition;
+    }
+
+    /**
+     * Sets the condition.
+     *
+     * @param condition
+     */
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 }

@@ -28,11 +28,15 @@ import java.net.URL;
 import java.util.Date;
 
 /**
+ * Navigates to new page either by using new absolute page URL or relative page path.
+ * Also supports history forward and back navigation as well as page refresh.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class NavigateAction extends AbstractSeleniumAction {
 
+    /** Page URL to navigate to */
     private String page;
 
     /**
@@ -53,10 +57,11 @@ public class NavigateAction extends AbstractSeleniumAction {
         } else {
             try {
                 if (browser.getEndpointConfiguration().getBrowserType().equals(BrowserType.IE)) {
-                    page = BrowserUtils.makeIECachingSafeUrl(page, new Date().getTime());
+                    String cachingSafeUrl = BrowserUtils.makeIECachingSafeUrl(context.replaceDynamicContentInString(page), new Date().getTime());
+                    browser.getWebDriver().navigate().to(new URL(cachingSafeUrl));
+                } else {
+                    browser.getWebDriver().navigate().to(new URL(context.replaceDynamicContentInString(page)));
                 }
-
-                browser.getWebDriver().navigate().to(new URL(context.replaceDynamicContentInString(page)));
             } catch (MalformedURLException ex) {
                 String baseUrl = browser.getWebDriver().getCurrentUrl();
                 try {
@@ -72,6 +77,7 @@ public class NavigateAction extends AbstractSeleniumAction {
                 if (!lastChar.equals("/")) {
                     baseUrl = baseUrl + "/";
                 }
+
                 browser.getWebDriver().navigate().to(baseUrl + context.replaceDynamicContentInString(page));
             }
         }

@@ -28,6 +28,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
+ * Initialize new page object and run optional validation. Page action is a method on page object that is called via reflection.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
@@ -58,9 +60,9 @@ public class PageAction extends AbstractSeleniumAction {
     protected void execute(SeleniumBrowser browser, TestContext context) {
         if (StringUtils.hasText(type)) {
             try {
-                page = (WebPage) Class.forName(type).newInstance();
+                page = (WebPage) Class.forName(context.replaceDynamicContentInString(type)).newInstance();
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                throw new CitrusRuntimeException(String.format("Failed to access page type '%s'", type), e);
+                throw new CitrusRuntimeException(String.format("Failed to access page type '%s'", context.replaceDynamicContentInString(type)), e);
             }
         }
 

@@ -21,11 +21,14 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.WebElement;
 
 /**
+ * Sets value on checkbox form input element.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class CheckInputAction extends FindElementAction {
 
+    /** Checkbox checked */
     private boolean checked;
 
     /**
@@ -46,11 +49,21 @@ public class CheckInputAction extends FindElementAction {
         }
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
+    /**
+     * Gets the checked.
+     *
+     * @return
+     */
     public boolean isChecked() {
         return checked;
+    }
+
+    /**
+     * Sets the checked.
+     *
+     * @param checked
+     */
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

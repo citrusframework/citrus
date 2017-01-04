@@ -20,18 +20,25 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.Alert;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * Access current alert dialog. In case no alert is opened action fails.
+ * Action supports optional alert text validation.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class AlertAction extends AbstractSeleniumAction {
 
-    private String action = "accept";
+    /** Accept or dismiss dialog */
+    private boolean accept = true;
 
+    /** Optional dialog text validation */
     private String text;
 
     /**
@@ -50,16 +57,26 @@ public class AlertAction extends AbstractSeleniumAction {
             }
 
             if (StringUtils.hasText(text)) {
-                Assert.isTrue(context.replaceDynamicContentInString(text).equals(alert.getText()),
-                        String.format("Failed to validate alert dialog text, " +
-                        "expected '%s', but was '%s'", text, alert.getText()));
+                log.info("Validating alert text");
+
+                String alertText = context.replaceDynamicContentInString(text);
+
+                if (ValidationMatcherUtils.isValidationMatcherExpression(alertText)) {
+                    ValidationMatcherUtils.resolveValidationMatcher("alertText", alert.getText(), alertText, context);
+                } else {
+                    Assert.isTrue(alertText.equals(alert.getText()),
+                            String.format("Failed to validate alert dialog text, " +
+                                    "expected '%s', but was '%s'", alertText, alert.getText()));
+
+                }
+                log.info("Alert text validation successful - All values Ok");
             }
 
-            context.setVariable("selenium_alert_text", alert.getText());
+            context.setVariable(SeleniumHeaders.SELENIUM_ALERT_TEXT, alert.getText());
 
-            if (action.equals("accept")) {
+            if (accept) {
                 alert.accept();
-            } else if (action.equals("dismiss")) {
+            } else {
                 alert.dismiss();
             }
         } catch (Exception e) {
@@ -68,18 +85,38 @@ public class AlertAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the alert action to perform.
-     * @param action
+     * Gets the accept.
+     *
+     * @return
      */
-    public void setAction(String action) {
-        this.action = action;
+    public boolean isAccept() {
+        return accept;
     }
 
     /**
-     * Gets the alert action.
+     * Sets the accept.
+     *
+     * @param accept
+     */
+    public void setAccept(boolean accept) {
+        this.accept = accept;
+    }
+
+    /**
+     * Gets the text.
+     *
      * @return
      */
-    public String getAction() {
-        return action;
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * Sets the text.
+     *
+     * @param text
+     */
+    public void setText(String text) {
+        this.text = text;
     }
 }

@@ -21,6 +21,7 @@ import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.AlertAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -31,7 +32,13 @@ public class AlertActionParser extends AbstractBrowserActionParser {
 
     @Override
     protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
-        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("action"), "action");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("accept"), "accept");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("text"), "text");
+
+        Element textElement = DomUtils.getChildElementByTagName(element, "text");
+        if (textElement != null) {
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, DomUtils.getTextValue(textElement), "text");
+        }
     }
 
     @Override

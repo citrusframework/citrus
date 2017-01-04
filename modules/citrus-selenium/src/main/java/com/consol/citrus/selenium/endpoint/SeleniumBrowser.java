@@ -16,10 +16,13 @@
 
 package com.consol.citrus.selenium.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.selenium.actions.SeleniumAction;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
@@ -46,10 +49,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
+ * Selenium browser provides access to web driver and initializes Selenium environment from endpoint configuration.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumBrowser extends AbstractEndpoint {
+public class SeleniumBrowser extends AbstractEndpoint implements Producer {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SeleniumBrowser.class);
@@ -75,6 +80,14 @@ public class SeleniumBrowser extends AbstractEndpoint {
     public SeleniumBrowser(SeleniumBrowserConfiguration endpointConfiguration) {
         super(endpointConfiguration);
         temporaryStorage = createTemporaryStorage();
+    }
+
+    @Override
+    public void send(Message message, TestContext context) {
+        SeleniumAction action = message.getPayload(SeleniumAction.class);
+        action.execute(context);
+
+        log.info("Selenium action successfully executed");
     }
 
     /**
@@ -295,11 +308,11 @@ public class SeleniumBrowser extends AbstractEndpoint {
 
     @Override
     public Producer createProducer() {
-        return null;
+        return this;
     }
 
     @Override
     public Consumer createConsumer() {
-        return null;
+        throw new UnsupportedOperationException("Selenium browser must not be used as message consumer");
     }
 }

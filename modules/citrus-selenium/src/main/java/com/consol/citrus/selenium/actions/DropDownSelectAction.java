@@ -30,13 +30,17 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 /**
+ * Selects dropdown option(s) on form input.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class DropDownSelectAction extends FindElementAction {
 
+    /** Option to select */
     private String option;
 
+    /** Multiple options to select */
     private List<String> options;
 
     /**
@@ -59,7 +63,7 @@ public class DropDownSelectAction extends FindElementAction {
         if (!CollectionUtils.isEmpty(options)) {
             if (BrowserType.IE.equals(browser.getEndpointConfiguration().getBrowserType())) {
                 for (String option : options) {
-                    dropdown.selectByValue(option);
+                    dropdown.selectByValue(context.replaceDynamicContentInString(option));
                 }
             } else {
                 List<WebElement> optionElements = dropdown.getOptions();
@@ -67,7 +71,7 @@ public class DropDownSelectAction extends FindElementAction {
                 builder.keyDown(Keys.CONTROL);
                 for (String optionValue : options) {
                     for (WebElement option : optionElements) {
-                        if (!option.isSelected() && isSameValue(option, optionValue)) {
+                        if (!option.isSelected() && isSameValue(option, context.replaceDynamicContentInString(optionValue))) {
                             builder.moveToElement(option).click(option);
                         }
                     }
@@ -87,19 +91,39 @@ public class DropDownSelectAction extends FindElementAction {
         }
     }
 
-    public void setOptions(List<String> options) {
-        this.options = options;
+    /**
+     * Gets the option.
+     *
+     * @return
+     */
+    public String getOption() {
+        return option;
     }
 
-    public List<String> getOptions() {
-        return options;
-    }
-
+    /**
+     * Sets the option.
+     *
+     * @param option
+     */
     public void setOption(String option) {
         this.option = option;
     }
 
-    public String getOption() {
-        return option;
+    /**
+     * Gets the options.
+     *
+     * @return
+     */
+    public List<String> getOptions() {
+        return options;
+    }
+
+    /**
+     * Sets the options.
+     *
+     * @param options
+     */
+    public void setOptions(List<String> options) {
+        this.options = options;
     }
 }

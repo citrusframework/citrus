@@ -250,7 +250,11 @@
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="BrowserActionType">
-          <xs:attribute name="action" type="xs:string" use="required"/>
+          <xs:sequence>
+            <xs:element name="text" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+          <xs:attribute name="text" type="xs:boolean"/>
+          <xs:attribute name="accept" type="xs:boolean" use="required"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

@@ -29,14 +29,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Finds element in DOM tree on current page and validates its properties and settings.
+ * Test action fails in case no element is found or the validation expectations are not met.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class FindElementAction extends AbstractSeleniumAction {
 
+    /** Element selector */
     private String selectorType;
     private String select;
 
+    /** Optional validation expectations on element */
     private String tagName;
     private Map<String, String> attributes = new HashMap<>();
     private Map<String, String> styles = new HashMap<>();

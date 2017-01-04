@@ -19,6 +19,7 @@ package com.consol.citrus.selenium.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 
 import java.util.Set;
 
@@ -28,7 +29,8 @@ import java.util.Set;
  */
 public class SwitchWindowAction extends AbstractSeleniumAction {
 
-    private String windowName = "selenium_popup_window";
+    /** Window to select */
+    private String windowName = SeleniumHeaders.SELENIUM_PREFIX + "_popup_window";
 
     /**
      * Default constructor.
@@ -49,19 +51,29 @@ public class SwitchWindowAction extends AbstractSeleniumAction {
         }
 
         String lastWindow = browser.getWebDriver().getWindowHandle();
-        context.setVariable("selenium_last_window", lastWindow);
+        context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
         browser.getWebDriver().switchTo().window(context.getVariable(windowName));
         log.info("Switch window focus to " + windowName);
 
-        context.setVariable("selenium_active_window", context.getVariable(windowName));
+        context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, context.getVariable(windowName));
     }
 
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
-    }
-
+    /**
+     * Gets the windowName.
+     *
+     * @return
+     */
     public String getWindowName() {
         return windowName;
+    }
+
+    /**
+     * Sets the windowName.
+     *
+     * @param windowName
+     */
+    public void setWindowName(String windowName) {
+        this.windowName = windowName;
     }
 }

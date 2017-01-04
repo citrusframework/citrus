@@ -19,16 +19,20 @@ package com.consol.citrus.selenium.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 
 import java.util.Set;
 
 /**
+ * Close opened window by name.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class CloseWindowAction extends AbstractSeleniumAction {
 
-    private String windowName = "selenium_active_window";
+    /** Window name */
+    private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
 
     /**
      * Default constructor.
@@ -59,27 +63,37 @@ public class CloseWindowAction extends AbstractSeleniumAction {
             browser.getWebDriver().switchTo().window(context.getVariable(windowName));
             browser.getWebDriver().close();
 
-            if (context.getVariables().containsKey("selenium_active_window")) {
-                browser.getWebDriver().switchTo().window(context.getVariable("selenium_active_window"));
+            if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW)) {
+                browser.getWebDriver().switchTo().window(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW));
             } else {
                 browser.getWebDriver().switchTo().window(activeWindow);
-                context.setVariable("selenium_active_window", activeWindow);
+                context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, activeWindow);
             }
         }
 
         log.info("Switch back to main window!");
-        if (context.getVariables().containsKey("selenium_last_window")) {
-            browser.getWebDriver().switchTo().window(context.getVariable("selenium_last_window"));
+        if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW)) {
+            browser.getWebDriver().switchTo().window(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));
         } else {
             browser.getWebDriver().switchTo().defaultContent();
         }
     }
 
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
-    }
-
+    /**
+     * Gets the windowName.
+     *
+     * @return
+     */
     public String getWindowName() {
         return windowName;
+    }
+
+    /**
+     * Sets the windowName.
+     *
+     * @param windowName
+     */
+    public void setWindowName(String windowName) {
+        this.windowName = windowName;
     }
 }

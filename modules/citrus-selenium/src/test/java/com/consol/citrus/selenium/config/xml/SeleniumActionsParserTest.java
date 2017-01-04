@@ -30,7 +30,7 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
 
     @Test
     public void testActionParser() {
-        assertActionCount(19);
+        assertActionCount(20);
 
         StartBrowserAction startAction = (StartBrowserAction) getNextTestActionFromTest();
         Assert.assertNotNull(startAction.getBrowser());
@@ -39,7 +39,14 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         AlertAction alertAction = (AlertAction) getNextTestActionFromTest();
         Assert.assertNull(alertAction.getBrowser());
         Assert.assertEquals(alertAction.getName(), "selenium:alert");
-        Assert.assertEquals(alertAction.getAction(), "accept");
+        Assert.assertNull(alertAction.getText());
+        Assert.assertTrue(alertAction.isAccept());
+
+        alertAction = (AlertAction) getNextTestActionFromTest();
+        Assert.assertNull(alertAction.getBrowser());
+        Assert.assertEquals(alertAction.getName(), "selenium:alert");
+        Assert.assertEquals(alertAction.getText(), "This is a warning message!");
+        Assert.assertFalse(alertAction.isAccept());
 
         FindElementAction findElementAction = (FindElementAction) getNextTestActionFromTest();
         Assert.assertNull(findElementAction.getBrowser());

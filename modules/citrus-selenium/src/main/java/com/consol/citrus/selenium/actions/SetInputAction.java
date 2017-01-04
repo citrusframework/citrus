@@ -22,11 +22,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 /**
+ * Sets new text value for form input element.
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class SetInputAction extends FindElementAction {
 
+    /** Value to set on input */
     private String value;
 
     /**
@@ -49,11 +52,21 @@ public class SetInputAction extends FindElementAction {
         }
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
+    /**
+     * Gets the value.
+     *
+     * @return
+     */
     public String getValue() {
         return value;
+    }
+
+    /**
+     * Sets the value.
+     *
+     * @param value
+     */
+    public void setValue(String value) {
+        this.value = value;
     }
 }
