@@ -79,6 +79,10 @@ Module providing utility classes and helper for Docker integration with Citrus.
 
 Module providing utility classes and helper for Kubernetes integration with Citrus.
 
+### citrus-selenium (JAR)
+
+Module providing utility classes and helper for Selenium integration with Citrus.
+
 ### citrus-rmi (JAR)
 
 Module providing client and server implementations for Java RMI integration with Citrus.

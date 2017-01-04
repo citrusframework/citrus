@@ -32,6 +32,7 @@ import com.consol.citrus.mail.client.MailClientBuilder;
 import com.consol.citrus.mail.server.MailServerBuilder;
 import com.consol.citrus.rmi.client.RmiClientBuilder;
 import com.consol.citrus.rmi.server.RmiServerBuilder;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
 import com.consol.citrus.ssh.client.SshClientBuilder;
 import com.consol.citrus.ssh.server.SshServerBuilder;
 import com.consol.citrus.vertx.endpoint.VertxEndpointBuilder;
@@ -160,5 +161,14 @@ public abstract class CitrusEndpoints {
                 throw new UnsupportedOperationException("Citrus Kubernetes stack has no support for server implementation");
             }
         };
+    }
+
+    /**
+     * Creates new SeleniumBrowser builder.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static SeleniumBrowserBuilder selenium() {
+        return new SeleniumBrowserBuilder();
     }
 }

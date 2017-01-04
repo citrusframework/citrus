@@ -1749,6 +1749,42 @@
                 </goals>
               </execution>
               <execution>
+                <id>copy-citrus-selenium-schemas</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/selenium/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-selenium/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-selenium-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-selenium-test-schemas</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/schema/selenium/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-selenium/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-selenium-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
                 <id>copy-citrus-cucumber-test-schemas</id>
                 <phase>package</phase>
                 <configuration>

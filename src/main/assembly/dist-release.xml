@@ -20,6 +20,7 @@
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-docker</include>
         <include>com.consol.citrus:citrus-kubernetes</include>
+        <include>com.consol.citrus:citrus-selenium</include>
         <include>com.consol.citrus:citrus-cucumber</include>
         <include>com.consol.citrus:citrus-zookeeper</include>
         <include>com.consol.citrus:citrus-rmi</include>
@@ -39,6 +40,7 @@
         <include>com.consol.citrus.model:citrus-model-camel</include>
         <include>com.consol.citrus.model:citrus-model-docker</include>
         <include>com.consol.citrus.model:citrus-model-kubernetes</include>
+        <include>com.consol.citrus.model:citrus-model-selenium</include>
         <include>com.consol.citrus.model:citrus-model-cucumber</include>
         <include>com.consol.citrus.model:citrus-model-zookeeper</include>
         <include>com.consol.citrus.model:citrus-model-rmi</include>
@@ -120,6 +122,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-model/model-kubernetes/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-selenium/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>
@@ -225,6 +234,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-kubernetes/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-selenium/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

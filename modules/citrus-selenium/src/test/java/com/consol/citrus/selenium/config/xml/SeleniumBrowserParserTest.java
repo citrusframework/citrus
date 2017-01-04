@@ -59,7 +59,7 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNull(browser.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser.getEndpointConfiguration().getTimeout(), 10000L);
 
-        // 2nd browser
+        // 3rd browser
         browser = browsers.get("remoteBrowser");
         Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.IE);
         Assert.assertEquals(browser.getEndpointConfiguration().getRemoteServerUrl(), "http://localhost:9090/selenium");

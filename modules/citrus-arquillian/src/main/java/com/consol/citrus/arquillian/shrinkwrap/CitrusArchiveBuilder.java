@@ -105,6 +105,7 @@ public final class CitrusArchiveBuilder {
         vertx();
         docker();
         kubernetes();
+        selenium();
         cucumber();
         zookeeper();
         rmi();
@@ -202,6 +203,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder kubernetes() {
         artifactCoordinates.add(getCoordinates("citrus-kubernetes"));
+        return this;
+    }
+
+    /**
+     * Gets the selenium Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder selenium() {
+        artifactCoordinates.add(getCoordinates("citrus-selenium"));
         return this;
     }
 

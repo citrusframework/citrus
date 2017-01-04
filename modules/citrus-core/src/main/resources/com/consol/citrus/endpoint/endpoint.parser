@@ -12,6 +12,7 @@ endpoint.parser.rmi.client=com.consol.citrus.rmi.config.annotation.RmiClientConf
 endpoint.parser.rmi.server=com.consol.citrus.rmi.config.annotation.RmiServerConfigParser
 endpoint.parser.docker.client=com.consol.citrus.docker.config.annotation.DockerClientConfigParser
 endpoint.parser.kubernetes.client=com.consol.citrus.kubernetes.config.annotation.KubernetesClientConfigParser
+endpoint.parser.selenium.browser=com.consol.citrus.selenium.config.annotation.SeleniumBrowserConfigParser
 endpoint.parser.ftp.client=com.consol.citrus.ftp.config.annotation.FtpClientConfigParser
 endpoint.parser.ftp.server=com.consol.citrus.ftp.config.annotation.FtpServerConfigParser
 endpoint.parser.ssh.client=com.consol.citrus.ssh.config.annotation.SshClientConfigParser
