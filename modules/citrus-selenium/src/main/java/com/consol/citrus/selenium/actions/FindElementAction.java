@@ -37,9 +37,12 @@ import java.util.Map;
  */
 public class FindElementAction extends AbstractSeleniumAction {
 
-    /** Element selector */
-    private String selectorType;
-    private String select;
+    /** Optional by used in Java DSL */
+    private By by;
+
+    /** Element selector property */
+    private String property;
+    private String propertyValue;
 
     /** Optional validation expectations on element */
     private String tagName;
@@ -69,7 +72,7 @@ public class FindElementAction extends AbstractSeleniumAction {
         WebElement element = browser.getWebDriver().findElement(createBy(context));
 
         if (element == null) {
-            throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", selectorType + "=" + select));
+            throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", property + "=" + propertyValue));
         }
 
         validate(element, browser, context);
@@ -137,61 +140,64 @@ public class FindElementAction extends AbstractSeleniumAction {
      * @return
      */
     protected By createBy(TestContext context) {
-        switch (selectorType) {
-            case "id":
-                return By.id(context.replaceDynamicContentInString(select));
-            case "class-name":
-                return By.className(context.replaceDynamicContentInString(select));
-            case "link-text":
-                return By.linkText(context.replaceDynamicContentInString(select));
-            case "css-selector":
-                return By.cssSelector(context.replaceDynamicContentInString(select));
-            case "name":
-                return By.name(context.replaceDynamicContentInString(select));
-            case "tag-name":
-                return By.tagName(context.replaceDynamicContentInString(select));
-            case "xpath":
-                return By.xpath(context.replaceDynamicContentInString(select));
+        if (by != null) {
+            return by;
         }
 
-        throw new CitrusRuntimeException("Unknown selector type: " + selectorType);
+        switch (property) {
+            case "id":
+                return By.id(context.replaceDynamicContentInString(propertyValue));
+            case "class-name":
+                return By.className(context.replaceDynamicContentInString(propertyValue));
+            case "link-text":
+                return By.linkText(context.replaceDynamicContentInString(propertyValue));
+            case "css-selector":
+                return By.cssSelector(context.replaceDynamicContentInString(propertyValue));
+            case "name":
+                return By.name(context.replaceDynamicContentInString(propertyValue));
+            case "tag-name":
+                return By.tagName(context.replaceDynamicContentInString(propertyValue));
+            case "xpath":
+                return By.xpath(context.replaceDynamicContentInString(propertyValue));
+        }
+
+        throw new CitrusRuntimeException("Unknown selector type: " + property);
     }
 
-
     /**
-     * Gets the selectorType.
+     * Gets the property.
      *
      * @return
      */
-    public String getSelectorType() {
-        return selectorType;
+    public String getProperty() {
+        return property;
     }
 
     /**
-     * Sets the selectorType.
+     * Sets the property.
      *
-     * @param selectorType
+     * @param property
      */
-    public void setSelectorType(String selectorType) {
-        this.selectorType = selectorType;
+    public void setProperty(String property) {
+        this.property = property;
     }
 
     /**
-     * Gets the select.
+     * Gets the propertyValue.
      *
      * @return
      */
-    public String getSelect() {
-        return select;
+    public String getPropertyValue() {
+        return propertyValue;
     }
 
     /**
-     * Sets the select.
+     * Sets the propertyValue.
      *
-     * @param select
+     * @param propertyValue
      */
-    public void setSelect(String select) {
-        this.select = select;
+    public void setPropertyValue(String propertyValue) {
+        this.propertyValue = propertyValue;
     }
 
     /**
@@ -300,5 +306,23 @@ public class FindElementAction extends AbstractSeleniumAction {
      */
     public void setText(String text) {
         this.text = text;
+    }
+
+    /**
+     * Gets the by.
+     *
+     * @return
+     */
+    public By getBy() {
+        return by;
+    }
+
+    /**
+     * Sets the by.
+     *
+     * @param by
+     */
+    public void setBy(By by) {
+        this.by = by;
     }
 }

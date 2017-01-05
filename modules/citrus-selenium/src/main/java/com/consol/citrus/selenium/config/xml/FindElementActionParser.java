@@ -36,34 +36,34 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
     protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
         Element webElement = DomUtils.getChildElementByTagName(element, "element");
         if (webElement != null) {
-            String selector = null;
-            String selectorType = null;
+            String propertyValue = null;
+            String property = null;
 
             if (webElement.hasAttribute("id")) {
-                selectorType = "id";
-                selector = webElement.getAttribute("id");
+                property = "id";
+                propertyValue = webElement.getAttribute("id");
             } else if (webElement.hasAttribute("name")) {
-                selectorType = "name";
-                selector = webElement.getAttribute("name");
+                property = "name";
+                propertyValue = webElement.getAttribute("name");
             } else if (webElement.hasAttribute("class-name")) {
-                selectorType = "class-name";
-                selector = webElement.getAttribute("class-name");
+                property = "class-name";
+                propertyValue = webElement.getAttribute("class-name");
             } else if (webElement.hasAttribute("css-selector")) {
-                selectorType = "css-selector";
-                selector = webElement.getAttribute("css-selector");
+                property = "css-selector";
+                propertyValue = webElement.getAttribute("css-selector");
             } else if (webElement.hasAttribute("link-text")) {
-                selectorType = "link-text";
-                selector = webElement.getAttribute("link-text");
+                property = "link-text";
+                propertyValue = webElement.getAttribute("link-text");
             } else if (webElement.hasAttribute("xpath")) {
-                selectorType = "xpath";
-                selector = webElement.getAttribute("xpath");
+                property = "xpath";
+                propertyValue = webElement.getAttribute("xpath");
             } else if (webElement.hasAttribute("tag-name")) {
-                selectorType = "tag-name";
-                selector = webElement.getAttribute("tag-name");
+                property = "tag-name";
+                propertyValue = webElement.getAttribute("tag-name");
             }
 
-            beanDefinition.addPropertyValue("selectorType", selectorType);
-            beanDefinition.addPropertyValue("select", selector);
+            beanDefinition.addPropertyValue("property", property);
+            beanDefinition.addPropertyValue("propertyValue", propertyValue);
 
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("tag-name"), "tagName");
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("text"), "text");

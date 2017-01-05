@@ -446,6 +446,12 @@ public interface TestRunner extends ApplicationContextAware {
     TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer);
 
     /**
+     * Run selenium command action.
+     * @return
+     */
+    TestAction selenium(BuilderSupport<SeleniumActionBuilder> configurer);
+
+    /**
      * Run http command action.
      * @return
      */

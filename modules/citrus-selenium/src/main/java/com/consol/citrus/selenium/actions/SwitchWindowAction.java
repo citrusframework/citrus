@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SwitchWindowAction extends AbstractSeleniumAction {
+public class SwitchWindowAction extends AbstractSeleniumAction implements SeleniumWindowAction {
 
     /** Window to select */
     private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;

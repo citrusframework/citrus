@@ -48,8 +48,8 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
         action =  new SetInputAction();
         action.setBrowser(seleniumBrowser);
 
-        action.setSelectorType("name");
-        action.setSelect("textField");
+        action.setProperty("name");
+        action.setPropertyValue("textField");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);

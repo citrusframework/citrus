@@ -502,6 +502,12 @@ public interface TestDesigner extends ApplicationContextAware {
     KubernetesActionBuilder kubernetes();
 
     /**
+     * Creates a new selenium action builder.
+     * @return
+     */
+    SeleniumActionBuilder selenium();
+
+    /**
      *
      */
     HttpActionBuilder http();

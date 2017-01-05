@@ -638,6 +638,13 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public SeleniumActionBuilder selenium() {
+        SeleniumActionBuilder builder = new SeleniumActionBuilder();
+        action(builder);
+        return builder;
+    }
+
+    @Override
     public HttpActionBuilder http() {
         HttpActionBuilder builder = new HttpActionBuilder()
                 .withApplicationContext(getApplicationContext());

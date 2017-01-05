@@ -29,10 +29,10 @@ import java.util.Set;
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class OpenWindowAction extends AbstractSeleniumAction {
+public class OpenWindowAction extends AbstractSeleniumAction implements SeleniumWindowAction {
 
     /** Window name to open */
-    private String windowName = SeleniumHeaders.SELENIUM_PREFIX + "popup_window";
+    private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
 
     /**
      * Default constructor.

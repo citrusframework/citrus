@@ -418,6 +418,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    public SeleniumActionBuilder selenium() {
+        return testDesigner.selenium();
+    }
+
+    @Override
     public HttpActionBuilder http() {
         return testDesigner.http();
     }

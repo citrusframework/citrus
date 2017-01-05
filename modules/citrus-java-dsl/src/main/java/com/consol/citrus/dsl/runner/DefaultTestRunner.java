@@ -512,6 +512,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public TestAction selenium(BuilderSupport<SeleniumActionBuilder> configurer) {
+        SeleniumActionBuilder builder = new SeleniumActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
+    }
+
+    @Override
     public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
         HttpActionBuilder builder = new HttpActionBuilder()
                     .withApplicationContext(applicationContext);

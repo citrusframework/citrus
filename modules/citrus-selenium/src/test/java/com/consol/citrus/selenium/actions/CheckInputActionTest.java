@@ -46,8 +46,8 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         action =  new CheckInputAction();
         action.setBrowser(seleniumBrowser);
 
-        action.setSelectorType("name");
-        action.setSelect("checkbox");
+        action.setProperty("name");
+        action.setPropertyValue("checkbox");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);

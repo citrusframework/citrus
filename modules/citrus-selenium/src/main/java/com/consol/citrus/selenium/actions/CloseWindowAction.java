@@ -29,7 +29,7 @@ import java.util.Set;
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class CloseWindowAction extends AbstractSeleniumAction {
+public class CloseWindowAction extends AbstractSeleniumAction implements SeleniumWindowAction {
 
     /** Window name */
     private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;

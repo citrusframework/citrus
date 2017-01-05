@@ -51,8 +51,8 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         action =  new DropDownSelectAction();
         action.setBrowser(seleniumBrowser);
 
-        action.setSelectorType("name");
-        action.setSelect("dropdown");
+        action.setProperty("name");
+        action.setPropertyValue("dropdown");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);

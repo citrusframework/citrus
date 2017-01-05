@@ -16,19 +16,17 @@
 
 package com.consol.citrus.selenium.actions;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
-
 /**
- * Basic Selenium action interface marks Selenium related test actions.
+ * Basic Selenium window related action interface.
+ *
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface SeleniumAction extends TestAction {
+public interface SeleniumWindowAction extends SeleniumAction {
 
     /**
-     * Sets the Selenium browser.
-     * @param browser
+     * Sets the window name.
+     * @param name
      */
-    void setBrowser(SeleniumBrowser browser);
+    void setWindowName(String name);
 }

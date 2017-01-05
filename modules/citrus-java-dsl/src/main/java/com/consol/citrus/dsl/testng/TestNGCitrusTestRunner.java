@@ -351,6 +351,11 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    public TestAction selenium(BuilderSupport<SeleniumActionBuilder> configurer) {
+        return testRunner.selenium(configurer);
+    }
+
+    @Override
     public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
         return testRunner.http(configurer);
     }

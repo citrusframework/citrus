@@ -39,7 +39,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     private String script;
 
     /** Optional arguments */
-    private List<?> arguments = new ArrayList<>();
+    private List<Object> arguments = new ArrayList<>();
 
     /** JavaScript errors to validate */
     List<String> expectedErrors = new ArrayList<>();
@@ -104,7 +104,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
      *
      * @return
      */
-    public List<?> getArguments() {
+    public List<Object> getArguments() {
         return arguments;
     }
 
@@ -113,7 +113,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
      *
      * @param arguments
      */
-    public void setArguments(List<?> arguments) {
+    public void setArguments(List<Object> arguments) {
         this.arguments = arguments;
     }
 

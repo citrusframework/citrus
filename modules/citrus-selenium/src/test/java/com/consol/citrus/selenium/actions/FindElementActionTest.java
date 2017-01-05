@@ -57,7 +57,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(dataProvider = "findByProvider")
-    public void testExecuteFindBy(String selectorType, String select, final By by) throws Exception {
+    public void testExecuteFindBy(String property, String value, final By by) throws Exception {
         when(webDriver.findElement(any(By.class))).thenAnswer(new Answer<WebElement>() {
             @Override
             public WebElement answer(InvocationOnMock invocation) throws Throwable {
@@ -69,8 +69,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
             }
         });
 
-        action.setSelectorType(selectorType);
-        action.setSelect(select);
+        action.setProperty(property);
+        action.setPropertyValue(value);
 
         action.execute(context);
 
@@ -105,8 +105,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable("myId", "clickMe");
 
-        action.setSelectorType("id");
-        action.setSelect("${myId}");
+        action.setProperty("id");
+        action.setPropertyValue("${myId}");
 
         action.execute(context);
 
@@ -135,8 +135,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setAttributes(Collections.singletonMap("type", "submit"));
         action.setStyles(Collections.singletonMap("color", "red"));
 
-        action.setSelectorType("name");
-        action.setSelect("clickMe");
+        action.setProperty("name");
+        action.setPropertyValue("clickMe");
 
         action.execute(context);
 
@@ -168,8 +168,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setDisplayed(displayed);
         action.setEnabled(enabled);
 
-        action.setSelectorType("name");
-        action.setSelect("clickMe");
+        action.setProperty("name");
+        action.setPropertyValue("clickMe");
 
         try {
             action.execute(context);
@@ -195,16 +195,16 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     public void testElementNotFound() {
         when(webDriver.findElement(any(By.class))).thenReturn(null);
 
-        action.setSelectorType("id");
-        action.setSelect("myButton");
+        action.setProperty("id");
+        action.setPropertyValue("myButton");
 
         action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown selector type: unsupported")
-    public void testElementUnsupportedSelectorType() {
-        action.setSelectorType("unsupported");
-        action.setSelect("wrong");
+    public void testElementUnsupportedProperty() {
+        action.setProperty("unsupported");
+        action.setPropertyValue("wrong");
 
         action.execute(context);
     }

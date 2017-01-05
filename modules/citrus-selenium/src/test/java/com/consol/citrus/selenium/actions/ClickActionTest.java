@@ -50,8 +50,8 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
         action =  new ClickAction();
         action.setBrowser(seleniumBrowser);
 
-        action.setSelectorType("id");
-        action.setSelect("myButton");
+        action.setProperty("id");
+        action.setPropertyValue("myButton");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);

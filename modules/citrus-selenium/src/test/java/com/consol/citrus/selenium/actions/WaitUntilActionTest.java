@@ -48,8 +48,8 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         action =  new WaitUntilAction();
         action.setBrowser(seleniumBrowser);
 
-        action.setSelectorType("class-name");
-        action.setSelect("clickable");
+        action.setProperty("class-name");
+        action.setPropertyValue("clickable");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
