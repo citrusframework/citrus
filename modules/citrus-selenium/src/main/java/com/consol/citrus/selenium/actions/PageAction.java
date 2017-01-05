@@ -84,7 +84,7 @@ public class PageAction extends AbstractSeleniumAction {
                         if (method.getName().equals(action)) {
                             if (method.getParameterCount() == 0 && arguments.size() == 0) {
                                 ReflectionUtils.invokeMethod(method, page);
-                            } else if (method.getParameterCount() == 1 && method.getParameters()[0].equals(TestContext.class)) {
+                            } else if (method.getParameterCount() == 1 && method.getParameters()[0].getParameterizedType().getTypeName().equals(TestContext.class.getName())) {
                                 ReflectionUtils.invokeMethod(method, page, context);
                             } else if (method.getParameterCount() == arguments.size()) {
                                 ReflectionUtils.invokeMethod(method, page, context.resolveDynamicValuesInList(arguments).toArray());
@@ -93,7 +93,7 @@ public class PageAction extends AbstractSeleniumAction {
                                 args[arguments.size()] = context;
                                 ReflectionUtils.invokeMethod(method, page, context.resolveDynamicValuesInArray(args));
                             } else {
-                                throw new CitrusRuntimeException("Unsupported method signature for page action - expected single test context parameter or no parameter");
+                                throw new CitrusRuntimeException("Unsupported method signature for page action - not matching given arguments");
                             }
                         }
                     }
