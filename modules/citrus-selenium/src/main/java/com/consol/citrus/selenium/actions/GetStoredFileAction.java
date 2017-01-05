@@ -18,6 +18,7 @@ package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 
 /**
  * @author Christoph Deppisch
@@ -37,7 +38,8 @@ public class GetStoredFileAction extends AbstractSeleniumAction {
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
-        browser.getStoredFile(context.replaceDynamicContentInString(fileName));
+        String filePath = browser.getStoredFile(context.replaceDynamicContentInString(fileName));
+        context.setVariable(SeleniumHeaders.SELENIUM_DOWNLOAD_FILE, filePath);
     }
 
     /**

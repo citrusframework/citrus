@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  */
 public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
@@ -48,12 +48,13 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, locator);
+        reset(webDriver, locator);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new OpenWindowAction();
         action.setBrowser(seleniumBrowser);
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(webDriver.switchTo()).thenReturn(locator);
     }
 
@@ -70,7 +71,7 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
         action.setWindowName("myNewWindow");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "new_window");
@@ -88,7 +89,7 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
         action.setWindowName("myNewWindow");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
 }

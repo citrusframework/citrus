@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
  */
 public class WaitUntilActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
@@ -41,7 +41,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, element);
+        reset(webDriver, element);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new WaitUntilAction();
         action.setBrowser(seleniumBrowser);
@@ -49,7 +51,6 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("class-name");
         action.setSelect("clickable");
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
         when(element.getTagName()).thenReturn("button");
@@ -61,7 +62,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(element.isDisplayed()).thenReturn(false);
 
         action.setCondition("hidden");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(element).isDisplayed();
     }
@@ -73,7 +74,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
 
         action.setTimeout(1000L);
         action.setCondition("hidden");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test
@@ -82,7 +83,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(element.isDisplayed()).thenReturn(true);
 
         action.setCondition("visible");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(element).isDisplayed();
     }
@@ -94,7 +95,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
 
         action.setTimeout(1000L);
         action.setCondition("visible");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
@@ -103,6 +104,6 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(element.isDisplayed()).thenReturn(false);
 
         action.setCondition("unknown");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 }

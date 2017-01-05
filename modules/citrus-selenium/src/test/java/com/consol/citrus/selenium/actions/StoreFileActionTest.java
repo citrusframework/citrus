@@ -20,10 +20,11 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
 
 /**
  * @author Christoph Deppisch
@@ -31,37 +32,37 @@ import static org.mockito.Mockito.*;
  */
 public class StoreFileActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
     private StoreFileAction action;
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver);
+        reset(webDriver);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new StoreFileAction();
         action.setBrowser(seleniumBrowser);
-
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
     }
 
     @Test
     public void testExecute() throws Exception {
-        action.setFileLocation("tmp/file.txt");
-        action.execute(seleniumBrowser, context);
+        action.setFileLocation("classpath:download/file.txt");
+        action.execute(context);
 
-        verify(seleniumBrowser).storeFile("tmp/file.txt");
+        Assert.assertNotNull(seleniumBrowser.getStoredFile("file.txt"));
     }
 
     @Test
     public void testExecuteVariableSupport() throws Exception {
-        context.setVariable("file", "tmp/file.txt");
+        context.setVariable("file", "classpath:download/file.xml");
 
         action.setFileLocation("${file}");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
-        verify(seleniumBrowser).storeFile("tmp/file.txt");
+        Assert.assertNotNull(seleniumBrowser.getStoredFile("file.xml"));
     }
 
 }

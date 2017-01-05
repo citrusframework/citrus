@@ -33,34 +33,31 @@ import static org.mockito.Mockito.*;
  */
 public class StopBrowserActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
-    private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
     private StopBrowserAction action;
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, seleniumBrowserConfiguration, webDriver);
+        reset(webDriver);
+
+        seleniumBrowser.setWebDriver(webDriver);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.CHROME);
 
         action =  new StopBrowserAction();
         action.setBrowser(seleniumBrowser);
-
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
-        when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.CHROME);
     }
 
     @Test
     public void testStop() throws Exception {
-        when(seleniumBrowser.isStarted()).thenReturn(true);
-
         context.setVariable(SeleniumHeaders.SELENIUM_BROWSER, "ChromeBrowser");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertFalse(context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER));
+        Assert.assertNull(seleniumBrowser.getWebDriver());
 
-        verify(seleniumBrowser).stop();
+        verify(webDriver).quit();
     }
 }

@@ -38,8 +38,9 @@ import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -146,7 +147,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      * @return String containing the filename to which the file is uploaded to.
      */
     public String storeFile(String fileLocation) {
-        return storeFile(new File(fileLocation));
+        return storeFile(new PathMatchingResourcePatternResolver().getResource(fileLocation));
     }
 
     /**
@@ -156,13 +157,13 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      * @param file Resource to deploy to temporary storage
      * @return String containing the filename to which the file is uploaded to.
      */
-    public String storeFile(File file) {
+    public String storeFile(Resource file) {
         try {
-            Path dir = temporaryStorage.getFileName();
-            File newFile = new File(dir.toFile(), file.getName());
+            File newFile = new File(temporaryStorage.toFile(), file.getFilename());
 
-            log.info("Copy " + file + " to " + newFile);
-            FileUtils.copyFile(file, newFile);
+            log.info("Store file " + file + " to " + newFile);
+
+            FileUtils.copyFile(file.getFile(), newFile);
 
             return newFile.getCanonicalPath();
         } catch (IOException e) {
@@ -178,9 +179,13 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      */
     public String getStoredFile(String filename) {
         try {
-            Path dir = temporaryStorage.getFileName();
-            File newFile = new File(dir.toFile(), filename);
-            return newFile.getCanonicalPath();
+            File stored = new File(temporaryStorage.toFile(), filename);
+
+            if (!stored.exists()) {
+                throw new CitrusRuntimeException("Failed to access stored file: " + stored.getCanonicalPath());
+            }
+
+            return stored.getCanonicalPath();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to retrieve file: " + filename, e);
         }
@@ -291,6 +296,15 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      */
     public WebDriver getWebDriver() {
         return webDriver;
+    }
+
+    /**
+     * Sets the webDriver.
+     *
+     * @param webDriver
+     */
+    public void setWebDriver(WebDriver webDriver) {
+        this.webDriver = webDriver;
     }
 
     /**

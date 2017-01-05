@@ -22,6 +22,7 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
@@ -68,7 +69,7 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
                     log.error("Failed to save screenshot to target storage", e);
                 }
             } else {
-                browser.storeFile(screenshot);
+                browser.storeFile(new FileSystemResource(screenshot));
             }
         }
     }

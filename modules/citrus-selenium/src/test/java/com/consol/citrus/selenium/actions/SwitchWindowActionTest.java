@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
  */
 public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
@@ -46,12 +46,13 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, locator);
+        reset(webDriver, locator);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new SwitchWindowAction();
         action.setBrowser(seleniumBrowser);
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(webDriver.switchTo()).thenReturn(locator);
     }
 
@@ -68,7 +69,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, "last_window");
         context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, "active_window");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "last_window");
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "active_window");
@@ -89,7 +90,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable("myWindow", "other_window");
 
         action.setWindowName("myWindow");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "other_window");
@@ -109,7 +110,7 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable("myWindow", "other_window");
 
         action.setWindowName("myWindow");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
 }

@@ -38,19 +38,19 @@ import static org.mockito.Mockito.*;
  */
 public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
 
     private JavaScriptAction action;
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver);
+        reset(webDriver);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new JavaScriptAction();
         action.setBrowser(seleniumBrowser);
-
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
         action.setScript("alert('Hello')");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
         Assert.assertEquals(((List) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
@@ -73,7 +73,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         context.setVariable("text", "Hello");
 
         action.setScript("alert('${text}')");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
         Assert.assertEquals(((List) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
@@ -87,7 +87,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
         action.setScript("alert('Hello')");
         action.setExpectedErrors(Collections.singletonList("This went totally wrong!"));
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
         Assert.assertEquals(((List) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
@@ -101,7 +101,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
         action.setScript("alert('Hello')");
         action.setExpectedErrors(Collections.singletonList("This went totally wrong!"));
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
 }

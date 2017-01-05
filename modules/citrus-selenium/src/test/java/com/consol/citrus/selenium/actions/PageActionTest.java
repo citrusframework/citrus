@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
  */
 public class PageActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement formElement = Mockito.mock(WebElement.class);
     private WebElement inputElement = Mockito.mock(WebElement.class);
@@ -49,12 +49,13 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, formElement, inputElement);
+        reset(webDriver, formElement, inputElement);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new PageAction();
         action.setBrowser(seleniumBrowser);
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(formElement.getTagName()).thenReturn("form");
         when(formElement.isEnabled()).thenReturn(true);
         when(formElement.isDisplayed()).thenReturn(true);
@@ -73,7 +74,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setAction("validate");
         action.setPage(new UserFormPage());
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test
@@ -83,7 +84,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setAction("validate");
         action.setType(UserFormPage.class.getName());
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test
@@ -97,7 +98,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setValidator(validator);
         action.setPage(userForm);
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(validator).validate(userForm, seleniumBrowser, context);
     }
@@ -108,7 +109,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setArguments(Collections.singletonList("Citrus"));
         action.setPage(new UserFormPage());
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(inputElement).clear();
         verify(inputElement).sendKeys("Citrus");
@@ -121,18 +122,18 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setPage(new TestPage());
 
         action.setAction("submit");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         action.setAction("submitWithContext");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         action.setAction("submitWithArgument");
         action.setArguments(Collections.singletonList("ok"));
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         action.setAction("submitWithArgumentAndContext");
         action.setArguments(Collections.singletonList("ok"));
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(formElement, times(4)).submit();
     }
@@ -145,7 +146,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
         action.setAction("submit");
         action.setArguments(Collections.singletonList("Citrus"));
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(inputElement).clear();
         verify(inputElement).sendKeys("Citrus");
@@ -158,7 +159,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setAction("validate");
         action.setPage(new UserFormPage());
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access page type.*")
@@ -166,7 +167,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         action.setAction("validate");
         action.setType(UserFormPage.class.getPackage().getName() + ".UnknownPage");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     public class TestPage implements WebPage {

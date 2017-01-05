@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
  */
 public class CheckInputActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
@@ -39,7 +39,9 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, element);
+        reset(webDriver, element);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new CheckInputAction();
         action.setBrowser(seleniumBrowser);
@@ -47,7 +49,6 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("name");
         action.setSelect("checkbox");
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
         when(element.getTagName()).thenReturn("input");
@@ -60,7 +61,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         when(element.isSelected()).thenReturn(false);
         action.setChecked(true);
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(element).click();
     }
@@ -72,7 +73,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         when(element.isSelected()).thenReturn(true);
         action.setChecked(false);
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(element).click();
     }
@@ -84,7 +85,7 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         when(element.isSelected()).thenReturn(true);
         action.setChecked(true);
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(element, times(0)).click();
     }

@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
  */
 public class SetInputActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
@@ -41,7 +41,9 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, element);
+        reset(webDriver, element);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new SetInputAction();
         action.setBrowser(seleniumBrowser);
@@ -49,7 +51,6 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("name");
         action.setSelect("textField");
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
         when(element.getTagName()).thenReturn("input");
@@ -61,7 +62,7 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
 
         action.setValue("new_value");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(element).clear();
         verify(element).sendKeys("new_value");
@@ -79,7 +80,7 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
 
         action.setValue("option");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(option).click();
     }

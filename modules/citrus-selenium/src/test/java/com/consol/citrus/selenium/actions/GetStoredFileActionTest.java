@@ -16,10 +16,13 @@
 
 package com.consol.citrus.selenium.actions;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,27 +34,35 @@ import static org.mockito.Mockito.*;
  */
 public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
     private GetStoredFileAction action;
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver);
+        reset(webDriver);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new GetStoredFileAction();
         action.setBrowser(seleniumBrowser);
-
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
     }
 
     @Test
     public void testExecute() throws Exception {
-        action.setFileName("file.txt");
-        action.execute(seleniumBrowser, context);
+        seleniumBrowser.storeFile("classpath:download/file.txt");
 
-        verify(seleniumBrowser).getStoredFile("file.txt");
+        action.setFileName("file.txt");
+        action.execute(context);
+
+        Assert.assertNotNull(context.getVariable(SeleniumHeaders.SELENIUM_DOWNLOAD_FILE));
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access stored file.*")
+    public void testExecuteError() throws Exception {
+        action.setFileName("unknown.txt");
+        action.execute(context);
     }
 
 }

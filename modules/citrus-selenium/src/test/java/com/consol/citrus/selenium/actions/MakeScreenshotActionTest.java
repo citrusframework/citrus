@@ -38,32 +38,30 @@ import static org.mockito.Mockito.*;
  */
 public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
-
-    private File screenshot = Mockito.mock(File.class);
 
     private MakeScreenshotAction action;
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver);
+        reset(webDriver);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new MakeScreenshotAction();
         action.setBrowser(seleniumBrowser);
-
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
-        when(screenshot.getName()).thenReturn("screenshot123.png");
     }
 
     @Test
     public void testExecute() throws Exception {
-        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(screenshot);
+        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(new ClassPathResource("screenshot.png").getFile());
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_SCREENSHOT), "Test_screenshot123.png");
-        verify(seleniumBrowser).storeFile(screenshot);
+        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_SCREENSHOT), "Test_screenshot.png");
+
+        Assert.assertNotNull(seleniumBrowser.getStoredFile("screenshot.png"));
     }
 
     @Test
@@ -73,7 +71,10 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
         context.setVariable(Citrus.TEST_NAME_VARIABLE, "MyTest");
 
         action.setOutputDir("target");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
+
+        File stored = new File("target/MyTest_screenshot.png");
+        Assert.assertTrue(stored.exists());
     }
 
 }

@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
-import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -38,8 +37,7 @@ import static org.mockito.Mockito.*;
  */
 public class NavigateActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
-    private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);
+    private SeleniumBrowser seleniumBrowser;
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Navigation navigation = Mockito.mock(WebDriver.Navigation.class);
 
@@ -47,19 +45,20 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, seleniumBrowserConfiguration, webDriver, navigation);
+        reset(webDriver, navigation);
+
+        seleniumBrowser = new SeleniumBrowser();
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new NavigateAction();
         action.setBrowser(seleniumBrowser);
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
-        when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
         when(webDriver.navigate()).thenReturn(navigation);
     }
 
     @Test
     public void testNavigatePageUrl() throws Exception {
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.CHROME);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.CHROME);
         doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -69,14 +68,14 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
         }).when(navigation).to(any(URL.class));
 
         action.setPage("http://localhost:8080");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(navigation).to(any(URL.class));
     }
 
     @Test
     public void testNavigatePageUrlInternetExplorer() throws Exception {
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.IE);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
         doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -86,18 +85,18 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
         }).when(navigation).to(any(URL.class));
 
         action.setPage("http://localhost:8080");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(navigation).to(any(URL.class));
     }
 
     @Test
     public void testNavigateRelativePageUrl() throws Exception {
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.CHROME);
-        when(seleniumBrowserConfiguration.getStartPageUrl()).thenReturn("http://localhost:8080");
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
+        seleniumBrowser.getEndpointConfiguration().setStartPageUrl("http://localhost:8080");
 
         action.setPage("info");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(navigation).to("http://localhost:8080/info");
     }
@@ -105,7 +104,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteBack() throws Exception {
         action.setPage("back");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(navigation).back();
     }
@@ -113,7 +112,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteForward() throws Exception {
         action.setPage("forward");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(navigation).forward();
     }
@@ -121,7 +120,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteRefresh() throws Exception {
         action.setPage("refresh");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(navigation).refresh();
     }

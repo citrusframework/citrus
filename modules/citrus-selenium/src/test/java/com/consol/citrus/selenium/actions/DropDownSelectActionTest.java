@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
-import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.*;
@@ -36,8 +35,7 @@ import static org.mockito.Mockito.*;
  */
 public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
-    private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);
+    private SeleniumBrowser seleniumBrowser;
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
@@ -45,7 +43,10 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, seleniumBrowserConfiguration, webDriver, element);
+        reset(webDriver, element);
+
+        seleniumBrowser = new SeleniumBrowser();
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new DropDownSelectAction();
         action.setBrowser(seleniumBrowser);
@@ -53,8 +54,6 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("name");
         action.setSelect("dropdown");
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
-        when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
         when(element.getTagName()).thenReturn("select");
@@ -71,7 +70,7 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
         action.setOption("select_me");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(option).click();
     }
@@ -80,7 +79,8 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     public void testExecuteMultiSelect() throws Exception {
         WebElement option = Mockito.mock(WebElement.class);
 
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.IE);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
+
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
@@ -88,7 +88,7 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
 
         action.setOptions(Arrays.asList("option1", "option2"));
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         verify(option, times(2)).click();
     }

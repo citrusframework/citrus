@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
  */
 public class CloseWindowActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
@@ -46,12 +46,13 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, locator);
+        reset(webDriver, locator);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new CloseWindowAction();
         action.setBrowser(seleniumBrowser);
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(webDriver.switchTo()).thenReturn(locator);
     }
 
@@ -67,7 +68,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, "last_window");
         context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, "active_window");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "last_window");
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "last_window");
@@ -87,7 +88,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, "active_window");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertFalse(context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW));
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "main_window");
@@ -111,7 +112,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable("myWindow", "other_window");
 
         action.setWindowName("myWindow");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "last_window");
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "active_window");
@@ -133,7 +134,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable("myWindow", "other_window");
 
         action.setWindowName("myWindow");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertFalse(context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW));
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "active_window");
@@ -146,7 +147,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find window handle.*")
     public void testCloseWindowInvalidWindowName() throws Exception {
         action.setWindowName("myWindow");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find window.*")
@@ -163,7 +164,7 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable("myWindow", "other_window");
 
         action.setWindowName("myWindow");
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
 }

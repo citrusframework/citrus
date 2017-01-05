@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
  */
 public class FindElementActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
+    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
@@ -44,12 +44,13 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() {
-        reset(seleniumBrowser, webDriver, element);
+        reset(webDriver, element);
+
+        seleniumBrowser.setWebDriver(webDriver);
 
         action =  new FindElementAction();
         action.setBrowser(seleniumBrowser);
 
-        when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
         when(element.getTagName()).thenReturn("button");
@@ -71,7 +72,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType(selectorType);
         action.setSelect(select);
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariableObject("button"), element);
     }
@@ -107,7 +108,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("id");
         action.setSelect("${myId}");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariableObject("button"), element);
     }
@@ -137,7 +138,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("name");
         action.setSelect("clickMe");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
 
         Assert.assertEquals(context.getVariableObject("button"), element);
     }
@@ -171,7 +172,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setSelect("clickMe");
 
         try {
-            action.execute(seleniumBrowser, context);
+            action.execute(context);
             Assert.fail("Missing exception to to validation error");
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().endsWith(errorMsg), e.getMessage());
@@ -197,7 +198,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("id");
         action.setSelect("myButton");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown selector type: unsupported")
@@ -205,7 +206,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         action.setSelectorType("unsupported");
         action.setSelect("wrong");
 
-        action.execute(seleniumBrowser, context);
+        action.execute(context);
     }
 
 }
