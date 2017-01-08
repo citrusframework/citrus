@@ -26,7 +26,7 @@ foo:randomNumber()
 **Tip**
 You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library uses the **citrus:** prefix.In the next chapters the default functions offered by the framework will be described in detail.
 
-### citrus:concat()
+### concat()
 
 The function will combine several string tokens to a single string value. This means that you can combine a static text value with a variable value for instance. A first example should clarify the usage:
 
@@ -65,7 +65,7 @@ The function can be used wherever variables can be used. For instance when valid
 </message>
 ```
 
-### citrus:substring()
+### substring()
 
 The function will have three parameters.
 
@@ -95,7 +95,7 @@ Test Framework
 Hello 
 ```
 
-### citrus:stringLength()
+### stringLength()
 
 The function will calculate the number of characters in a string representation and return the number.
 
@@ -109,7 +109,7 @@ Function output:
 
 **20** 
 
-### citrus:translate()
+### translate()
 
 This function will replace regular expression matching values inside a string representation with a specified replacement string.
 
@@ -127,7 +127,7 @@ Function output:
 
 **Hello Test Framework** 
 
-### citrus:substringBefore()
+### substringBefore()
 
 The function will search for the first occurrence of a specified string and will return the substring before that occurrence. Let us have a closer look in a simple example:
 
@@ -145,7 +145,7 @@ Function output:
 
 **Test** 
 
-### citrus:substringAfter()
+### substringAfter()
 
 The function will search for the first occurrence of a specified string and will return the substring after that occurrence. Let us clarify this with a simple example:
 
@@ -163,7 +163,7 @@ Function output:
 
 **Framework** 
 
-### citrus:round()
+### round()
 
 This is a simple mathematic function that will round decimal numbers representations to their nearest non decimal number.
 
@@ -177,7 +177,7 @@ Function output:
 
 **3** 
 
-### citrus:floor()
+### floor()
 
 This function will round down decimal number values.
 
@@ -191,7 +191,7 @@ Function output:
 
 **3.0** 
 
-### citrus:ceiling()
+### ceiling()
 
 Similar to floor function, but now the function will round up the decimal number values.
 
@@ -205,7 +205,7 @@ Function output:
 
 **4.0** 
 
-### citrus:randomNumber()
+### randomNumber()
 
 The random number function will provide you the opportunity to generate random number strings containing positive number letters. There is a singular Boolean parameter for that function describing whether the generated number should have exactly the amount of digits. Default value for this padding flag will be true.
 
@@ -229,7 +229,7 @@ Function output:
 65 
 ```
 
-### citrus:randomString()
+### randomString()
 
 This function will generate a random string representation with a defined length. A second parameter for this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows also digit characters in the generated string. By default digit charaters are not allowed.
 
@@ -254,7 +254,7 @@ dtkhirtsuz
 Vt567JkA32 
 ```
 
-### citrus:randomEnumValue()
+### randomEnumValue()
 
 This function returns one of its supplied arguments. Furthermore you can specify a custom function with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments. This promotes code reuse and facilitates refactoring.
 
@@ -288,7 +288,7 @@ We have added a custom function library with a custom function definition. The c
 <variable name="httpStatusCode" value="custom:randomHttpStatusCode()" />
 ```
 
-### citrus:currentDate()
+### currentDate()
 
 This function will definitely help you when accessing the current date. Some examples will show the usage in detail:
 
@@ -317,7 +317,7 @@ Function output:
 2009-09-01T12:00:00 
 ```
 
-### citrus:upperCase()
+### upperCase()
 
 This function converts any string to upper case letters.
 
@@ -331,7 +331,7 @@ Function output:
 
 **HELLO TEST FRAMEWORK** 
 
-### citrus:lowerCase()
+### lowerCase()
 
 This function converts any string to lower case letters.
 
@@ -345,7 +345,7 @@ Function output:
 
 **hello test framework** 
 
-### citrus:average()
+### average()
 
 The function will sum up all specified number values and divide the result through the number of values.
 
@@ -355,7 +355,7 @@ The function will sum up all specified number values and divide the result throu
 
 avg = **4.0** 
 
-### citrus:minimum()
+### minimum()
 
 This function returns the minimum value in a set of number values.
 
@@ -365,7 +365,7 @@ This function returns the minimum value in a set of number values.
 
 min = **3.0** 
 
-### citrus:maximum()
+### maximum()
 
 This function returns the maximum value in a set of number values.
 
@@ -375,7 +375,7 @@ This function returns the maximum value in a set of number values.
 
 max = **5.0** 
 
-### citrus:sum()
+### sum()
 
 The function will sum up all number values. The number values can also be negative.
 
@@ -385,7 +385,7 @@ The function will sum up all number values. The number values can also be negati
 
 sum = **12.0** 
 
-### citrus:absolute()
+### absolute()
 
 The function will return the absolute number value.
 
@@ -395,7 +395,7 @@ The function will return the absolute number value.
 
 abs = **3.0** 
 
-### citrus:mapValue()
+### mapValue()
 
 This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen at runtime and the corresponding value is not defined during the design time.
 
@@ -423,7 +423,7 @@ In this example the function sets the variable httpStatusMessage to the 'Interna
 <variable name="httpStatusCodeMessage" value="custom:getHttpStatusMessage('500')" />
 ```
 
-### citrus:randomUUID()
+### randomUUID()
 
 The function will generate a random Java UUID.
 
@@ -433,7 +433,7 @@ The function will generate a random Java UUID.
 
 uuid = **98fbd7b0-832e-4b85-b9d2-e0113ee88356** 
 
-### citrus:encodeBase64()
+### encodeBase64()
 
 The function will encode a string to binary data using base64 hexadecimal encoding.
 
@@ -443,7 +443,7 @@ The function will encode a string to binary data using base64 hexadecimal encodi
 
 encoded = **VGVzdCBGcmFtZXdvcms=** 
 
-### citrus:decodeBase64()
+### decodeBase64()
 
 The function will decode binary data to a character sequence using base64 hexadecimal decoding.
 
@@ -453,7 +453,7 @@ The function will decode binary data to a character sequence using base64 hexade
 
 decoded = **Hallo Testframework** 
 
-### citrus:escapeXml()
+### escapeXml()
 
 If you want to deal with escaped XML in your test case you may want to use this function. It automatically escapes all XML special characters.
 
@@ -469,7 +469,7 @@ If you want to deal with escaped XML in your test case you may want to use this 
 
 **&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;** 
 
-### citrus:cdataSection()
+### cdataSection()
 
 Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.
 
@@ -479,7 +479,7 @@ Usually we use CDATA sections to define message payload data inside a testcase. 
 
 cdata = **`<![CDATA[payload]]>`** 
 
-### citrus:digestAuthHeader()
+### digestAuthHeader()
 
 Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.
 
@@ -509,7 +509,7 @@ You can use these digest headers in messages sent by Citrus like this:
 
 This will set a Http Authorization header with the respective digest in the request message. So your test is ready for client digest authentication.
 
-### citrus:localHostAddress()
+### localHostAddress()
 
 Test cases may use the local host address for some reason (e.g. used as authentication principle). As the tests may run on different machines at the same time we can not use static host addresses. The provided function localHostAddress() reads the local host name dynamically at runtime.
 
@@ -521,7 +521,7 @@ A possible value is either the host name as used in DNS entry or an IP address v
 
 address = **`<192.168.2.100>`** 
 
-### citrus:changeDate()
+### changeDate()
 
 This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.
 
@@ -559,7 +559,7 @@ Function output:
 
 With this you are able to manipulate all date values of static or dynamic nature at test runtime.
 
-### citrus:readFile()
+### readFile()
 
 The **readFile** function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values and other functions.
 
@@ -576,7 +576,7 @@ Let's see this function in action:
 
 The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance. This is a very powerful way to extract large message parts to separate file resources. Just add the **readFile** function somewhere to the message content and Citrus will load the extra file content and place it right into the message payload for you.
 
-### citrus:message()
+### message()
 
 When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
 that have been sent or received within the test case. The **message** function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
@@ -623,7 +623,7 @@ The sample above loads the header **Operation** of the message.
 
 In Java DSL the message store is also accessible over the TestContext.
 
-### citrus:xpath()
+### xpath()
 
 The **xpath** function evaluates a Xpath expressions on some XML source and returns the expression result as String.
 
@@ -653,7 +653,7 @@ Also accessing the local message store is valid here:
 This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
 becomes very easy then.
 
-### citrus:jsonPath()
+### jsonPath()
 
 The **jsonPath** function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.
 

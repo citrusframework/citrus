@@ -203,3 +203,27 @@ li.L7,
 li.L9 {
     /* */
 }
+
+/* Anchor plugin */
+
+a.plugin-anchor span {
+    font-size: 20px !important;
+    margin-left: -20px;
+    padding-left: 50px;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal h2 {
+    padding-left: 25px;
+}
+
+/* Side navigation */
+
+.book .book-body .navigation {
+    top: auto;
+    height: 70px;
+}
+
+.book .book-body .navigation:hover {
+    color: #ccc;
+    background-color: #fafafa;
+}
