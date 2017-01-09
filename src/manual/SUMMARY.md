@@ -73,6 +73,7 @@
 * [Cucumber](cucumber.md)
 * [Zookeeper](zookeeper.md)
 * [Restdocs](restdocs.md)
+* [Selenium](selenium.md)
 * [Endpoint-component](endpoint-component.md)
 * [Endpoint-adapter](endpoint-adapter.md)
 * [Functions](functions.md)

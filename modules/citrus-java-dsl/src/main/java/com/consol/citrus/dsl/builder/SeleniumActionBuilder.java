@@ -212,6 +212,16 @@ public class SeleniumActionBuilder extends AbstractTestActionBuilder<DelegatingT
     }
 
     /**
+     * Make screenshot with custom output directory.
+     */
+    public SeleniumActionBuilder screenshot(String outputDir) {
+        MakeScreenshotAction action = new MakeScreenshotAction();
+        action.setOutputDir(outputDir);
+        action(action);
+        return this;
+    }
+
+    /**
      * Store file.
      * @param fileLocation
      */
