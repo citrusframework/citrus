@@ -36,6 +36,7 @@
             "result": {
               "clientVersion": "1.4.27",
               "apiVersion": "${apiVersion}",
+              "kind":"Info",
               "masterUrl": "${masterUrl}",
               "namespace": "${namespace}"
             }

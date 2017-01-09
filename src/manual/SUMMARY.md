@@ -66,6 +66,7 @@
 * [Mail](mail.md)
 * [Arquillian](arquillian.md)
 * [Docker](docker.md)
+* [Kubernetes](kubernetes.md)
 * [Ssh](ssh.md)
 * [Rmi](rmi.md)
 * [Jmx](jmx.md)

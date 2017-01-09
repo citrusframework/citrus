@@ -43,14 +43,9 @@ Citrus operates with the Docker remote REST API in order to interact with the Do
 The Docker client component above is using all default configuration values. By default Citrus is searching the system properties as well as environment variables for default Docker settings such as:
 
 *  **DOCKER_HOST** ="tcp://localhost:2376"
-
 *  **DOCKER_CERT_PATH** ="~/.docker/machine/machines/default"
-
 *  **DOCKER_TLS_VERIFY** ="1"
-
 *  **DOCKER_MACHINE_NAME** ="default"
-
-
 
 In case these settings are not settable in your environment you can also use explicit settings in the Docker client component:
 
@@ -190,7 +185,7 @@ public void dockerTest() {
 }
 ```
 
-The Java DSL Docker commands provide an optional **CommandResultCallback** that is called with the unmarshalled command result object. In the example above the Version model object is passed as argument to the callback. So the tester can access the command result and validate its properties.
+The Java DSL Docker commands provide an optional **CommandResultCallback** that is called with the unmarshalled command result object. In the example above the *Version* model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
 
 By default Citrus tries to find a Docker client component within the Citrus Spring application context. If not present Citrus will instantiate a default docker client with all default settings. You can also explicitly set the docker client instance when using the Java DSL Docker command actions:
 
