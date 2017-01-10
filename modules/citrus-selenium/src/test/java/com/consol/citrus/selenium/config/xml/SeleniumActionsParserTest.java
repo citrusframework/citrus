@@ -30,7 +30,7 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
 
     @Test
     public void testActionParser() {
-        assertActionCount(20);
+        assertActionCount(22);
 
         StartBrowserAction startAction = (StartBrowserAction) getNextTestActionFromTest();
         Assert.assertNotNull(startAction.getBrowser());
@@ -155,6 +155,16 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         Assert.assertNull(closeWindowAction.getBrowser());
         Assert.assertEquals(closeWindowAction.getName(), "selenium:close-window");
         Assert.assertEquals(closeWindowAction.getWindowName(), "closeWindow");
+
+        StoreFileAction storeFileAction = (StoreFileAction) getNextTestActionFromTest();
+        Assert.assertNull(storeFileAction.getBrowser());
+        Assert.assertEquals(storeFileAction.getName(), "selenium:store-file");
+        Assert.assertEquals(storeFileAction.getFilePath(), "classpath:download/file.txt");
+
+        GetStoredFileAction getStoredFileAction = (GetStoredFileAction) getNextTestActionFromTest();
+        Assert.assertNull(getStoredFileAction.getBrowser());
+        Assert.assertEquals(getStoredFileAction.getName(), "selenium:get-stored-file");
+        Assert.assertEquals(getStoredFileAction.getFileName(), "file.txt");
 
         ClearBrowserCacheAction clearCacheAction = (ClearBrowserCacheAction) getNextTestActionFromTest();
         Assert.assertNull(clearCacheAction.getBrowser());

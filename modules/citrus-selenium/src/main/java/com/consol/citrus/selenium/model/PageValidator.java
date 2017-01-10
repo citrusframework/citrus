@@ -23,12 +23,13 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface PageValidator {
+public interface PageValidator<T extends WebPage> {
 
     /**
      * Validate page contents.
+     * @param webPage
      * @param browser
      * @param context
      */
-    void validate(WebPage webPage, SeleniumBrowser browser, TestContext context);
+    void validate(T webPage, SeleniumBrowser browser, TestContext context);
 }

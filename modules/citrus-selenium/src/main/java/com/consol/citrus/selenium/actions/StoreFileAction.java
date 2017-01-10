@@ -25,8 +25,8 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
  */
 public class StoreFileAction extends AbstractSeleniumAction {
 
-    /** File location */
-    private String fileLocation;
+    /** File path */
+    private String filePath;
 
     /**
      * Default constructor.
@@ -37,24 +37,24 @@ public class StoreFileAction extends AbstractSeleniumAction {
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
-        browser.storeFile(context.replaceDynamicContentInString(fileLocation));
+        browser.storeFile(context.replaceDynamicContentInString(filePath));
     }
 
     /**
-     * Gets the fileLocation.
+     * Gets the filePath.
      *
      * @return
      */
-    public String getFileLocation() {
-        return fileLocation;
+    public String getFilePath() {
+        return filePath;
     }
 
     /**
-     * Sets the fileLocation.
+     * Sets the filePath.
      *
-     * @param fileLocation
+     * @param filePath
      */
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

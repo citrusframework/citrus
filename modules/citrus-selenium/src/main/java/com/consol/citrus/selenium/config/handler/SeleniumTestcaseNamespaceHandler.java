@@ -43,5 +43,7 @@ public class SeleniumTestcaseNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("screenshot", new MakeScreenshotActionParser());
         registerBeanDefinitionParser("navigate", new NavigateActionParser());
         registerBeanDefinitionParser("alert", new AlertActionParser());
+        registerBeanDefinitionParser("store-file", new StoreFileActionParser());
+        registerBeanDefinitionParser("get-stored-file", new GetStoredFileActionParser());
     }
 }

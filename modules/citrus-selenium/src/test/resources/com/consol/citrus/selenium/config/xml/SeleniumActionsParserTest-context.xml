@@ -81,6 +81,9 @@
             <selenium:switch-window name="switchWindow"/>
             <selenium:close-window name="closeWindow"/>
 
+            <selenium:store-file file-path="classpath:download/file.txt"/>
+            <selenium:get-stored-file file-name="file.txt"/>
+
             <selenium:clear-cache/>
 
             <selenium:stop browser="mockBrowser"/>

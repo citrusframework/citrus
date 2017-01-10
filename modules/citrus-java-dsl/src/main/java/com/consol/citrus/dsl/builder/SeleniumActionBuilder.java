@@ -223,11 +223,11 @@ public class SeleniumActionBuilder extends AbstractTestActionBuilder<DelegatingT
 
     /**
      * Store file.
-     * @param fileLocation
+     * @param filePath
      */
-    public SeleniumActionBuilder store(String fileLocation) {
+    public SeleniumActionBuilder store(String filePath) {
         StoreFileAction action = new StoreFileAction();
-        action.setFileLocation(fileLocation);
+        action.setFilePath(filePath);
         action(action);
         return this;
     }

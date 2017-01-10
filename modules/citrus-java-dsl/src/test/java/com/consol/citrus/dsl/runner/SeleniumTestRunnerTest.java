@@ -240,7 +240,7 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(10)).getDelegate().getClass(), StoreFileAction.class);
         StoreFileAction storeFileAction = (StoreFileAction) ((DelegatingTestAction)test.getActions().get(10)).getDelegate();
         Assert.assertEquals(storeFileAction.getName(), "selenium:store-file");
-        Assert.assertEquals(storeFileAction.getFileLocation(), "classpath:download/file.txt");
+        Assert.assertEquals(storeFileAction.getFilePath(), "classpath:download/file.txt");
         Assert.assertNotNull(findElementAction.getBrowser());
 
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(11)).getDelegate().getClass(), GetStoredFileAction.class);

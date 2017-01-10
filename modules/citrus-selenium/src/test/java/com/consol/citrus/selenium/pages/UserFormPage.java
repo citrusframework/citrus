@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class UserFormPage implements WebPage, PageValidator {
+public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 
     @FindBy(id = "userForm")
     private WebElement form;
@@ -54,7 +54,7 @@ public class UserFormPage implements WebPage, PageValidator {
     }
 
     @Override
-    public void validate(WebPage webPage, SeleniumBrowser browser, TestContext context) {
+    public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
         Assert.isTrue(userName != null);
         Assert.isTrue(StringUtils.hasText(userName.getAttribute("value")));
         Assert.isTrue(form != null);

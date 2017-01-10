@@ -243,6 +243,26 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="store-file">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BrowserActionType">
+          <xs:attribute name="file-path" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="get-stored-file">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BrowserActionType">
+          <xs:attribute name="file-name" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="alert">
     <xs:annotation>
       <xs:documentation>Access current alert dialog and perform action (accept, dismiss)</xs:documentation>

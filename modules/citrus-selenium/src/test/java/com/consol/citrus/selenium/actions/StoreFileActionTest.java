@@ -49,7 +49,7 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecute() throws Exception {
-        action.setFileLocation("classpath:download/file.txt");
+        action.setFilePath("classpath:download/file.txt");
         action.execute(context);
 
         Assert.assertNotNull(seleniumBrowser.getStoredFile("file.txt"));
@@ -59,7 +59,7 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
     public void testExecuteVariableSupport() throws Exception {
         context.setVariable("file", "classpath:download/file.xml");
 
-        action.setFileLocation("${file}");
+        action.setFilePath("${file}");
         action.execute(context);
 
         Assert.assertNotNull(seleniumBrowser.getStoredFile("file.xml"));

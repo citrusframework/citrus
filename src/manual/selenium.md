@@ -327,6 +327,206 @@ selenium().select("happy").element(By.id("user-mood"));
 The actions above select dropdown options and set user input on text fields and checkboxes. As usual the form elements are selected by some properties such as
 ids, names or xpath expressions.
 
+### Page actions
+
+Page objects are a well known pattern when using Selenium. The page objects define elements that the page is working with. In addition to that the
+page objects define actions that can be executed from outside. This object oriented approach for accessing pages and their elements is a very good idea.
+Lets have a look at a sample page object.
+
+```java
+public class UserFormPage implements WebPage {
+
+    @FindBy(id = "userForm")
+    private WebElement form;
+
+    @FindBy(id = "username")
+    private WebElement userName;
+
+    /**
+     * Sets the user name.
+     */
+    public void setUserName(String value, TestContext context) {
+        userName.clear();
+        userName.sendKeys(value);
+    }
+
+    /**
+     * Submits the form.
+     * @param context
+     */
+    public void submit(TestContext context) {
+        form.submit();
+    }
+}
+```
+
+As you can see the page object is a Java POJO that implements the **WebPage** interface. The page defines **WebElement** members. These are automatically
+injected by Citrus and Selenium based on the **FindBy** annotation. Now the test case is able to load that page object and execute some action methods on the page such as
+*setUserName* or *submit*.
+
+**XML DSL** 
+
+```xml
+<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+               action="setUserName">
+  <selenium:arguments>
+    <selenium:argument>Citrus</selenium:argument>
+  </selenium:arguments>              
+</selenium:page>
+                              
+<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+               action="submit"/>
+```
+
+**Java DSL** 
+
+```java
+selenium().page(UserFormPage.class).argument("Citrus").execute("setUserName");
+
+selenium().page(UserFormPage.class).execute("submit");
+```
+
+The page object class is automatically loaded and instantiated with dependency injection for all *FindBy* annotated web elements. After that the action method is executed. 
+The action methods can also have method parameters as seen in *setUserName*. The value parameter is automatically set when calling the method.
+
+Methods can also use the optional parameter *TestContext*. With this context you can access the current test context with all test variables for instance. This method parameter
+should always be the last parameter.
+
+### Page validation
+
+We can also use page object for validation purpose. The page object is loaded and instantiated as described in previous section. Then the page validator
+is called. The validator performs assertions and validation operations with the page object. Lets see a sample page validator:
+
+```java
+public class UserFormValidator implements PageValidator<UserFormPage> {
+
+    @Override
+    public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.isTrue(webPage.getUserName() != null);
+        Assert.isTrue(StringUtils.hasText(webPage.getUserName().getAttribute("value")));
+    }
+}
+```
+
+The page validator is called with the web page instance, the browser and the test context. The validator should assert page objects and web elements for
+validation purpose. In a test case we can call the validator to validate the page.
+
+**XML DSL** 
+
+```xml
+<bean id ="userFormValidator" class="com.consol.citrus.selenium.pages.UserFormValidator"/>
+
+<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+               action="validate"
+               validator="userFormValidator"/>
+```
+
+**Java DSL** 
+
+```java
+@Autowired
+private UserFormValidator userFormValidator;
+
+selenium().page(UserFormPage.class).execute("validate").validator(userFormValidator);
+```
+
+Instead of using a separate validator class you can also put the validation method to the page object itself. Then page object and validation is
+done within the same class:
+
+```java
+public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
+
+    @FindBy(id = "userForm")
+    private WebElement form;
+
+    @FindBy(id = "username")
+    private WebElement userName;
+
+    /**
+     * Sets the user name.
+     */
+    public void setUserName(String value, TestContext context) {
+        userName.clear();
+        userName.sendKeys(value);
+    }
+
+    /**
+     * Submits the form.
+     * @param context
+     */
+    public void submit(TestContext context) {
+        form.submit();
+    }
+
+    @Override
+    public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.isTrue(userName != null);
+        Assert.isTrue(StringUtils.hasText(userName.getAttribute("value")));
+        Assert.isTrue(form != null);
+    }
+}
+```
+
+**XML DSL** 
+
+```xml
+<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+               action="validate"/>
+```
+
+**Java DSL** 
+
+```java
+selenium().page(UserFormPage.class).execute("validate");
+```
+
+### Wait
+
+Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
+to be *visible* or *hidden*.
+
+**XML DSL** 
+
+```xml
+<selenium:wait until="hidden">
+    <selenium:element id="info-dialog"/>
+</selenium:wait>
+```
+
+**Java DSL** 
+
+```java
+selenium().waitUntil().hidden().element(By.id("info-dialog"));
+```
+
+The example waits for the element *info-dialog* to disappear. The time to wait is 5000 milliseconds by default. You can set the timeout on the action. Due
+to Selenium limitations the minimum wait time is 1000 milliseconds.
+
+### Navigate
+
+The action navigates to a new page either by using a new relative path or a complete new Http URL. 
+
+**XML DSL** 
+
+```xml
+<selenium:navigate page="http://localhost:8080"/>
+
+<selenium:navigate page="help"/>
+```
+
+**Java DSL** 
+
+```java
+selenium().navigate("http://localhost:8080");
+
+selenium().navigate("help");
+```
+
+The sample above describes a new page with new Http URL. The browser will navigate to this new page. All further Selenium actions are performed on this new
+page. The second navigation action opens the relative page *help* so the new page URL is **http://localhost:8080/help**.
+
+Navigation is always done on the active browser window. You can manage the opened windows as described in next section.
+
 ### Window actions
 
 Selenium is able to manage multiple windows. So you can open, close and swich active windows in a Citrus test. 
@@ -354,6 +554,27 @@ name is missing. Citrus uses default window names that are automatically used as
 * **selenium_active_window** the active window handle
 * **selenium_last_window** the last window handle when switched to other window
 
+### Alert
+
+We are able to access the alert dialog on the current page. Citrus will validate the displayed dialog text and accept or dismiss of the dialog.
+
+**XML DSL** 
+
+```xml
+<selenium:alert accept="true">
+  <selenium:alert-text>Hello!</selenium:alert-text>
+</selenium:alert>
+```
+
+**Java DSL** 
+
+```java
+selenium().alert().text("Hello!").accept();
+```
+
+The alert dialog text is validated when expected text is given on the test action. The user can decide to accept or dismiss the dialog. After that the dialog should be closed.
+In case the test action fails to find an open alert dialog the test action raises runtime errors and the test will fail.
+
 ### Make screenshot
 
 You can execute this action in case you want to take a screenshot of the current page. This action only works with browsers that actually display the user interface. The action will not have any effect 
@@ -376,3 +597,47 @@ selenium().screenhsot("target");
 ```
 
 The test action has an optional parameter *output-dir* which represents the output directory where the screenshot is saved to.
+
+### Temporary storage (Firefox)
+
+**Important** This action only works with Firefox web driver! Other browsers are not working with the temporary download storage.
+
+The browser uses a temporary storage for downloaded files. We can access this temporary storage during a test case.
+
+**XML DSL** 
+
+```xml
+<selenium:store-file file-path="classpath:download/file.txt"/>
+<selenium:get-stored-file file-name="file.txt"/>
+```
+
+**Java DSL** 
+
+```java
+selenium().store("classpath:download/file.txt");
+selenium().getStored("file.txt");
+```
+
+As you can see the test case is able to store new files to the temporary browser storage. We have to give the file path as classpath
+or file system path. When reading the temporary file storage we need to specify the file name that we want to access in the temporary storage. The
+temporary storage is not capable of subdirectories all files are stored directly to the storage in one single directory.
+
+In case the stored file is not found by that name the test action fails with respective errors. On the other hand when the file is found in temporary storage
+Citrus will automatically create a new test variable **selenium_download_file** which contains the file name as value.
+
+### Clear browser cache
+
+When clearing the browser cache all cookies and temporary files will be deleted.
+
+**XML DSL** 
+
+```xml
+<selenium:clear-cache/>
+```
+
+**Java DSL** 
+
+```java
+selenium().clearCache();
+```
+
