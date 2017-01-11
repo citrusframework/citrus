@@ -49,13 +49,13 @@ public abstract class AbstractClientCommand<O, R extends KubernetesResource, T e
             }
 
             if (hasParameter(KubernetesMessageHeaders.NAME)) {
-                ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString()));
+                operation = (O) ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString()));
             }
         }
 
         if (operation instanceof ClientMixedOperation) {
             if (hasParameter(KubernetesMessageHeaders.NAMESPACE)) {
-                ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString()));
+                operation = (O) ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString()));
             }
         }
 

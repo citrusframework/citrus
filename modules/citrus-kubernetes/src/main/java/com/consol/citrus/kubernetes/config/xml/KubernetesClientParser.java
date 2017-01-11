@@ -22,7 +22,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
-import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.Config;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -39,33 +39,18 @@ public class KubernetesClientParser extends AbstractEndpointParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
-        ConfigBuilder config = new ConfigBuilder();
+        BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder.genericBeanDefinition(Config.class);
+        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("url"), "masterUrl");
+        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("version"), "apiVersion");
+        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("username"), "username");
+        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("password"), "password");
+        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("namespace"), "namespace");
+        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("cert-file"), "caCertFile");
 
-        if (element.hasAttribute("url")) {
-            config.withMasterUrl(element.getAttribute("url"));
-        }
+        String clientConfigId = element.getAttribute(ID_ATTRIBUTE) + "Config";
+        BeanDefinitionParserUtils.registerBean(clientConfigId, configBuilder.getBeanDefinition(), parserContext, shouldFireEvents());
 
-        if (element.hasAttribute("version")) {
-            config.withApiVersion(element.getAttribute("version"));
-        }
-
-        if (element.hasAttribute("username")) {
-            config.withUsername(element.getAttribute("username"));
-        }
-
-        if (element.hasAttribute("password")) {
-            config.withPassword(element.getAttribute("password"));
-        }
-
-        if (element.hasAttribute("namespace")) {
-            config.withNamespace(element.getAttribute("namespace"));
-        }
-
-        if (element.hasAttribute("cert-file")) {
-            config.withCaCertFile(element.getAttribute("cert-file"));
-        }
-
-        endpointConfiguration.addPropertyValue("kubernetesClientConfig", config.build());
+        endpointConfiguration.addPropertyReference("kubernetesClientConfig", clientConfigId);
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("object-mapper"), "objectMapper");
