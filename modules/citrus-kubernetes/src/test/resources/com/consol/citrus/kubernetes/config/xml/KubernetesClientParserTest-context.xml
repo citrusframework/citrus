@@ -8,7 +8,7 @@
   <citrus-k8s:client id="k8sClient1"/>
 
   <citrus-k8s:client id="k8sClient2"
-                          url="http://localhost:8843"
+                          url="http://localhost:8843/"
                           version="v1"
                           username="user"
                           password="s!cr!t"
