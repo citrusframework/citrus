@@ -96,6 +96,8 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
                 return new ListEvents();
             case "list-endpoints":
                 return new ListEndpoints();
+            case "create-pod":
+                return new CreatePod();
             case "list-pods":
                 return new ListPods();
             case "watch-pods":
@@ -112,6 +114,8 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
                 return new ListReplicationControllers();
             case "watch-replication-controllers":
                 return new WatchReplicationControllers();
+            case "create-service":
+                return new CreateService();
             case "list-services":
                 return new ListServices();
             case "watch-services":

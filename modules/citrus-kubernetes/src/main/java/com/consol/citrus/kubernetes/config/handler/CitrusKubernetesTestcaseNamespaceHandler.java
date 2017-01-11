@@ -17,7 +17,7 @@
 package com.consol.citrus.kubernetes.config.handler;
 
 import com.consol.citrus.kubernetes.command.*;
-import com.consol.citrus.kubernetes.config.xml.KubernetesExecuteActionParser;
+import com.consol.citrus.kubernetes.config.xml.*;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -27,18 +27,20 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusKubernetesTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("info", new KubernetesExecuteActionParser(Info.class));
-        registerBeanDefinitionParser("list-events", new KubernetesExecuteActionParser(ListEvents.class));
-        registerBeanDefinitionParser("list-endpoints", new KubernetesExecuteActionParser(ListEndpoints.class));
-        registerBeanDefinitionParser("list-nodes", new KubernetesExecuteActionParser(ListNodes.class));
-        registerBeanDefinitionParser("watch-nodes", new KubernetesExecuteActionParser(WatchNodes.class));
-        registerBeanDefinitionParser("list-services", new KubernetesExecuteActionParser(ListServices.class));
-        registerBeanDefinitionParser("watch-services", new KubernetesExecuteActionParser(WatchServices.class));
-        registerBeanDefinitionParser("list-replication-controllers", new KubernetesExecuteActionParser(ListReplicationControllers.class));
-        registerBeanDefinitionParser("watch-replication-controllers", new KubernetesExecuteActionParser(WatchReplicationControllers.class));
-        registerBeanDefinitionParser("list-namespaces", new KubernetesExecuteActionParser(ListNamespaces.class));
-        registerBeanDefinitionParser("watch-namespaces", new KubernetesExecuteActionParser(WatchNamespaces.class));
-        registerBeanDefinitionParser("list-pods", new KubernetesExecuteActionParser(ListPods.class));
-        registerBeanDefinitionParser("watch-pods", new KubernetesExecuteActionParser(WatchPods.class));
+        registerBeanDefinitionParser("info", new KubernetesExecuteActionParser<>(Info.class));
+        registerBeanDefinitionParser("list-events", new KubernetesExecuteActionParser<>(ListEvents.class));
+        registerBeanDefinitionParser("list-endpoints", new KubernetesExecuteActionParser<>(ListEndpoints.class));
+        registerBeanDefinitionParser("list-nodes", new KubernetesExecuteActionParser<>(ListNodes.class));
+        registerBeanDefinitionParser("watch-nodes", new KubernetesExecuteActionParser<>(WatchNodes.class));
+        registerBeanDefinitionParser("create-service", new CreateServiceActionParser());
+        registerBeanDefinitionParser("list-services", new KubernetesExecuteActionParser<>(ListServices.class));
+        registerBeanDefinitionParser("watch-services", new KubernetesExecuteActionParser<>(WatchServices.class));
+        registerBeanDefinitionParser("list-replication-controllers", new KubernetesExecuteActionParser<>(ListReplicationControllers.class));
+        registerBeanDefinitionParser("watch-replication-controllers", new KubernetesExecuteActionParser<>(WatchReplicationControllers.class));
+        registerBeanDefinitionParser("list-namespaces", new KubernetesExecuteActionParser<>(ListNamespaces.class));
+        registerBeanDefinitionParser("watch-namespaces", new KubernetesExecuteActionParser<>(WatchNamespaces.class));
+        registerBeanDefinitionParser("create-pod", new CreatePodActionParser());
+        registerBeanDefinitionParser("list-pods", new KubernetesExecuteActionParser<>(ListPods.class));
+        registerBeanDefinitionParser("watch-pods", new KubernetesExecuteActionParser<>(WatchPods.class));
     }
 }

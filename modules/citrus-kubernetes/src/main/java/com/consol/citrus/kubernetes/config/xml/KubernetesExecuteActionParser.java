@@ -38,16 +38,16 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesExecuteActionParser implements BeanDefinitionParser {
+public class KubernetesExecuteActionParser<T extends KubernetesCommand> implements BeanDefinitionParser {
 
     /** Kubernetes command to execute */
-    private Class<? extends KubernetesCommand> commandType;
+    private Class<T> commandType;
 
     /**
      * Constructor using kubernetes command.
      * @param commandType
      */
-    public KubernetesExecuteActionParser(Class<? extends KubernetesCommand> commandType) {
+    public KubernetesExecuteActionParser(Class<T> commandType) {
         this.commandType = commandType;
     }
 
@@ -59,7 +59,7 @@ public class KubernetesExecuteActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, beanDefinition);
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("client"), "kubernetesClient");
 
-        KubernetesCommand command = createCommand(commandType);
+        T command = parseCommand(createCommand(commandType), element, parserContext);
         for (int i = 0; i < element.getAttributes().getLength(); i++) {
             Node attribute = element.getAttributes().item(i);
             if (!attribute.getNodeName().equals("client")) {
@@ -91,11 +91,22 @@ public class KubernetesExecuteActionParser implements BeanDefinitionParser {
     }
 
     /**
+     * Subclasses may add custom command parsing logic here.
+     * @param command
+     * @param element
+     * @param parserContext
+     * @return
+     */
+    protected T parseCommand(T command, Element element, ParserContext parserContext) {
+        return command;
+    }
+
+    /**
      * Creates new Kubernetes command instance of given type.
      * @param commandType
      * @return
      */
-    private KubernetesCommand createCommand(Class<? extends KubernetesCommand> commandType) {
+    private T createCommand(Class<T> commandType) {
         try {
             return commandType.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {

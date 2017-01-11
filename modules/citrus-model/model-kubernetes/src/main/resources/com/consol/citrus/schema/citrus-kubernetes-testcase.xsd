@@ -35,6 +35,88 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="create-pod">
+    <xs:annotation>
+      <xs:documentation>Creates new kubernetes pod</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="template" minOccurs="0">
+          <xs:complexType>
+            <xs:attribute name="file" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="spec" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="container" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ports" minOccurs="0">
+                      <xs:complexType>
+                        <xs:attribute name="protocol" type="xs:string" default="TCP"/>
+                        <xs:attribute name="port" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="image" type="xs:string" use="required"/>
+                  <xs:attribute name="pull-policy" type="xs:string"/>
+                  <xs:attribute name="name" type="xs:string"/>
+                  <xs:attribute name="command" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="restart-policy" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="create-service">
+    <xs:annotation>
+      <xs:documentation>Creates new kubernetes service</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="template" minOccurs="0">
+          <xs:complexType>
+            <xs:attribute name="file" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="spec" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="selector">
+                <xs:complexType>
+                  <xs:attribute name="label" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ports" minOccurs="0">
+                <xs:complexType>
+                  <xs:attribute name="protocol" type="xs:string" default="TCP"/>
+                  <xs:attribute name="port" type="xs:string" use="required"/>
+                  <xs:attribute name="target-port" type="xs:string"/>
+                  <xs:attribute name="node-port" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="list-pods">
     <xs:annotation>
       <xs:documentation>List kubernetes pods</xs:documentation>

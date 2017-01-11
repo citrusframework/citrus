@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/kubernetes/testcase
+                                  http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd
+                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="KubernetesCreateIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2016-12-15</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2016-12-15T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test kubernetes container command execution with kubernetes client.</description>
+
+    <variables>
+      <variable name="podLabel" value="server=hello-jetty"/>
+      <variable name="serviceLabel" value="service=hello-jetty"/>
+      <variable name="randomId" value="citrus:randomNumber(10)-citrus:lowerCase(citrus:randomString(4))"/>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Create new pod from template</message>
+      </echo>
+
+      <k8s:create-pod namespace="default">
+        <k8s:template file="classpath:templates/hello-jetty.yml"/>
+      </k8s:create-pod>
+
+      <echo>
+        <message>List pods by '${podLabel}'</message>
+      </echo>
+
+      <repeat-onerror-until-true condition="@assertThat('greaterThan(9)')@" auto-sleep="1000">
+        <k8s:list-pods label="${podLabel}">
+          <k8s:expect>
+            <k8s:element path="$.result.items.size()" value="1"/>
+            <k8s:element path="$..status.phase" value="Running"/>
+          </k8s:expect>
+        </k8s:list-pods>
+      </repeat-onerror-until-true>
+
+      <echo>
+        <message>Create new service from template</message>
+      </echo>
+
+      <k8s:create-service namespace="default">
+        <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+      </k8s:create-service>
+
+      <echo>
+        <message>List services by '${serviceLabel}'</message>
+      </echo>
+
+      <k8s:list-services label="${serviceLabel}">
+        <k8s:expect>
+          <k8s:element path="$.result.items.size()" value="1"/>
+        </k8s:expect>
+      </k8s:list-services>
+
+    </actions>
+
+  </testcase>
+</spring:beans>
