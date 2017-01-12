@@ -19,12 +19,19 @@ package com.consol.citrus.websocket.client;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.websocket.endpoint.AbstractWebSocketEndpointConfiguration;
 import com.consol.citrus.websocket.handler.CitrusWebSocketHandler;
+import org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension;
+import org.eclipse.jetty.websocket.jsr356.JsrExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.adapter.standard.StandardToWebSocketExtensionAdapter;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Collections;
 
 /**
  * Web socket endpoint configuration for client side web socket communication.
@@ -32,6 +39,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
  * @since 2.3
  */
 public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {
+
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketClientEndpointConfiguration.class);
 
@@ -40,6 +48,9 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
 
     /** Web socket client implementation */
     private WebSocketClient client = new StandardWebSocketClient();
+
+    /** Optional web socket http headers */
+    private WebSocketHttpHeaders webSocketHttpHeaders;
 
     @Override
     public CitrusWebSocketHandler getHandler() {
@@ -61,7 +72,13 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
      */
     private CitrusWebSocketHandler getWebSocketClientHandler(String url) {
         CitrusWebSocketHandler handler = new CitrusWebSocketHandler();
-        ListenableFuture<WebSocketSession> future = client.doHandshake(handler, url);
+
+        if (webSocketHttpHeaders == null) {
+            webSocketHttpHeaders = new WebSocketHttpHeaders();
+            webSocketHttpHeaders.setSecWebSocketExtensions(Collections.singletonList(new StandardToWebSocketExtensionAdapter(new JsrExtension(new PerMessageDeflateExtension().getName()))));
+        }
+
+        ListenableFuture<WebSocketSession> future = client.doHandshake(handler, webSocketHttpHeaders, UriComponentsBuilder.fromUriString(url).buildAndExpand().encode().toUri());
         try {
             future.get();
         } catch (Exception e) {
@@ -78,5 +95,23 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
      */
     public void setClient(WebSocketClient client) {
         this.client = client;
+    }
+
+    /**
+     * Gets the webSocketHttpHeaders.
+     *
+     * @return
+     */
+    public WebSocketHttpHeaders getWebSocketHttpHeaders() {
+        return webSocketHttpHeaders;
+    }
+
+    /**
+     * Sets the webSocketHttpHeaders.
+     *
+     * @param webSocketHttpHeaders
+     */
+    public void setWebSocketHttpHeaders(WebSocketHttpHeaders webSocketHttpHeaders) {
+        this.webSocketHttpHeaders = webSocketHttpHeaders;
     }
 }

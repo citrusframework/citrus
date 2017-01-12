@@ -49,7 +49,7 @@ public class CallTemplateParserTest extends AbstractActionParserTest<Template> {
             createApplicationContext("failed");
             Assert.fail("Missing bean creation exception due to unknown template");
         } catch (BeanCreationException e) {
-            Assert.assertTrue(e.getMessage().contains("NoSuchBeanDefinitionException: No bean named 'unknownTemplate' is defined"));
+            Assert.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'unknownTemplate'"));
         }
     }
     

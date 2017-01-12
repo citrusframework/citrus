@@ -13,6 +13,7 @@
   <citrus-websocket:client id="webSocketClient2"
                           url="ws://localhost:8080/test/uri"
                           timeout="10000"
+                          http-headers="webSocketHttpHeaders"
                           endpoint-resolver="endpointResolver"
                           message-converter="messageConverter"/>
 
@@ -22,6 +23,10 @@
                           actor="testActor"/>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="webSocketHttpHeaders" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.springframework.web.socket.WebSocketHttpHeaders"/>
+  </bean>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.websocket.message.WebSocketMessageConverter"/>

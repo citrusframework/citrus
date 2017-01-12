@@ -28,11 +28,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.SettableListenableFuture;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.*;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.net.URI;
 
 import static org.mockito.Mockito.*;
 
@@ -70,7 +71,7 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
 
                 return future;
             }
-        }).when(client).doHandshake(any(CitrusWebSocketHandler.class), eq(endpointUri));
+        }).when(client).doHandshake(any(CitrusWebSocketHandler.class), any(WebSocketHttpHeaders.class), any(URI.class));
 
         when(session.getId()).thenReturn("test-socket-1");
         when(session.isOpen()).thenReturn(true);
@@ -120,7 +121,7 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
                 handler.afterConnectionEstablished(session);
                 return future;
             }
-        }).when(client).doHandshake(any(CitrusWebSocketHandler.class), eq(endpointUri));
+        }).when(client).doHandshake(any(CitrusWebSocketHandler.class), any(WebSocketHttpHeaders.class), any(URI.class));
 
         when(session.getId()).thenReturn("test-socket-1");
         when(session.isOpen()).thenReturn(true);

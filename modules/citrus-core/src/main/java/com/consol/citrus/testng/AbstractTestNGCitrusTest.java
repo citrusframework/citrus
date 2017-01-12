@@ -78,6 +78,14 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             }
 
             super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
+
+            if (testResult.getThrowable() != null) {
+                if (testResult.getThrowable() instanceof RuntimeException) {
+                    throw (RuntimeException) testResult.getThrowable();
+                } else {
+                    throw new CitrusRuntimeException(testResult.getThrowable());
+                }
+            }
         } else {
             super.run(callBack, testResult);
         }

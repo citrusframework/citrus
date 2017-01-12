@@ -32,6 +32,11 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-hazelcast</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-codegen</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>

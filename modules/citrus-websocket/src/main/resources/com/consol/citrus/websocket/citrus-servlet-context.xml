@@ -27,10 +27,6 @@
   </bean>
 
   <bean id="upgradeStrategy" class="org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy">
-    <constructor-arg ref="serverFactory"/>
-  </bean>
-
-  <bean id="serverFactory" class="org.eclipse.jetty.websocket.server.WebSocketServerFactory">
     <constructor-arg>
       <bean class="org.eclipse.jetty.websocket.api.WebSocketPolicy">
         <constructor-arg value="SERVER"/>

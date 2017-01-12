@@ -72,13 +72,13 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         when(k8sClient.nodes()).thenReturn(nodesOperation);
         when(nodesOperation.list()).thenReturn(new NodeList());
         when(nodesOperation.watch(any(Watcher.class))).thenAnswer(invocationOnMock -> {
-            invocationOnMock.getArgumentAt(0, Watcher.class).eventReceived(Watcher.Action.ADDED, new Node());
+            ((Watcher) invocationOnMock.getArguments()[0]).eventReceived(Watcher.Action.ADDED, new Node());
             return null;
         });
 
         when(k8sClient.services()).thenReturn(servicesOperation);
         when(servicesOperation.watch(any(Watcher.class))).thenAnswer(invocationOnMock -> {
-            invocationOnMock.getArgumentAt(0, Watcher.class).eventReceived(Watcher.Action.MODIFIED, new Service());
+            ((Watcher) invocationOnMock.getArguments()[0]).eventReceived(Watcher.Action.MODIFIED, new Service());
             return null;
         });
         when(servicesOperation.withName("myService")).thenReturn(servicesOperation);

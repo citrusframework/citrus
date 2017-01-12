@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -187,9 +188,8 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         MessageSelectingQueueChannel queueChannel = Mockito.mock(MessageSelectingQueueChannel.class);
         org.springframework.messaging.Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
-        reset(queueChannel);
-        
-        when(queueChannel.receive(any(HeaderMatchingMessageSelector.class)))
+
+        when(queueChannel.receive(any(DispatchingMessageSelector.class)))
                             .thenReturn(message);
         
         endpoint.getEndpointConfiguration().setChannel(queueChannel);

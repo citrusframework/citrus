@@ -44,7 +44,7 @@ public class ActionParserTest extends AbstractActionParserTest<TestAction> {
             createApplicationContext("failed");
             Assert.fail("Missing bean creation exception due to broken bean reference");
         } catch (BeanCreationException e) {
-            Assert.assertTrue(e.getMessage().contains("NoSuchBeanDefinitionException: No bean named 'brokenRef' is defined"));
+            Assert.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'brokenRef'"));
         }
     }
     

@@ -18,6 +18,7 @@ package com.consol.citrus.websocket.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import com.consol.citrus.websocket.client.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.testng.Assert;
@@ -44,6 +45,7 @@ public class WebSocketClientParserTest extends AbstractBeanDefinitionParserTest 
         // 2nd message sender
         webSocketClient = clients.get("webSocketClient2");
         Assert.assertEquals(webSocketClient.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test/uri");
+        Assert.assertEquals(((WebSocketClientEndpointConfiguration)webSocketClient.getEndpointConfiguration()).getWebSocketHttpHeaders(), beanDefinitionContext.getBean("webSocketHttpHeaders"));
         Assert.assertEquals(webSocketClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertEquals(webSocketClient.getEndpointConfiguration().getEndpointUriResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(webSocketClient.getEndpointConfiguration().getTimeout(), 10000L);

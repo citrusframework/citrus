@@ -43,6 +43,7 @@ public class WebSocketClientParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("url"), "endpointUri");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("http-headers"), "webSocketHttpHeaders");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("endpoint-resolver"), "endpointUriResolver");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
