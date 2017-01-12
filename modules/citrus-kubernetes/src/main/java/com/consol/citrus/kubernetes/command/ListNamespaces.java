@@ -36,6 +36,6 @@ public class ListNamespaces extends AbstractListCommand<NamespaceList, ListNames
 
     @Override
     protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().namespaces();
+        return kubernetesClient.getClient().namespaces();
     }
 }

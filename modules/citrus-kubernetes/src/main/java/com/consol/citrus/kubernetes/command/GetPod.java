@@ -37,6 +37,6 @@ public class GetPod extends AbstractGetCommand<Pod, GetPod> {
 
     @Override
     protected ClientMixedOperation<Pod, PodList, DoneablePod, ClientPodResource<Pod, DoneablePod>> operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().pods();
+        return kubernetesClient.getClient().pods();
     }
 }

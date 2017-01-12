@@ -46,7 +46,7 @@ public class CreateService extends AbstractCreateCommand<Service, DoneableServic
 
     @Override
     protected ClientMixedOperation<Service, ? extends KubernetesResourceList, DoneableService, ? extends ClientResource<Service, DoneableService>> operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().services();
+        return kubernetesClient.getClient().services();
     }
 
     @Override
@@ -184,5 +184,24 @@ public class CreateService extends AbstractCreateCommand<Service, DoneableServic
      */
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    /**
+     * Gets the service.
+     *
+     * @return
+     */
+    public Service getService() {
+        return getResource();
+    }
+
+    /**
+     * Sets the service.
+     *
+     * @param service
+     */
+    public CreateService setService(Service service) {
+        setResource(service);
+        return this;
     }
 }

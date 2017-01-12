@@ -36,6 +36,6 @@ public class WatchServices extends AbstractWatchCommand<Service, WatchServices> 
 
     @Override
     protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().services();
+        return kubernetesClient.getClient().services();
     }
 }

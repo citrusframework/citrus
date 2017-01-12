@@ -123,4 +123,12 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
     public SelectiveConsumer createConsumer() {
         return this;
     }
+
+    /**
+     * Gets the Kubernetes client.
+     * @return
+     */
+    public io.fabric8.kubernetes.client.KubernetesClient getClient() {
+        return getEndpointConfiguration().getKubernetesClient();
+    }
 }

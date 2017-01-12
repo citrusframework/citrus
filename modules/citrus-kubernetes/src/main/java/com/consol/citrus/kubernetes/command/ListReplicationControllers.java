@@ -36,6 +36,6 @@ public class ListReplicationControllers extends AbstractListCommand<ReplicationC
 
     @Override
     protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().replicationControllers();
+        return kubernetesClient.getClient().replicationControllers();
     }
 }

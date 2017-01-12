@@ -36,6 +36,6 @@ public class ListServices extends AbstractListCommand<ServiceList, ListServices>
 
     @Override
     protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().services();
+        return kubernetesClient.getClient().services();
     }
 }

@@ -75,10 +75,10 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st client
-        Assert.assertNotNull(client1.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertNotNull(client1.getClient());
 
         // 2nd client
-        Assert.assertNotNull(client2.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertNotNull(client2.getClient());
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8443/");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");

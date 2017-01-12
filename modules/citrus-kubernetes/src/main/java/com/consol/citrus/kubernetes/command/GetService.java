@@ -37,6 +37,6 @@ public class GetService extends AbstractGetCommand<Service, GetService> {
 
     @Override
     protected ClientMixedOperation<Service, ServiceList, DoneableService, ClientResource<Service, DoneableService>> operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().services();
+        return kubernetesClient.getClient().services();
     }
 }

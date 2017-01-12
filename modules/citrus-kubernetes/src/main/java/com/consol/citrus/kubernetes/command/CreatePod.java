@@ -50,7 +50,7 @@ public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod
 
     @Override
     protected ClientMixedOperation<Pod, ? extends KubernetesResourceList, DoneablePod, ? extends ClientResource<Pod, DoneablePod>> operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().pods();
+        return kubernetesClient.getClient().pods();
     }
 
     @Override
@@ -227,5 +227,24 @@ public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod
      */
     public void setRestartPolicy(String restartPolicy) {
         this.restartPolicy = restartPolicy;
+    }
+
+    /**
+     * Gets the pod.
+     *
+     * @return
+     */
+    public Pod getPod() {
+        return getResource();
+    }
+
+    /**
+     * Sets the pod.
+     *
+     * @param pod
+     */
+    public CreatePod setPod(Pod pod) {
+        setResource(pod);
+        return this;
     }
 }

@@ -36,6 +36,6 @@ public class WatchNamespaces extends AbstractWatchCommand<Namespace, WatchNamesp
 
     @Override
     protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().namespaces();
+        return kubernetesClient.getClient().namespaces();
     }
 }

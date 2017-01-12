@@ -33,8 +33,14 @@ import java.io.*;
  */
 public abstract class AbstractCreateCommand<R extends KubernetesResource, D extends Doneable<R>, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>>, R, T> {
 
+    /** Optional resource object to create */
+    private R resource;
+
     /** Template yml file to specify target */
     private String template;
+
+    /** Template yml resource to specify target */
+    private Resource templateResource;
 
     /**
      * Default constructor initializing the command name.
@@ -47,7 +53,10 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, D exte
 
     @Override
     public void execute(ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>> operation, TestContext context) {
-        if (StringUtils.hasText(getTemplate())) {
+        if (resource != null) {
+            operation.create(resource);
+            setCommandResult(new CommandResult<>(resource));
+        } else if (StringUtils.hasText(getTemplate()) || templateResource != null) {
             R resource = operation.load(getTemplateAsStream(context)).get();
             operation.create(resource);
             setCommandResult(new CommandResult<>(resource));
@@ -70,10 +79,16 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, D exte
      * @return
      */
     protected InputStream getTemplateAsStream(TestContext context) {
-        Resource templateResource = FileUtils.getFileResource(getTemplate(), context);
+        Resource resource;
+        if (templateResource != null) {
+            resource = templateResource;
+        } else {
+            resource = FileUtils.getFileResource(template, context);
+        }
+
         String templateYml;
         try {
-            templateYml = context.replaceDynamicContentInString(FileUtils.readToString(templateResource));
+            templateYml = context.replaceDynamicContentInString(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read template resource", e);
         }
@@ -96,5 +111,41 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, D exte
      */
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    /**
+     * Gets the templateResource.
+     *
+     * @return
+     */
+    public Resource getTemplateResource() {
+        return templateResource;
+    }
+
+    /**
+     * Sets the templateResource.
+     *
+     * @param templateResource
+     */
+    public void setTemplateResource(Resource templateResource) {
+        this.templateResource = templateResource;
+    }
+
+    /**
+     * Gets the resource.
+     *
+     * @return
+     */
+    public R getResource() {
+        return resource;
+    }
+
+    /**
+     * Sets the resource.
+     *
+     * @param resource
+     */
+    public void setResource(R resource) {
+        this.resource = resource;
     }
 }

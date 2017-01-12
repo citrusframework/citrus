@@ -36,6 +36,6 @@ public class ListEvents extends AbstractListCommand<EventList, ListEvents> {
 
     @Override
     protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().events();
+        return kubernetesClient.getClient().events();
     }
 }

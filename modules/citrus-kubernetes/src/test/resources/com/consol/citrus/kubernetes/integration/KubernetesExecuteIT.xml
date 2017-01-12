@@ -58,44 +58,40 @@
               "apiVersion":"${apiVersion}",
               "kind":"PodList",
               "metadata":"@ignore@",
-              "items":[
-                {
-                  "apiVersion":"${apiVersion}",
-                  "kind":"Pod",
-                  "metadata":"@ignore@",
-                  "spec":{
-                    "containers":[
-                      {
-                        "args":[],
-                        "command":[],
-                        "env":[],
-                        "image":"gcr.io/google_containers/echoserver:1.4",
-                        "imagePullPolicy":"IfNotPresent",
-                        "name":"hello-minikube",
-                        "ports":[
-                          {
-                            "containerPort":8080,
-                            "protocol":"TCP"
-                          }
-                        ],
-                        "resources":{},
-                        "terminationMessagePath":"/dev/termination-log",
-                        "volumeMounts":"@ignore@"
-                      }
-                    ],
-                    "dnsPolicy":"ClusterFirst",
-                    "imagePullSecrets":[],
-                    "nodeName":"minikube",
-                    "restartPolicy":"Always",
-                    "securityContext":{"supplementalGroups":[]},
-                    "serviceAccount":"default",
-                    "serviceAccountName":"default",
-                    "terminationGracePeriodSeconds":30,
-                    "volumes":"@ignore@"
-                  },
-                  "status": "@ignore@"
-                }
-              ]
+              "items":[{
+                "apiVersion":"${apiVersion}",
+                "kind":"Pod",
+                "metadata":"@ignore@",
+                "spec":{
+                  "containers":[
+                    {
+                      "args":[],
+                      "command":[],
+                      "env":[],
+                      "image":"gcr.io/google_containers/echoserver:1.4",
+                      "imagePullPolicy":"IfNotPresent",
+                      "name":"hello-minikube",
+                      "ports":[{
+                        "containerPort":8080,
+                        "protocol":"TCP"
+                      }],
+                      "resources":{},
+                      "terminationMessagePath":"/dev/termination-log",
+                      "volumeMounts":"@ignore@"
+                    }
+                  ],
+                  "dnsPolicy":"ClusterFirst",
+                  "imagePullSecrets":[],
+                  "nodeName":"minikube",
+                  "restartPolicy":"Always",
+                  "securityContext":{"supplementalGroups":[]},
+                  "serviceAccount":"default",
+                  "serviceAccountName":"default",
+                  "terminationGracePeriodSeconds":30,
+                  "volumes":"@ignore@"
+                },
+                "status": "@ignore@"
+              }]
             }
           }</k8s:result>
           <k8s:element path="$.result.items.size()" value="1"/>

@@ -36,7 +36,7 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 kubernetes().info()
-                    .validateCommandResult((result, context) -> Assert.assertNotNull(result));
+                    .validate((result, context) -> Assert.assertNotNull(result));
 
                 kubernetes().listNamespaces();
                 kubernetes().listNodes();
@@ -45,20 +45,22 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
                             .withoutLabel("running")
                             .label("app", "myApp");
 
+                kubernetes().getPod("myPod");
+
                 kubernetes().watchNodes()
                             .label("new");
 
                 kubernetes().watchServices()
                         .name("myService")
                         .namespace("myNamespace")
-                        .validateCommandResult((event, context) -> Assert.assertNotNull(event));
+                        .validate((event, context) -> Assert.assertNotNull(event));
             }
         };
 
         builder.configure();
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 6);
+        Assert.assertEquals(test.getActionCount(), 7);
         Assert.assertEquals(test.getActions().get(0).getClass(), KubernetesExecuteAction.class);
 
         KubernetesExecuteAction action = (KubernetesExecuteAction)test.getActions().get(0);
@@ -81,10 +83,15 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
 
         action = (KubernetesExecuteAction)test.getActions().get(4);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
+        Assert.assertEquals(action.getCommand().getClass(), GetPod.class);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myPod");
+
+        action = (KubernetesExecuteAction)test.getActions().get(5);
+        Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "new");
 
-        action = (KubernetesExecuteAction)test.getActions().get(5);
+        action = (KubernetesExecuteAction)test.getActions().get(6);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");

@@ -37,9 +37,9 @@ public class Info extends AbstractKubernetesCommand<InfoResult, Info> {
     public void execute(KubernetesClient kubernetesClient, TestContext context) {
         InfoResult model = new InfoResult();
         model.setClientVersion(Version.clientVersion());
-        model.setApiVersion(kubernetesClient.getEndpointConfiguration().getKubernetesClient().getApiVersion());
-        model.setMasterUrl(kubernetesClient.getEndpointConfiguration().getKubernetesClient().getMasterUrl().toString());
-        model.setNamespace(kubernetesClient.getEndpointConfiguration().getKubernetesClient().getNamespace());
+        model.setApiVersion(kubernetesClient.getClient().getApiVersion());
+        model.setMasterUrl(kubernetesClient.getClient().getMasterUrl().toString());
+        model.setNamespace(kubernetesClient.getClient().getNamespace());
 
         setCommandResult(new CommandResult<>(model));
     }

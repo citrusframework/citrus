@@ -36,6 +36,6 @@ public class ListPods extends AbstractListCommand<PodList, ListPods> {
 
     @Override
     protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().pods();
+        return kubernetesClient.getClient().pods();
     }
 }

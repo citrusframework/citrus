@@ -19,6 +19,9 @@ package com.consol.citrus.dsl.builder;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.*;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.Service;
+import org.springframework.core.io.Resource;
 
 /**
  * Action executes kubernetes commands.
@@ -69,10 +72,40 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     }
 
     /**
+     * Create new pod.
+     */
+    public CreatePod createPod(Pod pod) {
+		CreatePod command = new CreatePod();
+		command.setPod(pod);
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Create new pod from template.
+     */
+    public CreatePod createPod(Resource template) {
+		CreatePod command = new CreatePod();
+		command.setTemplateResource(template);
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Gets pod by name.
+     */
+    public GetPod getPod(String name) {
+		GetPod command = new GetPod();
+		command.name(name);
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
      * Use a list pods command.
      */
     public ListPods listPods() {
-		ListPods command = new ListPods();
+        ListPods command = new ListPods();
         action.setCommand(command);
         return command;
     }
@@ -82,6 +115,36 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
      */
     public WatchPods watchPods() {
 		WatchPods command = new WatchPods();
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Create new service.
+     */
+    public CreateService createService(Service service) {
+        CreateService command = new CreateService();
+        command.setService(service);
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Create new service from template.
+     */
+    public CreateService createService(Resource template) {
+        CreateService command = new CreateService();
+        command.setTemplateResource(template);
+        action.setCommand(command);
+        return command;
+    }
+
+    /**
+     * Gets service by name.
+     */
+    public GetService getService(String name) {
+        GetService command = new GetService();
+        command.name(name);
         action.setCommand(command);
         return command;
     }

@@ -127,7 +127,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
      * @param callback
      * @return
      */
-    public T validateCommandResult(CommandResultCallback<R> callback) {
+    public T validate(CommandResultCallback<R> callback) {
         this.resultCallback = callback;
         return self;
     }

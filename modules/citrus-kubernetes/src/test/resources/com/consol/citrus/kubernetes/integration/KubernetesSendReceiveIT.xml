@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans 
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase
-                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase
+                                  http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
 
   <testcase name="KubernetesSendReceiveIT">
     <meta-info>
@@ -19,7 +22,7 @@
     <description>Test kubernetes container command execution with kubernetes client.</description>
 
     <variables>
-      <variable name="podLabel" value="app"/>
+      <variable name="podLabel" value="run=hello-minikube"/>
     </variables>
 
     <actions>
@@ -43,37 +46,10 @@
                 "clientVersion": "1.4.27",
                 "apiVersion": "${apiVersion}",
                 "kind":"Info",
-                "masterUrl": "${masterUrl}",
+                "masterUrl": "https://${minikube}:8443/",
                 "namespace": "${namespace}"
               }
             }</data>
-        </message>
-      </receive>
-
-      <echo>
-        <message>List all services</message>
-      </echo>
-
-      <send endpoint="k8sClient">
-        <message>
-          <data>
-            { "command": "list-services" }
-          </data>
-         </message>
-      </send>
-
-      <receive endpoint="k8sClient">
-        <message type="json">
-          <data>{
-            "command": "list-services",
-            "result": {
-                  "apiVersion":"${apiVersion}",
-                  "kind":"ServiceList",
-                  "metadata":"@ignore@",
-                  "items":[]
-              }
-          }</data>
-          <validate path="$.result.items.size()" value="0"/>
         </message>
       </receive>
 
@@ -94,15 +70,154 @@
           <data>{
             "command": "list-pods",
             "result": {
-                  "apiVersion":"${apiVersion}",
-                  "kind":"PodList",
-                  "metadata":"@ignore@",
-                  "items":[]
-              }
+              "apiVersion":"${apiVersion}",
+              "kind":"PodList",
+              "metadata":"@ignore@",
+              "items":[{
+                "apiVersion":"${apiVersion}",
+                "kind":"Pod",
+                "metadata":"@ignore@",
+                "spec":{
+                  "containers":[
+                    {
+                      "args":[],
+                      "command":[],
+                      "env":[],
+                      "image":"gcr.io/google_containers/echoserver:1.4",
+                      "imagePullPolicy":"IfNotPresent",
+                      "name":"hello-minikube",
+                      "ports":[{
+                        "containerPort":8080,
+                        "protocol":"TCP"
+                      }],
+                      "resources":{},
+                      "terminationMessagePath":"/dev/termination-log",
+                      "volumeMounts":"@ignore@"
+                    }],
+                    "dnsPolicy":"ClusterFirst",
+                    "imagePullSecrets":[],
+                    "nodeName":"minikube",
+                    "restartPolicy":"Always",
+                    "securityContext":{"supplementalGroups":[]},
+                    "serviceAccount":"default",
+                    "serviceAccountName":"default",
+                    "terminationGracePeriodSeconds":30,
+                    "volumes":"@ignore@"
+                },
+                "status": "@ignore@"
+              }]
+            }
           }</data>
-          <validate path="$.result.items.size()" value="0"/>
+          <validate path="$.result.items.size()" value="1"/>
+          <validate path="$..status.phase" value="Running"/>
+          <validate path="$..metadata.name" value="@variable('podName')@"/>
         </message>
       </receive>
+
+      <echo>
+        <message>List all services</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <data>
+            { "command": "list-services" }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message type="json">
+          <data>{
+              "command": "list-services",
+              "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"ServiceList",
+              "metadata":"@ignore@",
+              "items":"@ignore@"
+            }
+          }</data>
+          <validate path="$.result.items.size()" value="2"/>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Get hello-minikube service by name</message>
+      </echo>
+
+      <send endpoint="k8sClient">
+        <message>
+          <data>
+            {
+              "command": "get-service",
+              "name": "hello-minikube"
+            }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="k8sClient">
+        <message type="json">
+          <data>{
+            "command": "get-service",
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"Service",
+              "metadata": {
+                "creationTimestamp":"@ignore@",
+                "finalizers":[],
+                "labels": {
+                  "run":"hello-minikube"
+                },
+                "name":"hello-minikube",
+                "namespace":"default",
+                "ownerReferences":[],
+                "resourceVersion":"@ignore@",
+                "selfLink":"/api/${apiVersion}/namespaces/default/services/hello-minikube",
+                "uid":"@ignore@"
+              },
+              "spec": {
+                "clusterIP":"@ignore@",
+                "deprecatedPublicIPs":[],
+                "externalIPs":[],
+                "loadBalancerSourceRanges":[],
+                "ports":[{
+                  "nodePort":"@variable('servicePort')@",
+                  "port":8080,
+                  "protocol":"TCP",
+                  "targetPort":8080
+                }],
+                "selector": {
+                  "run":"hello-minikube"
+                },
+                "sessionAffinity":"None",
+                "type":"NodePort"
+              },
+              "status":"@ignore@"
+            }
+          }</data>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Invoke hello-minikube pod service</message>
+      </echo>
+
+      <http:send-request uri="http://${minikube}:${servicePort}/hello">
+        <http:POST>
+          <http:headers content-type="text/plain"/>
+          <http:body type="plaintext">
+            <http:data>Hello</http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-response uri="http://${minikube}:${servicePort}/hello">
+        <http:headers status="200" reason-phrase="OK"/>
+        <http:body type="plaintext">
+          <http:data>@endsWith('Hello')@</http:data>
+        </http:body>
+      </http:receive-response>
 
       <echo>
         <message>List all endpoints</message>
@@ -124,23 +239,23 @@
                   "apiVersion":"${apiVersion}",
                   "kind":"EndpointsList",
                   "metadata":"@ignore@",
-                  "items":[]
+                  "items":"@ignore@"
               }
           }</data>
-          <validate path="$.result.items.size()" value="0"/>
+          <validate path="$.result.items.size()" value="2"/>
         </message>
       </receive>
 
       <echo>
-        <message>List pods by '${podLabel}'</message>
+        <message>Get hello-minikube pod by '${podName}'</message>
       </echo>
 
       <send endpoint="k8sClient">
         <message>
           <data>
             {
-              "command": "list-pods",
-              "label": "${podLabel}"
+              "command": "get-pod",
+              "name": "${podName}"
             }
           </data>
         </message>
@@ -148,7 +263,57 @@
 
       <receive endpoint="k8sClient">
         <message type="json">
-          <validate path="$.result.items.size()" value="0"/>
+          <data>{
+            "command": "get-pod",
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"Pod",
+              "metadata": {
+                "annotations":"@ignore@",
+                "creationTimestamp":"@ignore@",
+                "finalizers":[],
+                "generateName":"@startsWith('hello-minikube-')@",
+                "labels":{
+                "pod-template-hash":"@ignore@",
+                  "run":"hello-minikube"
+                },
+                "name":"${podName}",
+                "namespace":"default",
+                "ownerReferences":"@ignore@",
+                "resourceVersion":"@ignore@",
+                "selfLink":"/api/${apiVersion}/namespaces/default/pods/${podName}",
+                "uid":"@ignore@"
+              },
+              "spec": {
+                "containers": [{
+                  "args":[],
+                  "command":[],
+                  "env":[],
+                  "image":"gcr.io/google_containers/echoserver:1.4",
+                  "imagePullPolicy":"IfNotPresent",
+                  "name":"hello-minikube",
+                  "ports":[{
+                    "containerPort":8080,
+                    "protocol":"TCP"
+                  }],
+                  "resources":{},
+                  "terminationMessagePath":"/dev/termination-log",
+                  "volumeMounts":"@ignore@"
+                }],
+                "dnsPolicy":"ClusterFirst",
+                "imagePullSecrets":"@ignore@",
+                "nodeName":"minikube",
+                "restartPolicy":"Always",
+                "securityContext":"@ignore@",
+                "serviceAccount":"default",
+                "serviceAccountName":"default",
+                "terminationGracePeriodSeconds":30,
+                "volumes":"@ignore@"
+              },
+              "status": "@ignore@"
+            }
+          }</data>
+          <validate path="$..status.phase" value="Running"/>
         </message>
       </receive>
     </actions>

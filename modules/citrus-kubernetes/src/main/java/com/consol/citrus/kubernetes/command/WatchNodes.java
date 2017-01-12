@@ -36,6 +36,6 @@ public class WatchNodes extends AbstractWatchCommand<Node, WatchNodes> {
 
     @Override
     protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().nodes();
+        return kubernetesClient.getClient().nodes();
     }
 }

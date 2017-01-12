@@ -38,11 +38,11 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
 
         // 1st client
         KubernetesClient client = clients.get("k8sClient1");
-        Assert.assertNotNull(client.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertNotNull(client.getClient());
 
         // 2nd client
         client = clients.get("k8sClient2");
-        Assert.assertNotNull(client.getEndpointConfiguration().getKubernetesClient());
+        Assert.assertNotNull(client.getClient());
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8843/");
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
         Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");

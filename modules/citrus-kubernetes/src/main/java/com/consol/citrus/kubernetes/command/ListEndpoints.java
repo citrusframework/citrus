@@ -36,6 +36,6 @@ public class ListEndpoints extends AbstractListCommand<EndpointsList, ListEndpoi
 
     @Override
     protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().endpoints();
+        return kubernetesClient.getClient().endpoints();
     }
 }
