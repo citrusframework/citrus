@@ -66,6 +66,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(k8sClient.pods()).thenReturn(podsOperation);
         when(podsOperation.list()).thenReturn(new PodList());
+        when(podsOperation.withName("myPod")).thenReturn(podsOperation);
 
         when(k8sClient.namespaces()).thenReturn(namespacesOperation);
         when(namespacesOperation.list()).thenReturn(new NamespaceList());
@@ -82,6 +83,8 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
             invocationOnMock.getArgumentAt(0, Watcher.class).eventReceived(Watcher.Action.MODIFIED, new Service());
             return null;
         });
+        when(servicesOperation.withName("myService")).thenReturn(servicesOperation);
+        when(servicesOperation.inNamespace("myNamespace")).thenReturn(servicesOperation);
 
         final KubernetesClient client = new KubernetesClient();
         client.getEndpointConfiguration().setKubernetesClient(k8sClient);
