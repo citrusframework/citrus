@@ -16,6 +16,7 @@
 
 package com.consol.citrus.kubernetes.command;
 
+import com.consol.citrus.context.TestContext;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.*;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
@@ -43,7 +44,7 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
     }
 
     @Override
-    public void execute(ClientNonNamespaceOperation operation) {
+    public void execute(ClientNonNamespaceOperation operation, TestContext context) {
         watch = (Watch) operation.watch(new Watcher<R>() {
             @Override
             public void eventReceived(Action action, R resource) {

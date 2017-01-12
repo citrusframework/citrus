@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,26 @@
 package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import com.consol.citrus.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.dsl.ClientPodResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractListCommand<R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+public class GetPod extends AbstractGetCommand<Pod, GetPod> {
 
     /**
      * Default constructor initializing the command name.
-     *
-     * @param name
      */
-    public AbstractListCommand(String name) {
-        super("list-" + name);
+    public GetPod() {
+        super("pod");
     }
 
     @Override
-    public void execute(ClientNonNamespaceOperation operation, TestContext context) {
-        setCommandResult(new CommandResult<>((R) operation.list()));
+    protected ClientMixedOperation<Pod, PodList, DoneablePod, ClientPodResource<Pod, DoneablePod>> operation(KubernetesClient kubernetesClient, TestContext context) {
+        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().pods();
     }
 }

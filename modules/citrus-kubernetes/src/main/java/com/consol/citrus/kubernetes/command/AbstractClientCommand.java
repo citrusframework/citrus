@@ -27,7 +27,7 @@ import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractClientCommand<O, R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractKubernetesCommand<R, T> {
+public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperation, R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractKubernetesCommand<R, T> {
 
     /**
      * Default constructor initializing the command name.
@@ -42,15 +42,13 @@ public abstract class AbstractClientCommand<O, R extends KubernetesResource, T e
     public final void execute(KubernetesClient kubernetesClient, TestContext context) {
         O operation = operation(kubernetesClient, context);
 
-        if (operation instanceof ClientNonNamespaceOperation) {
-            if (hasParameter(KubernetesMessageHeaders.LABEL)) {
-                ((ClientNonNamespaceOperation) operation).withLabels(getLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
-                ((ClientNonNamespaceOperation) operation).withoutLabels(getWithoutLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
-            }
+        if (hasParameter(KubernetesMessageHeaders.LABEL)) {
+            operation.withLabels(getLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
+            operation.withoutLabels(getWithoutLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
+        }
 
-            if (hasParameter(KubernetesMessageHeaders.NAME)) {
-                operation = (O) ((ClientNonNamespaceOperation) operation).withName(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString()));
-            }
+        if (hasParameter(KubernetesMessageHeaders.NAME)) {
+            operation = (O) operation.withName(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString()));
         }
 
         if (operation instanceof ClientMixedOperation) {
@@ -60,14 +58,15 @@ public abstract class AbstractClientCommand<O, R extends KubernetesResource, T e
         }
 
 
-        execute(operation);
+        execute(operation, context);
     }
 
     /**
      * Execute the mixed operation
      * @param operation
+     * @param context
      */
-    protected abstract void execute(O operation);
+    protected abstract void execute(O operation, TestContext context);
 
     /**
      * Subclasses provide operation to call.

@@ -20,13 +20,15 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.dsl.ClientResource;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class CreatePod extends AbstractCreateCommand<Pod, CreatePod> {
+public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod> {
 
     /** Docker image name */
     private String image;
@@ -47,23 +49,12 @@ public class CreatePod extends AbstractCreateCommand<Pod, CreatePod> {
     }
 
     @Override
-    public void execute(KubernetesClient client, TestContext context) {
-        if (StringUtils.hasText(getTemplate())) {
-            Pod pod = client.getEndpointConfiguration().getKubernetesClient().pods().load(getTemplateAsStream(context)).get();
-            client.getEndpointConfiguration().getKubernetesClient().pods().create(pod);
-            setCommandResult(new CommandResult<>(pod));
-        } else {
-            setCommandResult(new CommandResult<>(specify(client.getEndpointConfiguration().getKubernetesClient().pods().createNew(), context).done()));
-        }
+    protected ClientMixedOperation<Pod, ? extends KubernetesResourceList, DoneablePod, ? extends ClientResource<Pod, DoneablePod>> operation(KubernetesClient kubernetesClient, TestContext context) {
+        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().pods();
     }
 
-    /**
-     * Specify pod to create.
-     * @param pod
-     * @param context
-     * @return
-     */
-    private DoneablePod specify(DoneablePod pod, TestContext context) {
+    @Override
+    protected DoneablePod specify(DoneablePod pod, TestContext context) {
         PodFluent.MetadataNested metadata = pod.editOrNewMetadata();
 
         if (getParameters().containsKey(KubernetesMessageHeaders.NAME)) {

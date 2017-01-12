@@ -48,25 +48,6 @@
       </k8s:info>
 
       <echo>
-        <message>List all services</message>
-      </echo>
-
-      <k8s:list-services>
-        <k8s:expect>
-          <k8s:result>{
-            "result": {
-              "apiVersion":"${apiVersion}",
-              "kind":"ServiceList",
-              "metadata":"@ignore@",
-              "items":"@ignore@"
-            }
-          }</k8s:result>
-          <k8s:element path="$.result.items.size()" value="2"/>
-          <k8s:element path="$..nodePort" value="@variable('servicePort')@"/>
-        </k8s:expect>
-      </k8s:list-services>
-
-      <echo>
         <message>List all pods</message>
       </echo>
 
@@ -79,7 +60,7 @@
               "metadata":"@ignore@",
               "items":[
                 {
-                  "apiVersion":"v1",
+                  "apiVersion":"${apiVersion}",
                   "kind":"Pod",
                   "metadata":"@ignore@",
                   "spec":{
@@ -119,8 +100,73 @@
           }</k8s:result>
           <k8s:element path="$.result.items.size()" value="1"/>
           <k8s:element path="$..status.phase" value="Running"/>
+          <k8s:element path="$..metadata.name" value="@variable('podName')@"/>
         </k8s:expect>
       </k8s:list-pods>
+
+      <echo>
+        <message>List all services</message>
+      </echo>
+
+      <k8s:list-services>
+        <k8s:expect>
+          <k8s:result>{
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"ServiceList",
+              "metadata":"@ignore@",
+              "items":"@ignore@"
+            }
+          }</k8s:result>
+          <k8s:element path="$.result.items.size()" value="2"/>
+        </k8s:expect>
+      </k8s:list-services>
+
+      <echo>
+        <message>Get hello-minikube service by name</message>
+      </echo>
+
+      <k8s:get-service name="hello-minikube">
+        <k8s:expect>
+          <k8s:result>{
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"Service",
+              "metadata": {
+                "creationTimestamp":"@ignore@",
+                "finalizers":[],
+                "labels": {
+                  "run":"hello-minikube"
+                },
+                "name":"hello-minikube",
+                "namespace":"default",
+                "ownerReferences":[],
+                "resourceVersion":"@ignore@",
+                "selfLink":"/api/${apiVersion}/namespaces/default/services/hello-minikube",
+                "uid":"@ignore@"
+              },
+              "spec": {
+                "clusterIP":"@ignore@",
+                "deprecatedPublicIPs":[],
+                "externalIPs":[],
+                "loadBalancerSourceRanges":[],
+                "ports":[{
+                  "nodePort":"@variable('servicePort')@",
+                  "port":8080,
+                  "protocol":"TCP",
+                  "targetPort":8080
+                }],
+                "selector": {
+                  "run":"hello-minikube"
+                },
+                "sessionAffinity":"None",
+                "type":"NodePort"
+              },
+              "status":"@ignore@"
+            }
+          }</k8s:result>
+        </k8s:expect>
+      </k8s:get-service>
 
       <echo>
         <message>Invoke hello-minikube pod service</message>
@@ -162,14 +208,63 @@
       <k8s:list-events/>
 
       <echo>
-        <message>List pods by '${podLabel}'</message>
+        <message>Get hello-minikube pod by '${podName}'</message>
       </echo>
 
-      <k8s:list-pods label="${podLabel}">
+      <k8s:get-pod name="${podName}">
         <k8s:expect>
-          <k8s:element path="$.result.items.size()" value="1"/>
-        </k8s:expect>              
-      </k8s:list-pods>        
+          <k8s:result>{
+            "result": {
+              "apiVersion":"${apiVersion}",
+              "kind":"Pod",
+              "metadata": {
+                  "annotations":"@ignore@",
+                  "creationTimestamp":"@ignore@",
+                  "finalizers":[],
+                  "generateName":"@startsWith('hello-minikube-')@",
+                  "labels":{
+                    "pod-template-hash":"@ignore@",
+                    "run":"hello-minikube"
+                  },
+                  "name":"${podName}",
+                  "namespace":"default",
+                  "ownerReferences":"@ignore@",
+                  "resourceVersion":"@ignore@",
+                  "selfLink":"/api/${apiVersion}/namespaces/default/pods/${podName}",
+                  "uid":"@ignore@"
+              },
+              "spec": {
+                "containers": [{
+                  "args":[],
+                  "command":[],
+                  "env":[],
+                  "image":"gcr.io/google_containers/echoserver:1.4",
+                  "imagePullPolicy":"IfNotPresent",
+                  "name":"hello-minikube",
+                  "ports":[{
+                    "containerPort":8080,
+                    "protocol":"TCP"
+                  }],
+                  "resources":{},
+                  "terminationMessagePath":"/dev/termination-log",
+                  "volumeMounts":"@ignore@"
+                }],
+                "dnsPolicy":"ClusterFirst",
+                "imagePullSecrets":"@ignore@",
+                "nodeName":"minikube",
+                "restartPolicy":"Always",
+                "securityContext":"@ignore@",
+                "serviceAccount":"default",
+                "serviceAccountName":"default",
+                "terminationGracePeriodSeconds":30,
+                "volumes":"@ignore@"
+              },
+              "status": "@ignore@"
+            }
+          }</k8s:result>
+          <k8s:element path="$..status.phase" value="Running"/>
+        </k8s:expect>
+      </k8s:get-pod>
 
     </actions>
 

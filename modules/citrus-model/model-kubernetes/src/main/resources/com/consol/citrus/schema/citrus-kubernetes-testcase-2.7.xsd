@@ -78,6 +78,53 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="get-pod">
+    <xs:annotation>
+      <xs:documentation>Gets kubernetes pod from server</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="list-pods">
+    <xs:annotation>
+      <xs:documentation>List kubernetes pods</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="watch-pods">
+    <xs:annotation>
+      <xs:documentation>Watch kubernetes pods</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="client" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="create-service">
     <xs:annotation>
       <xs:documentation>Creates new kubernetes service</xs:documentation>
@@ -117,9 +164,9 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="list-pods">
+  <xs:element name="get-service">
     <xs:annotation>
-      <xs:documentation>List kubernetes pods</xs:documentation>
+      <xs:documentation>Gets kubernetes service from server</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -127,24 +174,9 @@
         <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="label" type="xs:string"/>
-      <xs:attribute name="namespace" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="watch-pods">
-    <xs:annotation>
-      <xs:documentation>Watch kubernetes pods</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
-      </xs:sequence>
-      <xs:attribute name="client" type="xs:string"/>
-      <xs:attribute name="label" type="xs:string"/>
-      <xs:attribute name="namespace" type="xs:string"/>
       <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute name="namespace" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

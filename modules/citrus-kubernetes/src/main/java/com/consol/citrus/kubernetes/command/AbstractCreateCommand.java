@@ -19,8 +19,11 @@ package com.consol.citrus.kubernetes.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.dsl.ClientResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 
@@ -28,7 +31,7 @@ import java.io.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractCreateCommand<R extends KubernetesResource, T extends AbstractKubernetesCommand> extends AbstractKubernetesCommand<R, T> {
+public abstract class AbstractCreateCommand<R extends KubernetesResource, D extends Doneable<R>, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>>, R, T> {
 
     /** Template yml file to specify target */
     private String template;
@@ -41,6 +44,25 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, T exte
     public AbstractCreateCommand(String name) {
         super("create-" + name);
     }
+
+    @Override
+    public void execute(ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>> operation, TestContext context) {
+        if (StringUtils.hasText(getTemplate())) {
+            R resource = operation.load(getTemplateAsStream(context)).get();
+            operation.create(resource);
+            setCommandResult(new CommandResult<>(resource));
+        } else {
+            setCommandResult(new CommandResult<>(specify(operation.createNew(), context).done()));
+        }
+    }
+
+    /**
+     * Specify pod to create.
+     * @param pod
+     * @param context
+     * @return
+     */
+    protected abstract D specify(D pod, TestContext context);
 
     /**
      * Create input stream from template resource and add test variable support.

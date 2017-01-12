@@ -20,13 +20,15 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.dsl.ClientResource;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class CreateService extends AbstractCreateCommand<Service, CreateService> {
+public class CreateService extends AbstractCreateCommand<Service, DoneableService, CreateService> {
 
     private String selector;
 
@@ -43,23 +45,12 @@ public class CreateService extends AbstractCreateCommand<Service, CreateService>
     }
 
     @Override
-    public void execute(KubernetesClient client, TestContext context) {
-        if (StringUtils.hasText(getTemplate())) {
-            Service service = client.getEndpointConfiguration().getKubernetesClient().services().load(getTemplateAsStream(context)).get();
-            client.getEndpointConfiguration().getKubernetesClient().services().create(service);
-            setCommandResult(new CommandResult<>(service));
-        } else {
-            setCommandResult(new CommandResult<>(specify(client.getEndpointConfiguration().getKubernetesClient().services().createNew(), context).done()));
-        }
+    protected ClientMixedOperation<Service, ? extends KubernetesResourceList, DoneableService, ? extends ClientResource<Service, DoneableService>> operation(KubernetesClient kubernetesClient, TestContext context) {
+        return kubernetesClient.getEndpointConfiguration().getKubernetesClient().services();
     }
 
-    /**
-     * Specify pod to create.
-     * @param service
-     * @param context
-     * @return
-     */
-    private DoneableService specify(DoneableService service, TestContext context) {
+    @Override
+    protected DoneableService specify(DoneableService service, TestContext context) {
         ServiceFluent.MetadataNested metadata = service.editOrNewMetadata();
 
         if (getParameters().containsKey(KubernetesMessageHeaders.NAME)) {
