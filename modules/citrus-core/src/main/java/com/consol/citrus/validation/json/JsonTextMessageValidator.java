@@ -83,14 +83,14 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             ReadContext readContext = JsonPath.parse(receivedJson);
             Object controlJson = parser.parse(controlJsonText);
             if (receivedJson instanceof JSONObject) {
-                validateJson((JSONObject) receivedJson, (JSONObject) controlJson, validationContext, context, readContext);
+                validateJson("$.", (JSONObject) receivedJson, (JSONObject) controlJson, validationContext, context, readContext);
             } else if (receivedJson instanceof JSONArray) {
                 JSONObject tempReceived = new JSONObject();
                 tempReceived.put("array", receivedJson);
                 JSONObject tempControl = new JSONObject();
                 tempControl.put("array", controlJson);
                 
-                validateJson(tempReceived, tempControl, validationContext, context, readContext);
+                validateJson("$.", tempReceived, tempControl, validationContext, context, readContext);
             } else {
                 throw new CitrusRuntimeException("Unsupported json type " + receivedJson.getClass());
             }
@@ -107,6 +107,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * Validates JSON text with comparison to expected control JSON object.
      * JSON entries can be ignored with ignore placeholder.
      * 
+     * @param elementName the current element name that is under verification in this method
      * @param receivedJson the received JSON text object.
      * @param controlJson the expected control JSON text.
      * @param validationContext the JSON message validation context.
@@ -114,10 +115,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param readContext the JSONPath read context.
      */
     @SuppressWarnings("rawtypes")
-    public void validateJson(JSONObject receivedJson, JSONObject controlJson, JsonMessageValidationContext validationContext, TestContext context, ReadContext readContext) {
+    public void validateJson(String elementName, JSONObject receivedJson, JSONObject controlJson, JsonMessageValidationContext validationContext, TestContext context, ReadContext readContext) {
         if (strict) {
             Assert.isTrue(controlJson.size() == receivedJson.size(),
-                          ValidationUtils.buildValueMismatchErrorMessage("Number of JSON entries not equal", controlJson.size(), receivedJson.size()));
+                          ValidationUtils.buildValueMismatchErrorMessage("Number of JSON entries not equal for element: '" + elementName + "'", controlJson.size(), receivedJson.size()));
         }
 
         for (Map.Entry<String, Object> stringObjectEntry : controlJson.entrySet()) {
@@ -158,7 +159,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                         ValidationUtils.buildValueMismatchErrorMessage("Type mismatch for JSON entry '" + controlKey + "'",
                                 JSONObject.class.getSimpleName(), receivedValue.getClass().getSimpleName()));
 
-                validateJson((JSONObject) receivedValue,
+                validateJson(controlKey.toString(), (JSONObject) receivedValue,
                         (JSONObject) controlValue, validationContext, context, readContext);
             } else if (controlValue instanceof JSONArray) {
                 Assert.isTrue(receivedValue instanceof JSONArray,
@@ -183,7 +184,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                                 ValidationUtils.buildValueMismatchErrorMessage("Value types not equal for entry: '" + jsonArrayControl.get(i) + "'",
                                         JSONObject.class.getName(), jsonArrayReceived.get(i).getClass().getName()));
 
-                        validateJson((JSONObject) jsonArrayReceived.get(i),
+                        validateJson(controlKey.toString(), (JSONObject) jsonArrayReceived.get(i),
                                 (JSONObject) jsonArrayControl.get(i), validationContext, context, readContext);
                     } else {
                         Assert.isTrue(jsonArrayControl.get(i).equals(jsonArrayReceived.get(i)),
