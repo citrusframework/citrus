@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.ClientResource;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractGetCommand<R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, ? extends Doneable<R>, ? extends ClientResource<R, ? extends Doneable<R>>>, R, T> {
+public abstract class AbstractGetCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, ? extends Doneable<R>, ? extends ClientResource<R, ? extends Doneable<R>>>, R, T> {
 
     /**
      * Default constructor initializing the command name.

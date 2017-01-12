@@ -16,11 +16,11 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.*;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.*;
 import org.springframework.core.io.Resource;
 
 /**
@@ -65,187 +65,453 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
 	/**
      * Use a info command.
      */
-    public Info info() {
-		Info command = new Info();
-        action.setCommand(command);
-        return command;
+    public BaseActionBuilder<BaseActionBuilder, InfoResult> info() {
+        return new BaseActionBuilder<>(new Info());
     }
 
     /**
-     * Create new pod.
+     * Pod action builder.
      */
-    public CreatePod createPod(Pod pod) {
-		CreatePod command = new CreatePod();
-		command.setPod(pod);
-        action.setCommand(command);
-        return command;
+    public PodActionBuilder pod() {
+        return new PodActionBuilder();
     }
 
     /**
-     * Create new pod from template.
+     * Pods action builder.
      */
-    public CreatePod createPod(Resource template) {
-		CreatePod command = new CreatePod();
-		command.setTemplateResource(template);
-        action.setCommand(command);
-        return command;
+    public PodsActionBuilder pods() {
+        return new PodsActionBuilder();
     }
 
     /**
-     * Gets pod by name.
+     * Service action builder.
      */
-    public GetPod getPod(String name) {
-		GetPod command = new GetPod();
-		command.name(name);
-        action.setCommand(command);
-        return command;
+    public ServiceActionBuilder service() {
+        return new ServiceActionBuilder();
     }
 
     /**
-     * Use a list pods command.
+     * Services action builder.
      */
-    public ListPods listPods() {
-        ListPods command = new ListPods();
-        action.setCommand(command);
-        return command;
+    public ServicesActionBuilder services() {
+        return new ServicesActionBuilder();
     }
 
     /**
-     * Use a watch pods command.
+     * ReplicationControllers action builder.
      */
-    public WatchPods watchPods() {
-		WatchPods command = new WatchPods();
-        action.setCommand(command);
-        return command;
+    public ReplicationControllersActionBuilder replicationControllers() {
+        return new ReplicationControllersActionBuilder();
     }
 
     /**
-     * Create new service.
+     * Endpoints action builder.
      */
-    public CreateService createService(Service service) {
-        CreateService command = new CreateService();
-        command.setService(service);
-        action.setCommand(command);
-        return command;
+    public EndpointsActionBuilder endpoints() {
+        return new EndpointsActionBuilder();
     }
 
     /**
-     * Create new service from template.
+     * Nodes action builder.
      */
-    public CreateService createService(Resource template) {
-        CreateService command = new CreateService();
-        command.setTemplateResource(template);
-        action.setCommand(command);
-        return command;
+    public NodesActionBuilder nodes() {
+        return new NodesActionBuilder();
     }
 
     /**
-     * Gets service by name.
+     * Events action builder.
      */
-    public GetService getService(String name) {
-        GetService command = new GetService();
-        command.name(name);
-        action.setCommand(command);
-        return command;
+    public EventsActionBuilder events() {
+        return new EventsActionBuilder();
     }
 
     /**
-     * Use a list services command.
+     * Namespaces action builder.
      */
-    public ListServices listServices() {
-		ListServices command = new ListServices();
-        action.setCommand(command);
-        return command;
+    public NamespacesActionBuilder namespaces() {
+        return new NamespacesActionBuilder();
     }
 
     /**
-     * Use a watch services command.
+     * Base kubernetes action builder.
      */
-    public WatchServices watchServices() {
-		WatchServices command = new WatchServices();
-        action.setCommand(command);
-        return command;
+    public class BaseActionBuilder<T extends BaseActionBuilder, R extends KubernetesResource> implements TestActionBuilder {
+
+        /** Kubernetes command */
+        private KubernetesCommand<R> command;
+
+        /** Self reference for fluent API */
+        private T self;
+
+        /**
+         * Default constructor.
+         */
+        BaseActionBuilder() {
+            super();
+            self = (T) this;
+        }
+
+        /**
+         * Constructor using command.
+         * @param command
+         */
+        BaseActionBuilder(KubernetesCommand<R> command) {
+            command(command);
+        }
+
+        /**
+         * Adds expected command result.
+         * @param result
+         * @return
+         */
+        public T result(String result) {
+            action.setCommandResult(result);
+            return self;
+        }
+
+        /**
+         * Adds command result callback.
+         * @param callback
+         * @return
+         */
+        public T validate(CommandResultCallback<R> callback) {
+            command.validate(callback);
+            return self;
+        }
+
+        /**
+         * Sets the label parameter.
+         * @param key
+         * @param value
+         * @return
+         */
+        public T label(String key, String value) {
+            command.label(key, value);
+            return self;
+        }
+
+        /**
+         * Sets the label parameter.
+         * @param key
+         * @return
+         */
+        public T label(String key) {
+            command.label(key);
+            return self;
+        }
+
+        /**
+         * Sets the namespace parameter.
+         * @param key
+         * @return
+         */
+        public T namespace(String key) {
+            command.namespace(key);
+            return self;
+        }
+
+        /**
+         * Sets the name parameter.
+         * @param key
+         * @return
+         */
+        public T name(String key) {
+            command.name(key);
+            return self;
+        }
+
+        /**
+         * Sets the without label parameter.
+         * @param key
+         * @param value
+         * @return
+         */
+        public T withoutLabel(String key, String value) {
+            command.withoutLabel(key, value);
+            return self;
+        }
+
+        /**
+         * Sets the without label parameter.
+         * @param key
+         * @return
+         */
+        public T withoutLabel(String key) {
+            command.withoutLabel(key);
+            return self;
+        }
+
+        /**
+         * Sets command.
+         * @param command
+         * @return
+         */
+        protected T command(KubernetesCommand<R> command) {
+            this.command = command;
+            KubernetesActionBuilder.this.command(command);
+            return self;
+        }
+
+        @Override
+        public TestAction build() {
+            return KubernetesActionBuilder.this.build();
+        }
     }
 
     /**
-     * Use a list replication controllers command.
+     * Pod action builder.
      */
-    public ListReplicationControllers listReplicationControllers() {
-		ListReplicationControllers command = new ListReplicationControllers();
-        action.setCommand(command);
-        return command;
+    public class PodActionBuilder extends BaseActionBuilder<PodActionBuilder, Pod> {
+
+        /**
+         * Creates new pod.
+         * @param pod
+         */
+        public PodActionBuilder create(Pod pod) {
+            CreatePod command = new CreatePod();
+            command.setPod(pod);
+            command(command);
+            return this;
+        }
+
+        /**
+         * Create new pod from template.
+         * @param template
+         */
+        public PodActionBuilder create(Resource template) {
+            CreatePod command = new CreatePod();
+            command.setTemplateResource(template);
+            command(command);
+            return this;
+        }
+
+        /**
+         * Create new pod from template path.
+         * @param templatePath
+         */
+        public PodActionBuilder create(String templatePath) {
+            CreatePod command = new CreatePod();
+            command.setTemplate(templatePath);
+            command(command);
+            return this;
+        }
+
+        /**
+         * Gets pod by name.
+         * @param name
+         */
+        public PodActionBuilder get(String name) {
+            GetPod command = new GetPod();
+            command.name(name);
+            command(command);
+            return this;
+        }
     }
 
     /**
-     * Use a watch replication controllers command.
+     * Pods action builder.
      */
-    public WatchReplicationControllers watchReplicationControllers() {
-		WatchReplicationControllers command = new WatchReplicationControllers();
-        action.setCommand(command);
-        return command;
+    public class PodsActionBuilder extends BaseActionBuilder<PodsActionBuilder, PodList> {
+
+        /**
+         * List pods.
+         */
+        public PodsActionBuilder list() {
+            ListPods command = new ListPods();
+            command(command);
+            return this;
+        }
+
+        /**
+         * Watch pods.
+         */
+        public WatchActionBuilder<Pod> watch() {
+            return new WatchActionBuilder<>(new WatchPods());
+        }
+
     }
 
     /**
-     * Use a list endpoints command.
+     * Service action builder.
      */
-    public ListEndpoints listEndpoints() {
-		ListEndpoints command = new ListEndpoints();
-        action.setCommand(command);
-        return command;
+    public class ServiceActionBuilder extends BaseActionBuilder<ServiceActionBuilder, Service> {
+
+        /**
+         * Creates new pod.
+         * @param pod
+         */
+        public ServiceActionBuilder create(Service pod) {
+            CreateService command = new CreateService();
+            command.setService(pod);
+            command(command);
+            return this;
+        }
+
+        /**
+         * Create new pod from template.
+         * @param template
+         */
+        public ServiceActionBuilder create(Resource template) {
+            CreateService command = new CreateService();
+            command.setTemplateResource(template);
+            command(command);
+            return this;
+        }
+
+        /**
+         * Create new pod from template path.
+         * @param templatePath
+         */
+        public ServiceActionBuilder create(String templatePath) {
+            CreateService command = new CreateService();
+            command.setTemplate(templatePath);
+            command(command);
+            return this;
+        }
+
+        /**
+         * Gets pod by name.
+         * @param name
+         */
+        public ServiceActionBuilder get(String name) {
+            GetService command = new GetService();
+            command.name(name);
+            command(command);
+            return this;
+        }
+
     }
 
     /**
-     * Use a list events command.
+     * Services action builder.
      */
-    public ListEvents listEvents() {
-		ListEvents command = new ListEvents();
-        action.setCommand(command);
-        return command;
+    public class ServicesActionBuilder extends BaseActionBuilder<ServiceActionBuilder, ServiceList> {
+
+        /**
+         * List services.
+         */
+        public ServicesActionBuilder list() {
+            ListServices command = new ListServices();
+            command(command);
+            return this;
+        }
+
+        /**
+         * Watch services.
+         */
+        public WatchActionBuilder<Service> watch() {
+            return new WatchActionBuilder<>(new WatchServices());
+        }
     }
 
     /**
-     * Use a list nodes command.
+     * Endpoints action builder.
      */
-    public ListNodes listNodes() {
-		ListNodes command = new ListNodes();
-        action.setCommand(command);
-        return command;
+    public class EndpointsActionBuilder extends BaseActionBuilder<EndpointsActionBuilder, EndpointsList> {
+
+        /**
+         * List endpoints.
+         */
+        public EndpointsActionBuilder list() {
+            ListEndpoints command = new ListEndpoints();
+            command(command);
+            return this;
+        }
     }
 
     /**
-     * Use a watch nodes command.
+     * Nodes action builder.
      */
-    public WatchNodes watchNodes() {
-		WatchNodes command = new WatchNodes();
-        action.setCommand(command);
-        return command;
+    public class NodesActionBuilder extends BaseActionBuilder<NodesActionBuilder, NodeList> {
+
+        /**
+         * List nodes.
+         */
+        public NodesActionBuilder list() {
+            ListNodes command = new ListNodes();
+            command(command);
+            return this;
+        }
+
+        /**
+         * Watch nodes.
+         */
+        public WatchActionBuilder<Node> watch() {
+            return new WatchActionBuilder<>(new WatchNodes());
+        }
     }
 
     /**
-     * Use a list namespaces command.
+     * Namespaces action builder.
      */
-    public ListNamespaces listNamespaces() {
-		ListNamespaces command = new ListNamespaces();
-        action.setCommand(command);
-        return command;
+    public class NamespacesActionBuilder extends BaseActionBuilder<NamespacesActionBuilder, NamespaceList> {
+
+        /**
+         * List namespaces.
+         */
+        public NamespacesActionBuilder list() {
+            ListNamespaces command = new ListNamespaces();
+            command(command);
+            return this;
+        }
+
+        /**
+         * Watch namespaces.
+         */
+        public WatchActionBuilder<Namespace> watch() {
+            return new WatchActionBuilder<>(new WatchNamespaces());
+        }
     }
 
     /**
-     * Use a watch namespaces command.
+     * Events action builder.
      */
-    public WatchNamespaces watchNamespaces() {
-		WatchNamespaces command = new WatchNamespaces();
-        action.setCommand(command);
-        return command;
+    public class EventsActionBuilder extends BaseActionBuilder<EventsActionBuilder, EventList> {
+
+        /**
+         * List endpoints.
+         */
+        public EventsActionBuilder list() {
+            ListEvents command = new ListEvents();
+            command(command);
+            return this;
+        }
+
     }
 
-	/**
-	 * Adds expected command result.
-	 * @param result
-	 * @return
-	 */
-	public KubernetesActionBuilder result(String result) {
-		action.setCommandResult(result);
-		return this;
-	}
+    /**
+     * ReplicationControllers action builder.
+     */
+    public class ReplicationControllersActionBuilder extends BaseActionBuilder<ReplicationControllersActionBuilder, ReplicationControllerList> {
+
+        /**
+         * List replication controllers.
+         */
+        public ReplicationControllersActionBuilder list() {
+            ListReplicationControllers command = new ListReplicationControllers();
+            command(command);
+            return this;
+        }
+
+        /**
+         * Watch pods.
+         */
+        public WatchActionBuilder<ReplicationController> watch() {
+            return new WatchActionBuilder<>(new WatchReplicationControllers());
+        }
+    }
+
+    /**
+     * Watch action builder.
+     */
+    public class WatchActionBuilder<R extends KubernetesResource> extends BaseActionBuilder<WatchActionBuilder<R>, R> {
+
+        /**
+         * Constructor using command.
+         * @param command
+         */
+        WatchActionBuilder(KubernetesCommand<R> command) {
+            command(command);
+        }
+    }
 }

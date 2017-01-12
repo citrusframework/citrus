@@ -35,22 +35,26 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                kubernetes().info()
+                kubernetes()
+                    .info()
                     .validate((result, context) -> Assert.assertNotNull(result));
 
-                kubernetes().listNamespaces();
-                kubernetes().listNodes();
+                kubernetes().namespaces().list();
+                kubernetes().nodes().list();
 
-                kubernetes().listPods()
+                kubernetes().pods()
+                            .list()
                             .withoutLabel("running")
                             .label("app", "myApp");
 
-                kubernetes().getPod("myPod");
+                kubernetes().pod().get("myPod");
 
-                kubernetes().watchNodes()
+                kubernetes().nodes()
+                            .watch()
                             .label("new");
 
-                kubernetes().watchServices()
+                kubernetes().services()
+                        .watch()
                         .name("myService")
                         .namespace("myNamespace")
                         .validate((event, context) -> Assert.assertNotNull(event));

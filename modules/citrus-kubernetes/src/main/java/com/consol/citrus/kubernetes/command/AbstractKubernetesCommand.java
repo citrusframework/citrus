@@ -30,7 +30,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T extends AbstractKubernetesCommand> implements KubernetesCommand {
+public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> implements KubernetesCommand<R> {
 
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -122,22 +122,67 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
         return self;
     }
 
-    /**
-     * Adds validation callback with command result.
-     * @param callback
-     * @return
-     */
+    @Override
     public T validate(CommandResultCallback<R> callback) {
         this.resultCallback = callback;
         return self;
     }
 
-    /**
-     * Gets the result validation callback.
-     * @return
-     */
+    @Override
     public CommandResultCallback<R> getResultCallback() {
         return resultCallback;
+    }
+
+    @Override
+    public T label(String key, String value) {
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            withParam(KubernetesMessageHeaders.LABEL, key + "=" + value);
+        } else {
+            withParam(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key + "=" + value);
+        }
+        return self;
+    }
+
+    @Override
+    public T label(String key) {
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            withParam(KubernetesMessageHeaders.LABEL, key);
+        } else {
+            withParam(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key);
+        }
+        return self;
+    }
+
+    @Override
+    public T namespace(String key) {
+        withParam(KubernetesMessageHeaders.NAMESPACE, key);
+        return self;
+    }
+
+    @Override
+    public T name(String key) {
+        withParam(KubernetesMessageHeaders.NAME, key);
+        return self;
+    }
+
+    @Override
+    public T withoutLabel(String key, String value) {
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            withParam(KubernetesMessageHeaders.LABEL, key + "!=" + value);
+        } else {
+            withParam(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key + "!=" + value);
+        }
+        return self;
+    }
+
+    @Override
+    public T withoutLabel(String key) {
+        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
+            withParam(KubernetesMessageHeaders.LABEL, "!" + key);
+        } else {
+            withParam(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + ",!" + key);
+        }
+        return self;
     }
 
     /**
@@ -182,83 +227,5 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
         }
 
         return labels;
-    }
-
-    /**
-     * Sets the label parameter.
-     * @param key
-     * @param value
-     * @return
-     */
-    public T label(String key, String value) {
-        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
-            getParameters().put(KubernetesMessageHeaders.LABEL, key + "=" + value);
-        } else {
-            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key + "=" + value);
-        }
-        return self;
-    }
-
-    /**
-     * Sets the label parameter.
-     * @param key
-     * @return
-     */
-    public T label(String key) {
-        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
-            getParameters().put(KubernetesMessageHeaders.LABEL, key);
-        } else {
-            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key);
-        }
-        return self;
-    }
-
-    /**
-     * Sets the namespace parameter.
-     * @param key
-     * @return
-     */
-    public T namespace(String key) {
-        getParameters().put(KubernetesMessageHeaders.NAMESPACE, key);
-        return self;
-    }
-
-    /**
-     * Sets the name parameter.
-     * @param key
-     * @return
-     */
-    public T name(String key) {
-        getParameters().put(KubernetesMessageHeaders.NAME, key);
-        return self;
-    }
-
-    /**
-     * Sets the without label parameter.
-     * @param key
-     * @param value
-     * @return
-     */
-    public T withoutLabel(String key, String value) {
-        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
-            getParameters().put(KubernetesMessageHeaders.LABEL, key + "!=" + value);
-        } else {
-            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + "," + key + "!=" + value);
-        }
-        return self;
-    }
-
-    /**
-     * Sets the without label parameter.
-     * @param key
-     * @return
-     */
-    public T withoutLabel(String key) {
-        if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
-            getParameters().put(KubernetesMessageHeaders.LABEL, "!" + key);
-        } else {
-            getParameters().put(KubernetesMessageHeaders.LABEL, getParameters().get(KubernetesMessageHeaders.LABEL) + ",!" + key);
-        }
-        return self;
     }
 }

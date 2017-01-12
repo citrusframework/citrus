@@ -48,6 +48,13 @@ public interface KubernetesCommand<R extends KubernetesResource> {
     Map<String, Object> getParameters();
 
     /**
+     * Adds validation callback with command result.
+     * @param callback
+     * @return
+     */
+    KubernetesCommand<R> validate(CommandResultCallback<R> callback);
+
+    /**
      * Provides access to this command result if any.
      * @return
      */
@@ -58,4 +65,48 @@ public interface KubernetesCommand<R extends KubernetesResource> {
      * @return
      */
     CommandResultCallback<R> getResultCallback();
+
+    /**
+     * Sets the label parameter.
+     * @param key
+     * @param value
+     * @return
+     */
+    KubernetesCommand<R> label(String key, String value);
+
+    /**
+     * Sets the label parameter.
+     * @param key
+     * @return
+     */
+    KubernetesCommand<R> label(String key);
+
+    /**
+     * Sets the namespace parameter.
+     * @param key
+     * @return
+     */
+    KubernetesCommand<R> namespace(String key);
+
+    /**
+     * Sets the name parameter.
+     * @param key
+     * @return
+     */
+    KubernetesCommand<R> name(String key);
+
+    /**
+     * Sets the without label parameter.
+     * @param key
+     * @param value
+     * @return
+     */
+    KubernetesCommand<R> withoutLabel(String key, String value);
+
+    /**
+     * Sets the without label parameter.
+     * @param key
+     * @return
+     */
+    KubernetesCommand<R> withoutLabel(String key);
 }

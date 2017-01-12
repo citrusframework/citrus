@@ -27,7 +27,7 @@ import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperation, R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractKubernetesCommand<R, T> {
+public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperation, R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractKubernetesCommand<R, T> {
 
     /**
      * Default constructor initializing the command name.

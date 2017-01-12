@@ -31,7 +31,7 @@ import java.io.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractCreateCommand<R extends KubernetesResource, D extends Doneable<R>, T extends AbstractClientCommand> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>>, R, T> {
+public abstract class AbstractCreateCommand<R extends KubernetesResource, D extends Doneable<R>, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>>, R, T> {
 
     /** Optional resource object to create */
     private R resource;

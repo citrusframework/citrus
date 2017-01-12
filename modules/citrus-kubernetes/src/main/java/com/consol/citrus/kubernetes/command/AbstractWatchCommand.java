@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractWatchCommand<R extends KubernetesResource, T extends AbstractClientCommand> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+public abstract class AbstractWatchCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
 
     /** Watch handle */
     private Watch watch;

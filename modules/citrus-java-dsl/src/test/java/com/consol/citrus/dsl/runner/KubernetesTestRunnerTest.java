@@ -99,28 +99,33 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                     }));
 
                 kubernetes(action -> action.client(client)
-                    .listPods()
+                    .pods()
+                    .list()
                     .label("active")
                     .name("myPod"));
 
                 kubernetes(action -> action.client(client)
-                    .listNodes()
+                    .nodes()
+                    .list()
                     .validate((nodes, context) -> {
                         Assert.assertNotNull(nodes.getResult());
                     }));
 
                 kubernetes(action -> action.client(client)
-                    .listNamespaces()
+                    .namespaces()
+                    .list()
                     .validate((namespaces, context) -> {
                         Assert.assertNotNull(namespaces.getResult());
                     }));
 
                 kubernetes(action -> action.client(client)
-                        .watchNodes()
+                        .nodes()
+                        .watch()
                         .label("new"));
 
                 kubernetes(action -> action.client(client)
-                        .watchServices()
+                        .services()
+                        .watch()
                         .name("myService")
                         .namespace("myNamespace")
                         .validate((services, context) -> {
