@@ -16,10 +16,11 @@
 
 package com.consol.citrus.script;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import java.io.*;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+
+import groovy.lang.GroovyObject;
 
 /**
  * Class parsing a groovy script to create a test case instance.
@@ -41,6 +43,9 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
    
     /** Application context */
     private ApplicationContext applicationContext;
+    
+    /** Groovy class engine */
+    private GroovyClassPrivilegedEngine groovyClassEngine = new GroovyClassPrivilegedEngine();
     
     /**
      * Logger
@@ -63,13 +68,6 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
         BufferedReader bodyReader = null;
         
         try {
-            GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
-                public GroovyClassLoader run() {
-                    ClassLoader parent = getClass().getClassLoader();
-                    return new GroovyClassLoader(parent);
-                }
-            });
-
             StringBuilder script = new StringBuilder();
             bodyReader = new BufferedReader(new FileReader(groovyScript.getFile()));
             templateReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("test_template.groovy")));
@@ -86,21 +84,14 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
                     }
                 }
             }
-            
-            Class<?> groovyClass = loader.parseClass(script.toString());
     
-            GroovyObject groovyObject;
-            groovyObject = (GroovyObject) groovyClass.newInstance();
+            GroovyObject groovyObject = groovyClassEngine.getGroovyObject(script.toString());
             
             if (groovyObject instanceof TestCaseBuilder) {
                 return ((TestCaseBuilder)groovyObject).build(applicationContext);
             } else {
                 throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseBuilder.");
             }
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new CitrusRuntimeException(e);
         } catch (CompilationFailedException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {

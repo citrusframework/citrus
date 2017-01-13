@@ -16,17 +16,19 @@
 
 package com.consol.citrus.validation.script;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
+import java.io.IOException;
+
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.script.GroovyClassEngine;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+
+import groovy.lang.GroovyObject;
 
 /**
  * Builds a control message from Groovy code with markup builder support.
@@ -43,6 +45,9 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
 
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
+    
+    /** Groovy class engine */
+    private GroovyClassEngine groovyClassEngine = new GroovyClassEngine();
     
     /**
      * Build the control message from script code.
@@ -72,24 +77,12 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
      */
     private String buildMarkupBuilderScript(String scriptData) {
         try {
-            ClassLoader parent = GroovyScriptMessageBuilder.class.getClassLoader(); 
-            GroovyClassLoader loader = new GroovyClassLoader(parent);
+        	GroovyObject groovyObject = groovyClassEngine.getGroovyObject(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
+                                                      .withCode(scriptData)
+                                                      .build());
             
-            Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
-                                                            .withCode(scriptData)
-                                                            .build());
-            
-            if (groovyClass == null) {
-                throw new CitrusRuntimeException("Could not load groovy script!");    
-            }
-            
-            GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
             return (String) groovyObject.invokeMethod("run", new Object[] {});
         } catch (CompilationFailedException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
         }
     }

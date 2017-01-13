@@ -57,6 +57,11 @@ public class GroovyActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("scriptResourcePath", filePath);
         }
         
+        String cacheSource = element.getAttribute("cacheSource");
+        if (StringUtils.hasText(cacheSource)) {
+            beanDefinition.addPropertyValue("cacheSource", Boolean.valueOf(cacheSource));
+        }
+        
         return beanDefinition.getBeanDefinition();
     }
 }

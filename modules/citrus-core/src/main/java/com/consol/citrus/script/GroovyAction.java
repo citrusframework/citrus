@@ -16,9 +16,6 @@
 
 package com.consol.citrus.script;
 
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -29,8 +26,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.TemplateBasedScriptBuilder;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import groovy.lang.GroovyObject;
 
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
@@ -54,6 +50,9 @@ public class GroovyAction extends AbstractTestAction {
     
     /** Manage automatic groovy template usage */
     private boolean useScriptTemplate = true;
+    
+    /** Groovy class engine */
+    private GroovyClassPrivilegedEngine groovyClassEngine;
 
     /** Executes a script using the TestContext */
     public interface ScriptExecutor {
@@ -68,28 +67,21 @@ public class GroovyAction extends AbstractTestAction {
      */
     public GroovyAction() {
         setName("groovy");
+        
+        groovyClassEngine = new GroovyClassPrivilegedEngine();
     }
 
     @Override
     public void doExecute(TestContext context) {
         try {
-            GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
-                public GroovyClassLoader run() {
-                    ClassLoader parent = getClass().getClassLoader();
-                    return new GroovyClassLoader(parent);
-                }
-            });
-
             assertScriptProvided();
-
+            
             String rawCode = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context));
             String code = context.replaceDynamicContentInString(rawCode.trim());
 
             // load groovy code
-            Class<?> groovyClass = loader.parseClass(code);
-            // Instantiate an object from groovy code
-            GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
-
+            GroovyObject groovyObject = groovyClassEngine.getGroovyObject(code);
+            
             // only apply default script template in case we have feature enabled and code is not a class, too
             if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
                 if (StringUtils.hasText(scriptTemplate)) {
@@ -104,8 +96,7 @@ public class GroovyAction extends AbstractTestAction {
                             .build();
                 }
 
-                groovyClass = loader.parseClass(code);
-                groovyObject = (GroovyObject) groovyClass.newInstance();
+                groovyObject = groovyClassEngine.getGroovyObject(code);
             }
 
             if (log.isDebugEnabled()) {
@@ -213,4 +204,23 @@ public class GroovyAction extends AbstractTestAction {
     public String getScriptTemplate() {
         return scriptTemplate;
     }
+    
+    /**
+     * Enable or disable Groovy source cache.
+     * @param enable TRUE if source cache must be enabled.
+     */
+    public void setCacheSource(boolean enable)
+    {
+    	groovyClassEngine.setDefaultCacheSource(enable);
+    }
+    
+    /**
+     * Gets the cacheSource value.
+     * @return True of Groovy source cache is enabled.
+     */
+    public boolean isCacheSource()
+    {
+    	return groovyClassEngine.isDefaultCacheSource();
+    }
+
 }

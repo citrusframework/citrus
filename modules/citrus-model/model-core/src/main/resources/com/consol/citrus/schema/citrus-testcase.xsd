@@ -561,6 +561,7 @@
                 <xs:attribute name="resource" type="xs:string"/>
                 <xs:attribute name="use-script-template" type="xs:boolean"/>
                 <xs:attribute name="script-template" type="xs:string"/>
+                <xs:attribute name="cacheSource" type="xs:boolean"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
