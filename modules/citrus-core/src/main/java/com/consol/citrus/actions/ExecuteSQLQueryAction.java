@@ -238,7 +238,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 columnName = columnName.toLowerCase();
             } else if (columnValuesMap.containsKey(columnName.toUpperCase())) {
                 columnName = columnName.toUpperCase();
-            } else {
+            } else if (!columnValuesMap.containsKey(columnName)) {
                 throw new CitrusRuntimeException("Could not find column '" + columnName + "' in SQL result set");
             }
 
