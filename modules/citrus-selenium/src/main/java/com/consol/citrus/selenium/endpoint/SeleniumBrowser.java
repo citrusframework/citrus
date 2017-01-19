@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -209,6 +210,8 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
                 return new FirefoxDriver(defaults);
             case BrowserType.IE:
                 return new InternetExplorerDriver();
+            case BrowserType.EDGE:
+                return new EdgeDriver();
             case BrowserType.SAFARI:
                 return new SafariDriver();
             case BrowserType.CHROME:
@@ -217,12 +220,12 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
                 return new ChromeDriver();
             case BrowserType.HTMLUNIT:
                 BrowserVersion browserVersion = null;
-                if (getEndpointConfiguration().getVersion().equals("FIREFOX38")) {
-                    browserVersion = BrowserVersion.FIREFOX_38;
-                } else if (getEndpointConfiguration().getVersion().equals("INTERNET_EXPLORER_8")) {
-                    browserVersion = BrowserVersion.INTERNET_EXPLORER_8;
-                } else if (getEndpointConfiguration().getVersion().equals("INTERNET_EXPLORER_11")) {
-                    browserVersion = BrowserVersion.INTERNET_EXPLORER_11;
+                if (getEndpointConfiguration().getVersion().equals("FIREFOX")) {
+                    browserVersion = BrowserVersion.FIREFOX_45;
+                } else if (getEndpointConfiguration().getVersion().equals("INTERNET_EXPLORER")) {
+                    browserVersion = BrowserVersion.INTERNET_EXPLORER;
+                } else if (getEndpointConfiguration().getVersion().equals("EDGE")) {
+                    browserVersion = BrowserVersion.EDGE;
                 } else if (getEndpointConfiguration().getVersion().equals("CHROME")) {
                     browserVersion = BrowserVersion.CHROME;
                 }

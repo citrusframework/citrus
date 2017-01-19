@@ -50,6 +50,7 @@ The Selenium browser component supports different browser types for the commonly
 * **chrome**
 * **googlechrome**
 * **internet explorer**  
+* **edge**  
 * **custom**
 
 Html unit is the default browser type and represents a headless browser that executed without displaying the graphical user interface. In case you need a totally different browser or
@@ -113,7 +114,7 @@ We added a special selenium namespace with prefix **selenium:** so now we can st
       <selenium:find>
         <selenium:element tag-name="h1" text="Welcome!">
           <selenium:styles>
-            <selenium:style name="font-size" value="20pt"/>
+            <selenium:style name="font-size" value="40px"/>
           </selenium:styles>
         </selenium:element>
       </selenium:find>
@@ -127,7 +128,7 @@ We added a special selenium namespace with prefix **selenium:** so now we can st
 
 In this very simple example we first start the Selenium browser instance. After that we can continue to use Selenium commands without browser attribute explicitly set. Citrus
 knows which browser instance is currently active and will automatically use this opened browser instance. Next in this example we find some element on the displayed page by its
-tag-name and text. We also validate the element style *font-size* to meet the expected value *20pt* in this step.
+tag-name and text. We also validate the element style *font-size* to meet the expected value *40px* in this step.
 
 In addition to that the example performs a click operation on the element with the id *ok-button*. Selenium supports element find operations on different properties:
 
@@ -181,7 +182,7 @@ public void seleniumTest() {
                 .enabled(true)
                 .displayed(true)
                 .text("Welcome!")
-                .style("font-size", "20pt");
+                .style("font-size", "40px");
 
     selenium().click().element(By.linkText("Click Me!"));
 }
@@ -243,7 +244,7 @@ for further element validation:
 <selenium:find>
   <selenium:element tag-name="h1" text="Welcome!">
     <selenium:styles>
-      <selenium:style name="font-size" value="20pt"/>
+      <selenium:style name="font-size" value="40px"/>
     </selenium:styles>
   </selenium:element>
 </selenium:find>
@@ -262,7 +263,7 @@ for further element validation:
 ```java
 selenium().find().element(By.tagName("h1"))
         .text("Welcome!")
-        .style("font-size", "20pt");
+        .style("font-size", "40px");
 
 selenium().find().element(By.id("ok-button"))
         .tagName("button")

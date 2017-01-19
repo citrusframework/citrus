@@ -36,6 +36,7 @@
             <xs:enumeration value="chrome"/>
             <xs:enumeration value="googlechrome"/>
             <xs:enumeration value="internet explorer"/>
+            <xs:enumeration value="edge"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>

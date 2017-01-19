@@ -33,7 +33,7 @@
       <selenium:find>
         <selenium:element tag-name="h1" text="Welcome!">
           <selenium:styles>
-            <selenium:style name="font-size" value="20pt"/>
+            <selenium:style name="font-size" value="40px"/>
           </selenium:styles>
         </selenium:element>
       </selenium:find>
