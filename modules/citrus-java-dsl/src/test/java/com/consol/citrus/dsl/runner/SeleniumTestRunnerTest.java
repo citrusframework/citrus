@@ -27,13 +27,19 @@ import com.consol.citrus.selenium.endpoint.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Keyboard;
+import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,11 +51,11 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
 
     private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
     private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);
-    private WebDriver webDriver = Mockito.mock(WebDriver.class);
+    private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
     private WebElement element = Mockito.mock(WebElement.class);
     private WebElement button = Mockito.mock(WebElement.class);
-    private WebElement link = Mockito.mock(WebElement.class);
+    private RemoteWebElement link = Mockito.mock(RemoteWebElement.class);
     private WebElement input = Mockito.mock(WebElement.class);
     private WebElement checkbox = Mockito.mock(WebElement.class);
     private WebElement hidden = Mockito.mock(WebElement.class);
@@ -57,6 +63,10 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
     private WebDriver.Navigation navigation = Mockito.mock(WebDriver.Navigation.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
     private WebDriver.Options options = Mockito.mock(WebDriver.Options.class);
+
+    private Mouse mouse = Mockito.mock(Mouse.class);
+    private Keyboard keyboard = Mockito.mock(Keyboard.class);
+    private Coordinates coordinates = Mockito.mock(Coordinates.class);
 
     @Test
     public void testSeleniumBuilder() {
@@ -88,6 +98,12 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         when(link.isEnabled()).thenReturn(true);
         when(link.isDisplayed()).thenReturn(true);
 
+        when(webDriver.findElement(By.linkText("Hover Me!"))).thenReturn(link);
+        when(webDriver.getMouse()).thenReturn(mouse);
+        when(webDriver.getKeyboard()).thenReturn(keyboard);
+
+        when(link.getCoordinates()).thenReturn(coordinates);
+
         when(webDriver.findElement(By.name("username"))).thenReturn(input);
         when(input.getTagName()).thenReturn("input");
         when(input.isEnabled()).thenReturn(true);
@@ -103,6 +119,8 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         when(checkbox.isEnabled()).thenReturn(true);
         when(checkbox.isDisplayed()).thenReturn(true);
         when(checkbox.isSelected()).thenReturn(false);
+
+        when(webDriver.executeScript(anyString())).thenReturn(Collections.singletonList("This went wrong!"));
 
         when(webDriver.findElement(By.className("btn"))).thenReturn(button);
         when(button.getTagName()).thenReturn("button");
@@ -139,6 +157,7 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
                             .attribute("type", "submit"));
 
                 selenium(action -> action.click().element(By.linkText("Click Me!")));
+                selenium(action -> action.hover().element(By.linkText("Hover Me!")));
 
                 selenium(action -> action.setInput("Citrus").element(By.name("username")));
                 selenium(action -> action.checkInput(false).element(By.xpath("//input[@type='checkbox']")));
@@ -295,6 +314,7 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         verify(alert).accept();
         verify(options).deleteAllCookies();
         verify(link).click();
+        verify(mouse).mouseMove(coordinates);
         verify(input).clear();
         verify(input).sendKeys("Citrus");
     }
