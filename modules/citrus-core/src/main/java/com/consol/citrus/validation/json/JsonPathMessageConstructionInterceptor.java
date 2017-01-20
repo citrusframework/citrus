@@ -27,6 +27,7 @@ import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -43,6 +44,9 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
 
     /** Overwrites message elements before validating (via JSONPath expressions) */
     private Map<String, String> jsonPathExpressions = new HashMap<>();
+
+    /** Optional ignoring element not found errors */
+    private boolean ignoreNotFound = false;
 
     /**
      * Default constructor.
@@ -83,7 +87,26 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
                 jsonPathExpression = entry.getKey();
                 String valueExpression = context.replaceDynamicContentInString(entry.getValue());
 
-                documentContext.set(jsonPathExpression, valueExpression);
+                Object value;
+                if (valueExpression.equals("true")) {
+                    value = true;
+                } else if (valueExpression.equals("false")) {
+                    value = false;
+                } else {
+                    try {
+                        value = NumberUtils.parseNumber(valueExpression, Integer.class);
+                    } catch (IllegalArgumentException e) {
+                        value = valueExpression;
+                    }
+                }
+
+                try {
+                    documentContext.set(jsonPathExpression, value);
+                } catch (PathNotFoundException e) {
+                    if (!ignoreNotFound) {
+                        throw new UnknownElementException(String.format("Could not find element for expression: %s", jsonPathExpression), e);
+                    }
+                }
 
                 if (log.isDebugEnabled()) {
                     log.debug("Element " + jsonPathExpression + " was set to value: " + valueExpression);
@@ -93,8 +116,6 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
             message.setPayload(jsonData.toString());
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
-        } catch (PathNotFoundException e) {
-            throw new UnknownElementException(String.format("Could not find element for expression: %s", jsonPathExpression), e);
         }
 
         return message;
@@ -111,5 +132,23 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
 
     public Map<String, String> getJsonPathExpressions() {
         return jsonPathExpressions;
+    }
+
+    /**
+     * Gets the ignoreNotFound.
+     *
+     * @return
+     */
+    public boolean isIgnoreNotFound() {
+        return ignoreNotFound;
+    }
+
+    /**
+     * Sets the ignoreNotFound.
+     *
+     * @param ignoreNotFound
+     */
+    public void setIgnoreNotFound(boolean ignoreNotFound) {
+        this.ignoreNotFound = ignoreNotFound;
     }
 }

@@ -41,7 +41,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
     public <T> T translate(Node node, T value, TestContext context) {
         String nodePath = XMLUtils.getNodesPathName(node);
 
-        if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT_MATCH)) {
+        if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(nodePath)) {
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));

@@ -86,9 +86,9 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     @Override
     public void afterPropertiesSet() throws Exception {
         if (getPathMappingStrategy() != null &&
-                !getPathMappingStrategy().equals(PathMappingStrategy.EXACT_MATCH)) {
+                !getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
             log.warn(String.format("%s ignores path mapping strategy other than %s",
-                    getClass().getSimpleName(), PathMappingStrategy.EXACT_MATCH));
+                    getClass().getSimpleName(), PathMappingStrategy.EXACT));
         }
 
         super.afterPropertiesSet();

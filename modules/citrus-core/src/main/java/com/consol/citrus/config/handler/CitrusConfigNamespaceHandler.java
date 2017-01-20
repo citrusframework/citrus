@@ -38,6 +38,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("xml-data-dictionary", new XmlDataDictionaryParser());
         registerBeanDefinitionParser("xpath-data-dictionary", new XpathDataDictionaryParser());
         registerBeanDefinitionParser("json-data-dictionary", new JsonDataDictionaryParser());
+        registerBeanDefinitionParser("json-path-data-dictionary", new JsonPathDataDictionaryParser());
         registerBeanDefinitionParser("message-validators", new MessageValidatorRegistryParser());
         registerBeanDefinitionParser("namespace-context", new NamespaceContextParser());
         registerBeanDefinitionParser("function-library", new FunctionLibraryParser());

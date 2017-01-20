@@ -50,7 +50,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
     protected Resource mappingFile;
 
     /** Kind of mapping strategy how to identify dictionary item */
-    private PathMappingStrategy pathMappingStrategy = PathMappingStrategy.EXACT_MATCH;
+    private PathMappingStrategy pathMappingStrategy = PathMappingStrategy.EXACT;
 
     /**
      * Convert to original value type if necessary.

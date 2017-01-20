@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
+import com.consol.citrus.variable.dictionary.json.JsonPathMappingDataDictionary;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -27,9 +27,9 @@ import java.util.Map;
 
 /**
  * @author Christoph Deppisch
- * @since 2.0
+ * @since 2.7
  */
-public class JsonDataDictionaryParserTest extends AbstractBeanDefinitionParserTest {
+public class JsonPathDataDictionaryParserTest extends AbstractBeanDefinitionParserTest {
 
     @BeforeClass
     @Override
@@ -39,29 +39,29 @@ public class JsonDataDictionaryParserTest extends AbstractBeanDefinitionParserTe
     @Test
     public void testDataDictionaryParser() throws Exception {
         beanDefinitionContext = createApplicationContext("context");
-        Map<String, JsonMappingDataDictionary> dictionaries = beanDefinitionContext.getBeansOfType(JsonMappingDataDictionary.class);
+        Map<String, JsonPathMappingDataDictionary> dictionaries = beanDefinitionContext.getBeansOfType(JsonPathMappingDataDictionary.class);
 
         Assert.assertEquals(dictionaries.size(), 3L);
 
-        JsonMappingDataDictionary dictionary = dictionaries.get("dataDictionary1");
+        JsonPathMappingDataDictionary dictionary = dictionaries.get("dataDictionary1");
         Assert.assertEquals(dictionary.getName(), "dataDictionary1");
         Assert.assertTrue(dictionary.isGlobalScope());
         Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
         Assert.assertNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 3L);
 
-        Assert.assertEquals(dictionary.getMappings().get("node.name.1"), "value1");
-        Assert.assertEquals(dictionary.getMappings().get("node.name.2"), "value2");
-        Assert.assertEquals(dictionary.getMappings().get("node.name.3"), "value3");
+        Assert.assertEquals(dictionary.getMappings().get("$.node.name.1"), "value1");
+        Assert.assertEquals(dictionary.getMappings().get("$.node.name.2"), "value2");
+        Assert.assertEquals(dictionary.getMappings().get("$.node.name.3"), "value3");
 
         dictionary = dictionaries.get("dataDictionary2");
         Assert.assertEquals(dictionary.getName(), "dataDictionary2");
         Assert.assertFalse(dictionary.isGlobalScope());
-        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.ENDS_WITH);
+        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
         Assert.assertNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 1L);
 
-        Assert.assertEquals(dictionary.getMappings().get("node.name.1"), "value1");
+        Assert.assertEquals(dictionary.getMappings().get("$.node.name.1"), "value1");
 
         dictionary = dictionaries.get("dataDictionary3");
         Assert.assertEquals(dictionary.getName(), "dataDictionary3");
@@ -70,7 +70,7 @@ public class JsonDataDictionaryParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertNotNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 2L);
 
-        Assert.assertEquals(dictionary.getMappings().get("node.name.1"), "value1");
-        Assert.assertEquals(dictionary.getMappings().get("node.name.2"), "value2");
+        Assert.assertEquals(dictionary.getMappings().get("$.node.name.1"), "value1");
+        Assert.assertEquals(dictionary.getMappings().get("$.node.name.2"), "value2");
     }
 }

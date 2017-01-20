@@ -60,7 +60,7 @@ public interface DataDictionary<T> extends MessageConstructionInterceptor {
      * with path comparison.
      */
     public static enum PathMappingStrategy {
-        EXACT_MATCH,
+        EXACT,
         ENDS_WITH,
         STARTS_WITH;
     }

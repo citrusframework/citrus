@@ -304,6 +304,17 @@
       </xs:complexType>
     </xs:element>
 
+    <xs:element name="json-path-data-dictionary">
+      <xs:annotation>
+        <xs:documentation>Data dictionary holding json path expression mappings for dynamic json test data in messages.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="DataDictionaryType"/>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
+
     <xs:element name="before-suite">
       <xs:annotation>
         <xs:documentation>Sequence of test actions executed before test suite run. Container execution can be restricted by suite name and test groups</xs:documentation>

@@ -111,10 +111,28 @@ Of course the data dictionary does also support test variables, functions. Also 
 
 ```xml
 <citrus:mapping path="TestMessage.Users[0]" value="Christoph"/>
-  <citrus:mapping path="TestMessage.Users[1]" value="Julia"/>
+<citrus:mapping path="TestMessage.Users[1]" value="Julia"/>
 ```
 
 The **Users** element is a JSON array, so we can access the elements with index. Nesting JSON objects and arrays is also supported so you can also handle more complex JSON data.
+
+The **JsonMappingDataDictionary** implementation is easy to use and fits the basic needs for JSON data dictionaries. The message element path expressions are very simple and do fit basic needs. 
+However when more complex JSON payloads apply for translation we might reach the boundaries here.
+
+For more complex JSON message payloads JsonPath data dictionaries are very effective:
+
+```xml
+<citrus:json-path-data-dictionary id="jsonMappingDataDictionary">
+  <citrus:mappings>
+    <citrus:mapping path="$.TestMessage.MessageId" value="${messageId}"/>
+    <citrus:mapping path="$..CorrelationId" value="${correlationId}"/>
+    <citrus:mapping path="$..Users[0]" value="Christoph"/>
+    <citrus:mapping path="$.TestMessage.TimeStamp" value="citrus:currentDate()"/>
+  </citrus:mappings>
+</citrus:json-path-data-dictionary>
+```
+
+JsonPath mapping expressions are way more powerful and can also handle very complex scenarios. You can apply for all elements named *CorrelationId* in one single entry for instance. 
 
 ### Dictionary scopes
 
@@ -157,7 +175,7 @@ The sample above is a sending test action with an explicit data dictionary refer
 
 ### Path mapping strategies
 
-Another advanced topic about data dictionaries is the path mapping strategy. When using simple path expressions the default strategy is always **EXACT_MATCH** . This means that the path expression has to evaluate exactly to a message element within the payload data. And only this exact message element is translated.
+Another advanced topic about data dictionaries is the path mapping strategy. When using simple path expressions the default strategy is always **EXACT** . This means that the path expression has to evaluate exactly to a message element within the payload data. And only this exact message element is translated.
 
 You can set your own path mapping strategy in order to change this behavior. For instance another mapping strategy would be **STARS_WITH** . All elements are translated that start with a certain path expression. Let us clarify this with an example:
 

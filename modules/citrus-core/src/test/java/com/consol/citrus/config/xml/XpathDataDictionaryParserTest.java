@@ -46,7 +46,7 @@ public class XpathDataDictionaryParserTest extends AbstractBeanDefinitionParserT
         XpathMappingDataDictionary dictionary = dictionaries.get("dataDictionary1");
         Assert.assertEquals(dictionary.getName(), "dataDictionary1");
         Assert.assertTrue(dictionary.isGlobalScope());
-        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT_MATCH);
+        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
         Assert.assertNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 3L);
 
@@ -66,7 +66,7 @@ public class XpathDataDictionaryParserTest extends AbstractBeanDefinitionParserT
         dictionary = dictionaries.get("dataDictionary3");
         Assert.assertEquals(dictionary.getName(), "dataDictionary3");
         Assert.assertTrue(dictionary.isGlobalScope());
-        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT_MATCH);
+        Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
         Assert.assertNotNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 2L);
 

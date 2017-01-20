@@ -43,7 +43,7 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
 
     @Test
     public void testConstructWithJsonPathMultipleValues() {
-        Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\", \"Id\": \"1234567\"}}");
+        Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\", \"Id\": 1234567}}");
 
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
@@ -51,7 +51,7 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
 
         JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
         Message intercepted = interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":\"9999999\"}}");
+        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":9999999}}");
     }
 
     @Test
