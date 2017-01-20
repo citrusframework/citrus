@@ -28,7 +28,7 @@ public class KubernetesExecuteActionParserTest extends AbstractActionParserTest<
 
     @Test
     public void testKubernetesExecuteActionParser() {
-        assertActionCount(15);
+        assertActionCount(21);
         assertActionClassAndName(KubernetesExecuteAction.class, "kubernetes-execute");
 
         KubernetesExecuteAction action = getNextTestActionFromTest();
@@ -65,9 +65,49 @@ public class KubernetesExecuteActionParserTest extends AbstractActionParserTest<
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), CreatePod.class);
+        Assert.assertNotNull(((CreatePod) action.getCommand()).getTemplate());
+        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "default");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), GetPod.class);
+        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myPod");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), DeletePod.class);
+        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myPod");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
         Assert.assertEquals(action.getCommand().getClass(), ListServices.class);
         Assert.assertEquals(action.getCommand().getParameters().size(), 2);
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL).toString(), "!service_label");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), CreateService.class);
+        Assert.assertNotNull(((CreateService) action.getCommand()).getTemplate());
+        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "default");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), GetService.class);
+        Assert.assertEquals(action.getCommand().getParameters().size(), 2);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myService");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getCommand());
+        Assert.assertEquals(action.getCommand().getClass(), DeleteService.class);
+        Assert.assertEquals(action.getCommand().getParameters().size(), 2);
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME).toString(), "myService");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString(), "myNamespace");
 
         action = getNextTestActionFromTest();

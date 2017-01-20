@@ -53,7 +53,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
         KubernetesResponse response = new KubernetesResponse();
         KubernetesMessage message = KubernetesMessage.response(response);
 
-        response.setCommand(command.getName().substring("kubernetes:".length()));
+        response.setCommand(command.getName());
 
         message.setHeader(KubernetesMessageHeaders.COMMAND, response.getCommand());
         for (Map.Entry<String, Object> header : createMessageHeaders(command).entrySet()) {
@@ -100,6 +100,8 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
                 return new CreatePod();
             case "get-pod":
                 return new GetPod();
+            case "delete-pod":
+                return new DeletePod();
             case "list-pods":
                 return new ListPods();
             case "watch-pods":
@@ -120,6 +122,8 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
                 return new CreateService();
             case "get-service":
                 return new GetService();
+            case "delete-service":
+                return new DeleteService();
             case "list-services":
                 return new ListServices();
             case "watch-services":
@@ -137,7 +141,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
     private Map<String,Object> createMessageHeaders(KubernetesCommand<?> command) {
         Map<String, Object> headers = new HashMap<String, Object>();
 
-        headers.put(KubernetesMessageHeaders.COMMAND, command.getName().substring("kubernetes:".length()));
+        headers.put(KubernetesMessageHeaders.COMMAND, command.getName());
 
         for (Map.Entry<String, Object> entry : command.getParameters().entrySet()) {
             headers.put(entry.getKey(), entry.getValue());

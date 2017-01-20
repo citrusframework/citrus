@@ -13,7 +13,7 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 3citrus:randomNumber(4)
+      nodePort: 31citrus:randomNumber(3)
   selector:
     server: hello-jetty
   type: NodePort

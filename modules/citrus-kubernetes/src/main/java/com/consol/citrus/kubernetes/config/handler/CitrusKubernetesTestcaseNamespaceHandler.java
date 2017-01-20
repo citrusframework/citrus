@@ -34,6 +34,7 @@ public class CitrusKubernetesTestcaseNamespaceHandler extends NamespaceHandlerSu
         registerBeanDefinitionParser("watch-nodes", new KubernetesExecuteActionParser<>(WatchNodes.class));
         registerBeanDefinitionParser("create-service", new CreateServiceActionParser());
         registerBeanDefinitionParser("get-service", new KubernetesExecuteActionParser<>(GetService.class));
+        registerBeanDefinitionParser("delete-service", new KubernetesExecuteActionParser<>(DeleteService.class));
         registerBeanDefinitionParser("list-services", new KubernetesExecuteActionParser<>(ListServices.class));
         registerBeanDefinitionParser("watch-services", new KubernetesExecuteActionParser<>(WatchServices.class));
         registerBeanDefinitionParser("list-replication-controllers", new KubernetesExecuteActionParser<>(ListReplicationControllers.class));
@@ -42,6 +43,7 @@ public class CitrusKubernetesTestcaseNamespaceHandler extends NamespaceHandlerSu
         registerBeanDefinitionParser("watch-namespaces", new KubernetesExecuteActionParser<>(WatchNamespaces.class));
         registerBeanDefinitionParser("create-pod", new CreatePodActionParser());
         registerBeanDefinitionParser("get-pod", new KubernetesExecuteActionParser<>(GetPod.class));
+        registerBeanDefinitionParser("delete-pod", new KubernetesExecuteActionParser<>(DeletePod.class));
         registerBeanDefinitionParser("list-pods", new KubernetesExecuteActionParser<>(ListPods.class));
         registerBeanDefinitionParser("watch-pods", new KubernetesExecuteActionParser<>(WatchPods.class));
     }

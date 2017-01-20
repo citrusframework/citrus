@@ -38,7 +38,7 @@ After that you are able to use customized Citrus XML elements in order to define
 Citrus operates with the Kubernetes remote REST API in order to interact with the Kubernetes platform. The Kubernetes client is defined as Spring bean component in the configuration as follows:
 
 ```xml
-<citrus-kubernetes:client id="myK8sClient"/>
+<citrus-k8s:client id="myK8sClient"/>
 ```
 
 The Kubernetes client is based on the [Fabric8 Java Kubernetes client](https://github.com/fabric8io/kubernetes-client) implementation. Following from that the component can be configured in various ways. 
@@ -54,7 +54,7 @@ explanation of those please refer to the [Fabric8 client documentation](https://
 In case these settings are not settable in your environment you can also use explicit settings in the Kubernetes client component:
 
 ```xml
-<citrus-kubernetes:client id="myK8sClient"
+<citrus-k8s:client id="myK8sClient"
               url="http://localhost:8843"
               version="v1"
               username="user"

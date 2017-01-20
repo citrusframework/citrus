@@ -147,7 +147,7 @@ public class KubernetesMessage extends DefaultMessage {
      */
     public static KubernetesMessage request(KubernetesCommand<?> command) {
         KubernetesRequest request = new KubernetesRequest();
-        request.setCommand(command.getName().substring("kubernetes:".length()));
+        request.setCommand(command.getName());
 
         for (Map.Entry<String, Object> entry : command.getParameters().entrySet()) {
             if (entry.getKey().equals(KubernetesMessageHeaders.NAME)) {

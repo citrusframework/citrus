@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-@Test(enabled = false)
+@Test
 public class KubernetesCreateIT extends AbstractKubernetesIT {
 
     @CitrusXmlTest(name = "KubernetesCreateIT")

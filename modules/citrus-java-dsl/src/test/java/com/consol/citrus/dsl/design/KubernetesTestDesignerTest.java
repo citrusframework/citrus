@@ -48,6 +48,7 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
                             .label("app", "myApp");
 
                 kubernetes().pod().get("myPod");
+                kubernetes().pod().delete("myPod");
 
                 kubernetes().nodes()
                             .watch()
@@ -64,40 +65,53 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 7);
+        Assert.assertEquals(test.getActionCount(), 8);
         Assert.assertEquals(test.getActions().get(0).getClass(), KubernetesExecuteAction.class);
 
         KubernetesExecuteAction action = (KubernetesExecuteAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), Info.class);
+        Assert.assertEquals(action.getCommand().getName(), "info");
         Assert.assertNotNull(action.getCommand().getResultCallback());
 
         action = (KubernetesExecuteAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListNamespaces.class);
+        Assert.assertEquals(action.getCommand().getName(), "list-namespaces");
 
         action = (KubernetesExecuteAction)test.getActions().get(2);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListNodes.class);
+        Assert.assertEquals(action.getCommand().getName(), "list-nodes");
 
         action = (KubernetesExecuteAction)test.getActions().get(3);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
+        Assert.assertEquals(action.getCommand().getName(), "list-pods");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!running,app=myApp");
 
         action = (KubernetesExecuteAction)test.getActions().get(4);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), GetPod.class);
+        Assert.assertEquals(action.getCommand().getName(), "get-pod");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myPod");
 
         action = (KubernetesExecuteAction)test.getActions().get(5);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
-        Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "new");
+        Assert.assertEquals(action.getCommand().getClass(), DeletePod.class);
+        Assert.assertEquals(action.getCommand().getName(), "delete-pod");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myPod");
 
         action = (KubernetesExecuteAction)test.getActions().get(6);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
+        Assert.assertEquals(action.getCommand().getClass(), WatchNodes.class);
+        Assert.assertEquals(action.getCommand().getName(), "watch-nodes");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "new");
+
+        action = (KubernetesExecuteAction)test.getActions().get(7);
+        Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
+        Assert.assertEquals(action.getCommand().getName(), "watch-services");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
     }

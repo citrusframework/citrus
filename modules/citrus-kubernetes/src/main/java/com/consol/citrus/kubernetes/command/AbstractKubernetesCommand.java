@@ -55,7 +55,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
      * @param name
      */
     public AbstractKubernetesCommand(String name) {
-        this.name = String.format("kubernetes:%s", name);
+        this.name = name;
         this.self = (T) this;
     }
 

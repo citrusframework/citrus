@@ -22,7 +22,17 @@
 
             <k8s:list-events/>
             <k8s:list-pods label="pod_label"/>
+            <k8s:create-pod namespace="default">
+                <k8s:template file="classpath:templates/hello-jetty.yml"/>
+            </k8s:create-pod>
+            <k8s:get-pod name="myPod"/>
+            <k8s:delete-pod name="myPod"/>
             <k8s:list-services label="!service_label" namespace="myNamespace"/>
+            <k8s:create-service namespace="default">
+                <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+            </k8s:create-service>
+            <k8s:get-service name="myService" namespace="myNamespace"/>
+            <k8s:delete-service name="myService" namespace="myNamespace"/>
             <k8s:list-replication-controllers namespace="myNamespace"/>
             <k8s:list-nodes label="node_label=active"/>
             <k8s:list-endpoints label="endpoint_label!=active"/>

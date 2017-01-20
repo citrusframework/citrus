@@ -306,6 +306,16 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
             command(command);
             return this;
         }
+
+        /**
+         * Deletes pod by name.
+         * @param name
+         */
+        public DeleteActionBuilder delete(String name) {
+            DeletePod command = new DeletePod();
+            command.name(name);
+            return new DeleteActionBuilder(command);
+        }
     }
 
     /**
@@ -337,7 +347,7 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     public class ServiceActionBuilder extends BaseActionBuilder<ServiceActionBuilder, Service> {
 
         /**
-         * Creates new pod.
+         * Creates new service.
          * @param pod
          */
         public ServiceActionBuilder create(Service pod) {
@@ -348,7 +358,7 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
         }
 
         /**
-         * Create new pod from template.
+         * Create new service from template.
          * @param template
          */
         public ServiceActionBuilder create(Resource template) {
@@ -359,7 +369,7 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
         }
 
         /**
-         * Create new pod from template path.
+         * Create new service from template path.
          * @param templatePath
          */
         public ServiceActionBuilder create(String templatePath) {
@@ -370,7 +380,7 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
         }
 
         /**
-         * Gets pod by name.
+         * Gets service by name.
          * @param name
          */
         public ServiceActionBuilder get(String name) {
@@ -378,6 +388,16 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
             command.name(name);
             command(command);
             return this;
+        }
+
+        /**
+         * Deletes service by name.
+         * @param name
+         */
+        public DeleteActionBuilder delete(String name) {
+            DeleteService command = new DeleteService();
+            command.name(name);
+            return new DeleteActionBuilder(command);
         }
 
     }
@@ -511,6 +531,20 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
          * @param command
          */
         WatchActionBuilder(KubernetesCommand<R> command) {
+            command(command);
+        }
+    }
+
+    /**
+     * Delete action builder.
+     */
+    public class DeleteActionBuilder<R extends DeleteResult> extends BaseActionBuilder<DeleteActionBuilder<R>, R> {
+
+        /**
+         * Constructor using command.
+         * @param command
+         */
+        DeleteActionBuilder(KubernetesCommand<R> command) {
             command(command);
         }
     }

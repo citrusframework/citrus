@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,36 +27,29 @@ import javax.validation.constraints.NotNull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "clientVersion",
         "apiVersion",
         "kind",
-        "masterUrl",
-        "namespace"
+        "success"
 })
-public class InfoResult implements HasMetadata {
+public class DeleteResult implements HasMetadata {
     @NotNull
     @JsonProperty("kind")
-    private String kind = "Info";
+    private String kind = "Delete";
 
     @NotNull
     @JsonProperty("apiVersion")
     private String apiVersion = "v1";
 
     @NotNull
-    @JsonProperty("clientVersion")
-    private String clientVersion;
+    @JsonProperty("success")
+    private Boolean success;
 
-    @NotNull
-    @JsonProperty("masterUrl")
-    private String masterUrl;
-
-    @NotNull
-    @JsonProperty("namespace")
-    private String namespace;
+    @JsonIgnore
+    private String type;
 
     @Override
     public String getKind() {
-        return kind;
+        return kind + type;
     }
 
     /**
@@ -78,57 +71,48 @@ public class InfoResult implements HasMetadata {
     }
 
     /**
-     * Gets the value of the clientVersion property.
+     * Sets the kind.
      *
-     * @return the clientVersion
+     * @param kind
      */
-    public String getClientVersion() {
-        return clientVersion;
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     /**
-     * Sets the clientVersion property.
+     * Gets the success.
      *
-     * @param clientVersion
+     * @return
      */
-    public void setClientVersion(String clientVersion) {
-        this.clientVersion = clientVersion;
+    public Boolean getSuccess() {
+        return success;
     }
 
     /**
-     * Gets the value of the masterUrl property.
+     * Sets the success.
      *
-     * @return the masterUrl
+     * @param success
      */
-    public String getMasterUrl() {
-        return masterUrl;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
     /**
-     * Sets the masterUrl property.
+     * Gets the type.
      *
-     * @param masterUrl
+     * @return
      */
-    public void setMasterUrl(String masterUrl) {
-        this.masterUrl = masterUrl;
+    public String getType() {
+        return type;
     }
 
     /**
-     * Gets the value of the namespace property.
+     * Sets the type.
      *
-     * @return the namespace
+     * @param type
      */
-    public String getNamespace() {
-        return namespace;
-    }
-
-    /**
-     * Sets the namespace property.
-     *
-     * @param namespace
-     */
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
