@@ -78,28 +78,35 @@ public class JsonPathVariableExtractor implements VariableExtractor {
                     }
                 }
 
-                Object jsonPathResult;
-                if (JsonPath.isPathDefinite(jsonPathExpression)) {
-                    jsonPathResult = readerContext.read(jsonPathExpression);
-                } else {
-                    JSONArray values = readerContext.read(jsonPathExpression);
-                    if (values.size() == 1) {
-                        jsonPathResult = values.get(0);
+                Object jsonPathResult = null;
+                PathNotFoundException pathNotFoundException = null;
+                try {
+                    if (JsonPath.isPathDefinite(jsonPathExpression)) {
+                        jsonPathResult = readerContext.read(jsonPathExpression);
                     } else {
-                        jsonPathResult = values.toJSONString();
+                        JSONArray values = readerContext.read(jsonPathExpression);
+                        if (values.size() == 1) {
+                            jsonPathResult = values.get(0);
+                        } else {
+                            jsonPathResult = values.toJSONString();
+                        }
                     }
+                } catch (PathNotFoundException e) {
+                    pathNotFoundException = e;
                 }
 
                 if (StringUtils.hasText(jsonPathFunction)) {
                     jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
                 }
 
+                if (jsonPathResult == null) {
+                    throw new UnknownElementException(String.format("Could not find element for expression: %s", jsonPathExpression), pathNotFoundException);
+                }
+
                 context.setVariable(variableName, jsonPathResult.toString());
             }
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
-        } catch (PathNotFoundException e) {
-            throw new UnknownElementException(String.format("Could not find element for expression: %s", jsonPathExpression), e);
         }
     }
 

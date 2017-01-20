@@ -62,27 +62,34 @@ public class JsonPathFunction implements Function {
                 }
             }
 
-            Object jsonPathResult;
-            if (JsonPath.isPathDefinite(expression)) {
-                jsonPathResult = readerContext.read(expression);
-            } else {
-                JSONArray values = readerContext.read(expression);
-                if (values.size() == 1) {
-                    jsonPathResult = values.get(0);
+            Object jsonPathResult = null;
+            PathNotFoundException pathNotFoundException = null;
+            try {
+                if (JsonPath.isPathDefinite(expression)) {
+                    jsonPathResult = readerContext.read(expression);
                 } else {
-                    jsonPathResult = values.toJSONString();
+                    JSONArray values = readerContext.read(expression);
+                    if (values.size() == 1) {
+                        jsonPathResult = values.get(0);
+                    } else {
+                        jsonPathResult = values.toJSONString();
+                    }
                 }
+            } catch (PathNotFoundException e) {
+                pathNotFoundException = e;
             }
 
             if (StringUtils.hasText(jsonPathFunction)) {
                 jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
             }
 
+            if (jsonPathResult == null) {
+                throw new CitrusRuntimeException(String.format("Failed to find JSON element for path: %s", jsonPathExpression), pathNotFoundException);
+            }
+
             return jsonPathResult.toString();
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
-        } catch (PathNotFoundException e) {
-            throw new CitrusRuntimeException(String.format("Failed to find JSON element for path: %s", jsonPathExpression), e);
         }
     }
 }
