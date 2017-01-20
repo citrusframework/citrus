@@ -42,10 +42,10 @@
 
       <repeat-onerror-until-true condition="@assertThat('greaterThan(9)')@" auto-sleep="1000">
         <k8s:list-pods label="${podLabel}">
-          <k8s:expect>
+          <k8s:validate>
             <k8s:element path="$.result.items.size()" value="1"/>
             <k8s:element path="$..status.phase" value="Running"/>
-          </k8s:expect>
+          </k8s:validate>
         </k8s:list-pods>
       </repeat-onerror-until-true>
 
@@ -62,9 +62,9 @@
       </echo>
 
       <k8s:list-services label="${serviceLabel}">
-        <k8s:expect>
+        <k8s:validate>
           <k8s:element path="$.result.items.size()" value="1"/>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:list-services>
 
     </actions>

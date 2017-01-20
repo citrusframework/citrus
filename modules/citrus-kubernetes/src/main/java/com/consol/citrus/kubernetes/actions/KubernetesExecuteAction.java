@@ -51,10 +51,10 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     /** Kubernetes command to execute */
     private KubernetesCommand command;
 
-    /** Expected command result for validation */
+    /** Control command result for validation */
     private String commandResult;
 
-    /** Expected path expressions in command result */
+    /** Control path expressions in command result */
     private Map<String, Object> commandResultExpressions;
 
     @Autowired
@@ -127,7 +127,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         }
 
         if (command.getResultCallback() != null && result != null) {
-            command.getResultCallback().doWithCommandResult(result, context);
+            command.getResultCallback().validateCommandResult(result, context);
         }
     }
 
@@ -167,7 +167,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Gets the expected command result data.
+     * Gets the expected control command result data.
      * @return
      */
     public String getCommandResult() {
@@ -175,16 +175,16 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the expected command result data.
-     * @param expectedCommandResult
+     * Sets the expected control command result data.
+     * @param controlCommandResult
      */
-    public KubernetesExecuteAction setCommandResult(String expectedCommandResult) {
-        this.commandResult = expectedCommandResult;
+    public KubernetesExecuteAction setCommandResult(String controlCommandResult) {
+        this.commandResult = controlCommandResult;
         return this;
     }
 
     /**
-     * Gets the expected command result expressions such as JsonPath expressions.
+     * Gets the expected control command result expressions such as JsonPath expressions.
      * @return
      */
     public Map<String, Object> getCommandResultExpressions() {

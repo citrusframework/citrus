@@ -67,15 +67,15 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand> implemen
             }
         }
 
-        Element expectCmdResult = DomUtils.getChildElementByTagName(element, "expect");
-        if (expectCmdResult != null) {
-            Element resultElement = DomUtils.getChildElementByTagName(expectCmdResult, "result");
+        Element controlCmdResult = DomUtils.getChildElementByTagName(element, "validate");
+        if (controlCmdResult != null) {
+            Element resultElement = DomUtils.getChildElementByTagName(controlCmdResult, "result");
             if (resultElement != null) {
                 beanDefinition.addPropertyValue("commandResult", DomUtils.getTextValue(resultElement));
             }
 
             Map<String, Object> pathExpressions = new HashMap<>();
-            List<?> pathElements = DomUtils.getChildElementsByTagName(expectCmdResult, "element");
+            List<?> pathElements = DomUtils.getChildElementsByTagName(controlCmdResult, "element");
             for (Iterator<?> iter = pathElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
                 pathExpressions.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));

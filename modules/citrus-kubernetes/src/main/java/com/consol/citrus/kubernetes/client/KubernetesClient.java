@@ -108,7 +108,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
         }
 
         if (command.getResultCallback() != null) {
-            command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
+            command.getResultCallback().validateCommandResult(command.getCommandResult(), context);
         }
 
         return getEndpointConfiguration().getMessageConverter().convertInbound(command, getEndpointConfiguration(), context);

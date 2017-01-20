@@ -93,7 +93,7 @@ We added a special kubernetes namespace with prefix **k8s:** so now we can start
 <testcase name="KubernetesCommandIT">
     <actions>
       <k8s:info client="myK8sClient">
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "clientVersion": "1.4.27",
@@ -103,11 +103,11 @@ We added a special kubernetes namespace with prefix **k8s:** so now we can start
               "namespace": "test"
             }
           }</k8s:result>
-        </k8s:expect>      
+        </k8s:validate>      
       </k8s:info>
       
       <k8s:list-pods>
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "apiVersion":"v1",
@@ -117,7 +117,7 @@ We added a special kubernetes namespace with prefix **k8s:** so now we can start
             }
           }</k8s:result>
           <k8s:element path="$.result.items.size()" value="0"/>
-        </k8s:expect>        
+        </k8s:validate>        
       </k8s:list-pods>
     </actions>
 </testcase>
@@ -153,10 +153,10 @@ Up to now we have only used the Citrus XML DSL. Of course all Kubernetes command
 @CitrusTest
 public void kubernetesTest() {
     kubernetes().info()
-        .validateCommandResult(new CommandResultCallback<InfoResult>() {
+        .validate(new CommandResultCallback<InfoResult>() {
             @Override
-            public void doWithCommandResult(InfoResult version, TestContext context) {
-                Assert.assertEquals(version.getApiVersion(), "v1");
+            public void doWithCommandResult(InfoResult info, TestContext context) {
+                Assert.assertEquals(info.getApiVersion(), "v1");
             }
     });
 
@@ -167,6 +167,22 @@ public void kubernetesTest() {
 ```
 
 The Java DSL Kubernetes commands provide an optional **CommandResultCallback** that is called with the unmarshalled command result object. In the example above the *InfoResult* model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
+
+Java 8 Lambda expressions add some syntactical sugar to the command result validation:
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void kubernetesTest() {
+    kubernetes().info()
+        .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
+
+    kubernetes().listPods()
+                .withoutLabel("running")
+                .label("app", "myApp");
+}
+```
 
 By default Citrus tries to find a Kubernetes client component within the Citrus Spring application context. If not present Citrus will instantiate a default kubernetes client with all default settings. You can also explicitly set the kubernetes client instance when using the Java DSL Kubernetes command actions:
 

@@ -26,9 +26,9 @@ import io.fabric8.kubernetes.api.model.KubernetesResource;
 public interface CommandResultCallback<R extends KubernetesResource> {
 
     /**
-     * Callback method called with command result.
+     * Callback method called with command result for validation.
      * @param result
      * @param context
      */
-    void doWithCommandResult(CommandResult<R> result, TestContext context);
+    void validateCommandResult(CommandResult<R> result, TestContext context);
 }

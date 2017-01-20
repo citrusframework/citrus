@@ -29,7 +29,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
     </xs:complexType>
@@ -85,7 +85,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="name" type="xs:string"/>
@@ -101,7 +101,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -116,7 +116,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -171,7 +171,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="name" type="xs:string"/>
@@ -187,7 +187,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -202,7 +202,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -218,7 +218,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -233,7 +233,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -249,7 +249,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -264,7 +264,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -278,7 +278,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -293,7 +293,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -307,7 +307,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
@@ -322,14 +322,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="expect" type="ExpectCmdResultType" minOccurs="0"/>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
-  <xs:complexType name="ExpectCmdResultType">
+  <xs:complexType name="ValidateCommandResultType">
     <xs:annotation>
       <xs:documentation>Expects and validates a command result</xs:documentation>
     </xs:annotation>

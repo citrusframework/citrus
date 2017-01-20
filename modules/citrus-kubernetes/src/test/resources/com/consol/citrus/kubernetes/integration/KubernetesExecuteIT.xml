@@ -34,7 +34,7 @@
       </echo>
 
       <k8s:info>
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "clientVersion": "1.4.27",
@@ -44,7 +44,7 @@
               "namespace": "${namespace}"
             }
           }</k8s:result>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:info>
 
       <echo>
@@ -52,7 +52,7 @@
       </echo>
 
       <k8s:list-pods>
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "apiVersion":"${apiVersion}",
@@ -97,7 +97,7 @@
           <k8s:element path="$.result.items.size()" value="1"/>
           <k8s:element path="$..status.phase" value="Running"/>
           <k8s:element path="$..metadata.name" value="@variable('podName')@"/>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:list-pods>
 
       <echo>
@@ -105,7 +105,7 @@
       </echo>
 
       <k8s:list-services>
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "apiVersion":"${apiVersion}",
@@ -115,7 +115,7 @@
             }
           }</k8s:result>
           <k8s:element path="$.result.items.size()" value="2"/>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:list-services>
 
       <echo>
@@ -123,7 +123,7 @@
       </echo>
 
       <k8s:get-service name="hello-minikube">
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "apiVersion":"${apiVersion}",
@@ -161,7 +161,7 @@
               "status":"@ignore@"
             }
           }</k8s:result>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:get-service>
 
       <echo>
@@ -189,7 +189,7 @@
       </echo>
 
       <k8s:list-endpoints>
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "apiVersion":"${apiVersion}",
@@ -199,7 +199,7 @@
             }
           }</k8s:result>
           <k8s:element path="$.result.items.size()" value="2"/>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:list-endpoints>
       <k8s:list-events/>
 
@@ -208,7 +208,7 @@
       </echo>
 
       <k8s:get-pod name="${podName}">
-        <k8s:expect>
+        <k8s:validate>
           <k8s:result>{
             "result": {
               "apiVersion":"${apiVersion}",
@@ -259,7 +259,7 @@
             }
           }</k8s:result>
           <k8s:element path="$..status.phase" value="Running"/>
-        </k8s:expect>
+        </k8s:validate>
       </k8s:get-pod>
 
     </actions>

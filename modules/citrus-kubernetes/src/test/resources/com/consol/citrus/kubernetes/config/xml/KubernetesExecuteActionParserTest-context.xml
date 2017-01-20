@@ -13,11 +13,11 @@
             <k8s:info client="myK8sClient"/>
 
             <k8s:list-pods>
-                <k8s:expect>
+                <k8s:validate>
                     <k8s:result>{}</k8s:result>
                     <k8s:element path="$.apiVersion" value="v1"/>
                     <k8s:element path="$..name.toString()" value="[a,b,c,d]"/>
-                </k8s:expect>
+                </k8s:validate>
             </k8s:list-pods>
 
             <k8s:list-events/>
