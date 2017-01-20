@@ -30,7 +30,7 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
 
     @Test
     public void testActionParser() {
-        assertActionCount(22);
+        assertActionCount(23);
 
         StartBrowserAction startAction = (StartBrowserAction) getNextTestActionFromTest();
         Assert.assertNotNull(startAction.getBrowser());
@@ -86,6 +86,12 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         Assert.assertEquals(clickAction.getName(), "selenium:click");
         Assert.assertEquals(clickAction.getProperty(), "id");
         Assert.assertEquals(clickAction.getPropertyValue(), "edit-link");
+
+        HoverAction hoverAction = (HoverAction) getNextTestActionFromTest();
+        Assert.assertNull(hoverAction.getBrowser());
+        Assert.assertEquals(hoverAction.getName(), "selenium:hover");
+        Assert.assertEquals(hoverAction.getProperty(), "id");
+        Assert.assertEquals(hoverAction.getPropertyValue(), "edit-link");
 
         SetInputAction setInputAction = (SetInputAction) getNextTestActionFromTest();
         Assert.assertNull(setInputAction.getBrowser());

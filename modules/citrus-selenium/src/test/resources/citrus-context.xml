@@ -38,6 +38,7 @@
       <map>
         <entry key="/" value-ref="index"/>
         <entry key="/form" value-ref="form"/>
+        <entry key="/favicon.ico" value-ref="favicon"/>
       </map>
     </property>
   </bean>
@@ -59,6 +60,8 @@
       <citrus:element name="Content-Type" value="text/html"/>
     </citrus:header>
   </citrus:static-response-adapter>
+
+  <citrus:static-response-adapter id="favicon"/>
 
   <!-- Web page objects -->
   <bean id="userForm" class="com.consol.citrus.selenium.pages.UserFormPage" scope="prototype"/>

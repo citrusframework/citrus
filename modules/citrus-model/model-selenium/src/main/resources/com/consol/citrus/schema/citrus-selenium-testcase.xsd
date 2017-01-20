@@ -124,6 +124,7 @@
   </xs:element>
 
   <xs:element name="click" type="ElementActionType"/>
+  <xs:element name="hover" type="ElementActionType"/>
 
   <xs:element name="set-input">
     <xs:complexType>

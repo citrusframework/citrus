@@ -35,6 +35,7 @@ public class SeleniumTestcaseNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("find", new FindElementActionParser());
         registerBeanDefinitionParser("page", new PageActionParser());
         registerBeanDefinitionParser("click", new ClickActionParser());
+        registerBeanDefinitionParser("hover", new HoverActionParser());
         registerBeanDefinitionParser("set-input", new SetInputActionParser());
         registerBeanDefinitionParser("check-input", new CheckInputActionParser());
         registerBeanDefinitionParser("dropdown-select", new DropDownSelectActionParser());

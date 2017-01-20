@@ -38,6 +38,28 @@
         </selenium:element>
       </selenium:find>
 
+      <selenium:find>
+        <selenium:element id="hello-text" text="Hello!">
+          <selenium:styles>
+            <selenium:style name="background-color" value="rgba(0, 0, 0, 0)"/>
+            <selenium:style name="color" value="rgba(0, 0, 0, 1)"/>
+          </selenium:styles>
+        </selenium:element>
+      </selenium:find>
+
+      <selenium:hover>
+        <selenium:element id="hello-text"/>
+      </selenium:hover>
+
+      <selenium:find>
+        <selenium:element id="hello-text">
+          <selenium:styles>
+            <selenium:style name="background-color" value="rgba(0, 153, 0, 1)"/>
+            <selenium:style name="color" value="rgba(255, 255, 255, 1)"/>
+          </selenium:styles>
+        </selenium:element>
+      </selenium:find>
+
       <selenium:click>
         <selenium:element id="open-alert"/>
       </selenium:click>

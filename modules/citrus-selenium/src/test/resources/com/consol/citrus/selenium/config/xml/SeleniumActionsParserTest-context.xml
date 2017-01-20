@@ -42,6 +42,10 @@
                 <selenium:element id="edit-link"/>
             </selenium:click>
 
+            <selenium:hover>
+                <selenium:element id="edit-link"/>
+            </selenium:hover>
+
             <selenium:set-input value="new-value">
                 <selenium:element tag-name="input"/>
             </selenium:set-input>

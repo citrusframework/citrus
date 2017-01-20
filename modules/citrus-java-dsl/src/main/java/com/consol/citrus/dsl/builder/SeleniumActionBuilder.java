@@ -196,6 +196,15 @@ public class SeleniumActionBuilder extends AbstractTestActionBuilder<DelegatingT
     }
 
     /**
+     * Hover element.
+     */
+    public ElementActionBuilder hover() {
+		HoverAction action = new HoverAction();
+        action(action);
+        return new ElementActionBuilder(action);
+    }
+
+    /**
      * Clear browser cache.
      */
     public SeleniumActionBuilder clearCache() {

@@ -146,6 +146,7 @@ Citrus supports the following Selenium commands with respective test actions:
 *  **selenium:start** Start the browser instance 
 *  **selenium:find** Finds element on current page and validates element properties 
 *  **selenium:click** Performs click operation on element
+*  **selenium:hover** Performs hover operation on element
 *  **selenium:navigate** Navigates to new page url (including history back, forward and refresh) 
 *  **selenium:set-input** Finds input element and sets value 
 *  **selenium:check-input** Finds checkbox element and sets/unsets value 
@@ -294,6 +295,24 @@ The action performs a click operation on the element.
 
 ```java
 selenium().click().element(By.linkText("Click Me!"));
+```
+
+### Hover
+
+The action performs a hover operation on the element.
+
+**XML DSL** 
+
+```xml
+<selenium:hover>
+  <selenium:element link-text="Find Me!"/>
+</selenium:hover>
+```
+
+**Java DSL** 
+
+```java
+selenium().hover().element(By.linkText("Find Me!"));
 ```
 
 ### Form input actions
