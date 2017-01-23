@@ -244,6 +244,24 @@ Of course you can set the **Accept** header on each send operation in order to t
 
 Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.
 
+### HTTP client interceptors
+
+The client component is able to add custom interceptors that participate in the request/response processing. The interceptors need to implement the common interface **org.springframework.http.client.ClientHttpRequestInterceptor**.
+
+```xml
+<citrus-http:client id="helloHttpClient"
+                  request-url="http://localhost:8080/hello"
+                  request-method="GET"
+                  interceptors="clientInterceptors"/>
+
+<util:list id="clientInterceptors">
+  <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
+</util:list>
+```
+
+The sample above adds the Citrus logging client interceptor that logs requests and responses exchanged with that client component. You can add custom interceptor implementations here in order
+to participate in the request/response message processing.
+
 ### HTTP REST server
 
 The HTTP client was quite easy and straight forward. Receiving HTTP messages is a little bit more complicated because Citrus has to provide server functionality listening on a local port for client connections. Therefore Citrus offers an embedded HTTP server which is capable of handling incoming HTTP requests. Once a client connection is accepted the HTTP server must also provide a proper HTTP response to the client. In the next few lines you will see how to simulate server side HTTP REST service with Citrus.
@@ -507,6 +525,24 @@ The next example receives a HTTP GET method request on server side. Here the GET
 Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.
 
 As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.
+
+### HTTP server interceptors
+
+The server component is able to add custom interceptors that participate in the request/response processing. The interceptors need to implement the common interface **org.springframework.web.servlet.HandlerInterceptor**.
+
+```xml
+<citrus-http:server id="httpServer"
+                  port="8080"
+                  auto-start="true"
+                  interceptors="serverInterceptors"/>
+
+<util:list id="serverInterceptors">
+  <bean class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
+</util:list>
+```
+
+The sample above adds the Citrus logging handler interceptor that logs requests and responses exchanged with that server component. You can add custom interceptor implementations here in order
+to participate in the request/response message processing.
 
 ### HTTP form urlencoded data
 

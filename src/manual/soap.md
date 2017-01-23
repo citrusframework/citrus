@@ -95,6 +95,31 @@ The **dynamicEndpointResolver** bean must implement the EndpointUriResolver inte
 
 As you can see you can use dynamic test variables then in order to build the request uri to use. The SOAP client evaluates the endpoint uri header and sends the message to this server resource. You can use a different uri value then in different test cases and send actions.
 
+### SOAP client interceptors
+
+The client component is able to add custom interceptors that participate in the request/response processing. The interceptors need to implement the common interface **org.springframework.ws.client.support.interceptor.ClientInterceptor**.
+
+```xml
+<citrus-ws:client id="secureSoapClient"
+                  request-url="http://localhost:8080/services/ws/todolist"
+                  interceptors="clientInterceptors"/>
+
+<util:list id="clientInterceptors">
+  <bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Timestamp UsernameToken"/>
+    <property name="securementUsername" value="admin"/>
+    <property name="securementPassword" value="secret"/>
+  </bean>
+  <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
+</util:list>
+```
+
+The sample above adds Wss4J WsSecurity interceptors in order to add security constraints to the request messages.
+
+**Note**
+When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors exlicitly as shown with the *com.consol.citrus.ws.interceptor.LoggingClientInterceptor* which
+is able to log request/response messages during communication.
+
 ### SOAP server
 
 Every client need a server to talk to. When receiving SOAP messages we require a web server instance listening on a port. Citrus is using an embedded Jetty server instance in combination with the Spring Web Service API in order to accept SOAP request calls asa server. See how the Citrus SOAP server is configured in the Spring configuration.
@@ -417,6 +442,47 @@ With this configuration Citrus will handle all available mime headers and pass t
 ```
 
 So now you are able to validate the whole SOAP envelope as is. This might be of interest in very special cases. As mentioned by default the Citrus server will automatically remove the SOAP envelope and translate the SOAP body to the message payload for straight forward validation inside the test cases.
+
+### SOAP server interceptors
+
+The Citrus SOAP server supports the concept of interceptors in order to add custom logic to the request/response processing steps. The interceptors need to implement a common interface: **org.springframework.ws.server.EndpointInterceptor**. We are able to customize the interceptor
+chain on the server component as follows:
+
+```xml
+<citrus-ws:server id="secureSoapServer"
+                  port="8080"
+                  auto-start="true"
+                  interceptors="serverInterceptors"/>
+
+<util:list id="serverInterceptors">
+  <bean class="com.consol.citrus.ws.interceptor.SoapMustUnderstandEndpointInterceptor">
+    <property name="acceptedHeaders">
+      <list>
+        <value>{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}Security</value>
+      </list>
+    </property>
+  </bean>
+  <bean class="com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor"/>
+  <bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="Timestamp UsernameToken"/>
+    <property name="validationCallbackHandler">
+      <bean id="passwordCallbackHandler" class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
+        <property name="usersMap">
+          <map>
+            <entry key="admin" value="secret"/>
+          </map>
+        </property>
+      </bean>
+    </property>
+  </bean>
+</util:list>
+```
+
+The custom interceptors are used to enable WsSecurity features on the soap server component via Wss4J.
+
+**Note**
+When customizing the interceptor chain of the soap server component all default interceptors (like logging interceptors) are lost. You can see that we had to add
+the *com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor* explicitly in order to log request/response messages for the server communication.
 
 ### SOAP 1.2
 
