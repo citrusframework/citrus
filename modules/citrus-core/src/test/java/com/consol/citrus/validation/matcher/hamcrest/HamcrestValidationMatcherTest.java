@@ -20,8 +20,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -38,35 +37,38 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
     @DataProvider
     public Object[][] testData() {
         return new Object[][] {
-            new Object[]{ "foo", "value", Arrays.asList("equalTo(value)") },
-            new Object[]{"foo", "value", Arrays.asList("not(equalTo(other))")},
-            new Object[]{"foo", "value", Arrays.asList("is(not(other))")},
-            new Object[]{"foo", "value", Arrays.asList("not(is(other))")},
-            new Object[]{"foo", "value", Arrays.asList("equalToIgnoringCase(VALUE)")},
-            new Object[]{"foo", "value", Arrays.asList("containsString(lue)")},
-            new Object[]{"foo", "value", Arrays.asList("not(containsString(other))")},
-            new Object[]{"foo", "value", Arrays.asList("startsWith(val)")},
-            new Object[]{"foo", "value", Arrays.asList("endsWith(lue)")},
-            new Object[]{"foo", "value", Arrays.asList("anyOf(startsWith(val), endsWith(lue))")},
-            new Object[]{"foo", "value", Arrays.asList("allOf(startsWith(val), endsWith(lue))")},
-            new Object[]{"foo", "", Arrays.asList("isEmptyString()")},
-            new Object[]{"foo", "bar", Arrays.asList("not(isEmptyString())")},
-            new Object[]{"foo", null, Arrays.asList("isEmptyOrNullString()")},
-            new Object[]{"foo", null, Arrays.asList("nullValue()")},
-            new Object[]{"foo", "bar", Arrays.asList("notNullValue()")},
-            new Object[]{"foo", "[]", Arrays.asList("empty()")},
-            new Object[]{"foo", "", Arrays.asList("empty()")},
-            new Object[]{"foo", "bar", Arrays.asList("not(empty())")},
-            new Object[]{"foo", "5", Arrays.asList("greaterThan(4)")},
-            new Object[]{"foo", "5", Arrays.asList("allOf(greaterThan(4), lessThan(6), not(lessThan(5)))")},
-            new Object[]{"foo", "5", Arrays.asList("is(not(greaterThan(5)))")},
-            new Object[]{"foo", "5", Arrays.asList("greaterThanOrEqualTo(5)")},
-            new Object[]{"foo", "4", Arrays.asList("lessThan(5)")},
-            new Object[]{"foo", "4", Arrays.asList("not(lessThan(1))")},
-            new Object[]{"foo", "4", Arrays.asList("lessThanOrEqualTo(4)")},
-            new Object[]{"foo", "", Arrays.asList("1", "lessThanOrEqualTo(4)")},
-            new Object[]{"foo", "", Arrays.asList("4", "lessThanOrEqualTo(4)")},
-            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Arrays.asList("hasSize(5)") }
+            new Object[]{ "foo", "value", Collections.singletonList("equalTo(value)") },
+            new Object[]{"foo", "value", Collections.singletonList("not(equalTo(other))")},
+            new Object[]{"foo", "value", Collections.singletonList("is(not(other))")},
+            new Object[]{"foo", "value", Collections.singletonList("not(is(other))")},
+            new Object[]{"foo", "value", Collections.singletonList("equalToIgnoringCase(VALUE)")},
+            new Object[]{"foo", "value", Collections.singletonList("containsString(lue)")},
+            new Object[]{"foo", "value", Collections.singletonList("not(containsString(other))")},
+            new Object[]{"foo", "value", Collections.singletonList("startsWith(val)")},
+            new Object[]{"foo", "value", Collections.singletonList("endsWith(lue)")},
+            new Object[]{"foo", "value", Collections.singletonList("anyOf(startsWith(val), endsWith(lue))")},
+            new Object[]{"foo", "value", Collections.singletonList("allOf(startsWith(val), endsWith(lue))")},
+            new Object[]{"foo", "", Collections.singletonList("isEmptyString()")},
+            new Object[]{"foo", "bar", Collections.singletonList("not(isEmptyString())")},
+            new Object[]{"foo", null, Collections.singletonList("isEmptyOrNullString()")},
+            new Object[]{"foo", null, Collections.singletonList("nullValue()")},
+            new Object[]{"foo", "bar", Collections.singletonList("notNullValue()")},
+            new Object[]{"foo", "[]", Collections.singletonList("empty()")},
+            new Object[]{"foo", "", Collections.singletonList("empty()")},
+            new Object[]{"foo", "bar", Collections.singletonList("not(empty())")},
+            new Object[]{"foo", "10", Collections.singletonList("greaterThan(9)")},
+            new Object[]{"foo", "10.0", Collections.singletonList("greaterThan(9.0)")},
+            new Object[]{"foo", "10.4", Collections.singletonList("greaterThanOrEqualTo(10.4)")},
+            new Object[]{"foo", "10.5", Collections.singletonList("greaterThanOrEqualTo(10.4)")},
+            new Object[]{"foo", "10", Collections.singletonList("allOf(greaterThan(9), lessThan(11), not(lessThan(10)))")},
+            new Object[]{"foo", "10", Collections.singletonList("is(not(greaterThan(10)))")},
+            new Object[]{"foo", "10", Collections.singletonList("greaterThanOrEqualTo(10)")},
+            new Object[]{"foo", "9", Collections.singletonList("lessThan(10)")},
+            new Object[]{"foo", "9", Collections.singletonList("not(lessThan(1))")},
+            new Object[]{"foo", "9", Collections.singletonList("lessThanOrEqualTo(9)")},
+            new Object[]{"foo", "", Arrays.asList("1", "lessThanOrEqualTo(9)")},
+            new Object[]{"foo", "", Arrays.asList("9", "lessThanOrEqualTo(9)")},
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("hasSize(5)") }
         };
     }
 
@@ -79,33 +81,36 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
     @DataProvider
     public Object[][] testDataFailed() {
         return new Object[][] {
-            new Object[]{ "foo", "value", Arrays.asList("equalTo(wrong)") },
-            new Object[]{"foo", "value", Arrays.asList("not(equalTo(value))")},
-            new Object[]{"foo", "value", Arrays.asList("is(not(value))")},
-            new Object[]{"foo", "value", Arrays.asList("not(is(value))")},
-            new Object[]{"foo", "value", Arrays.asList("equalToIgnoringCase(WRONG)")},
-            new Object[]{"foo", "value", Arrays.asList("containsString(wrong)")},
-            new Object[]{"foo", "value", Arrays.asList("not(containsString(value))")},
-            new Object[]{"foo", "value", Arrays.asList("startsWith(wrong)")},
-            new Object[]{"foo", "value", Arrays.asList("endsWith(wrong)")},
-            new Object[]{"foo", "value", Arrays.asList("anyOf(startsWith(wrong), endsWith(wrong))")},
-            new Object[]{"foo", "value", Arrays.asList("allOf(startsWith(wrong), endsWith(wrong))")},
-            new Object[]{"foo", "bar", Arrays.asList("isEmptyString()")},
-            new Object[]{"foo", "", Arrays.asList("not(isEmptyString())")},
-            new Object[]{"foo", "bar", Arrays.asList("isEmptyOrNullString()")},
-            new Object[]{"foo", "bar", Arrays.asList("nullValue()")},
-            new Object[]{"foo", null, Arrays.asList("notNullValue()")},
-            new Object[]{"foo", "[bar]", Arrays.asList("empty()")},
-            new Object[]{"foo", "bar", Arrays.asList("empty()")},
-            new Object[]{"foo", "4", Arrays.asList("greaterThan(4)")},
-            new Object[]{"foo", "4", Arrays.asList("allOf(greaterThan(4), lessThan(6), not(lessThan(5)))")},
-            new Object[]{"foo", "6", Arrays.asList("is(not(greaterThan(5)))")},
-            new Object[]{"foo", "4", Arrays.asList("greaterThanOrEqualTo(5)")},
-            new Object[]{"foo", "5", Arrays.asList("lessThan(5)")},
-            new Object[]{"foo", "0", Arrays.asList("not(lessThan(1))")},
-            new Object[]{"foo", "5", Arrays.asList("lessThanOrEqualTo(4)")},
-            new Object[]{"foo", "", Arrays.asList("5", "lessThanOrEqualTo(4)")},
-            new Object[]{"foo", "[value1,value2]", Arrays.asList("hasSize(5)") }
+            new Object[]{ "foo", "value", Collections.singletonList("equalTo(wrong)") },
+            new Object[]{"foo", "value", Collections.singletonList("not(equalTo(value))")},
+            new Object[]{"foo", "value", Collections.singletonList("is(not(value))")},
+            new Object[]{"foo", "value", Collections.singletonList("not(is(value))")},
+            new Object[]{"foo", "value", Collections.singletonList("equalToIgnoringCase(WRONG)")},
+            new Object[]{"foo", "value", Collections.singletonList("containsString(wrong)")},
+            new Object[]{"foo", "value", Collections.singletonList("not(containsString(value))")},
+            new Object[]{"foo", "value", Collections.singletonList("startsWith(wrong)")},
+            new Object[]{"foo", "value", Collections.singletonList("endsWith(wrong)")},
+            new Object[]{"foo", "value", Collections.singletonList("anyOf(startsWith(wrong), endsWith(wrong))")},
+            new Object[]{"foo", "value", Collections.singletonList("allOf(startsWith(wrong), endsWith(wrong))")},
+            new Object[]{"foo", "bar", Collections.singletonList("isEmptyString()")},
+            new Object[]{"foo", "", Collections.singletonList("not(isEmptyString())")},
+            new Object[]{"foo", "bar", Collections.singletonList("isEmptyOrNullString()")},
+            new Object[]{"foo", "bar", Collections.singletonList("nullValue()")},
+            new Object[]{"foo", null, Collections.singletonList("notNullValue()")},
+            new Object[]{"foo", "[bar]", Collections.singletonList("empty()")},
+            new Object[]{"foo", "bar", Collections.singletonList("empty()")},
+            new Object[]{"foo", "9", Collections.singletonList("greaterThan(9)")},
+            new Object[]{"foo", "9.0", Collections.singletonList("greaterThan(9.0)")},
+            new Object[]{"foo", "9.3", Collections.singletonList("greaterThanOrEqualTo(9.4)")},
+            new Object[]{"foo", "9", Collections.singletonList("allOf(greaterThan(9), lessThan(11), not(lessThan(10)))")},
+            new Object[]{"foo", "11", Collections.singletonList("is(not(greaterThan(10)))")},
+            new Object[]{"foo", "9", Collections.singletonList("greaterThanOrEqualTo(10)")},
+            new Object[]{"foo", "10", Collections.singletonList("lessThan(10)")},
+            new Object[]{"foo", "ten", Collections.singletonList("lessThan(10)")},
+            new Object[]{"foo", "0", Collections.singletonList("not(lessThan(1))")},
+            new Object[]{"foo", "10", Collections.singletonList("lessThanOrEqualTo(9)")},
+            new Object[]{"foo", "", Arrays.asList("10", "lessThanOrEqualTo(9)")},
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("hasSize(5)") }
         };
     }
 }

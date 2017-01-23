@@ -39,15 +39,15 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
 
     private List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith" );
 
-    private List<String> collectionMatchers = Arrays.asList( "hasSize" );
+    private List<String> collectionMatchers = Collections.singletonList("hasSize");
 
-    private List<String> comparableMatchers = Arrays.asList( "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo" );
+    private List<String> numericMatchers = Arrays.asList( "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo" );
 
     private List<String> containerMatchers = Arrays.asList( "is", "not" );
 
     private List<String> noArgumentMatchers = Arrays.asList( "isEmptyString", "isEmptyOrNullString", "nullValue", "notNullValue", "anything" );
 
-    private List<String> noArgumentCollectionMatchers = Arrays.asList( "empty" );
+    private List<String> noArgumentCollectionMatchers = Collections.singletonList("empty");
 
     private List<String> iterableMatchers = Arrays.asList( "contains", "anyOf", "allOf" );
 
@@ -66,15 +66,24 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
         String matcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
         String[] matcherParameter = matcherExpression.trim().substring(matcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
+        Matcher matcher = getMatcher(matcherName, matcherParameter);
         if (noArgumentCollectionMatchers.contains(matcherName) || collectionMatchers.contains(matcherName)) {
-            assertThat(getCollection(matcherValue), getMatcher(matcherName, matcherParameter));
-            return;
+            assertThat(getCollection(matcherValue), matcher);
+        } else if (numericMatchers.contains(matcherName)) {
+            assertThat(new NumericComparable(matcherValue), matcher);
+        } else if (iterableMatchers.contains(matcherName) && containsNumericMatcher(matcherExpression)) {
+            assertThat(new NumericComparable(matcherValue), matcher);
         } else {
-            assertThat(matcherValue, getMatcher(matcherName, matcherParameter));
-            return;
+            assertThat(matcherValue, matcher);
         }
     }
 
+    /**
+     * Construct matcher by name and parameters.
+     * @param matcherName
+     * @param matcherParameter
+     * @return
+     */
     private Matcher getMatcher(String matcherName, String[] matcherParameter) {
         try {
             if (noArgumentMatchers.contains(matcherName)) {
@@ -137,7 +146,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
                 }
             }
 
-            if (comparableMatchers.contains(matcherName)) {
+            if (numericMatchers.contains(matcherName)) {
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, Comparable.class);
 
                 if (matcherMethod != null) {
@@ -159,6 +168,11 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
         throw new CitrusRuntimeException("Unsupported matcher: " + matcherName);
     }
 
+    /**
+     * Construct collection from delimited string expression.
+     * @param value
+     * @return
+     */
     private Set<String> getCollection(String value) {
         String arrayString = value;
 
@@ -169,5 +183,74 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
         return StringUtils.commaDelimitedListToSet(arrayString);
     }
 
+    /**
+     * Checks for numeric matcher presence in expression.
+     * @param matcherExpression
+     * @return
+     */
+    private boolean containsNumericMatcher(String matcherExpression) {
+        for (String numericMatcher : numericMatchers) {
+            if (matcherExpression.contains(numericMatcher)) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    /**
+     * Numeric value comparable automatically converts types to numeric values for
+     * comparison.
+     */
+    private class NumericComparable implements Comparable {
+
+        private Long number = null;
+        private Double decimal = null;
+
+        /**
+         * Constructor initializing numeric value from string.
+         * @param value
+         */
+        public NumericComparable(String value) {
+            if (value.contains(".")) {
+                this.decimal = Double.parseDouble(value);
+            } else {
+                try {
+                    this.number = Long.parseLong(value);
+                } catch (NumberFormatException e) {
+                    throw new AssertionError(e);
+                }
+            }
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            if (number != null) {
+                if (o instanceof String || o instanceof NumericComparable) {
+                    return number.compareTo(Long.parseLong(o.toString()));
+                } else if (o instanceof Long) {
+                    return number.compareTo((Long) o);
+                }
+            }
+
+            if (decimal != null) {
+                if (o instanceof String || o instanceof NumericComparable) {
+                    return decimal.compareTo(Double.parseDouble(o.toString()));
+                } else if (o instanceof Double) {
+                    return decimal.compareTo((Double) o);
+                }
+            }
+
+            return 0;
+        }
+
+        @Override
+        public String toString() {
+            if (number != null) {
+                return number.toString();
+            } else {
+                return decimal.toString();
+            }
+        }
+    }
 }
