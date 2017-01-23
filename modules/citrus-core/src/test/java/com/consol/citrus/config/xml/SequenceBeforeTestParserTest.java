@@ -41,7 +41,7 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         beanDefinitionContext = createApplicationContext("context");
         Map<String, SequenceBeforeTest> container = beanDefinitionContext.getBeansOfType(SequenceBeforeTest.class);
 
-        Assert.assertEquals(container.size(), 4L);
+        Assert.assertEquals(container.size(), 5L);
 
         SequenceBeforeTest sequenceBefore = container.get("beforeTest");
         Assert.assertEquals(sequenceBefore.getName(), "beforeTest");
@@ -111,6 +111,25 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "com.consol.citrus.database", new String[]{"other", "unit", "e2e"}));
         Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "com.consol.citrus.database", new String[] {"e2e"}));
         Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "com.consol.citrus.database", new String[] {"other", "unit", "e2e"}));
+
+        sequenceBefore.execute(context);
+
+        sequenceBefore = container.get("beforeTest5");
+        Assert.assertEquals(sequenceBefore.getName(), "beforeTest5");
+        Assert.assertNull(sequenceBefore.getNamePattern());
+        Assert.assertNull(sequenceBefore.getPackageNamePattern());
+        Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
+        Assert.assertEquals(sequenceBefore.getEnv().size(), 1L);
+        Assert.assertEquals(sequenceBefore.getSystemProperties().size(), 1L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
+
+        Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
+
+        Assert.assertFalse(sequenceBefore.shouldExecute("Foo_OK_Test", "com.consol.citrus", null));
+        System.setProperty("before-test", "false");
+        Assert.assertFalse(sequenceBefore.shouldExecute("Foo_OK_Test", "com.consol.citrus", null));
+        System.setProperty("before-test", "true");
+        Assert.assertTrue(sequenceBefore.shouldExecute("Foo_OK_Test", "com.consol.citrus", null));
 
         sequenceBefore.execute(context);
     }

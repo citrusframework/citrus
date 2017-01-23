@@ -72,6 +72,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     /** Marks this test case as test runner instance that grows in size step by step as test actions are executed */
     private boolean testRunner = false;
 
+    /** Test groups */
+    private String[] groups;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
 
@@ -176,7 +179,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         if (beforeTest != null) {
             for (SequenceBeforeTest sequenceBeforeTest : beforeTest) {
                 try {
-                    if (sequenceBeforeTest.shouldExecute(getName(), getPackageName(), null)) //TODO provide test group information
+                    if (sequenceBeforeTest.shouldExecute(getName(), getPackageName(), groups))
                         sequenceBeforeTest.execute(context);
                 } catch (Exception e) {
                     throw new CitrusRuntimeException("Before test failed with errors", e);
@@ -196,7 +199,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         if (afterTest != null) {
             for (SequenceAfterTest sequenceAfterTest : afterTest) {
                 try {
-                    if (sequenceAfterTest.shouldExecute(getName(), getPackageName(), null)) {
+                    if (sequenceAfterTest.shouldExecute(getName(), getPackageName(), groups)) {
                         sequenceAfterTest.execute(context);
                     }
                 } catch (Exception e) {
@@ -466,5 +469,23 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public void setTestResult(TestResult testResult) {
         this.testResult = testResult;
+    }
+
+    /**
+     * Gets the groups.
+     *
+     * @return
+     */
+    public String[] getGroups() {
+        return groups;
+    }
+
+    /**
+     * Sets the groups.
+     *
+     * @param groups
+     */
+    public void setGroups(String[] groups) {
+        this.groups = groups;
     }
 }

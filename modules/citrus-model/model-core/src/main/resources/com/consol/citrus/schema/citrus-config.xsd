@@ -69,6 +69,20 @@
         <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
 
+    <xs:complexType name="PropertiesType">
+      <xs:annotation>
+        <xs:documentation>Basic property with name and optional value.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="property" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="channel-endpoint">
       <xs:annotation>
         <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
@@ -321,6 +335,8 @@
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
+          <xs:element name="env" minOccurs="0" type="PropertiesType"/>
+          <xs:element name="system" minOccurs="0" type="PropertiesType"/>
           <xs:element name="actions">
             <xs:complexType>
               <xs:sequence>
@@ -345,6 +361,8 @@
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
+          <xs:element name="env" minOccurs="0" type="PropertiesType"/>
+          <xs:element name="system" minOccurs="0" type="PropertiesType"/>
           <xs:element name="actions">
             <xs:complexType>
               <xs:sequence>
@@ -369,6 +387,8 @@
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
+          <xs:element name="env" minOccurs="0" type="PropertiesType"/>
+          <xs:element name="system" minOccurs="0" type="PropertiesType"/>
           <xs:element name="actions">
             <xs:complexType>
               <xs:sequence>
@@ -394,6 +414,8 @@
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
+          <xs:element name="env" minOccurs="0" type="PropertiesType"/>
+          <xs:element name="system" minOccurs="0" type="PropertiesType"/>
           <xs:element name="actions">
             <xs:complexType>
               <xs:sequence>

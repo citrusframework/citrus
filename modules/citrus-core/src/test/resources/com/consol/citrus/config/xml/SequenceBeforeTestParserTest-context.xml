@@ -63,6 +63,20 @@
     </citrus:actions>
   </citrus:before-test>
 
+  <citrus:before-test id="beforeTest5">
+    <citrus:env>
+      <citrus:property name="USER"/>
+    </citrus:env>
+    <citrus:system>
+      <citrus:property name="before-test" value="true"/>
+    </citrus:system>
+    <citrus:actions>
+      <action:echo>
+        <action:message>Hello Citrus!</action:message>
+      </action:echo>
+    </citrus:actions>
+  </citrus:before-test>
+
   <bean id="customAction" class="com.consol.citrus.actions.CustomTestAction"/>
 
   <citrus:channel-endpoint id="customEndpoint"/>

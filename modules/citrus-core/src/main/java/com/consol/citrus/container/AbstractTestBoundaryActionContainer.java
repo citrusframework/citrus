@@ -18,11 +18,9 @@ package com.consol.citrus.container;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.PatternMatchUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Abstract test action container describes methods to enable/disable container execution based on given test name, package
@@ -44,6 +42,12 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
 
     /** List of test group names that match for this container */
     private List<String> testGroups = new ArrayList<String>();
+
+    /** Optional env parameters */
+    private Map<String, String> env = new HashMap<>();
+
+    /** Optional system properties */
+    private Map<String, String> systemProperties = new HashMap<>();
 
     /**
      * Checks if this suite actions should execute according to suite name and included test groups.
@@ -80,6 +84,25 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
             return false;
         }
 
+        for (Map.Entry<String, String> envEntry : env.entrySet()) {
+            if (!System.getenv().containsKey(envEntry.getKey()) ||
+                    (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
+                if (log.isDebugEnabled())  {
+                    log.debug(String.format(baseErrorMessage, "env properties", getName()));
+                }
+                return false;
+            }
+        }
+
+        for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
+            if (!System.getProperties().containsKey(systemProperty.getKey()) ||
+                    (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
+                if (log.isDebugEnabled())  {
+                    log.debug(String.format(baseErrorMessage, "system properties", getName()));
+                }
+                return false;
+            }
+        }
 
         return true;
     }
@@ -153,5 +176,41 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
      */
     public void setPackageNamePattern(String packageNamePattern) {
         this.packageNamePattern = packageNamePattern;
+    }
+
+    /**
+     * Gets the env.
+     *
+     * @return
+     */
+    public Map<String, String> getEnv() {
+        return env;
+    }
+
+    /**
+     * Sets the env.
+     *
+     * @param env
+     */
+    public void setEnv(Map<String, String> env) {
+        this.env = env;
+    }
+
+    /**
+     * Gets the systemProperties.
+     *
+     * @return
+     */
+    public Map<String, String> getSystemProperties() {
+        return systemProperties;
+    }
+
+    /**
+     * Sets the systemProperties.
+     *
+     * @param systemProperties
+     */
+    public void setSystemProperties(Map<String, String> systemProperties) {
+        this.systemProperties = systemProperties;
     }
 }

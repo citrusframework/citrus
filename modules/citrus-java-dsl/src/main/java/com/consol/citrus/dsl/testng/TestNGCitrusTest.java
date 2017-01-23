@@ -102,6 +102,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
             testResult.setAttribute(RUNNER_ATTRIBUTE, testRunner);
 
             TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
+            testCase.setGroups(testResult.getMethod().getGroups());
 
             CitrusAnnotations.injectAll(this, citrus, ctx);
 

@@ -42,7 +42,7 @@ public class SequenceAfterTestParserTest extends AbstractBeanDefinitionParserTes
         beanDefinitionContext = createApplicationContext("context");
         Map<String, SequenceAfterTest> container = beanDefinitionContext.getBeansOfType(SequenceAfterTest.class);
 
-        Assert.assertEquals(container.size(), 4L);
+        Assert.assertEquals(container.size(), 5L);
 
         SequenceAfterTest sequenceAfter = container.get("afterTest");
         Assert.assertEquals(sequenceAfter.getName(), "afterTest");
@@ -112,6 +112,25 @@ public class SequenceAfterTestParserTest extends AbstractBeanDefinitionParserTes
         Assert.assertTrue(sequenceAfter.shouldExecute("Foo_OK_Test", "com.consol.citrus.database", new String[]{"other", "unit", "e2e"}));
         Assert.assertTrue(sequenceAfter.shouldExecute("Foo_OK_Test", "com.consol.citrus.database", new String[] {"e2e"}));
         Assert.assertTrue(sequenceAfter.shouldExecute("Foo_OK_Test", "com.consol.citrus.database", new String[] {"other", "unit", "e2e"}));
+
+        sequenceAfter.execute(context);
+
+        sequenceAfter = container.get("afterTest5");
+        Assert.assertEquals(sequenceAfter.getName(), "afterTest5");
+        Assert.assertNull(sequenceAfter.getNamePattern());
+        Assert.assertNull(sequenceAfter.getPackageNamePattern());
+        Assert.assertEquals(sequenceAfter.getTestGroups().size(), 0L);
+        Assert.assertEquals(sequenceAfter.getEnv().size(), 1L);
+        Assert.assertEquals(sequenceAfter.getSystemProperties().size(), 1L);
+        Assert.assertEquals(sequenceAfter.getActionCount(), 1L);
+
+        Assert.assertEquals(sequenceAfter.getActions().get(0).getClass(), EchoAction.class);
+
+        Assert.assertFalse(sequenceAfter.shouldExecute("Foo_OK_Test", "com.consol.citrus", null));
+        System.setProperty("after-test", "false");
+        Assert.assertFalse(sequenceAfter.shouldExecute("Foo_OK_Test", "com.consol.citrus", null));
+        System.setProperty("after-test", "true");
+        Assert.assertTrue(sequenceAfter.shouldExecute("Foo_OK_Test", "com.consol.citrus", null));
 
         sequenceAfter.execute(context);
     }

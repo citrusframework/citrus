@@ -26,8 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -47,6 +46,32 @@ public abstract class AbstractTestBoundaryActionContainerParser implements BeanD
         if (element.hasAttribute("groups")) {
             List<String> groups = Arrays.asList(StringUtils.commaDelimitedListToStringArray(element.getAttribute("groups")));
             builder.addPropertyValue("testGroups", groups);
+        }
+
+        Map<String, String> envProperties = new HashMap<>();
+        Element envElement = DomUtils.getChildElementByTagName(element, "env");
+        if (envElement != null) {
+            List<Element> propertyElements = DomUtils.getChildElementsByTagName(envElement, "property");
+            for (Element property : propertyElements) {
+                envProperties.put(property.getAttribute("name"), property.getAttribute("value"));
+            }
+        }
+
+        if (!envProperties.isEmpty()) {
+            builder.addPropertyValue("env", envProperties);
+        }
+
+        Map<String, String> systemProperties = new HashMap<>();
+        Element systemElement = DomUtils.getChildElementByTagName(element, "system");
+        if (systemElement != null) {
+            List<Element> propertyElements = DomUtils.getChildElementsByTagName(systemElement, "property");
+            for (Element property : propertyElements) {
+                systemProperties.put(property.getAttribute("name"), property.getAttribute("value"));
+            }
+        }
+
+        if (!systemProperties.isEmpty()) {
+            builder.addPropertyValue("systemProperties", systemProperties);
         }
 
         ActionContainerParser.doParse(DomUtils.getChildElementByTagName(element, "actions"), parserContext, builder);

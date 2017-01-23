@@ -29,6 +29,18 @@
     </citrus:actions>
   </citrus:after-suite>
 
+  <citrus:after-suite id="afterSuite3">
+    <citrus:env>
+      <citrus:property name="USER"/>
+    </citrus:env>
+    <citrus:system>
+      <citrus:property name="after-suite" value="true"/>
+    </citrus:system>
+    <citrus:actions>
+      <action:sleep milliseconds="1000"/>
+    </citrus:actions>
+  </citrus:after-suite>
+
   <bean id="customAction" class="com.consol.citrus.actions.CustomTestAction"/>
 
   <citrus:channel-endpoint id="customEndpoint"/>

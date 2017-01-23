@@ -41,7 +41,7 @@ public class SequenceAfterSuiteParserTest extends AbstractBeanDefinitionParserTe
         beanDefinitionContext = createApplicationContext("context");
         Map<String, SequenceAfterSuite> container = beanDefinitionContext.getBeansOfType(SequenceAfterSuite.class);
 
-        Assert.assertEquals(container.size(), 2L);
+        Assert.assertEquals(container.size(), 3L);
 
         SequenceAfterSuite sequenceAfter = container.get("afterSuite");
         Assert.assertEquals(sequenceAfter.getName(), "afterSuite");
@@ -79,6 +79,23 @@ public class SequenceAfterSuiteParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertTrue(sequenceAfter.shouldExecute("suiteA", new String[] {"e2e"}));
         Assert.assertTrue(sequenceAfter.shouldExecute("suiteB", new String[] {"other", "unit", "e2e"}));
 
+        Assert.assertEquals(sequenceAfter.getActions().get(0).getClass(), SleepAction.class);
+
+        sequenceAfter.execute(context);
+
+        sequenceAfter = container.get("afterSuite3");
+        Assert.assertEquals(sequenceAfter.getName(), "afterSuite3");
+        Assert.assertEquals(sequenceAfter.getSuiteNames().size(), 0L);
+        Assert.assertEquals(sequenceAfter.getTestGroups().size(), 0L);
+        Assert.assertEquals(sequenceAfter.getEnv().size(), 1L);
+        Assert.assertEquals(sequenceAfter.getSystemProperties().size(), 1L);
+        Assert.assertEquals(sequenceAfter.getActionCount(), 1L);
+
+        Assert.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
+        System.setProperty("after-suite", "false");
+        Assert.assertFalse(sequenceAfter.shouldExecute("suiteA", null));
+        System.setProperty("after-suite", "true");
+        Assert.assertTrue(sequenceAfter.shouldExecute("suiteA", null));
         Assert.assertEquals(sequenceAfter.getActions().get(0).getClass(), SleepAction.class);
 
         sequenceAfter.execute(context);

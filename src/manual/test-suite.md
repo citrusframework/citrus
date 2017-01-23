@@ -25,7 +25,7 @@ It is important to notice that the Citrus configuration components that we are g
 
 You can influence the behavior of a test run in the initialization phase actually before the tests are executed. See the next code example to find out how it works with actions that take place before the first test is executed:
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:before-suite id="actionsBeforeSuite">
@@ -37,13 +37,13 @@ XML Config
 
 The Citrus configuration component holds a list of Citrus test actions that get executed before the test suite run. You can add all Citrus test actions here as you would do in a normal test case definition.
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:before-suite id="actionsBeforeSuite">
     <citrus:actions>
         <citrus-test:sql dataSource="testDataSource"/>
-            <citrus-test:statement">CREATE TABLE PERSON (ID integer, NAME char(250))</citrus-test:statement>
+            <citrus-test:statement>CREATE TABLE PERSON (ID integer, NAME char(250))</citrus-test:statement>
         </citrus-test:sql>
     </citrus:actions>
 </citrus:before-suite>
@@ -56,7 +56,7 @@ Citrus offers special startup and shutdown actions that may start and stop serve
 
 So far we have used XML DSL actions in before suite configuration. Now if you exclusively want to use Java DSL you can do the same with adding a custom class that extends **TestDesignerBeforeSuiteSupport** or **TestRunnerBeforeSuiteSupport** .
 
-Java DSL designer
+**Java DSL designer**
 
 ```java
 public class MyBeforeSuite extends TestDesignerBeforeSuiteSupport {
@@ -75,7 +75,7 @@ The custom implementation extends **TestDesignerBeforeSuiteSupport** and therefo
 
 Of course you can also use other Spring bean mechanisms such as component-scans here too. The respective test runner implementation extends the **TestRunnerBeforeSuiteSupport** and gets a test runner instance as method argument injected.
 
-Java DSL runner
+**Java DSL runner**
 
 ```java
 public class MyBeforeSuite extends TestRunnerBeforeSuiteSupport {
@@ -86,23 +86,22 @@ public class MyBeforeSuite extends TestRunnerBeforeSuiteSupport {
 }
 ```
 
-You can have many before-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name or test group names that should match accordingly:
+You can have many before-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name, test group names, environment or system properties that should match accordingly:
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:before-suite id="actionsBeforeSuite" suites="databaseSuite" groups="e2e">
     <citrus:actions>
         <citrus-test:sql dataSource="testDataSource"/>
-            <citrus-test:statement">CREATE TABLE PERSON (ID integer, NAME char(250))</citrus-test:statement>
+            <citrus-test:statement>CREATE TABLE PERSON (ID integer, NAME char(250))</citrus-test:statement>
         </citrus-test:sql>
     </citrus:actions>
 </citrus:before-suite>
 ```
 
-The above before suite container is only executed with the test suite called **databaseSuite** or when the test group **e2e** is defined. Test groups and suite names are only supported when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with the JUnit test framework.
-
-You can define multiple suite names and test groups with comma delimited strings as attribute values.
+The above before suite container is only executed with the test suite called **databaseSuite** or when the test group **e2e** is defined. Test groups and suite names are only supported when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. 
+This is why after suite action containers are not restricted in execution when using Citrus with the JUnit test framework. You can define multiple suite names and test groups with comma delimited strings as attribute values.
 
 When using the Java DSL before suite support you can set suite names and test group filters by simply calling the respective setter methods in your custom implementation.
 
@@ -121,11 +120,35 @@ When using the Java DSL before suite support you can set suite names and test gr
 </bean>
 ```
 
+Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.
+
+**XML Config**
+
+```xml
+<citrus:before-suite id="actionsBeforeSuite" suites="databaseSuite" groups="e2e">
+    <citrus:env>
+      <citrus:property name="USER"/>
+    </citrus:env>
+    <citrus:system>
+      <citrus:property name="test-stage" value="e2e"/>
+    </citrus:system>
+    <citrus:actions>
+        <citrus-test:sql dataSource="testDataSource"/>
+            <citrus-test:statement>CREATE TABLE PERSON (ID integer, NAME char(250))</citrus-test:statement>
+        </citrus-test:sql>
+    </citrus:actions>
+</citrus:before-suite>
+```
+
+In the example above the suite sequence will only apply on environments with *USER* property set and the system property *test-stage* must be set to *e2e*. Otherwise
+the sequence execution is skipped.
+
 ### After suite
 
 A test run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run in actions after the tests are finished. The Spring bean syntax here is not significantly different to those in before suite section:
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:after-suite id="actionsAfterSuite">
@@ -137,13 +160,13 @@ XML Config
 
 Again we give the after suite configuration component a unique id within the configuration and put one to many test actions as nested configuration elements to the list of actions executed after the test suite run.
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:after-suite id="actionsAfterSuite">
     <citrus:actions>
         <citrus-test:sql dataSource="testDataSource"/>
-            <citrus-test:statement">DELETE FROM TABLE PERSON</citrus-test:statement>
+            <citrus-test:statement>DELETE FROM TABLE PERSON</citrus-test:statement>
         </citrus-test:sql>
     </citrus:actions>
 </citrus:after-suite>
@@ -153,7 +176,7 @@ We have to use the Citrus test case XML namespace when defining nested test acti
 
 Of course we can also define Java DSL after suite actions. You can do this by adding a custom class that extends **TestDesignerAfterSuiteSupport** or **TestRunnerAfterSuiteSupport** .
 
-Java DSL designer
+**Java DSL designer**
 
 ```java
 public class MyAfterSuite extends TestDesignerAfterSuiteSupport {
@@ -172,7 +195,7 @@ The custom implementation extends **TestDesignerAfterSuiteSupport** and therefor
 
 Of course you can also use other Spring bean mechanisms such as component-scans here too. The respective test runner implementation extends the **TestRunnerAfterSuiteSupport** and gets a test runner instance as method argument injected.
 
-Java DSL runner
+**Java DSL runner**
 
 ```java
 public class MyAfterSuite extends TestRunnerAfterSuiteSupport {
@@ -183,21 +206,22 @@ public class MyAfterSuite extends TestRunnerAfterSuiteSupport {
 }
 ```
 
-You can have many after-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name or test group names that should match accordingly:
+You can have many after-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name, test group names, environment or system properties that should match accordingly:
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:after-suite id="actionsAfterSuite" suites="databaseSuite" groups="e2e">
     <citrus:actions>
         <citrus-test:sql dataSource="testDataSource"/>
-            <citrus-test:statement">DELETE FROM TABLE PERSON</citrus-test:statement>
+            <citrus-test:statement>DELETE FROM TABLE PERSON</citrus-test:statement>
         </citrus-test:sql>
     </citrus:actions>
 </citrus:after-suite>
 ```
 
-The above after suite container is only executed with the test suite called **databaseSuite** or when the test group **e2e** is defined. Test groups and suite names are only supported when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with the JUnit test framework.
+The above after suite container is only executed with the test suite called **databaseSuite** or when the test group **e2e** is defined. Test groups and suite names are only supported when using the TestNG unit test framework. 
+Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with the JUnit test framework.
 
 You can define multiple suite names and test groups with comma delimited strings as attribute values.
 
@@ -218,11 +242,35 @@ When using the Java DSL before suite support you can set suite names and test gr
 </bean>
 ```
 
+Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.
+
+**XML Config**
+
+```xml
+<citrus:after-suite id="actionsBeforeSuite" suites="databaseSuite" groups="e2e">
+    <citrus:env>
+      <citrus:property name="USER"/>
+    </citrus:env>
+    <citrus:system>
+      <citrus:property name="test-stage" value="e2e"/>
+    </citrus:system>
+    <citrus:actions>
+        <citrus-test:sql dataSource="testDataSource"/>
+            <citrus-test:statement>DELETE FROM TABLE PERSON</citrus-test:statement>
+        </citrus-test:sql>
+    </citrus:actions>
+</citrus:after-suite>
+```
+
+In the example above the suite sequence will only apply on environments with *USER* property set and the system property *test-stage* must be set to *e2e*. Otherwise
+the sequence execution is skipped.
+
 ### Before test
 
 Before each test is executed it also might sound reasonable to purge all JMS queues for instance. In case a previous test fails some messages might be left in the JMS queues. Also the database might be in dirty state. The follow-up test then will be confronted with these invalid messages and data. Purging all JMS destinations before a test is therefore a good idea. Just like we prepared some data in actions before suite we can clean up the data before a test starts to execute.
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:before-test id="defaultBeforeTest">
@@ -234,7 +282,7 @@ XML Config
 
 The before test configuration component receives a unique id and a list of test actions that get executed before a test case is started. The component receives usual test action definitions just like you would write them in a normal test case definition. See the example below how to add test actions.
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:before-test id="defaultBeforeTest">
@@ -246,25 +294,49 @@ XML Config
 </citrus:before-test>
 ```
 
-Note that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed before each test in our test suite run. Also notice that we can restrict the before test container execution. We can restrict execution based on the test name, package and test groups. See following example how this works:
+Note that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed before each test in our test suite run. Also notice that we can restrict the before test container execution. We can restrict execution based on the test name, package, test groups and environment or system properties. See following example how this works:
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:before-test id="defaultBeforeTest" test="*_Ok_Test" package="com.consol.citrus.longrunning.*">
     <citrus:actions>
-            <citrus-test:echo>
-              <citrus-test:message>This is executed before each test!</citrus-test:message>
-            </citrus-test:echo>
+        <citrus-test:echo>
+          <citrus-test:message>This is executed before each test!</citrus-test:message>
+        </citrus-test:echo>
     </citrus:actions>
 </citrus:before-test>
 ```
 
 The above before test component is only executed for test cases that match the name pattern ***_Ok_Test** and that match the package **com.consol.citrus.longrunning.*** . Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify before test actions in various ways. Of course you can have multiple before test configuration components at the same time. Citrus will pick the right containers and put it to execution when necessary.
 
+Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.
+
+**XML Config**
+
+```xml
+<citrus:before-test id="specialBeforeTest">
+    <citrus:env>
+      <citrus:property name="USER"/>
+    </citrus:env>
+    <citrus:system>
+      <citrus:property name="test-stage" value="e2e"/>
+    </citrus:system>
+    <citrus:actions>
+        <citrus-test:echo>
+          <citrus-test:message>This is executed before each test!</citrus-test:message>
+        </citrus-test:echo>
+    </citrus:actions>
+</citrus:before-test>
+```
+
+In the example above the test sequence will only apply on environments with *USER* property set and the system property *test-stage* must be set to *e2e*. Otherwise
+the sequence execution is skipped.
+
 When using the Java DSL we need to implement the before test logic in a separate class that extends **TestDesignerBeforeTestSupport** or **TestRunnerBeforeTestSupport** 
 
-Java DSL designer
+**Java DSL designer**
 
 ```java
 public class MyBeforeTest extends TestDesignerBeforeTestSupport {
@@ -277,7 +349,7 @@ public class MyBeforeTest extends TestDesignerBeforeTestSupport {
 
 As you can see the class implements the method **beforeTest** that is provided with a test designer argument. You simply add the before test actions to the designer instance as usual by calling Java DSL methods on the designer object. Citrus will automatically execute these operations before each test is executed. The same logic applies to the test runner variation that extends **TestRunnerBeforeTestSupport** :
 
-Java DSL runner
+**Java DSL runner**
 
 ```java
 public class MyBeforeTest extends TestRunnerBeforeTestSupport {
@@ -302,7 +374,7 @@ We can add filter properties to the before test Java DSL actions so they applied
 
 The same logic that applies to the **before-test** configuration component can be done after each test. The **after-test** configuration component defines test actions executed after each test. Just like we prepared some data in actions before a test we can clean up the data after a test has finished execution.
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:after-test id="defaultAfterTest">
@@ -314,7 +386,7 @@ XML Config
 
 The after test configuration component receives a unique id and a list of test actions that get executed after a test case is finished. Notice that the after test actions are executed no matter what result success or failure the previous test case came up to. The component receives usual test action definitions just like you would write them in a normal test case definition. See the example below how to add test actions.
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:after-test id="defaultAfterTest">
@@ -326,25 +398,50 @@ XML Config
 </citrus:after-test>
 ```
 
-Please be aware of the fact that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed after each test in our test suite run. Of course we can restrict the after test container execution. Supported restrictions are based on the test name, package and test groups. See following example how this works:
+Please be aware of the fact that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed after each test in our test suite run. Of course we can restrict the after test container execution. Supported restrictions are based on the test name, package, test groups and environment or system properties. See following example how this works:
 
-XML Config
+**XML Config**
 
 ```xml
 <citrus:after-test id="defaultAfterTest" test="*_Error_Test" package="com.consol.citrus.error.*">
     <citrus:actions>
-            <citrus-test:echo>
-              <citrus-test:message>This is executed after each test!</citrus-test:message>
-            </citrus-test:echo>
+        <citrus-test:echo>
+          <citrus-test:message>This is executed after each test!</citrus-test:message>
+        </citrus-test:echo>
     </citrus:actions>
 </citrus:after-test>
 ```
 
-The above after test component is obviously only executed for test cases that match the name pattern ***_Error_Test** and that match the package **com.consol.citrus.error.*** . Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components at the same time. Citrus will pick the right containers and put it to execution when necessary.
+The above after test component is obviously only executed for test cases that match the name pattern ***_Error_Test** and that match the package **com.consol.citrus.error.*** . Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components at the same time. 
+Citrus will pick the right containers and put it to execution when necessary.
+
+Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.
+
+**XML Config**
+
+```xml
+<citrus:after-test id="specialAfterTest">
+    <citrus:env>
+      <citrus:property name="USER"/>
+    </citrus:env>
+    <citrus:system>
+      <citrus:property name="test-stage" value="e2e"/>
+    </citrus:system>
+    <citrus:actions>
+        <citrus-test:echo>
+          <citrus-test:message>This is executed after each test!</citrus-test:message>
+        </citrus-test:echo>
+    </citrus:actions>
+</citrus:after-test>
+```
+
+In the example above the test sequence will only apply on environments with *USER* property set and the system property *test-stage* must be set to *e2e*. Otherwise
+the sequence execution is skipped.
 
 When using the Java DSL we need to implement the after test logic in a separate class that extends **TestDesignerAfterTestSupport** or **TestRunnerAfterTestSupport** 
 
-Java DSL designer
+**Java DSL designer**
 
 ```java
 public class MyAfterTest extends TestDesignerAfterTestSupport {
@@ -357,7 +454,7 @@ public class MyAfterTest extends TestDesignerAfterTestSupport {
 
 As you can see the class implements the method **afterTest** that is provided with a test designer argument. You simply add the after test actions to the designer instance as usual by calling Java DSL methods on the designer object. Citrus will automatically execute these operations after each test is executed. The same logic applies to the test runner variation that extends **TestRunnerAfterTestSupport** :
 
-Java DSL runner
+**Java DSL runner**
 
 ```java
 public class MyAfterTest extends TestRunnerAfterTestSupport {
@@ -377,4 +474,3 @@ The after test implementations are added to the Spring bean application context 
 ```
 
 We can add filter properties to the after test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package **com.consol.citrus.e2e** . Leave these properties empty for default actions that are executed after all tests.
-
