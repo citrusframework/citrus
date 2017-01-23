@@ -1138,10 +1138,8 @@ In Citrus WebService client you can add those header information using the commo
   <constructor-arg>
     <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
         <property name="version" value="VERSION200408"/>
-        <property name="action"
-                     value="http://citrus.sample/sayHello"/>
-        <property name="to"
-                     value="http://citrus.sample/server"/>
+        <property name="action" value="http://citrus.sample/sayHello"/>
+        <property name="to" value="http://citrus.sample/server"/>
         <property name="from">
             <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
                 <constructor-arg value="http://citrus.sample/client"/>
@@ -1162,9 +1160,25 @@ In Citrus WebService client you can add those header information using the commo
 </bean>
 ```
 
-**Note**
-The WS-Addressing specification knows several versions. Supported version are **VERSION10 (WS-Addressing 1.0 May 2006)** and **VERSION200408
-            (August 2004 edition of the WS-Addressing specification)** .
+The WsAddressing header values will be used for all request messages that are sent with the soap client component *soapClient*. You can overwrite the WsAddressing
+header in each send test action in your test though. Just set the special WsAddressing message header on your request. You can use the following message header names in 
+order to overwrite the default addressing headers specified in the message converter configuration (also see the class *com.consol.citrus.ws.addressing.WsAddressingMessageHeaders*).
+
+* **citrus_soap_ws_addressing_messageId** addressing message id as URI
+* **citrus_soap_ws_addressing_from** addressing from endpoint reference as URI
+* **citrus_soap_ws_addressing_to** addressing to URI
+* **citrus_soap_ws_addressing_action** addressing action URI
+* **citrus_soap_ws_addressing_replyTo** addressing reply to endpoint reference as URI
+* **citrus_soap_ws_addressing_faultTo** addressing fault to endpoint reference as URI
+
+When using this message headers you are able to explicitly overwrite the WsAddressing headers. Test variables are supported of course when specifying the values. Most of the values
+are parsed to a URI value at the end so please make sure to use correct URI String representations.
+
+**Note** 
+The WS-Addressing specification knows several versions. Supported version are: 
+
+* **VERSION10 (WS-Addressing 1.0 May 2006)** 
+* **VERSION200408 (August 2004 edition of the WS-Addressing specification)**
 
 The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request with WS addressing headers looks like follows:
 
@@ -1193,7 +1207,18 @@ The addressing headers find a place in the SOAP message header with respective n
 ```
 
 **Important**
-The message id property is automatically generated for each request. If you need to set a static message id you can do so in Spring application context message sender configuration.
+By default when not set explicitly on the message headers the WsAddressing message id property is automatically generated for each request. You can set the message id generation strategy in the Spring application context message converter configuration:
+
+```xml
+<bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
+  <property name="messageIdStrategy">
+    <bean class="org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy"/>
+  </property>
+</bean>
+```
+
+By default the strategy will create a new Java UUID for each request. The strategy also uses a common resource name prefix *urn:uuid:*. You can overwrite the message id
+any time for each request explicitly by setting the message header *citrus_soap_ws_addressing_messageId* with a respective value on the message in your test.
 
 ### SOAP client fork mode
 

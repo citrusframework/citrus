@@ -28,11 +28,11 @@ import org.mockito.stubbing.Answer;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.namespace.QName;
 import javax.xml.soap.*;
 import javax.xml.transform.TransformerException;
 import java.io.*;
@@ -162,8 +162,8 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
         
         when(soapRequest.getSoapHeader()).thenReturn(soapHeader);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("", "operation", "")))).thenReturn(soapHeaderElement);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("", "messageId", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("", "operation", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("", "messageId", "")))).thenReturn(soapHeaderElement);
 
         callback.doWithMessage(soapRequest);
 
@@ -187,8 +187,8 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
         
         when(soapRequest.getSoapHeader()).thenReturn(soapHeader);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.citrus.com", "operation", "citrus")))).thenReturn(soapHeaderElement);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.citrus.com", "messageId", "citrus")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("http://www.citrus.com", "operation", "citrus")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("http://www.citrus.com", "messageId", "citrus")))).thenReturn(soapHeaderElement);
 
         callback.doWithMessage(soapRequest);
 

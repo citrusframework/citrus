@@ -18,12 +18,12 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ws.addressing.WsAddressingHeaders;
-import com.consol.citrus.ws.addressing.WsAddressingVersion;
-import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.ws.addressing.*;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
@@ -59,18 +59,45 @@ public class WsAddressingMessageConverter extends SoapMessageConverter {
 
         SoapMessage soapMessage = (SoapMessage) webServiceMessage;
         URI messageId;
-        if (addressingHeaders.getMessageId() != null) {
+        if (message.getHeader(WsAddressingMessageHeaders.MESSAGE_ID) != null) {
+            messageId = URI.create(context.replaceDynamicContentInString(message.getHeader(WsAddressingMessageHeaders.MESSAGE_ID).toString()));
+        } else if (addressingHeaders.getMessageId() != null) {
             messageId = addressingHeaders.getMessageId();
         } else {
             messageId = messageIdStrategy.newMessageId(soapMessage);
         }
 
+        EndpointReference from = addressingHeaders.getFrom();
+        if (message.getHeader(WsAddressingMessageHeaders.FROM) != null) {
+            from = new EndpointReference(URI.create(context.replaceDynamicContentInString(message.getHeader(WsAddressingMessageHeaders.FROM).toString())));
+        }
+
+        URI to = addressingHeaders.getTo();
+        if (message.getHeader(WsAddressingMessageHeaders.TO) != null) {
+            to = URI.create(context.replaceDynamicContentInString(message.getHeader(WsAddressingMessageHeaders.TO).toString()));
+        }
+
+        URI action = addressingHeaders.getAction();
+        if (message.getHeader(WsAddressingMessageHeaders.ACTION) != null) {
+            action = URI.create(context.replaceDynamicContentInString(message.getHeader(WsAddressingMessageHeaders.ACTION).toString()));
+        }
+
+        EndpointReference replyTo = addressingHeaders.getReplyTo();
+        if (message.getHeader(WsAddressingMessageHeaders.REPLY_TO) != null) {
+            replyTo = new EndpointReference(URI.create(context.replaceDynamicContentInString(message.getHeader(WsAddressingMessageHeaders.REPLY_TO).toString())));
+        }
+
+        EndpointReference faultTo = addressingHeaders.getReplyTo();
+        if (message.getHeader(WsAddressingMessageHeaders.FAULT_TO) != null) {
+            faultTo = new EndpointReference(URI.create(context.replaceDynamicContentInString(message.getHeader(WsAddressingMessageHeaders.FAULT_TO).toString())));
+        }
+
         MessageAddressingProperties map =
-                new MessageAddressingProperties(addressingHeaders.getTo(),
-                        addressingHeaders.getFrom(),
-                        addressingHeaders.getReplyTo(),
-                        addressingHeaders.getFaultTo(),
-                        addressingHeaders.getAction(),
+                new MessageAddressingProperties(to,
+                        from,
+                        replyTo,
+                        faultTo,
+                        action,
                         messageId);
 
         AddressingVersion version;

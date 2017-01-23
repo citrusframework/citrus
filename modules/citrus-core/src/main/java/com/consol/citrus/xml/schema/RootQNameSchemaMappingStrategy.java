@@ -16,16 +16,13 @@
 
 package com.consol.citrus.xml.schema;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.xsd.XsdSchema;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import javax.xml.namespace.QName;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Mapping strategy uses the root element local name to find matching schema
@@ -41,7 +38,7 @@ public class RootQNameSchemaMappingStrategy extends AbstractSchemaMappingStrateg
     @Override
     public XsdSchema getSchema(List<XsdSchema> schemas, String namespace, String elementName) {
         XsdSchema schema = null;
-        QName rootQName = QNameUtils.createQName(namespace, elementName, "");
+        QName rootQName = new QName(namespace, elementName, "");
         
         if (mappings.containsKey(rootQName.toString())) {
             schema = mappings.get(rootQName.toString());

@@ -43,6 +43,7 @@ import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
@@ -110,7 +111,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
                     headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
                 } else {
-                    headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.createQName("", headerEntry.getKey(), ""));
+                    headerElement = soapRequest.getSoapHeader().addHeaderElement(new QName("", headerEntry.getKey(), ""));
                 }
 
                 headerElement.setText(headerEntry.getValue().toString());

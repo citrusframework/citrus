@@ -26,7 +26,6 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
-import org.springframework.xml.namespace.QNameUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -96,7 +95,7 @@ public class DelegatingEndpointInterceptorTest {
 
     @Test
     public void testInterceptSoapMustUnderstand() throws Exception {
-        QName soapHeader = QNameUtils.createQName("http://citrusframework.org", "soapMustUnderstand", "citrus");
+        QName soapHeader = new QName("http://citrusframework.org", "soapMustUnderstand", "citrus");
 
         List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
         interceptors.add(endpointInterceptorMock);

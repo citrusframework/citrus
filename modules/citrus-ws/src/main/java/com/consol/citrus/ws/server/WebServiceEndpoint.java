@@ -313,7 +313,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     private QName getDefaultQName(String localPart) {
         if (StringUtils.hasText(defaultNamespaceUri)) {
-            return QNameUtils.createQName(defaultNamespaceUri, localPart, defaultPrefix);
+            return new QName(defaultNamespaceUri, localPart, defaultPrefix);
         } else {
             throw new SoapHeaderException("Failed to add SOAP header '" + localPart + "', " +
             		"because neither valid QName nor default namespace-uri is set!");

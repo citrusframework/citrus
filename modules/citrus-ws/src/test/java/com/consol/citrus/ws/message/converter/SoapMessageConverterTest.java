@@ -34,7 +34,6 @@ import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
@@ -195,8 +194,8 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
 
         when(soapRequest.getSoapHeader()).thenReturn(soapHeader);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("", "operation", "")))).thenReturn(soapHeaderElement);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("", "messageId", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("", "operation", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("", "messageId", "")))).thenReturn(soapHeaderElement);
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
@@ -218,8 +217,8 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
 
         when(soapRequest.getSoapHeader()).thenReturn(soapHeader);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.citrus.com", "operation", "citrus")))).thenReturn(soapHeaderElement);
-        when(soapHeader.addHeaderElement(eq(QNameUtils.createQName("http://www.citrus.com", "messageId", "citrus")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("http://www.citrus.com", "operation", "citrus")))).thenReturn(soapHeaderElement);
+        when(soapHeader.addHeaderElement(eq(new QName("http://www.citrus.com", "messageId", "citrus")))).thenReturn(soapHeaderElement);
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 

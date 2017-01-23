@@ -35,7 +35,6 @@ import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
@@ -223,7 +222,7 @@ public class WebServiceEndpointTest {
         
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
         
-        when(soapRequestHeaderEntry.getName()).thenReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus"));
+        when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://www.consol.de/citrus", "Operation", "citrus"));
         when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
         
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
@@ -314,7 +313,7 @@ public class WebServiceEndpointTest {
         
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
         
-        when(soapRequestHeaderEntry.getName()).thenReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus"));
+        when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://www.consol.de/citrus", "Operation", "citrus"));
         when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
         
         when(messageContext.getResponse()).thenReturn(soapResponse);
