@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -55,7 +56,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     private String commandResult;
 
     /** Control path expressions in command result */
-    private Map<String, Object> commandResultExpressions;
+    private Map<String, Object> commandResultExpressions = new HashMap<>();
 
     @Autowired
     private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();

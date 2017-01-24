@@ -34,6 +34,7 @@ import java.util.Map;
 
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
@@ -56,6 +57,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         reset(kubernetesClient, clientOperation);
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
+        when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.list()).thenReturn(response);
 
         KubernetesExecuteAction action = new KubernetesExecuteAction();
@@ -67,6 +69,59 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
         Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+
+        verify(clientOperation).inAnyNamespace();
+    }
+
+    @Test
+    public void testListPodsInNamespace() throws Exception {
+        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        PodList response = new PodList();
+        response.getItems().add(new Pod());
+
+        reset(kubernetesClient, clientOperation);
+
+        when(kubernetesClient.pods()).thenReturn(clientOperation);
+        when(clientOperation.inNamespace("myNamespace")).thenReturn(clientOperation);
+        when(clientOperation.list()).thenReturn(response);
+
+        KubernetesExecuteAction action = new KubernetesExecuteAction();
+        action.setCommand(new ListPods().namespace("myNamespace"));
+        action.setKubernetesClient(client);
+
+        action.execute(context);
+
+        Assert.assertEquals(action.getCommand().getParameters().size(), 1);
+        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+
+        verify(clientOperation).inNamespace("myNamespace");
+    }
+
+    @Test
+    public void testListPodsInDefaultClientNamespace() throws Exception {
+        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        PodList response = new PodList();
+        response.getItems().add(new Pod());
+
+        reset(kubernetesClient, clientOperation);
+
+        when(kubernetesClient.getNamespace()).thenReturn("myNamespace");
+        when(kubernetesClient.pods()).thenReturn(clientOperation);
+        when(clientOperation.inNamespace("myNamespace")).thenReturn(clientOperation);
+        when(clientOperation.list()).thenReturn(response);
+
+        KubernetesExecuteAction action = new KubernetesExecuteAction();
+        action.setCommand(new ListPods());
+        action.setKubernetesClient(client);
+
+        action.execute(context);
+
+        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
+        Assert.assertFalse(action.getCommand().getCommandResult().hasError());
+        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+
+        verify(clientOperation).inNamespace("myNamespace");
     }
 
     @Test
@@ -78,6 +133,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         reset(kubernetesClient, clientOperation);
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
+        when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.withLabels(anyMap())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -113,6 +169,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         reset(kubernetesClient, clientOperation);
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
+        when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.withoutLabels(anyMap())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -148,6 +205,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         reset(kubernetesClient, clientOperation);
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
+        when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.withLabels(anyMap())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {

@@ -47,8 +47,8 @@ public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
                             .withoutLabel("running")
                             .label("app", "myApp");
 
-                kubernetes().pod().get("myPod");
-                kubernetes().pod().delete("myPod");
+                kubernetes().pods().get("myPod");
+                kubernetes().pods().delete("myPod");
 
                 kubernetes().nodes()
                             .watch()

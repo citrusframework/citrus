@@ -64,7 +64,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(k8sClient.pods()).thenReturn(podsOperation);
         when(podsOperation.list()).thenReturn(new PodList());
-        when(podsOperation.withName("myPod")).thenReturn(podsOperation);
+        when(podsOperation.inNamespace("myNamespace")).thenReturn(podsOperation);
 
         when(k8sClient.namespaces()).thenReturn(namespacesOperation);
         when(namespacesOperation.list()).thenReturn(new NamespaceList());
@@ -102,7 +102,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                     .pods()
                     .list()
                     .label("active")
-                    .name("myPod"));
+                    .namespace("myNamespace"));
 
                 kubernetes(action -> action.client(client)
                     .nodes()
@@ -149,7 +149,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         action = (KubernetesExecuteAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "kubernetes-execute");
         Assert.assertEquals(action.getCommand().getClass(), ListPods.class);
-        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myPod");
+        Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "active");
 
         action = (KubernetesExecuteAction)test.getActions().get(2);

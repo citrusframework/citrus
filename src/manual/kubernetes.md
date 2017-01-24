@@ -153,14 +153,15 @@ Up to now we have only used the Citrus XML DSL. Of course all Kubernetes command
 @CitrusTest
 public void kubernetesTest() {
     kubernetes().info()
-        .validate(new CommandResultCallback<InfoResult>() {
-            @Override
-            public void doWithCommandResult(InfoResult info, TestContext context) {
-                Assert.assertEquals(info.getApiVersion(), "v1");
-            }
-    });
+                .validate(new CommandResultCallback<InfoResult>() {
+                    @Override
+                    public void doWithCommandResult(InfoResult info, TestContext context) {
+                        Assert.assertEquals(info.getApiVersion(), "v1");
+                    }
+            });
 
-    kubernetes().listPods()
+    kubernetes().pods()
+                .list()
                 .withoutLabel("running")
                 .label("app", "myApp");
 }
@@ -176,9 +177,10 @@ Java 8 Lambda expressions add some syntactical sugar to the command result valid
 @CitrusTest
 public void kubernetesTest() {
     kubernetes().info()
-        .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
+                .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
 
-    kubernetes().listPods()
+    kubernetes().pods()
+                .list()
                 .withoutLabel("running")
                 .label("app", "myApp");
 }
@@ -194,17 +196,15 @@ private KubernetesClient kubernetesClient;
 
 @CitrusTest
 public void kubernetesTest() {
-    kubernetes().client(kubernetesClient).info()
-        .validateCommandResult(new CommandResultCallback<InfoResult>() {
-            @Override
-            public void doWithCommandResult(InfoResult version, TestContext context) {
-                Assert.assertEquals(version.getApiVersion(), "v1");
-            }
-    });
+    kubernetes().client(kubernetesClient)
+                .info()
+                .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
 
-    kubernetes().client(kubernetesClient).listPods()
-                    .withoutLabel("running")
-                    .label("app", "myApp");
+    kubernetes().client(kubernetesClient)
+                .pods()
+                .list()
+                .withoutLabel("running")
+                .label("app", "myApp");
 }
 ```
 

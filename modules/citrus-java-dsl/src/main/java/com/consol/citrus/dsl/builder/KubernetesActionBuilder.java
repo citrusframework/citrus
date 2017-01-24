@@ -70,24 +70,10 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     }
 
     /**
-     * Pod action builder.
-     */
-    public PodActionBuilder pod() {
-        return new PodActionBuilder();
-    }
-
-    /**
      * Pods action builder.
      */
     public PodsActionBuilder pods() {
         return new PodsActionBuilder();
-    }
-
-    /**
-     * Service action builder.
-     */
-    public ServiceActionBuilder service() {
-        return new ServiceActionBuilder();
     }
 
     /**
@@ -133,29 +119,80 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     }
 
     /**
+     * Base kubernetes action builder with namespace.
+     */
+    public class NamespacedActionBuilder<R extends KubernetesResource> extends BaseActionBuilder<NamespacedActionBuilder<R>, R> {
+        /**
+         * Constructor using command.
+         * @param command
+         */
+        NamespacedActionBuilder(KubernetesCommand<R> command) {
+            super(command);
+        }
+
+        /**
+         * Sets the namespace parameter.
+         * @param key
+         * @return
+         */
+        public NamespacedActionBuilder<R> namespace(String key) {
+            command.namespace(key);
+            return this;
+        }
+    }
+
+    /**
+     * Base kubernetes action builder with name option.
+     */
+    public class NamedActionBuilder<R extends KubernetesResource> extends BaseActionBuilder<NamedActionBuilder<R>, R> {
+        /**
+         * Constructor using command.
+         * @param command
+         */
+        NamedActionBuilder(KubernetesCommand<R> command) {
+            super(command);
+        }
+
+        /**
+         * Sets the name parameter.
+         * @param key
+         * @return
+         */
+        public NamedActionBuilder<R> name(String key) {
+            command.name(key);
+            return this;
+        }
+
+        /**
+         * Sets the namespace parameter.
+         * @param key
+         * @return
+         */
+        public NamedActionBuilder<R> namespace(String key) {
+            command.namespace(key);
+            return this;
+        }
+    }
+
+    /**
      * Base kubernetes action builder.
      */
     public class BaseActionBuilder<T extends BaseActionBuilder, R extends KubernetesResource> implements TestActionBuilder {
 
         /** Kubernetes command */
-        private KubernetesCommand<R> command;
+        protected final KubernetesCommand<R> command;
 
         /** Self reference for fluent API */
-        private T self;
-
-        /**
-         * Default constructor.
-         */
-        BaseActionBuilder() {
-            super();
-            self = (T) this;
-        }
+        protected T self;
 
         /**
          * Constructor using command.
          * @param command
          */
         BaseActionBuilder(KubernetesCommand<R> command) {
+            super();
+            self = (T) this;
+            this.command = command;
             command(command);
         }
 
@@ -166,6 +203,17 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
          */
         public T result(String result) {
             action.setCommandResult(result);
+            return self;
+        }
+
+        /**
+         * Adds JsonPath command result validation.
+         * @param path
+         * @param value
+         * @return
+         */
+        public T validate(String path, Object value) {
+            action.getCommandResultExpressions().put(path, value);
             return self;
         }
 
@@ -201,26 +249,6 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
         }
 
         /**
-         * Sets the namespace parameter.
-         * @param key
-         * @return
-         */
-        public T namespace(String key) {
-            command.namespace(key);
-            return self;
-        }
-
-        /**
-         * Sets the name parameter.
-         * @param key
-         * @return
-         */
-        public T name(String key) {
-            command.name(key);
-            return self;
-        }
-
-        /**
          * Sets the without label parameter.
          * @param key
          * @param value
@@ -247,7 +275,6 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
          * @return
          */
         protected T command(KubernetesCommand<R> command) {
-            this.command = command;
             KubernetesActionBuilder.this.command(command);
             return self;
         }
@@ -259,293 +286,222 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     }
 
     /**
-     * Pod action builder.
+     * Pods action builder.
      */
-    public class PodActionBuilder extends BaseActionBuilder<PodActionBuilder, Pod> {
+    public class PodsActionBuilder {
+        /**
+         * List pods.
+         */
+        public NamespacedActionBuilder<PodList> list() {
+            ListPods command = new ListPods();
+            return new NamespacedActionBuilder<>(command);
+        }
 
         /**
          * Creates new pod.
          * @param pod
          */
-        public PodActionBuilder create(Pod pod) {
+        public NamedActionBuilder<Pod> create(Pod pod) {
             CreatePod command = new CreatePod();
             command.setPod(pod);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Create new pod from template.
          * @param template
          */
-        public PodActionBuilder create(Resource template) {
+        public NamedActionBuilder<Pod> create(Resource template) {
             CreatePod command = new CreatePod();
             command.setTemplateResource(template);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Create new pod from template path.
          * @param templatePath
          */
-        public PodActionBuilder create(String templatePath) {
+        public NamedActionBuilder<Pod> create(String templatePath) {
             CreatePod command = new CreatePod();
             command.setTemplate(templatePath);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Gets pod by name.
          * @param name
          */
-        public PodActionBuilder get(String name) {
+        public NamedActionBuilder<Pod> get(String name) {
             GetPod command = new GetPod();
             command.name(name);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Deletes pod by name.
          * @param name
          */
-        public DeleteActionBuilder delete(String name) {
+        public NamedActionBuilder<DeleteResult> delete(String name) {
             DeletePod command = new DeletePod();
             command.name(name);
-            return new DeleteActionBuilder(command);
-        }
-    }
-
-    /**
-     * Pods action builder.
-     */
-    public class PodsActionBuilder extends BaseActionBuilder<PodsActionBuilder, PodList> {
-
-        /**
-         * List pods.
-         */
-        public PodsActionBuilder list() {
-            ListPods command = new ListPods();
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Watch pods.
          */
-        public WatchActionBuilder<Pod> watch() {
-            return new WatchActionBuilder<>(new WatchPods());
+        public NamedActionBuilder<Pod> watch() {
+            return new NamedActionBuilder<>(new WatchPods());
         }
-
     }
 
     /**
-     * Service action builder.
+     * Services action builder.
      */
-    public class ServiceActionBuilder extends BaseActionBuilder<ServiceActionBuilder, Service> {
+    public class ServicesActionBuilder {
+        /**
+         * List services.
+         */
+        public NamespacedActionBuilder<ServiceList> list() {
+            return new NamespacedActionBuilder<>(new ListServices());
+        }
 
         /**
          * Creates new service.
          * @param pod
          */
-        public ServiceActionBuilder create(Service pod) {
+        public NamedActionBuilder<Service> create(Service pod) {
             CreateService command = new CreateService();
             command.setService(pod);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Create new service from template.
          * @param template
          */
-        public ServiceActionBuilder create(Resource template) {
+        public NamedActionBuilder<Service> create(Resource template) {
             CreateService command = new CreateService();
             command.setTemplateResource(template);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Create new service from template path.
          * @param templatePath
          */
-        public ServiceActionBuilder create(String templatePath) {
+        public NamedActionBuilder<Service> create(String templatePath) {
             CreateService command = new CreateService();
             command.setTemplate(templatePath);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Gets service by name.
          * @param name
          */
-        public ServiceActionBuilder get(String name) {
+        public NamedActionBuilder<Service> get(String name) {
             GetService command = new GetService();
             command.name(name);
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Deletes service by name.
          * @param name
          */
-        public DeleteActionBuilder delete(String name) {
+        public NamedActionBuilder<DeleteResult> delete(String name) {
             DeleteService command = new DeleteService();
             command.name(name);
-            return new DeleteActionBuilder(command);
-        }
-
-    }
-
-    /**
-     * Services action builder.
-     */
-    public class ServicesActionBuilder extends BaseActionBuilder<ServiceActionBuilder, ServiceList> {
-
-        /**
-         * List services.
-         */
-        public ServicesActionBuilder list() {
-            ListServices command = new ListServices();
-            command(command);
-            return this;
+            return new NamedActionBuilder<>(command);
         }
 
         /**
          * Watch services.
          */
-        public WatchActionBuilder<Service> watch() {
-            return new WatchActionBuilder<>(new WatchServices());
+        public NamedActionBuilder<Service> watch() {
+            return new NamedActionBuilder<>(new WatchServices());
         }
     }
 
     /**
      * Endpoints action builder.
      */
-    public class EndpointsActionBuilder extends BaseActionBuilder<EndpointsActionBuilder, EndpointsList> {
-
+    public class EndpointsActionBuilder {
         /**
          * List endpoints.
          */
-        public EndpointsActionBuilder list() {
-            ListEndpoints command = new ListEndpoints();
-            command(command);
-            return this;
+        public NamespacedActionBuilder<EndpointsList> list() {
+            return new NamespacedActionBuilder<>(new ListEndpoints());
         }
     }
 
     /**
      * Nodes action builder.
      */
-    public class NodesActionBuilder extends BaseActionBuilder<NodesActionBuilder, NodeList> {
-
+    public class NodesActionBuilder {
         /**
          * List nodes.
          */
-        public NodesActionBuilder list() {
-            ListNodes command = new ListNodes();
-            command(command);
-            return this;
+        public BaseActionBuilder<BaseActionBuilder, NodeList> list() {
+            return new BaseActionBuilder<>(new ListNodes());
         }
 
         /**
          * Watch nodes.
          */
-        public WatchActionBuilder<Node> watch() {
-            return new WatchActionBuilder<>(new WatchNodes());
+        public BaseActionBuilder<BaseActionBuilder, Node> watch() {
+            return new BaseActionBuilder<>(new WatchNodes());
         }
     }
 
     /**
      * Namespaces action builder.
      */
-    public class NamespacesActionBuilder extends BaseActionBuilder<NamespacesActionBuilder, NamespaceList> {
-
+    public class NamespacesActionBuilder {
         /**
          * List namespaces.
          */
-        public NamespacesActionBuilder list() {
-            ListNamespaces command = new ListNamespaces();
-            command(command);
-            return this;
+        public BaseActionBuilder<BaseActionBuilder, NamespaceList> list() {
+            return new BaseActionBuilder<>(new ListNamespaces());
         }
 
         /**
          * Watch namespaces.
          */
-        public WatchActionBuilder<Namespace> watch() {
-            return new WatchActionBuilder<>(new WatchNamespaces());
+        public BaseActionBuilder<BaseActionBuilder, Namespace> watch() {
+            return new BaseActionBuilder<>(new WatchNamespaces());
         }
     }
 
     /**
      * Events action builder.
      */
-    public class EventsActionBuilder extends BaseActionBuilder<EventsActionBuilder, EventList> {
-
+    public class EventsActionBuilder {
         /**
          * List endpoints.
          */
-        public EventsActionBuilder list() {
-            ListEvents command = new ListEvents();
-            command(command);
-            return this;
+        public NamespacedActionBuilder<EventList> list() {
+            return new NamespacedActionBuilder<>(new ListEvents());
         }
-
     }
 
     /**
      * ReplicationControllers action builder.
      */
-    public class ReplicationControllersActionBuilder extends BaseActionBuilder<ReplicationControllersActionBuilder, ReplicationControllerList> {
-
+    public class ReplicationControllersActionBuilder {
         /**
          * List replication controllers.
          */
-        public ReplicationControllersActionBuilder list() {
-            ListReplicationControllers command = new ListReplicationControllers();
-            command(command);
-            return this;
+        public NamespacedActionBuilder<ReplicationControllerList> list() {
+            return new NamespacedActionBuilder<>(new ListReplicationControllers());
         }
 
         /**
          * Watch pods.
          */
-        public WatchActionBuilder<ReplicationController> watch() {
-            return new WatchActionBuilder<>(new WatchReplicationControllers());
-        }
-    }
-
-    /**
-     * Watch action builder.
-     */
-    public class WatchActionBuilder<R extends KubernetesResource> extends BaseActionBuilder<WatchActionBuilder<R>, R> {
-
-        /**
-         * Constructor using command.
-         * @param command
-         */
-        WatchActionBuilder(KubernetesCommand<R> command) {
-            command(command);
-        }
-    }
-
-    /**
-     * Delete action builder.
-     */
-    public class DeleteActionBuilder<R extends DeleteResult> extends BaseActionBuilder<DeleteActionBuilder<R>, R> {
-
-        /**
-         * Constructor using command.
-         * @param command
-         */
-        DeleteActionBuilder(KubernetesCommand<R> command) {
-            command(command);
+        public NamespacedActionBuilder<ReplicationController> watch() {
+            return new NamespacedActionBuilder<>(new WatchReplicationControllers());
         }
     }
 }

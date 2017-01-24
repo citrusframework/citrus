@@ -22,6 +22,7 @@ import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -54,9 +55,12 @@ public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperatio
         if (operation instanceof ClientMixedOperation) {
             if (hasParameter(KubernetesMessageHeaders.NAMESPACE)) {
                 operation = (O) ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString()));
+            } else if (StringUtils.hasText(kubernetesClient.getClient().getNamespace())) {
+                operation = (O) ((ClientMixedOperation) operation).inNamespace(kubernetesClient.getClient().getNamespace());
+            } else {
+                operation = (O) ((ClientMixedOperation) operation).inAnyNamespace();
             }
         }
-
 
         execute(operation, context);
     }
