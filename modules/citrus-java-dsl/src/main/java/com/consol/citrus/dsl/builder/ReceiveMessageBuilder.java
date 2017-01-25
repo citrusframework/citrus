@@ -37,6 +37,7 @@ import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -635,7 +636,10 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T validationCallback(ValidationCallback callback) {
-        callback.setApplicationContext(applicationContext);
+        if (callback instanceof ApplicationContextAware) {
+            ((ApplicationContextAware) callback).setApplicationContext(applicationContext);
+        }
+
         getAction().setValidationCallback(callback);
         return self;
     }

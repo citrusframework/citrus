@@ -19,6 +19,7 @@ package com.consol.citrus.validation.callback;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import java.util.Map;
  *  
  * @author Christoph Deppisch
  */
-public abstract class AbstractValidationCallback<T> implements ValidationCallback {
+public abstract class AbstractValidationCallback<T> implements ValidationCallback, ApplicationContextAware {
 
     /** Spring application context injected before validation callback is called */
     protected ApplicationContext applicationContext;
