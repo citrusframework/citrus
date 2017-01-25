@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
+import org.testng.annotations.BeforeSuite;
 
 import java.util.concurrent.*;
 
@@ -35,24 +36,29 @@ public class AbstractKubernetesIT extends AbstractTestNGCitrusTest {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractKubernetesIT.class);
 
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
+    /** Minikube connection state, checks connectivity only once per test run */
+    private static boolean connected = false;
+
+    @BeforeSuite(alwaysRun = true)
+    public void checkMinikubeEnvironment() {
         try {
-            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    KubernetesClient kubernetesClient = new DefaultKubernetesClient();
-                    kubernetesClient.pods().list();
-                    return true;
-                }
+            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                KubernetesClient kubernetesClient = new DefaultKubernetesClient();
+                kubernetesClient.pods().list();
+                return true;
             });
 
             future.get(5000, TimeUnit.MILLISECONDS);
+            connected = true;
         } catch (Exception e) {
             log.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
-            return;
         }
+    }
 
-        super.run(callBack, testResult);
+    @Override
+    public void run(IHookCallBack callBack, ITestResult testResult) {
+        if (connected) {
+            super.run(callBack, testResult);
+        }
     }
 }
