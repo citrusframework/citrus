@@ -36,7 +36,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.callback.AbstractValidationCallback;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
@@ -1302,7 +1302,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithValidationCallback() {
-        final ValidationCallback callback = Mockito.mock(ValidationCallback.class);
+        final AbstractValidationCallback callback = Mockito.mock(AbstractValidationCallback.class);
 
         reset(callback, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
