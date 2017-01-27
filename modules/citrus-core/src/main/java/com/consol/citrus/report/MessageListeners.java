@@ -29,12 +29,15 @@ import java.util.List;
  */
 public class MessageListeners {
 
-    /** List of message listener known to Spring application context */
+    /**
+     * List of message listener known to Spring application context
+     */
     @Autowired
-    private List<MessageListener> messageListener = new ArrayList<MessageListener>();
+    private List<MessageListener> messageListener = new ArrayList<>();
 
     /**
      * Delegate to all known message listener instances.
+     *
      * @param message
      * @param context
      */
@@ -48,6 +51,7 @@ public class MessageListeners {
 
     /**
      * Delegate to all known message listener instances.
+     *
      * @param message
      * @param context
      */
@@ -61,6 +65,7 @@ public class MessageListeners {
 
     /**
      * Save check if message listeners are present.
+     *
      * @return
      */
     public boolean isEmpty() {
@@ -69,10 +74,13 @@ public class MessageListeners {
 
     /**
      * Adds a new message listener.
+     *
      * @param listener
      */
     public void addMessageListener(MessageListener listener) {
-        this.messageListener.add(listener);
+        if (!this.messageListener.contains(listener)) {
+            this.messageListener.add(listener);
+        }
     }
 
 }
