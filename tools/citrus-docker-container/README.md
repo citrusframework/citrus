@@ -4,14 +4,14 @@ Citrus Docker Container ![Logo][1]
 Build image
 ---------
 
-This project contains the Dockerfile for the Citrus Docker image. You can build the image with Maven calling
+This project contains the `Dockerfile` for the Citrus Docker image. You can build the image with Maven calling
 
 ```
 mvn docker:build
 ```
 
-After that you should have a new image on your Docker host named *consol/citrus-2.7*. You can use this base image in other
-Maven projects in order to execute the Citrus tests within Docker boundaries. This is extremely useful in case the Citrus need
+After that you should have a new image on your Docker host named `consol/citrus-2.7`. You can use this base image in other
+Maven projects in order to execute the Citrus tests within Docker boundaries. This is extremely useful in case the Citrus tests need
 to be within the Docker universe e.g. for access to other running Docker containers that expose a service to the Docker world.
  
 Also this image can be used to be part of Kubernetes or Openshift. When run as a Pod in Kubernetes the Citrus test cases are able
@@ -24,13 +24,13 @@ The Citrus Docker image executes Citrus integration tests as Maven build within 
 image is based on the Maven Docker image and executes a Maven project build on container startup.
 
 The image has a prepared Maven repository containing all available Citrus artifacts. The container executes
-Maven POMs in the app directory (default */maven*). Therefore the image is well suited for usage with the
-Fabric8 Docker Maven plugin that is able to assemble Maven projects in */maven*. 
+Maven POMs in the app directory (default `/maven`). Therefore the image is well suited for usage with the
+Fabric8 Docker Maven plugin that is able to assemble Maven projects in `/maven`. 
 
-Your Citrus Maven project just need to add following POM configuration of the Fabric8 Docker plugin in order to
+Your Citrus Maven project just needs to add the following POM configuration of the Fabric8 Docker plugin in order to
 bootstrap the complete Citrus Docker image:
 
-```
+```xml
 <plugin>
     <groupId>io.fabric8</groupId>
     <artifactId>docker-maven-plugin</artifactId>
@@ -76,7 +76,7 @@ mvn docker:start
 Team
 ---------
 
-ConSol* Software GmbH
+ConSol Software GmbH
 citrus-dev-l@consol.de
 
 http://www.citrusframework.org

@@ -63,7 +63,7 @@
       <id>christophd</id>
       <name>Christoph Deppisch</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
@@ -73,7 +73,7 @@
       <id>cwied</id>
       <name>Christian Wied</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
@@ -83,7 +83,7 @@
       <id>philkom</id>
       <name>Philipp Komninos</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
@@ -93,7 +93,7 @@
       <id>jblipphaus</id>
       <name>Jan Lipphaus</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
@@ -103,7 +103,7 @@
       <id>jza</id>
       <name>Jan Zahalka</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
@@ -113,7 +113,7 @@
       <id>maherma</id>
       <name>Martin Maher</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
@@ -123,7 +123,7 @@
       <id>movchin</id>
       <name>Michael Movchin</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
+      <organization>ConSol Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Web Developer</role>
@@ -142,7 +142,7 @@
   </scm>
 
   <organization>
-    <name>ConSol* Consulting&amp;Solutions GmbH</name>
+    <name>ConSol Software GmbH</name>
     <url>http://www.consol.com/</url>
   </organization>
   

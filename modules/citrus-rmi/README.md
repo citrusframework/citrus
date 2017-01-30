@@ -128,7 +128,7 @@ Citrus will automatically marshal the XML representation of the service invocati
 Licensing
 ---------
   
-Copyright 2006-2015 ConSol* Software GmbH.
+Copyright 2006-2017 ConSol Software GmbH.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ limitations under the License.
 Team
 ---------
 
-ConSol* Software GmbH
+ConSol Software GmbH
 Christoph Deppisch
 christoph.deppisch@consol.de
 

@@ -41,7 +41,7 @@ The tests can be integrated into a continuous integration environment so Citrus 
 
 ## Project history
 
-All software development projects at ConSol* use extensive automated testing and continuous or nightly builds to ensure highest 
+All software development projects at ConSol use extensive automated testing and continuous or nightly builds to ensure highest 
 possible quality of our deliveries. When we started focusing on EAI projects we searched for a tool that supports automated 
 integration tests of EAI systems, simulating several connected systems using different protocols (the IT world discovered a 
 surprisingly huge variety of technologies two applications may use to talk to each other). Although we evaluated several 
