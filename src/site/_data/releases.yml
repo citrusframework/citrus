@@ -1,12 +1,89 @@
 - version: ${project.version}
+  date: 2017-01-30
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
   - title: Update to Java 8
-      id: 133
-      type: Add
-      author: christophd
+    id: 133
+    type: Update
+    author: christophd
+  - title: Kubernetes integration
+    id: 150
+    type: Add
+    author: christophd
+  - title: Selenium support
+    id: 68
+    type: Add
+    author: christophd
+  - title: MS SQL Compatibility fix
+    id: 188
+    type: Fix
+    author: christophd
+  - title: LoggingClientInterceptor gets disabled when some interceptor is set
+    id: 180
+    type: Fix
+    author: christophd
+  - title: Enable/disable before/after suite based on env parameter
+    id: 163
+    type: Add
+    author: christophd
+  - title: WsAddressing header customization
+    id: 193
+    type: Update
+    author: christophd
+  - title: Hamcrest validation matcher with numeric values
+    id: 192
+    type: Fix
+    author: christophd
+  - title: Add JsonPathDataDictionary
+    id: 175
+    type: Add
+    author: christophd
+  - title: Add test behavior documentation
+    id: 164
+    type: Update
+    author: christophd
+  - title: MessageConstructionInterceptor causes StackOverflowError
+    id: 139
+    type: Fix
+    author: christophd
+  - title: Always give current Json element in error messages
+    id: 185
+    type: Update
+    author: christophd
+  - title: HTTP server autostart with JavaConfig fails
+    id: 179
+    type: Fix
+    author: christophd
+  - title: MailServerBuilder in Spring Java config not working
+    id: 177
+    type: Fix
+    author: christophd
+  - title: Exception when executing single Cucumber scenario
+    id: 176
+    type: Fix
+    author: christophd
+  - title: Simply copy byte array out of input stream
+    id: 172
+    type: Update
+    author: christophd
+  - title: JsonMappingDataDictionary breaks non string values
+    id: 174
+    type: Fix
+    author: christophd
+  - title: Test fails with enabled global dictionary
+    id: 166
+    type: Fix
+    author: christophd
+  - title: Explicit dictionary vs. global dictionary message overwrite
+    id: 167
+    type: Fix
+    author: christophd
+  - title: Remove deprecated API
+    id: 162
+    type: Update
+    author: christophd
 
 - version: 2.6.2
   date: 2016-11-14

@@ -8,7 +8,7 @@ Christoph Deppisch, Martin Maher
 
 **2.7-SNAPSHOT**
 
-**Copyright © 2016 ConSol Software GmbH**
+**Copyright © 2017 ConSol Software GmbH**
 
 **[www.citrusframework.org](http://www.citrusframework.org)**
 
