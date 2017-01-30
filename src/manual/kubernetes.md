@@ -1,7 +1,7 @@
 ## Kubernetes support
 
 [Kubernetes](http://kubernetes.io/) is one of the hottest management platforms for containerized applications these days. Kubernetes lets you deploy, scale and manage your containers on the platform so you get features like auto-scaling, self-healing, service discovery and load balancing.
-Citrus provides interaction with the Kubernetes REST API so you can access the Kubernetes platform within a Citrus test case.
+Citrus provides interaction with the Kubernetes REST API so you can access the Kubernetes platform and its resources within a Citrus test case.
 
 **Note**
 The Kubernetes test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
@@ -48,10 +48,10 @@ By default the client reads the system properties as well as environment variabl
 *  **kubernetes.api.version** / **KUBERNETES_API_VERSION**
 *  **kubernetes.trust.certificates** / **KUBERNETES_TRUST_CERTIFICATES**
 
-If you set these properties in your environment the client component will automatically pick up the configuration settings. For a complete list of settings and
-explanation of those please refer to the [Fabric8 client documentation](https://github.com/fabric8io/kubernetes-client).
+If you set these properties in your environment the client component will automatically pick up the configuration settings. Also when using `kubectl` command line locally the client may automatically 
+use the stored user authentication settings from there. For a complete list of settings and explanation of those please refer to the [Fabric8 client documentation](https://github.com/fabric8io/kubernetes-client).
 
-In case these settings are not settable in your environment you can also use explicit settings in the Kubernetes client component:
+In case you need to set the client configuration explicitly on your environment you can also use explicit settings on the Kubernetes client component:
 
 ```xml
 <citrus-k8s:client id="myK8sClient"
@@ -64,11 +64,37 @@ In case these settings are not settable in your environment you can also use exp
               object-mapper="objectMapper"/>
 ```
 
-Now Citrus is able to access the Kubernetes remote API for executing commands such as list-pods, watch-services and so on.
+Now Citrus is able to access the Kubernetes remote API for executing commands such as list-pods, watch-services and so on. Citrus provides a set of actions that
+perform a Kubernetes command via REST. The results usually get validated in the Citrus test as usual.
 
-### Kubernetes commands
+Based on that we can execute several Kubernetes commands in a test case and validate the Json results:
 
-We have several Citrus test actions each representing a Kubernetes command. These actions can be part of a test case where you can manage Kubernetes pods inside the test. As a prerequisite we have to enable the Kubernetes specific test actions in our XML test as follows:
+Citrus supports the following Kubernetes API commands with respective test actions:
+
+*  **k8s:info** 
+*  **k8s:list-pods** 
+*  **k8s:get-pod** 
+*  **k8s:delete-pod** 
+*  **k8s:list-services** 
+*  **k8s:get-service** 
+*  **k8s:delete-service** 
+*  **k8s:list-namespaces** 
+*  **k8s:list-events** 
+*  **k8s:list-endpoints** 
+*  **k8s:list-nodes** 
+*  **k8s:list-replication-controllers**
+*  **k8s:watch-pods** 
+*  **k8s:watch-services** 
+*  **k8s:watch-namespaces** 
+*  **k8s:watch-nodes** 
+*  **k8s:watch-replication-controllers**
+
+We will discuss these commands in detail later on in this chapter. For now lets have a closer look on how to use the commands inside of a Citrus test.
+
+### Kubernetes commands in XML
+
+We have several Citrus test actions each representing a Kubernetes command. These actions can be part of a test case where you can manage Kubernetes pods inside the test. As a prerequisite we have to enable the Kubernetes 
+specific test actions in our XML test as follows:
 
 ```xml
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -124,26 +150,11 @@ We added a special kubernetes namespace with prefix **k8s:** so now we can start
 ```
 
 In this very simple example we first ping the Kubernetes REST API to make sure we have connectivity up and running. The info command connects the REST API and returns a list of status information of the Kubernetes client. 
-After that we get the list of available Kubernetes pods. As a tester we might be interested in validating the command results. So wen can specify an optional **k8s:result** which is usually in JSON data format. As usual we can use test 
-variables here and ignore some values explicitly such as the **metadata** value.
+After that we get the list of available Kubernetes pods. As a tester we might be interested in validating the command results. So wen can specify an optional **k8s:result** which is usually in Json format. With that we can apply the full
+Citrus Json validation power to the Kubernetes results. As usual we can use test variables here and ignore some values explicitly such as the **metadata** value. Also JsonPath expression validation and Json test message validation features in
+Citrus come in here to validate the results.
 
-Based on that we can execute several Kubernetes commands in a test case and validate the Json results:
-
-Citrus supports the following Kubernetes API commands with respective test actions:
-
-*  **k8s:info** 
-*  **k8s:list-pods** 
-*  **k8s:list-services** 
-*  **k8s:list-namespaces** 
-*  **k8s:list-events** 
-*  **k8s:list-endpoints** 
-*  **k8s:list-nodes** 
-*  **k8s:list-replication-controllers**
-*  **k8s:watch-pods** 
-*  **k8s:watch-services** 
-*  **k8s:watch-namespaces** 
-*  **k8s:watch-nodes** 
-*  **k8s:watch-replication-controllers** 
+### Kubernetes commands in Java
 
 Up to now we have only used the Citrus XML DSL. Of course all Kubernetes commands are also available in Java DSL as the next example shows.
 
@@ -167,7 +178,8 @@ public void kubernetesTest() {
 }
 ```
 
-The Java DSL Kubernetes commands provide an optional **CommandResultCallback** that is called with the unmarshalled command result object. In the example above the *InfoResult* model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
+The Java DSL Kubernetes commands provide an optional **CommandResultCallback** that is automatically called with the unmarshalled command result object. 
+In the example above the *InfoResult* model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
 
 Java 8 Lambda expressions add some syntactical sugar to the command result validation:
 
@@ -186,7 +198,8 @@ public void kubernetesTest() {
 }
 ```
 
-By default Citrus tries to find a Kubernetes client component within the Citrus Spring application context. If not present Citrus will instantiate a default kubernetes client with all default settings. You can also explicitly set the kubernetes client instance when using the Java DSL Kubernetes command actions:
+By default Citrus tries to find a Kubernetes client component within the Citrus Spring application context. If not present Citrus will instantiate a default kubernetes client with all default settings. 
+You can also explicitly set the kubernetes client instance when using the Java DSL Kubernetes command actions:
 
 **Java DSL** 
 
@@ -208,10 +221,276 @@ public void kubernetesTest() {
 }
 ```
 
+### Info command
+
+The info command just gets the client connection settings and provides them as a Json result to the action.
+
+**XML DSL** 
+
+```xml
+<k8s:info client="myK8sClient">
+  <k8s:validate>
+    <k8s:result>{
+      "result": {
+        "clientVersion": "1.4.27",
+        "apiVersion": "v1",
+        "kind":"Info",
+        "masterUrl": "${masterUrl}",
+        "namespace": "test"
+      }
+    }</k8s:result>
+  </k8s:validate>      
+</k8s:info>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void infoTest() {
+    kubernetes().info()
+                .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
+}
+```
+
+### List resources
+
+We can list Kubernetes resources such as pods, services, endpoints and replication controllers. The list can be filtered by several properties such as
+
+* label
+* namespace
+
+The test action is able to define respective filters to the list so we get only pods the match the given attributes:
+
+**XML DSL** 
+
+```xml
+<k8s:list-pods label="app=todo">
+    <k8s:validate>
+      <k8s:result>{
+        "result": {
+          "apiVersion":"${apiVersion}",
+          "kind":"PodList",
+          "metadata":"@ignore@",
+          "items":"@ignore@"
+        }
+      }</k8s:result>
+      <k8s:element path="$.result.items.size()" value="1"/>
+      <k8s:element path="$..status.phase" value="Running"/>
+    </k8s:validate>
+</k8s:list-pods>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .client(k8sClient)
+        .pods()
+        .list()
+        .label("app=todo")
+        .validate("$..status.phase", "Running")
+        .validate((pods, context) -> {
+            Assert.assertFalse(CollectionUtils.isEmpty(pods.getResult().getItems()));
+        });
+}
+```
+
+As you can see we are able to give the pod label that is searched for in list of all pods. The list returned is validated either by giving an expected Json message
+or by adding JsonPath expressions with expected values to check.
+
+In Java DSL we can add a validation result callback that is provided with the unmarshalled result object for validation. Besides *label* filtering we can also specify the *namespace*
+and the pod *name* to search for.
+
+You can also define multiple labels as comma delimited list:
+
+```xml
+<k8s:list-services label="stage!=test,provider=fabric8" namespace="default"/>
+```
+
+As you can see we have combined to label filters *stage!=test* and *provider=fabric8* on pods in namespace *default*. The first label filter is negated so the label *stage* should **not** be *test* here.
+
+### List nodes and namespaces
+
+Nodes and namespaces are special resources that are not filtered by their namespace as they are more global resources. The rest is pretty similar to listing pods or services. We can
+add filteres such as *name* and *label*.
+
+**XML DSL** 
+
+```xml
+<k8s:list-namespaces label="provider=citrus">
+    <k8s:validate>
+      <k8s:element path="$.result.items.size()" value="1"/>
+    </k8s:validate>
+</k8s:list-namespaces>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .client(k8sClient)
+        .namespaces()
+        .list()
+        .label("provider=citrus")
+        .validate((pods, context) -> {
+            Assert.assertFalse(CollectionUtils.isEmpty(pods.getResult().getItems()));
+        });
+}
+```
+
+### Get resources
+
+We can get a very special Kubernetes resource such as a pod or service for detailed validation of that resource. We need to specify a resource name
+in order to select the resource from list of available resources in Kubernetes.
+
+**XML DSL** 
+
+```xml
+<k8s:get-pod name="citrus_pod">
+    <k8s:validate>
+      <k8s:result>{
+      "result": {
+        "apiVersion":"${apiVersion}",
+        "kind":"Pod",
+        "metadata": {
+            "annotations":"@ignore@",
+            "creationTimestamp":"@ignore@",
+            "finalizers":[],
+            "generateName":"@startsWith('hello-minikube-')@",
+            "labels":{
+              "pod-template-hash":"@ignore@",
+              "run":"hello-minikube"
+            },
+            "name":"${podName}",
+            "namespace":"default",
+            "ownerReferences":"@ignore@",
+            "resourceVersion":"@ignore@",
+            "selfLink":"/api/${apiVersion}/namespaces/default/pods/${podName}",
+            "uid":"@ignore@"
+        },
+        "spec": {
+          "containers": [{
+            "args":[],
+            "command":[],
+            "env":[],
+            "image":"gcr.io/google_containers/echoserver:1.4",
+            "imagePullPolicy":"IfNotPresent",
+            "name":"hello-minikube",
+            "ports":[{
+              "containerPort":8080,
+              "protocol":"TCP"
+            }],
+            "resources":{},
+            "terminationMessagePath":"/dev/termination-log",
+            "volumeMounts":"@ignore@"
+          }],
+          "dnsPolicy":"ClusterFirst",
+          "imagePullSecrets":"@ignore@",
+          "nodeName":"minikube",
+          "restartPolicy":"Always",
+          "securityContext":"@ignore@",
+          "serviceAccount":"default",
+          "serviceAccountName":"default",
+          "terminationGracePeriodSeconds":30,
+          "volumes":"@ignore@"
+        },
+        "status": "@ignore@"
+      }
+      }</k8s:result>
+      <k8s:element path="$..status.phase" value="Running"/>
+    </k8s:validate>
+</k8s:get-pod>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .client(k8sClient)
+        .pods()
+        .get("citrus_pod")
+        .validate("$..status.phase", "Running")
+        .validate((pod, context) -> {
+            Assert.assertEquals(pods.getResult().getStatus().getPhase(), "Running");
+        });
+}
+```
+
+As you can see we are able get the complete pod information from Kubernetes. The result is validated with Json message validator in Citrus. This means we can use *@ignore@* as well as test variables and
+JsonPath expressions.
+
+### Delete resources
+
+With that command we are able to delete a resource in Kubernetes. Up to now deletion of pods and services is supported. We have to give a name of the resource that we want
+to delete.
+
+**XML DSL** 
+
+```xml
+<k8s:delete-pod name="citrus_pod">
+    <k8s:validate>
+      <k8s:element path="$.result.success" value="true"/>
+    </k8s:validate>
+</k8s:delete-pod>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .pods()
+        .delete("citrus_pod")
+        .validate((result, context) -> Assert.assertTrue(result.getResult().getSuccess()));
+}
+```
+
+### Watch resources
+
+When using a watch command we add a subscription to all changes and events regarding Kubernetes resources. So we can watch resources such as pods, services, events and so on for future changes.
+Each change triggers a new watch event result that we can expect and validate.
+
+**XML DSL** 
+
+```xml
+<k8s:watch-pods label="provider=citrus">
+    <k8s:validate>
+      <k8s:element path="$.action" value="DELETED"/>
+    </k8s:validate>
+</k8s:watch-pods>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void listPodsTest() {
+    kubernetes()
+        .pods()
+        .watch()
+        .label("provider=citrus")
+        .validate((watchEvent, context) -> {
+            Assert.assertFalse(watchEvent.hasError());
+            Assert.assertEquals(((WatchEventResult) watchEvent).getAction(), Watcher.Action.DELETED);
+        });
+}
+```
+
+**Note**
+The watch command may be triggered several times for multiple changes on the respective Kubernetes resource. Each watch event trigger results in a new validation.
+
 ### Kubernetes messaging
 
-We have seen how to access the Kubernetes remote REST API by using special Citrus test actions in out test. As an alternative we can also go back
-to the generic send/receive actions in Citrus for accessing the Kubernetes API. We demonstrate this with a simple example:
+We have seen how to access the Kubernetes remote REST API by using special Citrus test actions in out test. As an alternative to that we can also use more 
+generic send/receive actions in Citrus for accessing the Kubernetes API. We demonstrate this with a simple example:
 
 **XML DSL** 
 
@@ -271,4 +550,6 @@ to the generic send/receive actions in Citrus for accessing the Kubernetes API. 
 </testcase>
 ```
 
-As you can see we can use the send/receive actions to call Kubernetes API commands and receive the respective results in Json format, too.
+As you can see we can use the send/receive actions to call Kubernetes API commands and receive the respective results in Json format, too. This gives us the well known
+Json validation mechanism in Citrus in order to validate the results from Kubernetes. This way you can load Kubernetes resources verifying its state and properties.
+Of course JsonPath expressions also come in here in order to validate Json elements explicitly. 
