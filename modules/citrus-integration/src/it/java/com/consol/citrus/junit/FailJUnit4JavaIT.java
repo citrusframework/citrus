@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +16,29 @@
 
 package com.consol.citrus.junit;
 
-import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2
  */
-public class JUnit4AnnotationIT extends AbstractJUnit4CitrusTest {
+public class FailJUnit4JavaIT extends JUnit4CitrusTestDesigner {
 
-    @Test
-    @CitrusXmlTest
-    public void JUnit4AnnotationIT() {
-    }
-
-    @Test
-    @CitrusXmlTest(name = "SampleIT")
-    public void JUnit4Annotation_1_IT() {
-    }
-
-    @Test
-    @CitrusXmlTest(name = { "EchoActionIT", "FailActionIT", "CreateVariablesIT" }, packageName = "com.consol.citrus.actions")
-    public void JUnit4Annotation_2_IT() {
-    }
-
-    @Test
-    @CitrusXmlTest(packageScan = "com.consol.citrus.functions")
-    public void JUnit4Annotation_3_IT() {
+    @Override
+    protected void configure() {
+        echo("This test should fail because of unknown variable ${foo}");
     }
 
     @Test(expected = TestCaseFailedException.class)
-    @CitrusXmlTest(name = "FailActionJUnit4IT")
-    public void JUnit4Annotation_4_IT() {
+    public void doExecute() {
+        executeTest();
+    }
+
+    @Test(expected = TestCaseFailedException.class)
+    @CitrusTest
+    public void failTest() {
+        echo("This test should fail because of unknown variable ${foo}");
     }
 }
