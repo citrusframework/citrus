@@ -47,7 +47,7 @@ public class JUnit4AnnotationIT extends AbstractJUnit4CitrusTest {
     }
 
     @Test(expected = TestCaseFailedException.class)
-    @CitrusXmlTest(name = "FailActionJUnit4IT")
+    @CitrusXmlTest(name = "FailJUnit4IT")
     public void JUnit4Annotation_4_IT() {
     }
 }
