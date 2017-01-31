@@ -24,6 +24,7 @@ import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
@@ -35,8 +36,7 @@ import java.net.URL;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -52,6 +52,8 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         ClientNonNamespaceOperation namespacesOperation = Mockito.mock(ClientNonNamespaceOperation.class);
         ClientNonNamespaceOperation nodesOperation = Mockito.mock(ClientNonNamespaceOperation.class);
         ClientMixedOperation servicesOperation = Mockito.mock(ClientMixedOperation.class);
+
+        Watch watch = Mockito.mock(Watch.class);
 
         CreateContainerResponse response = new CreateContainerResponse();
         response.setId(UUID.randomUUID().toString());
@@ -73,13 +75,13 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         when(nodesOperation.list()).thenReturn(new NodeList());
         when(nodesOperation.watch(any(Watcher.class))).thenAnswer(invocationOnMock -> {
             ((Watcher) invocationOnMock.getArguments()[0]).eventReceived(Watcher.Action.ADDED, new Node());
-            return null;
+            return watch;
         });
 
         when(k8sClient.services()).thenReturn(servicesOperation);
         when(servicesOperation.watch(any(Watcher.class))).thenAnswer(invocationOnMock -> {
             ((Watcher) invocationOnMock.getArguments()[0]).eventReceived(Watcher.Action.MODIFIED, new Service());
-            return null;
+            return watch;
         });
         when(servicesOperation.withName("myService")).thenReturn(servicesOperation);
         when(servicesOperation.inNamespace("myNamespace")).thenReturn(servicesOperation);
@@ -133,7 +135,6 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
                             Assert.assertNotNull(services.getResult());
                             Assert.assertEquals(((WatchEventResult) services).getAction(), Watcher.Action.MODIFIED);
                         }));
-
             }
         };
 
@@ -171,5 +172,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCommand().getClass(), WatchServices.class);
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAME), "myService");
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.NAMESPACE), "myNamespace");
+
+        verify(watch, atLeastOnce()).close();
     }
 }
