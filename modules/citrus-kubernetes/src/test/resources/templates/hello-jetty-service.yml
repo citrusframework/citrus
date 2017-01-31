@@ -9,8 +9,7 @@ metadata:
     service: hello-jetty
 spec:
   ports:
-    -
-      protocol: TCP
+    - protocol: TCP
       port: 8080
       targetPort: 8080
       nodePort: 31citrus:randomNumber(3)

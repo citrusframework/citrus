@@ -37,7 +37,7 @@
         <k8s:validate>
           <k8s:result>{
             "result": {
-              "clientVersion": "1.4.27",
+              "clientVersion": "1.4.34",
               "apiVersion": "${apiVersion}",
               "kind":"Info",
               "masterUrl": "https://${minikube}:8443/",

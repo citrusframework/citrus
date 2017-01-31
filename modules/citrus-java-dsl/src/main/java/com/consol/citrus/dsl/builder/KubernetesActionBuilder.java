@@ -16,7 +16,6 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.*;
@@ -177,7 +176,7 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
     /**
      * Base kubernetes action builder.
      */
-    public class BaseActionBuilder<T extends BaseActionBuilder, R extends KubernetesResource> implements TestActionBuilder {
+    public class BaseActionBuilder<T extends BaseActionBuilder, R extends KubernetesResource> extends AbstractTestActionBuilder<KubernetesExecuteAction> {
 
         /** Kubernetes command */
         protected final KubernetesCommand<R> command;
@@ -190,7 +189,7 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
          * @param command
          */
         BaseActionBuilder(KubernetesCommand<R> command) {
-            super();
+            super(KubernetesActionBuilder.this.action);
             self = (T) this;
             this.command = command;
             command(command);
@@ -277,11 +276,6 @@ public class KubernetesActionBuilder extends AbstractTestActionBuilder<Kubernete
         protected T command(KubernetesCommand<R> command) {
             KubernetesActionBuilder.this.command(command);
             return self;
-        }
-
-        @Override
-        public TestAction build() {
-            return KubernetesActionBuilder.this.build();
         }
     }
 

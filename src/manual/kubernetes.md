@@ -411,7 +411,7 @@ in order to select the resource from list of available resources in Kubernetes.
 
 ```java
 @CitrusTest
-public void listPodsTest() {
+public void getPodsTest() {
     kubernetes()
         .client(k8sClient)
         .pods()
@@ -425,6 +425,113 @@ public void listPodsTest() {
 
 As you can see we are able get the complete pod information from Kubernetes. The result is validated with Json message validator in Citrus. This means we can use *@ignore@* as well as test variables and
 JsonPath expressions.
+
+### Create resources
+
+We can create new Kubernetes resources within a Citrus test. This is very important in case we need to setup new pods or services for the test run. You can create new resources
+by giving a `.yml` file holding all information how to create the new resource. See the following sample YAML for a new pod and service:
+
+```
+kind: Pod
+apiVersion: v1
+metadata:
+  name: hello-jetty-${randomId}
+  namespace: default
+  selfLink: /api/v1/namespaces/default/pods/hello-jetty-${randomId}
+  uid: citrus:randomUUID()
+  labels:
+    server: hello-jetty
+spec:
+  containers:
+    - name: hello-jetty
+      image: jetty:9.3
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+  dnsPolicy: ClusterFirst
+  serviceAccountName: default
+  serviceAccount: default
+  nodeName: minikube
+```
+
+This YAML file specifies a new resource of kind *Pod*. We define the metadata as well as all containers that are part of this pod. The container is build from
+*jetty:9.3* Docker image that should be pulled automatically from Docker Hub registry. We also expose port 8080 as *containerPort* so the upcoming service configuration can provide this
+port to clients as Kubernetes service.  
+
+```
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-jetty
+  namespace: default
+  selfLink: /api/v1/namespaces/default/services/hello-jetty
+  uid: citrus:randomUUID()
+  labels:
+    service: hello-jetty
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 31citrus:randomNumber(3)
+  selector:
+    server: hello-jetty
+  type: NodePort
+  sessionAffinity: None
+```
+
+The service resource maps the port *8080* and selects all pods with label *server=hello-jetty*. This makes the jetty container available to clients. The service type is *NodePort* which means
+that clients outside of Kubernetes are also able to access the service by using the dynamic port *nodePort=31xxx*. We can use Citrus functions such as *randomNumber* in the YAML files.
+ 
+In the test case we can use these YAML files to create the resources in Kubernetes: 
+
+**XML DSL** 
+
+```xml
+<k8s:create-pod namespace="default">
+  <k8s:template file="classpath:templates/hello-jetty-pod.yml"/>
+</k8s:create-pod>
+
+<k8s:create-service namespace="default">
+  <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+</k8s:create-service>
+```
+
+**Java DSL** 
+
+```java
+@CitrusTest
+public void createPodsTest() {
+    kubernetes()
+        .pods()
+        .create(new ClassPathResource("templates/hello-jetty-pod.yml"))
+        .namespace("default");
+    
+    kubernetes()
+        .services()
+        .create(new ClassPathResource("templates/hello-jetty-service.yml"))
+        .namespace("default");
+}
+```
+
+Creating new resources may take some time to finish. Kubernetes will have to pull images, build containers and start up everything. The create action is not waiting synchronously for all that to have happened.
+Therefore we might add a list-pods action that waits for the new resources to appear.
+
+```xml
+<repeat-onerror-until-true condition="@assertThat('greaterThan(9)')@" auto-sleep="1000">
+  <k8s:list-pods label="server=hello-jetty">
+    <k8s:validate>
+      <k8s:element path="$.result.items.size()" value="1"/>
+      <k8s:element path="$..status.phase" value="Running"/>
+    </k8s:validate>
+  </k8s:list-pods>
+</repeat-onerror-until-true>
+```
+
+With this repeat on error action we wait for the new *server=hello-jetty* labeled pod to be in state *Running*.
 
 ### Delete resources
 
@@ -445,7 +552,7 @@ to delete.
 
 ```java
 @CitrusTest
-public void listPodsTest() {
+public void deletePodsTest() {
     kubernetes()
         .pods()
         .delete("citrus_pod")
@@ -455,8 +562,11 @@ public void listPodsTest() {
 
 ### Watch resources
 
-When using a watch command we add a subscription to all changes and events regarding Kubernetes resources. So we can watch resources such as pods, services, events and so on for future changes.
-Each change triggers a new watch event result that we can expect and validate.
+**Note**
+The watch operation is still in experimental state and may face severe adjustments and improvements in near future.
+
+When using a watch command we add a subscription to change events on a Kubernetes resources. So we can watch resources such as pods, services for future changes.
+Each change on that resource triggers a new watch event result that we can expect and validate.
 
 **XML DSL** 
 
@@ -485,7 +595,9 @@ public void listPodsTest() {
 ```
 
 **Note**
-The watch command may be triggered several times for multiple changes on the respective Kubernetes resource. Each watch event trigger results in a new validation.
+The watch command may be triggered several times for multiple changes on the respective Kubernetes resource. The watch action will always handle one single event result. The first
+event trigger is forwarded to the action validation. All further watch events on that same resource are ignored. This means that you may need multiple watch actions in your test case in case you expect
+multiple watch events to be triggered.
 
 ### Kubernetes messaging
 

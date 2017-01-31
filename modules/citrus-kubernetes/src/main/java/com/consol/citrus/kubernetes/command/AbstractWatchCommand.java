@@ -17,11 +17,13 @@
 package com.consol.citrus.kubernetes.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.*;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +34,11 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
     /** Watch handle */
     private Watch watch;
 
-    private ConcurrentLinkedQueue<WatchEventResult<R>> results = new ConcurrentLinkedQueue<>();
+    /** Timeout to wait for watch result */
+    private long timeout = 5000L;
+
+    private BlockingQueue<WatchEventResult<R>> results = new ArrayBlockingQueue<>(1);
+    private WatchEventResult<R> cachedResult;
 
     /**
      * Default constructor initializing the command name.
@@ -48,24 +54,46 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
         watch = (Watch) operation.watch(new Watcher<R>() {
             @Override
             public void eventReceived(Action action, R resource) {
-                results.add(new WatchEventResult<>(resource, action));
+                if (results.isEmpty() && cachedResult == null) {
+                    results.add(new WatchEventResult<>(resource, action));
+                } else {
+                    log.debug("Ignoring watch result: " + action.name());
+                }
             }
 
             @Override
             public void onClose(KubernetesClientException cause) {
-                results.add(new WatchEventResult<>(cause));
+                if (results.isEmpty()&& cachedResult == null) {
+                    results.add(new WatchEventResult<>(cause));
+                }
             }
         });
     }
 
     @Override
     public WatchEventResult<R> getCommandResult() {
-        WatchEventResult watchEventResult = results.poll();
-
-        if (watchEventResult != null) {
-            watchEventResult.setWatch(watch);
+        if (cachedResult != null) {
+            return cachedResult;
         }
-        return watchEventResult;
+        
+        try {
+            WatchEventResult<R> watchEventResult = results.poll(timeout, TimeUnit.MILLISECONDS);
+            if (watchEventResult == null) {
+                throw new ActionTimeoutException("Failed to get watch result");
+            }
+
+            try {
+                watch.close();
+            } catch (KubernetesClientException e) {
+                log.warn("Failed to gracefully close watch", e);
+            }
+
+            watchEventResult.setWatch(watch);
+            cachedResult = watchEventResult;
+            return watchEventResult;
+        } catch (InterruptedException e) {
+            throw new CitrusRuntimeException("Failed to wait for watch result", e);
+        }
     }
 
     /**
@@ -74,5 +102,23 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
      */
     public Watch getWatch() {
         return watch;
+    }
+
+    /**
+     * Sets the timeout.
+     *
+     * @param timeout
+     */
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    /**
+     * Gets the timeout.
+     *
+     * @return
+     */
+    public long getTimeout() {
+        return timeout;
     }
 }

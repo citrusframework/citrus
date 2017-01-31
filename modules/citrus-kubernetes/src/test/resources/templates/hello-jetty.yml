@@ -9,13 +9,11 @@ metadata:
     server: hello-jetty
 spec:
   containers:
-    -
-      name: hello-jetty
+    - name: hello-jetty
       image: jetty:9.3
       imagePullPolicy: IfNotPresent
       ports:
-        -
-          containerPort: 8080
+        - containerPort: 8080
           protocol: TCP
   restartPolicy: Always
   terminationGracePeriodSeconds: 30

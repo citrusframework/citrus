@@ -1,6 +1,9 @@
 FROM openjdk:8-jdk
 MAINTAINER citrusframework.org <citrus-dev-l@consol.de>
 
+ENV BUILD_DATE=2017-01-31
+ENV BUILD_VERSION=0.0.1
+
 ARG MAVEN_VERSION=3.3.9
 ARG USER_HOME_DIR="/root"
 
