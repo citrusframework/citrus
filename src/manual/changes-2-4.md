@@ -1,4 +1,4 @@
-### Changes in Citrus 2.4?!
+## Changes in Citrus 2.4
 
 Citrus 2.4 comes with a set of new features especially regarding Apache Camel and Docker integrations. Bugfixes of course are also part of the package. See the following overview on what has changed.
 

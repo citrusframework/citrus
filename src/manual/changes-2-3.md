@@ -1,4 +1,4 @@
-### Changes in Citrus 2.3?!
+## Changes in Citrus 2.3
 
 We want to give you a short overview of what has changed in Citrus 2.3. The release adds some new features and improvements to the box. Bugfixes of course are also part of the package. See the following overview on what has changed.
 

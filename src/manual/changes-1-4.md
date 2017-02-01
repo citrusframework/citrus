@@ -1,4 +1,4 @@
-### Changes in Citrus 1.4.x
+## Changes in Citrus 1.4.x
 
 ### Refactoring
 

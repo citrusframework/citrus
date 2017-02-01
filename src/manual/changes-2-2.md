@@ -1,4 +1,4 @@
-### Changes in Citrus 2.2?!
+## Changes in Citrus 2.2
 
 Citrus 2.2 is a release mostly adding new features as well as improvements to given Citrus features. Bugfixes of course are also part of the package. See the following overview on what has changed.
 

@@ -1,4 +1,4 @@
-### Changes in Citrus 2.0
+## Changes in Citrus 2.0
 
 Citrus 2.0 is a major version upgrade and therefore big things should be happening. In the following sections we shortly describe the Citrus evolution. We want you to get a quick overview of what has happened and all the new things in Citrus. So hopefully you can spot your favorite new feature.
 

@@ -1,4 +1,4 @@
-### Changes in Citrus 2.5?!
+## Changes in Citrus 2.5
 
 We have added lots of new features and improvements with Citrus 2.5. Namely these are the new modules for RMI and JMX support, a new x-www-form-urlencoded message validator and new functions anc test actions. Just have a look at the following features that made it to the box.
 
@@ -41,8 +41,4 @@ The new timer test action container repeats its execution based on a time expres
 ### Upgrade to Vert.x 3.2.0
 
 The Vert.x module was upgraded to use Vert.x 3.2.0 version. The Citrus module implementation was updated to work with this new Vert.x version. Learn more about the Vert.x integration in Citrus with [vertx](vertx).
-
-### Bugfixes
-
-Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in JIRA ([http://www.citrusframework.org/changes-report.html](http://www.citrusframework.org/changes-report.html)).
 

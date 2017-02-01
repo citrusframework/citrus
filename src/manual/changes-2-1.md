@@ -1,4 +1,4 @@
-### Changes in Citrus 2.1
+## Changes in Citrus 2.1
 
 Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes and improvements. See the following overview on what has changed.
 

@@ -1,4 +1,4 @@
-## What's new in Citrus 2.6?!
+## Changes in Citrus 2.6
 
 Citrus 2.6 comes with a set of new modules that enable completely new aspects of integration testing. Namely these are the new modules for Cucumber behavior driven development and Zookeeper support. Just have a look at the following features that are shipped within the 2.6 box.
 
@@ -77,10 +77,4 @@ Some of the changes that we have made might hit you right away. These changes ar
 * Java DSL module has had Maven dependencies to several other modules in Citrus (e.g. citrus-jms, citrus-soap). These dependencies were declared as compile dependencies, which is not very nice as you might not need JMS or SOAP functionalities in your project. We have added optional and provided markers to that dependencies which means that you have to decide in your project which of the modules to include.
 
 You may face some missing dependencies errors when running the Maven project. As a result you need to include the Citrus modules (e.g. citrus-http, citrus-docker, and so on) in your project Maven POM explicitly.
-
-
-
-### Bugfixes
-
-Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in JIRA ([http://www.citrusframework.org/changes-report.html](http://www.citrusframework.org/changes-report.html)).
 

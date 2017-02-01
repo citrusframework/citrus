@@ -1,4 +1,4 @@
-### Changes in Citrus 1.2
+## Changes in Citrus 1.2
 
 ### Spring version update
 

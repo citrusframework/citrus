@@ -208,19 +208,15 @@ li.L9 {
 
 a.plugin-anchor span {
     font-size: 20px !important;
-    margin-left: -20px;
-    padding-left: 50px;
-}
-
-.book .book-body .page-wrapper .page-inner section.normal h2 {
-    padding-left: 25px;
+    margin-left: -45px;
+    padding-left: 0px;
 }
 
 /* Side navigation */
 
 .book .book-body .navigation {
     top: auto;
-    height: 70px;
+    height: 85px;
 }
 
 .book .book-body .navigation:hover {

@@ -1,4 +1,4 @@
-### Changes in Citrus 1.3.x
+## Changes in Citrus 1.3.x
 
 ### @CitrusTest and @CitrusXmlTest annotations
 
