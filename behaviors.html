@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Repeat | Citrus Reference Guide</title>
+        <title>Test behaviors | Citrus Reference Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.6.7">
@@ -47,10 +47,10 @@
         
     
     
-    <link rel="next" href="./containers-repeat-onerror.html" />
+    <link rel="next" href="./containers.html" />
     
     
-    <link rel="prev" href="./containers-iterate.html" />
+    <link rel="prev" href="./templates.html" />
     
 
         
@@ -59,9 +59,9 @@
         
         
     <div class="book"
-        data-level="16.5"
-        data-chapter-title="Repeat"
-        data-filepath="containers-repeat.md"
+        data-level="15"
+        data-chapter-title="Test behaviors"
+        data-filepath="behaviors.md"
         data-basepath="."
         data-revision="Wed Feb 01 2017 17:03:57 GMT+0100 (CET)"
         data-innerlanguage="">
@@ -794,7 +794,7 @@
             
         </li>
     
-        <li class="chapter " data-level="15" data-path="behaviors.html">
+        <li class="chapter active" data-level="15" data-path="behaviors.html">
             
                 
                     <a href="./behaviors.html">
@@ -885,7 +885,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="16.5" data-path="containers-repeat.html">
+        <li class="chapter " data-level="16.5" data-path="containers-repeat.html">
             
                 
                     <a href="./containers-repeat.html">
@@ -2008,53 +2008,58 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="repeat-until-true"><a name="repeat-until-true" class="plugin-anchor" href="#repeat-until-true"><span class="fa fa-link"></span></a>Repeat until true</h3>
-<p>Quite similar to the previously described iterate container this repeating container will execute its actions in a loop according to an ending condition. The condition describes a Boolean expression using the operators as described in the previous chapter.</p>
-<p><strong>Note</strong>
-The loop continues its work until the provided condition evaluates to <strong>true</strong> . It is very important to notice that the repeat loop will execute the actions before evaluating the condition. This means the actions get executed 1-n times.</p>
-<p><strong>XML DSL</strong> </p>
-<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;iterateTest&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">repeat-until-true</span> <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;(i = 3) or (i = 5)&quot;</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>index is: ${i}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
-            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">repeat-until-true</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
-</code></pre>
-<p><strong>Java DSL designer and runner</strong> </p>
-<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">repeatTest</span><span class="hljs-params">()</span> </span>{
-    repeat().until(<span class="hljs-string">&quot;(i gt 5) or (i = 3)&quot;</span>).index(<span class="hljs-string">&quot;i&quot;</span>))
-        .actions(
-            echo(<span class="hljs-string">&quot;index is: ${i}&quot;</span>)
-        );
+                        <h2 id="test-behaviors"><a name="test-behaviors" class="plugin-anchor" href="#test-behaviors"><span class="fa fa-link"></span></a>Test behaviors</h2>
+<p>Test behaviors combine action sequences to a logical unit. The behavior defines a set of test actions that can be applied to a Java DSL test case.
+Following from that you can say that behaviors are reusable test action templates. The maintenance is much more effective when you reuse basic test actions
+in many test cases.</p>
+<p>The behavior is a separate Java DSL class with a single <em>apply</em> method that configures the test actions. Have a look at this first example:</p>
+<p><strong>Java DSL</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FooBehavior</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTestBehavior</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">apply</span><span class="hljs-params">()</span> </span>{
+        variable(<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;test&quot;</span>);
+
+        echo(<span class="hljs-string">&quot;fooBehavior&quot;</span>);
+    }
+}
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BarBehavior</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTestBehavior</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">apply</span><span class="hljs-params">()</span> </span>{
+        variable(<span class="hljs-string">&quot;bar&quot;</span>, <span class="hljs-string">&quot;test&quot;</span>);
+
+        echo(<span class="hljs-string">&quot;barBehavior&quot;</span>);
+    }
 }
 </code></pre>
-<p>As you can see the repeat container is only executed when the iterating condition expression evaluates to <strong>false</strong> . By the time the condition is <strong>true</strong> execution is discontinued. You can use basic logical operators such as <strong>and</strong>, <strong>or</strong> and so on.</p>
-<p>A more powerful way is given by Hamcrest matchers that are directly supported in condition expressions.</p>
-<p><strong>XML DSL</strong> </p>
-<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;iterateTest&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">repeat-until-true</span> <span class="hljs-attribute">index</span>=<span class="hljs-value">&quot;i&quot;</span> <span class="hljs-attribute">condition</span>=<span class="hljs-value">&quot;@assertThat(anyOf(is(3), is(5))@&quot;</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>index is: ${i}<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
-            <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">repeat-until-true</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
-</code></pre>
-<p><strong>Java DSL designer and runner</strong> </p>
+<p>As you can see the behavior class is able to use the Citrus Java DSL as usual. Each behavior is able to define test variables and actions. In a test case you can apply the behaviors
+as follows:</p>
+<p><strong>Java DSL</strong> </p>
 <pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">repeatTest</span><span class="hljs-params">()</span> </span>{
-    repeat().until(anyOf(is(<span class="hljs-number">3</span>), is(<span class="hljs-number">5</span>)).index(<span class="hljs-string">&quot;i&quot;</span>))
-        .actions(
-            echo(<span class="hljs-string">&quot;index is: ${i}&quot;</span>)
-        );
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">behaviorTest</span><span class="hljs-params">()</span> </span>{
+    variable(<span class="hljs-string">&quot;myTime&quot;</span>, <span class="hljs-string">&quot;citrus:currentDate()&quot;</span>);
+
+    FooBehavior fooBehavior = <span class="hljs-keyword">new</span> FooBehavior();
+    applyBehavior(fooBehavior);
+
+    applyBehavior(<span class="hljs-keyword">new</span> BarBehavior());
+
+    applyBehavior(fooBehavior);
 }
 </code></pre>
-<p>The Hamcrest matcher usage simplifies the reading a lot. And it empowers you to combine more complex condition expressions. So I personally prefer this syntax.</p>
+<p>When dealing with behaviors test actions are defined somewhere outside the test case. How do we handle test variables? A behavior may use different variable names then the test and vice versa. 
+No doubt the behavior will fail as soon as special variables with respective values are not present. Unknown variables cause the behavior and the whole test to fail with errors.</p>
+<p>So a good approach would be to harmonize variable usage across behaviors and test cases, so that templates and test cases do use the same variable naming. The behavior automatically knows all variables in the test case.
+And all test variables created inside the behavior are visible to the test case after applying.</p>
+<p><strong>Important</strong>
+When a behavior changes variables this will automatically affect the variables in the whole test. So if you change a variable&apos;s value inside a behavior and the variable is defined inside the test case the changes will affect 
+the variable in a global test context. This means we have to be careful when executing a behavior several times in a test, especially in combination with parallel containers (see <a href="containers-parallel">containers-parallel</a>).</p>
+<h3 id="behavior-types"><a name="behavior-types" class="plugin-anchor" href="#behavior-types"><span class="fa fa-link"></span></a>Behavior types</h3>
+<p>The test case in Java is able to follow either designer or runner strategies. This means we also have two different behavior types for designer and runner respectively.
+The behaviors are located in separate packages</p>
+<ul>
+<li>com.consol.citrus.dsl.design.AbstractTestBehavior</li>
+<li>com.consol.citrus.dsl.runner.AbstractTestBehavior</li>
+</ul>
+<p>Decide which base behavior you want to extend from according to your test case nature.</p>
 
                     
                     </section>
@@ -2065,10 +2070,10 @@ The loop continues its work until the provided condition evaluates to <strong>tr
         </div>
 
         
-        <a href="./containers-iterate.html" class="navigation navigation-prev " aria-label="Previous page: Iterate"><i class="fa fa-angle-left"></i></a>
+        <a href="./templates.html" class="navigation navigation-prev " aria-label="Previous page: Templates"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./containers-repeat-onerror.html" class="navigation navigation-next " aria-label="Next page: Repeat On Error"><i class="fa fa-angle-right"></i></a>
+        <a href="./containers.html" class="navigation navigation-next " aria-label="Next page: Containers"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
