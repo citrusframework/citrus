@@ -11,14 +11,14 @@ ending with a built Citrus project ready for coding.
 
 - **[Git](http://git-scm.com/)**
   This can be either a command line client or some graphical UI. For simplicity, we assume you have the command line client installed.
-- **Java 7 (or higher version)**
+- **Java 8 (or higher version)**
   You can verify the Java installation via command line with
 
 {% highlight shell %}  
 java -version
-java version &quot;1.7.0_xx&quot;
-Java(TM) 2 Runtime Environment, Standard Edition (build 1.7.0_xx)
-Java HotSpot(TM) Client VM (build 1.7.0_xx, mixed mode, sharing)</pre>
+java version "1.8.0_112"
+Java(TM) SE Runtime Environment (build 1.8.0_112-b16)
+Java HotSpot(TM) 64-Bit Server VM (build 25.112-b16, mixed mode)</pre>
 {% endhighlight %}
   
 - **Maven 3.0.x (or higher version)**

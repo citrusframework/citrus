@@ -11,7 +11,7 @@ within minutes.
 
 You need following software on your computer, in order to use the Citrus Framework:
 
-- **Java 7 or higher**
+- **Java 8 or higher**
   Installed JDK plus JAVA_HOME environment variable set up and pointing to your Java installation directory
 - **Java IDE**
   A Java IDE will help you manage your Citrus project, create and execute test cases. Just use the Java IDE that you are 

@@ -9,7 +9,7 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-camel</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
 </dependency>
 ```
 

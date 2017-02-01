@@ -9,7 +9,7 @@ The SOAP WebService components in Citrus are kept in a separate Maven module. So
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-ws</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
 </dependency>
 ```
 

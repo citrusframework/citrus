@@ -12,7 +12,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <slf4j.version>1.7.22</slf4j.version>
     <testng.version>6.10</testng.version>
-    <citrus.version>2.7-SNAPSHOT</citrus.version>
+    <citrus.version>2.7</citrus.version>
   </properties>
 
   <build>

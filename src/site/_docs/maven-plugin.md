@@ -12,8 +12,8 @@ The following specifies the minimum requirements to run this Maven plugin:
 
 | Library | Version |
 |:-------:|:-------:|
-| Maven | 3.0 |
-| JDK | 1.7 |
+| Maven | 3.3 |
+| JDK | 1.8 |
 | Memory | No minimum requirement. |
 | Disk Space | No minimum requirement. |
 

@@ -66,7 +66,7 @@ In case you already have a proper Maven project you can also integrate Citrus wi
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-core</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -77,7 +77,7 @@ In case you already have a proper Maven project you can also integrate Citrus wi
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-java-dsl</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -88,7 +88,7 @@ In case you already have a proper Maven project you can also integrate Citrus wi
 <plugin>
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-maven-plugin</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
   <configuration>
     <author>Donald Duck</author>
     <targetPackage>com.consol.citrus</targetPackage>
@@ -171,7 +171,7 @@ Ant is a very popular way to compile, test, package and execute Java projects. T
 
 Before we start with the Citrus setup be sure to meet the following preconditions. The following software should be installed on your computer, in order to use the Citrus framework:
 
-* Java 7 or higher
+* Java 8 or higher
 
 Installed JDK plus JAVA_HOME environment variable set up and pointing to your Java installation directory
 

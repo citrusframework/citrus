@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-docker-container</artifactId>
   <name>citrus-docker-container</name>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
   <packaging>pom</packaging>
 
   <build>

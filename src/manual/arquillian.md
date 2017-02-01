@@ -10,7 +10,7 @@ Arquillian offers a fine mechanism for extensions adding features to the Arquill
 
 ```xml
 <extension qualifier="citrus">
-    <property name="citrusVersion">2.7-SNAPSHOT</property>
+    <property name="citrusVersion">2.7</property>
     <property name="autoPackage">true</property>
     <property name="suiteName">citrus-arquillian-suite</property>
 </extension>
@@ -34,7 +34,7 @@ Now that we have added the extension descriptor with all properties we need to a
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-arquillian</artifactId>
-  <version>2.7-SNAPSHOT</version>
+  <version>2.7</version>
   <scope>test</scope>
 </dependency>
 ```

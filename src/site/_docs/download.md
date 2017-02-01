@@ -16,7 +16,7 @@ manual download are listed below:
 {% for release in site.data.releases limit:12 %}| {{ release.version }} | Release [zip](${site.url}/dist/citrus-{{ release.version }}-release.zip)/[tar.gz](${site.url}/dist/citrus-{{ release.version }}-release.tar.gz) | Sources [zip](${site.url}/dist/citrus-{{ release.version }}-src.zip)/[tar.gz](${site.url}/dist/citrus-{{ release.version }}-src.tar.gz) |
 {% endfor %}
 
-The Citrus project requires Java 7 (or newer version) to run.
+The Citrus project requires Java 8 (or newer version) to run.
 
 ## Maven 
 

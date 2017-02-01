@@ -11,7 +11,7 @@ within minutes. You can find the project sources on GitHub [citrus-samples/sampl
 
 You need following software on your computer, in order to use the Citrus Framework:
 
-- **Java 7 or higher**
+- **Java 8 or higher**
   Installed JDK plus JAVA_HOME environment variable set up and pointing to your Java installation directory
 - **Java IDE**
   A Java IDE will help you manage your Citrus project, create and execute test cases. Just use the Java IDE that you are 
@@ -45,7 +45,7 @@ The Gradle build configuration is done in the **build.gradle** and **settings.gr
 {% highlight shell %}
 rootProject.name = 'citrus-sample-gradle'
 group 'com.consol.citrus.samples'
-version '2.7-SNAPSHOT'
+version '2.7'
 {% endhighlight %}
     
 Now as Citrus libraries are available on Maven central repository we add these repositories so Gradle knows how to download the required
@@ -67,8 +67,8 @@ Now lets move on with adding the Citrus libraries to the project.
 
 {% highlight shell %}
 dependencies {
-    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7-SNAPSHOT'
-    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7-SNAPSHOT'
+    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7'
+    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7'
     testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
     [...]
 }
