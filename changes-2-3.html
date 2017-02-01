@@ -63,7 +63,7 @@
         data-chapter-title="Changes 2.3"
         data-filepath="changes-2-3.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:34:54 GMT+0100 (CET)"
+        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1655,7 +1655,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h3 id="changes-in-citrus-23"><a name="changes-in-citrus-23" class="plugin-anchor" href="#changes-in-citrus-23"><span class="fa fa-link"></span></a>Changes in Citrus 2.3?!</h3>
+                        <h2 id="changes-in-citrus-23"><a name="changes-in-citrus-23" class="plugin-anchor" href="#changes-in-citrus-23"><span class="fa fa-link"></span></a>Changes in Citrus 2.3</h2>
 <p>We want to give you a short overview of what has changed in Citrus 2.3. The release adds some new features and improvements to the box. Bugfixes of course are also part of the package. See the following overview on what has changed.</p>
 <h3 id="test-runner-and-test-designer"><a name="test-runner-and-test-designer" class="plugin-anchor" href="#test-runner-and-test-designer"><span class="fa fa-link"></span></a>Test runner and test designer</h3>
 <p>One of the biggest issues with the Citrus Java DSL is the fact that the Citrus Java DSL methods first build the whole test case together before the actual execution takes place. So calling a Java DSL method <strong>send</strong> for instance just prepares the sending test action. The actual sending of the message takes place to a later time when all test actions are setup and the test case is ready to run. This separation of design time and runtime of a test case leads to misunderstandings as a Java developer is used to work with statements and method calls that perform immediately. Based on that the mixture of Citrus Java DSL method calls and normal Java code logic in your test may have lead to unexpected behavior. Following from that we decided to refactor the Java DSL method execution. The result is a new <strong>TestRunner</strong> concept that executes all Java DSL method calls immediately. The old way of building the whole test case before execution is represented with <strong>TestDesigner</strong> concept. So both worlds are now available to you. See <a href="testcase">testcase</a> for details.</p>
