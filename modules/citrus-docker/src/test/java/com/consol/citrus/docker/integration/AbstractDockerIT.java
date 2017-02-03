@@ -19,11 +19,12 @@ package com.consol.citrus.docker.integration;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
+import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
+import org.testng.annotations.BeforeSuite;
 
 import java.util.concurrent.*;
 
@@ -36,27 +37,31 @@ public class AbstractDockerIT extends AbstractTestNGCitrusTest {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractDockerIT.class);
 
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
+    /** Docker connection state, checks connectivity only once per test run */
+    private static boolean connected = false;
+
+    @BeforeSuite(alwaysRun = true)
+    public void checkDockerEnvironment() {
         try {
-            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    DockerClient dockerClient = DockerClientImpl.getInstance()
-                            .withDockerCmdExecFactory(new DockerCmdExecFactoryImpl());
+            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                DockerClient dockerClient = DockerClientImpl.getInstance()
+                        .withDockerCmdExecFactory(new JerseyDockerCmdExecFactory());
 
-                    dockerClient.pingCmd().exec();
-
-                    return true;
-                }
+                dockerClient.pingCmd().exec();
+                return true;
             });
 
             future.get(5000, TimeUnit.MILLISECONDS);
+            connected = true;
         } catch (Exception e) {
-            log.warn("Skipping Docker test execution as no proper Docker environment is available on host system!");
-            return;
+            log.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
         }
+    }
 
-        super.run(callBack, testResult);
+    @Override
+    public void run(IHookCallBack callBack, ITestResult testResult) {
+        if (connected) {
+            super.run(callBack, testResult);
+        }
     }
 }
