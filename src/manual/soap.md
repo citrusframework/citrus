@@ -180,7 +180,7 @@ However we do not want to loose the great extendability and customizing capabili
         <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
 ```
 
-With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in [endpoint-adapter](endpoint-adapter).
+With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in [endpoint-adapter](endpoint-adapter.md).
 
 ### SOAP send and receive
 
@@ -1396,7 +1396,7 @@ The program listing above describes a normal SpringWS request mapping with endpo
 
 ![figure_009.jpg](images/figure_009.jpg)
 
-The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various message endpoint adapter implementations in Citrus were already discussed in [endpoint-adapter](endpoint-adapter).
+The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various message endpoint adapter implementations in Citrus were already discussed in [endpoint-adapter](endpoint-adapter.md).
 
 In this example the ***'helloServiceEndpoint'*** uses the ***'static-response-adapter'*** which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to respond more dynamically.
 
