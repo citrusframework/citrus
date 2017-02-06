@@ -4,21 +4,21 @@
     <archetype>
       <groupId>com.consol.citrus.mvn</groupId>
       <artifactId>citrus-quickstart</artifactId>
-      <version>2.7</version>
+      <version>2.7.1-SNAPSHOT</version>
       <repository>http://labs.consol.de/maven/repository/</repository>
       <description>Citrus quickstart project</description>
     </archetype>
     <archetype>
       <groupId>com.consol.citrus.mvn</groupId>
       <artifactId>citrus-quickstart-soap</artifactId>
-      <version>2.7</version>
+      <version>2.7.1-SNAPSHOT</version>
       <repository>http://labs.consol.de/maven/repository/</repository>
       <description>Citrus quickstart project with SOAP client and server</description>
     </archetype>
     <archetype>
       <groupId>com.consol.citrus.mvn</groupId>
       <artifactId>citrus-quickstart-jms</artifactId>
-      <version>2.7</version>
+      <version>2.7.1-SNAPSHOT</version>
       <repository>http://labs.consol.de/maven/repository/</repository>
       <description>Citrus quickstart project with JMS consumer and producer</description>
     </archetype>
