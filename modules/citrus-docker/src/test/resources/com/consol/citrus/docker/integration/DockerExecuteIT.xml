@@ -44,7 +44,9 @@
                 "GoVersion":"@ignore@",
                 "Os":"@ignore@",
                 "Arch":"@ignore@",
-                "KernelVersion":"@ignore@"
+                "KernelVersion":"@ignore@",
+                "BuildTime":"@ignore@",
+                "Experimental":"@ignore@"
               }
             ]]>
           </docker:result>
@@ -97,26 +99,36 @@
                 "HostConfig":"@ignore@",
                 "HostnamePath":"@ignore@",
                 "HostsPath":"@ignore@",
+                "LogPath":"@ignore@",
                 "Id":"${containerId}",
+                "SizeRootFs":"@ignore@",
                 "Image":"@ignore@",
                 "MountLabel":"",
                 "Name":"/${containerName}",
+                "RestartCount":0,
                 "NetworkSettings":"@ignore@",
                 "Path":"top",
-                "ProcessLabel":"",
+                "ProcessLabel":"@ignore@",
                 "ResolvConfPath":"@ignore@",
                 "ExecIDs":null,
                 "State":
                 {
+                  "Status": "running",
                   "Running":true,
                   "Paused":false,
+                  "Restarting":false,
+                  "Dead":false,
+                  "oomkilled":false,
+                  "OOMKilled":false,
                   "Pid": "@ignore@",
                   "ExitCode":0,
+                  "Error":"",
                   "StartedAt":"@ignore@",
                   "FinishedAt":"@ignore@"
                 },
                 "Volumes": "@ignore@",
-                "VolumesRW": "@ignore@"
+                "VolumesRW": "@ignore@",
+                "Mounts":[]
               }
             ]]>
           </docker:result>
