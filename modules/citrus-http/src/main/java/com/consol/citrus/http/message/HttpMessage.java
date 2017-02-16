@@ -87,8 +87,8 @@ public class HttpMessage extends DefaultMessage {
      * @param statusCode
      */
     public HttpMessage status(HttpStatus statusCode) {
-        statusCode(Integer.valueOf(statusCode.value()));
-        reasonPhrase(statusCode.name());
+        statusCode(statusCode.value());
+        reasonPhrase(statusCode.getReasonPhrase());
         return this;
     }
 
