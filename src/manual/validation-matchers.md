@@ -238,29 +238,29 @@ In the listing above we are using the **equalTo()** matcher. All Hamcrest matche
 ```xml
 <someValue>@assertThat(equalTo(value))@</someValue>
 <someValue>@assertThat(not(equalTo(other))@</someValue>
-<someValue>@assertThat(is(not(other))@</someValue>
-<someValue>@assertThat(not(is(other))@</someValue>
-<someValue>@assertThat(equalToIgnoringCase(VALUE)@</someValue>
-<someValue>@assertThat(containsString(lue)@</someValue>
-<someValue>@assertThat(not(containsString(other))@</someValue>
-<someValue>@assertThat(startsWith(val)@</someValue>
-<someValue>@assertThat(endsWith(lue)@</someValue>
-<someValue>@assertThat(anyOf(startsWith(val), endsWith(lue))@</someValue>
-<someValue>@assertThat(allOf(startsWith(val), endsWith(lue))@</someValue>
-<someValue>@assertThat(isEmptyString()@</someValue>
-<someValue>@assertThat(not(isEmptyString())@</someValue>
-<someValue>@assertThat(isEmptyOrNullString()@</someValue>
-<someValue>@assertThat(nullValue()@</someValue>
-<someValue>@assertThat(notNullValue()@</someValue>
-<someValue>@assertThat(empty()@</someValue>
+<someValue>@assertThat(is(not(other)))@</someValue>
+<someValue>@assertThat(not(is(other)))@</someValue>
+<someValue>@assertThat(equalToIgnoringCase(VALUE))@</someValue>
+<someValue>@assertThat(containsString(lue))@</someValue>
+<someValue>@assertThat(not(containsString(other)))@</someValue>
+<someValue>@assertThat(startsWith(val))@</someValue>
+<someValue>@assertThat(endsWith(lue))@</someValue>
+<someValue>@assertThat(anyOf(startsWith(val), endsWith(lue)))@</someValue>
+<someValue>@assertThat(allOf(startsWith(val), endsWith(lue)))@</someValue>
+<someValue>@assertThat(isEmptyString())@</someValue>
+<someValue>@assertThat(not(isEmptyString()))@</someValue>
+<someValue>@assertThat(isEmptyOrNullString())@</someValue>
+<someValue>@assertThat(nullValue())@</someValue>
+<someValue>@assertThat(notNullValue())@</someValue>
+<someValue>@assertThat(empty())@</someValue>
 <someValue>@assertThat(not(empty())@</someValue>
-<someValue>@assertThat(greaterThan(4)@</someValue>
+<someValue>@assertThat(greaterThan(4))@</someValue>
 <someValue>@assertThat(allOf(greaterThan(4), lessThan(6), not(lessThan(5)))@</someValue>
-<someValue>@assertThat(is(not(greaterThan(5)))@</someValue>
-<someValue>@assertThat(greaterThanOrEqualTo(5)@</someValue>
-<someValue>@assertThat(lessThan(5)@</someValue>
-<someValue>@assertThat(not(lessThan(1))@</someValue>
-<someValue>@assertThat(lessThanOrEqualTo(4)@</someValue>
+<someValue>@assertThat(is(not(greaterThan(5))))@</someValue>
+<someValue>@assertThat(greaterThanOrEqualTo(5))@</someValue>
+<someValue>@assertThat(lessThan(5))@</someValue>
+<someValue>@assertThat(not(lessThan(1)))@</someValue>
+<someValue>@assertThat(lessThanOrEqualTo(4))@</someValue>
 <someValue>@assertThat(hasSize(5))@</someValue>
 ```
 
