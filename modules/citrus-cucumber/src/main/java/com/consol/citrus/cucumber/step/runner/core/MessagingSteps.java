@@ -18,7 +18,6 @@ package com.consol.citrus.cucumber.step.runner.core;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.cucumber.message.MessageCreators;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -55,21 +54,11 @@ public class MessagingSteps {
     @When("^<([^>]*)> sends message <([^>]*)>$")
     public void sendMessage(final String endpoint, final String messageId) {
         if (messages.containsKey(messageId)) {
-            runner.send(new BuilderSupport<SendMessageBuilder>() {
-                @Override
-                public void configure(SendMessageBuilder builder) {
-                    builder.endpoint(endpoint)
-                            .message(new DefaultMessage(messages.get(messageId)));
-                }
-            });
+            runner.send(builder -> builder.endpoint(endpoint)
+                    .message(new DefaultMessage(messages.get(messageId))));
         } else {
-            runner.send(new BuilderSupport<SendMessageBuilder>() {
-                @Override
-                public void configure(SendMessageBuilder builder) {
-                    builder.endpoint(endpoint)
-                            .message(messageCreators.createMessage(messageId));
-                }
-            });
+            runner.send(builder -> builder.endpoint(endpoint)
+                    .message(messageCreators.createMessage(messageId)));
         }
     }
 
@@ -80,13 +69,8 @@ public class MessagingSteps {
 
     @When("^<([^>]*)> sends$")
     public void send(final String endpoint, final String payload) {
-        runner.send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint(endpoint)
-                        .payload(payload);
-            }
-        });
+        runner.send(builder -> builder.endpoint(endpoint)
+                .payload(payload));
     }
 
     @When("^<([^>]*)> sends \"([^\"]*)\"$")
@@ -112,23 +96,13 @@ public class MessagingSteps {
     @When("^<([^>]*)> receives ([^\\s]+) message <([^>]*)>$")
     public void receiveMessage(final String endpoint, final String type, final String messageId) {
         if (messages.containsKey(messageId)) {
-            runner.receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                @Override
-                public void configure(ReceiveMessageBuilder builder) {
-                    builder.endpoint(endpoint)
-                            .messageType(type)
-                            .message(new DefaultMessage(messages.get(messageId)));
-                }
-            });
+            runner.receive(builder -> builder.endpoint(endpoint)
+                    .messageType(type)
+                    .message(new DefaultMessage(messages.get(messageId))));
         } else {
-            runner.receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                @Override
-                public void configure(ReceiveMessageBuilder builder) {
-                    builder.endpoint(endpoint)
-                            .messageType(type)
-                            .message(messageCreators.createMessage(messageId));
-                }
-            });
+            runner.receive(builder -> builder.endpoint(endpoint)
+                    .messageType(type)
+                    .message(messageCreators.createMessage(messageId)));
         }
     }
 
@@ -144,14 +118,9 @@ public class MessagingSteps {
 
     @When("^<([^>]*)> receives ([^\\s]+) \"([^\"]*)\"$")
     public void receive(final String endpoint, final String type, final String payload) {
-        runner.receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint(endpoint)
-                .messageType(type)
-                .payload(payload);
-            }
-        });
+        runner.receive(builder -> builder.endpoint(endpoint)
+        .messageType(type)
+        .payload(payload));
     }
 
     @When("^<([^>]*)> receives \"([^\"]*)\"$")

@@ -1,4 +1,4 @@
-Feature: Variables features
+Feature: Variables designer features
 
 Background:
     Given variables

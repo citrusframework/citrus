@@ -1,4 +1,4 @@
-Feature: Echo features
+Feature: Echo runner features
 
   Scenario: Echo messages
     Given variable foo is "bar"

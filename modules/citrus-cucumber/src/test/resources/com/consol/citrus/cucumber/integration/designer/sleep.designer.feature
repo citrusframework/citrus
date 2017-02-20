@@ -1,4 +1,4 @@
-Feature: Sleep features
+Feature: Sleep designer features
 
   Scenario: Sleep default time
     Given variable sleep is "true"

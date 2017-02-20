@@ -1,13 +1,13 @@
-Feature: Messaging features
+Feature: Messaging designer features
 
 Background:
   Given variable text is "Hello"
 
-  Scenario: Send and receive
+  Scenario: Send and receive inline
     When <fooEndpoint> sends "<message><text>${text}</text></message>"
     Then <fooEndpoint> should receive "<message><text>${text}</text></message>"
 
-  Scenario: Send and receive
+  Scenario: Send and receive multiline
     When <fooEndpoint> sends
       """
       <message>
@@ -21,11 +21,11 @@ Background:
       </message>
       """
 
-  Scenario: Send and receive plaintext
+  Scenario: Send and receive plaintext inline
     When <echoEndpoint> sends "${text}"
     Then <echoEndpoint> should receive plaintext "You just said: ${text}"
 
-  Scenario: Send and receive plaintext
+  Scenario: Send and receive plaintext multiline
     When <echoEndpoint> sends
       """
       ${text}
@@ -35,7 +35,7 @@ Background:
       You just said: ${text}
       """
 
-  Scenario: Message definition
+  Scenario: Message definition inline
     Given message echoRequest
       And <echoRequest> payload is "${text}"
       And <echoRequest> header operation is "sayHello"
@@ -45,7 +45,7 @@ Background:
     When <echoEndpoint> sends message <echoRequest>
     Then <echoEndpoint> should receive plaintext message <echoResponse>
 
-  Scenario: Message definition
+  Scenario: Message definition multiline
     Given message echoRequest
       And <echoRequest> payload is
         """

@@ -1,7 +1,7 @@
-Feature: Message creator features
+Feature: Message creator runner features
 
 Background:
-  Given message creator com.consol.citrus.cucumber.echo.EchoMessageCreator
+  Given message creator com.consol.citrus.cucumber.integration.echo.EchoMessageCreator
   And variable operation is "sayHello"
   And variable text is "Hello"
 
