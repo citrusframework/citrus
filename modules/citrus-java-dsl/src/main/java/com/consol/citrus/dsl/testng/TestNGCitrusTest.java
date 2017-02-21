@@ -18,8 +18,7 @@ package com.consol.citrus.dsl.testng;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.*;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
@@ -80,40 +79,44 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
     @Override
     protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
-        TestDesigner testDesigner = null;
-        TestRunner testRunner = null;
+        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
+            super.run(testResult, method, testLoader, invocationCount);
+        } else {
+            TestDesigner testDesigner = null;
+            TestRunner testRunner = null;
 
-        try {
-            if (citrus == null) {
-                citrus = Citrus.newInstance(applicationContext);
+            try {
+                if (citrus == null) {
+                    citrus = Citrus.newInstance(applicationContext);
+                }
+
+                TestContext ctx = prepareTestContext(citrus.createTestContext());
+
+                if (isDesignerMethod(method)) {
+                    testDesigner = createTestDesigner(method, ctx);
+                } else if (isRunnerMethod(method)) {
+                    testRunner = createTestRunner(method, ctx);
+                } else {
+                    throw new CitrusRuntimeException("Missing designer or runner method parameter");
+                }
+
+                testResult.setAttribute(DESIGNER_ATTRIBUTE, testDesigner);
+                testResult.setAttribute(RUNNER_ATTRIBUTE, testRunner);
+
+                TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
+                testCase.setGroups(testResult.getMethod().getGroups());
+
+                CitrusAnnotations.injectAll(this, citrus, ctx);
+
+                invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
+            } finally {
+                if (testRunner != null) {
+                    testRunner.stop();
+                }
+
+                testResult.removeAttribute(DESIGNER_ATTRIBUTE);
+                testResult.removeAttribute(RUNNER_ATTRIBUTE);
             }
-
-            TestContext ctx = prepareTestContext(citrus.createTestContext());
-
-            if (isDesignerMethod(method)) {
-                testDesigner = createTestDesigner(method, ctx);
-            } else if (isRunnerMethod(method)) {
-                testRunner = createTestRunner(method, ctx);
-            } else {
-                throw new CitrusRuntimeException("Missing designer or runner method parameter");
-            }
-
-            testResult.setAttribute(DESIGNER_ATTRIBUTE, testDesigner);
-            testResult.setAttribute(RUNNER_ATTRIBUTE, testRunner);
-
-            TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
-            testCase.setGroups(testResult.getMethod().getGroups());
-
-            CitrusAnnotations.injectAll(this, citrus, ctx);
-
-            invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
-        } finally {
-            if (testRunner != null) {
-                testRunner.stop();
-            }
-
-            testResult.removeAttribute(DESIGNER_ATTRIBUTE);
-            testResult.removeAttribute(RUNNER_ATTRIBUTE);
         }
     }
 
