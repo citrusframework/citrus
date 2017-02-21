@@ -1,6 +1,33 @@
 - version: ${project.version}
-  date: 2017-02-01
+  date: 2017-03-10
   tag: latest
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
+  - title: Mix XML and Java DSL test methods
+      id: 211
+      type: Fix
+      author: christophd
+  - title: Fixed parentheses in examples for matchers
+      id: 210
+      type: Fix
+      author: christophd
+  - title: Sporadic IllegalStateException
+      id: 209
+      type: Fix
+      author: christophd
+  - title: Link to templates was written wrong
+      id: 206
+      type: Fix
+      author: christophd
+  - title: StopTime action holding static state
+      id: 204
+      type: Fix
+      author: christophd
+
+- version: 2.7
+  date: 2017-02-01
+  tag: v2-7
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
