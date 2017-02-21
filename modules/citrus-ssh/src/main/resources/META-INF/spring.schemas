@@ -14,4 +14,5 @@ http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-2.6.xsd=com/
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-2.6.1.xsd=com/consol/citrus/schema/citrus-ssh-config-2.6.1.xsd
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-2.6.2.xsd=com/consol/citrus/schema/citrus-ssh-config-2.6.2.xsd
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-2.7.xsd=com/consol/citrus/schema/citrus-ssh-config-2.7.xsd
+http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config-2.7.1.xsd=com/consol/citrus/schema/citrus-ssh-config-2.7.1.xsd
 http\://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd=com/consol/citrus/schema/citrus-ssh-config.xsd

@@ -1,4 +1,6 @@
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-2.7.xsd=com/consol/citrus/schema/citrus-kubernetes-config-2.7.xsd
+http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config-2.7.1.xsd=com/consol/citrus/schema/citrus-kubernetes-config-2.7.1.xsd
 http\://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd=com/consol/citrus/schema/citrus-kubernetes-config.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-2.7.xsd=com/consol/citrus/schema/citrus-kubernetes-testcase-2.7.xsd
+http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase-2.7.1.xsd=com/consol/citrus/schema/citrus-kubernetes-testcase-2.7.1.xsd
 http\://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd=com/consol/citrus/schema/citrus-kubernetes-testcase.xsd
