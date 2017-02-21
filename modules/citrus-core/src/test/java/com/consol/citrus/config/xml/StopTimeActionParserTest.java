@@ -28,14 +28,16 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class StopTimeActionParserTest extends AbstractActionParserTest<StopTimeAction> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(StopTimeAction.class, "stop-time");
         
         StopTimeAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getId(), "CITRUS_TIMELINE");
-        
+        Assert.assertEquals(action.getId(), StopTimeAction.DEFAULT_TIMELINE_ID);
+        Assert.assertEquals(action.getSuffix(), StopTimeAction.DEFAULT_TIMELINE_VALUE_SUFFIX);
+
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getId(), "CitrusTimeLine");
+        Assert.assertEquals(action.getId(), "custom");
+        Assert.assertEquals(action.getSuffix(), "_time");
     }
 }

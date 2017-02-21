@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class GroovyActionParserTest extends AbstractActionParserTest<GroovyAction> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(4);
         assertActionClassAndName(GroovyAction.class, "groovy");
         

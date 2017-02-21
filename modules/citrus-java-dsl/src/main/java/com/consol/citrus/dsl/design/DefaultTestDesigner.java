@@ -498,6 +498,15 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public StopTimeAction stopTime(String id, String suffix) {
+        StopTimeAction action = new StopTimeAction();
+        action.setId(id);
+        action.setSuffix(suffix);
+        action(action);
+        return action;
+    }
+
+    @Override
     public TraceVariablesAction traceVariables() {
         TraceVariablesAction action = new TraceVariablesAction();
         action(action);

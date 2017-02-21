@@ -475,6 +475,7 @@
             <xs:element ref="description" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="suffix" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="ExpectTimeoutActionType">

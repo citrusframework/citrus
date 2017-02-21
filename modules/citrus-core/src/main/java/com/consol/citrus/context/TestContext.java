@@ -16,15 +16,18 @@
 
 package com.consol.citrus.context;
 
-import com.consol.citrus.*;
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.endpoint.EndpointFactory;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.*;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -116,9 +119,20 @@ public class TestContext {
      * @return value of the variable
      */
     public String getVariable(final String variableExpression) {
-        return getVariableObject(variableExpression).toString();
+        return getVariable(variableExpression, String.class);
     }
-    
+
+    /**
+     * Gets typed variable value.
+     * @param variableExpression
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public <T> T getVariable(String variableExpression, Class<T> type) {
+        return TypeConversionUtils.convertIfNecessary(getVariableObject(variableExpression), type);
+    }
+
     /**
      * Gets the value for the given variable as object representation.
      * Use this method if you seek for test objects stored in the context.

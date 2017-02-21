@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class RepeatUntilTrueParserTest extends AbstractActionParserTest<RepeatUntilTrue> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(3);
         assertActionClassAndName(RepeatUntilTrue.class, "repeat-until-true");
         

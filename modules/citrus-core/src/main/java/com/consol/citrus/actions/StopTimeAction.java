@@ -21,9 +21,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Action used for time measurement during test. User can define a time line that is followed
  * during the test case. Action can print out the watched time to the console/logger.
@@ -33,11 +30,12 @@ import java.util.Map;
  */
 public class StopTimeAction extends AbstractTestAction {
 
-    /** Static member to hold all time stamps */
-    private static Map<String, Long> timeStamps = new HashMap<>();
+    public static final String DEFAULT_TIMELINE_ID = "CITRUS_TIMELINE";
+    public static final String DEFAULT_TIMELINE_VALUE_SUFFIX = "_VALUE";
 
     /** Current time line id */
-    private String id = "CITRUS_TIMELINE";
+    private String id = DEFAULT_TIMELINE_ID;
+    private String suffix = DEFAULT_TIMELINE_VALUE_SUFFIX;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(StopTimeAction.class);
@@ -51,16 +49,23 @@ public class StopTimeAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
+        String timeLineId = context.replaceDynamicContentInString(id);
+        String timeLineSuffix = context.replaceDynamicContentInString(suffix);
+
         try {
-            if (timeStamps.containsKey(id)) {
+            if (context.getVariables().containsKey(timeLineId)) {
+                long time = System.currentTimeMillis() - context.getVariable(timeLineId, Long.class);
+                context.setVariable(timeLineId + timeLineSuffix, time);
+
                 if (description != null) {
-                    log.info("TimeWatcher " + id + " after " + (System.currentTimeMillis() - timeStamps.get(id).longValue()) + " ms (" + description + ")");
+                    log.info("TimeWatcher " + timeLineId + " after " + time + " ms (" + description + ")");
                 } else {
-                    log.info("TimeWatcher " + id + " after " + (System.currentTimeMillis() - timeStamps.get(id).longValue()) + " ms");
+                    log.info("TimeWatcher " + timeLineId + " after " + time + " ms");
                 }
             } else {
-                log.info("Starting TimeWatcher: " + id);
-                timeStamps.put(id, System.currentTimeMillis());
+                log.info("Starting TimeWatcher: " + timeLineId);
+                context.setVariable(timeLineId, System.currentTimeMillis());
+                context.setVariable(timeLineId + timeLineSuffix, 0L);
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
@@ -77,18 +82,29 @@ public class StopTimeAction extends AbstractTestAction {
     }
 
     /**
-     * Get the current time stamps.
-     * @return the timeStamps
-     */
-    public static Map<String, Long> getTimeStamps() {
-        return timeStamps;
-    }
-
-    /**
      * Gets the id.
      * @return the id
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Sets the suffix.
+     *
+     * @param suffix
+     */
+    public StopTimeAction setSuffix(String suffix) {
+        this.suffix = suffix;
+        return this;
+    }
+
+    /**
+     * Gets the suffix.
+     *
+     * @return
+     */
+    public String getSuffix() {
+        return suffix;
     }
 }

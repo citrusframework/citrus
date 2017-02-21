@@ -16,14 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.actions.StopTimeAction;
 import com.consol.citrus.actions.StopTimerAction;
-import com.consol.citrus.container.Timer;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * @author Martin Maher
@@ -32,7 +28,7 @@ import static org.testng.Assert.*;
 public class StopTimerParserTest extends AbstractActionParserTest<StopTimerAction> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(StopTimerAction.class, "stop-timer");
 

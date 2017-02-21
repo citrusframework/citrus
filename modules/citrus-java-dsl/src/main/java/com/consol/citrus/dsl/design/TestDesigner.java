@@ -374,6 +374,15 @@ public interface TestDesigner extends ApplicationContextAware {
     StopTimeAction stopTime(String id);
 
     /**
+     * Creates a new stop time action.
+     *
+     * @param id
+     * @param suffix
+     * @return
+     */
+    StopTimeAction stopTime(String id, String suffix);
+
+    /**
      * Creates a new trace variables action definition
      * that prints variable values to the console/logger.
      *

@@ -39,6 +39,7 @@ public class StopTimeActionParser implements BeanDefinitionParser {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopTimeAction.class);
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("id"), "id");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("suffix"), "suffix");
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

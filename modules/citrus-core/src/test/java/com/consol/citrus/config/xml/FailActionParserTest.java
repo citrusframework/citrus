@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class FailActionParserTest extends AbstractActionParserTest<FailAction> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(FailAction.class, "fail");
         

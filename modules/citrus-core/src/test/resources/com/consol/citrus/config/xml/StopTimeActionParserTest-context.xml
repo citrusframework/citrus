@@ -8,7 +8,7 @@
         <actions>
             <trace-time/>
             
-            <trace-time id="CitrusTimeLine"/>
+            <trace-time id="custom" suffix="_time"/>
         </actions>
     </testcase>
     

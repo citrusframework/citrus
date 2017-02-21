@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class IterateParserTest extends AbstractActionParserTest<Iterate> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(3);
         assertActionClassAndName(Iterate.class, "iterate");
         

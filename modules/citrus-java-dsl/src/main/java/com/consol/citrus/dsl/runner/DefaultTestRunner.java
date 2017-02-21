@@ -387,6 +387,14 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public StopTimeAction stopTime(String id, String suffix) {
+        StopTimeAction action = new StopTimeAction();
+        action.setId(id);
+        action.setSuffix(suffix);
+        return run(action);
+    }
+
+    @Override
     public TraceVariablesAction traceVariables() {
         return run(new TraceVariablesAction());
     }

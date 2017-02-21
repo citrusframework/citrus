@@ -29,7 +29,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class ConditionalParserTest extends AbstractActionParserTest<Conditional> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
 
         this.assertActionCount(1);
         this.assertActionClassAndName(Conditional.class, "conditional");

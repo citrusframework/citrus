@@ -29,7 +29,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class ParallelParserTest extends AbstractActionParserTest<Parallel> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(Parallel.class, "parallel");
         

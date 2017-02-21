@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class SequenceParserTest extends AbstractActionParserTest<Sequence> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         assertActionCount(1);
         assertActionClassAndName(Sequence.class, "sequential");
         

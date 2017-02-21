@@ -261,6 +261,11 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    public StopTimeAction stopTime(String id, String suffix) {
+        return testRunner.stopTime(id, suffix);
+    }
+
+    @Override
     public TraceVariablesAction traceVariables() {
         return testRunner.traceVariables();
     }

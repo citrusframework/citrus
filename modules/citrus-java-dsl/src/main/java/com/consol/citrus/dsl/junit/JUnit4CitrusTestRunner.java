@@ -26,7 +26,6 @@ import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.selenium.actions.SeleniumAction;
 import com.consol.citrus.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -260,6 +259,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     @Override
     public StopTimeAction stopTime(String id) {
         return testRunner.stopTime(id);
+    }
+
+    @Override
+    public StopTimeAction stopTime(String id, String suffix) {
+        return testRunner.stopTime(id, suffix);
     }
 
     @Override

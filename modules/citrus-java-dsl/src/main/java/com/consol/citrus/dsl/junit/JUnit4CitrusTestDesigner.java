@@ -323,6 +323,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    public StopTimeAction stopTime(String id, String suffix) {
+        return testDesigner.stopTime(id, suffix);
+    }
+
+    @Override
     public TraceVariablesAction traceVariables() {
         return testDesigner.traceVariables();
     }

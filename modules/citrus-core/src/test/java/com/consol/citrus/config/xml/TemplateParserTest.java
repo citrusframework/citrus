@@ -16,13 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
+import com.consol.citrus.container.Template;
+import com.consol.citrus.testng.AbstractActionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.container.Template;
-import com.consol.citrus.testng.AbstractActionParserTest;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -30,7 +29,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class TemplateParserTest extends AbstractActionParserTest<Template> {
 
     @Test
-    public void testFailActionParser() {
+    public void testActionParser() {
         Map<String, Template> templates = beanDefinitionContext.getBeansOfType(Template.class);
         
         Assert.assertEquals(templates.size(), 2);
