@@ -124,7 +124,7 @@ public class EchoSteps {
 }
 ```
 
-If we have a closer look at the step definition class we see that it is a normal POJO that uses a **@CitrusResource** annotated **TestDesigner** . The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.
+If we have a closer look at the step definition class we see that it is a normal POJO that uses a **@CitrusResource** annotated **TestDesigner**. The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.
 
 **Important**
 Of course you can do the dependency injection with **@CitrusResource** annotations on **TestRunner** instances, too. Which variation should someone use **TestDesigner** or **TestRunner** ? In fact there is a significant difference when looking at the two approaches. The designer will use the Gherkin methods to build the whole Citrus test case first before any action is executed. The runner will execute each test action that has been built with a Gherkin step immediately. This means that a designer approach will always complete all BDD step definitions before taking action. This directly affects the Cucumber step reports. All steps are usually marked as successful when using a designer approach as the Citrus test is executed after the Cucumber steps have been executed. The runner approach in contrast will fail the step when the corresponding test action fails. The Cucumber test reports will definitely look different depending on what approach you are choosing. All other functions stay the same in both approaches. If you need to learn more about designer and runner approaches please see
@@ -296,7 +296,7 @@ If you want to enable predefined steps support in your test you need to include 
 ```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    glue = { "com.consol.citrus.cucumber.step.designer" }
+    glue = { "com.consol.citrus.cucumber.step.designer" },
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
@@ -310,7 +310,7 @@ Of course you can also choose to include the **TestRunner** step definitions by 
 ```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    glue = { "com.consol.citrus.cucumber.step.runner" }
+    glue = { "com.consol.citrus.cucumber.step.runner" },
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 

@@ -12,12 +12,14 @@
     "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
     "xmlFilePattern" : "/**/*Test.xml,/**/*IT.xml",
     "useConnector" : true,
-    "connectorActive" : true,
+    "connectorActive" : false,
+    "tabSize" : 2,
     "build" : {
       "@class" : "com.consol.citrus.admin.model.build.maven.MavenBuildConfiguration",
       "type" : "maven",
       "properties" : [ ],
       "testPlugin" : "maven-failsafe",
+      "command" : null,
       "profiles" : null,
       "useClean" : false
     }

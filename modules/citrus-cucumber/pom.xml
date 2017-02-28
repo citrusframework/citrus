@@ -49,10 +49,20 @@
       <artifactId>citrus-model-cucumber</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-java-dsl</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-docker</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>

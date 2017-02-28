@@ -17,12 +17,8 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
-import com.consol.citrus.docker.command.CommandResultCallback;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.DockerActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.Info;
@@ -79,52 +75,24 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                docker(new BuilderSupport<DockerActionBuilder>() {
-                    @Override
-                    public void configure(DockerActionBuilder builder) {
-                        builder.client(client)
-                            .info();
-                    }
-                });
+                docker(builder -> builder.client(client)
+                    .info());
 
-                docker(new BuilderSupport<DockerActionBuilder>() {
-                    @Override
-                    public void configure(DockerActionBuilder builder) {
-                        builder.client(client)
-                            .ping();
-                    }
-                });
+                docker(builder -> builder.client(client)
+                    .ping());
 
-                docker(new BuilderSupport<DockerActionBuilder>() {
-                    @Override
-                    public void configure(DockerActionBuilder builder) {
-                        builder.client(client)
-                            .version()
-                            .validateCommandResult(new CommandResultCallback<Version>() {
-                                @Override
-                                public void doWithCommandResult(Version result, TestContext context) {
-                                    Assert.assertNotNull(result);
-                                }
-                            });
-                    }
-                });
+                docker(builder -> builder.client(client)
+                    .version()
+                    .validateCommandResult((result, context) -> {
+                        Assert.assertNotNull(result);
+                    }));
 
-                docker(new BuilderSupport<DockerActionBuilder>() {
-                    @Override
-                    public void configure(DockerActionBuilder builder) {
-                        builder.client(client)
-                            .create("new_image")
-                                .name("my_container");
-                    }
-                });
+                docker(builder -> builder.client(client)
+                    .create("new_image")
+                        .name("my_container"));
 
-                docker(new BuilderSupport<DockerActionBuilder>() {
-                    @Override
-                    public void configure(DockerActionBuilder builder) {
-                        builder.client(client)
-                            .inspectContainer("my_container");
-                    }
-                });
+                docker(builder -> builder.client(client)
+                    .inspectContainer("my_container"));
             }
         };
 
