@@ -31,4 +31,10 @@ public interface SeleniumAction extends TestAction {
      * @param browser
      */
     void setBrowser(SeleniumBrowser browser);
+
+    /**
+     * Gets the Selenium browser.
+     * @return
+     */
+    SeleniumBrowser getBrowser();
 }

@@ -11,4 +11,8 @@
     <constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
   </bean>
 
+  <bean id="seleniumBrowser" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.selenium.endpoint.SeleniumBrowser"/>
+  </bean>
+
 </beans>
