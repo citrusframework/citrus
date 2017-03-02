@@ -51,7 +51,7 @@ public class MessagingSteps {
         messages.put(messageId, new DefaultMessage());
     }
 
-    @When("^<([^>]*)> sends message <([^>]*)>$")
+    @When("^<([^>]+)> sends message <([^>]+)>$")
     public void sendMessage(String endpoint, String messageId) {
         if (messages.containsKey(messageId)) {
             designer.send(endpoint)
@@ -62,38 +62,38 @@ public class MessagingSteps {
         }
     }
 
-    @Then("^<([^>]*)> should send message <([^>]*)>$")
+    @Then("^<([^>]+)> should send message <([^>]+)>$")
     public void shouldSendMessage(String endpoint, String messageName) {
         sendMessage(endpoint, messageName);
     }
 
-    @When("^<([^>]*)> sends$")
+    @When("^<([^>]+)> sends$")
     public void send(String endpoint, String payload) {
         designer.send(endpoint)
                 .payload(payload);
     }
 
-    @When("^<([^>]*)> sends \"([^\"]*)\"$")
+    @When("^<([^>]+)> sends \"([^\"]*)\"$")
     public void sendPayload(String endpoint, String payload) {
         send(endpoint, payload);
     }
 
-    @Then("^<([^>]*)> should send \"([^\"]*)\"$")
+    @Then("^<([^>]+)> should send \"([^\"]*)\"$")
     public void shouldSend(String endpoint, String payload) {
         send(endpoint, payload);
     }
 
-    @Then("^<([^>]*)> should send$")
+    @Then("^<([^>]+)> should send$")
     public void shouldSendPayload(String endpoint, String payload) {
         send(endpoint, payload);
     }
 
-    @When("^<([^>]*)> receives message <([^>]*)>$")
+    @When("^<([^>]+)> receives message <([^>]+)>$")
     public void receiveXmlMessage(String endpoint, final String messageName) {
         receiveMessage(endpoint, MessageType.XML.name(), messageName);
     }
 
-    @When("^<([^>]*)> receives ([^\\s]+) message <([^>]*)>$")
+    @When("^<([^>]+)> receives ([^\\s]+) message <([^>]+)>$")
     public void receiveMessage(String endpoint, String type, final String messageId) {
         if (messages.containsKey(messageId)) {
             designer.receive(endpoint)
@@ -106,59 +106,59 @@ public class MessagingSteps {
         }
     }
 
-    @Then("^<([^>]*)> should receive message <([^>]*)>$")
+    @Then("^<([^>]+)> should receive message <([^>]+)>$")
     public void shouldReceiveXmlMessage(String endpoint, String messageName) {
         receiveMessage(endpoint, MessageType.XML.name(), messageName);
     }
 
-    @Then("^<([^>]*)> should receive ([^\\s]+) message <([^>]*)>$")
+    @Then("^<([^>]+)> should receive ([^\\s]+) message <([^>]+)>$")
     public void shouldReceiveMessage(String endpoint, String type, String messageName) {
         receiveMessage(endpoint, type, messageName);
     }
 
-    @When("^<([^>]*)> receives ([^\\s]+) \"([^\"]*)\"$")
+    @When("^<([^>]+)> receives ([^\\s]+) \"([^\"]*)\"$")
     public void receive(String endpoint, String type, String payload) {
         designer.receive(endpoint)
                 .messageType(type)
                 .payload(payload);
     }
 
-    @When("^<([^>]*)> receives \"([^\"]*)\"$")
+    @When("^<([^>]+)> receives \"([^\"]*)\"$")
     public void receiveXml(String endpoint, String payload) {
         receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @When("^<([^>]*)> receives$")
+    @When("^<([^>]+)> receives$")
     public void receiveXmlPayload(String endpoint, String payload) {
         receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @When("^<([^>]*)> receives ([^\\s\"]+)$")
+    @When("^<([^>]+)> receives ([^\\s\"]+)$")
     public void receivePayload(String endpoint, String type, String payload) {
         receive(endpoint, type, payload);
     }
 
-    @Then("^<([^>]*)> should receive ([^\\s]+) \"([^\"]*)\"$")
+    @Then("^<([^>]+)> should receive ([^\\s]+) \"([^\"]*)\"$")
     public void shouldReceive(String endpoint, String type, String payload) {
         receive(endpoint, type, payload);
     }
 
-    @Then("^<([^>]*)> should receive \"([^\"]*)\"$")
+    @Then("^<([^>]+)> should receive \"([^\"]*)\"$")
     public void shouldReceiveXml(String endpoint, String payload) {
         receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @Then("^<([^>]*)> should receive$")
+    @Then("^<([^>]+)> should receive$")
     public void shouldReceiveXmlPayload(String endpoint, String payload) {
         receive(endpoint, MessageType.XML.name(), payload);
     }
 
-    @Then("^<([^>]*)> should receive ([^\\s\"]+)$")
+    @Then("^<([^>]+)> should receive ([^\\s\"]+)$")
     public void shouldReceivePayload(String endpoint, String type, String payload) {
         receive(endpoint, type, payload);
     }
 
-    @And("^<([^>]*)> header ([^\\s]+) is \"([^\"]*)\"$")
+    @And("^<([^>]+)> header ([^\\s]+)(?: is |=)\"([^\"]*)\"$")
     public void addHeader(String messageId, String name, String value) {
         if (!messages.containsKey(messageId)) {
             throw new CitrusRuntimeException(String.format("Unknown message '%s'", messageId));
@@ -167,7 +167,7 @@ public class MessagingSteps {
         messages.get(messageId).setHeader(name, value);
     }
 
-    @And("^<([^>]*)> payload is \"([^\"]*)\"$")
+    @And("^<([^>]+)> payload (?:is )?\"([^\"]*)\"$")
     public void addPayload(String messageId, String payload) {
         if (!messages.containsKey(messageId)) {
             throw new CitrusRuntimeException(String.format("Unknown message '%s'", messageId));
@@ -176,7 +176,7 @@ public class MessagingSteps {
         messages.get(messageId).setPayload(payload);
     }
 
-    @And("^<([^>]*)> payload is$")
+    @And("^<([^>]+)> payload(?: is)?$")
     public void addPayloadMultiline(String messageId, String payload) {
         addPayload(messageId, payload);
     }
