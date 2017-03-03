@@ -16,6 +16,7 @@
 
 package cucumber.runtime.java.spring;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
@@ -64,6 +65,7 @@ public class CitrusSpringObjectFactory extends SpringFactory {
     public boolean addClass(Class<?> clazz) {
         InjectionMode fallback;
         if (mode == null) {
+            log.info("Initializing injection mode for Citrus " + Citrus.getVersion());
             fallback = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
         } else {
             fallback = mode;
