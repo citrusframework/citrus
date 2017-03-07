@@ -20,7 +20,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
@@ -127,7 +126,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.XML.toString());
+        return new DomXmlMessageValidator().supportsMessageType(messageType, message);
     }
 
     /**

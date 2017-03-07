@@ -73,7 +73,7 @@ public class DefaultMessage implements Message {
      * @param payload
      */
     public DefaultMessage(Object payload) {
-        this(payload, new LinkedHashMap<String, Object>());
+        this(payload, new LinkedHashMap<>());
     }
 
     /**

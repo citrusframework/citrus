@@ -250,7 +250,21 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.JSON.toString());
+        if (!messageType.equalsIgnoreCase(MessageType.JSON.name())) {
+            return false;
+        }
+
+        if (!(message.getPayload() instanceof String)) {
+            return false;
+        }
+
+        if (StringUtils.hasText(message.getPayload(String.class)) &&
+                !message.getPayload(String.class).trim().startsWith("{") &&
+                !message.getPayload(String.class).trim().startsWith("[")) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

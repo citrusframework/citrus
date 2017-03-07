@@ -20,7 +20,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.jayway.jsonpath.*;
@@ -122,7 +121,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.JSON.toString());
+        return new JsonTextMessageValidator().supportsMessageType(messageType, message);
 
     }
 }

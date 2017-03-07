@@ -18,10 +18,12 @@ package com.consol.citrus.validation;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,17 +54,37 @@ public class MessageValidatorRegistry implements InitializingBean {
      * @param message the message object
      * @return the list of matching message validators.
      */
-    public List<MessageValidator<? extends ValidationContext>> findMessageValidators(String messageType, Message message, List<ValidationContext> validationContexts) {
-        List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<MessageValidator<? extends ValidationContext>>();
-        
+    public List<MessageValidator<? extends ValidationContext>> findMessageValidators(String messageType, Message message) {
+        List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
+
         for (MessageValidator<? extends ValidationContext> validator : messageValidators) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingValidators.add(validator);
             }
         }
-        
+
         if (matchingValidators.isEmpty()) {
-            throw new CitrusRuntimeException("Could not find proper message validator for message type '" + 
+            // try to find fallback message validator for given message payload
+            if (message.getPayload() instanceof String &&
+                    StringUtils.hasText(message.getPayload(String.class))) {
+                String payload = message.getPayload(String.class);
+
+                if (payload.startsWith("<") && !messageType.equals(MessageType.XML.name())) {
+                    return findMessageValidators(MessageType.XML.name(), message);
+                }
+
+                if ((payload.trim().startsWith("{") || payload.trim().startsWith("[")) && !messageType.equals(MessageType.JSON.name())) {
+                    return findMessageValidators(MessageType.JSON.name(), message);
+                }
+
+                if (!messageType.equals(MessageType.PLAINTEXT.name())) {
+                    return findMessageValidators(MessageType.PLAINTEXT.name(), message);
+                }
+            }
+        }
+
+        if (matchingValidators.isEmpty()) {
+            throw new CitrusRuntimeException("Could not find proper message validator for message type '" +
                     messageType + "', please define a capable message validator for this message type");
         }
 

@@ -18,10 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.util.ValidateMessageParserUtil;
-import com.consol.citrus.config.util.VariableExtractorParserUtil;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.config.util.*;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -107,24 +104,22 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyValue("messageType", messageType);
             }
 
-            if (messageType.equalsIgnoreCase(MessageType.XML.toString()) || messageType.equalsIgnoreCase(MessageType.XHTML.toString())) {
-                XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(messageElement);
-                validationContexts.add(xmlMessageValidationContext);
+            validationContexts.add(new DefaultValidationContext());
 
-                XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
-                if (!xPathMessageValidationContext.getXpathExpressions().isEmpty()) {
-                    validationContexts.add(xPathMessageValidationContext);
-                }
-            } else if (messageType.equalsIgnoreCase(MessageType.JSON.toString())) {
-                JsonMessageValidationContext jsonMessageValidationContext = getJsonMessageValidationContext(messageElement);
-                validationContexts.add(jsonMessageValidationContext);
+            XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(messageElement);
+            validationContexts.add(xmlMessageValidationContext);
 
-                JsonPathMessageValidationContext jsonPathMessageValidationContext = getJsonPathMessageValidationContext(messageElement);
-                if (!jsonPathMessageValidationContext.getJsonPathExpressions().isEmpty()) {
-                    validationContexts.add(jsonPathMessageValidationContext);
-                }
-            } else {
-                validationContexts.add(new DefaultValidationContext());
+            XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
+            if (!xPathMessageValidationContext.getXpathExpressions().isEmpty()) {
+                validationContexts.add(xPathMessageValidationContext);
+            }
+
+            JsonMessageValidationContext jsonMessageValidationContext = getJsonMessageValidationContext(messageElement);
+            validationContexts.add(jsonMessageValidationContext);
+
+            JsonPathMessageValidationContext jsonPathMessageValidationContext = getJsonPathMessageValidationContext(messageElement);
+            if (!jsonPathMessageValidationContext.getJsonPathExpressions().isEmpty()) {
+                validationContexts.add(jsonPathMessageValidationContext);
             }
 
             ScriptValidationContext scriptValidationContext = getScriptValidationContext(messageElement, messageType);

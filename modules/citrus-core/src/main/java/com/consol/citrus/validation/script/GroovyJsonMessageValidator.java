@@ -17,9 +17,8 @@
 package com.consol.citrus.validation.script;
 
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import org.springframework.core.io.ClassPathResource;
-
-import com.consol.citrus.message.MessageType;
 
 /**
  * Extended groovy message validator providing specific Json slurper support.
@@ -40,6 +39,6 @@ public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         // only support json message type
-        return messageType.equalsIgnoreCase(MessageType.JSON.toString());
+        return new JsonTextMessageValidator().supportsMessageType(messageType, message);
     }
 }

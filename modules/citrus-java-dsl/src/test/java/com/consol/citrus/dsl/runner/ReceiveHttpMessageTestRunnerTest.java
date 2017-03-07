@@ -20,8 +20,6 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.message.HttpMessage;
@@ -30,6 +28,8 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
@@ -66,17 +66,12 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server(httpServer)
-                                .receive()
-                                .get("/test/foo")
-                                .queryParam("param1", "value1")
-                                .queryParam("param2", "value2")
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-                    }
-                });
+                http(action -> action.server(httpServer)
+                        .receive()
+                        .get("/test/foo")
+                        .queryParam("param1", "value1")
+                        .queryParam("param2", "value2")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
             }
         };
 
@@ -88,8 +83,10 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
-        Assert.assertEquals(action.getValidationContexts().size(), 1L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -114,16 +111,11 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.client(httpClient)
-                                .receive()
-                                .response(HttpStatus.OK)
-                                .version("HTTP/1.1")
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-                    }
-                });
+                http(action -> action.client(httpClient)
+                        .receive()
+                        .response(HttpStatus.OK)
+                        .version("HTTP/1.1")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
             }
         };
 
@@ -135,8 +127,10 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getValidationContexts().size(), 1L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");

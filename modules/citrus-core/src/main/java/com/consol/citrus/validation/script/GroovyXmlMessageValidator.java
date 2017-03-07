@@ -17,9 +17,9 @@
 package com.consol.citrus.validation.script;
 
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import org.springframework.core.io.ClassPathResource;
-
-import com.consol.citrus.message.MessageType;
 
 /**
  * Extended groovy message validator providing specific XML slurper support.
@@ -40,6 +40,7 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         // only support xml message type
-        return messageType.equalsIgnoreCase(MessageType.XML.toString()) || messageType.equalsIgnoreCase(MessageType.XHTML.toString());
+        return new DomXmlMessageValidator().supportsMessageType(messageType, message) ||
+                new XhtmlMessageValidator().supportsMessageType(messageType, message);
     }
 }

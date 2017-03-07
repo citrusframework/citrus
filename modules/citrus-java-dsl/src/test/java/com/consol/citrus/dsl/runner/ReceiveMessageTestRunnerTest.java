@@ -22,8 +22,6 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestRequest;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -99,12 +97,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint));
             }
         };
 
@@ -117,8 +110,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
     }
 
     @Test
@@ -132,14 +127,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .messageType(MessageType.PLAINTEXT)
-                                .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .messageType(MessageType.PLAINTEXT)
+                        .message(new DefaultMessage("Foo").setHeader("operation", "foo")));
             }
         };
 
@@ -152,8 +142,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
@@ -182,13 +174,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payloadModel(new TestRequest("Hello Citrus!"));
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payloadModel(new TestRequest("Hello Citrus!")));
             }
         };
 
@@ -201,8 +188,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
@@ -223,13 +212,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload(new TestRequest("Hello Citrus!"), marshaller);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload(new TestRequest("Hello Citrus!"), marshaller));
             }
         };
 
@@ -242,8 +226,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -270,13 +256,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload(new TestRequest("Hello Citrus!"), "myMarshaller");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload(new TestRequest("Hello Citrus!"), "myMarshaller"));
             }
         };
 
@@ -289,8 +270,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -310,13 +293,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
             }
         };
 
@@ -329,8 +307,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -352,13 +332,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload(resource);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload(resource));
             }
         };
 
@@ -371,8 +346,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -401,13 +378,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint("fooMessageEndpoint")
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-                    }
-                });
+                receive(action -> action.endpoint("fooMessageEndpoint")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
             }
         };
 
@@ -433,14 +405,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .timeout(1000L);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .timeout(1000L));
             }
         };
 
@@ -470,25 +437,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .header("operation", "sayHello")
-                                .header("foo", "bar");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("operation", "sayHello")
+                        .header("foo", "bar"));
 
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .header("operation", "sayHello")
-                                .header("foo", "bar")
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .header("operation", "sayHello")
+                        .header("foo", "bar")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
             }
         };
 
@@ -535,23 +492,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
 
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
-                                .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
+                        .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
             }
         };
 
@@ -601,25 +548,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
-                                .header("<Header><Name>operation</Name><Value>foo2</Value></Header>");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
+                        .header("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
 
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
-                                .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
-                                .header("<Header><Name>operation</Name><Value>foo2</Value></Header>");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
+                        .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
+                        .header("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
             }
         };
 
@@ -677,23 +614,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .header(resource);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header(resource));
 
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
-                                .header(resource);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
+                        .header(resource));
             }
         };
 
@@ -747,27 +674,17 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
-                                .header(resource)
-                                .header(resource);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
+                        .header(resource)
+                        .header(resource));
 
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
-                                .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
-                                .header(resource)
-                                .header(resource);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
+                        .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
+                        .header(resource)
+                        .header(resource));
             }
         };
 
@@ -817,16 +734,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .messageType(MessageType.PLAINTEXT)
-                                .payload("TestMessage")
-                                .header("operation", "sayHello")
-                                .validator(validator);
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .messageType(MessageType.PLAINTEXT)
+                        .payload("TestMessage")
+                        .header("operation", "sayHello")
+                        .validator(validator));
             }
         };
 
@@ -867,16 +779,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .messageType(MessageType.PLAINTEXT)
-                                .payload("TestMessage")
-                                .header("operation", "sayHello")
-                                .validator("plainTextValidator");
-                    }
-                });
+                receive(action -> action.endpoint(messageEndpoint)
+                        .messageType(MessageType.PLAINTEXT)
+                        .payload("TestMessage")
+                        .header("operation", "sayHello")
+                        .validator("plainTextValidator"));
             }
         };
 
@@ -915,16 +822,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
-                                .dictionary(dictionary);
-                    }
-                });
+                                .dictionary(dictionary));
             }
         };
 
@@ -964,16 +866,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
-                                .dictionary("customDictionary");
-                    }
-                });
+                                .dictionary("customDictionary"));
             }
         };
 
@@ -1011,14 +908,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .selector(messageSelector);
-                    }
-                });
+                                .selector(messageSelector));
             }
         };
 
@@ -1051,14 +943,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .selector("operation = 'sayHello'");
-                    }
-                });
+                                .selector("operation = 'sayHello'"));
             }
         };
 
@@ -1096,15 +983,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromPayload("/TestRequest/Message", "text")
-                                .extractFromPayload("/TestRequest/Message/@lang", "language");
-                    }
-                });
+                                .extractFromPayload("/TestRequest/Message/@lang", "language"));
             }
         };
 
@@ -1150,17 +1032,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .extractFromPayload("$.text", "text")
                                 .extractFromPayload("$.toString()", "payload")
-                                .extractFromPayload("$.person", "person");
-                    }
-                });
+                                .extractFromPayload("$.person", "person"));
             }
         };
 
@@ -1204,15 +1081,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromHeader("operation", "operationHeader")
-                                .extractFromHeader("requestId", "id");
-                    }
-                });
+                                .extractFromHeader("requestId", "id"));
             }
         };
 
@@ -1254,17 +1126,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromHeader("operation", "operationHeader")
                                 .extractFromHeader("requestId", "id")
                                 .extractFromPayload("/TestRequest/Message", "text")
-                                .extractFromPayload("/TestRequest/Message/@lang", "language");
-                    }
-                });
+                                .extractFromPayload("/TestRequest/Message/@lang", "language"));
             }
         };
 
@@ -1314,16 +1181,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
-                                .validationCallback(callback);
-                    }
-                });
+                                .validationCallback(callback));
             }
         };
 
@@ -1366,15 +1228,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScript("assert json.message == 'Hello Citrus!'")
-                                .validator("groovyMessageValidator");
-                    }
-                });
+                                .validator("groovyMessageValidator"));
             }
         };
 
@@ -1389,11 +1246,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1421,15 +1280,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScriptResource("classpath:com/consol/citrus/dsl/runner/validation.groovy")
-                                .validator("groovyMessageValidator");
-                    }
-                });
+                                .validator("groovyMessageValidator"));
             }
         };
 
@@ -1444,11 +1298,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
@@ -1475,15 +1331,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScript(new ClassPathResource("com/consol/citrus/dsl/runner/validation.groovy"))
-                                .validator("groovyMessageValidator");
-                    }
-                });
+                                .validator("groovyMessageValidator"));
             }
         };
 
@@ -1498,11 +1349,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1529,16 +1382,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScript("assert json.message == 'Hello Citrus!'")
                                 .validator("groovyMessageValidator")
-                                .header("operation", "sayHello");
-                    }
-                });
+                                .header("operation", "sayHello"));
             }
         };
 
@@ -1553,11 +1401,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1583,14 +1433,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
-                                .validateNamespace("pfx", "http://www.consol.de/schemas/test");
-                    }
-                });
+                                .validateNamespace("pfx", "http://www.consol.de/schemas/test"));
             }
         };
 
@@ -1603,10 +1448,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
@@ -1629,15 +1476,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
                                 .validate("TestRequest.Message", "Hello World!")
-                                .validate("TestRequest.Operation", "SayHello");
-                    }
-                });
+                                .validate("TestRequest.Operation", "SayHello"));
             }
         };
 
@@ -1650,10 +1492,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XpathMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), XpathMessageValidationContext.class);
 
-        XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(0);
+        XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(2);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
@@ -1676,19 +1520,14 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate("$.person.name", "John")
                                 .validate("$.person.active", true)
                                 .validate("$.id", anyOf(containsString("123456789"), nullValue()))
                                 .validate("$.text", "Hello World!")
-                                .validate("$.index", 5);
-                    }
-                });
+                                .validate("$.index", 5));
             }
         };
 
@@ -1701,11 +1540,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonPathMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), JsonPathMessageValidationContext.class);
 
-        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
+        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(3);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
@@ -1730,16 +1571,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate("$.person.name", "John")
-                                .validate("$.text", "Hello Citrus!");
-                    }
-                });
+                                .validate("$.text", "Hello Citrus!"));
             }
         };
     }
@@ -1758,16 +1594,11 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate("$.person.name", "John")
-                                .validate("$.text", "Hello World!");
-                    }
-                });
+                                .validate("$.text", "Hello World!"));
             }
         };
     }
@@ -1786,14 +1617,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>?</Message></TestRequest>")
-                                .ignore("TestRequest.Message");
-                    }
-                });
+                                .ignore("TestRequest.Message"));
             }
         };
 
@@ -1806,10 +1632,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
@@ -1832,17 +1660,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
                                 .ignore("$..text")
                                 .ignore("$.person.surname")
-                                .ignore("$.index");
-                    }
-                });
+                                .ignore("$.index"));
             }
         };
 
@@ -1855,10 +1678,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(0);
+        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(2);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}");
@@ -1894,14 +1719,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
-                                .xsd("testSchema");
-                    }
-                });
+                                .xsd("testSchema"));
             }
         };
 
@@ -1914,10 +1734,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");
@@ -1954,14 +1776,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint(messageEndpoint)
+                receive(action -> action.endpoint(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
-                                .xsdSchemaRepository("customSchemaRepository");
-                    }
-                });
+                                .xsdSchemaRepository("customSchemaRepository"));
             }
         };
 
@@ -1974,10 +1791,12 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");

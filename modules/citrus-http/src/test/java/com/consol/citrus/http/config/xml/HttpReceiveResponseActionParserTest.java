@@ -23,6 +23,7 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -67,8 +68,10 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(action.getEndpointUri(), "http://localhost:8080/test");
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();

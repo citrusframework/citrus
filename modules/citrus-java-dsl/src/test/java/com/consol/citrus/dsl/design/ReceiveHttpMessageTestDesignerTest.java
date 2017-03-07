@@ -24,6 +24,8 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
@@ -67,8 +69,10 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
-        Assert.assertEquals(action.getValidationContexts().size(), 1L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -102,8 +106,10 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getValidationContexts().size(), 1L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");

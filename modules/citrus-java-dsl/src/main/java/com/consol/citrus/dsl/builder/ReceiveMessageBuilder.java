@@ -64,9 +64,9 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     private String messageType;
 
     /** Validation context used in this action builder */
+    private DefaultValidationContext defaultValidationContext = new DefaultValidationContext();
     private XmlMessageValidationContext xmlMessageValidationContext = new XmlMessageValidationContext();
     private JsonMessageValidationContext jsonMessageValidationContext = new JsonMessageValidationContext();
-    private DefaultValidationContext defaultValidationContext = new DefaultValidationContext();
 
     /** JSON validation context used in this action builder */
     private JsonPathMessageValidationContext jsonPathValidationContext;
@@ -389,17 +389,10 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         this.messageType = messageType;
         getAction().setMessageType(messageType);
 
-        if (messageType.equalsIgnoreCase(MessageType.XML.name())
-                || messageType.equalsIgnoreCase(MessageType.XHTML.name())) {
-            getAction().getValidationContexts().add(xmlMessageValidationContext);
-            getAction().getValidationContexts().remove(jsonMessageValidationContext);
-        } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
-            getAction().getValidationContexts().remove(xmlMessageValidationContext);
-            getAction().getValidationContexts().add(jsonMessageValidationContext);
-        } else {
-            getAction().getValidationContexts().remove(xmlMessageValidationContext);
-            getAction().getValidationContexts().remove(jsonMessageValidationContext);
+        if (getAction().getValidationContexts().isEmpty()) {
             getAction().getValidationContexts().add(defaultValidationContext);
+            getAction().getValidationContexts().add(xmlMessageValidationContext);
+            getAction().getValidationContexts().add(jsonMessageValidationContext);
         }
 
         return self;
@@ -702,7 +695,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     private XpathMessageValidationContext getXPathValidationContext() {
         if (xmlMessageValidationContext instanceof XpathMessageValidationContext) {
             return ((XpathMessageValidationContext)xmlMessageValidationContext);
-        } else if (xmlMessageValidationContext instanceof XmlMessageValidationContext) {
+        } else {
             XpathMessageValidationContext xPathContext = new XpathMessageValidationContext();
             xPathContext.setNamespaces(xmlMessageValidationContext.getNamespaces());
             xPathContext.setControlNamespaces(xmlMessageValidationContext.getControlNamespaces());
@@ -717,8 +710,6 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
 
             xmlMessageValidationContext = xPathContext;
             return xPathContext;
-        } else {
-            throw new CitrusRuntimeException("Unable to set XML property on validation context type " + xmlMessageValidationContext);
         }
     }
 

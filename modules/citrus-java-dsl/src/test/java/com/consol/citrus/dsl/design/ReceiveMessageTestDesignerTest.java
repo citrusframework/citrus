@@ -33,6 +33,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -98,7 +99,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
     }
 
     @Test
@@ -123,8 +127,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
@@ -159,8 +165,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -189,8 +197,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -224,8 +234,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -254,8 +266,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -285,8 +299,10 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "somePayload");
@@ -1038,11 +1054,13 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert true");
@@ -1085,10 +1103,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1130,10 +1150,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
 
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
@@ -1177,11 +1199,13 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
         
-        Assert.assertEquals(action.getValidationContexts().size(), 2L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4L);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(1);
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
         
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert true");
@@ -1217,10 +1241,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
@@ -1252,10 +1278,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XpathMessageValidationContext.class);
-        
-        XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(0);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), XpathMessageValidationContext.class);
+
+        XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(2);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
@@ -1291,11 +1319,13 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonPathMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), JsonPathMessageValidationContext.class);
 
-        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
+        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(3);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
@@ -1344,10 +1374,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
@@ -1380,10 +1412,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(0);
+        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(2);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "{\"text\":\"Hello World!\", \"person\": {\"name\": \"Penny\", age: 25}}");
@@ -1415,10 +1449,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
@@ -1448,10 +1484,12 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
         
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");

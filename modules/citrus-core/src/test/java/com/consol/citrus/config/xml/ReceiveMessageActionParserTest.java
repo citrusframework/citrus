@@ -20,6 +20,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -48,8 +49,10 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
@@ -72,8 +75,10 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
@@ -98,8 +103,10 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof GroovyScriptMessageBuilder);
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
@@ -118,8 +125,10 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof GroovyScriptMessageBuilder);
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
@@ -146,10 +155,12 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 7th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
+        XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(1);
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
@@ -173,11 +184,13 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         
         // 8th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
-        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        XpathMessageValidationContext xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof XpathMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(3) instanceof JsonMessageValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(1);
+        XpathMessageValidationContext xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(2);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -189,11 +202,13 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 9th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
-        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof XpathMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(3) instanceof JsonMessageValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(1);
+        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(2);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -205,13 +220,15 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 10th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof ScriptValidationContext);
-        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
-        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(2);
+        Assert.assertEquals(action.getValidationContexts().size(), 5);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof XpathMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(3) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(4) instanceof ScriptValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(1);
+        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(2);
+        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(4);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -225,11 +242,13 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 11th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof ScriptValidationContext);
-        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(1);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(3) instanceof ScriptValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(1);
+        scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(3);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -240,10 +259,12 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 12th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonPathMessageValidationContext);
-        JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(3) instanceof JsonPathMessageValidationContext);
+        JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(3);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -255,10 +276,12 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 13th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonPathMessageValidationContext);
-        jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(3) instanceof JsonPathMessageValidationContext);
+        jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(3);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
@@ -270,9 +293,11 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 14th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof JsonMessageValidationContext);
-        JsonMessageValidationContext jsonValidationContext = (JsonMessageValidationContext)action.getValidationContexts().get(0);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        JsonMessageValidationContext jsonValidationContext = (JsonMessageValidationContext)action.getValidationContexts().get(2);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
