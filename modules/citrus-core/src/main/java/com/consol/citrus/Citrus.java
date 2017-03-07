@@ -136,7 +136,8 @@ public final class Citrus {
     public static final String JAVA_TEST_FILE_NAME_PATTERN = System.getProperty(JAVA_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.java,/**/*IT.java");
 
     /** Default message type used in message validation mechanism */
-    public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
+    public static final String DEFAULT_MESSAGE_TYPE_PROPERTY = "citrus.default.message.type";
+    public static final String DEFAULT_MESSAGE_TYPE = System.getProperty(DEFAULT_MESSAGE_TYPE_PROPERTY, MessageType.XML.toString());
 
     /**
      * Private constructor with Spring bean application context that holds all basic Citrus
