@@ -54,6 +54,7 @@ public class HttpSteps {
     private HttpMessage response;
 
     private Map<String, String> headers;
+    private Map<String, String> pathValidations;
 
     private String body;
     private String contentType;
@@ -73,6 +74,7 @@ public class HttpSteps {
         request = new HttpMessage();
         response = new HttpMessage();
         headers = new HashMap<>();
+        pathValidations = new HashMap<>();
     }
 
     @Given("^http-client \"([^\"\\s]+)\"$")
@@ -137,6 +139,11 @@ public class HttpSteps {
     @Given("^Header ([^\\s]+): (.+)$")
     public void addHeader(String name, String value) {
         headers.put(name, value);
+    }
+
+    @Given("^validate ([^\\s]+) is (.+)$")
+    public void addPathValidation(String name, String value) {
+        pathValidations.put(name, value);
     }
 
     @Given("^(?:Request|Response):$")
@@ -224,9 +231,14 @@ public class HttpSteps {
         }
         headers.clear();
 
-        designer.http().client(httpClient).receive()
+        HttpClientResponseActionBuilder responseBuilder = designer.http().client(httpClient).receive()
                 .response(response.getStatusCode())
                 .message(response);
+
+        for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
+            responseBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
+        }
+        pathValidations.clear();
     }
 
     @When("^(?:http-server )?receives? (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE)$")
@@ -257,27 +269,33 @@ public class HttpSteps {
         }
         headers.clear();
 
-        HttpServerActionBuilder.HttpServerReceiveActionBuilder requestBuilder = designer.http().server(httpServer).receive();
+        HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = designer.http().server(httpServer).receive();
+        HttpServerRequestActionBuilder requestBuilder;
 
         if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
-            requestBuilder.post().message(request);
+            requestBuilder = receiveBuilder.post().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.GET)) {
-            requestBuilder.get().message(request);
+            requestBuilder = receiveBuilder.get().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.PUT)) {
-            requestBuilder.put().message(request);
+            requestBuilder = receiveBuilder.put().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.DELETE)) {
-            requestBuilder.delete().message(request);
+            requestBuilder = receiveBuilder.delete().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.HEAD)) {
-            requestBuilder.head().message(request);
+            requestBuilder = receiveBuilder.head().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.TRACE)) {
-            requestBuilder.trace().message(request);
+            requestBuilder = receiveBuilder.trace().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.PATCH)) {
-            requestBuilder.patch().message(request);
+            requestBuilder = receiveBuilder.patch().message(request);
         } else if (request.getRequestMethod().equals(HttpMethod.OPTIONS)) {
-            requestBuilder.options().message(request);
+            requestBuilder = receiveBuilder.options().message(request);
         } else {
-            requestBuilder.post().message(request);
+            requestBuilder = receiveBuilder.post().message(request);
         }
+
+        for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
+            requestBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
+        }
+        pathValidations.clear();
     }
 
     @Then("^(?:http-server )?sends? status (\\d+)(?: [^\\s]+)?$")

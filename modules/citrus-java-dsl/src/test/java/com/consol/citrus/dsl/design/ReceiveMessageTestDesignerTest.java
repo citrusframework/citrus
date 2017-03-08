@@ -23,7 +23,6 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.dsl.TestRequest;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
@@ -1336,7 +1335,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.id").getClass(), StringContains.class);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testReceiveBuilderWithJsonPathExpressionsInvalidMessageType() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override

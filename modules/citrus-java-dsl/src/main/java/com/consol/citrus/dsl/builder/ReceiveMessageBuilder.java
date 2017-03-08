@@ -427,10 +427,6 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T validate(String path, Object controlValue) {
         if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-            if (!messageType.equalsIgnoreCase(MessageType.JSON.name())) {
-                throw new CitrusRuntimeException(String.format("Failed to set JSONPath validation expression on message type '%s' - please use JSON message type", messageType));
-            }
-
             getJsonPathValidationContext().getJsonPathExpressions().put(path, controlValue);
         } else {
             getXPathValidationContext().getXpathExpressions().put(path, controlValue);
