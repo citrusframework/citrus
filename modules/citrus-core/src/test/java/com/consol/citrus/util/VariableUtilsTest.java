@@ -16,14 +16,13 @@
 
 package com.consol.citrus.util;
 
-import javax.script.ScriptException;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.VariableUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import javax.script.ScriptException;
 
 /**
  * @author Jan Lipphaus
@@ -72,5 +71,47 @@ public class VariableUtilsTest extends AbstractTestNGUnitTest {
         }
 
         Assert.fail("Missing CitrusRuntimeException because of invalid script engine");
+    }
+    
+    @Test
+    public void testCutOffVariablesPrefixSuffix() {
+        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix(""), "");
+        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("something_else"), "something_else");
+        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("${}"), "");
+        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("${variable}"), "variable");
+        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("${incomplete"), "${incomplete");
+        Assert.assertEquals(VariableUtils.cutOffVariablesPrefix("{incomplete}"), "{incomplete}");
+    }
+
+    @Test
+    public void testCutOffSingleQuotes() {
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes(""), "");
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("something_else"), "something_else");
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("'"), "'");
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("''"), "");
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("'variable'"), "variable");
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("'incomplete"), "'incomplete");
+        Assert.assertEquals(VariableUtils.cutOffSingleQuotes("incomplete'"), "incomplete'");
+    }
+
+    @Test
+    public void testCutOffDoubleQuotes() {
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes(""), "");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("something_else"), "something_else");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\""), "\"");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\"\""), "");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\"variable\""), "variable");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("\"incomplete"), "\"incomplete");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("incomplete\""), "incomplete\"");
+    }
+
+    @Test
+    public void testCutOffVariablesEscaping() {
+        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping(""), "");
+        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping("something_else"), "something_else");
+        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping("////"), "");
+        Assert.assertEquals(VariableUtils.cutOffVariablesEscaping("//variable//"), "variable");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("//incomplete"), "//incomplete");
+        Assert.assertEquals(VariableUtils.cutOffDoubleQuotes("incomplete//"), "incomplete//");
     }
 }

@@ -19,12 +19,18 @@ package com.consol.citrus.cucumber.step.designer.selenium;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.variable.VariableUtils;
+import cucumber.api.DataTable;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.*;
+import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -90,9 +96,9 @@ public class SeleniumSteps {
     }
 
     @When("^(?:user )?(checks?|unchecks?) checkbox with ([^\"]+)=\"([^\"]+)\"$")
-    public void checkInput(String action, String property, String value) {
+    public void checkInput(String type, String property, String value) {
         designer.selenium().browser(browser)
-                .checkInput(action.equals("check") || action.equals("checks"))
+                .checkInput(type.equals("check") || type.equals("checks"))
                 .element(property, value);
     }
 
@@ -103,5 +109,48 @@ public class SeleniumSteps {
                 .enabled(true)
                 .displayed(true)
                 .element(property, value);
+    }
+
+    @Then("^(?:page )?should (?:display|have) (?:element|button|link|input|textfield|form|heading) with (id|name|class-name|link-text|css-selector|tag-name|xpath)=\"([^\"]+)\" having$")
+    public void should_display(String property, String value, DataTable dataTable) {
+        Map<String, String> elementProperties = dataTable.asMap(String.class, String.class);
+
+        SeleniumActionBuilder.FindElementActionBuilder elementBuilder = designer.selenium().browser(browser)
+                .find()
+                .element(property, value);
+
+        for (Map.Entry<String, String> propertyEntry : elementProperties.entrySet()) {
+            if (propertyEntry.getKey().equals("tag-name")) {
+                elementBuilder.tagName(propertyEntry.getValue());
+            }
+
+            if (propertyEntry.getKey().equals("text")) {
+                elementBuilder.text(propertyEntry.getValue());
+            }
+
+            if (propertyEntry.getKey().equals("enabled")) {
+                elementBuilder.enabled(Boolean.valueOf(propertyEntry.getValue()));
+            }
+
+            if (propertyEntry.getKey().equals("displayed")) {
+                elementBuilder.displayed(Boolean.valueOf(propertyEntry.getValue()));
+            }
+
+            if (propertyEntry.getKey().equals("styles") || propertyEntry.getKey().equals("style")) {
+                String[] propertyExpressions = StringUtils.delimitedListToStringArray(propertyEntry.getValue(), ";");
+                for (String propertyExpression : propertyExpressions) {
+                    String[] keyValue = propertyExpression.split("=");
+                    elementBuilder.style(keyValue[0].trim(), VariableUtils.cutOffDoubleQuotes(keyValue[1].trim()));
+                }
+            }
+
+            if (propertyEntry.getKey().equals("attributes") || propertyEntry.getKey().equals("attribute")) {
+                String[] propertyExpressions = StringUtils.commaDelimitedListToStringArray(propertyEntry.getValue());
+                for (String propertyExpression : propertyExpressions) {
+                    String[] keyValue = propertyExpression.split("=");
+                    elementBuilder.attribute(keyValue[0].trim(), VariableUtils.cutOffDoubleQuotes(keyValue[1].trim()));
+                }
+            }
+        }
     }
 }

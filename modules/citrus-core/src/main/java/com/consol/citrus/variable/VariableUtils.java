@@ -20,6 +20,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchVariableException;
+import org.springframework.util.StringUtils;
 
 import javax.script.*;
 
@@ -55,6 +56,32 @@ public final class VariableUtils {
         } catch (ScriptException e) {
             throw new CitrusRuntimeException("Failed to evaluate " + scriptEngine + " script", e);
         }
+    }
+
+    /**
+     * Cut off single quotes prefix and suffix.
+     * @param variable
+     * @return
+     */
+    public static String cutOffSingleQuotes(String variable) {
+        if (StringUtils.hasText(variable) && variable.length() > 1 && variable.charAt(0) == '\'' && variable.charAt(variable.length() - 1) == '\'') {
+            return variable.substring(1, variable.length() - 1);
+        }
+
+        return variable;
+    }
+
+    /**
+     * Cut off double quotes prefix and suffix.
+     * @param variable
+     * @return
+     */
+    public static String cutOffDoubleQuotes(String variable) {
+        if (StringUtils.hasText(variable) && variable.length() > 1 && variable.charAt(0) == '"' && variable.charAt(variable.length() - 1) == '"') {
+            return variable.substring(1, variable.length() - 1);
+        }
+
+        return variable;
     }
     
     /**
