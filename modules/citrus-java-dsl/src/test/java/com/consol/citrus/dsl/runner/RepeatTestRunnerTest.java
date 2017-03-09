@@ -18,7 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -69,12 +68,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
 
                 repeat().index("i")
                             .startsWith(2)
-                            .until(new IteratingConditionExpression() {
-                                @Override
-                                public boolean evaluate(int index, TestContext context) {
-                                    return index > 5;
-                                }
-                            })
+                            .until((index, context) -> index > 5)
                         .actions(echo("${var}"), sleep(100), echo("${var}"));
             }
         };

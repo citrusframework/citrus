@@ -17,7 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -31,113 +30,73 @@ public class SendSoapAttachmentTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void sendSoapAttachment() {
         parallel().actions(
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.client("webServiceClient")
-                                .send()
+                soap(builder -> builder.client("webServiceClient")
+                        .send()
+                        .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
+                                "</ns0:SoapMessageWithAttachmentRequest>")
+                        .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))),
+                sequential().actions(
+                        soap(builder -> builder.server("webServiceRequestReceiver")
+                                .receive()
                                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
-                                .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"));
-                    }
-                }),
-                sequential().actions(
-                        soap(new BuilderSupport<SoapActionBuilder>() {
-                            @Override
-                            public void configure(SoapActionBuilder builder) {
-                                builder.server("webServiceRequestReceiver")
-                                        .receive()
-                                        .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                                "</ns0:SoapMessageWithAttachmentRequest>")
-                                        .schemaValidation(false)
-                                        .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
-                                        .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
-                                        .timeout(5000L);
-                            }
-                        }),
-                        soap(new BuilderSupport<SoapActionBuilder>() {
-                            @Override
-                            public void configure(SoapActionBuilder builder) {
-                                builder.server("webServiceResponseSender")
-                                        .send()
-                                        .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                                    "<ns0:Success>true</ns0:Success>" +
-                                                "</ns0:SoapMessageWithAttachmentResponse>")
-                                        .header("citrus_jms_correlationId", "${internal_correlation_id}");
-                            }
-                        })
+                                .schemaValidation(false)
+                                .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
+                                .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
+                                .timeout(5000L)),
+                        soap(builder -> builder.server("webServiceResponseSender")
+                                .send()
+                                .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                            "<ns0:Operation>Read the attachment</ns0:Operation>" +
+                                            "<ns0:Success>true</ns0:Success>" +
+                                        "</ns0:SoapMessageWithAttachmentResponse>")
+                                .header("citrus_jms_correlationId", "${internal_correlation_id}"))
                 )
         );
 
-        soap(new BuilderSupport<SoapActionBuilder>() {
-            @Override
-            public void configure(SoapActionBuilder builder) {
-                builder.client("webServiceClient")
-                        .receive()
-                        .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                    "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                    "<ns0:Success>true</ns0:Success>" +
-                                "</ns0:SoapMessageWithAttachmentResponse>")
-                        .schemaValidation(false);
-            }
-        });
+        soap(builder -> builder.client("webServiceClient")
+                .receive()
+                .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            "<ns0:Operation>Read the attachment</ns0:Operation>" +
+                            "<ns0:Success>true</ns0:Success>" +
+                        "</ns0:SoapMessageWithAttachmentResponse>")
+                .schemaValidation(false));
 
         parallel().actions(
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.client("webServiceClient")
-                                .send()
+                soap(builder -> builder.client("webServiceClient")
+                        .send()
+                        .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                "<ns0:Operation>Read the attachment</ns0:Operation>" +
+                                "</ns0:SoapMessageWithAttachmentRequest>")
+                        .attachment("MySoapAttachment", "text/plain", "This is an attachment!")),
+                sequential().actions(
+                        soap(builder -> builder.server("webServiceRequestReceiver")
+                                .receive()
                                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
-                                .attachment("MySoapAttachment", "text/plain", "This is an attachment!");
-                    }
-                }),
-                sequential().actions(
-                        soap(new BuilderSupport<SoapActionBuilder>() {
-                            @Override
-                            public void configure(SoapActionBuilder builder) {
-                                builder.server("webServiceRequestReceiver")
-                                        .receive()
-                                        .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                                "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                                "</ns0:SoapMessageWithAttachmentRequest>")
-                                        .schemaValidation(false)
-                                        .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
-                                        .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
-                                        .timeout(5000L);
-                            }
-                        }),
-                        soap(new BuilderSupport<SoapActionBuilder>() {
-                            @Override
-                            public void configure(SoapActionBuilder builder) {
-                                builder.server("webServiceResponseSender")
-                                        .send()
-                                        .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                                "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                                "<ns0:Success>true</ns0:Success>" +
-                                                "</ns0:SoapMessageWithAttachmentResponse>")
-                                        .header("citrus_jms_correlationId", "${internal_correlation_id}");
-                            }
-                        })
+                                .schemaValidation(false)
+                                .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
+                                .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
+                                .timeout(5000L)),
+                        soap(builder -> builder.server("webServiceResponseSender")
+                                .send()
+                                .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                        "<ns0:Operation>Read the attachment</ns0:Operation>" +
+                                        "<ns0:Success>true</ns0:Success>" +
+                                        "</ns0:SoapMessageWithAttachmentResponse>")
+                                .header("citrus_jms_correlationId", "${internal_correlation_id}"))
                 )
         );
 
-        soap(new BuilderSupport<SoapActionBuilder>() {
-            @Override
-            public void configure(SoapActionBuilder builder) {
-                builder.client("webServiceClient")
-                        .receive()
-                        .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:Operation>Read the attachment</ns0:Operation>" +
-                                "<ns0:Success>true</ns0:Success>" +
-                                "</ns0:SoapMessageWithAttachmentResponse>")
-                        .schemaValidation(false);
-            }
-        });
+        soap(builder -> builder.client("webServiceClient")
+                .receive()
+                .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<ns0:Operation>Read the attachment</ns0:Operation>" +
+                        "<ns0:Success>true</ns0:Success>" +
+                        "</ns0:SoapMessageWithAttachmentResponse>")
+                .schemaValidation(false));
     }
 }

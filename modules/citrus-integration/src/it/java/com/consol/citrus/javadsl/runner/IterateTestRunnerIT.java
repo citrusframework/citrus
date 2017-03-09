@@ -18,7 +18,6 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
@@ -40,12 +39,7 @@ public class IterateTestRunnerIT extends TestNGCitrusTestRunner {
 
         iterate().condition(lessThanOrEqualTo(20)).actions(echo("index is: ${i}"));
 
-        iterate().condition(new IteratingConditionExpression() {
-                    @Override
-                    public boolean evaluate(int index, TestContext context) {
-                        return index < 20;
-                    }
-                }).actions(echo("index is: ${i}"));
+        iterate().condition((index, context) -> index < 20).actions(echo("index is: ${i}"));
         
         iterate().condition("i lt 20").index("i")
                 .actions(echo("index is: ${i}"));
@@ -67,12 +61,7 @@ public class IterateTestRunnerIT extends TestNGCitrusTestRunner {
                         .step(5)
                 .actions(echo("index is: ${i}"));
 
-        iterate().condition(new IteratingConditionExpression() {
-                            @Override
-                            public boolean evaluate(int index, TestContext context) {
-                                return index < 50;
-                            }
-                        })
+        iterate().condition((index, context) -> index < 50)
                         .startsWith(0)
                         .step(5)
                 .actions(echo("index is: ${i}"));

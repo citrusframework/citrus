@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -35,31 +32,21 @@ public class ValidateValuesTestRunnerIT extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("helloRequestSender")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<MessageId>${messageId}</MessageId>" +
-                                "<CorrelationId>${correlationId}</CorrelationId>" +
-                                "<User>${user}</User>" +
-                                "<Text>Hello TestFramework</Text>" +
-                                "</HelloRequest>")
-                        .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}");
-            }
-        });
+        send(builder -> builder.endpoint("helloRequestSender")
+                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello TestFramework</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}"));
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("helloResponseReceiver")
-                        .validate("HelloResponse.MessageId", "${messageId}")
-                        .validate("HelloResponse.CorrelationId", "${correlationId}")
-                        .validate("HelloResponse.Text", "citrus:concat('Hello ', ${user})")
-                        .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}");
-            }
-        });
+        receive(builder -> builder.endpoint("helloResponseReceiver")
+                .validate("HelloResponse.MessageId", "${messageId}")
+                .validate("HelloResponse.CorrelationId", "${correlationId}")
+                .validate("HelloResponse.Text", "citrus:concat('Hello ', ${user})")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}"));
     }
 }

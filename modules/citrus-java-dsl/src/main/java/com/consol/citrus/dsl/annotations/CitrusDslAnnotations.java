@@ -24,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-
 /**
  * @author Christoph Deppisch
  * @since 2.6
@@ -49,30 +47,24 @@ public abstract class CitrusDslAnnotations {
      * @param designer
      */
     public static void injectTestDesigner(final Object target, final TestDesigner designer) {
-        ReflectionUtils.doWithFields(target.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                Class<?> type = field.getType();
-                if (TestDesigner.class.isAssignableFrom(type)) {
-                    log.debug(String.format("Injecting test designer instance on test class field '%s'", field.getName()));
-                    ReflectionUtils.setField(field, target, designer);
-                } else {
-                    throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
-                }
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            Class<?> type = field.getType();
+            if (TestDesigner.class.isAssignableFrom(type)) {
+                log.debug(String.format("Injecting test designer instance on test class field '%s'", field.getName()));
+                ReflectionUtils.setField(field, target, designer);
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
             }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusResource.class) && TestDesigner.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
-
-                    return true;
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && TestDesigner.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
                 }
 
-                return false;
+                return true;
             }
+
+            return false;
         });
     }
 
@@ -83,30 +75,24 @@ public abstract class CitrusDslAnnotations {
      * @param runner
      */
     public static void injectTestRunner(final Object target, final TestRunner runner) {
-        ReflectionUtils.doWithFields(target.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                Class<?> type = field.getType();
-                if (TestRunner.class.isAssignableFrom(type)) {
-                    log.debug(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
-                    ReflectionUtils.setField(field, target, runner);
-                } else {
-                    throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
-                }
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            Class<?> type = field.getType();
+            if (TestRunner.class.isAssignableFrom(type)) {
+                log.debug(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
+                ReflectionUtils.setField(field, target, runner);
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
             }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusResource.class) && TestRunner.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
-
-                    return true;
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && TestRunner.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
                 }
 
-                return false;
+                return true;
             }
+
+            return false;
         });
     }
 }

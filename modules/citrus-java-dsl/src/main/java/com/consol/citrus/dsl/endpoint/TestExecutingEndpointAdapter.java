@@ -45,19 +45,17 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
                     mappingName + "' in Spring bean context", e);
         }
 
-        getTaskExecutor().execute(new Runnable() {
-            public void run() {
-                if (executable instanceof TestRunner) {
-                    prepareExecution(request, (TestRunner) executable);
-                    if (executable instanceof ExecutableTestRunnerComponent) {
-                        ((ExecutableTestRunnerComponent) executable).prepareExecution();
-                    }
-                } else if (executable instanceof TestDesigner) {
-                    prepareExecution(request, (TestDesigner) executable);
+        getTaskExecutor().execute(() -> {
+            if (executable instanceof TestRunner) {
+                prepareExecution(request, (TestRunner) executable);
+                if (executable instanceof ExecutableTestRunnerComponent) {
+                    ((ExecutableTestRunnerComponent) executable).prepareExecution();
                 }
-
-                executable.execute();
+            } else if (executable instanceof TestDesigner) {
+                prepareExecution(request, (TestDesigner) executable);
             }
+
+            executable.execute();
         });
 
         return getResponseEndpointAdapter().handleMessage(request);

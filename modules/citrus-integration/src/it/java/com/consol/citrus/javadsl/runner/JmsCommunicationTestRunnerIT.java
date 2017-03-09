@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -38,57 +35,37 @@ public class JmsCommunicationTestRunnerIT extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("helloRequestSender")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<MessageId>${messageId}</MessageId>" +
-                                "<CorrelationId>${correlationId}</CorrelationId>" +
-                                "<User>${user}</User>" +
-                                "<Text>Hello TestFramework</Text>" +
-                                "</HelloRequest>")
-                        .header("Operation", operation)
-                        .header("CorrelationId", "${correlationId}")
-                        .description("Send asynchronous hello request: TestFramework -> HelloService");
-            }
-        });
+        send(builder -> builder.endpoint("helloRequestSender")
+                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello TestFramework</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}")
+                .description("Send asynchronous hello request: TestFramework -> HelloService"));
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("helloResponseReceiver")
-                        .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<MessageId>${messageId}</MessageId>" +
-                                "<CorrelationId>${correlationId}</CorrelationId>" +
-                                "<User>HelloService</User>" +
-                                "<Text>Hello ${user}</Text>" +
-                                "</HelloResponse>")
-                        .header("Operation", operation)
-                        .header("CorrelationId", "${correlationId}")
-                        .description("Receive asynchronous hello response: HelloService -> TestFramework");
-            }
-        });
+        receive(builder -> builder.endpoint("helloResponseReceiver")
+                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>HelloService</User>" +
+                        "<Text>Hello ${user}</Text>" +
+                        "</HelloResponse>")
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}")
+                .description("Receive asynchronous hello response: HelloService -> TestFramework"));
         
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("helloRequestSender")
-                        .payload(new ClassPathResource("com/consol/citrus/actions/helloRequest.xml"))
-                        .header("Operation", operation)
-                        .header("CorrelationId", "${correlationId}");
-            }
-        });
+        send(builder -> builder.endpoint("helloRequestSender")
+                .payload(new ClassPathResource("com/consol/citrus/actions/helloRequest.xml"))
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}"));
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("helloResponseReceiver")
-                        .payload(new ClassPathResource("com/consol/citrus/actions/helloResponse.xml"))
-                        .header("Operation", operation)
-                        .header("CorrelationId", "${correlationId}");
-            }
-        });
+        receive(builder -> builder.endpoint("helloResponseReceiver")
+                .payload(new ClassPathResource("com/consol/citrus/actions/helloResponse.xml"))
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}"));
     }
 
     @CitrusTest
@@ -99,45 +76,25 @@ public class JmsCommunicationTestRunnerIT extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
 
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("helloRequestSender")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<MessageId>${messageId}</MessageId>" +
-                                "<CorrelationId>${correlationId}</CorrelationId>" +
-                                "<User>${user}</User>" +
-                                "<Text>Hello TestFramework</Text>" +
-                                "</HelloRequest>")
-                        .header("Operation", operation)
-                        .header("CorrelationId", "${correlationId}")
-                        .description("Send asynchronous hello request: TestFramework -> HelloService");
-            }
-        });
+        send(builder -> builder.endpoint("helloRequestSender")
+                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello TestFramework</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}")
+                .description("Send asynchronous hello request: TestFramework -> HelloService"));
 
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("helloResponseReceiver")
-                        .description("Receive asynchronous hello response: HelloService -> TestFramework");
-            }
-        });
+        receive(builder -> builder.endpoint("helloResponseReceiver")
+                .description("Receive asynchronous hello response: HelloService -> TestFramework"));
 
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("helloRequestSender")
-                        .payload(new ClassPathResource("com/consol/citrus/actions/helloRequest.xml"))
-                        .header("Operation", operation)
-                        .header("CorrelationId", "${correlationId}");
-            }
-        });
+        send(builder -> builder.endpoint("helloRequestSender")
+                .payload(new ClassPathResource("com/consol/citrus/actions/helloRequest.xml"))
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}"));
 
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("helloResponseReceiver");
-            }
-        });
+        receive(builder -> builder.endpoint("helloResponseReceiver"));
     }
 }

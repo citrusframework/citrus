@@ -19,8 +19,6 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.camel.actions.*;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.CamelRouteActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
@@ -56,25 +54,20 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
+                camel(builder -> builder.context(camelContext).create(new RouteBuilder(camelContext) {
                     @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext).create(new RouteBuilder(camelContext) {
-                            @Override
-                            public void configure() throws Exception {
-                                from("direct:news")
-                                        .routeId("route_1")
-                                        .setHeader("headline", simple("This is BIG news!"))
-                                        .to("mock:news");
+                    public void configure() throws Exception {
+                        from("direct:news")
+                                .routeId("route_1")
+                                .setHeader("headline", simple("This is BIG news!"))
+                                .to("mock:news");
 
-                                from("direct:rumors")
-                                        .routeId("route_2")
-                                        .setHeader("headline", simple("This is just a rumor!"))
-                                        .to("mock:rumors");
-                            }
-                        });
+                        from("direct:rumors")
+                                .routeId("route_2")
+                                .setHeader("headline", simple("This is just a rumor!"))
+                                .to("mock:rumors");
                     }
-                });
+                }));
             }
         };
 
@@ -116,12 +109,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
-                    @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext).start("route_1", "route_2");
-                    }
-                });
+                camel(builder -> builder.context(camelContext).start("route_1", "route_2"));
             }
         };
 
@@ -163,12 +151,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
-                    @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext).stop("route_1", "route_2");
-                    }
-                });
+                camel(builder -> builder.context(camelContext).stop("route_1", "route_2"));
             }
         };
 
@@ -213,12 +196,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
-                    @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext).remove("route_1", "route_2");
-                    }
-                });
+                camel(builder -> builder.context(camelContext).remove("route_1", "route_2"));
             }
         };
 
@@ -243,25 +221,20 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
+                camel(builder -> builder.create(new RouteBuilder() {
                     @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.create(new RouteBuilder() {
-                            @Override
-                            public void configure() throws Exception {
-                                from("direct:news")
-                                        .routeId("route_1")
-                                        .setHeader("headline", simple("This is BIG news!"))
-                                        .to("mock:news");
+                    public void configure() throws Exception {
+                        from("direct:news")
+                                .routeId("route_1")
+                                .setHeader("headline", simple("This is BIG news!"))
+                                .to("mock:news");
 
-                                from("direct:rumors")
-                                        .routeId("route_2")
-                                        .setHeader("headline", simple("This is just a rumor!"))
-                                        .to("mock:rumors");
-                            }
-                        });
+                        from("direct:rumors")
+                                .routeId("route_2")
+                                .setHeader("headline", simple("This is just a rumor!"))
+                                .to("mock:rumors");
                     }
-                });
+                }));
             }
         };
 
@@ -303,34 +276,19 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
-                    @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext)
-                                .controlBus()
-                                    .route("route_1", "status")
-                                    .result(ServiceStatus.Stopped);
-                    }
-                });
+                camel(builder -> builder.context(camelContext)
+                        .controlBus()
+                            .route("route_1", "status")
+                            .result(ServiceStatus.Stopped));
 
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
-                    @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext)
-                                .controlBus()
-                                .route("route_1", "start");
-                    }
-                });
+                camel(builder -> builder.context(camelContext)
+                        .controlBus()
+                        .route("route_1", "start"));
 
-                camel(new BuilderSupport<CamelRouteActionBuilder>() {
-                    @Override
-                    public void configure(CamelRouteActionBuilder builder) {
-                        builder.context(camelContext)
-                                .controlBus()
-                                .language(SimpleBuilder.simple("${camelContext.getRouteStatus('route_1')}"))
-                                .result(ServiceStatus.Started);
-                    }
-                });
+                camel(builder -> builder.context(camelContext)
+                        .controlBus()
+                        .language(SimpleBuilder.simple("${camelContext.getRouteStatus('route_1')}"))
+                        .result(ServiceStatus.Started));
             }
         };
 

@@ -18,8 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.GroovyActionBuilder;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -30,7 +28,8 @@ import org.testng.annotations.Test;
 
 import java.io.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
     private Resource scriptResource = Mockito.mock(Resource.class);
@@ -44,13 +43,8 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                groovy(new BuilderSupport<GroovyActionBuilder>() {
-                    @Override
-                    public void configure(GroovyActionBuilder builder) {
-                        builder.script(scriptResource)
-                                .skipTemplate();
-                    }
-                });
+                groovy(builder -> builder.script(scriptResource)
+                        .skipTemplate());
             }
         };
 
@@ -70,13 +64,8 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                groovy(new BuilderSupport<GroovyActionBuilder>() {
-                    @Override
-                    public void configure(GroovyActionBuilder builder) {
-                        builder.script("println 'Groovy!'")
-                                .skipTemplate();
-                    }
-                });
+                groovy(builder -> builder.script("println 'Groovy!'")
+                        .skipTemplate());
             }
         };
 
@@ -94,13 +83,8 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                groovy(new BuilderSupport<GroovyActionBuilder>() {
-                    @Override
-                    public void configure(GroovyActionBuilder builder) {
-                        builder.script("context.setVariable('message', 'Groovy!')")
-                                .template(new ClassPathResource("com/consol/citrus/script/script-template.groovy"));
-                    }
-                });
+                groovy(builder -> builder.script("context.setVariable('message', 'Groovy!')")
+                        .template(new ClassPathResource("com/consol/citrus/script/script-template.groovy")));
             }
         };
 
@@ -122,13 +106,8 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                groovy(new BuilderSupport<GroovyActionBuilder>() {
-                    @Override
-                    public void configure(GroovyActionBuilder builder) {
-                        builder.script("context.setVariable('message', 'Groovy!')")
-                                .template("classpath:com/consol/citrus/script/script-template.groovy");
-                    }
-                });
+                groovy(builder -> builder.script("context.setVariable('message', 'Groovy!')")
+                        .template("classpath:com/consol/citrus/script/script-template.groovy"));
             }
         };
 

@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -35,36 +32,26 @@ public class SyncJmsQueueTestRunnerIT extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("syncJmsQueueEndpoint")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<MessageId>${messageId}</MessageId>" +
-                                "<CorrelationId>${correlationId}</CorrelationId>" +
-                                "<User>${user}</User>" +
-                                "<Text>Hello TestFramework</Text>" +
-                                "</HelloRequest>")
-                        .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}")
-                        .description("Send synchronous hello request: TestFramework -> HelloService");
-            }
-        });
+        send(builder -> builder.endpoint("syncJmsQueueEndpoint")
+                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello TestFramework</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}")
+                .description("Send synchronous hello request: TestFramework -> HelloService"));
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("syncJmsQueueEndpoint")
-                        .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<MessageId>${messageId}</MessageId>" +
-                                "<CorrelationId>${correlationId}</CorrelationId>" +
-                                "<User>HelloService</User>" +
-                                "<Text>Hello ${user}</Text>" +
-                                "</HelloResponse>")
-                        .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}")
-                        .description("Receive sync hello response: HelloService -> TestFramework");
-            }
-        });
+        receive(builder -> builder.endpoint("syncJmsQueueEndpoint")
+                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>HelloService</User>" +
+                        "<Text>Hello ${user}</Text>" +
+                        "</HelloResponse>")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}")
+                .description("Receive sync hello response: HelloService -> TestFramework"));
     }
 }

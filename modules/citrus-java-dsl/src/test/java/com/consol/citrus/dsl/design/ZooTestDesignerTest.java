@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.ZooActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
@@ -43,12 +42,7 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                zookeeper().info().validateCommandResult(new com.consol.citrus.zookeeper.command.CommandResultCallback<ZooResponse>() {
-                    @Override
-                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                        Assert.assertNotNull(result);
-                    }
-                });
+                zookeeper().info().validateCommandResult((result, context) -> Assert.assertNotNull(result));
 
                 zookeeper().create(path, data);
                 zookeeper().create(path, data).mode(mode).acl(acl);

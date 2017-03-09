@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,34 +38,19 @@ public class QueryDatabaseRetriesTestRunnerIT extends TestNGCitrusTestRunner {
     public void sqlQueryRetries() {
         parallel().actions(
             sequential().actions(
-                sql(new BuilderSupport<ExecuteSQLBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLBuilder builder) {
-                        builder.dataSource(dataSource)
-                                .sqlResource("classpath:com/consol/citrus/actions/script.sql");
-                    }
-                }),
+                sql(builder -> builder.dataSource(dataSource)
+                        .sqlResource("classpath:com/consol/citrus/actions/script.sql")),
                 repeatOnError().autoSleep(100).index("i").until("i = 5")
                     .actions(
-                        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                            @Override
-                            public void configure(ExecuteSQLQueryBuilder builder) {
-                                builder.dataSource(dataSource)
-                                        .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
-                                        .validate("CUSTOMER_CNT", "0");
-                            }
-                        })
+                        query(builder -> builder.dataSource(dataSource)
+                                .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
+                                .validate("CUSTOMER_CNT", "0"))
                 )
             ),
             sequential().actions(
                 sleep(300),
-                sql(new BuilderSupport<ExecuteSQLBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLBuilder builder) {
-                        builder.dataSource(dataSource)
-                                .statement("DELETE FROM CUSTOMERS");
-                    }
-                })
+                sql(builder -> builder.dataSource(dataSource)
+                        .statement("DELETE FROM CUSTOMERS"))
             )
         );
     }

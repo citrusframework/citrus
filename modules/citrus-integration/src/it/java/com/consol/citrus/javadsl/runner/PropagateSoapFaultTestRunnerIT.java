@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,27 +31,17 @@ public class PropagateSoapFaultTestRunnerIT extends TestNGCitrusTestRunner {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("webServiceFaultClient")
-                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:Message>This is invalid</ns0:Message>" +
-                                "</ns0:SoapFaultForcingRequest>");
-            }
-        });
+        send(builder -> builder.endpoint("webServiceFaultClient")
+                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<ns0:Message>This is invalid</ns0:Message>" +
+                        "</ns0:SoapFaultForcingRequest>"));
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("webServiceFaultClient")
-                        .payload("<SOAP-ENV:Fault xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-                                "<faultcode xmlns:CITRUS=\"http://www.citrusframework.org/faults\">CITRUS:${soapFaultCode}</faultcode>" +
-                                "<faultstring xml:lang=\"en\">${soapFaultString}</faultstring>" +
-                                "</SOAP-ENV:Fault>")
-                        .schemaValidation(false)
-                        .timeout(5000L);
-            }
-        });
+        receive(builder -> builder.endpoint("webServiceFaultClient")
+                .payload("<SOAP-ENV:Fault xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                        "<faultcode xmlns:CITRUS=\"http://www.citrusframework.org/faults\">CITRUS:${soapFaultCode}</faultcode>" +
+                        "<faultstring xml:lang=\"en\">${soapFaultString}</faultstring>" +
+                        "</SOAP-ENV:Fault>")
+                .schemaValidation(false)
+                .timeout(5000L));
     }
 }

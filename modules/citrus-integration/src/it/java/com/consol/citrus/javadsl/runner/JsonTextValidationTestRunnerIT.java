@@ -17,7 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
 import org.springframework.http.HttpStatus;
@@ -32,111 +31,81 @@ public class JsonTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void jsonTextValidation() {
         parallel().actions(
-            http(new BuilderSupport<HttpActionBuilder>() {
-                @Override
-                public void configure(HttpActionBuilder builder) {
-                    builder.client("httpClient")
-                            .send()
-                            .post()
-                            .payload("{" +
-                                    "\"type\" : \"read\"," +
-                                    "\"mbean\" : \"java.lang:type=Memory\"," +
-                                    "\"attribute\" : \"HeapMemoryUsage\"," +
-                                    "\"path\" : \"used\"" +
-                                    "}");
-                }
-            }),
+            http(builder -> builder.client("httpClient")
+                    .send()
+                    .post()
+                    .payload("{" +
+                            "\"type\" : \"read\"," +
+                            "\"mbean\" : \"java.lang:type=Memory\"," +
+                            "\"attribute\" : \"HeapMemoryUsage\"," +
+                            "\"path\" : \"used\"" +
+                            "}")),
             sequential().actions(
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerRequestEndpoint")
-                                .receive()
-                                .post()
-                                .messageType(MessageType.JSON)
-                                .payload("{" +
-                                        "\"type\" : \"read\"," +
-                                        "\"mbean\" : \"java.lang:type=Memory\"," +
-                                        "\"attribute\" : \"HeapMemoryUsage\"," +
-                                        "\"path\" : \"@equalsIgnoreCase('USED')@\"" +
-                                        "}")
-                                .extractFromHeader("citrus_jms_messageId", "correlation_id");
-                    }
-                }),
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerResponseEndpoint")
-                                .send()
-                                .response(HttpStatus.OK)
-                                .payload("{" +
-                                        "\"timestamp\" : \"2011-01-01\"," +
-                                        "\"status\" : 200," +
-                                        "\"request\" : " +
-                                        "{" +
-                                        "\"mbean\" : \"java.lang:type=Memory\"," +
-                                        "\"path\" : \"used\"," +
-                                        "\"attribute\" : \"HeapMemoryUsage\"," +
-                                        "\"type\" : \"read\"" +
-                                        "}," +
-                                        "\"value\" : 512" +
-                                        "}")
-                                .version("HTTP/1.1")
-                                .header("citrus_jms_correlationId", "${correlation_id}");
-                    }
-                })
-            )
-        );
-
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
+                http(builder -> builder.server("httpServerRequestEndpoint")
                         .receive()
-                        .response(HttpStatus.OK)
-                        .messageType(MessageType.JSON)
-                        .payload("{" +
-                                "\"timestamp\" : \"@matchesDatePattern('yyyy-MM-dd')@\"," +
-                                "\"status\" : 200," +
-                                "\"request\" : " +
-                                "{" +
-                                "\"mbean\" : \"java.lang:type=Memory\"," +
-                                "\"path\" : \"@matches('u*s*e*d*')@\"," +
-                                "\"attribute\" : \"HeapMemoryUsage\"," +
-                                "\"type\" : \"read\"" +
-                                "}," +
-                                "\"value\" : \"@isNumber()@\"" +
-                                "}")
-                        .version("HTTP/1.1");
-            }
-        });
-
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
-                        .send()
                         .post()
+                        .messageType(MessageType.JSON)
                         .payload("{" +
                                 "\"type\" : \"read\"," +
                                 "\"mbean\" : \"java.lang:type=Memory\"," +
                                 "\"attribute\" : \"HeapMemoryUsage\"," +
-                                "\"path\" : \"used\"" +
-                                "}");
-            }
-        });
+                                "\"path\" : \"@equalsIgnoreCase('USED')@\"" +
+                                "}")
+                        .extractFromHeader("citrus_jms_messageId", "correlation_id")),
+                http(builder -> builder.server("httpServerResponseEndpoint")
+                        .send()
+                        .response(HttpStatus.OK)
+                        .payload("{" +
+                                "\"timestamp\" : \"2011-01-01\"," +
+                                "\"status\" : 200," +
+                                "\"request\" : " +
+                                "{" +
+                                "\"mbean\" : \"java.lang:type=Memory\"," +
+                                "\"path\" : \"used\"," +
+                                "\"attribute\" : \"HeapMemoryUsage\"," +
+                                "\"type\" : \"read\"" +
+                                "}," +
+                                "\"value\" : 512" +
+                                "}")
+                        .version("HTTP/1.1")
+                        .header("citrus_jms_correlationId", "${correlation_id}"))
+            )
+        );
+
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .messageType(MessageType.JSON)
+                .payload("{" +
+                        "\"timestamp\" : \"@matchesDatePattern('yyyy-MM-dd')@\"," +
+                        "\"status\" : 200," +
+                        "\"request\" : " +
+                        "{" +
+                        "\"mbean\" : \"java.lang:type=Memory\"," +
+                        "\"path\" : \"@matches('u*s*e*d*')@\"," +
+                        "\"attribute\" : \"HeapMemoryUsage\"," +
+                        "\"type\" : \"read\"" +
+                        "}," +
+                        "\"value\" : \"@isNumber()@\"" +
+                        "}")
+                .version("HTTP/1.1"));
+
+        http(builder -> builder.client("httpClient")
+                .send()
+                .post()
+                .payload("{" +
+                        "\"type\" : \"read\"," +
+                        "\"mbean\" : \"java.lang:type=Memory\"," +
+                        "\"attribute\" : \"HeapMemoryUsage\"," +
+                        "\"path\" : \"used\"" +
+                        "}"));
         
         sleep(2000);
         
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
-                        .receive()
-                        .response(HttpStatus.OK)
-                        .messageType(MessageType.JSON)
-                        .version("HTTP/1.1");
-            }
-        });
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .messageType(MessageType.JSON)
+                .version("HTTP/1.1"));
     }
 }

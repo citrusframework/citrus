@@ -61,14 +61,9 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                applyTemplate(new BuilderSupport<TemplateBuilder>() {
-                    @Override
-                    public void configure(TemplateBuilder builder) {
-                        builder.name("fooTemplate")
-                                .parameter("param", "foo")
-                                .parameter("text", "Citrus rocks!");
-                    }
-                });
+                applyTemplate(builder -> builder.name("fooTemplate")
+                        .parameter("param", "foo")
+                        .parameter("text", "Citrus rocks!"));
             }
         };
 
@@ -106,13 +101,8 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                applyTemplate(new BuilderSupport<TemplateBuilder>() {
-                    @Override
-                    public void configure(TemplateBuilder builder) {
-                        builder.name("fooTemplate")
-                                .globalContext(false);
-                    }
-                });
+                applyTemplate(builder -> builder.name("fooTemplate")
+                        .globalContext(false));
             }
         };
 

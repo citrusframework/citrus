@@ -20,8 +20,6 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.WaitAction;
 import com.consol.citrus.condition.Condition;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.WaitActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -49,12 +47,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor(new BuilderSupport<WaitActionBuilder>() {
-                    @Override
-                    public void configure(WaitActionBuilder builder) {
-                        builder.condition(condition).seconds(seconds).interval(interval);
-                    }
-                });
+                waitFor(builder -> builder.condition(condition).seconds(seconds).interval(interval));
             }
         };
 

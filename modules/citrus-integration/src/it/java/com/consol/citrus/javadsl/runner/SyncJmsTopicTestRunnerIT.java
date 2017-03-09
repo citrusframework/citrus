@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -38,73 +35,38 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
         parallel().actions(
             sequential().actions(
                 sleep(1000L),
-                send(new BuilderSupport<SendMessageBuilder>() {
-                    @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("syncJmsTopicEndpoint")
-                                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<MessageId>${messageId}</MessageId>" +
-                                        "<CorrelationId>${correlationId}</CorrelationId>" +
-                                        "<User>${user}</User>" +
-                                        "<Text>Hello TestFramework</Text>" +
-                                        "</HelloRequest>")
-                                .header("Operation", "sayHello")
-                                .header("CorrelationId", "${correlationId}");
-                    }
-                })
+                send(builder -> builder.endpoint("syncJmsTopicEndpoint")
+                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                "<MessageId>${messageId}</MessageId>" +
+                                "<CorrelationId>${correlationId}</CorrelationId>" +
+                                "<User>${user}</User>" +
+                                "<Text>Hello TestFramework</Text>" +
+                                "</HelloRequest>")
+                        .header("Operation", "sayHello")
+                        .header("CorrelationId", "${correlationId}"))
             ),
             sequential().actions(
                 parallel().actions(
-                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                        @Override
-                        public void configure(ReceiveMessageBuilder builder) {
-                            builder.endpoint("syncJmsTopicSubscriberEndpoint")
-                                    .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                            "<MessageId>${messageId}</MessageId>" +
-                                            "<CorrelationId>${correlationId}</CorrelationId>" +
-                                            "<User>${user}</User>" +
-                                            "<Text>Hello TestFramework</Text>" +
-                                            "</HelloRequest>")
-                                    .header("Operation", "sayHello")
-                                    .header("CorrelationId", "${correlationId}");
-                        }
-                    }),
-                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                        @Override
-                        public void configure(ReceiveMessageBuilder builder) {
-                            builder.endpoint("syncJmsTopicSubscriberEndpoint")
-                                    .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                            "<MessageId>${messageId}</MessageId>" +
-                                            "<CorrelationId>${correlationId}</CorrelationId>" +
-                                            "<User>${user}</User>" +
-                                            "<Text>Hello TestFramework</Text>" +
-                                            "</HelloRequest>")
-                                    .header("Operation", "sayHello")
-                                    .header("CorrelationId", "${correlationId}");
-                        }
-                    })
+                    receive(builder -> builder.endpoint("syncJmsTopicSubscriberEndpoint")
+                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<MessageId>${messageId}</MessageId>" +
+                                    "<CorrelationId>${correlationId}</CorrelationId>" +
+                                    "<User>${user}</User>" +
+                                    "<Text>Hello TestFramework</Text>" +
+                                    "</HelloRequest>")
+                            .header("Operation", "sayHello")
+                            .header("CorrelationId", "${correlationId}")),
+                    receive(builder -> builder.endpoint("syncJmsTopicSubscriberEndpoint")
+                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<MessageId>${messageId}</MessageId>" +
+                                    "<CorrelationId>${correlationId}</CorrelationId>" +
+                                    "<User>${user}</User>" +
+                                    "<Text>Hello TestFramework</Text>" +
+                                    "</HelloRequest>")
+                            .header("Operation", "sayHello")
+                            .header("CorrelationId", "${correlationId}"))
                 ),
-                send(new BuilderSupport<SendMessageBuilder>() {
-                    @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("syncJmsTopicSubscriberEndpoint")
-                                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<MessageId>${messageId}</MessageId>" +
-                                        "<CorrelationId>${correlationId}</CorrelationId>" +
-                                        "<User>HelloService</User>" +
-                                        "<Text>Hello ${user}</Text>" +
-                                        "</HelloResponse>")
-                                .header("Operation", "sayHello")
-                                .header("CorrelationId", "${correlationId}");
-                    }
-                })
-            )
-        );
-        
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("syncJmsTopicEndpoint")
+                send(builder -> builder.endpoint("syncJmsTopicSubscriberEndpoint")
                         .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -112,8 +74,18 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
                                 "<Text>Hello ${user}</Text>" +
                                 "</HelloResponse>")
                         .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}");
-            }
-        });
+                        .header("CorrelationId", "${correlationId}"))
+            )
+        );
+        
+        receive(builder -> builder.endpoint("syncJmsTopicEndpoint")
+                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>HelloService</User>" +
+                        "<Text>Hello ${user}</Text>" +
+                        "</HelloResponse>")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}"));
     }
 }

@@ -17,7 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
 import org.springframework.http.HttpStatus;
@@ -35,76 +34,56 @@ public class JsonGroovyValidationTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void jsonGroovyValidation() {
         parallel().actions(
-            http(new BuilderSupport<HttpActionBuilder>() {
-                @Override
-                public void configure(HttpActionBuilder builder) {
-                    builder.client("httpClient")
-                            .send()
-                            .post()
-                            .payload("{" +
-                                    "\"type\" : \"read\"," +
-                                    "\"mbean\" : \"java.lang:type=Memory\"," +
-                                    "\"attribute\" : \"HeapMemoryUsage\"," +
-                                    "\"path\" : \"used\"" +
-                                    "}");
-                }
-            }),
+            http(builder -> builder.client("httpClient")
+                    .send()
+                    .post()
+                    .payload("{" +
+                            "\"type\" : \"read\"," +
+                            "\"mbean\" : \"java.lang:type=Memory\"," +
+                            "\"attribute\" : \"HeapMemoryUsage\"," +
+                            "\"path\" : \"used\"" +
+                            "}")),
             sequential().actions(
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerRequestEndpoint")
-                                .receive()
-                                .post()
-                                .messageType(MessageType.JSON)
-                                .validator("defaultGroovyJsonMessageValidator")
-                                .validateScript("assert json.type == 'read'" + NEWLINE +
-                                        "assert json.mbean == 'java.lang:type=Memory'" + NEWLINE +
-                                        "assert json.attribute == 'HeapMemoryUsage'")
-                                .extractFromHeader("citrus_jms_messageId", "correlation_id");
-                    }
-                }),
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerResponseEndpoint")
-                                .send()
-                                .response(HttpStatus.OK)
-                                .payload("{" + NEWLINE +
-                                        "\"timestamp\" : \"2011-01-01\"," + NEWLINE +
-                                        "\"status\" : 200," + NEWLINE +
-                                        "\"request\" : " + NEWLINE +
-                                        "{" + NEWLINE +
-                                        "\"mbean\" : \"java.lang:type=Memory\"," + NEWLINE +
-                                        "\"path\" : \"used\"," + NEWLINE +
-                                        "\"attribute\" : \"HeapMemoryUsage\"," + NEWLINE +
-                                        "\"type\" : \"read\"" + NEWLINE +
-                                        "}," + NEWLINE +
-                                        "\"value\" : 512" + NEWLINE +
-                                        "}")
-                                .version("HTTP/1.1")
-                                .header("citrus_jms_correlationId", "${correlation_id}");
-                    }
-                })
+                http(builder -> builder.server("httpServerRequestEndpoint")
+                        .receive()
+                        .post()
+                        .messageType(MessageType.JSON)
+                        .validator("defaultGroovyJsonMessageValidator")
+                        .validateScript("assert json.type == 'read'" + NEWLINE +
+                                "assert json.mbean == 'java.lang:type=Memory'" + NEWLINE +
+                                "assert json.attribute == 'HeapMemoryUsage'")
+                        .extractFromHeader("citrus_jms_messageId", "correlation_id")),
+                http(builder -> builder.server("httpServerResponseEndpoint")
+                        .send()
+                        .response(HttpStatus.OK)
+                        .payload("{" + NEWLINE +
+                                "\"timestamp\" : \"2011-01-01\"," + NEWLINE +
+                                "\"status\" : 200," + NEWLINE +
+                                "\"request\" : " + NEWLINE +
+                                "{" + NEWLINE +
+                                "\"mbean\" : \"java.lang:type=Memory\"," + NEWLINE +
+                                "\"path\" : \"used\"," + NEWLINE +
+                                "\"attribute\" : \"HeapMemoryUsage\"," + NEWLINE +
+                                "\"type\" : \"read\"" + NEWLINE +
+                                "}," + NEWLINE +
+                                "\"value\" : 512" + NEWLINE +
+                                "}")
+                        .version("HTTP/1.1")
+                        .header("citrus_jms_correlationId", "${correlation_id}"))
             )
         );
         
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
-                        .receive()
-                        .response(HttpStatus.OK)
-                        .messageType(MessageType.JSON)
-                        .validator("defaultGroovyJsonMessageValidator")
-                        .validateScript("assert json.request.type == 'read'" + NEWLINE +
-                                "assert json.request.mbean == 'java.lang:type=Memory'" + NEWLINE +
-                                "assert json.request.attribute == 'HeapMemoryUsage'" + NEWLINE +
-                                "assert json.status == 200" + NEWLINE +
-                                "assert json.value >= 256" + NEWLINE +
-                                "assert json.value <= 1024")
-                        .version("HTTP/1.1");
-            }
-        });
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .messageType(MessageType.JSON)
+                .validator("defaultGroovyJsonMessageValidator")
+                .validateScript("assert json.request.type == 'read'" + NEWLINE +
+                        "assert json.request.mbean == 'java.lang:type=Memory'" + NEWLINE +
+                        "assert json.request.attribute == 'HeapMemoryUsage'" + NEWLINE +
+                        "assert json.status == 200" + NEWLINE +
+                        "assert json.value >= 256" + NEWLINE +
+                        "assert json.value <= 1024")
+                .version("HTTP/1.1"));
     }
 }

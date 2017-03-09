@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.AntRunBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -33,39 +31,19 @@ public class AntRunTestRunnerIT extends TestNGCitrusTestRunner {
         variable("welcomeText", "Hello Citrus today is citrus:currentDate()!");
         variable("checked", "true");
         
-        antrun(new BuilderSupport<AntRunBuilder>() {
-            @Override
-            public void configure(AntRunBuilder builder) {
-                builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
-                        .target("sayHello");
-            }
-        });
+        antrun(builder -> builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello"));
         
-        antrun(new BuilderSupport<AntRunBuilder>() {
-            @Override
-            public void configure(AntRunBuilder builder) {
-                builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
-                        .targets("sayHello", "sayGoodbye");
-            }
-        });
+        antrun(builder -> builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .targets("sayHello", "sayGoodbye"));
 
-        antrun(new BuilderSupport<AntRunBuilder>() {
-            @Override
-            public void configure(AntRunBuilder builder) {
-                builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
-                        .target("sayHello")
-                        .property("welcomeText", "${welcomeText}")
-                        .property("goodbyeText", "Goodbye!");
-            }
-        });
+        antrun(builder -> builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello")
+                .property("welcomeText", "${welcomeText}")
+                .property("goodbyeText", "Goodbye!"));
 
-        antrun(new BuilderSupport<AntRunBuilder>() {
-            @Override
-            public void configure(AntRunBuilder builder) {
-                builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
-                        .target("checkMe")
-                        .propertyFile("classpath:com/consol/citrus/actions/build.properties");
-            }
-        });
+        antrun(builder -> builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("checkMe")
+                .propertyFile("classpath:com/consol/citrus/actions/build.properties"));
     }
 }

@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.IteratingConditionExpression;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -40,12 +38,7 @@ public class RepeatOnErrorTestRunnerIT extends TestNGCitrusTestRunner {
         repeatOnError().until(is(5)).autoSleep(500)
                 .actions(echo("${i}. Versuch: ${message}"));
 
-        repeatOnError().until(new IteratingConditionExpression() {
-                    @Override
-                    public boolean evaluate(int index, TestContext context) {
-                        return index == 5;
-                    }
-                }).autoSleep(500)
+        repeatOnError().until((index, context) -> index == 5).autoSleep(500)
                 .actions(echo("${i}. Versuch: ${message}"));
         
         assertException().when(

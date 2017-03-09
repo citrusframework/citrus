@@ -21,8 +21,6 @@ import com.consol.citrus.actions.PurgeEndpointAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.PurgeEndpointsBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.Consumer;
@@ -71,13 +69,8 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                purgeEndpoints(new BuilderSupport<PurgeEndpointsBuilder>() {
-                    @Override
-                    public void configure(PurgeEndpointsBuilder builder) {
-                        builder.endpoints(endpoint1, endpoint2)
-                                .endpoint(endpoint3);
-                    }
-                });
+                purgeEndpoints(builder -> builder.endpoints(endpoint1, endpoint2)
+                        .endpoint(endpoint3));
             }
         };
 
@@ -125,14 +118,9 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                purgeEndpoints(new BuilderSupport<PurgeEndpointsBuilder>() {
-                    @Override
-                    public void configure(PurgeEndpointsBuilder builder) {
-                        builder.endpointNames("e1", "e2", "e3")
-                                .endpoint("e4")
-                                .selector("operation = 'sayHello'");
-                    }
-                });
+                purgeEndpoints(builder -> builder.endpointNames("e1", "e2", "e3")
+                        .endpoint("e4")
+                        .selector("operation = 'sayHello'"));
             }
         };
 
@@ -167,13 +155,8 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                purgeEndpoints(new BuilderSupport<PurgeEndpointsBuilder>() {
-                    @Override
-                    public void configure(PurgeEndpointsBuilder builder) {
-                        builder.endpoint("e1")
-                                .withApplicationContext(applicationContextMock);
-                    }
-                });
+                purgeEndpoints(builder -> builder.endpoint("e1")
+                        .withApplicationContext(applicationContextMock));
             }
         };
 

@@ -68,13 +68,8 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
-                    @Override
-                    public void configure(PurgeChannelsBuilder builder) {
-                        builder.channels(channel1, channel2)
-                                .channel(channel3);
-                    }
-                });
+                purgeChannels(builder -> builder.channels(channel1, channel2)
+                        .channel(channel3));
             }
         };
 
@@ -111,14 +106,9 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
-                    @Override
-                    public void configure(PurgeChannelsBuilder builder) {
-                        builder.channelNames("ch1", "ch2", "ch3")
-                                .channel("ch4")
-                                .selector(messageSelector);
-                    }
-                });
+                purgeChannels(builder -> builder.channelNames("ch1", "ch2", "ch3")
+                        .channel("ch4")
+                        .selector(messageSelector));
             }
         };
 
@@ -147,13 +137,8 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
-                    @Override
-                    public void configure(PurgeChannelsBuilder builder) {
-                        builder.channel("ch1")
-                                .channelResolver(channelResolver);
-                    }
-                });
+                purgeChannels(builder -> builder.channel("ch1")
+                        .channelResolver(channelResolver));
             }
         };
 

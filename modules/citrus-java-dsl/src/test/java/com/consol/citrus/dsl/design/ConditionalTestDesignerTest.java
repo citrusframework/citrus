@@ -17,9 +17,7 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -54,12 +52,7 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                conditional().when(new ConditionExpression() {
-                    @Override
-                    public boolean evaluate(TestContext context) {
-                        return context.getVariable("var").equals("Hello");
-                    }
-                }).actions(echo("${var}"));
+                conditional().when(context -> context.getVariable("var").equals("Hello")).actions(echo("${var}"));
             }
         };
 

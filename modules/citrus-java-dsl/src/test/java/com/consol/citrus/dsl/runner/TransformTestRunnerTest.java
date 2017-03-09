@@ -34,25 +34,20 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                transform(new BuilderSupport<TransformActionBuilder>() {
-                    @Override
-                    public void configure(TransformActionBuilder builder) {
-                        builder.source("<TestRequest>" +
-                                            "<Message>Hello World!</Message>" +
-                                        "</TestRequest>")
-                                .xslt(String.format("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">%n" +
-                                        "<xsl:template match=\"/\">%n" +
-                                        "<html>%n" +
-                                        "<body>%n" +
-                                        "<h2>Test Request</h2>%n" +
-                                        "<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>%n" +
-                                        "</body>%n" +
-                                        "</html>%n" +
-                                        "</xsl:template>%n" +
-                                        "</xsl:stylesheet>"))
-                                .result("result");
-                    }
-                });
+                transform(builder -> builder.source("<TestRequest>" +
+                                    "<Message>Hello World!</Message>" +
+                                "</TestRequest>")
+                        .xslt(String.format("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">%n" +
+                                "<xsl:template match=\"/\">%n" +
+                                "<html>%n" +
+                                "<body>%n" +
+                                "<h2>Test Request</h2>%n" +
+                                "<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>%n" +
+                                "</body>%n" +
+                                "</html>%n" +
+                                "</xsl:template>%n" +
+                                "</xsl:stylesheet>"))
+                        .result("result"));
             }
         };
 
@@ -82,14 +77,9 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                transform(new BuilderSupport<TransformActionBuilder>() {
-                    @Override
-                    public void configure(TransformActionBuilder builder) {
-                        builder.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))
-								.xslt(new ClassPathResource("com/consol/citrus/dsl/runner/transform.xslt"))
-                                .result("result");
-                    }
-                });
+                transform(builder -> builder.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))
+                        .xslt(new ClassPathResource("com/consol/citrus/dsl/runner/transform.xslt"))
+                        .result("result"));
             }
         };
 

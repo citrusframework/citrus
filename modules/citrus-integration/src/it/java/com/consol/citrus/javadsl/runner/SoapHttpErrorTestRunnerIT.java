@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -38,48 +36,33 @@ public class SoapHttpErrorTestRunnerIT extends TestNGCitrusTestRunner {
             assertException().exception(org.springframework.ws.client.WebServiceTransportException.class)
                             .message("Server Error [500]")
                     .when(
-                    send(new BuilderSupport<SendMessageBuilder>() {
-                        @Override
-                        public void configure(SendMessageBuilder builder) {
-                            builder.endpoint("webServiceClient")
-                                    .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
-                                            "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
-                                            "<ns0:User>${user}</ns0:User>" +
-                                            "<ns0:Text>Hello WebServer</ns0:Text>" +
-                                            "</ns0:HelloRequest>")
-                                    .header("{http://citrusframework.org/test}Operation", "sayHello")
-                                    .header("citrus_http_operation", "sayHello")
-                                    .header("citrus_soap_action", "sayHello");
-                        }
-                    })
+                    send(builder -> builder.endpoint("webServiceClient")
+                            .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                    "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                    "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                    "<ns0:User>${user}</ns0:User>" +
+                                    "<ns0:Text>Hello WebServer</ns0:Text>" +
+                                    "</ns0:HelloRequest>")
+                            .header("{http://citrusframework.org/test}Operation", "sayHello")
+                            .header("citrus_http_operation", "sayHello")
+                            .header("citrus_soap_action", "sayHello"))
             ),
             sequential().actions(
-                receive(new BuilderSupport<ReceiveMessageBuilder>() {
-                    @Override
-                    public void configure(ReceiveMessageBuilder builder) {
-                        builder.endpoint("webServiceRequestReceiver")
-                                .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                        "<ns0:MessageId>${messageId}</ns0:MessageId>" +
-                                        "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
-                                        "<ns0:User>${user}</ns0:User>" +
-                                        "<ns0:Text>Hello WebServer</ns0:Text>" +
-                                        "</ns0:HelloRequest>")
-                                .header("Operation", "sayHello")
-                                .header("operation", "sayHello")
-                                .header("citrus_soap_action", "sayHello")
-                                .schemaValidation(false)
-                                .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
-                    }
-                }),
-                send(new BuilderSupport<SendMessageBuilder>() {
-                    @Override
-                    public void configure(SendMessageBuilder builder) {
-                        builder.endpoint("webServiceResponseSender")
-                                .header("citrus_http_status_code", "500")
-                                .header("citrus_jms_correlationId", "${internal_correlation_id}");
-                    }
-                })
+                receive(builder -> builder.endpoint("webServiceRequestReceiver")
+                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                                "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                                "<ns0:User>${user}</ns0:User>" +
+                                "<ns0:Text>Hello WebServer</ns0:Text>" +
+                                "</ns0:HelloRequest>")
+                        .header("Operation", "sayHello")
+                        .header("operation", "sayHello")
+                        .header("citrus_soap_action", "sayHello")
+                        .schemaValidation(false)
+                        .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")),
+                send(builder -> builder.endpoint("webServiceResponseSender")
+                        .header("citrus_http_status_code", "500")
+                        .header("citrus_jms_correlationId", "${internal_correlation_id}"))
             )
         );
     }

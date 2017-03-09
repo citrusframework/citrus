@@ -17,8 +17,6 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -60,16 +58,11 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
-                    @Override
-                    public void configure(PurgeJmsQueuesBuilder builder) {
-                        builder.connectionFactory(connectionFactory)
-                                .queueNames("q1", "q2", "q3")
-                                .queue("q4")
-                                .timeout(200L)
-                                .sleep(150L);
-                    }
-                });
+                purgeQueues(builder -> builder.connectionFactory(connectionFactory)
+                        .queueNames("q1", "q2", "q3")
+                        .queue("q4")
+                        .timeout(200L)
+                        .sleep(150L));
             }
         };
 
@@ -105,16 +98,11 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
-                    @Override
-                    public void configure(PurgeJmsQueuesBuilder builder) {
-                        builder.connectionFactory(connectionFactory)
-                                .queues(queue1, queue2)
-                                .queue(queue3)
-                                .timeout(200L)
-                                .sleep(150L);
-                    }
-                });
+                purgeQueues(builder -> builder.connectionFactory(connectionFactory)
+                        .queues(queue1, queue2)
+                        .queue(queue3)
+                        .timeout(200L)
+                        .sleep(150L));
             }
         };
 

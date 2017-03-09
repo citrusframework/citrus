@@ -18,7 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -90,12 +89,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
                 repeatOnError().autoSleep(200)
                                 .index("k")
                                 .startsWith(2)
-                                .until(new IteratingConditionExpression() {
-                                    @Override
-                                    public boolean evaluate(int index, TestContext context) {
-                                        return index >= 5;
-                                    }
-                                })
+                                .until((index, context) -> index >= 5)
                         .actions(echo("${var}"));
             }
         };

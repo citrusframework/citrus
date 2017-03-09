@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ExecutePLSQLBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,31 +36,21 @@ public class ExecutePLSQLTestRunnerIT extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void executePLSQLAction() {
-        plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
-            @Override
-            public void configure(ExecutePLSQLBuilder builder) {
-                builder.dataSource(dataSource)
-                        .sqlResource("classpath:com/consol/citrus/actions/plsql.sql")
-                        .ignoreErrors(true);
-            }
-        });
+        plsql(builder -> builder.dataSource(dataSource)
+                .sqlResource("classpath:com/consol/citrus/actions/plsql.sql")
+                .ignoreErrors(true));
         
-        plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
-            @Override
-            public void configure(ExecutePLSQLBuilder builder) {
-                builder.dataSource(dataSource)
-                        .sqlScript("BEGIN\n" +
-                                "EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is\n" +
-                                "begin\n" +
-                                "if v_id  is null then\n" +
-                                "return 0;\n" +
-                                "end if;\n" +
-                                "return v_id;\n" +
-                                "end;';\n" +
-                                "END;\n" +
-                                "/")
-                        .ignoreErrors(true);
-            }
-        });
+        plsql(builder -> builder.dataSource(dataSource)
+                .sqlScript("BEGIN\n" +
+                        "EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is\n" +
+                        "begin\n" +
+                        "if v_id  is null then\n" +
+                        "return 0;\n" +
+                        "end if;\n" +
+                        "return v_id;\n" +
+                        "end;';\n" +
+                        "END;\n" +
+                        "/")
+                .ignoreErrors(true));
     }
 }

@@ -18,8 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AntRunAction;
-import com.consol.citrus.dsl.builder.AntRunBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
@@ -39,13 +37,8 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                antrun(new BuilderSupport<AntRunBuilder>() {
-                    @Override
-                    public void configure(AntRunBuilder builder) {
-                        builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
-                            .target("sayHello");
-                    }
-                });
+                antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
+                    .target("sayHello"));
             }
         };
         
@@ -65,13 +58,8 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                antrun(new BuilderSupport<AntRunBuilder>() {
-                    @Override
-                    public void configure(AntRunBuilder builder) {
-                        builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
-                                .targets("sayHello", "sayGoodbye");
-                    }
-                });
+                antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
+                        .targets("sayHello", "sayGoodbye"));
             }
         };
 
@@ -92,15 +80,10 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                antrun(new BuilderSupport<AntRunBuilder>() {
-                    @Override
-                    public void configure(AntRunBuilder builder) {
-                        builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
-                                .target("sayHello")
-                                .property("welcomeText", "Hi everybody!")
-                                .property("goodbyeText", "Goodbye!");
-                    }
-                });
+                antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
+                        .target("sayHello")
+                        .property("welcomeText", "Hi everybody!")
+                        .property("goodbyeText", "Goodbye!"));
             }
         };
 
@@ -125,14 +108,9 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("checked", true);
 
-                antrun(new BuilderSupport<AntRunBuilder>() {
-                    @Override
-                    public void configure(AntRunBuilder builder) {
-                        builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
-                                .target("checkMe")
-                                .propertyFile("classpath:com/consol/citrus/dsl/runner/build.properties");
-                    }
-                });
+                antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
+                        .target("checkMe")
+                        .propertyFile("classpath:com/consol/citrus/dsl/runner/build.properties"));
             }
         };
 
@@ -157,14 +135,9 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                antrun(new BuilderSupport<AntRunBuilder>() {
-                    @Override
-                    public void configure(AntRunBuilder builder) {
-                        builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
-                                .target("sayHello")
-                                .listener(buildListener);
-                    }
-                });
+                antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
+                        .target("sayHello")
+                        .listener(buildListener));
             }
         };
 

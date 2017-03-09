@@ -21,18 +21,13 @@ import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ReceiveTimeoutBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -55,24 +50,16 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveTimeoutBuilder() {
         reset(messageEndpoint, messageConsumer);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Thread.sleep(500L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Thread.sleep(500L);
+            return null;
         }).when(messageConsumer).receive(any(TestContext.class), eq(250L));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
-                    @Override
-                    public void configure(ReceiveTimeoutBuilder builder) {
-                        builder.endpoint(messageEndpoint)
-                                .timeout(250)
-                                .selector("TestMessageSelectorString");
-                    }
-                });
+                receiveTimeout(builder -> builder.endpoint(messageEndpoint)
+                        .timeout(250)
+                        .selector("TestMessageSelectorString"));
             }
         };
 
@@ -96,12 +83,9 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(applicationContextMock, messageEndpoint, messageConsumer);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Thread.sleep(600L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Thread.sleep(600L);
+            return null;
         }).when(messageConsumer).receive(any(TestContext.class), eq(500L));
 
         when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
@@ -112,13 +96,8 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
-                    @Override
-                    public void configure(ReceiveTimeoutBuilder builder) {
-                        builder.endpoint("fooMessageEndpoint")
-                                .timeout(500);
-                    }
-                });
+                receiveTimeout(builder -> builder.endpoint("fooMessageEndpoint")
+                        .timeout(500));
             }
         };
 
@@ -138,25 +117,17 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveTimeoutBuilderFailure() {
         reset(messageEndpoint, messageConsumer);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Thread.sleep(100L);
-                return new DefaultMessage("Hello Citrus!");
-            }
+        doAnswer(invocation -> {
+            Thread.sleep(100L);
+            return new DefaultMessage("Hello Citrus!");
         }).when(messageConsumer).receive(any(TestContext.class), eq(250L));
         try {
             new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
                 @Override
                 public void execute() {
-                    receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
-                        @Override
-                        public void configure(ReceiveTimeoutBuilder builder) {
-                            builder.endpoint(messageEndpoint)
-                                    .timeout(250)
-                                    .selector("TestMessageSelectorString");
-                        }
-                    });
+                    receiveTimeout(builder -> builder.endpoint(messageEndpoint)
+                            .timeout(250)
+                            .selector("TestMessageSelectorString"));
                 }
             };
 

@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -86,12 +85,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 5);
 
-                conditional().when(new ConditionExpression() {
-                                        @Override
-                                        public boolean evaluate(TestContext context) {
-                                            return context.getVariable("var").equals("5");
-                                        }
-                                    })
+                conditional().when(context -> context.getVariable("var").equals("5"))
                         .actions(echo("${var}"), createVariable("execution", "true"));
             }
         };

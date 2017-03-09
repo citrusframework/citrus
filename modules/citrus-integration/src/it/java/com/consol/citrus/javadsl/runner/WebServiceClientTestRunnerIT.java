@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,35 +31,25 @@ public class WebServiceClientTestRunnerIT extends TestNGCitrusTestRunner {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("webServiceHelloClient")
-                        .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:MessageId>${messageId}</ns0:MessageId>" +
-                                "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
-                                "<ns0:User>User</ns0:User>" +
-                                "<ns0:Text>Hello WebServer</ns0:Text>" +
-                                "</ns0:HelloStandaloneRequest>")
-                        .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
-                        .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello");
-            }
-        });
+        send(builder -> builder.endpoint("webServiceHelloClient")
+                .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                        "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                        "<ns0:User>User</ns0:User>" +
+                        "<ns0:Text>Hello WebServer</ns0:Text>" +
+                        "</ns0:HelloStandaloneRequest>")
+                .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
+                .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello"));
         
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("webServiceHelloClient")
-                        .payload("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                "<ns0:MessageId>${messageId}</ns0:MessageId>" +
-                                "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
-                                "<ns0:User>WebServer</ns0:User>" +
-                                "<ns0:Text>Hello User</ns0:Text>" +
-                                "</ns0:HelloStandaloneResponse>")
-                        .header("Request", "HelloRequest")
-                        .header("Operation", "sayHelloResponse")
-                        .schemaValidation(false);
-            }
-        });
+        receive(builder -> builder.endpoint("webServiceHelloClient")
+                .payload("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                        "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                        "<ns0:User>WebServer</ns0:User>" +
+                        "<ns0:Text>Hello User</ns0:Text>" +
+                        "</ns0:HelloStandaloneResponse>")
+                .header("Request", "HelloRequest")
+                .header("Operation", "sayHelloResponse")
+                .schemaValidation(false));
     }
 }

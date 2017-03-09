@@ -17,7 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
 import org.springframework.http.HttpStatus;
@@ -32,74 +31,44 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void plainTextValidation() {
         parallel().actions(
-            http(new BuilderSupport<HttpActionBuilder>() {
-                @Override
-                public void configure(HttpActionBuilder builder) {
-                    builder.client("httpClient")
-                            .send()
-                            .post()
-                            .payload("Hello, World!");
-                }
-            }),
+            http(builder -> builder.client("httpClient")
+                    .send()
+                    .post()
+                    .payload("Hello, World!")),
             sequential().actions(
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerRequestEndpoint")
-                                .receive()
-                                .post()
-                                .messageType(MessageType.PLAINTEXT)
-                                .payload("Hello, World!")
-                                .extractFromHeader("citrus_jms_messageId", "correlation_id");
-                    }
-                }),
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerResponseEndpoint")
-                                .send()
-                                .response(HttpStatus.OK)
-                                .payload("Hello, Citrus!")
-                                .version("HTTP/1.1")
-                                .header("citrus_jms_correlationId", "${correlation_id}");
-                    }
-                })
+                http(builder -> builder.server("httpServerRequestEndpoint")
+                        .receive()
+                        .post()
+                        .messageType(MessageType.PLAINTEXT)
+                        .payload("Hello, World!")
+                        .extractFromHeader("citrus_jms_messageId", "correlation_id")),
+                http(builder -> builder.server("httpServerResponseEndpoint")
+                        .send()
+                        .response(HttpStatus.OK)
+                        .payload("Hello, Citrus!")
+                        .version("HTTP/1.1")
+                        .header("citrus_jms_correlationId", "${correlation_id}"))
             )
         );
         
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
-                        .receive()
-                        .response(HttpStatus.OK)
-                        .messageType(MessageType.PLAINTEXT)
-                        .payload("Hello, Citrus!")
-                        .version("HTTP/1.1");
-            }
-        });
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .messageType(MessageType.PLAINTEXT)
+                .payload("Hello, Citrus!")
+                .version("HTTP/1.1"));
         
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
-                        .send()
-                        .post()
-                        .payload("Hello, World!");
-            }
-        });
+        http(builder -> builder.client("httpClient")
+                .send()
+                .post()
+                .payload("Hello, World!"));
         
         sleep(2000);
         
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
-                        .receive()
-                        .response()
-                        .messageType(MessageType.PLAINTEXT)
-                        .header("HTTP/1.1");
-            }
-        });
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response()
+                .messageType(MessageType.PLAINTEXT)
+                .header("HTTP/1.1"));
     }
 }

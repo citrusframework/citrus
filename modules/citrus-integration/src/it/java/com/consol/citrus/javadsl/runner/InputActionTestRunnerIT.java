@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.InputActionBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -36,39 +34,16 @@ public class InputActionTestRunnerIT extends TestNGCitrusTestRunner {
         variable("userinput3", "yes");
         variable("userinput4", "");
         
-        input(new BuilderSupport<InputActionBuilder>() {
-            @Override
-            public void configure(InputActionBuilder builder) {
-            }
+        input(builder -> {
         });
         echo("user input was: ${userinput}");
-        input(new BuilderSupport<InputActionBuilder>() {
-            @Override
-            public void configure(InputActionBuilder builder) {
-                builder.message("Now press enter:").result("userinput1");
-            }
-        });
+        input(builder -> builder.message("Now press enter:").result("userinput1"));
         echo("user input was: ${userinput1}");
-        input(new BuilderSupport<InputActionBuilder>() {
-            @Override
-            public void configure(InputActionBuilder builder) {
-                builder.message("Do you want to continue?").answers("y", "n").result("userinput2");
-            }
-        });
+        input(builder -> builder.message("Do you want to continue?").answers("y", "n").result("userinput2"));
         echo("user input was: ${userinput2}");
-        input(new BuilderSupport<InputActionBuilder>() {
-            @Override
-            public void configure(InputActionBuilder builder) {
-                builder.message("Do you want to continue?").answers("yes", "no").result("userinput3");
-            }
-        });
+        input(builder -> builder.message("Do you want to continue?").answers("yes", "no").result("userinput3"));
         echo("user input was: ${userinput3}");
-        input(new BuilderSupport<InputActionBuilder>() {
-            @Override
-            public void configure(InputActionBuilder builder) {
-                builder.result("userinput4");
-            }
-        });
+        input(builder -> builder.result("userinput4"));
         echo("user input was: ${userinput4}");
     }
 }

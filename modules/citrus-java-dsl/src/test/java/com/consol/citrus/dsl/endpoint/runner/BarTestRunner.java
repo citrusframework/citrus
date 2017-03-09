@@ -16,7 +16,6 @@
 
 package com.consol.citrus.dsl.endpoint.runner;
 
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.ExecutableTestRunnerComponent;
 import com.consol.citrus.message.MessageType;
 import org.springframework.stereotype.Component;
@@ -26,22 +25,12 @@ public class BarTestRunner extends ExecutableTestRunnerComponent {
 
     @Override
     public void execute() {
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint("inboundChannelEndpoint")
-                        .messageType(MessageType.PLAINTEXT)
-                        .payload("<TestRunner name=\"BarTestRunner\"></TestRunner>");
-            }
-        });
+        receive(builder -> builder.endpoint("inboundChannelEndpoint")
+                .messageType(MessageType.PLAINTEXT)
+                .payload("<TestRunner name=\"BarTestRunner\"></TestRunner>"));
 
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint("inboundChannelEndpoint")
-                        .payload("<TestRunner name=\"BarTestRunner\">OK</TestRunner>");
-            }
-        });
+        send(builder -> builder.endpoint("inboundChannelEndpoint")
+                .payload("<TestRunner name=\"BarTestRunner\">OK</TestRunner>"));
 
         echo("Bar TestRunner OK!");
     }

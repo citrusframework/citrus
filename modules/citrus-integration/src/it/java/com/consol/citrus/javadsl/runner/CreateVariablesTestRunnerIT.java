@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.GroovyActionBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -42,12 +40,7 @@ public class CreateVariablesTestRunnerIT extends TestNGCitrusTestRunner {
         
         echo("New variable 'new' has the value: ${new}");
         
-        groovy(new BuilderSupport<GroovyActionBuilder>() {
-            @Override
-            public void configure(GroovyActionBuilder builder) {
-                builder.script("assert ${myVariable} == 54321");
-            }
-        });
+        groovy(builder -> builder.script("assert ${myVariable} == 54321"));
 
         createVariable("foo", "bar");
 

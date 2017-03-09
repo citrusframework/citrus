@@ -18,8 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ExecutePLSQLBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
@@ -47,15 +45,10 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
-                    @Override
-                    public void configure(ExecutePLSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("TEST_STMT_1")
-                                .statement("TEST_STMT_2")
-                                .statement("TEST_STMT_3");
-                    }
-                });
+                plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("TEST_STMT_1")
+                        .statement("TEST_STMT_2")
+                        .statement("TEST_STMT_3"));
             }
         };
 
@@ -90,13 +83,8 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
-                    @Override
-                    public void configure(ExecutePLSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .sqlResource(sqlResource);
-                    }
-                });
+                plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .sqlResource(sqlResource));
             }
         };
 
@@ -129,13 +117,8 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
-                    @Override
-                    public void configure(ExecutePLSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .sqlResource("classpath:com/consol/citrus/dsl/runner/plsql.sql");
-                    }
-                });
+                plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .sqlResource("classpath:com/consol/citrus/dsl/runner/plsql.sql"));
             }
         };
 
@@ -164,17 +147,12 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
-                    @Override
-                    public void configure(ExecutePLSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .ignoreErrors(true)
-                                .sqlScript(("TEST_STMT_1\n" +
-                                        "/\n" +
-                                        "TEST_STMT_2\n" +
-                                        "/"));
-                    }
-                });
+                plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .ignoreErrors(true)
+                        .sqlScript(("TEST_STMT_1\n" +
+                                "/\n" +
+                                "TEST_STMT_2\n" +
+                                "/")));
             }
         };
 

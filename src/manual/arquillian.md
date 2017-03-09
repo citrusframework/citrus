@@ -231,42 +231,24 @@ Fortunately we have solved this issue with providing a separate **TestRunner** c
 @Test
 @CitrusTest
 public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws Exception {
-    runner.send(new BuilderSupport<SendMessageBuilder>() {
-        @Override
-        public void configure(SendMessageBuilder builder) {
-            builder.endpoint(serviceUri)
+    runner.send(builder -> builder.endpoint(serviceUri)
                   .message(new HttpMessage("name=Penny&age=20")
                       .method(HttpMethod.POST)
-                      .contentType(MediaType.APPLICATION_FORM_URLENCODED));
-        }
-    });
+                      .contentType(MediaType.APPLICATION_FORM_URLENCODED)));
 
-    runner.receive(new BuilderSupport<ReceiveMessageBuilder>() {
-        @Override
-        public void configure(ReceiveMessageBuilder builder) {
-          builder.endpoint(serviceUri)
+    runner.receive(builder -> builder.endpoint(serviceUri)
               .message(new HttpMessage()
-                  .statusCode(HttpStatus.NO_CONTENT));
-        }
-    });
+                  .statusCode(HttpStatus.NO_CONTENT)));
 
     Employee testEmployee = employeeService.findEmployee("Penny");
     employeeService.addJob(testEmployee, "waitress");
 
-    runner.send(new BuilderSupport<SendMessageBuilder>() {
-        @Override
-        public void configure(SendMessageBuilder builder) {
-            builder.endpoint(serviceUri)
+    runner.send(builder -> builder.endpoint(serviceUri)
                   .message(new HttpMessage()
                       .method(HttpMethod.GET)
-                      .accept(MediaType.APPLICATION_XML));
-        }
-    });
+                      .accept(MediaType.APPLICATION_XML)));
 
-    runner.receive(new BuilderSupport<ReceiveMessageBuilder>() {
-        @Override
-        public void configure(ReceiveMessageBuilder builder) {
-        builder.endpoint(serviceUri)
+    runner.receive(builder -> builder.endpoint(serviceUri)
               .message(new HttpMessage("" +
                 "" +
                   "20" +
@@ -276,9 +258,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
                   "" +
                   "" +
                 "")
-                      .statusCode(HttpStatus.OK));
-        }
-    });
+              .statusCode(HttpStatus.OK)));
 }
 ```
 

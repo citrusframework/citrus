@@ -18,7 +18,6 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.*;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.jms.config.annotation.JmsEndpointConfig;
@@ -42,23 +41,13 @@ public class EndpointInjectionJavaIT extends TestNGCitrusTestRunner {
     @Test
     @CitrusTest
     public void injectEndpoint() {
-        send(new BuilderSupport<SendMessageBuilder>() {
-            @Override
-            public void configure(SendMessageBuilder builder) {
-                builder.endpoint(jmsEndpoint)
-                        .messageType(MessageType.PLAINTEXT)
-                        .payload("Hello!");
-            }
-        });
+        send(builder -> builder.endpoint(jmsEndpoint)
+                .messageType(MessageType.PLAINTEXT)
+                .payload("Hello!"));
 
-        receive(new BuilderSupport<ReceiveMessageBuilder>() {
-            @Override
-            public void configure(ReceiveMessageBuilder builder) {
-                builder.endpoint(jmsEndpoint)
-                        .messageType(MessageType.PLAINTEXT)
-                        .payload("Hello!");
-            }
-        });
+        receive(builder -> builder.endpoint(jmsEndpoint)
+                .messageType(MessageType.PLAINTEXT)
+                .payload("Hello!"));
 
         Assert.assertNotNull(citrus);
     }

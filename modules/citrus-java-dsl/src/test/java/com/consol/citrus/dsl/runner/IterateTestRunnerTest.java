@@ -19,7 +19,6 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
-import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -101,12 +100,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 iterate().startsWith(0)
                             .step(1)
-                            .condition(new IteratingConditionExpression() {
-                                @Override
-                                public boolean evaluate(int index, TestContext context) {
-                                    return index < 5;
-                                }
-                            })
+                            .condition((index, context) -> index < 5)
                     .actions(createVariable("index", "${i}"));
             }
         };

@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.command.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -36,12 +35,7 @@ public class DockerTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 docker().info()
-                        .validateCommandResult(new CommandResultCallback<com.github.dockerjava.api.model.Info>() {
-                            @Override
-                            public void doWithCommandResult(com.github.dockerjava.api.model.Info result, TestContext context) {
-                                Assert.assertNotNull(result);
-                            }
-                        });
+                        .validateCommandResult((result, context) -> Assert.assertNotNull(result));
 
                 docker().version();
                 docker().ping();

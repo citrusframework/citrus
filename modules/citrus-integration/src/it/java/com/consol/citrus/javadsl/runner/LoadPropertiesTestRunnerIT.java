@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.GroovyActionBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -40,21 +38,16 @@ public class LoadPropertiesTestRunnerIT extends TestNGCitrusTestRunner {
         
         echo("Verify variables support (replacement in properties)");
         
-        groovy(new BuilderSupport<GroovyActionBuilder>() {
-            @Override
-            public void configure(GroovyActionBuilder builder) {
-                builder.script("import com.consol.citrus.*\n" +
-                        "import com.consol.citrus.variable.*\n" +
-                        "import com.consol.citrus.context.TestContext\n" +
-                        "import com.consol.citrus.script.GroovyAction.ScriptExecutor\n" +
-                        "import org.testng.Assert;\n" +
-                        "public class GScript implements ScriptExecutor {\n" +
-                        "public void execute(TestContext context) {\n" +
-                        "Assert.assertEquals(\"${welcomeText}\", \"Hello Mr. X\")\n" +
-                        "Assert.assertEquals(\"${todayDate}\", \"${checkDate}\")\n" +
-                        "}\n" +
-                        "}\n");
-            }
-        });
+        groovy(builder -> builder.script("import com.consol.citrus.*\n" +
+                "import com.consol.citrus.variable.*\n" +
+                "import com.consol.citrus.context.TestContext\n" +
+                "import com.consol.citrus.script.GroovyAction.ScriptExecutor\n" +
+                "import org.testng.Assert;\n" +
+                "public class GScript implements ScriptExecutor {\n" +
+                "public void execute(TestContext context) {\n" +
+                "Assert.assertEquals(\"${welcomeText}\", \"Hello Mr. X\")\n" +
+                "Assert.assertEquals(\"${todayDate}\", \"${checkDate}\")\n" +
+                "}\n" +
+                "}\n"));
     }
 }

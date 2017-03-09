@@ -65,29 +65,21 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         reset(soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                SoapFault message = (SoapFault) invocation.getArguments()[0];
-                Assert.assertEquals(message.getFaultActor(), "faultActor");
-                Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-                Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-                return null;
-            }
+        doAnswer(invocation -> {
+            SoapFault message = (SoapFault) invocation.getArguments()[0];
+            Assert.assertEquals(message.getFaultActor(), "faultActor");
+            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
+            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.server(soapServer)
-                                .sendFault()
-                                .faultActor("faultActor")
-                                .faultCode(FAULT_CODE)
-                                .faultString(FAULT_STRING);
-                    }
-                });
+                soap(builder -> builder.server(soapServer)
+                        .sendFault()
+                        .faultActor("faultActor")
+                        .faultCode(FAULT_CODE)
+                        .faultString(FAULT_STRING));
             }
         };
 
@@ -117,14 +109,11 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         reset(applicationContextMock, soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                SoapFault message = (SoapFault) invocation.getArguments()[0];
-                Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-                Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-                return null;
-            }
+        doAnswer(invocation -> {
+            SoapFault message = (SoapFault) invocation.getArguments()[0];
+            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
+            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
@@ -135,15 +124,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.server("soapServer")
-                                .sendFault()
-                                .faultCode(FAULT_CODE)
-                                .faultString(FAULT_STRING);
-                    }
-                });
+                soap(builder -> builder.server("soapServer")
+                        .sendFault()
+                        .faultCode(FAULT_CODE)
+                        .faultString(FAULT_STRING));
             }
         };
 
@@ -170,16 +154,13 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         reset(resource, soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                SoapFault message = (SoapFault) invocation.getArguments()[0];
-                Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-                Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-                Assert.assertEquals(message.getFaultDetails().size(), 1L);
-                Assert.assertEquals(message.getFaultDetails().get(0), ERROR_DETAIL);
-                return null;
-            }
+        doAnswer(invocation -> {
+            SoapFault message = (SoapFault) invocation.getArguments()[0];
+            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
+            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            Assert.assertEquals(message.getFaultDetails().size(), 1L);
+            Assert.assertEquals(message.getFaultDetails().get(0), ERROR_DETAIL);
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream(ERROR_DETAIL.getBytes()));
@@ -187,16 +168,11 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.server(soapServer)
-                                .sendFault()
-                                .faultCode(FAULT_CODE)
-                                .faultDetailResource(resource)
-                                .faultString(FAULT_STRING);
-                    }
-                });
+                soap(builder -> builder.server(soapServer)
+                        .sendFault()
+                        .faultCode(FAULT_CODE)
+                        .faultDetailResource(resource)
+                        .faultString(FAULT_STRING));
             }
         };
 
@@ -224,30 +200,22 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         reset(soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                SoapFault message = (SoapFault) invocation.getArguments()[0];
-                Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-                Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-                Assert.assertEquals(message.getFaultDetails().size(), 1L);
-                Assert.assertEquals(message.getFaultDetails().get(0), "DETAIL");
-                return null;
-            }
+        doAnswer(invocation -> {
+            SoapFault message = (SoapFault) invocation.getArguments()[0];
+            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
+            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            Assert.assertEquals(message.getFaultDetails().size(), 1L);
+            Assert.assertEquals(message.getFaultDetails().get(0), "DETAIL");
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.server(soapServer)
-                                .sendFault()
-                                .faultCode(FAULT_CODE)
-                                .faultDetail("DETAIL")
-                                .faultString(FAULT_STRING);
-                    }
-                });
+                soap(builder -> builder.server(soapServer)
+                        .sendFault()
+                        .faultCode(FAULT_CODE)
+                        .faultDetail("DETAIL")
+                        .faultString(FAULT_STRING));
             }
         };
 
@@ -275,30 +243,22 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         reset(soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                SoapFault message = (SoapFault) invocation.getArguments()[0];
-                Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-                Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-                Assert.assertEquals(message.getFaultDetails().size(), 1L);
-                Assert.assertEquals(message.getFaultDetails().get(0), ERROR_DETAIL);
-                return null;
-            }
+        doAnswer(invocation -> {
+            SoapFault message = (SoapFault) invocation.getArguments()[0];
+            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
+            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            Assert.assertEquals(message.getFaultDetails().size(), 1L);
+            Assert.assertEquals(message.getFaultDetails().get(0), ERROR_DETAIL);
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.server(soapServer)
-                                .sendFault()
-                                .faultCode(FAULT_CODE)
-                                .faultDetailResource("classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml")
-                                .faultString(FAULT_STRING);
-                    }
-                });
+                soap(builder -> builder.server(soapServer)
+                        .sendFault()
+                        .faultCode(FAULT_CODE)
+                        .faultDetailResource("classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml")
+                        .faultString(FAULT_STRING));
             }
         };
 
@@ -327,32 +287,24 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         reset(soapServer, messageProducer);
         when(soapServer.createProducer()).thenReturn(messageProducer);
         when(soapServer.getActor()).thenReturn(null);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                SoapFault message = (SoapFault) invocation.getArguments()[0];
-                Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-                Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-                Assert.assertEquals(message.getFaultDetails().size(), 2L);
-                Assert.assertEquals(message.getFaultDetails().get(0), "DETAIL1");
-                Assert.assertEquals(message.getFaultDetails().get(1), "DETAIL2");
-                return null;
-            }
+        doAnswer(invocation -> {
+            SoapFault message = (SoapFault) invocation.getArguments()[0];
+            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
+            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            Assert.assertEquals(message.getFaultDetails().size(), 2L);
+            Assert.assertEquals(message.getFaultDetails().get(0), "DETAIL1");
+            Assert.assertEquals(message.getFaultDetails().get(1), "DETAIL2");
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                soap(new BuilderSupport<SoapActionBuilder>() {
-                    @Override
-                    public void configure(SoapActionBuilder builder) {
-                        builder.server(soapServer)
-                                .sendFault()
-                                .faultCode(FAULT_CODE)
-                                .faultDetail("DETAIL1")
-                                .faultDetail("DETAIL2")
-                                .faultString(FAULT_STRING);
-                    }
-                });
+                soap(builder -> builder.server(soapServer)
+                        .sendFault()
+                        .faultCode(FAULT_CODE)
+                        .faultDetail("DETAIL1")
+                        .faultDetail("DETAIL2")
+                        .faultString(FAULT_STRING));
             }
         };
 

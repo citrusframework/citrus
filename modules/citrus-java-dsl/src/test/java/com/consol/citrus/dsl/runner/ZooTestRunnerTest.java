@@ -17,14 +17,9 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ZooActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.command.AbstractZooCommand;
-import com.consol.citrus.zookeeper.command.CommandResultCallback;
-import com.consol.citrus.zookeeper.command.ZooResponse;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.mockito.Mockito;
@@ -80,121 +75,63 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .validate("$.responseData.state", ZooKeeper.States.CONNECTED.name())
-                                .extract("$.responseData.state","state")
-                                .extract("$.responseData.sessionId","sessionId")
-                                .extract("$.responseData.sessionPwd","sessionPwd")
-                                .extract("$.responseData.sessionTimeout","sessionTimeout")
-                                .info()
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        Assert.assertNotNull(result);
-                                        Assert.assertEquals(result.getResponseData().get("state"), ZooKeeper.States.CONNECTED.name());
-                                        Assert.assertEquals(result.getResponseData().get("sessionId"), 100L);
-                                        Assert.assertEquals(result.getResponseData().get("sessionPwd"), pwd.getBytes());
-                                        Assert.assertEquals(result.getResponseData().get("sessionTimeout"), 200);
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .validate("$.responseData.state", ZooKeeper.States.CONNECTED.name())
+                        .extract("$.responseData.state","state")
+                        .extract("$.responseData.sessionId","sessionId")
+                        .extract("$.responseData.sessionPwd","sessionPwd")
+                        .extract("$.responseData.sessionTimeout","sessionTimeout")
+                        .info()
+                        .validateCommandResult((result, context) -> {
+                            Assert.assertNotNull(result);
+                            Assert.assertEquals(result.getResponseData().get("state"), ZooKeeper.States.CONNECTED.name());
+                            Assert.assertEquals(result.getResponseData().get("sessionId"), 100L);
+                            Assert.assertEquals(result.getResponseData().get("sessionPwd"), pwd.getBytes());
+                            Assert.assertEquals(result.getResponseData().get("sessionTimeout"), 200);
+                        }));
 
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .create(path, data)
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        Assert.assertNotNull(result);
-                                        Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.PATH), newPath);
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .create(path, data)
+                        .validateCommandResult((result, context) -> {
+                            Assert.assertNotNull(result);
+                            Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.PATH), newPath);
+                        }));
 
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .delete(path)
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        verify(zookeeperClientMock).delete(eq(path), eq(0), any(AsyncCallback.VoidCallback.class), isNull());
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .delete(path)
+                        .validateCommandResult((result, context) -> verify(zookeeperClientMock).delete(eq(path), eq(0), any(AsyncCallback.VoidCallback.class), isNull())));
 
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .exists(path)
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        Assert.assertNotNull(result);
-                                        for (Object o : result.getResponseData().values()) {
-                                            Assert.assertEquals(o.toString(), "1");
-                                        }
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .exists(path)
+                        .validateCommandResult((result, context) -> {
+                            Assert.assertNotNull(result);
+                            for (Object o : result.getResponseData().values()) {
+                                Assert.assertEquals(o.toString(), "1");
+                            }
+                        }));
 
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .children(path)
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        Assert.assertNotNull(result);
-                                        Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.CHILDREN), children);
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .children(path)
+                        .validateCommandResult((result, context) -> {
+                            Assert.assertNotNull(result);
+                            Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.CHILDREN), children);
+                        }));
 
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .get(path)
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        Assert.assertNotNull(result);
-                                        Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.DATA), data);
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .get(path)
+                        .validateCommandResult((result, context) -> {
+                            Assert.assertNotNull(result);
+                            Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.DATA), data);
+                        }));
 
-                zookeeper(new BuilderSupport<ZooActionBuilder>() {
-                    @Override
-                    public void configure(ZooActionBuilder builder) {
-                        builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
-                                .set(path, data)
-                                .validateCommandResult(new CommandResultCallback<ZooResponse>() {
-                                    @Override
-                                    public void doWithCommandResult(ZooResponse result, TestContext context) {
-                                        Assert.assertNotNull(result);
-                                        for (Object o : result.getResponseData().values()) {
-                                            Assert.assertEquals(o.toString(), "1");
-                                        }
-                                    }
-                                });
-                    }
-                });
+                zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))
+                        .set(path, data)
+                        .validateCommandResult((result, context) -> {
+                            Assert.assertNotNull(result);
+                            for (Object o : result.getResponseData().values()) {
+                                Assert.assertEquals(o.toString(), "1");
+                            }
+                        }));
             }
         };
 

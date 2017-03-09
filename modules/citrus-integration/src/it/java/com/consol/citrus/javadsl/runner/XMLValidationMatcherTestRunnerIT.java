@@ -17,7 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -33,69 +32,49 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
         variable("greetingText", "Hello Citrus");      
         
         parallel().actions(
-            http(new BuilderSupport<HttpActionBuilder>() {
-                @Override
-                public void configure(HttpActionBuilder builder) {
-                    builder.client("httpClient")
-                            .send()
-                            .post()
-                            .payload("<testRequestMessage>" +
-                                    "<text>citrus:cdataSection('<data>" +
-                                    "<greeting>Hello Citrus</greeting>" +
-                                    "<timestamp>2012-07-01T00:00:00</timestamp>" +
-                                    "</data>')</text>" +
-                                    "</testRequestMessage>")
-                            .contentType("text/xml")
-                            .accept("text/xml, */*");
-                }
-            }),
+            http(builder -> builder.client("httpClient")
+                    .send()
+                    .post()
+                    .payload("<testRequestMessage>" +
+                            "<text>citrus:cdataSection('<data>" +
+                            "<greeting>Hello Citrus</greeting>" +
+                            "<timestamp>2012-07-01T00:00:00</timestamp>" +
+                            "</data>')</text>" +
+                            "</testRequestMessage>")
+                    .contentType("text/xml")
+                    .accept("text/xml, */*")),
             sequential().actions(
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerRequestEndpoint")
-                                .receive()
-                                .post("/test")
-                                .payload("<testRequestMessage>" +
-                                        "<text>citrus:cdataSection('@matchesXml('<data>" +
-                                        "<greeting>${greetingText}</greeting>" +
-                                        "<timestamp>@ignore@</timestamp>" +
-                                        "</data>')@')</text>" +
-                                        "</testRequestMessage>")
-                                .contentType("text/xml")
-                                .accept("text/xml, */*")
-                                .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                                .extractFromHeader("citrus_jms_messageId", "correlation_id");
-                    }
-                }),
-                http(new BuilderSupport<HttpActionBuilder>() {
-                    @Override
-                    public void configure(HttpActionBuilder builder) {
-                        builder.server("httpServerResponseEndpoint")
-                                .send()
-                                .response(HttpStatus.OK)
-                                .payload("<testResponseMessage>" +
-                                        "<text>Hello Citrus</text>" +
-                                        "</testResponseMessage>")
-                                .version("HTTP/1.1")
-                                .contentType("text/xml")
-                                .header("citrus_jms_correlationId", "${correlation_id}");
-                    }
-                })
-            )
-        );
-        
-        http(new BuilderSupport<HttpActionBuilder>() {
-            @Override
-            public void configure(HttpActionBuilder builder) {
-                builder.client("httpClient")
+                http(builder -> builder.server("httpServerRequestEndpoint")
                         .receive()
+                        .post("/test")
+                        .payload("<testRequestMessage>" +
+                                "<text>citrus:cdataSection('@matchesXml('<data>" +
+                                "<greeting>${greetingText}</greeting>" +
+                                "<timestamp>@ignore@</timestamp>" +
+                                "</data>')@')</text>" +
+                                "</testRequestMessage>")
+                        .contentType("text/xml")
+                        .accept("text/xml, */*")
+                        .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
+                        .extractFromHeader("citrus_jms_messageId", "correlation_id")),
+                http(builder -> builder.server("httpServerResponseEndpoint")
+                        .send()
                         .response(HttpStatus.OK)
                         .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                                 "</testResponseMessage>")
-                        .version("HTTP/1.1");
-            }
-        });
+                        .version("HTTP/1.1")
+                        .contentType("text/xml")
+                        .header("citrus_jms_correlationId", "${correlation_id}"))
+            )
+        );
+        
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .payload("<testResponseMessage>" +
+                        "<text>Hello Citrus</text>" +
+                        "</testResponseMessage>")
+                .version("HTTP/1.1"));
     }
 }

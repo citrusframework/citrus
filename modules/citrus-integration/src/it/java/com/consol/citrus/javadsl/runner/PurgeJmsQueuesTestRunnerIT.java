@@ -17,8 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,45 +49,30 @@ public class PurgeJmsQueuesTestRunnerIT extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void purgeJmsQueuesAction() {
-        purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
-            @Override
-            public void configure(PurgeJmsQueuesBuilder builder) {
-                builder.queue("Citrus.Queue.Dummy")
-                        .queue("Citrus.Queue.Dummy.One.In")
-                        .queue("Citrus.Queue.Dummy.One.Out")
-                        .queue("Citrus.Queue.Dummy.One.In")
-                        .queue("Citrus.Queue.Dummy.One.Out")
-                        .queue("Citrus.Queue.Dummy.Three.In")
-                        .queue("Citrus.Queue.Dummy.Three.Out");
-            }
-        });
+        purgeQueues(builder -> builder.queue("Citrus.Queue.Dummy")
+                .queue("Citrus.Queue.Dummy.One.In")
+                .queue("Citrus.Queue.Dummy.One.Out")
+                .queue("Citrus.Queue.Dummy.One.In")
+                .queue("Citrus.Queue.Dummy.One.Out")
+                .queue("Citrus.Queue.Dummy.Three.In")
+                .queue("Citrus.Queue.Dummy.Three.Out"));
         
-        purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
-            @Override
-            public void configure(PurgeJmsQueuesBuilder builder) {
-                builder.connectionFactory(connectionFactory)
-                        .timeout(150L)
-                        .queue("Citrus.Queue.Dummy")
-                        .queue("Citrus.Queue.Dummy.One.In")
-                        .queue("Citrus.Queue.Dummy.One.Out")
-                        .queue("Citrus.Queue.Dummy.One.In")
-                        .queue("Citrus.Queue.Dummy.One.Out")
-                        .queue("Citrus.Queue.Dummy.Three.In")
-                        .queue("Citrus.Queue.Dummy.Three.Out");
-            }
-        });
+        purgeQueues(builder -> builder.connectionFactory(connectionFactory)
+                .timeout(150L)
+                .queue("Citrus.Queue.Dummy")
+                .queue("Citrus.Queue.Dummy.One.In")
+                .queue("Citrus.Queue.Dummy.One.Out")
+                .queue("Citrus.Queue.Dummy.One.In")
+                .queue("Citrus.Queue.Dummy.One.Out")
+                .queue("Citrus.Queue.Dummy.Three.In")
+                .queue("Citrus.Queue.Dummy.Three.Out"));
         
-        purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
-            @Override
-            public void configure(PurgeJmsQueuesBuilder builder) {
-                builder.queue(queue1)
-                        .queue(queue2)
-                        .queue(queue3)
-                        .queue("Citrus.Queue.Dummy.One.In")
-                        .queue("Citrus.Queue.Dummy.One.Out")
-                        .queue("Citrus.Queue.Dummy.Three.In")
-                        .queue("Citrus.Queue.Dummy.Three.Out");
-            }
-        });
+        purgeQueues(builder -> builder.queue(queue1)
+                .queue(queue2)
+                .queue(queue3)
+                .queue("Citrus.Queue.Dummy.One.In")
+                .queue("Citrus.Queue.Dummy.One.Out")
+                .queue("Citrus.Queue.Dummy.Three.In")
+                .queue("Citrus.Queue.Dummy.Three.Out"));
     }
 }

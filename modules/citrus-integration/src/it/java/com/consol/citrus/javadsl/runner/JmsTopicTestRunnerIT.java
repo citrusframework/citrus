@@ -17,9 +17,6 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
-import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -36,55 +33,40 @@ public class JmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-           receive(new BuilderSupport<ReceiveMessageBuilder>() {
-               @Override
-               public void configure(ReceiveMessageBuilder builder) {
-                   builder.endpoint("helloTopicRequestReceiver")
-                           .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                   "<MessageId>${messageId}</MessageId>" +
-                                   "<CorrelationId>${correlationId}</CorrelationId>" +
-                                   "<User>${user}</User>" +
-                                   "<Text>Hello TestFramework</Text>" +
-                                   "</HelloRequest>")
-                           .header("Operation", "sayHello")
-                           .header("CorrelationId", "${correlationId}")
-                           .timeout(5000)
-                           .description("Receive asynchronous hello response: HelloService -> TestFramework");
-               }
-           }),
-           receive(new BuilderSupport<ReceiveMessageBuilder>() {
-               @Override
-               public void configure(ReceiveMessageBuilder builder) {
-                   builder.endpoint("helloTopicRequestReceiver")
-                           .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                   "<MessageId>${messageId}</MessageId>" +
-                                   "<CorrelationId>${correlationId}</CorrelationId>" +
-                                   "<User>${user}</User>" +
-                                   "<Text>Hello TestFramework</Text>" +
-                                   "</HelloRequest>")
-                           .header("Operation", "sayHello")
-                           .header("CorrelationId", "${correlationId}")
-                           .timeout(5000)
-                           .description("Receive asynchronous hello response: HelloService -> TestFramework");
-               }
-           }),
+           receive(builder -> builder.endpoint("helloTopicRequestReceiver")
+                   .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                           "<MessageId>${messageId}</MessageId>" +
+                           "<CorrelationId>${correlationId}</CorrelationId>" +
+                           "<User>${user}</User>" +
+                           "<Text>Hello TestFramework</Text>" +
+                           "</HelloRequest>")
+                   .header("Operation", "sayHello")
+                   .header("CorrelationId", "${correlationId}")
+                   .timeout(5000)
+                   .description("Receive asynchronous hello response: HelloService -> TestFramework")),
+           receive(builder -> builder.endpoint("helloTopicRequestReceiver")
+                   .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                           "<MessageId>${messageId}</MessageId>" +
+                           "<CorrelationId>${correlationId}</CorrelationId>" +
+                           "<User>${user}</User>" +
+                           "<Text>Hello TestFramework</Text>" +
+                           "</HelloRequest>")
+                   .header("Operation", "sayHello")
+                   .header("CorrelationId", "${correlationId}")
+                   .timeout(5000)
+                   .description("Receive asynchronous hello response: HelloService -> TestFramework")),
            sequential().actions(
                sleep(1000L),
-               send(new BuilderSupport<SendMessageBuilder>() {
-                   @Override
-                   public void configure(SendMessageBuilder builder) {
-                       builder.endpoint("helloTopicRequestSender")
-                               .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                       "<MessageId>${messageId}</MessageId>" +
-                                       "<CorrelationId>${correlationId}</CorrelationId>" +
-                                       "<User>${user}</User>" +
-                                       "<Text>Hello TestFramework</Text>" +
-                                       "</HelloRequest>")
-                               .header("Operation", "sayHello")
-                               .header("CorrelationId", "${correlationId}")
-                               .description("Send asynchronous hello request: TestFramework -> HelloService");
-                   }
-               })
+               send(builder -> builder.endpoint("helloTopicRequestSender")
+                       .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                               "<MessageId>${messageId}</MessageId>" +
+                               "<CorrelationId>${correlationId}</CorrelationId>" +
+                               "<User>${user}</User>" +
+                               "<Text>Hello TestFramework</Text>" +
+                               "</HelloRequest>")
+                       .header("Operation", "sayHello")
+                       .header("CorrelationId", "${correlationId}")
+                       .description("Send asynchronous hello request: TestFramework -> HelloService"))
            )    
         );
     }

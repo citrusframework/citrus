@@ -18,8 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ExecuteSQLBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
@@ -31,7 +29,8 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -49,16 +48,11 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                sql(new BuilderSupport<ExecuteSQLBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("TEST_STMT_1")
-                                .statement("TEST_STMT_2")
-                                .statement("TEST_STMT_3")
-                                .ignoreErrors(false);
-                    }
-                });
+                sql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("TEST_STMT_1")
+                        .statement("TEST_STMT_2")
+                        .statement("TEST_STMT_3")
+                        .ignoreErrors(false));
             }
         };
 
@@ -85,14 +79,9 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                sql(new BuilderSupport<ExecuteSQLBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .sqlResource(new ClassPathResource("com/consol/citrus/dsl/runner/script.sql"))
-                                .ignoreErrors(true);
-                    }
-                });
+                sql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .sqlResource(new ClassPathResource("com/consol/citrus/dsl/runner/script.sql"))
+                        .ignoreErrors(true));
             }
         };
 
@@ -119,13 +108,8 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                sql(new BuilderSupport<ExecuteSQLBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .sqlResource("classpath:com/consol/citrus/dsl/runner/script.sql");
-                    }
-                });
+                sql(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .sqlResource("classpath:com/consol/citrus/dsl/runner/script.sql"));
             }
         };
 

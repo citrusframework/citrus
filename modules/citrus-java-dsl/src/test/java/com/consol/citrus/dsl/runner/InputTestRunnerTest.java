@@ -18,8 +18,6 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.InputAction;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.InputActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,14 +31,9 @@ public class InputTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("answer", "yes");
 
-                input(new BuilderSupport<InputActionBuilder>() {
-                    @Override
-                    public void configure(InputActionBuilder builder) {
-                        builder.message("Want to test me?")
-                                .result("answer")
-                                .answers("yes", "no", "maybe");
-                    }
-                });
+                input(builder -> builder.message("Want to test me?")
+                        .result("answer")
+                        .answers("yes", "no", "maybe"));
             }
         };
 

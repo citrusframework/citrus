@@ -19,8 +19,6 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.ExecuteSQLQueryBuilder;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -32,7 +30,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -62,16 +61,11 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("episodeId", "citrus:randomNumber(5)");
 
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .sqlResource(new ClassPathResource("com/consol/citrus/dsl/runner/query-script.sql"))
-                                .validate("NAME", "Leonard")
-                                .validate("CNT_EPISODES", "100000")
-                                .extract("NAME", "actorName");
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .sqlResource(new ClassPathResource("com/consol/citrus/dsl/runner/query-script.sql"))
+                        .validate("NAME", "Leonard")
+                        .validate("CNT_EPISODES", "100000")
+                        .extract("NAME", "actorName"));
             }
         };
 
@@ -116,17 +110,12 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("SELECT NAME FROM ACTORS")
-                                .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
-                                .validate("NAME", "Penny", "Sheldon")
-                                .validate("CNT_EPISODES", "9999")
-                                .extract("CNT_EPISODES", "cntEpisodes");
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("SELECT NAME FROM ACTORS")
+                        .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
+                        .validate("NAME", "Penny", "Sheldon")
+                        .validate("CNT_EPISODES", "9999")
+                        .extract("CNT_EPISODES", "cntEpisodes"));
             }
         };
 
@@ -170,15 +159,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("SELECT NAME FROM ACTORS")
-                                .validateScript("assert rows[0].NAME == 'Penny'\n" +
-                                        "assert rows[1].NAME == 'Sheldon'", ScriptTypes.GROOVY);
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("SELECT NAME FROM ACTORS")
+                        .validateScript("assert rows[0].NAME == 'Penny'\n" +
+                                "assert rows[1].NAME == 'Sheldon'", ScriptTypes.GROOVY));
             }
         };
 
@@ -211,14 +195,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("SELECT NAME FROM ACTORS")
-                                .validateScript(resource, ScriptTypes.GROOVY);
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("SELECT NAME FROM ACTORS")
+                        .validateScript(resource, ScriptTypes.GROOVY));
             }
         };
 
@@ -251,14 +230,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("SELECT NAME FROM ACTORS")
-                                .groovy("assert rows[0].NAME == 'Howard'");
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("SELECT NAME FROM ACTORS")
+                        .groovy("assert rows[0].NAME == 'Howard'"));
             }
         };
 
@@ -293,14 +267,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("SELECT NAME FROM ACTORS")
-                                .groovy(resource);
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("SELECT NAME FROM ACTORS")
+                        .groovy(resource));
             }
         };
         
@@ -334,15 +303,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
-                    @Override
-                    public void configure(ExecuteSQLQueryBuilder builder) {
-                        builder.jdbcTemplate(jdbcTemplate)
-                                .statement("SELECT NAME FROM ACTORS")
-                                .groovy("assert rows[0].NAME == 'Howard'")
-                                .validator(validator);
-                    }
-                });
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .statement("SELECT NAME FROM ACTORS")
+                        .groovy("assert rows[0].NAME == 'Howard'")
+                        .validator(validator));
             }
         };
 
