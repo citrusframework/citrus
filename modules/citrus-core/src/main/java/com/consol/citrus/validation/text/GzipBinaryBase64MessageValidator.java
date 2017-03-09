@@ -36,8 +36,8 @@ import java.util.zip.GZIPInputStream;
 public class GzipBinaryBase64MessageValidator extends BinaryBase64MessageValidator {
 
     @Override
-    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
-                                       ValidationContext validationContext, TestContext context) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, ValidationContext validationContext) throws ValidationException {
         if (receivedMessage.getPayload() instanceof byte[]) {
             try (GZIPInputStream gzipInputStream = new GZIPInputStream(receivedMessage.getPayload(InputStream.class));
                  ByteArrayOutputStream unzipped = new ByteArrayOutputStream()) {
@@ -51,7 +51,7 @@ public class GzipBinaryBase64MessageValidator extends BinaryBase64MessageValidat
             }
         }
 
-        super.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        super.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
     
     @Override

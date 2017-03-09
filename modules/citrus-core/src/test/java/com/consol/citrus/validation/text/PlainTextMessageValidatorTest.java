@@ -38,7 +38,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("Hello World!");
 
         ValidationContext validationContext = new DefaultValidationContext();
-        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("@contains('World!')@");
 
         ValidationContext validationContext = new DefaultValidationContext();
-        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -56,7 +56,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("@contains('Space!')@");
 
         ValidationContext validationContext = new DefaultValidationContext();
-        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
     
     @Test
@@ -67,7 +67,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         context.setVariable("world", "World");
 
         ValidationContext validationContext = new DefaultValidationContext();
-        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
     
     @Test
@@ -77,7 +77,7 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
         ValidationContext validationContext = new DefaultValidationContext();
         try {
-            validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'Hello Citrus!'"));
             Assert.assertTrue(e.getMessage().contains("but was 'Hello World!'"));

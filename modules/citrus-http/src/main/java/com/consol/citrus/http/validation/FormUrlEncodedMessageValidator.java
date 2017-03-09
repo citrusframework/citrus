@@ -51,14 +51,14 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
     private FormMarshaller formMarshaller = new FormMarshaller();
 
     /** Xml message validator delegate */
-    public DomXmlMessageValidator xmlMessageValidator = new DomXmlMessageValidator();
+    private DomXmlMessageValidator xmlMessageValidator = new DomXmlMessageValidator();
 
     /** Should form name value pairs be decoded by default */
-    public boolean autoDecode = true;
+    private boolean autoDecode = true;
 
     @Override
-    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
-                                       ValidationContext validationContext, TestContext context) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, ValidationContext validationContext) throws ValidationException {
         log.info("Start " + MESSAGE_TYPE + " message validation");
 
         try {
@@ -69,7 +69,7 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
             formMarshaller.marshal(createFormData(receivedMessage), result);
             formMessage.setPayload(result.toString());
 
-            xmlMessageValidator.validateMessagePayload(formMessage, controlMessage, xmlMessageValidationContext, context);
+            xmlMessageValidator.validateMessage(formMessage, controlMessage, context, xmlMessageValidationContext);
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate " + MESSAGE_TYPE + " message", e);
         }

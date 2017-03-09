@@ -98,6 +98,7 @@ The Citrus framework references some basic System properties that can be overwri
 citrus.spring.application.context=classpath*:citrus-custom-context.xml
 citrus.spring.java.config=com.consol.citrus.config.MyCustomConfig
 citrus.file.encoding=UTF-8
+citrus.default.message.type=XML
 citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml
 ```
 
@@ -112,6 +113,7 @@ At the moment you can use these properties for customization:
 * citrus.spring.application.context: File location for Spring XML configurations
 * citrus.spring.java.config: Class name for Spring Java config
 * citrus.file.encoding: Default file encoding used in Citrus when reading and writing file content
+* citrus.default.message.type: Default message type for validating payloads
 * citrus.xml.file.name.pattern: File name patterns used for XML test file package scan
 
 

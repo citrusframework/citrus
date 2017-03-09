@@ -33,8 +33,8 @@ import org.springframework.util.Assert;
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     @Override
-    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
-                                       ValidationContext validationContext, TestContext context) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, ValidationContext validationContext) throws ValidationException {
         log.debug("Start text message validation");
         
         if (log.isDebugEnabled()) {

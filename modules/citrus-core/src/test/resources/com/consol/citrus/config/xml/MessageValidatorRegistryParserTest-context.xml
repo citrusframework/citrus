@@ -19,10 +19,12 @@
     <citrus:validator ref="defaultGzipBinaryBase64MessageValidator"/>
     <citrus:validator ref="defaultJsonMessageValidator"/>
     <citrus:validator ref="defaultJsonPathMessageValidator"/>
+    <citrus:validator ref="defaultMessageHeaderValidator"/>
     <citrus:validator ref="defaultGroovyJsonMessageValidator"/>
     <citrus:validator ref="defaultXhtmlMessageValidator"/>
   </citrus:message-validators>
 
+  <bean id="defaultMessageHeaderValidator" class="com.consol.citrus.validation.DefaultMessageHeaderValidator"/>
   <bean id="defaultXmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
   <bean id="defaultXpathMessageValidator" class="com.consol.citrus.validation.xml.XpathMessageValidator"/>
   <bean id="defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>

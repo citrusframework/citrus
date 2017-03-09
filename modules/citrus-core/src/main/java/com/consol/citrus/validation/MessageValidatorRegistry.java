@@ -63,27 +63,23 @@ public class MessageValidatorRegistry implements InitializingBean {
             }
         }
 
-        if (matchingValidators.isEmpty()) {
+        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))) {
             // try to find fallback message validator for given message payload
             if (message.getPayload() instanceof String &&
                     StringUtils.hasText(message.getPayload(String.class))) {
                 String payload = message.getPayload(String.class);
 
                 if (payload.startsWith("<") && !messageType.equals(MessageType.XML.name())) {
-                    return findMessageValidators(MessageType.XML.name(), message);
-                }
-
-                if ((payload.trim().startsWith("{") || payload.trim().startsWith("[")) && !messageType.equals(MessageType.JSON.name())) {
-                    return findMessageValidators(MessageType.JSON.name(), message);
-                }
-
-                if (!messageType.equals(MessageType.PLAINTEXT.name())) {
-                    return findMessageValidators(MessageType.PLAINTEXT.name(), message);
+                    matchingValidators = findFallbackMessageValidators(MessageType.XML.name(), message);
+                } else if ((payload.trim().startsWith("{") || payload.trim().startsWith("[")) && !messageType.equals(MessageType.JSON.name())) {
+                    matchingValidators = findFallbackMessageValidators(MessageType.JSON.name(), message);
+                } else if (!messageType.equals(MessageType.PLAINTEXT.name())) {
+                    matchingValidators = findFallbackMessageValidators(MessageType.PLAINTEXT.name(), message);
                 }
             }
         }
 
-        if (matchingValidators.isEmpty()) {
+        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))) {
             throw new CitrusRuntimeException("Could not find proper message validator for message type '" +
                     messageType + "', please define a capable message validator for this message type");
         }
@@ -92,6 +88,18 @@ public class MessageValidatorRegistry implements InitializingBean {
             log.debug(String.format("Found %s message validators for message type: %s", matchingValidators.size(), messageType));
         }
         
+        return matchingValidators;
+    }
+
+    private List<MessageValidator<? extends ValidationContext>> findFallbackMessageValidators(String messageType, Message message) {
+        List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
+
+        for (MessageValidator<? extends ValidationContext> validator : messageValidators) {
+            if (validator.supportsMessageType(messageType, message)) {
+                matchingValidators.add(validator);
+            }
+        }
+
         return matchingValidators;
     }
 
@@ -120,5 +128,17 @@ public class MessageValidatorRegistry implements InitializingBean {
      */
     public List<MessageValidator<? extends ValidationContext>> getMessageValidators() {
         return messageValidators;
+    }
+
+    /**
+     * Gets the default message header validator.
+     * @return
+     */
+    public MessageValidator getDefaultMessageHeaderValidator() {
+        return messageValidators
+                .stream()
+                .filter(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))
+                .findFirst()
+                .orElse(null);
     }
 }

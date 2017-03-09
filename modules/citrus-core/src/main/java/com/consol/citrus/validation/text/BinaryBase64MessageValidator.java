@@ -32,13 +32,13 @@ import org.apache.commons.codec.binary.Base64;
 public class BinaryBase64MessageValidator extends PlainTextMessageValidator {
 
     @Override
-    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
-                                       ValidationContext validationContext, TestContext context) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, ValidationContext validationContext) throws ValidationException {
         if (receivedMessage.getPayload() instanceof byte[]) {
             receivedMessage.setPayload(Base64.encodeBase64String(receivedMessage.getPayload(byte[].class)));
         }
 
-        super.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        super.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
     
     @Override

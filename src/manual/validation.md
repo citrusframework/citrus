@@ -80,6 +80,7 @@ In the previous sections we have already seen some examples on how to overwrite 
 *  **defaultJsonMessageValidator**: com.consol.citrus.validation.json.JsonTextMessageValidator 
 *  **defaultJsonPathMessageValidator**: com.consol.citrus.validation.json.JsonPathMessageValidator 
 *  **defaultPlaintextMessageValidator**: com.consol.citrus.validation.text.PlainTextMessageValidator 
+*  **defaultMessageHeaderValidator**: com.consol.citrus.validation.DefaultMessageHeaderValidator 
 *  **defaultBinaryBase64MessageValidator**: com.consol.citrus.validation.text.BinaryBase64MessageValidator 
 *  **defaultGzipBinaryBase64MessageValidator**: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator 
 *  **defaultXhtmlMessageValidator**: com.consol.citrus.validation.xhtml.XhtmlMessageValidator 
@@ -94,6 +95,7 @@ Overwriting a single message validator with a custom implementation is then very
     <citrus:validator ref="defaultXpathMessageValidator"/>
     <citrus:validator ref="defaultGroovyXmlMessageValidator"/>
     <citrus:validator ref="defaultPlaintextMessageValidator"/>
+    <citrus:validator ref="defaultMessageHeaderValidator"/>
     <citrus:validator ref="defaultBinaryBase64MessageValidator"/>
     <citrus:validator ref="defaultGzipBinaryBase64MessageValidator"/>
     <citrus:validator class="com.consol.citrus.validation.custom.CustomMessageValidator"/>
@@ -113,6 +115,7 @@ The same approach applies in case you want to remove a message validator impleme
     <citrus:validator ref="defaultJsonMessageValidator"/>
     <citrus:validator ref="defaultJsonPathMessageValidator"/>
     <citrus:validator ref="defaultGroovyJsonMessageValidator"/>
+    <citrus:validator ref="defaultMessageHeaderValidator"/>
 </citrus:message-validators>
 ```
 

@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MessageValidatorConfig {
 
+    private final DefaultMessageHeaderValidator defaultMessageHeaderValidator = new DefaultMessageHeaderValidator();
     private final DomXmlMessageValidator defaultXmlMessageValidator = new DomXmlMessageValidator();
     private final XpathMessageValidator defaultXpathMessageValidator = new XpathMessageValidator();
     private final JsonTextMessageValidator defaultJsonMessageValidator = new JsonTextMessageValidator();
@@ -52,6 +53,11 @@ public class MessageValidatorConfig {
     @Bean(name = "defaultXmlMessageValidator")
     public DomXmlMessageValidator getDefaultXmlMessageValidator() {
         return defaultXmlMessageValidator;
+    }
+
+    @Bean(name = "defaultMessageHeaderValidator")
+    public DefaultMessageHeaderValidator getDefaultMessageHeaderValidator() {
+        return defaultMessageHeaderValidator;
     }
 
     @Bean(name = "defaultXpathMessageValidator")
@@ -114,6 +120,7 @@ public class MessageValidatorConfig {
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultJsonMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultJsonPathMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultPlaintextMessageValidator);
+        citrusMessageValidatorRegistry.getMessageValidators().add(defaultMessageHeaderValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultBinaryBase64MessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGzipBinaryBase64MessageValidator);
 

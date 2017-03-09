@@ -17,6 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
@@ -51,7 +52,7 @@ public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(messageValidators.size(), 1L);
 
         MessageValidatorRegistry messageValidatorBean = messageValidators.values().iterator().next();
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 10L);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 11L);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(0).getClass(), DomXmlMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(1).getClass(), XpathMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(2).getClass(), GroovyXmlMessageValidator.class);
@@ -60,7 +61,8 @@ public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(5).getClass(), GzipBinaryBase64MessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(6).getClass(), JsonTextMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(7).getClass(), JsonPathMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(8).getClass(), GroovyJsonMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(9).getClass(), XhtmlMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(8).getClass(), DefaultMessageHeaderValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(9).getClass(), GroovyJsonMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(10).getClass(), XhtmlMessageValidator.class);
     }
 }

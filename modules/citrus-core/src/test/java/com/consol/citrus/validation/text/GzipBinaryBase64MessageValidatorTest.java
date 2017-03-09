@@ -44,7 +44,7 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 
         ValidationContext validationContext = new DefaultValidationContext();
-        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 
         ValidationContext validationContext = new DefaultValidationContext();
-        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
 
         ValidationContext validationContext = new DefaultValidationContext();
         try {
-            validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
             Assert.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));

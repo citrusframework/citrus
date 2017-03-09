@@ -69,6 +69,68 @@
         </http:body>
       </http:receive-response>
 
+      <echo>
+        <message>Test pure Http status code validation</message>
+      </echo>
+
+      <http:send-request client="helloHttpClient">
+        <http:POST>
+          <http:headers>
+            <http:header name="Operation" value="sayHello"/>
+            <http:header name="CorrelationId" value="${correlationId}"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <MessageId>${messageId}</MessageId>
+                  <CorrelationId>${correlationId}</CorrelationId>
+                  <User>${user}</User>
+                  <Text>Hello Citrus</Text>
+                </HelloRequest>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-response client="helloHttpClient">
+        <http:headers status="200" reason-phrase="OK"/>
+      </http:receive-response>
+
+      <echo>
+        <message>Test header validation error</message>
+      </echo>
+
+      <http:send-request client="helloHttpClient">
+        <http:POST>
+          <http:headers>
+            <http:header name="Operation" value="sayHello"/>
+            <http:header name="CorrelationId" value="${correlationId}"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <MessageId>${messageId}</MessageId>
+                  <CorrelationId>${correlationId}</CorrelationId>
+                  <User>${user}</User>
+                  <Text>Hello Citrus</Text>
+                </HelloRequest>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <http:receive-response client="helloHttpClient">
+            <http:headers status="400" reason-phrase="NOT_FOUND"/>
+          </http:receive-response>
+        </when>
+      </assert>
+
     </actions>
   </testcase>
 </spring:beans>

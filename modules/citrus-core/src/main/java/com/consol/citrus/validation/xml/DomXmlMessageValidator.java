@@ -82,9 +82,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     @Override
-    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
-                                       XmlMessageValidationContext validationContext, TestContext context) throws ValidationException {
-        log.debug("Start XML message validation");
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, XmlMessageValidationContext validationContext) throws ValidationException {
+        log.debug("Start XML message validation ...");
 
         try {
             if (validationContext.isSchemaValidationEnabled()) {
@@ -108,11 +108,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
 
             log.info("XML message validation successful: All values OK");
-        } catch (ClassCastException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (DOMException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (LSException e) {
+        } catch (ClassCastException | DOMException | LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
             log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));

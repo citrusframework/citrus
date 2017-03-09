@@ -76,7 +76,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
             String validationScript = validationContext.getValidationScript(context);
             
             if (StringUtils.hasText(validationScript)) {
-                log.debug("Start groovy message validation");
+                log.debug("Start groovy message validation ...");
 
                 GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
                     public GroovyClassLoader run() {
@@ -96,11 +96,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                 
                 log.info("Groovy message validation successful: All values OK");
             }
-        } catch (CompilationFailedException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
         } catch (AssertionError e) {
             throw new ValidationException("Groovy script validation failed with assertion error:\n" + e.getMessage(), e);

@@ -20,7 +20,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.ValidationContext;
 
 /**
- * Basic control message validator provides message header validation. Subclasses only have to add
+ * Basic control message validator for all message types. Subclasses only have to add
  * specific logic for message payload validation. This validator is based on a control message.
  * 
  * @author Christoph Deppisch

@@ -46,7 +46,7 @@ public class JsonGroovyValidationJavaIT extends TestNGCitrusTestDesigner {
             sequential().actions(
                 http().server("httpServerRequestEndpoint")
                    .receive()
-                   .post("/")
+                   .post("/test")
                    .messageType(MessageType.JSON)
                    .validator("defaultGroovyJsonMessageValidator")
                    .validateScript("assert json.type == 'read'" + NEWLINE +
