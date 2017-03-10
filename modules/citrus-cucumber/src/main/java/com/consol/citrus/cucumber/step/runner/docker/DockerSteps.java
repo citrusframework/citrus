@@ -49,7 +49,7 @@ public class DockerSteps {
         }
     }
 
-    @Given("^docker client \"([^\"]+)\"$")
+    @Given("^docker-client \"([^\"]+)\"$")
     public void setClient(String id) {
         if (!citrus.getApplicationContext().containsBean(id)) {
             throw new CitrusRuntimeException("Unable to find docker client for id: " + id);
@@ -58,7 +58,7 @@ public class DockerSteps {
         dockerClient = citrus.getApplicationContext().getBean(id, DockerClient.class);
     }
 
-    @When("^create docker container \"([^\"]+)\" from \"([^\"]+)\"$")
+    @When("^create container \"([^\"]+)\" from \"([^\"]+)\"$")
     public void createContainer(String containerName, String imageTag) {
         runner.docker(builder -> builder.client(dockerClient)
                 .create(imageTag)
@@ -66,7 +66,7 @@ public class DockerSteps {
                 .validateCommandResult((result, context) -> context.setVariable(DockerMessageHeaders.CONTAINER_ID, result.getId())));
     }
 
-    @When("^build docker image \"([^\"]+)\" from file \"([^\"]+)\"$")
+    @When("^build image \"([^\"]+)\" from file \"([^\"]+)\"$")
     public void buildImage(String imageTag, String fileName) {
         runner.docker(builder -> builder.client(dockerClient)
                 .buildImage()
@@ -75,7 +75,7 @@ public class DockerSteps {
                 .validateCommandResult((result, context) -> context.setVariable(DockerMessageHeaders.IMAGE_ID, result.getImageId())));
     }
 
-    @Then("^start docker container \"([^\"]+)\"$")
+    @Then("^start container \"([^\"]+)\"$")
     public void startContainer(String containerId) {
         runner.docker(builder -> builder.client(dockerClient)
                 .start(containerId)
@@ -83,7 +83,7 @@ public class DockerSteps {
                         Assert.isTrue(!result.isErrorIndicated(), String.format("Failed to start container '%s' - %s", containerId, result.getErrorDetail()))));
     }
 
-    @Then("^stop docker container \"([^\"]+)\"$")
+    @Then("^stop container \"([^\"]+)\"$")
     public void stopContainer(String containerId) {
         runner.docker(builder -> builder.client(dockerClient)
                 .stop(containerId)
@@ -91,7 +91,7 @@ public class DockerSteps {
                         Assert.isTrue(!result.isErrorIndicated(), String.format("Failed to stop container '%s' - %s", containerId, result.getErrorDetail()))));
     }
 
-    @Then("^(?:the )?docker container \"([^\"]+)\" should be running$")
+    @Then("^(?:the )?container \"([^\"]+)\" should be running$")
     public void containerIsRunning(String containerId) {
         runner.docker(builder -> builder.client(dockerClient)
                 .inspectContainer(containerId)
@@ -99,7 +99,7 @@ public class DockerSteps {
                         Assert.isTrue(result.getState().getRunning(), "Failed to validate container state, expected running but was stopped")));
     }
 
-    @Then("^(?:the )?docker container \"([^\"]+)\" should be stopped")
+    @Then("^(?:the )?container \"([^\"]+)\" should be stopped")
     public void containerIsStopped(String containerId) {
         runner.docker(builder -> builder.client(dockerClient)
                 .inspectContainer(containerId)
