@@ -67,7 +67,7 @@ public class MessageValidatorRegistry implements InitializingBean {
             // try to find fallback message validator for given message payload
             if (message.getPayload() instanceof String &&
                     StringUtils.hasText(message.getPayload(String.class))) {
-                String payload = message.getPayload(String.class);
+                String payload = message.getPayload(String.class).trim();
 
                 if (payload.startsWith("<") && !messageType.equals(MessageType.XML.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.XML.name(), message);

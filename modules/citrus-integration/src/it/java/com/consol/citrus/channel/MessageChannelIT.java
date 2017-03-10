@@ -23,8 +23,8 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class MessageChannelT extends AbstractTestNGCitrusTest {
+public class MessageChannelIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
-    public void MessageChannelTest() {}
+    public void MessageChannelIT() {}
 }

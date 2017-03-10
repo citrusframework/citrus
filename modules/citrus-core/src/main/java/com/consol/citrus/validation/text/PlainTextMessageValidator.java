@@ -24,6 +24,7 @@ import com.consol.citrus.validation.DefaultMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Plain text validator using simple String comparison.
@@ -35,6 +36,11 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, ValidationContext validationContext) throws ValidationException {
+        if (controlMessage == null || controlMessage.getPayload() == null) {
+            log.debug("Skip message payload validation as no control message was defined");
+            return;
+        }
+
         log.debug("Start text message validation");
         
         if (log.isDebugEnabled()) {
@@ -66,6 +72,14 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
      * @param controlMessagePayload
      */
     private void validateText(String receivedMessagePayload, String controlMessagePayload) {
+        if (!StringUtils.hasText(controlMessagePayload)) {
+            log.debug("Skip message payload validation as no control message was defined");
+            return;
+        } else {
+            Assert.isTrue(StringUtils.hasText(receivedMessagePayload), "Validation failed - " +
+                    "expected message contents, but received empty message!");
+        }
+
         Assert.isTrue(receivedMessagePayload.equals(controlMessagePayload),
                 "Text values not equal, expected '" + controlMessagePayload + "' " +
                 		"but was '" + receivedMessagePayload + "'");

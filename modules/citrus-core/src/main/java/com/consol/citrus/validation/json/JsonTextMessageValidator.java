@@ -58,6 +58,11 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     @SuppressWarnings("unchecked")
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, JsonMessageValidationContext validationContext) throws ValidationException {
+        if (controlMessage == null || controlMessage.getPayload() == null) {
+            log.debug("Skip message payload validation as no control message was defined");
+            return;
+        }
+
         log.debug("Start JSON message validation ...");
 
         if (log.isDebugEnabled()) {

@@ -440,8 +440,10 @@
     
     <citrus-jms:endpoint id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
     
+    <citrus:channel-endpoint id="greetingEndpoint" channel="greetings"/>
+
     <citrus:channel-endpoint id="channelRequestSender" channel="greetings"/>
-    
+
     <citrus:channel-endpoint id="channelResponseReceiver"
          channel="greetings"
          timeout="5000"/>
