@@ -158,7 +158,269 @@
       </receive>
 
       <echo>
+        <message>Test header validation success</message>
+      </echo>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message type="plaintext"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message type="xml"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message type="json"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message type="plaintext"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message type="xml"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message type="json"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test header validation success - auto select message type</message>
+      </echo>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="greetingEndpoint">
+        <message/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
         <message>Test validation errors</message>
+      </echo>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="plaintext">
+              <data>Goodbye Citrus</data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="xml">
+              <data>
+                <![CDATA[
+                  <Text>Goodbye Citrus</Text>
+                ]]>
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="json">
+              <data>
+                {"text": "Goodbye Citrus"}
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test validation errors - auto select message type</message>
       </echo>
 
       <send endpoint="greetingEndpoint">
@@ -234,6 +496,226 @@
             </message>
             <header>
               <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test header validation error</message>
+      </echo>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="plaintext"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="xml"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="json"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="plaintext"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="xml"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message type="json"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test header validation error - auto select message type</message>
+      </echo>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="greetingEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="com.consol.citrus.exceptions.ValidationException">
+        <when>
+          <receive endpoint="greetingEndpoint">
+            <message/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
             </header>
           </receive>
         </when>

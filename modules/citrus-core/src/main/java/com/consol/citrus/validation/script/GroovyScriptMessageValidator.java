@@ -20,10 +20,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -122,8 +122,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        // support all known message types other than XML
-        return MessageType.knows(messageType) && !messageType.equalsIgnoreCase(MessageType.XML.toString())
-                && !messageType.equalsIgnoreCase(MessageType.XHTML.toString());
+        // only support plaintext message type
+        return new PlainTextMessageValidator().supportsMessageType(messageType, message);
     }
 }

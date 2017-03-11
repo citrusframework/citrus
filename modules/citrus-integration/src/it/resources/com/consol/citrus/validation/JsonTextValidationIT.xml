@@ -123,6 +123,27 @@
                     <http:data></http:data>
                 </http:body>
             </http:receive-response>
+
+          <http:send-request client="httpClient">
+              <http:POST>
+                <http:body>
+                    <http:data>
+                      {
+                        "type" : "read",
+                        "mbean" : "java.lang:type=Memory",
+                        "attribute" : "HeapMemoryUsage",
+                        "path" : "used"
+                      }
+                    </http:data>
+                </http:body>
+              </http:POST>
+            </http:send-request>
+
+            <sleep seconds="2"/>
+
+            <http:receive-response client="httpClient">
+                <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
+            </http:receive-response>
             
         </actions>
     </testcase>

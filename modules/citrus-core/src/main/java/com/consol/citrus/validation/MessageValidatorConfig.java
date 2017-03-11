@@ -18,8 +18,7 @@ package com.consol.citrus.validation;
 
 import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
-import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
-import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
+import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.text.*;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
@@ -49,6 +48,7 @@ public class MessageValidatorConfig {
 
     private final GroovyXmlMessageValidator defaultGroovyXmlMessageValidator = new GroovyXmlMessageValidator();
     private final GroovyJsonMessageValidator defaultGroovyJsonMessageValidator = new GroovyJsonMessageValidator();
+    private final GroovyScriptMessageValidator defaultGroovyTextMessageValidator = new GroovyScriptMessageValidator();
 
     @Bean(name = "defaultXmlMessageValidator")
     public DomXmlMessageValidator getDefaultXmlMessageValidator() {
@@ -110,6 +110,11 @@ public class MessageValidatorConfig {
         return defaultGroovyJsonMessageValidator;
     }
 
+    @Bean(name = "defaultGroovyTextMessageValidator")
+    public GroovyScriptMessageValidator getDefaultGroovyTextMessageValidator() {
+        return defaultGroovyTextMessageValidator;
+    }
+
     @Bean(name = MessageValidatorRegistry.BEAN_NAME)
     public MessageValidatorRegistry getMessageValidatorRegistry() {
         MessageValidatorRegistry citrusMessageValidatorRegistry = new MessageValidatorRegistry();
@@ -125,6 +130,7 @@ public class MessageValidatorConfig {
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGzipBinaryBase64MessageValidator);
 
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGroovyJsonMessageValidator);
+        citrusMessageValidatorRegistry.getMessageValidators().add(defaultGroovyTextMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultXhtmlMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultXhtmlXpathMessageValidator);
 
