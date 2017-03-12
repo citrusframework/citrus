@@ -152,12 +152,16 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
             endpointAdapter.getEndpoint().setName(getName());
 
-            if (testContextFactory == null && beanFactory != null) {
-                testContextFactory = beanFactory.getBean(TestContextFactory.class);
-            } else {
-                log.warn("Unable to create test context factory from Spring application context - using minimal test context factory");
-                testContextFactory = new TestContextFactory();
+            if (testContextFactory == null) {
+                if (beanFactory != null) {
+                    testContextFactory = beanFactory.getBean(TestContextFactory.class);
+                } else {
+                    log.warn("Unable to create test context factory from Spring application context - " +
+                            "using minimal test context factory");
+                    testContextFactory = new TestContextFactory();
+                }
             }
+
             ((ChannelEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
         }
 
