@@ -79,6 +79,8 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
+            Assert.assertFalse(e.getMessage().contains("only whitespaces!"));
+
             Assert.assertTrue(e.getMessage().contains("expected 'Hello Citrus!'"));
             Assert.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
             
@@ -86,5 +88,57 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         }
         
         Assert.fail("Missing validation exception due to wrong number of JSON entries");
+    }
+
+    @Test
+    public void testPlainTextValidationLeadingTrailingWhitespace() {
+        Message receivedMessage = new DefaultMessage("   Hello World!   ");
+        Message controlMessage = new DefaultMessage("Hello World!");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
+    public void testPlainTextValidationMultiline() {
+        Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
+        Message controlMessage = new DefaultMessage("Hello\nWorld!\n");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
+    public void testPlainTextValidationNormalizeWhitespaceCRLF() {
+        Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
+        Message controlMessage = new DefaultMessage("Hello\r\nWorld!\r\n");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        try {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+            Assert.fail("Missing exception due to non matching new line whitespaces");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("only whitespaces!"));
+            validator.setIgnoreWhitespace(true);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+            validator.setIgnoreWhitespace(false);
+        }
+    }
+
+    @Test
+    public void testPlainTextValidationNormalizeWhitespaceCR() {
+        Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
+        Message controlMessage = new DefaultMessage("Hello\rWorld!\r");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        try {
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+            Assert.fail("Missing exception due to non matching new line whitespaces");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("only whitespaces!"));
+            validator.setIgnoreWhitespace(true);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+            validator.setIgnoreWhitespace(false);
+        }
     }
 }

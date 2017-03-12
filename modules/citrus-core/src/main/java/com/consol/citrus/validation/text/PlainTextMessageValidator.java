@@ -33,6 +33,9 @@ import org.springframework.util.StringUtils;
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
+    public static final String IGNORE_WHITESPACE_PROPERTY = "citrus.plaintext.validation.ignore.whitespace";
+    private boolean ignoreWhitespace = Boolean.valueOf(System.getProperty(IGNORE_WHITESPACE_PROPERTY, "false"));
+
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, ValidationContext validationContext) throws ValidationException {
@@ -47,10 +50,10 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             log.debug("Received message:\n" + receivedMessage);
             log.debug("Control message:\n" + controlMessage);
         }
-        
+
         try {
-            String controlValue = context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim());
-            String resultValue = receivedMessage.getPayload(String.class).trim();
+            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
+            String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim());
 
             if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
                 ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, controlValue, context);
@@ -64,7 +67,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         
         log.info("Text validation successful: All values OK");
     }
-    
+
     /**
      * Compares two string with each other in order to validate plain text.
      * 
@@ -80,13 +83,40 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
                     "expected message contents, but received empty message!");
         }
 
-        Assert.isTrue(receivedMessagePayload.equals(controlMessagePayload),
-                "Text values not equal, expected '" + controlMessagePayload + "' " +
-                		"but was '" + receivedMessagePayload + "'");
+        if (!receivedMessagePayload.equals(controlMessagePayload)) {
+            if (StringUtils.trimAllWhitespace(receivedMessagePayload).equals(StringUtils.trimAllWhitespace(controlMessagePayload))) {
+                throw new ValidationException("Text values not equal (only whitespaces!), expected '" + controlMessagePayload + "' " +
+                        "but was '" + receivedMessagePayload + "'");
+            } else {
+                throw new ValidationException("Text values not equal, expected '" + controlMessagePayload + "' " +
+                        "but was '" + receivedMessagePayload + "'");
+            }
+        }
+    }
+
+    /**
+     * Normalize whitespace characters if appropriate.
+     * @param payload
+     * @return
+     */
+    private String normalizeWhitespace(String payload) {
+        if (ignoreWhitespace) {
+            return payload.replaceAll("\\r(\\n)?", "\n");
+        }
+
+        return payload;
     }
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
+    }
+
+    public void setIgnoreWhitespace(boolean ignoreWhitespace) {
+        this.ignoreWhitespace = ignoreWhitespace;
+    }
+
+    public boolean isIgnoreWhitespace() {
+        return ignoreWhitespace;
     }
 }
