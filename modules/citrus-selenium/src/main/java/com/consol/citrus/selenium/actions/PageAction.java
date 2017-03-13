@@ -22,9 +22,9 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.model.PageValidator;
 import com.consol.citrus.selenium.model.WebPage;
 import org.openqa.selenium.support.PageFactory;
-import org.springframework.util.*;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -44,6 +44,7 @@ public class PageAction extends AbstractSeleniumAction {
     /** Optional page action that should be executed */
     private String action;
 
+    /** Page action arguments */
     private List<String> arguments = new ArrayList<>();
 
     /** Web page validator */
@@ -78,23 +79,20 @@ public class PageAction extends AbstractSeleniumAction {
                     ((PageValidator) page).validate(page, browser, context);
                 }
             } else {
-                ReflectionUtils.doWithMethods(page.getClass(), new ReflectionUtils.MethodCallback() {
-                    @Override
-                    public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                        if (method.getName().equals(action)) {
-                            if (method.getParameterCount() == 0 && arguments.size() == 0) {
-                                ReflectionUtils.invokeMethod(method, page);
-                            } else if (method.getParameterCount() == 1 && method.getParameters()[0].getParameterizedType().getTypeName().equals(TestContext.class.getName())) {
-                                ReflectionUtils.invokeMethod(method, page, context);
-                            } else if (method.getParameterCount() == arguments.size()) {
-                                ReflectionUtils.invokeMethod(method, page, context.resolveDynamicValuesInList(arguments).toArray());
-                            } else if (method.getParameterCount() == arguments.size() + 1) {
-                                Object[] args = Arrays.copyOf(arguments.toArray(), arguments.size() + 1);
-                                args[arguments.size()] = context;
-                                ReflectionUtils.invokeMethod(method, page, context.resolveDynamicValuesInArray(args));
-                            } else {
-                                throw new CitrusRuntimeException("Unsupported method signature for page action - not matching given arguments");
-                            }
+                ReflectionUtils.doWithMethods(page.getClass(), method -> {
+                    if (method.getName().equals(action)) {
+                        if (method.getParameterCount() == 0 && arguments.size() == 0) {
+                            ReflectionUtils.invokeMethod(method, page);
+                        } else if (method.getParameterCount() == 1 && method.getParameters()[0].getParameterizedType().getTypeName().equals(TestContext.class.getName())) {
+                            ReflectionUtils.invokeMethod(method, page, context);
+                        } else if (method.getParameterCount() == arguments.size()) {
+                            ReflectionUtils.invokeMethod(method, page, context.resolveDynamicValuesInList(arguments).toArray());
+                        } else if (method.getParameterCount() == arguments.size() + 1) {
+                            Object[] args = Arrays.copyOf(arguments.toArray(), arguments.size() + 1);
+                            args[arguments.size()] = context;
+                            ReflectionUtils.invokeMethod(method, page, context.resolveDynamicValuesInArray(args));
+                        } else {
+                            throw new CitrusRuntimeException("Unsupported method signature for page action - not matching given arguments");
                         }
                     }
                 });

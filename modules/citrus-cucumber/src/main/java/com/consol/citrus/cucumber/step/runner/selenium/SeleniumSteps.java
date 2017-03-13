@@ -23,6 +23,8 @@ import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.model.PageValidator;
+import com.consol.citrus.selenium.model.WebPage;
 import com.consol.citrus.variable.VariableUtils;
 import cucumber.api.DataTable;
 import cucumber.api.Scenario;
@@ -30,7 +32,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.*;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -44,6 +46,12 @@ public class SeleniumSteps {
     @CitrusFramework
     protected Citrus citrus;
 
+    /** Page objects defined by id */
+    private Map<String, WebPage> pages;
+
+    /** Page validators defined by id */
+    private Map<String, PageValidator> validators;
+
     /** Selenium browser */
     protected SeleniumBrowser browser;
 
@@ -52,6 +60,9 @@ public class SeleniumSteps {
         if (browser == null && citrus.getApplicationContext().getBeansOfType(SeleniumBrowser.class).size() == 1L) {
             browser = citrus.getApplicationContext().getBean(SeleniumBrowser.class);
         }
+
+        pages = new HashMap<>();
+        validators = new HashMap<>();
     }
 
     @Given("^(?:selenium )?browser \"([^\"]+)\"$")
@@ -61,6 +72,40 @@ public class SeleniumSteps {
         }
 
         browser = citrus.getApplicationContext().getBean(id, SeleniumBrowser.class);
+    }
+
+    @Given("^pages$")
+    public void pages(DataTable dataTable) {
+        Map<String, String> variables = dataTable.asMap(String.class, String.class);
+        for (Map.Entry<String, String> entry : variables.entrySet()) {
+            page(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Given("^page \"([^\"]+)\" ([^\\s]+)$")
+    public void page(String id, String type) {
+        try {
+            pages.put(id, (WebPage) Class.forName(type).newInstance());
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new CitrusRuntimeException("Failed to laod page object", e);
+        }
+    }
+
+    @Given("^page validators")
+    public void page_validators(DataTable dataTable) {
+        Map<String, String> variables = dataTable.asMap(String.class, String.class);
+        for (Map.Entry<String, String> entry : variables.entrySet()) {
+            page_validator(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Given("^page validator ([^\\s]+) ([^\\s]+)$")
+    public void page_validator(String id, String type) {
+        try {
+            validators.put(id, (PageValidator) Class.forName(type).newInstance());
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new CitrusRuntimeException("Failed to laod page object", e);
+        }
     }
 
     @When("^(?:user )?starts? browser$")
@@ -154,5 +199,59 @@ public class SeleniumSteps {
                 }
             }
         });
+    }
+
+    @When("^(?:page )?([^\\s]+) performs ([^\\s]+)$")
+    public void page_action(String pageId, String method) {
+        page_action_with_arguments(pageId, method, null);
+    }
+
+    @When("^(?:page )?([^\\s]+) performs ([^\\s]+) with arguments$")
+    public void page_action_with_arguments(String pageId, String method, DataTable dataTable) {
+        verifyPage(pageId);
+
+        runner.selenium(action -> {
+            List<String> arguments = new ArrayList<>();
+            if (dataTable != null) {
+                arguments = dataTable.asList(String.class);
+            }
+
+            action.browser(browser)
+                .page(pages.get(pageId))
+                .execute(method)
+                .arguments(arguments);
+        });
+    }
+
+    @Then("^(?:page )?([^\\s]+) should validate$")
+    public void page_should_validate(String pageId) {
+        page_should_validate_with_validator(pageId, null);
+    }
+
+    @Then("^(?:page )?([^\\s]+) should validate with ([^\\s]+)$")
+    public void page_should_validate_with_validator(String pageId, String validatorId) {
+        verifyPage(pageId);
+
+        runner.selenium(action -> {
+            PageValidator pageValidator = null;
+            if (validators.containsKey(validatorId)) {
+                pageValidator = validators.get(validatorId);
+            }
+
+            action.browser(browser)
+                .page(pages.get(pageId))
+                .validator(pageValidator)
+                .validate();
+        });
+    }
+
+    /**
+     * Verify that page is known.
+     * @param pageId
+     */
+    private void verifyPage(String pageId) {
+        if (!pages.containsKey(pageId)) {
+            throw new CitrusRuntimeException(String.format("Unknown page '%s' - please introduce page with type information first", pageId));
+        }
     }
 }

@@ -29,6 +29,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Action builds selenium related actions.
@@ -436,6 +437,16 @@ public class SeleniumActionBuilder extends AbstractTestActionBuilder<DelegatingT
          */
         public PageActionBuilder arguments(String ... args) {
             action.setArguments(Arrays.asList(args));
+            return this;
+        }
+
+        /**
+         * Set page action arguments.
+         * @param args
+         * @return
+         */
+        public PageActionBuilder arguments(List<String> args) {
+            action.setArguments(args);
             return this;
         }
 

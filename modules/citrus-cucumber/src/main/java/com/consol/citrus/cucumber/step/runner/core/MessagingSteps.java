@@ -21,6 +21,8 @@ import com.consol.citrus.cucumber.message.MessageCreators;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import cucumber.api.Scenario;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.*;
 
 import java.util.HashMap;
@@ -36,10 +38,16 @@ public class MessagingSteps {
     private TestRunner runner;
 
     /** Available message creator POJO objects */
-    private MessageCreators messageCreators = new MessageCreators();
+    private MessageCreators messageCreators;
 
     /** Messages defined by id */
-    private Map<String, Message> messages = new HashMap<>();
+    private Map<String, Message> messages;
+
+    @Before
+    public void before(Scenario scenario) {
+        messageCreators = new MessageCreators();
+        messages = new HashMap<>();
+    }
 
     @Given("^message creator ([^\\s]+)$")
     public void messageCreator(String type) {
