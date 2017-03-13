@@ -182,6 +182,45 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
+    public void testMtomSoapAttachment() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                soap().client(soapClient)
+                    .send().mtomEnabled(true)
+                    .payload("<TestRequest><data>cid:attachment01</data></TestRequest>")
+                    .attachment(testAttachment);
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
+        
+        SendSoapMessageAction action = (SendSoapMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(action.getName(), "send");
+        
+        Assert.assertEquals(action.getEndpoint(), soapClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><data>cid:attachment01</data></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+
+        Assert.assertTrue(action.getMtomEnabled());
+        
+        Assert.assertEquals(action.getAttachments().size(), 1L);
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+    }    
+    
+    @Test
     public void testSoapAttachmentData() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override

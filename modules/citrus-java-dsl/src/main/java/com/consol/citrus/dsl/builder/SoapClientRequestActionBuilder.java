@@ -170,6 +170,11 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
         soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
         return this;
     }
+    
+    public SoapClientRequestActionBuilder mtomEnabled(boolean mtomEnabled) {
+        getAction().setMtomEnabled(mtomEnabled);
+        return this;
+    }
 
     @Override
     protected SendSoapMessageAction getAction() {
