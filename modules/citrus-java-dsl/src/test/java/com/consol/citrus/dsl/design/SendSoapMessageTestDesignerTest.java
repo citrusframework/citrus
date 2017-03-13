@@ -187,7 +187,8 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 soap().client(soapClient)
-                    .send().mtomEnabled(true)
+                    .send()
+                    .mtomEnabled(true)
                     .payload("<TestRequest><data>cid:attachment01</data></TestRequest>")
                     .attachment(testAttachment);
             }

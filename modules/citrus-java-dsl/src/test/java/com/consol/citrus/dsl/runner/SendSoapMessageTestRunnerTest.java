@@ -248,6 +248,53 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testMtomSoapAttachmentData() {
+        reset(soapClient, messageProducer);
+        when(soapClient.createProducer()).thenReturn(messageProducer);
+        when(soapClient.getActor()).thenReturn(null);
+        doAnswer(invocation -> {
+            SoapMessage message = (SoapMessage) invocation.getArguments()[0];
+            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><data><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:attachment01\"/></data></TestRequest>");
+            Assert.assertEquals(message.getAttachments().size(), 1L);
+            Assert.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
+            return null;
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                soap(builder -> builder.client(soapClient)
+                        .send()
+                        .mtomEnabled(true)
+                        .payload("<TestRequest><data>cid:attachment01</data></TestRequest>")
+                        .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent()));
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), soapClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><data>cid:attachment01</data></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+
+        Assert.assertTrue(action.getMtomEnabled());
+
+        Assert.assertEquals(action.getAttachments().size(), 1L);
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+    }
+
+    @Test
     public void testMultipleSoapAttachmentData() {
         reset(soapClient, messageProducer);
         when(soapClient.getActor()).thenReturn(null);

@@ -147,6 +147,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
     }
     
     public SoapServerResponseActionBuilder mtomEnabled(boolean mtomEnabled) {
+        soapMessage.mtomEnabled(mtomEnabled);
         getAction().setMtomEnabled(mtomEnabled);
         return this;
     }

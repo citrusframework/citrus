@@ -172,6 +172,7 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
     }
     
     public SoapClientRequestActionBuilder mtomEnabled(boolean mtomEnabled) {
+        soapMessage.mtomEnabled(mtomEnabled);
         getAction().setMtomEnabled(mtomEnabled);
         return this;
     }
