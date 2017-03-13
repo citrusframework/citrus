@@ -145,6 +145,11 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
         soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
         return this;
     }
+    
+    public SoapServerResponseActionBuilder mtomEnabled(boolean mtomEnabled) {
+        getAction().setMtomEnabled(mtomEnabled);
+        return this;
+    }
 
     @Override
     protected SendSoapMessageAction getAction() {
