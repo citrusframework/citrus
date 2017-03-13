@@ -296,21 +296,21 @@ If you want to enable predefined steps support in your test you need to include 
 ```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    glue = { "com.consol.citrus.cucumber.step.designer" },
+    glue = { "com.consol.citrus.cucumber.step.designer.core" },
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }
 ```
 
-Instead of writing the glue code on our own in step definition classes we include the glue package **com.consol.citrus.cucumber.step.designer** . This automatically loads all Citrus glue step definitions in this package. Once you have done this you can use predefined steps that add Citrus test logic without having to write any glue code in Java step definitions.
+Instead of writing the glue code on our own in step definition classes we include the glue package **com.consol.citrus.cucumber.step.designer.core** . This automatically loads all Citrus glue step definitions in this package. Once you have done this you can use predefined steps that add Citrus test logic without having to write any glue code in Java step definitions.
 
-Of course you can also choose to include the **TestRunner** step definitions by choosing the glue package **com.consol.citrus.cucumber.step.runner** .
+Of course you can also choose to include the **TestRunner** step definitions by choosing the glue package **com.consol.citrus.cucumber.step.runner.core** .
 
 ```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    glue = { "com.consol.citrus.cucumber.step.runner" },
+    glue = { "com.consol.citrus.cucumber.step.runner.core" },
     plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
@@ -350,7 +350,25 @@ Then <[endpoint-name]> should send
   """
 ```
 
-Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps. In the following sections we have a closer look at all predefined Citrus steps and how they work.
+Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps. 
+
+There are several default step definitions for different aspects of integration testing. Please see the following packages that define default steps in Citrus:
+
+**Test designer packages**
+
+* com.consol.citrus.cucumber.step.designer.core
+* com.consol.citrus.cucumber.step.designer.http
+* com.consol.citrus.cucumber.step.designer.docker
+* com.consol.citrus.cucumber.step.designer.selenium
+
+**Test runner packages**
+
+* com.consol.citrus.cucumber.step.runner.core
+* com.consol.citrus.cucumber.step.runner.http
+* com.consol.citrus.cucumber.step.runner.docker
+* com.consol.citrus.cucumber.step.runner.selenium
+
+In the following sections we have a closer look at all predefined Citrus steps and how they work.
 
 ### Variable steps
 
@@ -592,3 +610,202 @@ Then sleep [time] ms
 
 This adds a new sleep test action to the Citrus test.
 
+### Http steps
+
+The Http steps are specially designed for Http client-server communication. You can use these steps by adding following packages as glue options in your Cucumber test:
+
+* com.consol.citrus.cucumber.step.(designer|runner).http
+
+This package contains Http specific steps that enable you to send and receive messages via Http REST:
+
+```
+Feature: Voting Http REST API
+
+  Background:
+    Given URL: http://localhost:8080/rest/services
+    Given variables
+      | id      | citrus:randomUUID()  |
+      | title   | Do you like Mondays? |
+      | options | [ { "name": "yes", "votes": 0 }, { "name": "no", "votes": 0 } ] |
+      | report  | true                 |
+
+  Scenario: Clear voting list
+    When send DELETE /voting
+    Then receive status 200 OK
+
+  Scenario: Get empty voting list
+    Given Accept: application/json
+    When send GET /voting
+    Then Response: []
+    And receive status 200 OK
+
+  Scenario: Create voting
+    Given Request:
+    """
+    {
+      "id": "${id}",
+      "title": "${title}",
+      "options": ${options},
+      "report": ${report}
+    }
+    """
+    And Content-Type: application/json
+    When send POST /voting
+    Then receive status 200 OK
+
+  Scenario: Get voting list
+    When send GET /voting
+    Then validate $.size() is 1
+    Then validate $..title is ${title}
+    Then validate $..report is ${report}
+    And receive status 200 OK
+```
+
+The feature scenarios use default Http steps to send requests with different methods (GET, POST, PUT, DELETE) and receive status responses (Http 200 OK). Please
+explore the default step definitions in the respective package to get a detailed understanding on how to use those in your feature specification.
+
+### Docker steps
+
+Docker steps access containers and build images. By default the steps try to find a valida DockerClient component in the Spring application context configuration.
+You can use the steps in feature specifications to manage container states.
+
+```
+Feature: Voting Docker infrastructure
+
+  Scenario: Check container deployment state
+    Given docker-client "dockerClient"
+    Then container "voting-app" should be running
+    And container "message-broker" should be running
+```
+
+We are able to check the container state `running`. All we need is the Docker container name or id. What else can we do within the default Docker steps? We can
+build new images:
+
+```
+Feature: Build images
+
+  Scenario: Build voting image
+    Given docker-client "dockerClient"
+    When build image "voting:1.0.0" from file "scr/main/docker/Dockerfile"
+    Then create container "voting-app" from "voting:1.0.0"
+    And container "voting-app" should be running
+```
+
+This is how we can use Docker commands in Cucumber feature specifications with Citrus default step definitions. All default step definitions for Docker are located in package
+
+* com.consol.citrus.cucumber.step.(designer|runner).docker
+
+### Selenium steps
+
+Selenium is a widely used UI automation framework where browser user interactions are simulated. We can use default Selenium steps in the feature specifications in order to
+access Selenium commands in our tests.
+
+```
+Feature: Voting user interface
+
+  Background:
+    Given user starts browser
+    And user navigates to "http://localhost:8080"
+
+  Scenario: Welcome page
+    Then page should display link with link-text="Run application"
+
+  Scenario: Start application
+    When user clicks link with link-text="Run application"
+    And sleep 500 ms
+    Then page should display heading with tag-name="h1" having
+    | text | Voting list |
+
+    And page should display link with link-text="No voting found"
+    And page should display form with id="new-voting" having
+    | tag-name  | form          |
+    | attribute | method="post" |
+
+  Scenario: Add voting
+    Given user navigates to "http://localhost:8080/voting"
+    When user sets text "Do you like burgers?" to input with id="title"
+    And user clicks button with id="submitNew"
+    And sleep 500 ms
+    Then page should display element with link-text="Do you like burgers?"
+```
+
+With the predefined Cucumber steps for Selenium we are able to interact with the browser. For instance we can click buttons, verify page objects and
+navigate to different pages.
+
+All these Selenium steps are located in package:
+
+* com.consol.citrus.cucumber.step.(designer|runner).selenium
+
+The Selenium browser is automatically picked from the Spring bean application context configuration in Citrus. Here you can decide which Selenium WebDriver to use during the tests.
+Also you can instantiate web page instances and call page actions and validation steps:
+
+```java
+public class VotingListPage implements WebPage, PageValidator<VotingListPage> {
+
+    @FindBy(tagName = "h1")
+    private WebElement heading;
+
+    @FindBy(id = "new-voting")
+    private WebElement newVotingForm;
+
+    /**
+     * Submits new voting.
+     * @param title
+     * @param options
+     */
+    public void submit(String title, String options) {
+        newVotingForm.findElement(By.id("title")).sendKeys(title);
+        if (StringUtils.hasText(options)) {
+            newVotingForm.findElement(By.id("options")).sendKeys(options.replaceAll(":", "\n"));
+        }
+
+        newVotingForm.submit();
+    }
+
+    @Override
+    public void validate(VotingListPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.assertEquals("Voting list", heading.getText());
+    }
+}
+```
+
+This page object defines elements and actions on that page that are callable in our feature specification.
+
+```
+Feature: Voting pages
+
+  Background:
+    Given page "welcomePage" com.consol.citrus.demo.voting.selenium.pages.WelcomePage
+    Given page "votingListPage" com.consol.citrus.demo.voting.selenium.pages.VotingListPage
+
+  Scenario: Welcome page
+    When user starts browser
+    And user navigates to "http://localhost:8080"
+    Then page welcomePage should validate
+
+  Scenario: Start application
+    When user navigates to "http://localhost:8080"
+    And page welcomePage performs startApp
+    And sleep 500 ms
+    Then page votingListPage should validate
+
+  Scenario: Add voting
+    Given user navigates to "http://localhost:8080/voting"
+    When page votingListPage performs submit with arguments
+    | Do you like pizza? |
+    And sleep 500 ms
+    Then page should display element with link-text="Do you like pizza?"
+    And page votingListPage should validate
+
+  Scenario: Add voting with options
+    Given user navigates to "http://localhost:8080/voting"
+    When page votingListPage performs submit with arguments
+      | What is your favorite color? |
+      | red:green:blue |
+    And sleep 500 ms
+    Then page should display element with link-text="What is your favorite color?"
+    And page votingListPage should validate
+```
+
+The page objects get instantiated and dependency injection makes sure that web elements and other resources are passed to 
+the page object. Then action method can perform as well as validation tasks can validate the page state.

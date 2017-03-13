@@ -42,6 +42,20 @@ on the data dictionary settings in Citrus. Read more about that in chapter [data
 Test behaviors in Java DSL represent templates in XML DSL. The behavior encapsulates a set of test actions to a group that can be applied to multiple Java DSL tests. This enables
 you to combine common test actions in Java DSL with more comfortable reuse of test action definitions. See chapter [test-behaviors](behaviors.md) how to use that. 
 
+### Auto select message type
+
+Default message type for validation tasks in Citrus has been *XML*. Based on this message type the respective message validator implementation applies for *XML*, *JSON*, *plain text* and so on. You can now change this default message type by setting a system property (`citrus.default.message.type`). Also
+Citrus improved the auto select algorithm when the default message type is obviously not applicable. When a message arrives in Citrus the receiving action tries to find out which message validator fits best according to the message payload. XML message content is automatically identified 
+by `<>` characters. JSON message payloads are identified by `{}` or `[]` characters for objects and array representations. This way Citrus tries to find the best matching message validator for the incoming message. Before that Citrus has always been using the default message type *XML*.
+
+Read about different message validators in [validation](validation.md).
+
+### Default Cucumber steps
+
+The Citrus Cucumber extension now defines default step definitions for Http, Docker and Selenium. These default steps are ready for usage in any Cucumber Citrus feature specification. You can load
+the default steps as additional glue packages in your Cucumber options. After that you are ready to go for using the default steps directly in feature specification files. With the extensions you can perform Docker and Selenium commands very easy. Also you can describe the Http REST client-server communication 
+in BDD style. Read more about this in [cucumber](cucumber.md).
+
 ### Refactoring
 
 Deprecated APIs and classes that coexisted a long time are now removed. If your project is using on of these deprecated classes you may run into compile time errors.
