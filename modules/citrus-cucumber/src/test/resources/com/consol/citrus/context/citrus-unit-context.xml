@@ -7,6 +7,10 @@
               http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+  <bean id="httpClient" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
+  </bean>
+
   <bean id="dockerClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
   </bean>

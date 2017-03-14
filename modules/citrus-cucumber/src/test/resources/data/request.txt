@@ -1,0 +1,9 @@
+POST http://localhost:8080/test
+Accept:text/plain, application/xml, application/json, */*
+Content-Type:text/plain;charset=UTF-8
+Accept-Charset:utf-8
+Content-Length:70
+
+<TestRequestMessage>
+  <text>Hello server</text>
+</TestRequestMessage>

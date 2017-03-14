@@ -24,6 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
+import java.io.*;
 import java.util.Map;
 
 /**
@@ -87,7 +88,7 @@ public class HttpMessage extends DefaultMessage {
      * @param statusCode
      */
     public HttpMessage status(HttpStatus statusCode) {
-        statusCode(Integer.valueOf(statusCode.value()));
+        statusCode(statusCode.value());
         reasonPhrase(statusCode.name());
         return this;
     }
@@ -324,4 +325,95 @@ public class HttpMessage extends DefaultMessage {
         return null;
     }
 
+    /**
+     * Reads request from complete request dump.
+     * @param requestData
+     * @return
+     */
+    public static HttpMessage fromRequestData(String requestData) {
+        try (BufferedReader reader = new BufferedReader(new StringReader(requestData))) {
+            HttpMessage request = new HttpMessage();
+
+            String[] requestLine = reader.readLine().split("\\s");
+            if (requestLine.length > 0) {
+                request.method(HttpMethod.valueOf(requestLine[0]));
+            }
+
+            if (requestLine.length > 1) {
+                request.uri(requestLine[1]);
+            }
+
+            if (requestLine.length > 2) {
+                request.version(requestLine[2]);
+            }
+
+            String line = reader.readLine();
+            while (StringUtils.hasText(line)) {
+                if (!line.contains(":")) {
+                    throw new CitrusRuntimeException(String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
+                }
+
+                String[] keyValue = line.split(":");
+                request.setHeader(keyValue[0].trim(), keyValue[1].trim());
+                line = reader.readLine();
+            }
+
+            StringBuilder bodyBuilder = new StringBuilder();
+            line = reader.readLine();
+            while (StringUtils.hasText(line)) {
+                bodyBuilder.append(line).append(System.getProperty("line.separator"));
+                line = reader.readLine();
+            }
+
+            request.setPayload(bodyBuilder.toString().trim());
+
+            return request;
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to parse Http raw request data", e);
+        }
+    }
+
+    /**
+     * Reads response from complete response dump.
+     * @param responseData
+     * @return
+     */
+    public static HttpMessage fromResponseData(String responseData) {
+        try (BufferedReader reader = new BufferedReader(new StringReader(responseData))) {
+            HttpMessage response = new HttpMessage();
+
+            String[] statusLine = reader.readLine().split("\\s");
+            if (statusLine.length > 0) {
+                response.version(statusLine[0]);
+            }
+
+            if (statusLine.length > 1) {
+                response.status(HttpStatus.valueOf(Integer.valueOf(statusLine[1])));
+            }
+
+            String line = reader.readLine();
+            while (StringUtils.hasText(line)) {
+                if (!line.contains(":")) {
+                    throw new CitrusRuntimeException(String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
+                }
+
+                String[] keyValue = line.split(":");
+                response.setHeader(keyValue[0].trim(), keyValue[1].trim());
+                line = reader.readLine();
+            }
+
+            StringBuilder bodyBuilder = new StringBuilder();
+            line = reader.readLine();
+            while (StringUtils.hasText(line)) {
+                bodyBuilder.append(line).append(System.getProperty("line.separator"));
+                line = reader.readLine();
+            }
+
+            response.setPayload(bodyBuilder.toString().trim());
+
+            return response;
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to parse Http raw response data", e);
+        }
+    }
 }

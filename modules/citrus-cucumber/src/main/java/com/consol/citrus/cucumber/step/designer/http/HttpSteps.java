@@ -53,8 +53,8 @@ public class HttpSteps {
     private HttpMessage request;
     private HttpMessage response;
 
-    private Map<String, String> headers;
-    private Map<String, String> pathValidations;
+    private Map<String, String> headers = new HashMap<>();
+    private Map<String, String> pathValidations = new HashMap<>();
 
     private String body;
     private String contentType;
@@ -146,14 +146,34 @@ public class HttpSteps {
         pathValidations.put(name, value);
     }
 
-    @Given("^(?:Request|Response):$")
-    public void setBodyMultiline(String body) {
-        setBody(body);
+    @Given("^(?:Payload):$")
+    public void setPayloadMultiline(String payload) {
+        setPayload(payload);
     }
 
-    @Given("^(?:Request|Response): (.+)$")
-    public void setBody(String body) {
-        this.body = body;
+    @Given("^(?:Payload): (.+)$")
+    public void setPayload(String payload) {
+        this.body = payload;
+    }
+
+    @When("^(?:http-client )?sends? request$")
+    public void sendClientRequestFull(String requestData) {
+        sendClientRequest(HttpMessage.fromRequestData(requestData));
+    }
+
+    @Then("^(?:http-client )?receives? response$")
+    public void receiveClientResponseFull(String responseData) {
+        receiveClientResponse(HttpMessage.fromResponseData(responseData));
+    }
+
+    @When("^(?:http-server )?receives? request$")
+    public void receiveServerRequestFull(String requestData) {
+        receiveServerRequest(HttpMessage.fromRequestData(requestData));
+    }
+
+    @Then("^(?:http-server )?sends? response$")
+    public void sendServerResponseFull(String responseData) {
+        sendServerResponse(HttpMessage.fromResponseData(responseData));
     }
 
     @When("^(?:http-client )?sends? (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE)$")
@@ -184,6 +204,14 @@ public class HttpSteps {
         }
         headers.clear();
 
+        sendClientRequest(request);
+    }
+
+    /**
+     * Sends client request.
+     * @param request
+     */
+    protected void sendClientRequest(HttpMessage request) {
         HttpClientActionBuilder.HttpClientSendActionBuilder sendBuilder = designer.http().client(httpClient).send();
         HttpClientRequestActionBuilder requestBuilder;
 
@@ -230,7 +258,14 @@ public class HttpSteps {
             response.setHeader(headerEntry.getKey(), headerEntry.getValue());
         }
         headers.clear();
+        receiveClientResponse(response);
+    }
 
+    /**
+     * Receives client response.
+     * @param response
+     */
+    protected void receiveClientResponse(HttpMessage response) {
         HttpClientResponseActionBuilder responseBuilder = designer.http().client(httpClient).receive()
                 .response(response.getStatusCode())
                 .message(response);
@@ -268,7 +303,14 @@ public class HttpSteps {
             request.setHeader(headerEntry.getKey(), headerEntry.getValue());
         }
         headers.clear();
+        receiveServerRequest(request);
+    }
 
+    /**
+     * Receives server request.
+     * @param request
+     */
+    protected void receiveServerRequest(HttpMessage request) {
         HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = designer.http().server(httpServer).receive();
         HttpServerRequestActionBuilder requestBuilder;
 
@@ -316,7 +358,14 @@ public class HttpSteps {
             response.setHeader(headerEntry.getKey(), headerEntry.getValue());
         }
         headers.clear();
+        sendServerResponse(response);
+    }
 
+    /**
+     * Sends server response.
+     * @param response
+     */
+    protected void sendServerResponse(HttpMessage response) {
         designer.http().server(httpServer).send()
                 .response(response.getStatusCode())
                 .message(response);
