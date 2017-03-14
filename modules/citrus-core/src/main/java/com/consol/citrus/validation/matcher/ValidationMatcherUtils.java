@@ -18,6 +18,7 @@ package com.consol.citrus.validation.matcher;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 import org.springframework.util.StringUtils;
@@ -47,8 +48,15 @@ public final class ValidationMatcherUtils {
     public static void resolveValidationMatcher(String fieldName, String fieldValue, 
             String validationMatcherExpression, TestContext context) {
         String expression = VariableUtils.cutOffVariablesPrefix(cutOffValidationMatchersPrefix(validationMatcherExpression));
-        
+
+        if (expression.equals("ignore")) {
+            expression += "()";
+        }
+
         int bodyStart = expression.indexOf('(');
+        if (bodyStart < 0) {
+            throw new CitrusRuntimeException("Illegal syntax for validation matcher expression - missing validation value in '()' function body");
+        }
         
         String prefix = "";
         if (expression.indexOf(':') > 0 && expression.indexOf(':') < bodyStart) {

@@ -47,6 +47,7 @@ public class ValidationMatcherConfig {
     private final NotEmptyValidationMatcher notEmptyValidationMatcher = new NotEmptyValidationMatcher();
     private final NullValidationMatcher nullValidationMatcher = new NullValidationMatcher();
     private final NotNullValidationMatcher notNullValidationMatcher = new NotNullValidationMatcher();
+    private final IgnoreValidationMatcher ignoreValidationMatcher = new IgnoreValidationMatcher();
 
     @Bean(name = "validationMatcherRegistry")
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
@@ -84,6 +85,7 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.getMembers().put("notEmpty", notEmptyValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("null", nullValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("notNull", notNullValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("ignore", ignoreValidationMatcher);
 
         return citrusValidationMatcherLibrary;
     }

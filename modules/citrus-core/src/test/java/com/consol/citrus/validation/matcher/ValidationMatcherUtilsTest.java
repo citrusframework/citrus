@@ -34,6 +34,9 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testResolveDefaultValidationMatcher() {
+        ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@ignore@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@ignore()@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@ignore('bad syntax')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@equalsIgnoreCase('value')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${equalsIgnoreCase('value')}@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${equalsIgnoreCase(value)}@", context);

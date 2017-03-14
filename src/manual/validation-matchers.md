@@ -52,6 +52,30 @@ As you can see the library defines one to many validation matcher members either
 **Tip**
 You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.
 
+### ignore()
+
+The ignore validation matcher is a special matcher that ignores the value and is always positive in its outcome. You should use the ignore validation matcher when
+only validating the pure existence of an element. The value is ignored but the element has to be present in the message payload.
+ 
+```xml
+<message>
+    <payload>
+        <RequestMessage>
+            <MessageBody>
+                <Customer>
+                    <Id>@ignore()@</Id>
+                    <Name>@equalsIgnoreCase('foo')@</Name>
+                </Customer>
+            </MessageBody>
+        </RequestMessage>
+    </payload>
+</message>
+``` 
+
+**Note**
+
+The ignore validation matcher is the only validation matcher that is able to skip the function parameter body. So you can use both `@ignore()@` and `@ignore@`.
+
 ### matchesXml()
 
 The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive following XML message payload for validation:
