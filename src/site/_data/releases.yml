@@ -4,6 +4,10 @@
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+  - title: Add ignore validation matcher
+      id: 224
+      type: Add
+      author: christophd
   - title: Enabled mtomEnabled flag for soap send actions in Java DSL
       id: 216
       type: Add
