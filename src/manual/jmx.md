@@ -11,7 +11,7 @@ The JMX components in Citrus are kept in a separate Maven module. So you should 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-jmx</artifactId>
-  <version>2.7.1</version>
+  <version>2.7.2-SNAPSHOT</version>
 </dependency>
 ```
 

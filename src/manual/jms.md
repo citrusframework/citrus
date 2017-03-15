@@ -9,7 +9,7 @@ The JMS components in Citrus are kept in a separate Maven module. If not already
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-jms</artifactId>
-  <version>2.7.1</version>
+  <version>2.7.2-SNAPSHOT</version>
 </dependency>
 ```
 

@@ -10,7 +10,7 @@ The Kubernetes test components in Citrus are kept in a separate Maven module. If
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-kubernetes</artifactId>
-  <version>2.7.1</version>
+  <version>2.7.2-SNAPSHOT</version>
 </dependency>
 ```
 
