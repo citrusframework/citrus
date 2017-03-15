@@ -1,6 +1,13 @@
 - version: ${project.version}
-  date: 2017-03-15
+  date: 2017-05-31
   tag: latest
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
+
+- version: 2.7.1
+  date: 2017-03-15
+  tag: v2-7-1
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
