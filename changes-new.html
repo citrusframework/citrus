@@ -63,7 +63,7 @@
         data-chapter-title="Changes new"
         data-filepath="changes-new.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1670,7 +1670,7 @@ Microservices with Docker and Kubernetes. The basic usage is described in sectio
 <h3 id="selenium-support"><a name="selenium-support" class="plugin-anchor" href="#selenium-support"><span class="fa fa-link"></span></a>Selenium support</h3>
 <p>User interface and browser testing has not been a focus within Citrus integration testing until now that we can integrate with the famous <a href="http://www.seleniumhq.org/" target="_blank">Selenium</a> UI testing library. Thanks to the great contributions
 made by the community - especially by <a href="https://github.com/vdsrd" target="_blank">vdsrd@github</a> - we can use Selenium based actions and features directly in a Citrus test case. The Citrus Java and XML DSL both provide comfortable access to the Selenium API in order to 
-simulate user interaction within a browser. The mix of user based actions and Citrus messaging transport simulation gives complete new ways of handling complex integration scenarios. Read more about this in chapter <a href="reference/html/selenium.html">Selenium</a>.</p>
+simulate user interaction within a browser. The mix of user based actions and Citrus messaging transport simulation gives complete new ways of handling complex integration scenarios. Read more about this in chapter <a href="selenium.html">Selenium</a>.</p>
 <h3 id="environment-based-beforeafter-suite"><a name="environment-based-beforeafter-suite" class="plugin-anchor" href="#environment-based-beforeafter-suite"><span class="fa fa-link"></span></a>Environment based before/after suite</h3>
 <p>You can enable/disable before and after suite actions based on optional environment or system properties. Users can give property names or property values that are checked before execution. 
 Only in case the environment property checks do pass the actions are executed before/after the test suite run.</p>
@@ -1683,6 +1683,15 @@ on the data dictionary settings in Citrus. Read more about that in chapter <a hr
 <h3 id="java-dsl-test-behavior"><a name="java-dsl-test-behavior" class="plugin-anchor" href="#java-dsl-test-behavior"><span class="fa fa-link"></span></a>Java DSL test behavior</h3>
 <p>Test behaviors in Java DSL represent templates in XML DSL. The behavior encapsulates a set of test actions to a group that can be applied to multiple Java DSL tests. This enables
 you to combine common test actions in Java DSL with more comfortable reuse of test action definitions. See chapter <a href="behaviors.html">test-behaviors</a> how to use that. </p>
+<h3 id="auto-select-message-type"><a name="auto-select-message-type" class="plugin-anchor" href="#auto-select-message-type"><span class="fa fa-link"></span></a>Auto select message type</h3>
+<p>Default message type for validation tasks in Citrus has been <em>XML</em>. Based on this message type the respective message validator implementation applies for <em>XML</em>, <em>JSON</em>, <em>plain text</em> and so on. You can now change this default message type by setting a system property (<code>citrus.default.message.type</code>). Also
+Citrus improved the auto select algorithm when the default message type is obviously not applicable. When a message arrives in Citrus the receiving action tries to find out which message validator fits best according to the message payload. XML message content is automatically identified 
+by <code>&lt;&gt;</code> characters. JSON message payloads are identified by <code>{}</code> or <code>[]</code> characters for objects and array representations. This way Citrus tries to find the best matching message validator for the incoming message. Before that Citrus has always been using the default message type <em>XML</em>.</p>
+<p>Read about different message validators in <a href="validation.html">validation</a>.</p>
+<h3 id="default-cucumber-steps"><a name="default-cucumber-steps" class="plugin-anchor" href="#default-cucumber-steps"><span class="fa fa-link"></span></a>Default Cucumber steps</h3>
+<p>The Citrus Cucumber extension now defines default step definitions for Http, Docker and Selenium. These default steps are ready for usage in any Cucumber Citrus feature specification. You can load
+the default steps as additional glue packages in your Cucumber options. After that you are ready to go for using the default steps directly in feature specification files. With the extensions you can perform Docker and Selenium commands very easy. Also you can describe the Http REST client-server communication 
+in BDD style. Read more about this in <a href="cucumber.html">cucumber</a>.</p>
 <h3 id="refactoring"><a name="refactoring" class="plugin-anchor" href="#refactoring"><span class="fa fa-link"></span></a>Refactoring</h3>
 <p>Deprecated APIs and classes that coexisted a long time are now removed. If your project is using on of these deprecated classes you may run into compile time errors.
 Please have a look at the Citrus API JavaDocs and documentation in order to find out how to use the new APIs and classes that replaced the old deprecated stuff. </p>

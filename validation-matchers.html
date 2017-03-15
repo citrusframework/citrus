@@ -63,7 +63,7 @@
         data-chapter-title="Validation Matchers"
         data-filepath="validation-matchers.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1692,6 +1692,24 @@ You can use validation matcher with all validation mechanisms - not only with XM
 </code></pre>
 <p><strong>Tip</strong>
 You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.</p>
+<h3 id="ignore"><a name="ignore" class="plugin-anchor" href="#ignore"><span class="fa fa-link"></span></a>ignore()</h3>
+<p>The ignore validation matcher is a special matcher that ignores the value and is always positive in its outcome. You should use the ignore validation matcher when
+only validating the pure existence of an element. The value is ignored but the element has to be present in the message payload.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">RequestMessage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">MessageBody</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Customer</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Id</span>&gt;</span>@ignore()@<span class="hljs-tag">&lt;/<span class="hljs-title">Id</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Name</span>&gt;</span>@equalsIgnoreCase(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">Name</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">Customer</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">MessageBody</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">RequestMessage</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong></p>
+<p>The ignore validation matcher is the only validation matcher that is able to skip the function parameter body. So you can use both <code>@ignore()@</code> and <code>@ignore@</code>.</p>
 <h3 id="matchesxml"><a name="matchesxml" class="plugin-anchor" href="#matchesxml"><span class="fa fa-link"></span></a>matchesXml()</h3>
 <p>The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive following XML message payload for validation:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">GetCustomerMessage</span>&gt;</span>
@@ -1799,29 +1817,29 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 <p>In the listing above we are using the <strong>equalTo()</strong> matcher. All Hamcrest matchers are surrounded by a <strong>assertThat</strong> expression. You are able to combine several Hamcrest matchers then in order to construct very powerful validation logic. See the following examples on what is possible then:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalTo(value))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(equalTo(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(is(not(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(is(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalToIgnoringCase(VALUE)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(containsString(lue)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(containsString(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(startsWith(val)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(endsWith(lue)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(anyOf(startsWith(val), endsWith(lue))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(allOf(startsWith(val), endsWith(lue))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(isEmptyString()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(isEmptyString())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(isEmptyOrNullString()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(nullValue()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(notNullValue()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(empty()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(is(not(other)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(is(other)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalToIgnoringCase(VALUE))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(containsString(lue))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(containsString(other)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(startsWith(val))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(endsWith(lue))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(anyOf(startsWith(val), endsWith(lue)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(allOf(startsWith(val), endsWith(lue)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(isEmptyString())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(isEmptyString()))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(isEmptyOrNullString())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(nullValue())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(notNullValue())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(empty())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(empty())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(greaterThan(4)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(greaterThan(4))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(allOf(greaterThan(4), lessThan(6), not(lessThan(5)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(is(not(greaterThan(5)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(greaterThanOrEqualTo(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(lessThan(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(lessThan(1))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(lessThanOrEqualTo(4)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(is(not(greaterThan(5))))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(greaterThanOrEqualTo(5))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(lessThan(5))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(lessThan(1)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(lessThanOrEqualTo(4))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(hasSize(5))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
 </code></pre>
 <p>Citrus will automatically perform validation matchers on the element value. Only if all matchers are satisfied the validation will pass.</p>

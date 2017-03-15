@@ -63,7 +63,7 @@
         data-chapter-title="Plaintext"
         data-filepath="validation-plaintext.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1676,6 +1676,15 @@
 <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
 </code></pre>
 <p>Of course test variables are supported in the plain text payloads. The variables are replace by the referenced values before sending or receiving the message.</p>
+<p>Plaintext message payloads may only differ in whitespaces e.g. new line characters. By default the message validation fails even if only whitespace
+characters are different.</p>
+<p>You can disable this default behavior and ignore whitespaces characters like new lines with following system property:</p>
+<pre><code>citrus.plaintext.validation.ignore.whitespace=true
+</code></pre><p>Also you could set the property directly on the mesage validator bean:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultPlaintextMessageValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.text.PlainTextMessageValidator&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;ignoreWhitespace&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;true&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
 
                     
                     </section>

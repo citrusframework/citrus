@@ -63,7 +63,7 @@
         data-chapter-title="Stop time"
         data-filepath="actions-stop-time.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1656,28 +1656,29 @@
                     <section class="normal" id="section-">
                     
                         <h3 id="stop-time"><a name="stop-time" class="plugin-anchor" href="#stop-time"><span class="fa fa-link"></span></a>Stop time</h3>
-<p>Time measurement during a test can be very helpful. The <trace-time> action creates and monitors multiple timelines. The action offers the attribute &quot;id&quot; to identify a time line. The tester can of course use more than one time line with different ids simultaneously.</trace-time></p>
+<p>Time measurement during a test can be very helpful. The <trace-time> action creates and monitors multiple time lines. The action offers the attribute <em>id</em> to identify a time line. 
+The tester can of course use more than one time line with different ids simultaneously.</trace-time></p>
 <p>Read the next example and you will understand the mix of different time lines:</p>
 <p><strong>XML DSL</strong> </p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;StopTimeTest&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span>/&gt;</span>
 
-        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;time_line_id&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;time_line_id&quot;</span>/&gt;</span>
 
-        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;3.5&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">seconds</span>=<span class="hljs-value">&quot;3.5&quot;</span>/&gt;</span>
 
-        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot; time_line_id &quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot; time_line_id &quot;</span>/&gt;</span>
 
-        <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">milliseconds</span>=<span class="hljs-value">&quot;5000&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">sleep</span> <span class="hljs-attribute">milliseconds</span>=<span class="hljs-value">&quot;5000&quot;</span>/&gt;</span>
 
-        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span>/&gt;</span>
 
-        <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot; time_line_id &quot;</span>/&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot; time_line_id &quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
 </code></pre>
-<p><strong>Java DSL designer and runner</strong> </p>
+<p><strong>Java DSL</strong> </p>
 <pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">stopTimeTest</span><span class="hljs-params">()</span> </span>{
     stopTime();
@@ -1696,8 +1697,35 @@ TimeWatcher time_line_id after 3500 milliseconds
 TimeWatcher after 8500 seconds
 TimeWatcher time_line_id after 8500 milliseconds
 </code></pre>
+<p><strong>Important</strong>
+Time line ids should not exist as test variables before the action is called for the first time. This would break the time line initialization.</p>
 <p><strong>Note</strong>
-In case no time line id is specified the framework will measure the time for a default time line.To print out the current elapsed time for a time line you simply have to place the <trace-time> action into the action chain again and again, using the respective time line identifier. The elapsed time will be printed out to the console every time.</trace-time></p>
+In case no time line id is specified the framework will measure the time for a default time line. To print out the current elapsed time for a time line you simply have to place the 
+`<trace-time> action into the action chain again and again, using the respective time line identifier. The elapsed time will be printed out to the console every time.</trace-time></p>
+<p>Each time line is stored as test variable in the test case. By default you will have the following test variables set for each time line:</p>
+<ul>
+<li><strong>CITRUS_TIMELINE</strong> first timestamp of time line</li>
+<li><strong>CITRUS_TIMELINE_VALUE</strong> latest time measurement value (time passed since first timestamp in milliseconds)</li>
+</ul>
+<p>According to your time line id you will get different test variable names. Also you can customize the time value suffix (default: <em>_VALUE</em>):</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;custom_watcher&quot;</span> <span class="hljs-attribute">suffix</span>=<span class="hljs-value">&quot;_1st&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">sleep</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">trace-time</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;custom_watcher&quot;</span> <span class="hljs-attribute">suffix</span>=<span class="hljs-value">&quot;_2nd&quot;</span>/&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-java"><span class="hljs-annotation">@CitrusTest</span>
+stopTime(<span class="hljs-string">&quot;custom_watcher&quot;</span>, <span class="hljs-string">&quot;_1st&quot;</span>);
+sleep();
+stopTime(<span class="hljs-string">&quot;custom_watcher&quot;</span>, <span class="hljs-string">&quot;_2nd&quot;</span>);
+</code></pre>
+<p>You will get following test variables set:</p>
+<ul>
+<li><strong>custom_watcher</strong> first timestamp of time line</li>
+<li><strong>custom_watcher_1st</strong> time passed since start</li>
+<li><strong>custom_watcher_2nd</strong> time passed since start</li>
+</ul>
+<p>Of course using the same suffix multiple times will overwrite the timestamps in test variables.</p>
 
                     
                     </section>

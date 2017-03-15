@@ -63,7 +63,7 @@
         data-chapter-title="Soap"
         data-filepath="soap.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1662,7 +1662,7 @@ The SOAP WebService components in Citrus are kept in a separate Maven module. So
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-ws<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7.1<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus. See following XML definition to find out how to include the citrus-ws namespace.</p>
@@ -1787,7 +1787,7 @@ The default channel endpoint adapter automatically creates an inbound message ch
 
         <span class="hljs-tag">&lt;<span class="hljs-title">citrus:empty-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>/&gt;</span>
 </code></pre>
-<p>With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in <a href="endpoint-adapter">endpoint-adapter</a>.</p>
+<p>With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in <a href="endpoint-adapter.html">endpoint-adapter</a>.</p>
 <h3 id="soap-send-and-receive"><a name="soap-send-and-receive" class="plugin-anchor" href="#soap-send-and-receive"><span class="fa fa-link"></span></a>SOAP send and receive</h3>
 <p>Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport we might need to set special information on that messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in a XML DSL test:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
@@ -2761,7 +2761,7 @@ It is highly recommended to use a proper <strong>&quot;timeout&quot;</strong> se
 </code></pre>
 <p>The program listing above describes a normal SpringWS request mapping with endpoint configurations. The mapping is responsible to forward incoming requests to the endpoint which will handle the request and provide a proper response message. First of all we add a logging interceptor to the context so all incoming requests get logged to the console first. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming <strong><em>&apos;HelloRequest&apos;</em></strong> SOAP messages to the <strong><em>&apos;helloServiceEndpoint&apos;</em></strong> . Endpoints are of essential nature in Citrus SOAP WebServices implementation. They are responsible for processing a request in order to provide a proper response message that is sent back to the calling client. Citrus uses the endpoint in combination with a message endpoint adapter implementation.</p>
 <p><img src="images/figure_009.jpg" alt="figure_009.jpg"></p>
-<p>The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various message endpoint adapter implementations in Citrus were already discussed in <a href="endpoint-adapter">endpoint-adapter</a>.</p>
+<p>The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various message endpoint adapter implementations in Citrus were already discussed in <a href="endpoint-adapter.html">endpoint-adapter</a>.</p>
 <p>In this example the <strong><em>&apos;helloServiceEndpoint&apos;</em></strong> uses the <strong><em>&apos;static-response-adapter&apos;</em></strong> which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to respond more dynamically.</p>
 <p>Regardless of which message endpoint adapter setup you are using in your test case the endpoint transforms the response into a proper SOAP message. You can add as many request mappings and endpoints as you want to the server context configuration. So you are able to handle different request types with one single Jetty server instance.</p>
 <p>That&apos;s it for connecting with SOAP WebServices! We saw how to send and receive SOAP messages with Jetty and Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handling.</p>

@@ -63,7 +63,7 @@
         data-chapter-title="Validation"
         data-filepath="validation.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1720,10 +1720,12 @@
 <li><strong>defaultJsonMessageValidator</strong>: com.consol.citrus.validation.json.JsonTextMessageValidator </li>
 <li><strong>defaultJsonPathMessageValidator</strong>: com.consol.citrus.validation.json.JsonPathMessageValidator </li>
 <li><strong>defaultPlaintextMessageValidator</strong>: com.consol.citrus.validation.text.PlainTextMessageValidator </li>
+<li><strong>defaultMessageHeaderValidator</strong>: com.consol.citrus.validation.DefaultMessageHeaderValidator </li>
 <li><strong>defaultBinaryBase64MessageValidator</strong>: com.consol.citrus.validation.text.BinaryBase64MessageValidator </li>
 <li><strong>defaultGzipBinaryBase64MessageValidator</strong>: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator </li>
 <li><strong>defaultXhtmlMessageValidator</strong>: com.consol.citrus.validation.xhtml.XhtmlMessageValidator </li>
 <li><strong>defaultGroovyXmlMessageValidator</strong>: com.consol.citrus.validation.script.GroovyXmlMessageValidator </li>
+<li><strong>defaultGroovyTextMessageValidator</strong>: com.consol.citrus.validation.script.GroovyScriptMessageValidator </li>
 <li><strong>defaultGroovyJsonMessageValidator</strong>: com.consol.citrus.validation.script.GroovyJsonMessageValidator </li>
 </ul>
 <p>Overwriting a single message validator with a custom implementation is then very easy. Just add your custom Spring bean to the application context using one of these default bean identifiers. In case you want to change the message validator gang by adding or removing a message validator implementation completely you can place a message validator component in the Spring application context.</p>
@@ -1732,12 +1734,14 @@
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultXpathMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyXmlMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultPlaintextMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultMessageHeaderValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultBinaryBase64MessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGzipBinaryBase64MessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.validation.custom.CustomMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonPathMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyJsonMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyTextMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultXhtmlMessageValidator&quot;</span>/&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message-validators</span>&gt;</span>
 </code></pre>
@@ -1747,6 +1751,8 @@
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultJsonPathMessageValidator&quot;</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyJsonMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultGroovyTextMessageValidator&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;defaultMessageHeaderValidator&quot;</span>/&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message-validators</span>&gt;</span>
 </code></pre>
 <p>The Citrus message validator component deleted all default implementations except of those dealing with JSON message format. Now Citrus is only able to validate JSON messages. Be careful as the complete Citrus project will be affected by this change.</p>

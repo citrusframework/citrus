@@ -63,7 +63,7 @@
         data-chapter-title="Cucumber"
         data-filepath="cucumber.md"
         data-basepath="."
-        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-revision="Wed Mar 15 2017 10:49:12 GMT+0100 (CET)"
         data-innerlanguage="">
     
 
@@ -1664,7 +1664,7 @@ The Cucumber components in Citrus are kept in a separate Maven module. If not al
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-cucumber<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7.1<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
 </code></pre>
 <p>Citrus provides a separate configuration namespace and schema definition for Cucumber related step definitions. Include this namespace into your Spring configuration in order to use the Citrus Cucumber configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
@@ -1751,7 +1751,7 @@ The Cucumber components in Citrus are kept in a separate Maven module. If not al
 
 }
 </code></pre>
-<p>If we have a closer look at the step definition class we see that it is a normal POJO that uses a <strong>@CitrusResource</strong> annotated <strong>TestDesigner</strong> . The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.</p>
+<p>If we have a closer look at the step definition class we see that it is a normal POJO that uses a <strong>@CitrusResource</strong> annotated <strong>TestDesigner</strong>. The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.</p>
 <p><strong>Important</strong>
 Of course you can do the dependency injection with <strong>@CitrusResource</strong> annotations on <strong>TestRunner</strong> instances, too. Which variation should someone use <strong>TestDesigner</strong> or <strong>TestRunner</strong> ? In fact there is a significant difference when looking at the two approaches. The designer will use the Gherkin methods to build the whole Citrus test case first before any action is executed. The runner will execute each test action that has been built with a Gherkin step immediately. This means that a designer approach will always complete all BDD step definitions before taking action. This directly affects the Cucumber step reports. All steps are usually marked as successful when using a designer approach as the Citrus test is executed after the Cucumber steps have been executed. The runner approach in contrast will fail the step when the corresponding test action fails. The Cucumber test reports will definitely look different depending on what approach you are choosing. All other functions stay the same in both approaches. If you need to learn more about designer and runner approaches please see</p>
 <p>If we run the Cucumber test the Citrus test case automatically performs its actions. That is a first combination of Citrus and Cucumber BDD. The story descriptions are translated to test actions and we are able to run integration tests with behavior driven development. Great! In a next step we will use XML step definitions rather than coding the steps in Java DSL.</p>
@@ -1885,17 +1885,17 @@ Another notable thing is the XML escaping of reserved characters in the pattern 
 <p>If you want to enable predefined steps support in your test you need to include the glue code package in your test class like this:</p>
 <pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Cucumber.class)
 <span class="hljs-annotation">@CucumberOptions</span>(
-    glue = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.step.designer&quot;</span> }
+    glue = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.step.designer.core&quot;</span> },
     plugin = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.CitrusReporter&quot;</span> } )
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeatureIT</span> </span>{
 
 }
 </code></pre>
-<p>Instead of writing the glue code on our own in step definition classes we include the glue package <strong>com.consol.citrus.cucumber.step.designer</strong> . This automatically loads all Citrus glue step definitions in this package. Once you have done this you can use predefined steps that add Citrus test logic without having to write any glue code in Java step definitions.</p>
-<p>Of course you can also choose to include the <strong>TestRunner</strong> step definitions by choosing the glue package <strong>com.consol.citrus.cucumber.step.runner</strong> .</p>
+<p>Instead of writing the glue code on our own in step definition classes we include the glue package <strong>com.consol.citrus.cucumber.step.designer.core</strong> . This automatically loads all Citrus glue step definitions in this package. Once you have done this you can use predefined steps that add Citrus test logic without having to write any glue code in Java step definitions.</p>
+<p>Of course you can also choose to include the <strong>TestRunner</strong> step definitions by choosing the glue package <strong>com.consol.citrus.cucumber.step.runner.core</strong> .</p>
 <pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Cucumber.class)
 <span class="hljs-annotation">@CucumberOptions</span>(
-    glue = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.step.runner&quot;</span> }
+    glue = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.step.runner.core&quot;</span> },
     plugin = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.CitrusReporter&quot;</span> } )
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeatureIT</span> </span>{
 
@@ -1931,7 +1931,23 @@ Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&
   [message-payload]
   &quot;&quot;&quot;
 </code></pre>
-<p>Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps. In the following sections we have a closer look at all predefined Citrus steps and how they work.</p>
+<p>Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps. </p>
+<p>There are several default step definitions for different aspects of integration testing. Please see the following packages that define default steps in Citrus:</p>
+<p><strong>Test designer packages</strong></p>
+<ul>
+<li>com.consol.citrus.cucumber.step.designer.core</li>
+<li>com.consol.citrus.cucumber.step.designer.http</li>
+<li>com.consol.citrus.cucumber.step.designer.docker</li>
+<li>com.consol.citrus.cucumber.step.designer.selenium</li>
+</ul>
+<p><strong>Test runner packages</strong></p>
+<ul>
+<li>com.consol.citrus.cucumber.step.runner.core</li>
+<li>com.consol.citrus.cucumber.step.runner.http</li>
+<li>com.consol.citrus.cucumber.step.runner.docker</li>
+<li>com.consol.citrus.cucumber.step.runner.selenium</li>
+</ul>
+<p>In the following sections we have a closer look at all predefined Citrus steps and how they work.</p>
 <h3 id="variable-steps"><a name="variable-steps" class="plugin-anchor" href="#variable-steps"><span class="fa fa-link"></span></a>Variable steps</h3>
 <p>As you already know Citrus is able to work with test variables that hold important information during a test such as identifiers and dynamic values. The predefined step definitions in Citrus are able to create new test variables.</p>
 <pre><code class="lang-xml">Given variable messageText is &quot;Hello&quot;
@@ -2095,6 +2111,177 @@ Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&
 Then sleep [time] ms
 </code></pre>
 <p>This adds a new sleep test action to the Citrus test.</p>
+<h3 id="http-steps"><a name="http-steps" class="plugin-anchor" href="#http-steps"><span class="fa fa-link"></span></a>Http steps</h3>
+<p>The Http steps are specially designed for Http client-server communication. You can use these steps by adding following packages as glue options in your Cucumber test:</p>
+<ul>
+<li>com.consol.citrus.cucumber.step.(designer|runner).http</li>
+</ul>
+<p>This package contains Http specific steps that enable you to send and receive messages via Http REST:</p>
+<pre><code>Feature: Voting Http REST API
+
+  Background:
+    Given URL: http://localhost:8080/rest/services
+    Given variables
+      | id      | citrus:randomUUID()  |
+      | title   | Do you like Mondays? |
+      | options | [ { &quot;name&quot;: &quot;yes&quot;, &quot;votes&quot;: 0 }, { &quot;name&quot;: &quot;no&quot;, &quot;votes&quot;: 0 } ] |
+      | report  | true                 |
+
+  Scenario: Clear voting list
+    When send DELETE /voting
+    Then receive status 200 OK
+
+  Scenario: Get empty voting list
+    Given Accept: application/json
+    When send GET /voting
+    Then Response: []
+    And receive status 200 OK
+
+  Scenario: Create voting
+    Given Request:
+    &quot;&quot;&quot;
+    {
+      &quot;id&quot;: &quot;${id}&quot;,
+      &quot;title&quot;: &quot;${title}&quot;,
+      &quot;options&quot;: ${options},
+      &quot;report&quot;: ${report}
+    }
+    &quot;&quot;&quot;
+    And Content-Type: application/json
+    When send POST /voting
+    Then receive status 200 OK
+
+  Scenario: Get voting list
+    When send GET /voting
+    Then validate $.size() is 1
+    Then validate $..title is ${title}
+    Then validate $..report is ${report}
+    And receive status 200 OK
+</code></pre><p>The feature scenarios use default Http steps to send requests with different methods (GET, POST, PUT, DELETE) and receive status responses (Http 200 OK). Please
+explore the default step definitions in the respective package to get a detailed understanding on how to use those in your feature specification.</p>
+<h3 id="docker-steps"><a name="docker-steps" class="plugin-anchor" href="#docker-steps"><span class="fa fa-link"></span></a>Docker steps</h3>
+<p>Docker steps access containers and build images. By default the steps try to find a valida DockerClient component in the Spring application context configuration.
+You can use the steps in feature specifications to manage container states.</p>
+<pre><code>Feature: Voting Docker infrastructure
+
+  Scenario: Check container deployment state
+    Given docker-client &quot;dockerClient&quot;
+    Then container &quot;voting-app&quot; should be running
+    And container &quot;message-broker&quot; should be running
+</code></pre><p>We are able to check the container state <code>running</code>. All we need is the Docker container name or id. What else can we do within the default Docker steps? We can
+build new images:</p>
+<pre><code>Feature: Build images
+
+  Scenario: Build voting image
+    Given docker-client &quot;dockerClient&quot;
+    When build image &quot;voting:1.0.0&quot; from file &quot;scr/main/docker/Dockerfile&quot;
+    Then create container &quot;voting-app&quot; from &quot;voting:1.0.0&quot;
+    And container &quot;voting-app&quot; should be running
+</code></pre><p>This is how we can use Docker commands in Cucumber feature specifications with Citrus default step definitions. All default step definitions for Docker are located in package</p>
+<ul>
+<li>com.consol.citrus.cucumber.step.(designer|runner).docker</li>
+</ul>
+<h3 id="selenium-steps"><a name="selenium-steps" class="plugin-anchor" href="#selenium-steps"><span class="fa fa-link"></span></a>Selenium steps</h3>
+<p>Selenium is a widely used UI automation framework where browser user interactions are simulated. We can use default Selenium steps in the feature specifications in order to
+access Selenium commands in our tests.</p>
+<pre><code>Feature: Voting user interface
+
+  Background:
+    Given user starts browser
+    And user navigates to &quot;http://localhost:8080&quot;
+
+  Scenario: Welcome page
+    Then page should display link with link-text=&quot;Run application&quot;
+
+  Scenario: Start application
+    When user clicks link with link-text=&quot;Run application&quot;
+    And sleep 500 ms
+    Then page should display heading with tag-name=&quot;h1&quot; having
+    | text | Voting list |
+
+    And page should display link with link-text=&quot;No voting found&quot;
+    And page should display form with id=&quot;new-voting&quot; having
+    | tag-name  | form          |
+    | attribute | method=&quot;post&quot; |
+
+  Scenario: Add voting
+    Given user navigates to &quot;http://localhost:8080/voting&quot;
+    When user sets text &quot;Do you like burgers?&quot; to input with id=&quot;title&quot;
+    And user clicks button with id=&quot;submitNew&quot;
+    And sleep 500 ms
+    Then page should display element with link-text=&quot;Do you like burgers?&quot;
+</code></pre><p>With the predefined Cucumber steps for Selenium we are able to interact with the browser. For instance we can click buttons, verify page objects and
+navigate to different pages.</p>
+<p>All these Selenium steps are located in package:</p>
+<ul>
+<li>com.consol.citrus.cucumber.step.(designer|runner).selenium</li>
+</ul>
+<p>The Selenium browser is automatically picked from the Spring bean application context configuration in Citrus. Here you can decide which Selenium WebDriver to use during the tests.
+Also you can instantiate web page instances and call page actions and validation steps:</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VotingListPage</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">WebPage</span>, <span class="hljs-title">PageValidator</span>&lt;<span class="hljs-title">VotingListPage</span>&gt; </span>{
+
+    <span class="hljs-annotation">@FindBy</span>(tagName = <span class="hljs-string">&quot;h1&quot;</span>)
+    <span class="hljs-keyword">private</span> WebElement heading;
+
+    <span class="hljs-annotation">@FindBy</span>(id = <span class="hljs-string">&quot;new-voting&quot;</span>)
+    <span class="hljs-keyword">private</span> WebElement newVotingForm;
+
+    <span class="hljs-comment">/**
+     * Submits new voting.
+     * <span class="hljs-doctag">@param</span> title
+     * <span class="hljs-doctag">@param</span> options
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">submit</span><span class="hljs-params">(String title, String options)</span> </span>{
+        newVotingForm.findElement(By.id(<span class="hljs-string">&quot;title&quot;</span>)).sendKeys(title);
+        <span class="hljs-keyword">if</span> (StringUtils.hasText(options)) {
+            newVotingForm.findElement(By.id(<span class="hljs-string">&quot;options&quot;</span>)).sendKeys(options.replaceAll(<span class="hljs-string">&quot;:&quot;</span>, <span class="hljs-string">&quot;\n&quot;</span>));
+        }
+
+        newVotingForm.submit();
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">validate</span><span class="hljs-params">(VotingListPage webPage, SeleniumBrowser browser, TestContext context)</span> </span>{
+        Assert.assertEquals(<span class="hljs-string">&quot;Voting list&quot;</span>, heading.getText());
+    }
+}
+</code></pre>
+<p>This page object defines elements and actions on that page that are callable in our feature specification.</p>
+<pre><code>Feature: Voting pages
+
+  Background:
+    Given page &quot;welcomePage&quot; com.consol.citrus.demo.voting.selenium.pages.WelcomePage
+    Given page &quot;votingListPage&quot; com.consol.citrus.demo.voting.selenium.pages.VotingListPage
+
+  Scenario: Welcome page
+    When user starts browser
+    And user navigates to &quot;http://localhost:8080&quot;
+    Then page welcomePage should validate
+
+  Scenario: Start application
+    When user navigates to &quot;http://localhost:8080&quot;
+    And page welcomePage performs startApp
+    And sleep 500 ms
+    Then page votingListPage should validate
+
+  Scenario: Add voting
+    Given user navigates to &quot;http://localhost:8080/voting&quot;
+    When page votingListPage performs submit with arguments
+    | Do you like pizza? |
+    And sleep 500 ms
+    Then page should display element with link-text=&quot;Do you like pizza?&quot;
+    And page votingListPage should validate
+
+  Scenario: Add voting with options
+    Given user navigates to &quot;http://localhost:8080/voting&quot;
+    When page votingListPage performs submit with arguments
+      | What is your favorite color? |
+      | red:green:blue |
+    And sleep 500 ms
+    Then page should display element with link-text=&quot;What is your favorite color?&quot;
+    And page votingListPage should validate
+</code></pre><p>The page objects get instantiated and dependency injection makes sure that web elements and other resources are passed to 
+the page object. Then action method can perform as well as validation tasks can validate the page state.</p>
 
                     
                     </section>
