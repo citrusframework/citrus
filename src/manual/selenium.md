@@ -9,7 +9,7 @@ The Selenium test components in Citrus are kept in a separate Maven module. If n
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-selenium</artifactId>
-  <version>2.7.1-SNAPSHOT</version>
+  <version>2.7.1</version>
 </dependency>
 ```
 

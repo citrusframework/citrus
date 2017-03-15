@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
-  <version>2.7.1-SNAPSHOT</version>
+  <version>2.7.1</version>
   <name>citrus</name>
   <description>Citrus Test Framework</description>
   <url>http://www.citrusframework.org</url>
@@ -1013,7 +1013,7 @@
         <plugin>
           <groupId>io.fabric8</groupId>
           <artifactId>docker-maven-plugin</artifactId>
-          <version>0.15.16</version>
+          <version>0.19.0</version>
           <configuration>
             <watchInterval>500</watchInterval>
             <logDate>default</logDate>
@@ -1033,7 +1033,6 @@
                     </bind>
                   </volumes>
                   <wait>
-                    <log>Jekyll startup</log>
                     <http>
                       <url>http://localhost:4000</url>
                       <method>GET</method>

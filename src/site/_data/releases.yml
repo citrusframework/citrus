@@ -5,73 +5,73 @@
   stories: https://github.com/christophd/citrus/issues/
   changes:
   - title: Add ignore validation matcher
-      id: 224
-      type: Add
-      author: christophd
+    id: 224
+    type: Add
+    author: christophd
   - title: Enabled mtomEnabled flag for soap send actions in Java DSL
-      id: 216
-      type: Add
-      author: chris-weber
+    id: 216
+    type: Add
+    author: chris-weber
   - title: Line separators in plain text validation
-      id: 214
-      type: Add
-      author: christophd
+    id: 214
+    type: Add
+    author: christophd
   - title: Overwriting TestContext in AbstractServer
-      id: 221
-      type: Fix
-      author: christophd
+    id: 221
+    type: Fix
+    author: christophd
   - title: Citrus validates text content although I did not tell it
-      id: 197
-      type: Fix
-      author: christophd
+    id: 197
+    type: Fix
+    author: christophd
   - title: Auto select message type for validation enhancement
-      id: 218
-      type: Add
-      author: christophd
+    id: 218
+    type: Add
+    author: christophd
   - title: Cucumber Http steps
-      id: 217
-      type: Add
-      author: christophd
+    id: 217
+    type: Add
+    author: christophd
   - title: Cucumber Selenium steps
-      id: 213
-      type: Add
-      author: christophd
+    id: 213
+    type: Add
+    author: christophd
   - title: Cucumber Docker steps
-      id: 212
-      type: Add
-      author: christophd
+    id: 212
+    type: Add
+    author: christophd
   - title: Customize default message type
-      id: 219
-      type: Add
-      author: christophd
+    id: 219
+    type: Add
+    author: christophd
   - title: Http header validation skipped
-      id: 201
-      type: Fix
-      author: christophd
+    id: 201
+    type: Fix
+    author: christophd
   - title: Maven Archetype for Citrus
-      id: 200
-      type: Fix
-      author: christophd
+    id: 200
+    type: Fix
+    author: christophd
   - title: Mix XML and Java DSL test methods
-      id: 211
-      type: Fix
-      author: christophd
+    id: 211
+    type: Fix
+    author: christophd
   - title: Fixed parentheses in examples for matchers
-      id: 210
-      type: Fix
-      author: rhuss
+    id: 210
+    type: Fix
+    author: rhuss
   - title: Sporadic IllegalStateException
-      id: 209
-      type: Fix
-      author: christophd
+    id: 209
+    type: Fix
+    author: christophd
   - title: Link to templates was written wrong
-      id: 206
-      type: Fix
-      author: christophd
+    id: 206
+    type: Fix
+    author: christophd
   - title: StopTime action holding static state
-      id: 204
-      type: Fix
-      author: christophd
+    id: 204
+    type: Fix
+    author: christophd
 
 - version: 2.7
   date: 2017-02-01
