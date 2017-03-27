@@ -45,7 +45,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser browser1;
 
     @CitrusEndpoint
-    @SeleniumBrowserConfig(browserType="firefox",
+    @SeleniumBrowserConfig(type="firefox",
             version="1.0",
             eventListeners="eventListener",
             javaScript=false,
@@ -56,7 +56,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser browser2;
 
     @CitrusEndpoint
-    @SeleniumBrowserConfig(browserType="internet explorer",
+    @SeleniumBrowserConfig(type="internet explorer",
             remoteServer="http://localhost:9090/selenium")
     private SeleniumBrowser browser3;
 

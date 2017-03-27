@@ -55,8 +55,8 @@ public class SeleniumBrowserConfigParser extends AbstractAnnotationConfigParser<
             builder.remoteServer(annotation.remoteServer());
         }
 
-        if (StringUtils.hasText(annotation.browserType())) {
-            builder.browserType(annotation.browserType());
+        if (StringUtils.hasText(annotation.type())) {
+            builder.type(annotation.type());
         }
 
         if (StringUtils.hasText(annotation.webDriver())) {

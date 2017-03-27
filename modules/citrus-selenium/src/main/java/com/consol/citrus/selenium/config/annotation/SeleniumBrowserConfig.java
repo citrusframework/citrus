@@ -63,7 +63,7 @@ public @interface SeleniumBrowserConfig {
      * Browser type
      * @return
      */
-    String browserType() default "";
+    String type() default "";
 
     /**
      * Firefox profile.

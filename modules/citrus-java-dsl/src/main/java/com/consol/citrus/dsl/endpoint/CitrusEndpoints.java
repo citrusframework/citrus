@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.docker.client.DockerClientBuilder;
+import com.consol.citrus.dsl.endpoint.selenium.SeleniumBrowserEndpointBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointBuilder;
 import com.consol.citrus.ftp.client.FtpClientBuilder;
@@ -168,7 +169,8 @@ public abstract class CitrusEndpoints {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static SeleniumBrowserBuilder selenium() {
-        return new SeleniumBrowserBuilder();
+    public static SeleniumBrowserEndpointBuilder<SeleniumBrowserBuilder> selenium() {
+        return new SeleniumBrowserEndpointBuilder(new SeleniumBrowserBuilder());
     }
+
 }

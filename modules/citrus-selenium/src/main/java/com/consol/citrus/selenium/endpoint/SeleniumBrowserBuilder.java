@@ -42,7 +42,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
      * @param type
      * @return
      */
-    public SeleniumBrowserBuilder browserType(String type) {
+    public SeleniumBrowserBuilder type(String type) {
         endpoint.getEndpointConfiguration().setBrowserType(type);
         return this;
     }

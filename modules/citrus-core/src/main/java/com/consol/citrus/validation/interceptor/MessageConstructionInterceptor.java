@@ -21,7 +21,7 @@ import com.consol.citrus.message.Message;
 
 
 /**
- * Implementing classes may intercept the message paload constructing mechanism in order 
+ * Implementing classes may intercept the message payload constructing mechanism in order
  * to modify the message content.
  * 
  * @author Christoph Deppisch
