@@ -21,6 +21,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.hamcrest.Matcher;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -45,7 +46,6 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
 
         for (Map.Entry<String, Object> entry : controlHeaders.entrySet()) {
             String headerName = entry.getKey();
-            String expectedValue = entry.getValue().toString();
             String actualValue = null;
 
             if (MessageHeaderUtils.isSpringInternalHeader(headerName) ||
@@ -63,8 +63,15 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
                 actualValue = receivedHeaders.get(headerName).toString();
             }
 
+            if (entry.getValue() instanceof Matcher) {
+                Assert.isTrue(((Matcher) entry.getValue()).matches(actualValue),
+                        ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not matching for header '" + headerName + "'", entry.getValue(), actualValue));
+                continue;
+            }
+
             //check if value expression is variable or function
-            expectedValue = context.replaceDynamicContentInString(expectedValue);
+            String expectedValue = context.replaceDynamicContentInString(String.valueOf(entry.getValue()));
 
             try {
                 if (actualValue != null) {
