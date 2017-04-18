@@ -154,7 +154,7 @@ We set the global scope property to **false** so the dictionary is handled in ex
 <send endpoint="myEndpoint">
   <message data-dictionary="specialDataDictionary">
     <payload>
-      <TestMessage>Hello Citrus"/TestMessage>
+      <TestMessage>Hello Citrus</TestMessage>
     </payload>
   </message>
 </send>
@@ -166,7 +166,7 @@ We set the global scope property to **false** so the dictionary is handled in ex
 @CitrusTest
 public void dictionaryTest() {
     send(myEndpoint)
-        .payload("<TestMessage>Hello Citrus"/TestMessage>")
+        .payload("<TestMessage>Hello Citrus</TestMessage>")
         .dictionary("specialDataDictionary");
 }
 ```
