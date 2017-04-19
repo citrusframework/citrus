@@ -19,13 +19,13 @@
     <description>Test sends and receives messages on an asynchronous JMS queue endpoint.</description>
 
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="correlationId1" value="citrus:randomNumber(10)"></variable>
-      <variable name="correlationId2" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId1" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId2" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="correlationId1" value="citrus:randomNumber(10)"/>
+      <variable name="correlationId2" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId1" value="citrus:randomNumber(10)"/>
+      <variable name="messageId2" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
     </variables>
 
     <actions>

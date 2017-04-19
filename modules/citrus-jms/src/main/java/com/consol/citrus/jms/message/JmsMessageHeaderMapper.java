@@ -16,8 +16,8 @@
 
 package com.consol.citrus.jms.message;
 
-import org.springframework.integration.jms.DefaultJmsHeaderMapper;
-import org.springframework.integration.jms.JmsHeaders;
+import org.springframework.jms.support.JmsHeaders;
+import org.springframework.jms.support.SimpleJmsHeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 
 import javax.jms.Message;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
+public class JmsMessageHeaderMapper extends SimpleJmsHeaderMapper {
 
     @Override
     public void fromHeaders(MessageHeaders headers, Message jmsMessage) {
@@ -61,6 +61,22 @@ public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
             integrationHeaders.put(JmsHeaders.REDELIVERED, headers.get(JmsMessageHeaders.REDELIVERED));
         }
 
+        if (headers.get(JmsMessageHeaders.PRIORITY) != null) {
+            integrationHeaders.put(JmsHeaders.PRIORITY, headers.get(JmsMessageHeaders.PRIORITY));
+        }
+
+        if (headers.get(JmsMessageHeaders.DESTINATION) != null) {
+            integrationHeaders.put(JmsHeaders.DESTINATION, headers.get(JmsMessageHeaders.DESTINATION));
+        }
+
+        if (headers.get(JmsMessageHeaders.DELIVERY_MODE) != null) {
+            integrationHeaders.put(JmsHeaders.DELIVERY_MODE, headers.get(JmsMessageHeaders.DELIVERY_MODE));
+        }
+
+        if (headers.get(JmsMessageHeaders.EXPIRATION) != null) {
+            integrationHeaders.put(JmsHeaders.EXPIRATION, headers.get(JmsMessageHeaders.EXPIRATION));
+        }
+
         for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
             if (!headerEntry.getKey().startsWith(JmsMessageHeaders.JMS_PREFIX)
                     && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
@@ -73,7 +89,7 @@ public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
     }
 
     @Override
-    public Map<String, Object> toHeaders(Message jmsMessage) {
+    public MessageHeaders toHeaders(Message jmsMessage) {
         Map<String, Object> internalHeaders = new HashMap<>();
         Map<String, Object> jmsHeaders = super.toHeaders(jmsMessage);
 
@@ -101,12 +117,28 @@ public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
             internalHeaders.put(JmsMessageHeaders.REDELIVERED, jmsHeaders.get(JmsHeaders.REDELIVERED));
         }
 
+        if (jmsHeaders.get(JmsHeaders.PRIORITY) != null) {
+            internalHeaders.put(JmsMessageHeaders.PRIORITY, jmsHeaders.get(JmsHeaders.PRIORITY));
+        }
+
+        if (jmsHeaders.get(JmsHeaders.DESTINATION) != null) {
+            internalHeaders.put(JmsMessageHeaders.DESTINATION, jmsHeaders.get(JmsHeaders.DESTINATION));
+        }
+
+        if (jmsHeaders.get(JmsHeaders.DELIVERY_MODE) != null) {
+            internalHeaders.put(JmsMessageHeaders.DELIVERY_MODE, jmsHeaders.get(JmsHeaders.DELIVERY_MODE));
+        }
+
+        if (jmsHeaders.get(JmsHeaders.EXPIRATION) != null) {
+            internalHeaders.put(JmsMessageHeaders.EXPIRATION, jmsHeaders.get(JmsHeaders.EXPIRATION));
+        }
+
         for (Map.Entry<String, Object> headerEntry : jmsHeaders.entrySet()) {
             if (!headerEntry.getKey().startsWith(JmsHeaders.PREFIX)) {
                 internalHeaders.put(headerEntry.getKey(), headerEntry.getValue());
             }
         }
 
-        return internalHeaders;
+        return new MessageHeaders(internalHeaders);
     }
 }

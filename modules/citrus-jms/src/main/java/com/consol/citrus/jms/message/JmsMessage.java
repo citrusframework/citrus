@@ -20,7 +20,6 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 
 import javax.jms.Destination;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -49,23 +48,6 @@ public class JmsMessage extends DefaultMessage {
      */
     public JmsMessage(Object payload) {
         super(payload);
-    }
-
-    /**
-     * Default constructor using message payload and headers.
-     * @param payload
-     * @param headers
-     */
-    public JmsMessage(Object payload, Map<String, Object> headers) {
-        super(payload, headers);
-
-        if (!headers.containsKey(JmsMessageHeaders.MESSAGE_ID)) {
-            messageId(getId());
-        }
-
-        if (!headers.containsKey(JmsMessageHeaders.TIMESTAMP)) {
-            timestamp(getTimestamp());
-        }
     }
 
     /**

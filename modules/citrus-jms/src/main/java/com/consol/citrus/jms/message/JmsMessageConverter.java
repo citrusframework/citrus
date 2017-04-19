@@ -70,7 +70,7 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
         }
 
         try {
-            Map<String, Object> headers = endpointConfiguration.getHeaderMapper().toHeaders(jmsMessage);
+            MessageHeaders headers = endpointConfiguration.getHeaderMapper().toHeaders(jmsMessage);
             Object payload;
 
             if (jmsMessage instanceof TextMessage) {
@@ -95,7 +95,6 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
 
             if (payload instanceof Message) {
                 Message nestedMessage = (Message) payload;
-
                 for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
                     if (!headerEntry.getKey().startsWith(com.consol.citrus.message.MessageHeaders.MESSAGE_PREFIX)) {
                         nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());
@@ -104,7 +103,14 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
 
                 return nestedMessage;
             } else {
-                return new JmsMessage(payload, headers);
+                JmsMessage message = new JmsMessage(payload);
+                for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
+                    if (!headerEntry.getKey().startsWith(com.consol.citrus.message.MessageHeaders.MESSAGE_PREFIX)) {
+                        message.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                    }
+                }
+
+                return message;
             }
         } catch (JMSException e) {
             throw new CitrusRuntimeException("Failed to convert jms message", e);

@@ -384,11 +384,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-jms</artifactId>
-        <version>${spring.integration.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-xml</artifactId>
         <version>${spring.integration.version}</version>
       </dependency>
@@ -705,34 +700,46 @@
 
       <!-- Test scoped dependencies -->
       <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-jms</artifactId>
+        <version>${spring.integration.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-broker</artifactId>
         <version>${activemq.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-spring</artifactId>
         <version>${activemq.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
         <version>1.4.9</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
         <version>4.5</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>2.3.4</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.4</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>

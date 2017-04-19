@@ -40,6 +40,14 @@ public final class JmsMessageHeaders {
 
     public static final String REDELIVERED = JMS_PREFIX + "redelivered";
 
+    public static final String PRIORITY = JMS_PREFIX + "priority";
+
+    public static final String DESTINATION = JMS_PREFIX + "destination";
+
+    public static final String DELIVERY_MODE = JMS_PREFIX + "deliveryMode";
+
+    public static final String EXPIRATION = JMS_PREFIX + "expiration";
+
     public static final String TYPE = JMS_PREFIX + "type";
 
     public static final String TIMESTAMP = JMS_PREFIX + "timestamp";
