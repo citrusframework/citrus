@@ -384,16 +384,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-xml</artifactId>
-        <version>${spring.integration.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-stream</artifactId>
-        <version>${spring.integration.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-http</artifactId>
         <version>${spring.integration.version}</version>
       </dependency>
@@ -702,6 +692,12 @@
       <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-jms</artifactId>
+        <version>${spring.integration.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-xml</artifactId>
         <version>${spring.integration.version}</version>
         <scope>test</scope>
       </dependency>
