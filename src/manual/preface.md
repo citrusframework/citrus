@@ -8,7 +8,7 @@ The tester is forced to simulate several interface partners in an end-to-end int
 
 The Citrus framework gives a complete test automation tool for integration testing of enterprise applications. You can test your message interfaces to other applications as client and server. Every time a code change applies all automated Citrus tests ensure the stability of interfaces and message communication.
 
-Regression testing and continuous integration is very easy as Citrus fits into your build lifecylce as usual Java unit test. You can use Citrus with JUnit or TestNG in order to integrate with your application build.
+Regression testing and continuous integration is very easy as Citrus fits into your build lifecycle as usual Java unit test. You can use Citrus with JUnit or TestNG in order to integrate with your application build.
 
 With powerful validation capabilities for various message formats like XML, CSV or JSON Citrus is designed to provide fully automated integration tests for end-to-end use cases. Citrus effectively composes complex messaging use cases with response generation, error simulation, database interaction and more.
 

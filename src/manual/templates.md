@@ -76,10 +76,10 @@ There is an open question when dealing with templates that are defined somewhere
 
 So a first approach would be to harmonize variable usage across templates and test cases, so that templates and test cases do use the same variable naming. But this approach might lead to high calibration effort. Therefore templates support parameters to solve this problem. When a template is called the calling actor is able to set some parameters. Let us discuss an example for this issue.
 
-The template "doDateCoversion" in the next sample uses the variable ${date}. The calling test case can set this variable as a parameter without actually declaring the variable in the test itself:
+The template "doDateConversion" in the next sample uses the variable ${date}. The calling test case can set this variable as a parameter without actually declaring the variable in the test itself:
 
 ```xml
-<call-template name="doDateCoversion">
+<call-template name="doDateConversion">
     <parameter name="date" value="${sampleDate}">
 </call-template>
 ```

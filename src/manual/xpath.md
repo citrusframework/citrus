@@ -125,7 +125,7 @@ public void receiveMessageTest() {
 
 In the example above we use different expression result types. First we want to make sure nor **/TestRequest/Error** element is present. This can be done with a boolean result type and **false** value. Second we want to validate the number of found elements for the expression **/TestRequest/Status[.='success']** . The XPath expression evaluates to a node list that results in its list size to be checked. And last not least we evaluate to a **node-set** result type where all values in the node list will be translated to a comma delimited string value.
 
-Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that XPath expression results are comparable with **equalTo** operations. We would like to add some more powerful validation such as **greaterThan**, **lessThan**, **hasSize** and much more. Therefore we have introduced Hamcrest validation matcher support in Citrus. Hamcrest is a very poweful matcher library that provides a fantastic set of matcher implementations. Lets see how we can add these in our test case:
+Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that XPath expression results are comparable with **equalTo** operations. We would like to add some more powerful validation such as **greaterThan**, **lessThan**, **hasSize** and much more. Therefore we have introduced Hamcrest validation matcher support in Citrus. Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations. Lets see how we can add these in our test case:
 
 **XML DSL** 
 

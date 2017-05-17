@@ -107,7 +107,7 @@ The synchronous message endpoint component is similar to the asynchronous brothe
           timeout="10000"/>
 ```
 
-The synchronous component defines a target destination which again is either a queue or topic destination. If nothing else is defined the endpoint will create temporary reply destinations on its own. When the endpoint has sent a message it waits synchronously for the response message to arrive on the reply destination. You can receive this reply message in your test case by referencing this same endooint in a receive test action. In case no reply message arrives in time a message timeout error is raised respectively.
+The synchronous component defines a target destination which again is either a queue or topic destination. If nothing else is defined the endpoint will create temporary reply destinations on its own. When the endpoint has sent a message it waits synchronously for the response message to arrive on the reply destination. You can receive this reply message in your test case by referencing this same endpoint in a receive test action. In case no reply message arrives in time a message timeout error is raised respectively.
 
 See the following example test case which references the synchronous message endpoint in its send and receive test action in order to send out a message and wait for the synchronous response.
 
@@ -215,7 +215,7 @@ The JMS specification defines a set of special message header entries that can g
 </header>
 ```
 
-As you see all JMS specific message headers use the **citrus_jms_** prefix. This prefix comes from Spring Integration message header mappers that take care of setting those headers in the JMS message header properly.
+As you see all JMS specific message headers use the **`citrus_jms_`** prefix. This prefix comes from Spring Integration message header mappers that take care of setting those headers in the JMS message header properly.
 
 Typing of message header entries may also be of interest in order to meet the JMS standards of typed message headers. For instance the following message header is of type double and is therefore transferred via JMS as a double value.
 

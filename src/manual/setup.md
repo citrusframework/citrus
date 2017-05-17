@@ -104,7 +104,7 @@ Now that we have added Citrus to our Maven project we can start writing new test
 mvn citrus:create-test
 ```
 
-Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecylce. The tests will be included into your projects integration-test phase using the Maven surefire plugin. Here is a sample surefire configuration for Citrus.
+Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecycle. The tests will be included into your projects integration-test phase using the Maven surefire plugin. Here is a sample surefire configuration for Citrus.
 
 ```xml
 <plugin>

@@ -1,6 +1,6 @@
 ### Conditional
 
-Now we deal with conditional executions of test actions. Nested actions inside a conditional container are executed only in case a booleand expression evaluates to true. Otherwise the container execution is not performed at all.
+Now we deal with conditional executions of test actions. Nested actions inside a conditional container are executed only in case a boolean expression evaluates to true. Otherwise the container execution is not performed at all.
 
 See some example to find out how it works with the conditional expression string.
 

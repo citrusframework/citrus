@@ -99,7 +99,7 @@ If you are coming from Citrus 1.1 final you may have to look at the following po
 
 See [testsuite](testsuite) for details on this configuration changes.
 
-*  **JUnit vs. TestNG:** We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your prefered one. In this manner you need to add either a JUnit dependency or a TestNG dependency to your project on your own. We do not have static dependencies in our Maven POM to neither of those two. On our side these dependencies are declared optional so you feel free to add the one you like best to your Maven POM. Just add a JUnit or TestNG dependency to your Maven project or add the respective jar file to your project if you use ANT instead.
+*  **JUnit vs. TestNG:** We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your preferred one. In this manner you need to add either a JUnit dependency or a TestNG dependency to your project on your own. We do not have static dependencies in our Maven POM to neither of those two. On our side these dependencies are declared optional so you feel free to add the one you like best to your Maven POM. Just add a JUnit or TestNG dependency to your Maven project or add the respective jar file to your project if you use ANT instead.
 
 
 

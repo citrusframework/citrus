@@ -242,7 +242,7 @@ The Citrus Cucumber extension has to handle things different when Cucumber Sprin
 cucumber.api.java.ObjectFactory=cucumber.runtime.java.spring.CitrusSpringObjectFactory
 ```
 
-Now we are ready to add **@Autowired** Spring bean dependeny injection to step definition classes:
+Now we are ready to add **@Autowired** Spring bean dependency injection to step definition classes:
 
 ```java
 @ContextConfiguration(classes = CitrusSpringConfig.class)
@@ -285,7 +285,7 @@ As you can see we used Spring autowiring mechanism for the **echoEndpoint** fiel
 
 Of course you can also use a custom Java Spring configuration class here. But be sure to always import the Citrus Spring Java configuration classes, too. Otherwise you will not be able to execute the Citrus integration test capabilities.
 
-As usual we are able to use **@CitrusResource** annotated **TestDesigner** fields for building the Citrus integration test logic. With this extension you can use the full Spring testing power in your tests in particular dependency injection and also transaction management for data persistance tests.
+As usual we are able to use **@CitrusResource** annotated **TestDesigner** fields for building the Citrus integration test logic. With this extension you can use the full Spring testing power in your tests in particular dependency injection and also transaction management for data persistence tests.
 
 ### Citrus step definitions
 
@@ -510,7 +510,7 @@ Then <[endpoint-name]> should receive message <[message-name]>
 
 The steps reference a message by its name **echoRequest** and **echoResponse** .
 
-As you can see the named messages are used to define complete messages with payload and header information. Of course the named messages can be referenced in many scenarios and steps. Also with usage of test variables in payload and header you can dynmaically adjust those messages in each step.
+As you can see the named messages are used to define complete messages with payload and header information. Of course the named messages can be referenced in many scenarios and steps. Also with usage of test variables in payload and header you can dynamically adjust those messages in each step.
 
 ### Message creator steps
 
@@ -566,7 +566,7 @@ public class EchoMessageCreator {
 }
 ```
 
-As you can see the message creator is a POJO Java class that defines one or more methods that are annotated with **@MessageCreator** annotation. The annotation requires a message name. This is how Citrus will correlate message names in feature stories to message creator methods. The message returned is the used for the send and receive operations in the test. The message creator is reusable accross multiple feature stories and scenarios. In addition to that the creator is able to construct messages in a more powerful way. For instance the message payload could be loaded from file system resources.
+As you can see the message creator is a POJO Java class that defines one or more methods that are annotated with **@MessageCreator** annotation. The annotation requires a message name. This is how Citrus will correlate message names in feature stories to message creator methods. The message returned is the used for the send and receive operations in the test. The message creator is reusable across multiple feature stories and scenarios. In addition to that the creator is able to construct messages in a more powerful way. For instance the message payload could be loaded from file system resources.
 
 ### Echo steps
 
