@@ -713,7 +713,9 @@ Choose one of Spring's reference implementations or some other implementation as
 ```
 
 **Important**
-Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the **ws:assert** action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.```xml
+Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the **ws:assert** action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.
+
+```xml
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
     xmlns:spring="http://www.springframework.org/schema/beans"
     xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
