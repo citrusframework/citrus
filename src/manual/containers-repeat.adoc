@@ -3,7 +3,7 @@
 
 Quite similar to the previously described iterate container this repeating container will execute its actions in a loop according to an ending condition. The condition describes a Boolean expression using the operators as described in the previous chapter.
 
-NOTE: The loop continues its work until the provided condition evaluates to *true* . It is very important to notice that the repeat loop will execute the actions before evaluating the condition. This means the actions get executed 1-n times.
+NOTE: The loop continues its work until the provided condition evaluates to *true* . It is very important to notice that the repeat loop will execute the actions before evaluating the condition. This means the actions get executed `n-1` times.
 
 .XML DSL
 [source,xml]
