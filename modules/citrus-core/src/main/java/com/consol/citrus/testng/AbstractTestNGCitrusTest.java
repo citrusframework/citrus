@@ -78,14 +78,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             }
 
             super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
-
-            if (testResult.getThrowable() != null) {
-                if (testResult.getThrowable() instanceof RuntimeException) {
-                    throw (RuntimeException) testResult.getThrowable();
-                } else {
-                    throw new CitrusRuntimeException(testResult.getThrowable());
-                }
-            }
         } else {
             super.run(callBack, testResult);
         }
@@ -105,7 +97,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         TestContext ctx = prepareTestContext(citrus.createTestContext());
         TestCase testCase = testLoader.load();
-        testCase.setGroups(testResult.getMethod().getGroups());
 
         resolveParameter(testResult, method, testCase, ctx, invocationCount);
 
@@ -274,7 +265,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     @AfterSuite(alwaysRun = true)
     public void afterSuite(ITestContext testContext) {
         if (citrus != null) {
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+            citrus.afterSuite(testContext.getSuite().getName());
         }
     }
 

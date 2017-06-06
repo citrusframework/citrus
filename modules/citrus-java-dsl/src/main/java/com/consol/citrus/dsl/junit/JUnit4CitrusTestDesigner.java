@@ -128,6 +128,22 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    public void requirementID(String requirementID) {
+        testDesigner.requirementID(requirementID);
+    }
+
+    @Override
+    public void project(String project) {
+        testDesigner.project(project);
+    }
+
+    @Override
+    public void scenario(String scenario) {
+        testDesigner.scenario(scenario);
+    }
+
+
+    @Override
     public void author(String author) {
         testDesigner.author(author);
     }

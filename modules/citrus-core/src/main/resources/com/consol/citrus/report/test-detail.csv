@@ -1,0 +1,1 @@
+@test.name@,@test.description@,@test.step@,@test.data@,@test.expectedresult@,@test.externalid@,@test.timestamp@,@test.component@,@test.priority@,@test.asignee@,@test.label@,@test.requirementid@,@test.scenario@,@test.actualresult@,@test.failurereport@

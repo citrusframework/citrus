@@ -1,0 +1,31 @@
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:custom="http://www.citrusframework.org/samples/my-testcase-info"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/samples/my-testcase-info
+              http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd">
+
+    <testcase name="MyFirstTest">
+        <meta-info>
+            <author>Christoph</author>
+            <creationdate>2010-01-18</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph</last-updated-by>
+            <last-updated-on>2010-01-18T15:00:00</last-updated-on>
+            <custom:requirement>REQ10001</custom:requirement>
+            <custom:pre-condition>Existing user, sufficient rights</custom:pre-condition>
+            <custom:result>Password reset in database</custom:result>
+            <custom:classification>PasswordChange</custom:classification>
+        </meta-info>
+        <actions>
+            <echo>
+                <message>This is so weird</message>
+            </echo>
+        </actions>
+
+    </testcase>
+</spring:beans>

@@ -26,7 +26,10 @@ import com.consol.citrus.report.*;
 import com.consol.citrus.validation.MessageValidatorConfig;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * @author Christoph Deppisch
@@ -68,6 +71,16 @@ public class CitrusSpringConfig {
     @Bean(name = "htmlReporter")
     public HtmlReporter getHtmlReporter() {
         return new HtmlReporter();
+    }
+
+    @Bean(name = "csvReporter")
+    public CSVReporter getCSVReporter() {
+        return new CSVReporter();
+    }
+
+    @Bean(name = "jiraListener")
+    public JIRAConsumer getJIRAConsumer() {
+        return new JIRAConsumer();
     }
 
     @Bean(name = "testListeners")
