@@ -64,7 +64,7 @@
     <dependency>
       <groupId>com.consol.citrus.model</groupId>
       <artifactId>citrus-model-core</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
     </dependency>
 
     <dependency>

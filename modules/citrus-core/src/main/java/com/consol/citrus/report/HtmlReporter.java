@@ -68,7 +68,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
     /** Default logo image resource */
-    @Value("${citrus.html.report.logo:classpath:com/consol/citrus/report/iworks_logo.png}")
+    @Value("${citrus.html.report.logo:classpath:com/consol/citrus/report/citrus_logo.png}")
     private Resource logo;
 
     /** Enables/disables report generation */

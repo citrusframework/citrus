@@ -10,6 +10,10 @@
   <description>Citrus Test Framework</description>
   <url>http://www.citrusframework.org</url>
   <inceptionYear>2008</inceptionYear>
+  
+  <properties>
+		<citrus.version>2.7.1</citrus.version>
+  </properties>
 
   <licenses>
     <license>

@@ -23,7 +23,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jms</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ws</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-http</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-docker</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-kubernetes</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-selenium</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-camel</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -79,7 +79,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jmx</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -87,7 +87,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-rmi</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -95,7 +95,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-mail</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -103,7 +103,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ftp</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -111,7 +111,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ssh</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -119,7 +119,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-vertx</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -127,7 +127,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-websocket</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -135,7 +135,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-zookeeper</artifactId>
-      <version>${CitrusVersion}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
