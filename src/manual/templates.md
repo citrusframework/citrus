@@ -127,7 +127,7 @@ When a template works on variable values and parameters changes to these variabl
 In the listing above a template **print** is called several times in a parallel container. The parameter values will be handled in a global context, so it is quite likely to happen that the template instances influence each other during execution. We might get such print messages:
 
 ```xml
-2. Hello Europe
+1. Hello Europe
 2. Hello Africa
 3. Hello Africa
 ```
