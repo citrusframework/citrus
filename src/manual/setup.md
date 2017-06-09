@@ -17,10 +17,11 @@ As Maven handles all project dependencies automatically you do not need to downl
 If you start from scratch or in case you would like to have Citrus operating in a separate Maven module you can use the Citrus Maven archetype to create a new Maven project. The archetype will setup a basic Citrus project structure with basic settings and files.
 
 ```xml
-mvn archetype:generate -DarchetypeCatalog=http://citrusframework.org
+mvn archetype:generate -Dfilter=com.consol.citrus.mvn:citrus
         
-Choose archetype:
-1: http://citrusframework.org -> citrus-archetype (Basic archetype for Citrus integration test project)
+1: remote -> com.consol.citrus.mvn:citrus-quickstart (Citrus quickstart project)
+2: remote -> com.consol.citrus.mvn:citrus-quickstart-jms (Citrus quickstart project with JMS consumer and producer)
+3: remote -> com.consol.citrus.mvn:citrus-quickstart-soap (Citrus quickstart project with SOAP client and producer)
 Choose a number: 1 
 
 Define value for groupId: com.consol.citrus.samples
@@ -28,10 +29,12 @@ Define value for artifactId: citrus-sample
 Define value for version: 1.0-SNAPSHOT
 Define value for package: com.consol.citrus.samples
 ```
+In the sample above we used the Citrus archetype available in Maven central repository. 
+As the list of default archetypes available in Maven central is very long, it has been filtered for official Citrus archetypes.
 
-In the sample above we used the Citrus archetype catalog located on the Citrus homepage. Citrus archetypes are also available in Maven central repository. So can also just use **"mvn archetype:generate"** . As the list of default archetypes available in Maven central is very long you might want to filter the list with **"citrus"** and you will get just a few possibilities to choose from.
-
-We load the archetype information from "http://citrusframework.org" and choose the Citrus basic archetype. Now you have to define several values for your project: the groupId, the artifactId, the package and the project version. After that we are done! Maven created a Citrus project structure for us which is ready for testing. You should see the following basic project folder structure.
+After choosing the Citrus quickstart archetype you have to define several values for your project: the groupId, the artifactId, 
+the package and the project version. After that we are done! Maven created a Citrus project structure for us which is 
+ready for testing. You should see the following basic project folder structure.
 
 ```xml
 citrus-sample
