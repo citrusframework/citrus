@@ -237,8 +237,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
     @Test
     public void testReplaceVariablesInMap() {
         context.getVariables().put("test", "123");
-        context.getVariables().put("value", "test");
-        
+
         Map<String, Object> testMap = new HashMap<>();
         testMap.put("plainText", "Hello TestFramework!");
         testMap.put("value", "${test}");
@@ -255,14 +254,14 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(testMap.get("value"), "test");
         
         testMap.clear();
-        testMap.put("${value}", "test");
+        testMap.put("${test}", "value");
         
         testMap = context.resolveDynamicValuesInMap(testMap);
 
         // Should be null due to variable substitution
-        Assert.assertEquals(testMap.get("${value}"), null);
+        Assert.assertEquals(testMap.get("${test}"), null);
         // Should return "test" after variable substitution
-        Assert.assertEquals(testMap.get("test"), "test");
+        Assert.assertEquals(testMap.get("123"), "value");
     }
     
     @Test
