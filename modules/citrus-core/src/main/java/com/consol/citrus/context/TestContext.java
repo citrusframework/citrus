@@ -241,7 +241,7 @@ public class TestContext {
         Map<String, T> target = new HashMap<>(map.size());
 
         for (Entry<String, T> entry : map.entrySet()) {
-            String key = entry.getKey();
+            String key = replaceDynamicContentInString(entry.getKey());
             T value = entry.getValue();
 
             if (value instanceof String) {
