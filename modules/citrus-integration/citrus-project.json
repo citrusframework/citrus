@@ -1,12 +1,12 @@
 {
-  "projectHome" : "/Users/christoph/Projekte/Citrus/citrus/modules/citrus-integration",
   "name" : "citrus-integration",
   "description" : "",
   "version" : "2.7.2-SNAPSHOT",
   "settings" : {
     "basePackage" : "com.consol.citrus",
     "citrusVersion" : "2.7.2-SNAPSHOT",
-    "springApplicationContext" : "src/it/resources/citrus-context.xml",
+    "springApplicationContext" : "classpath*:citrus-context.xml",
+    "springJavaConfig" : "com.consol.citrus.CitrusEndpointConfig",
     "javaSrcDirectory" : "src/it/java/",
     "xmlSrcDirectory" : "src/it/resources/",
     "javaFilePattern" : "/**/*Test.java,/**/*IT.java",
@@ -19,9 +19,10 @@
       "type" : "maven",
       "properties" : [ ],
       "testPlugin" : "maven-failsafe",
-      "command" : null,
+      "command" : "install",
       "profiles" : null,
-      "useClean" : false
+      "clean" : false,
+      "compile" : true
     }
   }
 }

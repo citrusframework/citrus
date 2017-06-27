@@ -148,7 +148,7 @@
   
   <mailingLists>
     <mailingList>
-      <name>Project Announcments</name>
+      <name>Project Announcements</name>
     </mailingList>
     <mailingList>
       <name>Project Development List</name>
@@ -184,6 +184,9 @@
     <cucumber.version>1.2.5</cucumber.version>
     <zookeeper.version>3.4.8</zookeeper.version>
     <javadoc.options>-Xdoclint:none</javadoc.options>
+
+    <node.version>v7.7.4</node.version>
+    <npm.version>4.4.3</npm.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
@@ -1291,7 +1294,7 @@
           <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
-            <version>1.0</version>
+            <version>1.3</version>
             <inherited>false</inherited>
             <configuration>
               <workingDirectory>src</workingDirectory>
@@ -1304,8 +1307,8 @@
                   <goal>install-node-and-npm</goal>
                 </goals>
                 <configuration>
-                  <nodeVersion>v5.9.1</nodeVersion>
-                  <npmVersion>3.8.5</npmVersion>
+                  <nodeVersion>${node.version}</nodeVersion>
+                  <npmVersion>${npm.version}</npmVersion>
                 </configuration>
               </execution>
               <execution>
@@ -1986,7 +1989,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.3</version>
+            <version>2.10.4</version>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>

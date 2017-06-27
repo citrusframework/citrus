@@ -54,6 +54,8 @@ public class BooleanExpressionParserTest {
         Assert.assertFalse(BooleanExpressionParser.evaluate("false"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("true = false"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("false = true"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("( false = false ) and ( true = true )"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("( false = false ) and ( true = false )"));
     }
     
     @Test

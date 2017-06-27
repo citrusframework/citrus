@@ -108,11 +108,13 @@ or directly to http://github.com/christophd/citrus/issues
 Team
 ---------
 
+```
 ConSol Software GmbH
 Christoph Deppisch
 christoph.deppisch@consol.de
 
 http://www.citrusframework.org
+```
 
 Information
 ---------

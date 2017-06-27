@@ -60,7 +60,7 @@ public final class Citrus {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Citrus.class);
 
-    /** Load Citrus version */
+    /* Load Citrus version */
     static {
         try (final InputStream in = new ClassPathResource("META-INF/citrus.version").getInputStream()) {
             Properties versionProperties = new Properties();
@@ -75,7 +75,7 @@ public final class Citrus {
     /** Optional application property file */
     private static final String APPLICATION_PROPERTY_FILE = System.getProperty("citrus.application.config", "citrus-application.properties");
 
-    /** Load application properties */
+    /* Load application properties */
     static {
         try (final InputStream in = new ClassPathResource(APPLICATION_PROPERTY_FILE).getInputStream()) {
             Properties applicationProperties = new Properties();

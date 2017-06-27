@@ -20,7 +20,7 @@ import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.github.dockerjava.core.*;
-import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
+import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
 
 /**
  * @author Christoph Deppisch
@@ -43,7 +43,7 @@ public class DockerEndpointConfiguration extends AbstractPollableEndpointConfigu
      */
     private com.github.dockerjava.api.DockerClient createDockerClient() {
         return DockerClientImpl.getInstance(getDockerClientConfig())
-                .withDockerCmdExecFactory(new DockerCmdExecFactoryImpl());
+                .withDockerCmdExecFactory(new JerseyDockerCmdExecFactory());
     }
 
     /**
