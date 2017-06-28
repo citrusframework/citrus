@@ -33,7 +33,10 @@ import org.springframework.util.StringUtils;
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
+    public static final String IGNORE_NEWLINE_TYPE_PROPERTY = "citrus.plaintext.validation.ignore.newline.type";
     public static final String IGNORE_WHITESPACE_PROPERTY = "citrus.plaintext.validation.ignore.whitespace";
+
+    private boolean ignoreNewLineType = Boolean.valueOf(System.getProperty(IGNORE_NEWLINE_TYPE_PROPERTY, "false"));
     private boolean ignoreWhitespace = Boolean.valueOf(System.getProperty(IGNORE_WHITESPACE_PROPERTY, "false"));
 
     @Override
@@ -95,12 +98,32 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     }
 
     /**
-     * Normalize whitespace characters if appropriate.
+     * Normalize whitespace characters if appropriate. Based on system property settings this method normalizes
+     * new line characters exclusively or filters all whitespaces such as double whitespaces and new lines.
+     *
      * @param payload
      * @return
      */
     private String normalizeWhitespace(String payload) {
         if (ignoreWhitespace) {
+            StringBuilder result = new StringBuilder();
+            boolean lastWasSpace = true;
+            for (int i = 0; i < payload.length(); i++) {
+                char c = payload.charAt(i);
+                if (Character.isWhitespace(c)) {
+                    if (!lastWasSpace) {
+                        result.append(' ');
+                    }
+                    lastWasSpace = true;
+                } else {
+                    result.append(c);
+                    lastWasSpace = false;
+                }
+            }
+            return result.toString().trim();
+        }
+
+        if (ignoreNewLineType) {
             return payload.replaceAll("\\r(\\n)?", "\n");
         }
 
@@ -112,11 +135,39 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
     }
 
+    /**
+     * Gets the ignoreWhitespace.
+     *
+     * @return
+     */
+    public boolean isIgnoreWhitespace() {
+        return ignoreWhitespace;
+    }
+
+    /**
+     * Sets the ignoreWhitespace.
+     *
+     * @param ignoreWhitespace
+     */
     public void setIgnoreWhitespace(boolean ignoreWhitespace) {
         this.ignoreWhitespace = ignoreWhitespace;
     }
 
-    public boolean isIgnoreWhitespace() {
-        return ignoreWhitespace;
+    /**
+     * Gets the ignoreNewLineType.
+     *
+     * @return
+     */
+    public boolean isIgnoreNewLineType() {
+        return ignoreNewLineType;
+    }
+
+    /**
+     * Sets the ignoreNewLineType.
+     *
+     * @param ignoreNewLineType
+     */
+    public void setIgnoreNewLineType(boolean ignoreNewLineType) {
+        this.ignoreNewLineType = ignoreNewLineType;
     }
 }

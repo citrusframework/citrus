@@ -32,19 +32,28 @@ By the way sending plain text messages in Citrus is also very easy. Just use the
 
 Of course test variables are supported in the plain text payloads. The variables are replace by the referenced values before sending or receiving the message.
 
-Plaintext message payloads may only differ in whitespaces e.g. new line characters. By default the message validation fails even if only whitespace
+Plaintext message payloads may only differ in system-dependent line separator characters (*CR*, *LF*, *CRLF*). By default the plain text message validation fails because of that differences even if only whitespace
 characters are different.
 
-You can disable this default behavior and ignore whitespaces characters like new lines with following system property:
+You can disable this default validation behavior and ignore new line types with following system property:
+
+```
+citrus.plaintext.validation.ignore.newline.type=true
+```
+
+In case you need to ignore all whitespaces during plain text validation such as multiple new line characters or tabs you need to set this system property:
 
 ```
 citrus.plaintext.validation.ignore.whitespace=true
 ```
 
-Also you could set the property directly on the mesage validator bean:
+This property will not only ignore new line types but also normalize the whitespaces. As a result all empty lines, tabs and double whitespace characters are filtered before comparison.
+
+Of course you can also set the properties directly on the plain text message validator bean:
 
 ```xml
 <bean id="defaultPlaintextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator">
+  <property name="ignoreNewLineType" value="true"/>
   <property name="ignoreWhitespace" value="true"/>
 </bean>
 ```

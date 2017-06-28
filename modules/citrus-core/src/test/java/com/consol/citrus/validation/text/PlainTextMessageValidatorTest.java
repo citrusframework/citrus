@@ -23,6 +23,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -30,7 +31,12 @@ import org.testng.annotations.Test;
  */
 public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
-    private PlainTextMessageValidator validator = new PlainTextMessageValidator();
+    private PlainTextMessageValidator validator;
+
+    @BeforeMethod
+    public void setup() {
+        this.validator = new PlainTextMessageValidator();
+    }
 
     @Test
     public void testPlainTextValidation() {
@@ -109,7 +115,24 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testPlainTextValidationNormalizeWhitespaceCRLF() {
+    public void testPlainTextValidationNormalizeWhitespaces() {
+        Message receivedMessage = new DefaultMessage(" Hello\r\n\n  \t World!\t\t\n\n    ");
+        Message controlMessage = new DefaultMessage("Hello\n World!\n");
+
+        ValidationContext validationContext = new DefaultValidationContext();
+        try {
+            validator.setIgnoreNewLineType(true);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+            Assert.fail("Missing exception due to non matching new line whitespaces");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("only whitespaces!"));
+            validator.setIgnoreWhitespace(true);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        }
+    }
+
+    @Test
+    public void testPlainTextValidationNormalizeNewLineTypeCRLF() {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\r\nWorld!\r\n");
 
@@ -119,14 +142,13 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
             Assert.fail("Missing exception due to non matching new line whitespaces");
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("only whitespaces!"));
-            validator.setIgnoreWhitespace(true);
+            validator.setIgnoreNewLineType(true);
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-            validator.setIgnoreWhitespace(false);
         }
     }
 
     @Test
-    public void testPlainTextValidationNormalizeWhitespaceCR() {
+    public void testPlainTextValidationNormalizeNewLineTypeCR() {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\rWorld!\r");
 
@@ -136,9 +158,8 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
             Assert.fail("Missing exception due to non matching new line whitespaces");
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("only whitespaces!"));
-            validator.setIgnoreWhitespace(true);
+            validator.setIgnoreNewLineType(true);
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-            validator.setIgnoreWhitespace(false);
         }
     }
 }
