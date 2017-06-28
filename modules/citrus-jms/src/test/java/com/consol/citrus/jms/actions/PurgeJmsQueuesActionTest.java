@@ -142,7 +142,66 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         purgeQueuesAction.execute(context);
         verify(connection).start();
     }
-	@Test
+
+    @Test
+    public void testPurgeQueueNameVariable() throws JMSException {
+        PurgeJmsQueuesAction purgeQueuesAction = new PurgeJmsQueuesAction();
+        purgeQueuesAction.setConnectionFactory(connectionFactory);
+
+        context.getVariables().put("variableQueueName", "queueName");
+        context.getVariables().put("secondQueueName", "secondQueue");
+
+        List<String> queueNames = new ArrayList<String>();
+        queueNames.add("${variableQueueName}");
+        queueNames.add("${secondQueueName}");
+        purgeQueuesAction.setQueueNames(queueNames);
+
+        reset(connectionFactory, connection, session, messageConsumer);
+
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(session.createQueue("queueName")).thenReturn(queue);
+        when(session.createQueue("secondQueue")).thenReturn(queue);
+
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(100L)).thenReturn(null);
+
+        purgeQueuesAction.execute(context);
+        verify(connection).start();
+    }
+
+    @Test
+    public void testPurgeWithVariableQueueNamesConsumeMessages() throws JMSException {
+        PurgeJmsQueuesAction purgeQueuesAction = new PurgeJmsQueuesAction();
+        purgeQueuesAction.setConnectionFactory(connectionFactory);
+
+        context.getVariables().put("variableQueueName", "queueName");
+
+        List<String> queueNames = new ArrayList<String>();
+        queueNames.add("${variableQueueName}");
+        purgeQueuesAction.setQueueNames(queueNames);
+
+        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        TextMessage jmsRequest = new TextMessageImpl("<TestRequest>Hello World!</TestRequest>", requestHeaders);
+
+        reset(connectionFactory, connection, session, messageConsumer);
+
+        when(connectionFactory.createConnection()).thenReturn(connection);
+
+        when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
+
+        when(session.createQueue("queueName")).thenReturn(queue);
+
+        when(session.createConsumer(queue)).thenReturn(messageConsumer);
+        when(messageConsumer.receive(100L)).thenReturn(jmsRequest).thenReturn(null);
+
+        purgeQueuesAction.execute(context);
+        verify(connection).start();
+    }
+
+    @Test
     public void testPurgeWithCustomTimeout() throws JMSException {
         PurgeJmsQueuesAction purgeQueuesAction = new PurgeJmsQueuesAction();
         purgeQueuesAction.setConnectionFactory(connectionFactory);

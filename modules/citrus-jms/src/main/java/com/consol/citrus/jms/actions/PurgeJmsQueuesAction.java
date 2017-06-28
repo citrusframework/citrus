@@ -84,7 +84,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
                 purgeQueue(queue, session);
             }
             for (String queueName : queueNames) {
-                purgeQueue(queueName, session);
+                purgeQueue(context.replaceDynamicContentInString(queueName), session);
             }
 
         } catch (JMSException e) {
