@@ -27,7 +27,8 @@
                   "type" : "read",
                   "mbean" : "java.lang:type=Memory",
                   "attribute" : "HeapMemoryUsage",
-                  "path" : "used"
+                  "path" : "used",
+                  "lastModified": null
                 }
               </http:data>
             </http:body>
@@ -43,6 +44,7 @@
                     <http:json-path expression="$.mbean" value="java.lang:type=Memory"/>
                     <http:json-path expression="$..attribute" value="HeapMemoryUsage"/>
                     <http:json-path expression="$.path" value="@equalsIgnoreCase('USED')@"/>
+                    <http:json-path expression="$.lastModified" value="@assertThat(nullValue())@"/>
                 </http:validate>
               </http:body>
             </http:POST>
@@ -67,7 +69,8 @@
                         "attribute" : "HeapMemoryUsage",
                         "type" : "read"
                       },
-                  "value" : "512"
+                  "value" : "512",
+                  "lastModified": null
                 }
               </http:data>
             </http:body>
@@ -89,7 +92,8 @@
                     "attribute" : "HeapMemoryUsage",
                     "type" : "read"
                   },
-              "value" : "@isNumber()@"
+              "value" : "@isNumber()@",
+              "lastModified": "@assertThat(nullValue())@"
             }
           </http:data>
           <http:validate>
@@ -97,6 +101,7 @@
               <http:json-path expression="$.request.path" value="@matches('u*s*e*d*')@"/>
               <http:json-path expression="$..attribute" value="HeapMemoryUsage"/>
               <http:json-path expression="$.value" value="@isNumber()@"/>
+              <http:json-path expression="$.lastModified" value=""/>
           </http:validate>
         </http:body>
       </http:receive-response>

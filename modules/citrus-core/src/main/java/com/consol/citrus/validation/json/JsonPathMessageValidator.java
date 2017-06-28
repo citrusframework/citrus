@@ -52,7 +52,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
 
         log.debug("Start JSONPath element validation ...");
 
-        String jsonPathExpression = null;
+        String jsonPathExpression;
         try {
             JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
             Object receivedJson = parser.parse(receivedMessage.getPayload(String.class));
@@ -69,8 +69,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                     }
                 }
 
-                Object jsonPathResult = null;
-                PathNotFoundException pathNotFoundException = null;
+                Object jsonPathResult;
                 try {
                     if (JsonPath.isPathDefinite(jsonPathExpression)) {
                         jsonPathResult = readerContext.read(jsonPathExpression);
@@ -83,15 +82,11 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                         }
                     }
                 } catch (PathNotFoundException e) {
-                    pathNotFoundException = e;
+                    throw new ValidationException("Validation failed:" + e);
                 }
 
                 if (StringUtils.hasText(jsonPathFunction)) {
                     jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
-                }
-
-                if (jsonPathResult == null) {
-                    throw new ValidationException(String.format("Failed to validate JSON element for path: %s", jsonPathExpression), pathNotFoundException);
                 }
 
                 Object expectedValue = entry.getValue();

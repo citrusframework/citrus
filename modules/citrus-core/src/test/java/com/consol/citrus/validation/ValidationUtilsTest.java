@@ -18,6 +18,7 @@ package com.consol.citrus.validation;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.hamcrest.Matchers;
 import org.springframework.beans.TypeMismatchException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -62,8 +63,12 @@ public class ValidationUtilsTest extends AbstractTestNGUnitTest {
             new Object[] {"[a,b,c,d]", Arrays.asList("a", "b", "c", "d"), "listCompare"},
             new Object[] {"[[a],[b],[c],[d]]", Arrays.asList("[a]", "[b]", "[c]", "[d]"), "listCompare"},
             new Object[] {"{a=b}", Collections.singletonMap("a", "b"), "mapCompare"},
-            new Object[] {"foo", "foo".getBytes(), "bytesCompare"}
-
+            new Object[] {"foo", "foo".getBytes(), "bytesCompare"},
+            new Object[] {null, null, "nullCompare"},
+            new Object[] {null, "", "nullEmptyStringCompare"},
+            new Object[] {null, "@assertThat(nullValue())@", "nullValidationMatcherCompare"},
+            new Object[] {null, Matchers.nullValue(), "nullHamcrestMatcherCompare"},
+            new Object[] {"foo", Matchers.allOf(Matchers.not(Matchers.isEmptyString()), Matchers.equalTo("foo")), "hamcrestMatcherCompare"}
         };
     }
 
@@ -85,7 +90,12 @@ public class ValidationUtilsTest extends AbstractTestNGUnitTest {
                 new Object[] {"[[a],[b],[c],[d]]", Arrays.asList("[a]", "[b]", "[c]", "[f]"), "listCompare"},
                 new Object[] {"abcd", Arrays.asList("a", "b", "c", "f"), "listCompare"},
                 new Object[] {"{a=b}", Collections.singletonMap("a", "c"), "mapCompare"},
-                new Object[] {"foo", "bar".getBytes(), "bytesCompare"}
+                new Object[] {"foo", "bar".getBytes(), "bytesCompare"},
+                new Object[] {null, 5, "nullCompare"},
+                new Object[] {"foo", null, "nullCompare"},
+                new Object[] {null, "bar", "nullCompare"},
+                new Object[] {null, "@assertThat(notNullValue())@", "nullValidationMatcherCompare"},
+                new Object[] {"foo", Matchers.allOf(Matchers.isEmptyString(), Matchers.equalTo("bar")), "hamcrestMatcherCompare"}
         };
     }
 

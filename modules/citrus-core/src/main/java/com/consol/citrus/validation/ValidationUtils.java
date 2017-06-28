@@ -112,12 +112,30 @@ public abstract class ValidationUtils {
                                         "Values not equal for element '" + pathExpression + "'", expectedValueString, actualValueString));
                     }
                 }
-            } else {
-                Assert.isTrue(expectedValue == null || String.valueOf(expectedValue).length() == 0,
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                                "Values not equal for element '" + pathExpression + "'", expectedValue, null));
+            } else if (expectedValue != null) {
+                if (expectedValue instanceof Matcher) {
+                    Assert.isTrue(((Matcher) expectedValue).matches(null),
+                            ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not matching for element '" + pathExpression + "'", expectedValue, null));
+                } else if (expectedValue instanceof String) {
+                    String expectedValueString = expectedValue.toString();
+
+                    if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValueString)) {
+                        ValidationMatcherUtils.resolveValidationMatcher(pathExpression,
+                                null,
+                                expectedValueString,
+                                context);
+                    } else {
+                        Assert.isTrue(!StringUtils.hasText(expectedValueString),
+                                ValidationUtils.buildValueMismatchErrorMessage(
+                                        "Values not equal for element '" + pathExpression + "'", expectedValueString, null));
+                    }
+                } else {
+                    throw new ValidationException("Validation failed: " + ValidationUtils.buildValueMismatchErrorMessage(
+                            "Values not equal for element '" + pathExpression + "'", expectedValue, null));
+                }
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | AssertionError e) {
             throw new ValidationException("Validation failed:", e);
         }
     }
