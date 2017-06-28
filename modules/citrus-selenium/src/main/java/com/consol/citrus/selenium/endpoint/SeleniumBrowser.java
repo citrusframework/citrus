@@ -99,7 +99,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
         if (!isStarted()) {
             if (getEndpointConfiguration().getWebDriver() != null) {
                 webDriver = getEndpointConfiguration().getWebDriver();
-            } if (StringUtils.hasText(getEndpointConfiguration().getRemoteServerUrl())) {
+            } else if (StringUtils.hasText(getEndpointConfiguration().getRemoteServerUrl())) {
                 webDriver = createRemoteWebDriver(getEndpointConfiguration().getBrowserType(), getEndpointConfiguration().getRemoteServerUrl());
             } else {
                 webDriver = createLocalWebDriver(getEndpointConfiguration().getBrowserType());
