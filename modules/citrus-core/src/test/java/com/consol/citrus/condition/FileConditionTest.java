@@ -16,11 +16,8 @@
 
 package com.consol.citrus.condition;
 
-import com.consol.citrus.context.TestContext;
-import org.mockito.Mockito;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.*;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -29,30 +26,32 @@ import static org.testng.Assert.assertTrue;
  * @author Martin Maher
  * @since 2.4
  */
-public class FileConditionTest {
-    private TestContext contextMock = Mockito.mock(TestContext.class);
+public class FileConditionTest extends AbstractTestNGUnitTest {
+
+    private FileCondition condition = new FileCondition();
 
     @Test
-    public void isSatisfiedShouldSucceedWithValidFilename() throws Exception {
-        FileCondition testling = new FileCondition();
+    public void testValidFilename() throws Exception {
         String filePath = "classpath:citrus.variables";
-        testling.setFilePath(filePath);
+        condition.setFilePath(filePath);
 
-        reset(contextMock);
-        when(contextMock.replaceDynamicContentInString(filePath)).thenReturn(filePath);
-        assertTrue(testling.isSatisfied(contextMock));
-
+        assertTrue(condition.isSatisfied(context));
     }
 
     @Test
-    public void isSatisfiedShouldFailDueToInvalidFilename() throws Exception {
-        FileCondition testling = new FileCondition();
+    public void testValidFilenameWithVariables() throws Exception {
+        context.setVariable("file-name", "citrus.variables");
+        String filePath = "classpath:${file-name}";
+        condition.setFilePath(filePath);
+
+        assertTrue(condition.isSatisfied(context));
+    }
+
+    @Test
+    public void testInvalidFilename() throws Exception {
         String filePath = "SomeMissingFile.xyz";
-        testling.setFilePath(filePath);
+        condition.setFilePath(filePath);
 
-        reset(contextMock);
-        when(contextMock.replaceDynamicContentInString(filePath)).thenReturn(filePath);
-        assertFalse(testling.isSatisfied(contextMock));
-
+        assertFalse(condition.isSatisfied(context));
     }
 }

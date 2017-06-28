@@ -85,7 +85,7 @@ public class HttpCondition extends AbstractCondition {
         try {
             httpURLConnection = openConnection(url);
             httpURLConnection.setConnectTimeout(getTimeout(context));
-            httpURLConnection.setRequestMethod(method);
+            httpURLConnection.setRequestMethod(context.resolveDynamicValue(method));
 
             responseCode = httpURLConnection.getResponseCode();
         } catch (IOException e) {
@@ -116,7 +116,7 @@ public class HttpCondition extends AbstractCondition {
      */
     private URL getUrl(TestContext context) {
         try {
-            return new URL(context.resolveDynamicValue(this.url));
+            return new URL(context.replaceDynamicContentInString(this.url));
         } catch (MalformedURLException e) {
             throw new CitrusRuntimeException("Invalid request url", e);
         }

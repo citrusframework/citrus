@@ -51,7 +51,7 @@ public class FileCondition extends AbstractCondition {
         }
 
         try {
-            return FileUtils.getFileResource(filePath, context).getFile().isFile();
+            return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).getFile().isFile();
         } catch (IOException e) {
             log.warn(String.format("Failed to access file resource '%s'", e.getMessage()));
             return false;
