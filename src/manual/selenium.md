@@ -549,7 +549,7 @@ Navigation is always done on the active browser window. You can manage the opene
 
 ### Window actions
 
-Selenium is able to manage multiple windows. So you can open, close and swich active windows in a Citrus test. 
+Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test. 
 
 **XML DSL** 
 

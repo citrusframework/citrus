@@ -11,7 +11,7 @@ You will see that JSONPath is a very powerful technology when it comes to find o
 
 ### Manipulate with JSONPath
 
-First thing we want to do with JSONPath is to manipulate a message content before it is actually sent out. This is very useful when working with message file resources that are reused accross multiple test cases. Each test case can manipulate the message content individually with JSONPath before sending. Lets have a look at this simple sample:
+First thing we want to do with JSONPath is to manipulate a message content before it is actually sent out. This is very useful when working with message file resources that are reused across multiple test cases. Each test case can manipulate the message content individually with JSONPath before sending. Lets have a look at this simple sample:
 
 ```xml
 <message type="json">

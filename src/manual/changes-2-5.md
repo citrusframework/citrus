@@ -32,7 +32,7 @@ Added a new validation matcher implementation that is able to check that a date 
 
 ### Read file resource function
 
-A new function implementation offers you the possibilities to read file resource contents as inline data. The function is called and returns the file content as return value. The file content is then placed right where the function was called e.g. inside of a message paylaod element or as message header value. See [functions-read-file](functions-read-file)for details.
+A new function implementation offers you the possibilities to read file resource contents as inline data. The function is called and returns the file content as return value. The file content is then placed right where the function was called e.g. inside of a message payload element or as message header value. See [functions-read-file](functions-read-file)for details.
 
 ### Timer container
 

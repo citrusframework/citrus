@@ -21,7 +21,7 @@ This is all you need to know about Citrus endpoints. We have mentioned that the 
 ```xml
 <citrus-jms:endpoint id="helloServiceEndpoint"
         destination-name="Citrus.HelloService.Request.Queue"
-        connection-factory="myConnectionFacotry"/>
+        connection-factory="myConnectionFactory"/>
 ```
 
 This is a simple JMS endpoint component in Citrus. The endpoint XML bean definition follows a custom XML namespace and defines endpoint specific properties like the JMS destination name and the JMS connection factory. The endpoint id is a significant property as the test cases will reference this endpoint when sending and receiving messages by its identifier.

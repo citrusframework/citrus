@@ -117,7 +117,7 @@ The client component is able to add custom interceptors that participate in the 
 The sample above adds Wss4J WsSecurity interceptors in order to add security constraints to the request messages.
 
 **Note**
-When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors exlicitly as shown with the *com.consol.citrus.ws.interceptor.LoggingClientInterceptor* which
+When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors explicitly as shown with the *com.consol.citrus.ws.interceptor.LoggingClientInterceptor* which
 is able to log request/response messages during communication.
 
 ### SOAP server
@@ -604,7 +604,9 @@ Server: Jetty(7.0.0.pre5)
 ```
 
 **Important**
-Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root **`<spring:beans>`** element where we simply declare the citrus-ws specific namespace like follows.```xml
+Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root **`<spring:beans>`** element where we simply declare the citrus-ws specific namespace like follows.
+
+```xml
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
     xmlns:spring="http://www.springframework.org/schema/beans"
     xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
@@ -711,7 +713,9 @@ Choose one of Spring's reference implementations or some other implementation as
 ```
 
 **Important**
-Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the **ws:assert** action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.```xml
+Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the **ws:assert** action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.
+
+```xml
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
     xmlns:spring="http://www.springframework.org/schema/beans"
     xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
@@ -1136,7 +1140,7 @@ Citrus provides a comfortable way to set the HTTP message sender with basic auth
 </bean>
 ```
 
-The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. By default preemtive authentication is used. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus can setup an authentication cache within the HTTP context in order to have preemtive authentication.
+The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. By default preemptive authentication is used. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus can setup an authentication cache within the HTTP context in order to have preemptive authentication.
 
 **Tip**
 You can also skip the message sender configuration and set the **Authorization** header on each request in your send action definition on your own. Be aware of setting the header as HTTP mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the **username:password** phrase.

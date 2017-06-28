@@ -20,7 +20,7 @@ CITRUS TEST RESULTS
   EchoService_Ok_1              : SUCCESS
   EchoService_Ok_2              : SUCCESS
   EchoService_TempError_1       : SUCCESS
-  EchoService_AutomacticRetry_1 : SUCCESS
+  EchoService_AutomaticRetry_1 : SUCCESS
   [...]
   
   Found 175 test cases to execute

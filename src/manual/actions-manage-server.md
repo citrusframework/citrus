@@ -42,7 +42,7 @@ The start and stop server test action receive a server name which references a S
 </testcase>
 ```
 
-When using the Java DSL the best way to reference a server instance is to autowire the Spring bean via dependency injection. The Spring framework takes case on injecting the proper Spring bean component defined in the SPring application context. This way you can easily start and stop server instances within Java DSL test cases.
+When using the Java DSL the best way to reference a server instance is to autowire the Spring bean via dependency injection. The Spring framework takes case on injecting the proper Spring bean component defined in the Spring application context. This way you can easily start and stop server instances within Java DSL test cases.
 
 **Java DSL designer and runner** 
 
