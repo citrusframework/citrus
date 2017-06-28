@@ -22,6 +22,7 @@ import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
@@ -62,8 +63,18 @@ public class GroovyActionBuilder extends AbstractTestActionBuilder<GroovyAction>
 	 * @return
 	 */
 	public GroovyActionBuilder script(Resource scriptResource) {
+		return script(scriptResource, FileUtils.getDefaultCharset());
+	}
+
+	/**
+	 * Sets the Groovy script to execute.
+	 * @param scriptResource
+	 * @param charset
+	 * @return
+	 */
+	public GroovyActionBuilder script(Resource scriptResource, Charset charset) {
 		try {
-			action.setScript(FileUtils.readToString(scriptResource));
+			action.setScript(FileUtils.readToString(scriptResource, charset));
 		} catch (IOException e) {
 			throw new CitrusRuntimeException("Failed to read script resource file", e);
 		}
@@ -84,8 +95,17 @@ public class GroovyActionBuilder extends AbstractTestActionBuilder<GroovyAction>
      * @param scriptTemplate the scriptTemplate to set
      */
 	public GroovyActionBuilder template(Resource scriptTemplate) {
+		return template(scriptTemplate, FileUtils.getDefaultCharset());
+	}
+
+	/**
+     * Use a script template resource.
+     * @param scriptTemplate the scriptTemplate to set
+	 * @param charset
+     */
+	public GroovyActionBuilder template(Resource scriptTemplate, Charset charset) {
 		try {
-            action.setScriptTemplate(FileUtils.readToString(scriptTemplate));
+            action.setScriptTemplate(FileUtils.readToString(scriptTemplate, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script template file", e);
         }

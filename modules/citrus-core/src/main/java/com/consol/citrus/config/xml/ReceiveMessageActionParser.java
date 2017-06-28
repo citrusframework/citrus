@@ -344,6 +344,9 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                     String filePath = scriptElement.getAttribute("file");
                     if (StringUtils.hasText(filePath)) {
                         context.setValidationScriptResourcePath(filePath);
+                        if (scriptElement.hasAttribute("charset")) {
+                            context.setValidationScriptResourceCharset(scriptElement.getAttribute("charset"));
+                        }
                     } else {
                         context.setValidationScript(DomUtils.getTextValue(scriptElement));
                     }

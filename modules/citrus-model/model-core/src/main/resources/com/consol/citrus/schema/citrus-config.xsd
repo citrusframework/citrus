@@ -513,6 +513,7 @@
           <xs:element name="resource" minOccurs="0">
             <xs:complexType>
               <xs:attribute name="file" type="xs:string" use="required"/>
+              <xs:attribute name="charset" type="xs:string"/>
             </xs:complexType>
           </xs:element>
           <xs:element name="header" minOccurs="0">

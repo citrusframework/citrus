@@ -24,6 +24,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -103,8 +104,17 @@ public class ExecutePLSQLBuilder extends AbstractTestActionBuilder<ExecutePLSQLA
      * @param sqlResource
      */
     public ExecutePLSQLBuilder sqlResource(Resource sqlResource) {
+        return sqlResource(sqlResource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Setter for external file resource containing the SQL statements to execute.
+     * @param sqlResource
+	 * @param charset
+     */
+    public ExecutePLSQLBuilder sqlResource(Resource sqlResource, Charset charset) {
         try {
-            action.setScript(FileUtils.readToString(sqlResource));
+            action.setScript(FileUtils.readToString(sqlResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read sql resource", e);
         }

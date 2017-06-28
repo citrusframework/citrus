@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.script;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -27,6 +28,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Builds a control message from Groovy code with markup builder support.
@@ -41,6 +43,9 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
     /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
     private String scriptResourcePath;
 
+    /** Charset applied to payload resource */
+    private String scriptResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
     
@@ -53,7 +58,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
             String messagePayload = "";
             if (scriptResourcePath != null){
                 messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
-                        FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context))));
+                        FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context), Charset.forName(context.resolveDynamicValue(scriptResourceCharset)))));
             } else if (scriptData != null){
                 messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
             }
@@ -124,5 +129,23 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
      */
     public String getScriptData() {
         return scriptData;
+    }
+
+    /**
+     * Gets the scriptResourceCharset.
+     *
+     * @return
+     */
+    public String getScriptResourceCharset() {
+        return scriptResourceCharset;
+    }
+
+    /**
+     * Sets the scriptResourceCharset.
+     *
+     * @param scriptResourceCharset
+     */
+    public void setScriptResourceCharset(String scriptResourceCharset) {
+        this.scriptResourceCharset = scriptResourceCharset;
     }
 }

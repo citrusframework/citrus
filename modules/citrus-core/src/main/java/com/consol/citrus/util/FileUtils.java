@@ -41,6 +41,8 @@ public abstract class FileUtils {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FileUtils.class);
 
+    public final static String FILE_PATH_CHARSET_PARAMETER = ";charset=";
+
     /** Simulation mode required for Citrus administration UI when loading test cases from Java DSL */
     private static boolean simulationMode = false;
 
@@ -223,8 +225,13 @@ public abstract class FileUtils {
      * @return
      */
     public static Resource getFileResource(String filePath, TestContext context) {
-        return new PathMatchingResourcePatternResolver().getResource(
-                context.replaceDynamicContentInString(filePath));
+        if (filePath.contains(FILE_PATH_CHARSET_PARAMETER)) {
+            return new PathMatchingResourcePatternResolver().getResource(
+                    context.replaceDynamicContentInString(filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER))));
+        } else {
+            return new PathMatchingResourcePatternResolver().getResource(
+                    context.replaceDynamicContentInString(filePath));
+        }
     }
 
     /**
@@ -232,7 +239,21 @@ public abstract class FileUtils {
      * this one otherwise use system default.
      * @return
      */
-    private static Charset getDefaultCharset() {
+    public static Charset getDefaultCharset() {
         return Charset.forName(Citrus.CITRUS_FILE_ENCODING);
+    }
+
+    /**
+     * Extract charset information from file path. If not set return default charset. Charset
+     * is read as path parameter at the end of the file path {@see FileUtils.FILE_PATH_CHARSET_PARAMETER}
+     * @param path
+     * @return
+     */
+    public static Charset getCharset(String path) {
+        if (path.contains(FileUtils.FILE_PATH_CHARSET_PARAMETER)) {
+            return Charset.forName(path.substring(path.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER) + FileUtils.FILE_PATH_CHARSET_PARAMETER.length()));
+        } else {
+            return FileUtils.getDefaultCharset();
+        }
     }
 }

@@ -16,15 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for transform action in test case.
@@ -49,6 +48,9 @@ public class TransformActionParser implements BeanDefinitionParser {
         Element xmlResourceElement = DomUtils.getChildElementByTagName(element, "xml-resource");
         if (xmlResourceElement != null) {
             beanDefinition.addPropertyValue("xmlResourcePath", xmlResourceElement.getAttribute("file"));
+            if (xmlResourceElement.hasAttribute("charset")) {
+                beanDefinition.addPropertyValue("xmlResourceCharset", xmlResourceElement.getAttribute("charset"));
+            }
         }
         
         Element xsltDataElement = DomUtils.getChildElementByTagName(element, "xslt-data");
@@ -59,6 +61,9 @@ public class TransformActionParser implements BeanDefinitionParser {
         Element xsltResourceElement = DomUtils.getChildElementByTagName(element, "xslt-resource");
         if (xsltResourceElement != null) {
             beanDefinition.addPropertyValue("xsltResourcePath", xsltResourceElement.getAttribute("file"));
+            if (xsltResourceElement.hasAttribute("charset")) {
+                beanDefinition.addPropertyValue("xsltResourceCharset", xsltResourceElement.getAttribute("charset"));
+            }
         }
         
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");

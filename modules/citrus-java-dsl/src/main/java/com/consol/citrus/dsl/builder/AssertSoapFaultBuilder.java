@@ -28,6 +28,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author Christoph Deppisch
@@ -127,8 +128,18 @@ public class AssertSoapFaultBuilder extends AbstractExceptionContainerBuilder<As
      * @return
      */
     public AssertSoapFaultBuilder faultDetailResource(Resource resource) {
+        return faultDetailResource(resource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Expect fault detail from file resource.
+     * @param resource
+     * @param charset
+     * @return
+     */
+    public AssertSoapFaultBuilder faultDetailResource(Resource resource, Charset charset) {
         try {
-            action.getFaultDetails().add(FileUtils.readToString(resource));
+            action.getFaultDetails().add(FileUtils.readToString(resource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read fault detail resource", e);
         }

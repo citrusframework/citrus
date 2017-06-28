@@ -28,6 +28,7 @@ import org.openqa.selenium.By;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -276,9 +277,16 @@ public class SeleniumActionBuilder extends AbstractTestActionBuilder<DelegatingT
      * Execute JavaScript.
      */
     public JavaScriptActionBuilder javascript(Resource script) {
+        return javascript(script, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Execute JavaScript.
+     */
+    public JavaScriptActionBuilder javascript(Resource script, Charset charset) {
         JavaScriptAction action = new JavaScriptAction();
         try {
-            action.setScript(FileUtils.readToString(script));
+            action.setScript(FileUtils.readToString(script, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource", e);
         }

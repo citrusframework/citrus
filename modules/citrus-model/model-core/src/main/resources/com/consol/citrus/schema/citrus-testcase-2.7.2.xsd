@@ -68,6 +68,7 @@
                             <xs:element name="resource">
                                 <xs:complexType>
                                     <xs:attribute name="file" type="xs:string" use="required"/>
+                                    <xs:attribute name="charset" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="builder" type="ScriptDefinitionType"/>
@@ -91,6 +92,7 @@
                         <xs:element name="resource" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:attribute name="file" type="xs:string" use="required"/>
+                                <xs:attribute name="charset" type="xs:string"/>
                             </xs:complexType>
                         </xs:element>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
@@ -166,6 +168,7 @@
                                 <xs:element name="resource">
                                     <xs:complexType>
                                         <xs:attribute name="file" type="xs:string" use="required"/>
+                                        <xs:attribute name="charset" type="xs:string"/>
                                     </xs:complexType>
                                 </xs:element>
                                 <xs:element name="builder" type="ScriptDefinitionType"/>
@@ -254,6 +257,7 @@
                         <xs:element name="resource" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:attribute name="file" type="xs:string" use="required"/>
+                                <xs:attribute name="charset" type="xs:string"/>
                             </xs:complexType>
                         </xs:element>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
@@ -662,6 +666,7 @@
                 <xs:element name="xml-resource">
                     <xs:complexType>
                         <xs:attribute name="file" type="xs:string" use="required" />
+                        <xs:attribute name="charset" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
@@ -670,6 +675,7 @@
                 <xs:element name="xslt-resource">
                     <xs:complexType>
                         <xs:attribute name="file" type="xs:string" use="required" />
+                        <xs:attribute name="charset" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:choice>

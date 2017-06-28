@@ -77,7 +77,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             }
 
             for (String headerResourcePath : headerResources) {
-                message.addHeaderData(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(headerResourcePath, context))));
+                message.addHeaderData(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(headerResourcePath, context), FileUtils.getCharset(headerResourcePath))));
             }
 
             for (String data : headerData){

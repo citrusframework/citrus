@@ -22,6 +22,7 @@ import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Action transforms a XML document(specified inline or from external file resource)
@@ -71,8 +72,17 @@ public class TransformActionBuilder extends AbstractTestActionBuilder<TransformA
 	 * @param xmlResource the xmlResource to set
 	 */
 	public TransformActionBuilder source(Resource xmlResource) {
+	    return source(xmlResource, FileUtils.getDefaultCharset());
+	}
+
+	/**
+	 * Set the XML document as resource
+	 * @param xmlResource the xmlResource to set
+	 * @param charset
+	 */
+	public TransformActionBuilder source(Resource xmlResource, Charset charset) {
 	    try {
-	        action.setXmlData(FileUtils.readToString(xmlResource));
+	        action.setXmlData(FileUtils.readToString(xmlResource, charset));
 	    } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read xml resource", e);
         }
@@ -93,12 +103,21 @@ public class TransformActionBuilder extends AbstractTestActionBuilder<TransformA
 	 * @param xsltResource the xsltResource to set
 	 */
 	public TransformActionBuilder xslt(Resource xsltResource) {
+	    return xslt(xsltResource, FileUtils.getDefaultCharset());
+	}
+
+	/**
+	 * Set the XSLT document as resource
+	 * @param xsltResource the xsltResource to set
+	 * @param charset
+	 */
+	public TransformActionBuilder xslt(Resource xsltResource, Charset charset) {
 	    try {
-	        action.setXsltData(FileUtils.readToString(xsltResource));
+	        action.setXsltData(FileUtils.readToString(xsltResource, charset));
 	    } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read xstl resource", e);
         }
-	    
+
 		return this;
 	}
 }

@@ -17,6 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.json.*;
@@ -82,10 +83,13 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             } else {
                 throw new BeanCreationException("Unsupported message builder type: '" + builderType + "'");
             }
-            
+
             String scriptResourcePath = builderElement.getAttribute("file");
             if (StringUtils.hasText(scriptResourcePath)) {
                 scriptMessageBuilder.setScriptResourcePath(scriptResourcePath);
+                if (builderElement.hasAttribute("charset")) {
+                    scriptMessageBuilder.setScriptResourceCharset(builderElement.getAttribute("charset"));
+                }
             } else {
                 scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement).trim());
             }
@@ -117,6 +121,9 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         if (xmlResourceElement != null) {
             messageBuilder = new PayloadTemplateMessageBuilder();
             messageBuilder.setPayloadResourcePath(xmlResourceElement.getAttribute("file"));
+            if (xmlResourceElement.hasAttribute("charset")) {
+                messageBuilder.setPayloadResourceCharset(xmlResourceElement.getAttribute("charset"));
+            }
         }
         
         if (messageBuilder != null) {
@@ -213,7 +220,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
 
             List<Element> headerResourceElements = DomUtils.getChildElementsByTagName(headerElement, "resource");
             for (Element headerResourceElement : headerResourceElements) {
-                messageBuilder.getHeaderResources().add(headerResourceElement.getAttribute("file"));
+                String charset = headerResourceElement.getAttribute("charset");
+                messageBuilder.getHeaderResources().add(headerResourceElement.getAttribute("file") + (StringUtils.hasText(charset) ? FileUtils.FILE_PATH_CHARSET_PARAMETER + charset : ""));
             }
             
             messageBuilder.setMessageHeaders(messageHeaders);

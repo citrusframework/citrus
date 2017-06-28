@@ -130,7 +130,7 @@ public class AssertSoapFault extends AbstractActionContainer {
         try {
             for (String faultDetailPath : faultDetailResourcePaths) {
                 String resourcePath = context.replaceDynamicContentInString(faultDetailPath);
-                controlFault.addFaultDetail(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(resourcePath, context))));
+                controlFault.addFaultDetail(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(resourcePath, context), FileUtils.getCharset(resourcePath))));
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create SOAP fault detail from file resource", e);

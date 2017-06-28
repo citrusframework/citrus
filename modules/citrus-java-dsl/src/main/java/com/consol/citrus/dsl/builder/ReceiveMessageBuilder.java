@@ -46,6 +46,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -191,8 +192,18 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T payload(Resource payloadResource) {
+        return payload(payloadResource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Expect this message payload data in received message.
+     * @param payloadResource
+     * @param charset
+     * @return
+     */
+    public T payload(Resource payloadResource, Charset charset) {
         try {
-            setPayload(FileUtils.readToString(payloadResource));
+            setPayload(FileUtils.readToString(payloadResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
@@ -314,8 +325,19 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T header(Resource resource) {
+        return header(resource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Expect this message header data in received message from file resource. Message header data is used in
+     * SOAP messages as XML fragment for instance.
+     * @param resource
+     * @param charset
+     * @return
+     */
+    public T header(Resource resource, Charset charset) {
         try {
-            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource));
+            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
@@ -340,8 +362,18 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T validateScript(Resource scriptResource) {
+        return validateScript(scriptResource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Reads validation script file resource and sets content as validation script.
+     * @param scriptResource
+     * @param charset
+     * @return
+     */
+    public T validateScript(Resource scriptResource, Charset charset) {
         try {
-            validateScript(FileUtils.readToString(scriptResource));
+            validateScript(FileUtils.readToString(scriptResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource file", e);
         }

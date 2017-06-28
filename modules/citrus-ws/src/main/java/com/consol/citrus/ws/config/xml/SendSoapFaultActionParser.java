@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -87,9 +88,10 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
                     throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
                             "Please choose one of them.");
                 }
-                
+
+                String charset = faultDetailElement.getAttribute("charset");
                 String filePath = faultDetailElement.getAttribute("file");
-                faultDetailResourcePaths.add(filePath);
+                faultDetailResourcePaths.add(filePath + (StringUtils.hasText(charset) ? FileUtils.FILE_PATH_CHARSET_PARAMETER + charset : ""));
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {

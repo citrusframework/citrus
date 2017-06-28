@@ -27,6 +27,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Construct SOAP fault sending action with given fault code, string and details.
@@ -80,12 +81,24 @@ public class SoapServerFaultResponseActionBuilder extends SendMessageBuilder<Sen
      * @return
      */
     public SoapServerFaultResponseActionBuilder attachment(String contentId, String contentType, Resource contentResource) {
+        return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Sets the attachment with content resource.
+     * @param contentId
+     * @param contentType
+     * @param contentResource
+     * @param charset
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
 
         try {
-            attachment.setContent(FileUtils.readToString(contentResource));
+            attachment.setContent(FileUtils.readToString(contentResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read attachment resource", e);
         }
@@ -193,8 +206,18 @@ public class SoapServerFaultResponseActionBuilder extends SendMessageBuilder<Sen
      * @return
      */
     public SoapServerFaultResponseActionBuilder faultDetailResource(Resource resource) {
+        return faultDetailResource(resource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Adds a fault detail from file resource.
+     * @param resource
+     * @param charset
+     * @return
+     */
+    public SoapServerFaultResponseActionBuilder faultDetailResource(Resource resource, Charset charset) {
         try {
-            getAction().getFaultDetails().add(FileUtils.readToString(resource));
+            getAction().getFaultDetails().add(FileUtils.readToString(resource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read fault detail resource", e);
         }

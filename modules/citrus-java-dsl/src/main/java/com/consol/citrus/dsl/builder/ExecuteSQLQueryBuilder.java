@@ -28,6 +28,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -143,9 +144,19 @@ public class ExecuteSQLQueryBuilder extends AbstractTestActionBuilder<ExecuteSQL
      * @param type
      */
     public ExecuteSQLQueryBuilder validateScript(Resource scriptResource, String type) {
+        return validateScript(scriptResource, type, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Validate SQL result set via validation script, for instance Groovy.
+     * @param scriptResource
+     * @param type
+     * @param charset
+     */
+    public ExecuteSQLQueryBuilder validateScript(Resource scriptResource, String type, Charset charset) {
         ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
         try {
-            scriptValidationContext.setValidationScript(FileUtils.readToString(scriptResource));
+            scriptValidationContext.setValidationScript(FileUtils.readToString(scriptResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource", e);
         }

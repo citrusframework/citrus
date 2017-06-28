@@ -51,7 +51,7 @@ public class ReadFileResourceFunction implements Function {
             if (base64) {
                 return Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context).getInputStream()));
             } else {
-                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(parameterList.get(0), context)));
+                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(parameterList.get(0), context), FileUtils.getCharset(parameterList.get(0))));
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read file", e);

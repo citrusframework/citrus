@@ -84,7 +84,7 @@ public abstract class SqlUtils {
             while (reader.ready()) {
                 line = reader.readLine();
 
-                if (line != null && line.trim() != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
+                if (line != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
                     if (line.trim().endsWith(getStatementEndingCharacter(lineDecorator))) {
                         if (lineDecorator != null) {
                             buffer.append(lineDecorator.decorate(line));

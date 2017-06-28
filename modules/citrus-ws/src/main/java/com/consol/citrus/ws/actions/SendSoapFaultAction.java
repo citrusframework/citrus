@@ -89,7 +89,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         try {
             for (String faultDetailPath : faultDetailResourcePaths) {
                 String resourcePath = context.replaceDynamicContentInString(faultDetailPath);
-                soapFault.addFaultDetail(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(resourcePath, context))));
+                soapFault.addFaultDetail(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(resourcePath, context), FileUtils.getCharset(resourcePath))));
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create SOAP fault detail from file resource", e);

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.builder;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
@@ -25,6 +26,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -34,6 +36,9 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
 
     /** Message payload defined in external file resource path */
     private String payloadResourcePath;
+
+    /** Charset applied to payload resource */
+    private String payloadResourceCharset = Citrus.CITRUS_FILE_ENCODING;
 
     /** Direct string representation of message payload */
     private String payloadData;
@@ -55,7 +60,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
                         return zipped.toByteArray();
                     }
                 } else {
-                    return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context)));
+                    return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context), Charset.forName(context.resolveDynamicValue(payloadResourceCharset))));
                 }
             } else if (payloadData != null){
                 if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
@@ -109,5 +114,23 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
      */
     public String getPayloadData() {
         return payloadData;
+    }
+
+    /**
+     * Gets the payloadResourceCharset.
+     *
+     * @return
+     */
+    public String getPayloadResourceCharset() {
+        return payloadResourceCharset;
+    }
+
+    /**
+     * Sets the payloadResourceCharset.
+     *
+     * @param payloadResourceCharset
+     */
+    public void setPayloadResourceCharset(String payloadResourceCharset) {
+        this.payloadResourceCharset = payloadResourceCharset;
     }
 }

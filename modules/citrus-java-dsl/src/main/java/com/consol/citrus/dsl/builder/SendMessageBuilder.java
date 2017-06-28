@@ -42,6 +42,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Action builder creates a send message action with several message payload and header
@@ -179,12 +180,22 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      * @return
      */
     public T payload(Resource payloadResource) {
+        return payload(payloadResource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Adds message payload resource to this builder.
+     * @param payloadResource
+     * @param charset
+     * @return
+     */
+    public T payload(Resource payloadResource, Charset charset) {
         try {
-            setPayload(FileUtils.readToString(payloadResource));
+            setPayload(FileUtils.readToString(payloadResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
-    
+
         return self;
     }
 
@@ -296,8 +307,18 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      * @param resource
      */
     public T header(Resource resource) {
+        return header(resource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
+     * messages for instance as header XML fragment.
+     * @param resource
+     * @param charset
+     */
+    public T header(Resource resource, Charset charset) {
         try {
-            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource));
+            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }

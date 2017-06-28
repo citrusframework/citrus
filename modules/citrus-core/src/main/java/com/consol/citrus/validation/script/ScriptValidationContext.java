@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.script;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
@@ -23,6 +24,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Basic script validation context providing the validation code either from file resource or 
@@ -33,6 +35,9 @@ import java.io.IOException;
 public class ScriptValidationContext implements ValidationContext {
     /** Validation script as file resource path */
     private String validationScriptResourcePath;
+
+    /** Charset applied to script resource */
+    private String validationScriptResourceCharset = Citrus.CITRUS_FILE_ENCODING;
     
     /** Validation script code */
     private String validationScript = "";
@@ -69,7 +74,8 @@ public class ScriptValidationContext implements ValidationContext {
     public String getValidationScript(TestContext context) {
         try {
             if (validationScriptResourcePath != null) {
-                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(validationScriptResourcePath, context)));
+                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(validationScriptResourcePath, context),
+                        Charset.forName(context.replaceDynamicContentInString(validationScriptResourceCharset))));
             } else if (validationScript != null) {
                 return context.replaceDynamicContentInString(validationScript);
             } else {
@@ -134,5 +140,23 @@ public class ScriptValidationContext implements ValidationContext {
      */
     public String getMessageType() {
         return messageType;
+    }
+
+    /**
+     * Gets the validationScriptResourceCharset.
+     *
+     * @return
+     */
+    public String getValidationScriptResourceCharset() {
+        return validationScriptResourceCharset;
+    }
+
+    /**
+     * Sets the validationScriptResourceCharset.
+     *
+     * @param validationScriptResourceCharset
+     */
+    public void setValidationScriptResourceCharset(String validationScriptResourceCharset) {
+        this.validationScriptResourceCharset = validationScriptResourceCharset;
     }
 }

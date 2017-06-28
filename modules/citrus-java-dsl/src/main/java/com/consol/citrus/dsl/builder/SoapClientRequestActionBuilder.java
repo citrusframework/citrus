@@ -28,6 +28,7 @@ import com.consol.citrus.ws.message.*;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author Christoph Deppisch
@@ -102,12 +103,24 @@ public class SoapClientRequestActionBuilder extends SendMessageBuilder<SendSoapM
      * @return
      */
     public SoapClientRequestActionBuilder attachment(String contentId, String contentType, Resource contentResource) {
+        return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
+    }
+
+    /**
+     * Sets the attachment with content resource.
+     * @param contentId
+     * @param contentType
+     * @param contentResource
+     * @param charset
+     * @return
+     */
+    public SoapClientRequestActionBuilder attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
 
         try {
-            attachment.setContent(FileUtils.readToString(contentResource));
+            attachment.setContent(FileUtils.readToString(contentResource, charset));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read attachment resource", e);
         }
