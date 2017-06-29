@@ -1,9 +1,9 @@
 ## FTP support
 
-Citrus is able to start a little ftp server accepting incoming client requests. Also Citrus is able to call FTP commands as a client. The next sections deal with FTP connectivity.
+With Citrus it is possible to start your own ftp server for accepting incoming client requests. You can also use Citrus as a FTP client to send FTP commands. The next sections deal with FTP connectivity.
 
 **Note**
-The FTP components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
+The FTP components in Citrus are maintained in their own Maven module. So you should add the module as Maven dependency to your project accordingly.
 
 ```xml
 <dependency>
