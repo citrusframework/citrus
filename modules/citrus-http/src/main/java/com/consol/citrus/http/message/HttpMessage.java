@@ -161,6 +161,14 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Sets a new Http request query param.
      * @param name
+     */
+    public HttpMessage queryParam(String name) {
+        return queryParam(name, null);
+    }
+
+    /**
+     * Sets a new Http request query param.
+     * @param name
      * @param value
      */
     public HttpMessage queryParam(String name, String value) {
@@ -171,9 +179,9 @@ public class HttpMessage extends DefaultMessage {
         String queryParams;
         if (getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS) != null) {
             queryParams = getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS).toString();
-            queryParams += "," + name + "=" + value;
+            queryParams += "," + name + (StringUtils.hasText(value) ? "=" + value : "");
         } else {
-            queryParams = name + "=" + value;
+            queryParams = name + (StringUtils.hasText(value) ? "=" + value : "");
         }
 
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);

@@ -88,11 +88,13 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             StringTokenizer tok = new StringTokenizer(parameterString, "&");
             while (tok.hasMoreElements()) {
                 String[] parameterValue = tok.nextToken().split("=");
-                if (parameterValue.length != 2) {
+                if (parameterValue.length == 1) {
+                    parameters.put(parameterValue[0], null);
+                } else if (parameterValue.length == 2) {
+                    parameters.put(parameterValue[0], parameterValue[1]);
+                } else {
                     throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
                 }
-
-                parameters.put(parameterValue[0], parameterValue[1]);
             }
         }
 
@@ -120,7 +122,11 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
                         "set" + parameterEntry.getKey().substring(0, 1).toUpperCase() + parameterEntry.getKey().substring(1)));
             }
 
-            ReflectionUtils.invokeMethod(setter, endpointConfiguration, TypeConversionUtils.convertStringToType(parameterEntry.getValue(), field.getType(), context));
+            if (parameterEntry.getValue() != null) {
+                ReflectionUtils.invokeMethod(setter, endpointConfiguration, TypeConversionUtils.convertStringToType(parameterEntry.getValue(), field.getType(), context));
+            } else {
+                ReflectionUtils.invokeMethod(setter, endpointConfiguration, field.getType().cast(null));
+            }
         }
     }
 
@@ -166,9 +172,15 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
             if (field == null) {
                 if (paramString.length() == 0) {
-                    paramString.append("?").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
+                    paramString.append("?").append(parameterEntry.getKey());
+                    if (parameterEntry.getValue() != null) {
+                        paramString.append("=").append(parameterEntry.getValue());
+                    }
                 } else {
-                    paramString.append("&").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
+                    paramString.append("&").append(parameterEntry.getKey());
+                    if (parameterEntry.getValue() != null) {
+                        paramString.append("=").append(parameterEntry.getValue());
+                    }
                 }
             }
         }

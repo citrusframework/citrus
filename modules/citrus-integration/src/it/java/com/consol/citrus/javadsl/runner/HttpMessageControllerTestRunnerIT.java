@@ -103,8 +103,9 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                             .contentType("text/html")
                             .queryParam("id", "${id}")
                             .queryParam("name", "TestUser")
-                            .accept("application/xml;charset=UTF-8"))
-                    .path("user")),
+                            .queryParam("alive")
+                            .accept("application/xml;charset=UTF-8")
+                            .path("user"))),
 
             sequential().actions(
                 http(builder -> builder.server("httpServerRequestEndpoint")
@@ -114,10 +115,37 @@ public class HttpMessageControllerTestRunnerIT extends TestNGCitrusTestRunner {
                                 .method(HttpMethod.GET)
                                 .contentType("text/html")
                                 .header("Host", "localhost:8072")
-                                .accept("application/xml;charset=UTF-8"))
-                        .queryParam("id", "${id}")
-                        .queryParam("name", "TestUser"))
+                                .accept("application/xml;charset=UTF-8")
+                                .queryParam("id", "${id}")
+                                .queryParam("name", "TestUser")
+                                .queryParam("alive")))
             )
+        );
+
+        http(builder -> builder.client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .timeout(2000L)
+                .version("HTTP/1.1"));
+
+        echo("Query WSDL with special query param");
+
+        parallel().actions(
+                http(builder -> builder.client("httpClient")
+                        .send()
+                        .get()
+                        .queryParam("wsdl")
+                        .contentType("text/html")
+                        .accept("application/xml;charset=UTF-8")),
+
+                sequential().actions(
+                        http(builder -> builder.server("httpServerRequestEndpoint")
+                                .receive()
+                                .get()
+                                .contentType("text/html")
+                                .header("Host", "localhost:8072")
+                                .accept("application/xml;charset=UTF-8")
+                                .queryParam("wsdl")))
         );
 
         http(builder -> builder.client("httpClient")

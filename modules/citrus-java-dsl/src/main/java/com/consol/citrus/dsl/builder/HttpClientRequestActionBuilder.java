@@ -21,8 +21,10 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -97,6 +99,16 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
     /**
      * Adds a query param to the request uri.
      * @param name
+     * @return
+     */
+    public HttpClientRequestActionBuilder queryParam(String name) {
+        httpMessage.queryParam(name, null);
+        return this;
+    }
+
+    /**
+     * Adds a query param to the request uri.
+     * @param name
      * @param value
      * @return
      */
@@ -133,5 +145,26 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
     public HttpClientRequestActionBuilder accept(String accept) {
         httpMessage.accept(accept);
         return this;
+    }
+
+    @Override
+    public HttpClientRequestActionBuilder message(Message message) {
+        if (message instanceof HttpMessage) {
+            if (this.httpMessage.getRequestMethod() != null) {
+                ((HttpMessage) message).method(this.httpMessage.getRequestMethod());
+            }
+            
+            if (StringUtils.hasText(this.httpMessage.getPath())) {
+                ((HttpMessage) message).path(this.httpMessage.getPath());
+            }
+
+            if (StringUtils.hasText(this.httpMessage.getUri())) {
+                ((HttpMessage) message).uri(this.httpMessage.getUri());
+            }
+
+            this.httpMessage = (HttpMessage) message;
+        }
+
+        return super.message(message);
     }
 }

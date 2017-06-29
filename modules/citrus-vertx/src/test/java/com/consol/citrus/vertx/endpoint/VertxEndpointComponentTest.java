@@ -116,7 +116,7 @@ public class VertxEndpointComponentTest {
             component.createEndpoint("vertx:news?param1=&param2=value2", context);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Invalid parameter"));
+            Assert.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
         }
 
     }

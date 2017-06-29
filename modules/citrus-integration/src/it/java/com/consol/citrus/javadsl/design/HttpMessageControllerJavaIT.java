@@ -106,8 +106,9 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                     .contentType("text/html")
                     .queryParam("id", "${id}")
                     .queryParam("name", "TestUser")
-                    .accept("application/xml;charset=UTF-8"))
-                .path("user"),
+                    .queryParam("alive")
+                    .accept("application/xml;charset=UTF-8")
+                    .path("user")),
 
             sequential().actions(
                 http().server("httpServerRequestEndpoint")
@@ -117,9 +118,10 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                         .method(HttpMethod.GET)
                         .contentType("text/html")
                         .header("Host", "localhost:8072")
-                        .accept("application/xml;charset=UTF-8"))
-                    .queryParam("id", "${id}")
-                    .queryParam("name", "TestUser")
+                        .accept("application/xml;charset=UTF-8")
+                        .queryParam("id", "${id}")
+                        .queryParam("name", "TestUser")
+                        .queryParam("alive"))
             )
         );
 
@@ -128,5 +130,31 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
             .response(HttpStatus.OK)
             .timeout(2000L)
             .version("HTTP/1.1");
+
+        echo("Query WSDL with special query param");
+
+        parallel().actions(
+                http().client("httpClient")
+                        .send()
+                        .get()
+                        .queryParam("wsdl")
+                        .contentType("text/html")
+                        .accept("application/xml;charset=UTF-8"),
+
+                sequential().actions(
+                        http().server("httpServerRequestEndpoint")
+                                .receive()
+                                .get()
+                                .contentType("text/html")
+                                .header("Host", "localhost:8072")
+                                .accept("application/xml;charset=UTF-8")
+                                .queryParam("wsdl"))
+        );
+
+        http().client("httpClient")
+                .receive()
+                .response(HttpStatus.OK)
+                .timeout(2000L)
+                .version("HTTP/1.1");
     }
 }

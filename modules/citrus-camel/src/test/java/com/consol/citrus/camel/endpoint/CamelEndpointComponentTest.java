@@ -18,7 +18,6 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.camel.CamelContext;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +27,8 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -139,20 +139,6 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "controlbus:route?routeId=news&action=stats");
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
-
-    }
-
-    @Test
-    public void testInvalidEndpointUri() throws Exception {
-        CamelEndpointComponent component = new CamelEndpointComponent();
-
-        try {
-            reset(applicationContext);
-            component.createEndpoint("camel:direct:news?param1=&param2=value2", context);
-            Assert.fail("Missing exception due to invalid endpoint uri");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Invalid parameter"));
-        }
 
     }
 }

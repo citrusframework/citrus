@@ -63,7 +63,6 @@ public class JmsEndpointComponentTest {
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory); 
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
-
     }
 
     @Test
@@ -82,7 +81,6 @@ public class JmsEndpointComponentTest {
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
         Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "Sample.Queue.Name");
-
     }
 
     @Test
@@ -101,7 +99,6 @@ public class JmsEndpointComponentTest {
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
-
     }
 
     @Test
@@ -118,7 +115,6 @@ public class JmsEndpointComponentTest {
         Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
         Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
         Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
-
     }
 
     @Test
@@ -138,7 +134,20 @@ public class JmsEndpointComponentTest {
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
 
+    @Test
+    public void testCreateEndpointWithNullParameters() throws Exception {
+        JmsEndpointComponent component = new JmsEndpointComponent();
+
+        reset(applicationContext);
+        Endpoint endpoint = component.createEndpoint("jms:queuename?destination", context);
+
+        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
+
+        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
+        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
+        Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
     }
 
     @Test
@@ -161,7 +170,6 @@ public class JmsEndpointComponentTest {
         Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getReplyDestination(), replyDestination);
         Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getPollingInterval(), 100L);
-
     }
 
     @Test
@@ -172,8 +180,7 @@ public class JmsEndpointComponentTest {
             component.createEndpoint("jms:queuename?param1=&param2=value2", context);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Invalid parameter"));
+            Assert.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
         }
-
     }
 }

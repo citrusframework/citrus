@@ -72,8 +72,8 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/xml");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_ACCEPT), "text/xml");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "id=12345,type=gold");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "id=12345,type=gold,alive");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold,alive");
         Assert.assertNull(messageBuilder.getMessageHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());

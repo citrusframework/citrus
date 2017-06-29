@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws;
+package com.consol.citrus.ws.integration;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class JettyServerDemo {
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        new ClassPathXmlApplicationContext("jetty-server-demo.xml", JettyServerDemo.class);
-    }
+public class SoapWsdlRequestIT extends AbstractTestNGCitrusTest {
+    @Test
+    @CitrusXmlTest
+    public void SoapWsdlRequestIT() {}
 }

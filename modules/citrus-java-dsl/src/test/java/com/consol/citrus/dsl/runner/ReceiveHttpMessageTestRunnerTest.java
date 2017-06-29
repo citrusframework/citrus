@@ -61,6 +61,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .method(HttpMethod.GET)
                 .path("/test/foo")
+                .queryParam("noValue", null)
                 .queryParam("param1", "value1")
                 .queryParam("param2", "value2"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
@@ -69,6 +70,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 http(action -> action.server(httpServer)
                         .receive()
                         .get("/test/foo")
+                        .queryParam("noValue", null)
                         .queryParam("param1", "value1")
                         .queryParam("param2", "value2")
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -93,7 +95,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/test/foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "param1=value1,param2=value2");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "noValue,param1=value1,param2=value2");
     }
 
     @Test
