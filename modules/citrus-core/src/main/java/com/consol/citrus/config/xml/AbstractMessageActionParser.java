@@ -223,7 +223,16 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 String charset = headerResourceElement.getAttribute("charset");
                 messageBuilder.getHeaderResources().add(headerResourceElement.getAttribute("file") + (StringUtils.hasText(charset) ? FileUtils.FILE_PATH_CHARSET_PARAMETER + charset : ""));
             }
-            
+
+            // parse fragment with xs-any element
+            List<Element> headerFragmentElements = DomUtils.getChildElementsByTagName(headerElement, "fragment");
+            for (Element headerFragmentElement : headerFragmentElements) {
+                List<Element> fragment = DomUtils.getChildElements(headerFragmentElement);
+                if (!CollectionUtils.isEmpty(fragment)) {
+                    messageBuilder.getHeaderData().add(PayloadElementParser.parseMessagePayload(fragment.get(0)));
+                }
+            }
+
             messageBuilder.setMessageHeaders(messageHeaders);
         }
     }

@@ -36,7 +36,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
     @Test
     public void testReceiveMessageActionParser() {
-        assertActionCount(15);
+        assertActionCount(16);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
         
         PayloadTemplateMessageBuilder messageBuilder;
@@ -69,6 +69,33 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 2nd action
         action = getNextTestActionFromTest();
+        Assert.assertTrue(action.getMessageSelector().isEmpty());
+        Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+
+        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertNotNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
+        Assert.assertEquals(messageBuilder.getHeaderData().size(), 1);
+        Assert.assertEquals(messageBuilder.getHeaderData().get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Header xmlns=\"http://citrusframework.org/test\">\n   <operation>hello</operation>\n</Header>");
+        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+
+        Assert.assertNull(action.getDataDictionary());
+        Assert.assertEquals(action.getVariableExtractors().size(), 0);
+
+        // 3rd action
+        action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessageSelector().size(), 1);
         Assert.assertEquals(action.getMessageSelector().get("operation"), "Test");
         Assert.assertNull(action.getMessageSelectorString());
@@ -89,14 +116,14 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
         
-        // 3rd action
+        // 4th action
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertEquals(action.getMessageSelectorString(), "operation = 'Test'");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
-        // 4th action
+        // 5th action
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertNull(action.getMessageSelectorString());
@@ -118,7 +145,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().get("header1"), "Test");
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().get("header2"), "Test");
         
-        // 5th action
+        // 6th action
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertNull(action.getMessageSelectorString());
@@ -137,7 +164,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(groovyMessageBuilder.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(groovyMessageBuilder.getScriptData());
 
-        // 6th action
+        // 7th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
@@ -153,7 +180,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         Assert.assertNotNull(action.getDataDictionary());
 
-        // 7th action
+        // 8th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -182,7 +209,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(xmlValidationContext.getNamespaces().size(), 1);
         Assert.assertEquals(xmlValidationContext.getNamespaces().get("ns"), "http://www.consol.com");
         
-        // 8th action
+        // 9th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 4);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -200,7 +227,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
-        // 9th action
+        // 10th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 4);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -218,7 +245,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
-        // 10th action
+        // 11th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 5);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -240,7 +267,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScript().trim(), "assert true");
 
-        // 11th action
+        // 12th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 4);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -257,7 +284,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:com/consol/citrus/actions/test-validation-script.groovy");
 
-        // 12th action
+        // 13th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 4);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -274,7 +301,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
 
-        // 13th action
+        // 14th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 4);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -291,7 +318,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
 
-        // 14th action
+        // 15th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
@@ -316,7 +343,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().iterator().next(), "$.FooMessage.bar");
 
-        // 15th action
+        // 16th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);

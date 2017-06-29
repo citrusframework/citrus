@@ -6,7 +6,6 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
               http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
-
   <testcase name="SoapHeaderFragmentIT">
     <meta-info>
       <author>Christoph Deppisch</author>
@@ -28,10 +27,10 @@
           <data>
             <![CDATA[
               <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                <ns0:MessageId>${messageId}</ns0:MessageId>
-                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                <ns0:User>${user}</ns0:User>
-                <ns0:Text>Hello WebServer</ns0:Text>
+                  <ns0:MessageId>${messageId}</ns0:MessageId>
+                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                  <ns0:User>${user}</ns0:User>
+                  <ns0:Text>Hello WebServer</ns0:Text>
               </ns0:HelloRequest>
             ]]>
           </data>
@@ -40,10 +39,10 @@
           <data>
             <![CDATA[
               <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                <ns0:MessageId>${messageId}</ns0:MessageId>
-                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                <ns0:User>${user}</ns0:User>
-                <ns0:Text>Hello WebServer</ns0:Text>
+                  <ns0:MessageId>${messageId}</ns0:MessageId>
+                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                  <ns0:User>${user}</ns0:User>
+                  <ns0:Text>Hello WebServer</ns0:Text>
               </ns0:HelloHeader>
             ]]>
           </data>
@@ -57,11 +56,11 @@
           <data>
             <![CDATA[
               <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-								<ns0:MessageId>${messageId}</ns0:MessageId>
-								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>${user}</ns0:User>
-								<ns0:Text>Hello WebServer</ns0:Text>
-							</ns0:HelloRequest>
+                <ns0:MessageId>${messageId}</ns0:MessageId>
+                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                <ns0:User>${user}</ns0:User>
+                <ns0:Text>Hello WebServer</ns0:Text>
+              </ns0:HelloRequest>
             ]]>
           </data>
         </message>
@@ -69,13 +68,13 @@
           <data>
             <![CDATA[
               <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <Operation xmlns="http://citrusframework.org/test">sayHello</Operation>
-                <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                  <ns0:MessageId>${messageId}</ns0:MessageId>
-                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                  <ns0:User>${user}</ns0:User>
-                  <ns0:Text>Hello WebServer</ns0:Text>
-                </ns0:HelloHeader>
+                  <Operation xmlns="http://citrusframework.org/test">sayHello</Operation>
+                  <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                      <ns0:MessageId>${messageId}</ns0:MessageId>
+                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                      <ns0:User>${user}</ns0:User>
+                      <ns0:Text>Hello WebServer</ns0:Text>
+                  </ns0:HelloHeader>
               </SOAP-ENV:Header>
             ]]>
           </data>
@@ -91,12 +90,12 @@
         <message>
           <data>
             <![CDATA[
-							<ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-								<ns0:MessageId>${messageId}</ns0:MessageId>
-								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>WebServer</ns0:User>
-								<ns0:Text>Hello ${user}</ns0:Text>
-							</ns0:HelloResponse>
+              <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>${messageId}</ns0:MessageId>
+                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                <ns0:User>WebServer</ns0:User>
+                <ns0:Text>Hello ${user}</ns0:Text>
+              </ns0:HelloResponse>
             ]]>
           </data>
         </message>
@@ -104,10 +103,10 @@
           <data>
             <![CDATA[
               <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                <ns0:MessageId>${messageId}</ns0:MessageId>
-                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                <ns0:User>${user}</ns0:User>
-                <ns0:Text>Hello WebServer</ns0:Text>
+                  <ns0:MessageId>${messageId}</ns0:MessageId>
+                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                  <ns0:User>${user}</ns0:User>
+                  <ns0:Text>Hello WebServer</ns0:Text>
               </ns0:HelloHeader>
             ]]>
           </data>
@@ -122,10 +121,10 @@
           <data>
             <![CDATA[
               <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                <ns0:MessageId>${messageId}</ns0:MessageId>
-                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                <ns0:User>WebServer</ns0:User>
-                <ns0:Text>Hello ${user}</ns0:Text>
+                  <ns0:MessageId>${messageId}</ns0:MessageId>
+                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                  <ns0:User>WebServer</ns0:User>
+                  <ns0:Text>Hello ${user}</ns0:Text>
               </ns0:HelloResponse>
             ]]>
           </data>
@@ -134,16 +133,130 @@
           <data>
             <![CDATA[
               <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <Operation xmlns="http://citrusframework.org/test">@ignore@</Operation>
-                <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                  <ns0:MessageId>${messageId}</ns0:MessageId>
-                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-                  <ns0:User>${user}</ns0:User>
-                  <ns0:Text>Hello WebServer</ns0:Text>
-                </ns0:HelloHeader>
+                  <Operation xmlns="http://citrusframework.org/test">@ignore@</Operation>
+                  <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                      <ns0:MessageId>${messageId}</ns0:MessageId>
+                      <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                      <ns0:User>${user}</ns0:User>
+                      <ns0:Text>Hello WebServer</ns0:Text>
+                  </ns0:HelloHeader>
               </SOAP-ENV:Header>
             ]]>
           </data>
+          <element name="Operation" value="answerHello"/>
+          <element name="operation" value="answerHello"/>
+        </header>
+      </ws:receive>
+
+      <echo>
+        <message>Test header fragment</message>
+      </echo>
+
+      <ws:send endpoint="helloSoapClient" fork="true" soap-action="sayHello">
+        <message>
+          <payload>
+            <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>${user}</ns0:User>
+              <ns0:Text>Hello WebServer</ns0:Text>
+            </ns0:HelloRequest>
+          </payload>
+        </message>
+        <header>
+          <fragment>
+            <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>${user}</ns0:User>
+              <ns0:Text>Hello WebServer</ns0:Text>
+            </ns0:HelloHeader>
+          </fragment>
+          <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+          <element name="citrus_http_operation" value="sayHello"/>
+        </header>
+      </ws:send>
+
+      <ws:receive endpoint="soapRequestEndpoint" soap-action="sayHello">
+        <message schema-validation="false">
+          <payload>
+            <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>${user}</ns0:User>
+              <ns0:Text>Hello WebServer</ns0:Text>
+            </ns0:HelloRequest>
+          </payload>
+        </message>
+        <header>
+          <fragment>
+            <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+              <Operation xmlns="http://citrusframework.org/test">sayHello</Operation>
+              <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>${messageId}</ns0:MessageId>
+                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                <ns0:User>${user}</ns0:User>
+                <ns0:Text>Hello WebServer</ns0:Text>
+              </ns0:HelloHeader>
+            </SOAP-ENV:Header>
+          </fragment>
+          <element name="Operation" value="sayHello"/>
+          <element name="operation" value="sayHello"/>
+        </header>
+        <extract>
+          <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+        </extract>
+      </ws:receive>
+
+      <ws:send endpoint="soapResponseEndpoint">
+        <message>
+          <payload>
+            <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>WebServer</ns0:User>
+              <ns0:Text>Hello ${user}</ns0:Text>
+            </ns0:HelloResponse>
+          </payload>
+        </message>
+        <header>
+          <fragment>
+            <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>${user}</ns0:User>
+              <ns0:Text>Hello WebServer</ns0:Text>
+            </ns0:HelloHeader>
+          </fragment>
+          <element name="{http://citrusframework.org/test}Operation" value="answerHello"/>
+          <element name="citrus_http_operation" value="answerHello"/>
+          <element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+        </header>
+      </ws:send>
+
+      <ws:receive endpoint="helloSoapClient" timeout="5000">
+        <message schema-validation="false">
+          <payload>
+            <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>WebServer</ns0:User>
+              <ns0:Text>Hello ${user}</ns0:Text>
+            </ns0:HelloResponse>
+          </payload>
+        </message>
+        <header>
+          <fragment>
+            <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+              <Operation xmlns="http://citrusframework.org/test">@ignore@</Operation>
+              <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>${messageId}</ns0:MessageId>
+                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                <ns0:User>${user}</ns0:User>
+                <ns0:Text>Hello WebServer</ns0:Text>
+              </ns0:HelloHeader>
+            </SOAP-ENV:Header>
+          </fragment>
           <element name="Operation" value="answerHello"/>
           <element name="operation" value="answerHello"/>
         </header>

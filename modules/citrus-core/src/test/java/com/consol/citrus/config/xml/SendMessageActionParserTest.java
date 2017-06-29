@@ -35,7 +35,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
     @Test
     public void testSendMessageActionParser() {
-        assertActionCount(7);
+        assertActionCount(8);
         assertActionClassAndName(SendMessageAction.class, "send");
         
         PayloadTemplateMessageBuilder messageBuilder;
@@ -56,7 +56,24 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         Assert.assertNull(action.getDataDictionary());
 
-        // 2nd action
+        //2nd action
+        action = getNextTestActionFromTest();
+        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertNotNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
+        Assert.assertEquals(messageBuilder.getHeaderData().size(), 1);
+        Assert.assertEquals(messageBuilder.getHeaderData().get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Header xmlns=\"http://citrusframework.org/test\">\n   <operation>hello</operation>\n</Header>");
+        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
+        Assert.assertNull(action.getDataDictionary());
+
+        // 3rd action
         action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
@@ -68,7 +85,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        // 3rd action
+        // 4th action
         action = getNextTestActionFromTest();
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
         
@@ -81,7 +98,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        // 4th action
+        // 5th action
         action = getNextTestActionFromTest();
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
         
@@ -91,7 +108,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        // 5th action
+        // 6th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
@@ -117,7 +134,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         Assert.assertNotNull(action.getDataDictionary());
 
-        // 6th action
+        // 7th action
         action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
@@ -139,7 +156,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
 
-        // 7th action
+        // 8th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());

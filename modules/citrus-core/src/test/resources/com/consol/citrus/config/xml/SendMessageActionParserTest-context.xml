@@ -19,6 +19,20 @@
                     <element name="operation" value="Test"/>
                 </header>
             </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/test">Hello Citrus</TestMessage>
+                    </payload>
+                </message>
+                <header>
+                    <fragment>
+                        <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
+                    </fragment>
+                    <element name="operation" value="Test"/>
+                </header>
+            </send>
             
             <send endpoint="myMessageEndpoint">
                 <message>

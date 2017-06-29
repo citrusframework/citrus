@@ -95,6 +95,13 @@
                                 <xs:attribute name="charset" type="xs:string"/>
                             </xs:complexType>
                         </xs:element>
+                        <xs:element name="fragment" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:attribute name="name" type="xs:string" use="required"/>
@@ -258,6 +265,13 @@
                             <xs:complexType>
                                 <xs:attribute name="file" type="xs:string" use="required"/>
                                 <xs:attribute name="charset" type="xs:string"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="fragment" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
                             </xs:complexType>
                         </xs:element>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
