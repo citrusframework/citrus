@@ -67,6 +67,19 @@ public class WsdlXsdSchemaTest {
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
 
+        Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/SampleService/");
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
+    public void testWsdlSchemaWsdlImportsOnly() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithWsdlImportsOnly.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
+
+        Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/TestService/");
+
         Assert.assertNotNull(wsdl.getSource());
     }
 

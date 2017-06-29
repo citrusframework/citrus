@@ -91,45 +91,39 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
      */
     private Resource loadSchemas(Definition definition) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
         Types types = definition.getTypes();
-        List<?> schemaTypes = types.getExtensibilityElements();
         Resource targetXsd = null;
         Resource firstSchemaInWSDL = null;
-        for (Object schemaObject : schemaTypes) {
-            if (schemaObject instanceof SchemaImpl) {
-                SchemaImpl schema = (SchemaImpl) schemaObject;
-                inheritNamespaces(schema, definition);
 
-                addImportedSchemas(schema);
-                addIncludedSchemas(schema);
+        if (types != null) {
+            List<?> schemaTypes = types.getExtensibilityElements();
+            for (Object schemaObject : schemaTypes) {
+                if (schemaObject instanceof SchemaImpl) {
+                    SchemaImpl schema = (SchemaImpl) schemaObject;
+                    inheritNamespaces(schema, definition);
 
-                if (!importedSchemas.contains(getTargetNamespace(schema))) {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    Source source = new DOMSource(schema.getElement());
-                    Result result = new StreamResult(bos);
+                    addImportedSchemas(schema);
+                    addIncludedSchemas(schema);
 
-                    TransformerFactory.newInstance().newTransformer().transform(source, result);
-                    Resource schemaResource = new ByteArrayResource(bos.toByteArray());
+                    if (!importedSchemas.contains(getTargetNamespace(schema))) {
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        Source source = new DOMSource(schema.getElement());
+                        Result result = new StreamResult(bos);
 
-                    importedSchemas.add(getTargetNamespace(schema));
-                    schemaResources.add(schemaResource);
+                        TransformerFactory.newInstance().newTransformer().transform(source, result);
+                        Resource schemaResource = new ByteArrayResource(bos.toByteArray());
 
-                    if (definition.getTargetNamespace().equals(getTargetNamespace(schema)) && targetXsd == null) {
-                        targetXsd = schemaResource;
-                    } else if (targetXsd == null && firstSchemaInWSDL == null) {
-                        firstSchemaInWSDL = schemaResource;
+                        importedSchemas.add(getTargetNamespace(schema));
+                        schemaResources.add(schemaResource);
+
+                        if (definition.getTargetNamespace().equals(getTargetNamespace(schema)) && targetXsd == null) {
+                            targetXsd = schemaResource;
+                        } else if (targetXsd == null && firstSchemaInWSDL == null) {
+                            firstSchemaInWSDL = schemaResource;
+                        }
                     }
+                } else {
+                    log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
                 }
-            } else {
-                log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
-            }
-        }
-
-        if (targetXsd == null) {
-            // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
-            if (firstSchemaInWSDL != null) {
-              targetXsd = firstSchemaInWSDL;
-            } else if (!CollectionUtils.isEmpty(schemaResources)) {
-              targetXsd = schemaResources.get(0);
             }
         }
 
@@ -144,6 +138,15 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                 }
 
                 loadSchemas(getWsdlDefinition(new FileSystemResource(schemaLocation)));
+            }
+        }
+
+        if (targetXsd == null) {
+            // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
+            if (firstSchemaInWSDL != null) {
+                targetXsd = firstSchemaInWSDL;
+            } else if (!CollectionUtils.isEmpty(schemaResources)) {
+                targetXsd = schemaResources.get(0);
             }
         }
 
