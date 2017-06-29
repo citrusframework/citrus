@@ -72,6 +72,18 @@ public @interface JmsSyncEndpointConfig {
     String messageConverter() default "";
 
     /**
+     * Destination resolver.
+     * @return
+     */
+    String destinationResolver() default "";
+
+    /**
+     * Destination name resolver.
+     * @return
+     */
+    String destinationNameResolver() default "";
+
+    /**
      * Publish subscribe domain.
      * @return
      */

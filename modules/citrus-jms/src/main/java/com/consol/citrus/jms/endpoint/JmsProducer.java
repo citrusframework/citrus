@@ -17,15 +17,15 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
-import javax.jms.JMSException;
-import javax.jms.Session;
+import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -56,24 +56,63 @@ public class JmsProducer implements Producer {
     public void send(final Message message, final TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
-
-        if (log.isDebugEnabled()) {
-            log.debug("Sending JMS message to destination: '" + defaultDestinationName + "'");
+        if (endpointConfiguration.getDestination() != null) {
+            send(message, endpointConfiguration.getDestination(), context);
+        } else if (StringUtils.hasText(endpointConfiguration.getDestinationName())) {
+            if (endpointConfiguration.getDestinationNameResolver() != null) {
+                send(message, context.replaceDynamicContentInString(endpointConfiguration.getDestinationNameResolver().resolveEndpointUri(message, endpointConfiguration.getDestinationName())), context);
+            } else {
+                send(message, context.replaceDynamicContentInString(endpointConfiguration.getDestinationName()), context);
+            }
+        } else if (endpointConfiguration.getJmsTemplate().getDefaultDestination() != null) {
+            send(message, endpointConfiguration.getJmsTemplate().getDefaultDestination(), context);
+        } else if (StringUtils.hasText(endpointConfiguration.getJmsTemplate().getDefaultDestinationName())) {
+            send(message, context.replaceDynamicContentInString(endpointConfiguration.getJmsTemplate().getDefaultDestinationName()), context);
+        } else {
+            throw new CitrusRuntimeException("Unable to send message - JMS destination not set");
         }
 
-        endpointConfiguration.getJmsTemplate().send(new MessageCreator() {
-            @Override
-            public javax.jms.Message createMessage(Session session) throws JMSException {
-                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
-                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
-                return jmsMessage;
-            }
+        context.onOutboundMessage(message);
+    }
+
+    /**
+     * Send message using destination name.
+     * @param message
+     * @param destinationName
+     * @param context
+     */
+    private void send(Message message, String destinationName, TestContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("Sending JMS message to destination: '" + destinationName + "'");
+        }
+
+        endpointConfiguration.getJmsTemplate().send(destinationName, session -> {
+            javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
+            return jmsMessage;
         });
 
-        context.onOutboundMessage(message);
+        log.info("Message was sent to JMS destination: '" + destinationName + "'");
+    }
 
-        log.info("Message was sent to JMS destination: '" + defaultDestinationName + "'");
+    /**
+     * Send message using destination.
+     * @param message
+     * @param destination
+     * @param context
+     */
+    private void send(Message message, Destination destination, TestContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+        }
+
+        endpointConfiguration.getJmsTemplate().send(destination, session -> {
+            javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
+            return jmsMessage;
+        });
+
+        log.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
     }
 
     @Override

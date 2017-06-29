@@ -51,6 +51,8 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getConnectionFactory(), beanDefinitionContext.getBean("jmsConnectionFactory"));
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
+        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationResolver(), beanDefinitionContext.getBean("destinationResolver"));
+        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationNameResolver(), beanDefinitionContext.getBean("destinationNameResolver"));
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 10000L);

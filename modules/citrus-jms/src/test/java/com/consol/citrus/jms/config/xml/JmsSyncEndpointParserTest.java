@@ -54,6 +54,8 @@ public class JmsSyncEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class));
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getDestinationResolver(), beanDefinitionContext.getBean("destinationResolver"));
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getDestinationNameResolver(), beanDefinitionContext.getBean("destinationNameResolver"));
 
         // 3rd message receiver
         jmsSyncEndpoint = endpoints.get("jmsSyncEndpoint3");

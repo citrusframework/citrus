@@ -83,8 +83,8 @@ The **dynamicEndpointResolver** bean must implement the EndpointUriResolver inte
 
 ```xml
 <header>
-          <element name="citrus_endpoint_uri" value="ws://localhost:8080/customers/${customerId}"/>
-          </header>
+  <element name="citrus_endpoint_uri" value="ws://localhost:8080/customers/${customerId}"/>
+</header>
 ```
 
 The specific send action above will send its message to the dynamic endpoint (ws://localhost:8080/customers/${customerId}) which is set in the header **citrus_endpoint_uri** .
@@ -180,7 +180,7 @@ The Citrus WebSocket client can slice messages into several parts.
 
 The test above has two separate send operations both sending to a WebSocket endpoint. The first sending action sets the header **citrus_websocket_is_last** to **false** which indicates that the message is not complete yet. The 2nd send action pushes the rest of the message to the server and set the **citrus_websocket_is_last** header to **true** . Now the server is able to aggregate the message pieces to a single message payload. The result is a valida JSON array with both events in it.
 
-```xml
+```json
 [
   {
     "event" : "client_message_1",

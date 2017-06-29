@@ -73,11 +73,6 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
-        String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
-
-        if (log.isDebugEnabled()) {
-            log.debug("Sending JMS message to destination: '" + defaultDestinationName + "'");
-        }
 
         context.onOutboundMessage(message);
 
@@ -92,7 +87,32 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             javax.jms.Message jmsRequest = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
             endpointConfiguration.getMessageConverter().convertOutbound(jmsRequest, message, endpointConfiguration, context);
 
-            messageProducer = session.createProducer(getDefaultDestination(session));
+            Destination destination;
+            if (endpointConfiguration.getDestination() != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(endpointConfiguration.getDestination()) + "'");
+                }
+
+                destination = endpointConfiguration.getDestination();
+            } else if (StringUtils.hasText(endpointConfiguration.getDestinationName())){
+                if (endpointConfiguration.getDestinationNameResolver() != null) {
+                    destination = resolveDestination(context.replaceDynamicContentInString(endpointConfiguration.getDestinationNameResolver().resolveEndpointUri(message, endpointConfiguration.getDestinationName())));
+                } else {
+                    destination = resolveDestination(context.replaceDynamicContentInString(endpointConfiguration.getDestinationName()));
+                }
+            } else if (endpointConfiguration.getJmsTemplate().getDefaultDestination() != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(endpointConfiguration.getJmsTemplate().getDefaultDestination()) + "'");
+                }
+
+                destination = endpointConfiguration.getJmsTemplate().getDefaultDestination();
+            } else if (StringUtils.hasText(endpointConfiguration.getJmsTemplate().getDefaultDestinationName())) {
+                destination = resolveDestination(context.replaceDynamicContentInString(endpointConfiguration.getJmsTemplate().getDefaultDestinationName()));
+            } else {
+                throw new CitrusRuntimeException("Unable to send message - JMS destination not set");
+            }
+
+            messageProducer = session.createProducer(destination);
 
             replyToDestination = getReplyDestination(session, message);
             if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
@@ -106,7 +126,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
             }
 
-            log.info("Message was sent to JMS destination: '{}'", defaultDestinationName);
+            log.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
             log.debug("Receiving reply message on destination: '{}'", replyToDestination);
 
             javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
@@ -275,19 +295,17 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     }
 
     /**
-     * Get send destination either from injected destination instance or by resolving
-     * a destination name.
-     *
-     * @param session current JMS session
-     * @return the destination.
+     * Resolve destination from given name.
+     * @param destinationName
+     * @return
      * @throws JMSException
      */
-    private Destination getDefaultDestination(Session session) throws JMSException {
-        if (endpointConfiguration.getDestination() != null) {
-            return endpointConfiguration.getDestination();
+    private Destination resolveDestination(String destinationName) throws JMSException {
+        if (log.isDebugEnabled()) {
+            log.debug("Sending JMS message to destination: '" + destinationName + "'");
         }
 
-        return resolveDestinationName(endpointConfiguration.getDestinationName(), session);
+        return resolveDestinationName(destinationName, session);
     }
 
     /**
@@ -297,6 +315,10 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @return
      */
     private Destination resolveDestinationName(String name, Session session) throws JMSException {
+        if (endpointConfiguration.getDestinationResolver() != null) {
+            return endpointConfiguration.getDestinationResolver().resolveDestinationName(session, name, endpointConfiguration.isPubSubDomain());
+        }
+
         return new DynamicDestinationResolver().resolveDestinationName(session, name, endpointConfiguration.isPubSubDomain());
     }
 

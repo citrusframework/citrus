@@ -14,6 +14,8 @@
                                     connection-factory="jmsConnectionFactory"
                                     timeout="10000"
                                     destination="jmsQueue"
+                                    destination-resolver="destinationResolver"
+                                    destination-name-resolver="destinationNameResolver"
                                     message-correlator="replyMessageCorrelator"/>
 
   <citrus-jms:sync-endpoint id="jmsSyncEndpoint3"
@@ -47,5 +49,13 @@
 
   <bean id="jmsTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.jms.core.JmsTemplate"/>
+  </bean>
+
+  <bean id="destinationResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.springframework.jms.support.destination.DestinationResolver"/>
+  </bean>
+
+  <bean id="destinationNameResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
   </bean>
 </beans>

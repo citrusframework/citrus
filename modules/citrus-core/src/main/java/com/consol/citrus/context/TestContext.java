@@ -320,10 +320,13 @@ public class TestContext {
      * @return resulting string without any variable place holders.
      */
     public String replaceDynamicContentInString(final String str, boolean enableQuoting) {
-        String result;
-        result = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
-        result = FunctionUtils.replaceFunctionsInString(result, this, enableQuoting);
-        
+        String result = null;
+
+        if (str != null) {
+            result = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
+            result = FunctionUtils.replaceFunctionsInString(result, this, enableQuoting);
+        }
+
         return result;
     }
     

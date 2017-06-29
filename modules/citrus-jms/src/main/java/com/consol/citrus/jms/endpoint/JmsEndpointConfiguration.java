@@ -17,6 +17,8 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.jms.endpoint.resolver.DynamicDestinationNameResolver;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.jms.message.JmsMessageHeaderMapper;
 import org.slf4j.Logger;
@@ -49,6 +51,9 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     /** The destination resolver */
     private DestinationResolver destinationResolver;
 
+    /** Resolves dynamic destination names */
+    private EndpointUriResolver destinationNameResolver = new DynamicDestinationNameResolver();
+
     /** The JMS template */
     private JmsTemplate jmsTemplate;
 
@@ -65,22 +70,18 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     private boolean useObjectMessages = false;
 
     /**
-     * Gets the destination name.
+     * Get the destination name (either a queue name or a topic name).
+     * @param destination
      * @return the destinationName
      */
-    public String getDefaultDestinationName() {
-        Destination defaultDestination = getJmsTemplate().getDefaultDestination();
+    public String getDestinationName(Destination destination) {
         try {
-            if (defaultDestination != null) {
-                if (defaultDestination instanceof Queue) {
-                    return ((Queue)defaultDestination).getQueueName();
-                } else if (defaultDestination instanceof Topic) {
-                    return ((Topic)defaultDestination).getTopicName();
-                } else {
-                    return defaultDestination.toString();
-                }
+            if (destination instanceof Queue) {
+                return ((Queue) destination).getQueueName();
+            } else if (destination instanceof Topic) {
+                return ((Topic) destination).getTopicName();
             } else {
-                return getJmsTemplate().getDefaultDestinationName();
+                return destination.toString();
             }
         } catch (JMSException e) {
             log.error("Unable to resolve destination name", e);
@@ -259,5 +260,23 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setUseObjectMessages(boolean useObjectMessages) {
         this.useObjectMessages = useObjectMessages;
+    }
+
+    /**
+     * Gets the destinationNameResolver.
+     *
+     * @return
+     */
+    public EndpointUriResolver getDestinationNameResolver() {
+        return destinationNameResolver;
+    }
+
+    /**
+     * Sets the destinationNameResolver.
+     *
+     * @param destinationNameResolver
+     */
+    public void setDestinationNameResolver(EndpointUriResolver destinationNameResolver) {
+        this.destinationNameResolver = destinationNameResolver;
     }
 }

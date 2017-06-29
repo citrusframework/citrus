@@ -58,7 +58,7 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
         endpoint.createProducer().send(message, context);
 
-        verify(jmsTemplate).send(any(MessageCreator.class));
+        verify(jmsTemplate).send(eq(destination), any(MessageCreator.class));
     }
 
     @Test

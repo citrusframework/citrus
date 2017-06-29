@@ -225,6 +225,27 @@ Typing of message header entries may also be of interest in order to meet the JM
 </header>
 ```
 
+### Dynamic destination names
+
+Usually you set the target destination as property on the JMS endpoint component. In some cases it might be useful to set the target destination in a more dynamic way during the test run. You can do this
+by adding a special message header named **citrus_jms_destination_name**. This header is automatically interpreted by the Citrus JMS endpoint and is set as the target destination before a message is sent.
+
+```xml
+<send endpoint="jmsEndpoint">
+    <message>
+        ...
+    </message>
+    <header>
+        <element name="citrus_jms_destination_name" value="dynamic.destination.name"/>
+    </header>
+</send>
+```
+
+This action above will send the message to the destination "*dynamic.destination.name*" no matter what default destination is set on the referenced endpoint component named *jmsEndpoint*. The dynamic destination name setting also supports test variables so you
+can use variables and functions in the destination name, too.
+
+Another possibility for dynamic JMS destinations is given with the [dynamic endpoints](endpoint-component.md).
+
 ### SOAP over JMS
 
 When sending SOAP messages you have to deal with proper envelope, body and header construction. In Citrus you can add a special message converter that performs the heavy lift for you. Just add the message converter to the JMS endpoint as shown in the next program listing:

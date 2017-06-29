@@ -17,9 +17,11 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.destination.DestinationResolver;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -105,6 +107,26 @@ public class JmsSyncEndpointBuilder extends AbstractEndpointBuilder<JmsSyncEndpo
      */
     public JmsSyncEndpointBuilder messageConverter(JmsMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
+        return this;
+    }
+
+    /**
+     * Sets the destination resolver.
+     * @param resolver
+     * @return
+     */
+    public JmsSyncEndpointBuilder destinationResolver(DestinationResolver resolver) {
+        endpoint.getEndpointConfiguration().setDestinationResolver(resolver);
+        return this;
+    }
+
+    /**
+     * Sets the destination name resolver.
+     * @param resolver
+     * @return
+     */
+    public JmsSyncEndpointBuilder destinationNameResolver(EndpointUriResolver resolver) {
+        endpoint.getEndpointConfiguration().setDestinationNameResolver(resolver);
         return this;
     }
 

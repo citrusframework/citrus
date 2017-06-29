@@ -14,6 +14,8 @@
                                connection-factory="jmsConnectionFactory"
                                timeout="10000"
                                message-converter="messageConverter"
+                               destination-resolver="destinationResolver"
+                               destination-name-resolver="destinationNameResolver"
                                destination="jmsQueue"/>
 
   <citrus-jms:endpoint id="jmsEndpoint3"
@@ -48,5 +50,13 @@
   <!-- Custom message converter -->
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.jms.message.JmsMessageConverter"/>
+  </bean>
+
+  <bean id="destinationResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.springframework.jms.support.destination.DestinationResolver"/>
+  </bean>
+
+  <bean id="destinationNameResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
   </bean>
 </beans>

@@ -19,11 +19,13 @@ package com.consol.citrus.jms.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.StringUtils;
 
 import javax.jms.ConnectionFactory;
@@ -90,6 +92,14 @@ public class JmsEndpointConfigParser extends AbstractAnnotationConfigParser<JmsE
 
         if (StringUtils.hasText(annotation.messageConverter())) {
             builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), JmsMessageConverter.class));
+        }
+
+        if (StringUtils.hasText(annotation.destinationResolver())) {
+            builder.destinationResolver(getReferenceResolver().resolve(annotation.destinationResolver(), DestinationResolver.class));
+        }
+
+        if (StringUtils.hasText(annotation.destinationNameResolver())) {
+            builder.destinationNameResolver(getReferenceResolver().resolve(annotation.destinationNameResolver(), EndpointUriResolver.class));
         }
 
         builder.timeout(annotation.timeout());

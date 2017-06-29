@@ -20,6 +20,7 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.message.DefaultMessageCorrelator;
@@ -29,6 +30,7 @@ import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.destination.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -75,6 +77,8 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
             connectionFactory="jmsConnectionFactory",
             destination="jmsQueue",
             replyDestination="replyQueue",
+            destinationResolver="destinationResolver",
+            destinationNameResolver="destinationNameResolver",
             correlator="replyMessageCorrelator")
     private JmsSyncEndpoint jmsSyncEndpoint6;
 
@@ -107,6 +111,10 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private JmsMessageConverter messageConverter = Mockito.mock(JmsMessageConverter.class);
     @Mock
+    private DestinationResolver destinationResolver = Mockito.mock(DestinationResolver.class);
+    @Mock
+    private EndpointUriResolver destinationNameResolver = Mockito.mock(EndpointUriResolver.class);
+    @Mock
     private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
     @Mock
     private TestActor testActor = Mockito.mock(TestActor.class);
@@ -123,6 +131,8 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         when(applicationContext.getBean("jmsQueue", Destination.class)).thenReturn(jmsQueue);
         when(applicationContext.getBean("replyQueue", Destination.class)).thenReturn(replyQueue);
         when(applicationContext.getBean("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
+        when(applicationContext.getBean("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
+        when(applicationContext.getBean("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
         when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
         when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         when(applicationContext.getBean("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
@@ -180,6 +190,8 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(jmsSyncEndpoint6.getEndpointConfiguration().getReplyDestinationName());
         Assert.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getReplyDestination());
         Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationResolver(), destinationResolver);
+        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationNameResolver(), destinationNameResolver);
 
         // 7th message sender
         Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getConnectionFactory());

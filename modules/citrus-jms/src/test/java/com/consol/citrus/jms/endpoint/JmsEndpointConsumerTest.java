@@ -57,7 +57,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         reset(jmsTemplate, connectionFactory, destination);
 
         when(jmsTemplate.getDefaultDestination()).thenReturn(destination);
-        when(jmsTemplate.receive()).thenReturn(new TextMessageImpl(controlMessage.getPayload(String.class), controlHeaders));
+        when(jmsTemplate.receive(destination)).thenReturn(new TextMessageImpl(controlMessage.getPayload(String.class), controlHeaders));
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
@@ -85,7 +85,6 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         
         when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
-
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());

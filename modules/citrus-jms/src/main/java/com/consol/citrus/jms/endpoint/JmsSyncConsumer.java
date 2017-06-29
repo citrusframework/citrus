@@ -24,7 +24,6 @@ import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.util.Assert;
 
 import javax.jms.*;
@@ -53,7 +52,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply jms destination not set up yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply jms destination not set up yet");
     }
 
     @Override
@@ -82,21 +81,18 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         Assert.notNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
+            log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(replyDestination) + "'");
         }
 
-        endpointConfiguration.getJmsTemplate().send(replyDestination, new MessageCreator() {
-            @Override
-            public javax.jms.Message createMessage(Session session) throws JMSException {
-                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
-                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
-                return jmsMessage;
-            }
+        endpointConfiguration.getJmsTemplate().send(replyDestination, session -> {
+            javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
+            return jmsMessage;
         });
 
         context.onOutboundMessage(message);
 
-        log.info("Message was sent to JMS destination: '" + getDestinationName(replyDestination) + "'");
+        log.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(replyDestination) + "'");
     }
 
     /**
@@ -115,29 +111,6 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         }  else {
             log.warn("Unable to retrieve reply to destination for message \n" +
                     jmsMessage + "\n - no reply to destination found in message headers!");
-        }
-    }
-
-    /**
-     * Get the destination name (either a queue name or a topic name).
-     * @return the destinationName
-     */
-    private String getDestinationName(Destination destination) {
-        try {
-            if (destination != null) {
-                if (destination instanceof Queue) {
-                    return ((Queue)destination).getQueueName();
-                } else if (destination instanceof Topic) {
-                    return ((Topic)destination).getTopicName();
-                } else {
-                    return destination.toString();
-                }
-            } else {
-                return null;
-            }
-        } catch (JMSException e) {
-            log.error("Error while getting destination name", e);
-            return "";
         }
     }
 

@@ -18,11 +18,14 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+
+import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -48,35 +51,81 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        String destinationName;
-
-        if (StringUtils.hasText(selector)) {
-            destinationName = endpointConfiguration.getDefaultDestinationName() + "(" + selector + ")'";
-        } else {
-            destinationName = endpointConfiguration.getDefaultDestinationName();
-        }
-
-        log.debug("Receiving JMS message on destination: '" + destinationName + "'");
-
         endpointConfiguration.getJmsTemplate().setReceiveTimeout(timeout);
         javax.jms.Message receivedJmsMessage;
 
-        if (StringUtils.hasText(selector)) {
-            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receiveSelected(selector);
+        if (endpointConfiguration.getDestination() != null) {
+            receivedJmsMessage = receive(endpointConfiguration.getDestination(), selector);
+        } else if (StringUtils.hasText(endpointConfiguration.getDestinationName())) {
+            receivedJmsMessage = receive(context.replaceDynamicContentInString(endpointConfiguration.getDestinationName()), selector);
+        } else if (endpointConfiguration.getJmsTemplate().getDefaultDestination() != null) {
+            receivedJmsMessage = receive(endpointConfiguration.getJmsTemplate().getDefaultDestination(), selector);
+        } else if (StringUtils.hasText(endpointConfiguration.getJmsTemplate().getDefaultDestinationName())) {
+            receivedJmsMessage = receive(context.replaceDynamicContentInString(endpointConfiguration.getJmsTemplate().getDefaultDestinationName()), selector);
         } else {
-            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receive();
-        }
-
-        if (receivedJmsMessage == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName + "'");
+            throw new CitrusRuntimeException("Unable to receive message - JMS destination not set");
         }
 
         Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage, endpointConfiguration, context);
-
-        log.info("Received JMS message on destination: '" + destinationName + "'");
         context.onInboundMessage(receivedMessage);
 
         return receivedMessage;
+    }
+
+    /**
+     * Receive message from destination name.
+     * @param destinationName
+     * @param selector
+     * @return
+     */
+    private javax.jms.Message receive(String destinationName, String selector) {
+        javax.jms.Message receivedJmsMessage;
+
+        if (log.isDebugEnabled()) {
+            log.debug("Receiving JMS message on destination: '" + destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+        }
+
+        if (StringUtils.hasText(selector)) {
+            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receiveSelected(destinationName, selector);
+        } else {
+            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receive(destinationName);
+        }
+
+        if (receivedJmsMessage == null) {
+            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+        }
+
+        log.info("Received JMS message on destination: '" + destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+
+        return receivedJmsMessage;
+    }
+
+    /**
+     * Receive message from destination.
+     * @param destination
+     * @param selector
+     * @return
+     */
+    private javax.jms.Message receive(Destination destination, String selector) {
+        javax.jms.Message receivedJmsMessage;
+
+        if (log.isDebugEnabled()) {
+            log.debug("Receiving JMS message on destination: '" + endpointConfiguration.getDestinationName(destination) + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+        }
+
+        if (StringUtils.hasText(selector)) {
+            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receiveSelected(destination, selector);
+        } else {
+            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receive(destination);
+        }
+
+        if (receivedJmsMessage == null) {
+            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + endpointConfiguration.getDestinationName(destination) + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+        }
+
+        log.info("Received JMS message on destination: '" + endpointConfiguration.getDestinationName(destination) + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+
+        return receivedJmsMessage;
     }
 
 }
