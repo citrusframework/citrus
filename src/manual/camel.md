@@ -59,7 +59,20 @@ Right next to that Citrus endpoint we need the Apache Camel route that is locate
 </camelContext>
 ```
 
-As you can see the Citrus camel endpoint is able to interact with the Camel route. In the example above the Camel context is placed as Spring bean Camel context. This would be the easiest setup to use Camel with Citrus as you can add the Camel context straight to the Spring bean application context. Of course you can also import your Camel context and routes from other Spring bean context files or you can start the Camel context routes with Java code.
+As you can see the Citrus camel endpoint is able to interact with the Camel route. In the example above the Camel context is placed as Spring bean Camel context. 
+
+The Camel context is automatically referenced in the Citrus Camel endpoint. This is because Citrus will automatically look for a Camel context in the
+Spring bean configuration.
+
+In case you have multiple Camel context instances in your configuration you can explicitly link the endpoint to a context with `camel-context="camelContext"`. 
+
+```xml
+<citrus-camel:endpoint id="directCamelEndpoint"
+      camel-contxt="camelContext"
+      endpoint-uri="direct:news"/>
+```
+
+This explicitly binds the endpoint to the context named "*camelContext*". This configuration would be the easiest setup to use Camel with Citrus as you can add the Camel context straight to the Spring bean application context and interact with it in Citrus. Of course you can also import your Camel context and routes from other Spring bean context files or you can start the Camel context routes with Java code.
 
 In the example the Apache Camel route is listening on the route endpoint uri **direct:news** . Incoming messages will be logged to the console using a **log** Camel component. After that the message is forwarded to a **seda** Camel component which is a simple queue in memory. So we have a small Camel routing logic with two different message transports.
 
@@ -300,7 +313,13 @@ We added a special camel namespace with prefix **camel:** so now we can start to
 </testcase>
 ```
 
-In the example above we have used the **camel:create-route** test action that will create new Camel routes at runtime in the Camel context. The target Camel context is specified with the optional **camel-context** attribute. By default Citrus will search for a Camel context available in the Spring bean application context. Removing routes at runtime is also supported.
+In the example above we have used the **camel:create-route** test action that will create new Camel routes at runtime in the Camel context. The target Camel context is referenced with an automatically context lookup. The default Camel context name in this lookup is "*citrusCamelContext*". 
+If no specific settings are set Citrus will automatically try to look up the Camel context with name "*citrusCamelContext*" in the Spring bean configuration. All
+route operations will target this Camel context then.
+
+In addition to that you can skip this lookup and directly reference a target Camel context with the action attribute **camel-context** (used in the second action above). 
+
+Removing routes at runtime is also supported.
 
 **XML DSL** 
 
@@ -404,7 +423,9 @@ The Camel controlbus component is a good way to access route statistics and rout
 </testcase>
 ```
 
-The example test case shows the controlbus access. Camel provides two different ways to specify operations and parameters. The first option is the use of an **action** attribute. The Camel route id has to be specified as mandatory attribute. As a result the controlbus action will be executed on the target route during test runtime. This way we can also start and stop Camel routes in a Camel context.
+The example test case shows the controlbus access. As already mentioned you can explicitly reference a target Camel context with `camel-context="camelContext"`. In case no specific context is referenced Citrus will automatically lookup a target Camel context with the default context name "*citrusCamelContext*". 
+
+Camel provides two different ways to specify operations and parameters. The first option is the use of an **action** attribute. The Camel route id has to be specified as mandatory attribute. As a result the controlbus action will be executed on the target route during test runtime. This way we can also start and stop Camel routes in a Camel context.
 
 In case an controlbus operation has a result such as the **status** action we can specify a control result that is compared. Citrus will raise validation exceptions when the results differ. The second option for executing a controlbus action is the language expression. We can use Camel language expressions on the Camel context for accessing a controlbus operation. Also here we can define an optional outcome as expected result.
 
