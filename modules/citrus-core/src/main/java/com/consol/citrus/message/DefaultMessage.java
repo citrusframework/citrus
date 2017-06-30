@@ -105,9 +105,9 @@ public class DefaultMessage implements Message {
     @Override
     public String toString() {
         if (CollectionUtils.isEmpty(headerData)) {
-            return String.format("%s [payload: %s][headers: %s]", getClass().getSimpleName().toUpperCase(), getPayload(String.class).trim(), headers);
+            return getClass().getSimpleName().toUpperCase() + " [payload: " + getPayload(String.class).trim() + "][headers: " + headers + "]";
         } else {
-            return String.format("%s [payload: %s][headers: %s][header-data: %s]", getClass().getSimpleName().toUpperCase(), getPayload(String.class).trim(), headers, headerData);
+            return getClass().getSimpleName().toUpperCase() + " [payload: " + getPayload(String.class).trim() + "][headers: " + headers + "][header-data: " + headerData + "]";
         }
     }
 
