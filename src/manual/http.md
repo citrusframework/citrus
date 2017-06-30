@@ -847,6 +847,45 @@ So the Citrus server will automatically add gzip compression to the response for
 
 Of course you can also send gzipped content as a client. Then you would just set the **Content-Encoding** header to **gzip** in your request. The client will automatically apply compression for you.
 
+### HTTP servlet filters
+
+The Citrus http server component supports custom servlet filters that take part in handling an incoming request/response communication. This might be useful when customizing
+the basic server behavior such as custom zip/unzip mechanisms. The custom servlet filters are referenced in the http server component as follows:
+
+```xml
+<citrus-http:server id="httpServer"
+                        port="8080"
+                        filters="filters"
+                        filter-mappings="filterMappings"/>
+
+<util:map id="filters">
+    <entry key="request-caching-filter">
+        <bean class="com.consol.citrus.http.servlet.RequestCachingServletFilter"/>
+    </entry>
+    <entry key="gzip-filter">
+        <bean class="com.consol.citrus.http.servlet.GzipServletFilter"/>
+    </entry>
+</util:map>
+
+<util:map id="filterMappings">
+    <entry key="request-caching-filter" value="/*"/>
+    <entry key="gzip-filter" value="/gzip/*"/>
+</util:map>
+```
+
+The map of filters are specified as normal Spring configuration entries. The server component uses the attribute `filters` to reference a set of custom servlet filters.
+The map holds one to many servlet filter beans each given a name that is also referenced in the respective servlet mappings. The servlet mappings specify when to apply those filters.
+
+This way you can set a very custom servlet filter chain for each request/response communication. As usual the filter implementations can participate in the request and response handling process.
+
+Citrus provides several default servlet implementations that are automatically added to each http server component these implementations are:
+
+* `com.consol.citrus.http.servlet.RequestCachingServletFilter` caches incoming request data so input streams can be read multiple times during request processing (important when request logging is enabled)
+* `com.consol.citrus.http.servlet.GzipServletFilter` applies Gzip compressing when according headers are set and client explicitly asks for compressed request/response communication
+
+By the time you define some custom servlet filters or mappings to the server component Citrus will not apply default servlet filters. This means you always need to construct the whole servlet filter 
+chain including default servlet filters mentioned above.
+
 ### HTTP servlet context customization
 
 The Citrus HTTP server uses Spring application context loading on startup. For high customizations you can provide a custom servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling incoming requests (GET, PUT, DELETE, POST, etc.).
