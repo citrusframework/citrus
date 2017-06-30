@@ -326,6 +326,85 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     }
 
     /**
+     * Sets header data POJO object which is marshalled to a character sequence using the given object to xml mapper.
+     * @param model
+     * @param marshaller
+     * @return
+     */
+    public T headerFragment(Object model, Marshaller marshaller) {
+        StringResult result = new StringResult();
+
+        try {
+            marshaller.marshal(model, result);
+        } catch (XmlMappingException e) {
+            throw new CitrusRuntimeException("Failed to marshal object graph for message header data", e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to marshal object graph for message header data", e);
+        }
+
+        return header(result.toString());
+    }
+
+    /**
+     * Sets header data POJO object which is mapped to a character sequence using the given object to json mapper.
+     * @param model
+     * @param objectMapper
+     * @return
+     */
+    public T headerFragment(Object model, ObjectMapper objectMapper) {
+        try {
+            return header(objectMapper.writer().writeValueAsString(model));
+        } catch (JsonProcessingException e) {
+            throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
+        }
+    }
+
+    /**
+     * Sets header data POJO object which is marshalled to a character sequence using the default object to xml or object
+     * to json mapper that is available in Spring bean application context.
+     *
+     * @param model
+     * @return
+     */
+    public T headerFragment(Object model) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
+            return headerFragment(model, applicationContext.getBean(Marshaller.class));
+        } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
+            return headerFragment(model, applicationContext.getBean(ObjectMapper.class));
+        }
+
+        throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+    }
+
+    /**
+     * Sets header data POJO object which is marshalled to a character sequence using the given object to xml mapper that
+     * is accessed by its bean name in Spring bean application context.
+     *
+     * @param model
+     * @param mapperName
+     * @return
+     */
+    public T headerFragment(Object model, String mapperName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+        if (applicationContext.containsBean(mapperName)) {
+            Object mapper = applicationContext.getBean(mapperName);
+
+            if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
+                return headerFragment(model, (Marshaller) mapper);
+            } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
+                return headerFragment(model, (ObjectMapper) mapper);
+            } else {
+                throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
+            }
+        }
+
+        throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+    }
+
+    /**
      * Sets a explicit message type for this receive action.
      * @param messageType
      * @return

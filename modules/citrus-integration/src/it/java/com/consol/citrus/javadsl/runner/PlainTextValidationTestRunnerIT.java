@@ -69,6 +69,6 @@ public class PlainTextValidationTestRunnerIT extends TestNGCitrusTestRunner {
                 .receive()
                 .response()
                 .messageType(MessageType.PLAINTEXT)
-                .header("HTTP/1.1"));
+                .version("HTTP/1.1"));
     }
 }
