@@ -78,7 +78,7 @@
       </receive>
 
       <echo>
-        <message>Test 1: Test automatic Soap envelope handling</message>
+        <message>Test 2: Test automatic Soap envelope handling</message>
       </echo>
 
       <send endpoint="helloServiceSoapJmsEndpoint">
@@ -115,6 +115,67 @@
           </data>
         </message>
         <header>
+          <element name="citrus_soap_action" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test 3: Test header fragment handling</message>
+      </echo>
+
+      <send endpoint="helloServiceSoapJmsEndpoint">
+        <description>Send asynchronous JMS request: Citrus -> HelloService</description>
+        <message>
+          <data>
+            <![CDATA[
+              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>${user}</User>
+                <Text>Hello Citrus</Text>
+              </HelloRequest>
+						]]>
+          </data>
+        </message>
+        <header>
+          <data>
+            <![CDATA[
+            <RequestHeader xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <Service>HelloService</Service>
+              <Operation>sayHello</Operation>
+            </RequestHeader>
+            ]]>
+          </data>
+          <element name="citrus_soap_action" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloServiceResponseSoapJmsEndpoint">
+        <description>Receive asynchronous JMS response: HelloService -> Citrus</description>
+        <message>
+          <data>
+            <![CDATA[
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>HelloSoapService</User>
+                <Text>Hello ${user}</Text>
+              </HelloResponse>
+						]]>
+          </data>
+        </message>
+        <header>
+          <data>
+            <![CDATA[
+            <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+              <ResponseHeader xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <Service>HelloService</Service>
+                <Operation>sayHello</Operation>
+                <Acknowledge>true</Acknowledge>
+              </ResponseHeader>
+            </SOAP-ENV:Header>
+            ]]>
+          </data>
           <element name="citrus_soap_action" value="sayHello"/>
         </header>
       </receive>

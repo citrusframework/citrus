@@ -17,16 +17,17 @@
 package com.consol.citrus.jms.integration.service;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.integration.service.model.HelloRequest;
-import com.consol.citrus.jms.integration.service.model.HelloResponse;
+import com.consol.citrus.jms.integration.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.oxm.*;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.soap.*;
+import org.springframework.xml.transform.StringResult;
 
+import javax.xml.transform.*;
 import java.io.*;
 
 /**
@@ -64,6 +65,30 @@ public class HelloSoapServiceImpl {
 
             WebServiceMessage webServiceResponse = messageFactory.createWebServiceMessage();
             marshaller.marshal(response, webServiceResponse.getPayloadResult());
+
+            SoapHeader soapHeader = ((SoapMessage)webServiceRequest).getSoapHeader();
+            if (soapHeader != null) {
+                if (soapHeader.getSource() != null) {
+                    try {
+                        StringResult headerData = new StringResult();
+                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                        Transformer transformer = transformerFactory.newTransformer();
+                        transformer.transform(soapHeader.getSource(), headerData);
+
+                        if (headerData.toString().contains("RequestHeader")) {
+                            ResponseHeader responseHeader = new ResponseHeader();
+                            responseHeader.setService("HelloService");
+                            responseHeader.setOperation("sayHello");
+                            responseHeader.setAcknowledge(true);
+
+                            marshaller.marshal(responseHeader,
+                                    ((SoapMessage) webServiceResponse).getSoapHeader().getResult());
+                        }
+                    } catch (TransformerException e) {
+                        // do nothing
+                    }
+                }
+            }
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             webServiceResponse.writeTo(bos);

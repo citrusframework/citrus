@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.message.converter;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -64,6 +65,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SoapMessageConverter.class);
+
+    /** Default payload source encoding */
+    private String charset = Citrus.CITRUS_FILE_ENCODING;
     
     @Override
     public WebServiceMessage convertOutbound(Message internalMessage, WebServiceEndpointConfiguration endpointConfiguration, TestContext context) {
@@ -160,7 +164,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             if (endpointConfiguration.isKeepSoapEnvelope()) {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 webServiceMessage.writeTo(bos);
-                payload = bos.toString();
+                payload = bos.toString(charset);
             } else if (webServiceMessage.getPayloadSource() != null) {
                 StringResult payloadResult = new StringResult();
 
@@ -426,4 +430,21 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         }
     }
 
+    /**
+     * Gets the charset.
+     *
+     * @return
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * Sets the charset.
+     *
+     * @param charset
+     */
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
 }

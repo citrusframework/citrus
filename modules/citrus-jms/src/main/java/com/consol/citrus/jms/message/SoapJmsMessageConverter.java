@@ -20,20 +20,20 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
+import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.soap.*;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 import javax.jms.Message;
 import javax.jms.Session;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import java.io.*;
+import java.util.Iterator;
 
 /**
  * Special message converter automatically adds SOAP envelope with proper SOAP header and body elements.
@@ -76,6 +76,23 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
                 message.setHeader(SOAP_ACTION_HEADER, message.getHeader(jmsSoapActionHeader));
             }
 
+            SoapHeader soapHeader = soapMessage.getSoapHeader();
+            if (soapHeader != null) {
+                Iterator<?> iter = soapHeader.examineAllHeaderElements();
+                while (iter.hasNext()) {
+                    SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
+                    MessageHeaderUtils.setHeader(message, headerEntry.getName().getLocalPart(), headerEntry.getText());
+                }
+
+                if (soapHeader.getSource() != null) {
+                    StringResult headerData = new StringResult();
+                    Transformer transformer = transformerFactory.newTransformer();
+                    transformer.transform(soapHeader.getSource(), headerData);
+
+                    message.addHeaderData(headerData.toString());
+                }
+            }
+
             message.setPayload(payload.toString());
             return message;
         } catch(TransformerException e) {
@@ -97,16 +114,27 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage();
             transformerFactory.newTransformer().transform(new StringSource(payload), soapMessage.getPayloadResult());
 
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            soapMessage.writeTo(bos);
-
-            message.setPayload(new String(bos.toByteArray()));
-
             // Translate SOAP action header if present
             if (message.getHeader(SOAP_ACTION_HEADER) != null) {
                 message.setHeader(jmsSoapActionHeader, message.getHeader(SOAP_ACTION_HEADER));
                 message.removeHeader(SOAP_ACTION_HEADER);
             }
+
+            for (String headerData : message.getHeaderData()) {
+                try {
+                    Transformer transformer = transformerFactory.newTransformer();
+                    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                    transformer.transform(new StringSource(headerData),
+                            soapMessage.getSoapHeader().getResult());
+                } catch (TransformerException e) {
+                    throw new CitrusRuntimeException("Failed to write SOAP header content", e);
+                }
+            }
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            soapMessage.writeTo(bos);
+
+            message.setPayload(new String(bos.toByteArray()));
 
             return super.createJmsMessage(message, session, endpointConfiguration, context);
         } catch (TransformerException e) {

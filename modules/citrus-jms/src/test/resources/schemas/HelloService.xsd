@@ -40,6 +40,27 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="RequestHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Service" type="xs:string"/>
+        <xs:element name="Operation" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ResponseHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence>
+          <xs:element name="Service" type="xs:string"/>
+          <xs:element name="Operation" type="xs:string"/>
+          <xs:element name="Acknowledge" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="FaultDetail">
     <xs:complexType>
       <xs:sequence>

@@ -61,6 +61,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ResponseHeader }
+     *
+     */
+    public ResponseHeader createResponseHeader() {
+        return new ResponseHeader();
+    }
+
+    /**
      * Create an instance of {@link FaultType }
      * 
      */
@@ -74,6 +82,14 @@ public class ObjectFactory {
      */
     public HelloRequest createHelloRequest() {
         return new HelloRequest();
+    }
+
+    /**
+     * Create an instance of {@link RequestHeader }
+     *
+     */
+    public RequestHeader createRequestHeader() {
+        return new RequestHeader();
     }
 
 }
