@@ -198,11 +198,13 @@
 
     <citrus-http:server id="echoHttpServer"
           port="8074"
+          handle-cookies="true"
           auto-start="true"/>
 
     <citrus-http:client id="echoHttpClient"
                       request-url="http://localhost:8074/test"
                       request-method="POST"
+                      handle-cookies="true"
                       content-type="text/xml"/>
 
     <citrus-restdocs:configurer id="restDocConfigurer" output-directory="test-output/generated-snippets"/>

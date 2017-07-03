@@ -22,12 +22,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageHeaders;
+import com.consol.citrus.http.message.*;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -90,7 +88,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
@@ -134,7 +132,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
-        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 5L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);

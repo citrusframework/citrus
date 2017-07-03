@@ -53,6 +53,8 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
 
         builder.autoStart(annotation.autoStart());
         builder.timeout(annotation.timeout());
+        builder.handleAttributeHeaders(annotation.handleAttributeHeaders());
+        builder.handleCookies(annotation.handleCookies());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
             builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));

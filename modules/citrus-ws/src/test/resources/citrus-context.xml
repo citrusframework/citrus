@@ -162,6 +162,8 @@
                     port="14080"
                     auto-start="true"
                     root-parent-context="true"
+                    handle-mime-headers="true"
+                    handle-header-attributes="true"
                     timeout="3000"
                     resource-base="src/it/resources"/>
 

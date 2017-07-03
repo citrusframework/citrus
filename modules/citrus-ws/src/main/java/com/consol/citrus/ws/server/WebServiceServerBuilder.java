@@ -231,6 +231,16 @@ public class WebServiceServerBuilder extends AbstractEndpointBuilder<WebServiceS
     }
 
     /**
+     * Sets the handleAttributeHeaders property.
+     * @param flag
+     * @return
+     */
+    public WebServiceServerBuilder handleAttributeHeaders(boolean flag) {
+        endpoint.setHandleAttributeHeaders(flag);
+        return this;
+    }
+
+    /**
      * Sets the SOAP header namespace.
      * @param namespace
      * @return

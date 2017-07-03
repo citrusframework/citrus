@@ -93,9 +93,9 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
 
     }
     
-    protected abstract Object buildMessagePayload(TestContext context, String messageType);
+    public abstract Object buildMessagePayload(TestContext context, String messageType);
 
-    protected Map<String, Object> buildMessageHeaders(TestContext context) {
+    public Map<String, Object> buildMessageHeaders(TestContext context) {
         try {
             Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
 

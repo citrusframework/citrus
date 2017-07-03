@@ -21,6 +21,7 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -110,9 +111,9 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
 
-        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 3L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
@@ -142,9 +143,9 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
 
-        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
@@ -178,9 +179,9 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
 
-        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");

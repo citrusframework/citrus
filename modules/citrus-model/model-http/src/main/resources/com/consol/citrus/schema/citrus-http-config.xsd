@@ -43,6 +43,8 @@
         <xs:attribute name="servlet-handler" type="xs:string"/>
         <xs:attribute name="security-handler" type="xs:string"/>
         <xs:attribute name="endpoint-adapter" type="xs:string"/>
+        <xs:attribute name="handle-header-attributes" type="xs:boolean"/>
+        <xs:attribute name="handle-cookies" type="xs:boolean"/>
         <xs:attribute name="interceptors" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
       </xs:complexType>
@@ -64,6 +66,7 @@
         <xs:attribute name="charset" type="xs:string"/>
         <xs:attribute name="content-type" type="xs:string"/>
         <xs:attribute name="default-accept-header" type="xs:boolean"/>
+        <xs:attribute name="handle-cookies" type="xs:boolean"/>
         <xs:attribute name="interceptors" type="xs:string"/>
         <xs:attribute name="error-strategy">
           <xs:simpleType>

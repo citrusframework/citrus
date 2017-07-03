@@ -19,6 +19,7 @@
                           charset="ISO-8859-1"
                           timeout="10000"
                           default-accept-header="false"
+                          handle-cookies="true"
                           message-converter="messageConverter"
                           request-factory="soapRequestFactory"
                           endpoint-resolver="endpointResolver"/>

@@ -47,12 +47,15 @@
 
   <citrus-http:client id="echoHttpClient"
                       request-url="http://localhost:12080/echo"
+                      handle-cookies="true"
                       timeout="5000"/>
 
   <citrus-http:server id="echoHttpServer"
                       port="12080"
                       timeout="5000"
                       auto-start="true"
+                      handle-cookies="true"
+                      handle-header-attributes="true"
                       root-parent-context="true"
                       resource-base="src/it/resources"/>
 </beans>

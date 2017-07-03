@@ -474,6 +474,12 @@
           <xs:attribute name="value" type="xs:string"/>
         </xs:complexType>
       </xs:element>
+      <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
     <xs:attribute name="content-type" type="xs:string"/>
     <xs:attribute name="accept" type="xs:string"/>
@@ -486,6 +492,18 @@
         <xs:complexType>
           <xs:attribute name="name" type="xs:string"/>
           <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+          <xs:attribute name="max-age" type="xs:int"/>
+          <xs:attribute name="path" type="xs:string"/>
+          <xs:attribute name="version" type="xs:int"/>
+          <xs:attribute name="domain" type="xs:string"/>
+          <xs:attribute name="comment" type="xs:string"/>
+          <xs:attribute name="secure" type="xs:boolean"/>
         </xs:complexType>
       </xs:element>
     </xs:sequence>

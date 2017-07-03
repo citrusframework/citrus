@@ -16,6 +16,8 @@
                         port="8082"
                         context-config-location="classpath:com/consol/citrus/http/servlet-context.xml"
                         message-converter="messageConverter"
+                        handle-header-attributes="true"
+                        handle-cookies="true"
                         connector="connector"
                         resource-base="src/it/resources"
                         root-parent-context="true"

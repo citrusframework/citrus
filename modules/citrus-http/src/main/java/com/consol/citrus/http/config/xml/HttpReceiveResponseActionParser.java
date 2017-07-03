@@ -19,10 +19,7 @@ package com.consol.citrus.http.config.xml;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageHeaders;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.http.message.*;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -32,7 +29,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
+import javax.servlet.http.Cookie;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -67,8 +65,8 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         Element headers = DomUtils.getChildElementByTagName(element, "headers");
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
-            for (Iterator<?> iter = headerElements.iterator(); iter.hasNext();) {
-                Element header = (Element) iter.next();
+            for (Object headerElement : headerElements) {
+                Element header = (Element) headerElement;
                 httpMessage.setHeader(header.getAttribute("name"), header.getAttribute("value"));
             }
 
@@ -86,6 +84,38 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             if (StringUtils.hasText(version)) {
                 httpMessage.version(version);
             }
+
+            List<?> cookieElements = DomUtils.getChildElementsByTagName(headers, "cookie");
+            for (Object item : cookieElements) {
+                Element cookieElement = (Element) item;
+                Cookie cookie = new Cookie(cookieElement.getAttribute("name"), cookieElement.getAttribute("value"));
+
+                if (cookieElement.hasAttribute("comment")) {
+                    cookie.setComment(cookieElement.getAttribute("comment"));
+                }
+
+                if (cookieElement.hasAttribute("path")) {
+                    cookie.setPath(cookieElement.getAttribute("path"));
+                }
+
+                if (cookieElement.hasAttribute("domain")) {
+                    cookie.setDomain(cookieElement.getAttribute("domain"));
+                }
+
+                if (cookieElement.hasAttribute("max-age")) {
+                    cookie.setMaxAge(Integer.valueOf(cookieElement.getAttribute("max-age")));
+                }
+
+                if (cookieElement.hasAttribute("secure")) {
+                    cookie.setSecure(Boolean.valueOf(cookieElement.getAttribute("secure")));
+                }
+
+                if (cookieElement.hasAttribute("version")) {
+                    cookie.setVersion(Integer.valueOf(cookieElement.getAttribute("version")));
+                }
+
+                httpMessage.cookie(cookie);
+            }
         }
 
         parseMessageSelector(element, builder);
@@ -93,13 +123,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         Element body = DomUtils.getChildElementByTagName(element, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);
-        Map<String, Object> messageHeaders = httpMessage.getHeaders();
-        messageHeaders.remove(MessageHeaders.ID);
-        messageHeaders.remove(MessageHeaders.TIMESTAMP);
-        messageBuilder.setMessageHeaders(messageHeaders);
-
-        builder.addPropertyValue("messageBuilder", messageBuilder);
+        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body)));
         builder.addPropertyValue("validationContexts", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 

@@ -18,6 +18,7 @@
                       servlet-name="citrus-ws"
                       servlet-mapping-path="/foo"
                       handle-mime-headers="true"
+                      handle-header-attributes="true"
                       keep-soap-envelope="true"
                       message-converter="messageConverter"
                       message-factory="soap12MessageFactory"

@@ -771,6 +771,191 @@ You can customize the security handler for your very specific needs (e.g. load u
 **Tip**
 This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.
 
+### HTTP cookies
+
+Cookies hold any kind of information and are saved as test information on the client side. Http servers are able to instruct the client (browser) to save a new cookie with name, value and some attributes. This is usually done with a 
+*"Set-Cookie"* message header set on the server response message. Citrus is able to add those cookie information in a server response.
+ 
+**XML DSL** 
+```xml
+<http:receive-request server="echoHttpServer">
+  <http:POST>
+    <http:headers>
+      <http:header name="Operation" value="getCookie"/>
+    </http:headers>
+    <http:body>
+      <http:data>
+        <![CDATA[
+          Some request data
+        ]]>
+      </http:data>
+    </http:body>
+  </http:POST>
+</http:receive-request>
+
+<http:send-response server="echoHttpServer">
+  <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+  <http:header name="Operation" value="getCookie"/>
+  <http:cookie name="Token"
+               value="${messageId}"
+               secure="false"
+               domain="citrusframework.org"
+               path="/test/cookie.py"
+               max-age="86400"/>
+  </http:headers>
+  <http:body>
+    <http:data>
+      <![CDATA[
+        Some response body
+      ]]>
+    </http:data>
+  </http:body>
+</http:send-response>
+``` 
+
+**Java DSL**
+```java
+Cookie cookie = new Cookie("Token", "${messageId}");
+cookie.setPath("/test/cookie.py");
+cookie.setSecure(false);
+cookie.setDomain("citrusframework.org");
+cookie.setMaxAge(86400);
+
+http().server("echoHttpServer")
+    .receive()
+    .post()
+    .payload("Some request data")
+    .header("Operation", "sayHello");
+
+http().server("echoHttpServer")
+   .send()
+   .response(HttpStatus.OK)
+   .payload("Some response body")
+   .header("Operation", "sayHello")
+   .cookie(cookie);
+```
+
+The sample above receives a Http request with method POST and some request data. The server response is specified with *Http 200 OK* and some additional cookie information. The
+cookie is part of the message header specification and gets a name and value as well as several other attributes. This response will result in a Http response with the *"Set-Cookie"* header set:
+
+```text
+Set-Cookie:Token=5877643571;Path=/test/cookie.py;Domain=citrusframework.org;Max-Age=86400
+```
+
+As you can see test variables are replaced before the cookie is added to the response. The client now is able to receive the cookie information for validation:
+
+**XML DSL**
+```xml
+<http:receive-response server="echoHttpClient">
+  <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+  <http:header name="Operation" value="getCookie"/>
+  <http:cookie name="Token"
+               value="${messageId}"
+               secure="false"
+               domain="citrusframework.org"
+               path="/test/cookie.py"
+               max-age="86400"/>
+  </http:headers>
+  <http:body>
+    <http:data>
+      <![CDATA[
+        Some response body
+      ]]>
+    </http:data>
+  </http:body>
+</http:receive-response>
+```
+
+**Java DSL**
+```java
+Cookie cookie = new Cookie("Token", "${messageId}");
+cookie.setPath("/test/cookie.py");
+cookie.setSecure(false);
+cookie.setDomain("citrusframework.org");
+cookie.setMaxAge(86400);
+        
+http().client("echoHttpClient")
+    .receive()
+    .response(HttpStatus.OK)
+    .payload("Some response body")
+    .header("Operation", "sayHello")
+    .cookie(cookie);
+```
+
+Once again the cookie information is added to the header specification. The Citrus message validation will make sure that the cookie information is present with all
+specified attributes.
+
+In all further actions the client is able to continue to send the cookie information with name and value:
+
+**XML DSL**
+```xml
+<http:send-request client="echoHttpClient" fork="true">
+  <http:POST>
+    <http:headers>
+      <http:header name="Operation" value="sayHello"/>
+      <http:cookie name="Token" value="${messageId}"/>
+    </http:headers>
+    <http:body>
+      <http:data>
+        <![CDATA[
+          Some other request data
+        ]]>
+      </http:data>
+    </http:body>
+  </http:POST>
+</http:send-request>
+```
+
+**Java DSL**
+```java
+http().client("echoHttpClient")
+    .send()
+    .post()
+    .fork(true)
+    .payload("Some other request data")
+    .header("Operation", "sayHello")
+    .cookie(new Cookie("Token", "${messageId}"));
+```
+
+The cookie now is only specified with name and value as the cookie now goes to the *"Cookie"* request message header.
+
+```text
+Cookie:Token=5877643571
+```
+
+Of course the Citrus Http server can now also validate the cookie information in a request validation:
+
+**XML DSL**
+```xml
+<http:receive-request client="echoHttpServer">
+  <http:POST>
+    <http:headers>
+      <http:header name="Operation" value="sayHello"/>
+      <http:cookie name="Token" value="${messageId}"/>
+    </http:headers>
+    <http:body>
+      <http:data>
+        <![CDATA[
+          Some other request data
+        ]]>
+      </http:data>
+    </http:body>
+  </http:POST>
+</http:receive-request>
+```
+
+**Java DSL**
+```java
+http().server("echoHttpServer")
+    .receive()
+    .post()
+    .payload("Some other request data")
+    .header("Operation", "sayHello")
+    .cookie(new Cookie("Token", "${messageId}"));
+```
+
+The Citrus message validation will make sure that the cookie is set in the request with respective name and value.
+
 ### HTTP Gzip compression
 
 Gzip is a very popular compression mechanism for optimizing the message transportation for large content. The Citrus http client and server components support gzip compression out of the box. This means

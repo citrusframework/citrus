@@ -54,6 +54,7 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
             servletName="citrus-ws",
             servletMappingPath="/foo",
             handleMimeHeaders=true,
+            handleAttributeHeaders=true,
             keepSoapEnvelope=true,
             messageConverter="messageConverter",
             messageFactory="soap12MessageFactory",
@@ -129,6 +130,7 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(soapServer1.getConnectors().length, 0);
         Assert.assertNull(soapServer1.getConnector());
         Assert.assertFalse(soapServer1.isHandleMimeHeaders());
+        Assert.assertFalse(soapServer1.isHandleAttributeHeaders());
         Assert.assertFalse(soapServer1.isKeepSoapEnvelope());
         Assert.assertNull(soapServer1.getSoapHeaderNamespace());
         Assert.assertEquals(soapServer1.getSoapHeaderPrefix(), "");
@@ -149,6 +151,7 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(soapServer2.getConnectors().length, 0);
         Assert.assertNull(soapServer2.getConnector());
         Assert.assertTrue(soapServer2.isHandleMimeHeaders());
+        Assert.assertTrue(soapServer2.isHandleAttributeHeaders());
         Assert.assertTrue(soapServer2.isKeepSoapEnvelope());
         Assert.assertEquals(soapServer2.getSoapHeaderNamespace(), "http://citrusframework.org");
         Assert.assertEquals(soapServer2.getSoapHeaderPrefix(), "CITRUS");

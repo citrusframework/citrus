@@ -24,14 +24,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
 public class HttpMessage extends DefaultMessage {
+
+    /** Http cookies */
+    private List<Cookie> cookies = new ArrayList<>();
 
     /**
      * Empty constructor initializing with empty message payload.
@@ -331,6 +335,75 @@ public class HttpMessage extends DefaultMessage {
         }
 
         return null;
+    }
+
+    /**
+     * Gets the cookies.
+     *
+     * @return
+     */
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    /**
+     * Sets the cookies.
+     *
+     * @param cookies
+     */
+    public void setCookies(Cookie[] cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                cookie(cookie);
+            }
+        }
+    }
+
+    /**
+     * Adds new cookie to this http message.
+     * @param cookie
+     * @return
+     */
+    public HttpMessage cookie(Cookie cookie) {
+        this.cookies.add(cookie);
+
+        setHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + cookie.getName(), getCookieString(cookie));
+
+        return this;
+    }
+
+    private String getCookieString(Cookie cookie) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(cookie.getName());
+        builder.append("=");
+        builder.append(cookie.getValue());
+
+        if (cookie.getVersion() > 0) {
+            builder.append(";Version=").append(cookie.getVersion());
+        }
+
+        if (StringUtils.hasText(cookie.getPath())) {
+            builder.append(";Path=").append(cookie.getPath());
+        }
+
+        if (StringUtils.hasText(cookie.getDomain())) {
+            builder.append(";Domain=").append(cookie.getDomain());
+        }
+
+        if (cookie.getMaxAge() > 0) {
+            builder.append(";Max-Age=").append(cookie.getMaxAge());
+        }
+
+        if (StringUtils.hasText(cookie.getComment())) {
+            builder.append(";Comment=").append(cookie.getComment());
+        }
+
+        if (cookie.getSecure()) {
+            builder.append(";Secure=").append(cookie.getSecure());
+        }
+
+        return builder.toString();
     }
 
     /**

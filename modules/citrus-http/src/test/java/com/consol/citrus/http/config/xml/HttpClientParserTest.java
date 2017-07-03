@@ -50,7 +50,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().isDefaultAcceptHeader(), true);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 5000L);
-
+        Assert.assertEquals(httpClient.getEndpointConfiguration().isHandleCookies(), false);
 
         // 2nd message sender
         httpClient = clients.get("httpClient2");
@@ -65,6 +65,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getEndpointUriResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(httpClient.getEndpointConfiguration().isDefaultAcceptHeader(), false);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().isHandleCookies(), true);
 
         // 3rd message sender
         httpClient = clients.get("httpClient3");

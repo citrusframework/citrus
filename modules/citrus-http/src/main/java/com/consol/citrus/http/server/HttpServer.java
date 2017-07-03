@@ -100,6 +100,12 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     /** Optional servlet handler customization */
     private ServletHandler servletHandler;
 
+    /** Should handle http attributes */
+    private boolean handleAttributeHeaders = false;
+
+    /** Should handle http cookies */
+    private boolean handleCookies = false;
+
     /** Message converter */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
@@ -627,5 +633,41 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setMessageConverter(HttpMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the handleAttributeHeaders.
+     *
+     * @return
+     */
+    public boolean isHandleAttributeHeaders() {
+        return handleAttributeHeaders;
+    }
+
+    /**
+     * Sets the handleAttributeHeaders.
+     *
+     * @param handleAttributeHeaders
+     */
+    public void setHandleAttributeHeaders(boolean handleAttributeHeaders) {
+        this.handleAttributeHeaders = handleAttributeHeaders;
+    }
+
+    /**
+     * Gets the handleCookies.
+     *
+     * @return
+     */
+    public boolean isHandleCookies() {
+        return handleCookies;
+    }
+
+    /**
+     * Sets the handleCookies.
+     *
+     * @param handleCookies
+     */
+    public void setHandleCookies(boolean handleCookies) {
+        this.handleCookies = handleCookies;
     }
 }

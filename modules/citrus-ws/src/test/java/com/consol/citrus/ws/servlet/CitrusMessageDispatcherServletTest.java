@@ -83,6 +83,7 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         when(webServiceServer.getEndpointAdapter()).thenReturn(null);
         when(webServiceServer.getMessageConverter()).thenReturn(new SoapMessageConverter());
         when(webServiceServer.isHandleMimeHeaders()).thenReturn(false);
+        when(webServiceServer.isHandleAttributeHeaders()).thenReturn(false);
         when(webServiceServer.isKeepSoapEnvelope()).thenReturn(false);
         when(webServiceServer.getSoapHeaderNamespace()).thenReturn(null);
         when(webServiceServer.getSoapHeaderPrefix()).thenReturn("");
@@ -96,6 +97,7 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(webServiceEndpoint.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
         Assert.assertEquals(webServiceEndpoint.getEndpointConfiguration().getMessageConverter().getClass(), SoapMessageConverter.class);
         Assert.assertFalse(webServiceEndpoint.getEndpointConfiguration().isHandleMimeHeaders());
+        Assert.assertFalse(webServiceEndpoint.getEndpointConfiguration().isHandleAttributeHeaders());
         Assert.assertFalse(webServiceEndpoint.getEndpointConfiguration().isKeepSoapEnvelope());
         Assert.assertNull(webServiceEndpoint.getDefaultNamespaceUri());
         Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "");
@@ -110,6 +112,7 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         when(webServiceServer.getEndpointAdapter()).thenReturn(new TimeoutProducingEndpointAdapter());
         when(webServiceServer.getMessageConverter()).thenReturn(new WsAddressingMessageConverter(new WsAddressingHeaders()));
         when(webServiceServer.isHandleMimeHeaders()).thenReturn(true);
+        when(webServiceServer.isHandleAttributeHeaders()).thenReturn(true);
         when(webServiceServer.isKeepSoapEnvelope()).thenReturn(true);
         when(webServiceServer.getSoapHeaderNamespace()).thenReturn("http://citrusframework.org");
         when(webServiceServer.getSoapHeaderPrefix()).thenReturn("CITRUS");
@@ -120,6 +123,7 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(webServiceEndpoint.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
         Assert.assertEquals(webServiceEndpoint.getEndpointConfiguration().getMessageConverter().getClass(), WsAddressingMessageConverter.class);
         Assert.assertTrue(webServiceEndpoint.getEndpointConfiguration().isHandleMimeHeaders());
+        Assert.assertTrue(webServiceEndpoint.getEndpointConfiguration().isHandleAttributeHeaders());
         Assert.assertTrue(webServiceEndpoint.getEndpointConfiguration().isKeepSoapEnvelope());
         Assert.assertEquals(webServiceEndpoint.getDefaultNamespaceUri(), "http://citrusframework.org");
         Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "CITRUS");

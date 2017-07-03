@@ -69,6 +69,9 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
     /** Should handle mime headers */
     private boolean handleMimeHeaders = true;
 
+    /** Should handle http attributes */
+    private boolean handleAttributeHeaders = false;
+
     /** Should keep soap envelope when creating internal message */
     private boolean keepSoapEnvelope = false;
 
@@ -281,4 +284,21 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
         this.keepSoapEnvelope = keepSoapEnvelope;
     }
 
+    /**
+     * Gets the handleAttributeHeaders.
+     *
+     * @return
+     */
+    public boolean isHandleAttributeHeaders() {
+        return handleAttributeHeaders;
+    }
+
+    /**
+     * Sets the handleAttributeHeaders.
+     *
+     * @param handleAttributeHeaders
+     */
+    public void setHandleAttributeHeaders(boolean handleAttributeHeaders) {
+        this.handleAttributeHeaders = handleAttributeHeaders;
+    }
 }

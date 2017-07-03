@@ -44,6 +44,7 @@ import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
@@ -183,7 +184,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 handleInboundSoapMessage((org.springframework.ws.soap.SoapMessage) webServiceMessage, message, endpointConfiguration);
             }
 
-            handleInboundHttpHeaders(message);
+            handleInboundHttpHeaders(message, endpointConfiguration);
 
             return message;
         } catch (TransformerException e) {
@@ -249,7 +250,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      *
      * @param message
      */
-    protected void handleInboundHttpHeaders(SoapMessage message) {
+    protected void handleInboundHttpHeaders(SoapMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
         TransportContext transportContext = TransportContextHolder.getTransportContext();
         if (transportContext == null) {
             log.warn("Unable to get complete set of http request headers - no transport context available");
@@ -260,13 +261,23 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         if (connection instanceof HttpServletConnection) {
             UrlPathHelper pathHelper = new UrlPathHelper();
             HttpServletConnection servletConnection = (HttpServletConnection) connection;
-            message.setHeader(SoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletConnection.getHttpServletRequest()));
-            message.setHeader(SoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletConnection.getHttpServletRequest()));
+            HttpServletRequest httpServletRequest = servletConnection.getHttpServletRequest();
+            message.setHeader(SoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(httpServletRequest));
+            message.setHeader(SoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(httpServletRequest));
 
-            String queryParams = pathHelper.getOriginatingQueryString(servletConnection.getHttpServletRequest());
+            String queryParams = pathHelper.getOriginatingQueryString(httpServletRequest);
             message.setHeader(SoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
 
-            message.setHeader(SoapMessageHeaders.HTTP_REQUEST_METHOD, servletConnection.getHttpServletRequest().getMethod().toString());
+            message.setHeader(SoapMessageHeaders.HTTP_REQUEST_METHOD, httpServletRequest.getMethod());
+
+            if (endpointConfiguration.isHandleAttributeHeaders()) {
+                Enumeration<String> attributeNames = httpServletRequest.getAttributeNames();
+                while (attributeNames.hasMoreElements()) {
+                    String attributeName = attributeNames.nextElement();
+                    Object attribute = httpServletRequest.getAttribute(attributeName);
+                    message.setHeader(attributeName, attribute);
+                }
+            }
         } else {
             log.warn("Unable to get complete set of http request headers");
 

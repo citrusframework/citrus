@@ -44,6 +44,7 @@
         <xs:attribute name="message-converter" type="xs:string"/>
         <xs:attribute name="message-factory" type="xs:string"/>
         <xs:attribute name="handle-mime-headers" type="xs:boolean"/>
+        <xs:attribute name="handle-header-attributes" type="xs:boolean"/>
         <xs:attribute name="keep-soap-envelope" type="xs:boolean"/>
         <xs:attribute name="soap-header-namespace" type="xs:string"/>
         <xs:attribute name="soap-header-prefix" type="xs:string"/>

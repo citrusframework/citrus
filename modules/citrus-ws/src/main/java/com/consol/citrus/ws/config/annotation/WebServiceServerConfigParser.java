@@ -48,6 +48,7 @@ public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser
         WebServiceServerBuilder builder = new WebServiceServerBuilder();
 
         builder.handleMimeHeaders(annotation.handleMimeHeaders());
+        builder.handleAttributeHeaders(annotation.handleAttributeHeaders());
         builder.keepSoapEnvelope(annotation.keepSoapEnvelope());
 
         if (StringUtils.hasText(annotation.soapHeaderNamespace())) {

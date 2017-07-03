@@ -155,6 +155,12 @@ public @interface WebServiceServerConfig {
     boolean handleMimeHeaders() default false;
 
     /**
+     * Handle attribute headers.
+     * @return
+     */
+    boolean handleAttributeHeaders() default false;
+
+    /**
      * Keep SOAP envelope.
      * @return
      */

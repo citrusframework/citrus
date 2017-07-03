@@ -61,6 +61,8 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "httpServer1-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
+        Assert.assertFalse(server.isHandleAttributeHeaders());
+        Assert.assertFalse(server.isHandleCookies());
 
         // 2nd message sender
         server = servers.get("httpServer2");
@@ -77,7 +79,9 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getContextPath(), "/citrus");
         Assert.assertEquals(server.getServletName(), "citrus-http");
         Assert.assertEquals(server.getServletMappingPath(), "/foo");
-        
+        Assert.assertTrue(server.isHandleAttributeHeaders());
+        Assert.assertTrue(server.isHandleCookies());
+
         // 3rd message sender
         server = servers.get("httpServer3");
         Assert.assertNull(server.getConnector());

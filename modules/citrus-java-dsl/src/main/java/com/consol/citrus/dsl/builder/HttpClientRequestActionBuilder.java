@@ -21,10 +21,13 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.Cookie;
 
 /**
  * @author Christoph Deppisch
@@ -44,7 +47,7 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
         super(delegate);
         delegate.setDelegate(new SendMessageAction());
         getAction().setEndpoint(httpClient);
-        getAction().setMessageBuilder(new StaticMessageContentBuilder(httpMessage));
+        message(httpMessage);
     }
 
     /**
@@ -56,7 +59,7 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
         super(delegate);
         delegate.setDelegate(new SendMessageAction());
         getAction().setEndpointUri(httpClientUri);
-        getAction().setMessageBuilder(new StaticMessageContentBuilder(httpMessage));
+        message(httpMessage);
     }
 
     @Override
@@ -147,6 +150,16 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
         return this;
     }
 
+    /**
+     * Adds cookie to response by "Cookie" header.
+     * @param cookie
+     * @return
+     */
+    public HttpClientRequestActionBuilder cookie(Cookie cookie) {
+        httpMessage.cookie(cookie);
+        return this;
+    }
+
     @Override
     public HttpClientRequestActionBuilder message(Message message) {
         if (message instanceof HttpMessage) {
@@ -162,9 +175,18 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
                 ((HttpMessage) message).uri(this.httpMessage.getUri());
             }
 
+            if (StringUtils.hasText(this.httpMessage.getQueryParams())) {
+                ((HttpMessage) message).queryParams(this.httpMessage.getQueryParams());
+            }
+
             this.httpMessage = (HttpMessage) message;
+        } else {
+            this.httpMessage = new HttpMessage(message);
         }
 
-        return super.message(message);
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
+        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
+        getAction().setMessageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        return this;
     }
 }

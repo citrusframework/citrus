@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+              http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+
+  <testcase name="SoapHttpAttributeHeaderIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2017-06-30</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2017-06-30T00:00:00</last-updated-on>
+    </meta-info>
+
+    <variables>
+      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
+      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
+      <variable name="user" value="Christoph"></variable>
+      <variable name="csrfToken" value="citrus:randomUUID()"></variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Test: Receive Http SOAP request via server instance and send back SOAP response.</message>
+      </echo>
+
+      <send endpoint="echoHttpClient" fork="true">
+        <message>
+          <data>
+            <![CDATA[
+              <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hello="http://citrusframework.org/schemas/samples/HelloService.xsd" xmlns:header="http://citrusframework.org/header">
+                <SOAP-ENV:Header>
+                  <header:Operation>sayHello</header:Operation>
+                  <header:CorrelationId>${correlationId}</header:CorrelationId>
+                </SOAP-ENV:Header>
+                <SOAP-ENV:Body>
+                  <hello:HelloRequest>
+                    <hello:MessageId>${messageId}</hello:MessageId>
+                    <hello:CorrelationId>${correlationId}</hello:CorrelationId>
+                    <hello:User>${user}</hello:User>
+                    <hello:Text>Hello Citrus</hello:Text>
+                  </hello:HelloRequest>
+                </SOAP-ENV:Body>
+              </SOAP-ENV:Envelope>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="SOAPAction" value="HelloService/sayHello"/>
+          <element name="Content-Type" value="text/xml;charset=utf-8"/>
+          <element name="X-CSRF-TOKEN" value="${csrfToken}"/>
+        </header>
+      </send>
+
+      <receive endpoint="echoSoapServer">
+        <message>
+          <data>
+            <![CDATA[
+              <hello:HelloRequest xmlns:hello="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <hello:MessageId>${messageId}</hello:MessageId>
+                <hello:CorrelationId>${correlationId}</hello:CorrelationId>
+                <hello:User>${user}</hello:User>
+                <hello:Text>Hello Citrus</hello:Text>
+              </hello:HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_soap_action" value="HelloService/sayHello"/>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+          <element name="X-CSRF-TOKEN" value="${csrfToken}"/>
+        </header>
+      </receive>
+
+      <send endpoint="echoSoapServer">
+        <message>
+          <data>
+            <![CDATA[
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>HelloService</User>
+                <Text>Hello ${user}</Text>
+              </HelloResponse>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_soap_action" value="HelloService/sayHello"/>
+          <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+          <element name="{http://citrusframework.org/test}CorrelationId" value="${correlationId}"/>
+        </header>
+      </send>
+
+      <receive endpoint="echoHttpClient">
+        <message>
+          <data>
+            <![CDATA[
+              <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                <SOAP-ENV:Header>
+                  <Operation xmlns="http://citrusframework.org/test">sayHello</Operation>
+                  <CorrelationId xmlns="http://citrusframework.org/test">${correlationId}</CorrelationId>
+                </SOAP-ENV:Header>
+                <SOAP-ENV:Body>
+                  <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                    <MessageId>${messageId}</MessageId>
+                    <CorrelationId>${correlationId}</CorrelationId>
+                    <User>HelloService</User>
+                    <Text>Hello ${user}</Text>
+                  </HelloResponse>
+                </SOAP-ENV:Body>
+              </SOAP-ENV:Envelope>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="SOAPAction" value='"HelloService/sayHello"'/>
+          <element name="Content-Type" value="text/xml;charset=utf-8"/>
+        </header>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

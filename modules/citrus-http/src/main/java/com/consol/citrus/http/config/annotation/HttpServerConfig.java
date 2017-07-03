@@ -114,6 +114,18 @@ public @interface HttpServerConfig {
     String messageConverter() default "";
 
     /**
+     * Handle attribute headers.
+     * @return
+     */
+    boolean handleAttributeHeaders() default false;
+
+    /**
+     * Handle cookies.
+     * @return
+     */
+    boolean handleCookies() default false;
+
+    /**
      * Auto start.
      * @return
      */

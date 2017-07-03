@@ -25,10 +25,10 @@ import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -73,13 +73,13 @@ public class HttpStepsTest extends AbstractTestNGUnitTest {
         SendMessageAction action = (SendMessageAction) ((DelegatingTestAction) designer.getTestCase().getTestAction(0)).getDelegate();
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=UTF-8");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_ACCEPT), "text/plain, application/xml, application/json, */*");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/test");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), "POST");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader("Accept-Charset"), "utf-8");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), "<TestRequestMessage>\n  <text>Hello server</text>\n</TestRequestMessage>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof HttpMessageContentBuilder);
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=UTF-8");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_ACCEPT), "text/plain, application/xml, application/json, */*");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/test");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), "POST");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader("Accept-Charset"), "utf-8");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), "<TestRequestMessage>\n  <text>Hello server</text>\n</TestRequestMessage>");
     }
 
     @Test
@@ -92,11 +92,11 @@ public class HttpStepsTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction) designer.getTestCase().getTestAction(0)).getDelegate();
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=utf-8");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader("Accept-Charset"), "utf-8");
-        Assert.assertEquals(((StaticMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), "<TestResponseMessage>\n  <text>Hello Citrus</text>\n</TestResponseMessage>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof HttpMessageContentBuilder);
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=utf-8");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader("Accept-Charset"), "utf-8");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), "<TestResponseMessage>\n  <text>Hello Citrus</text>\n</TestResponseMessage>");
     }
 
 }

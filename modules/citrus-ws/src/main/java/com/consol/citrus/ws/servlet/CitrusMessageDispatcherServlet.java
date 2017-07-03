@@ -90,6 +90,7 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
 
             WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
             endpointConfiguration.setHandleMimeHeaders(webServiceServer.isHandleMimeHeaders());
+            endpointConfiguration.setHandleAttributeHeaders(webServiceServer.isHandleAttributeHeaders());
             endpointConfiguration.setKeepSoapEnvelope(webServiceServer.isKeepSoapEnvelope());
             endpointConfiguration.setMessageConverter(webServiceServer.getMessageConverter());
             messageEndpoint.setEndpointConfiguration(endpointConfiguration);

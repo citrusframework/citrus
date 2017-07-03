@@ -54,6 +54,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
             port=8082,
             contextConfigLocation="classpath:com/consol/citrus/http/servlet-context.xml",
             messageConverter="messageConverter",
+            handleAttributeHeaders=true,
+            handleCookies=true,
             connector="connector",
             resourceBase="src/it/resources",
             rootParentContext=true,
@@ -153,6 +155,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer1.getPort(), 8081);
         Assert.assertEquals(httpServer1.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
         Assert.assertEquals(httpServer1.getResourceBase(), "src/main/resources");
+        Assert.assertFalse(httpServer1.isHandleAttributeHeaders());
+        Assert.assertFalse(httpServer1.isHandleCookies());
         Assert.assertFalse(httpServer1.isAutoStart());
         Assert.assertFalse(httpServer1.isUseRootContextAsParent());
         Assert.assertEquals(httpServer1.getContextPath(), "/");
@@ -170,6 +174,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer2.getPort(), 8082);
         Assert.assertEquals(httpServer2.getContextConfigLocation(), "classpath:com/consol/citrus/http/servlet-context.xml");
         Assert.assertEquals(httpServer2.getResourceBase(), "src/it/resources");
+        Assert.assertTrue(httpServer2.isHandleAttributeHeaders());
+        Assert.assertTrue(httpServer2.isHandleCookies());
         Assert.assertFalse(httpServer2.isAutoStart());
         Assert.assertTrue(httpServer2.isUseRootContextAsParent());
         Assert.assertEquals(httpServer2.getContextPath(), "/citrus");

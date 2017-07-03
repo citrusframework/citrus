@@ -46,6 +46,8 @@ public abstract class HttpMessageHeaders {
     
     public static final String HTTP_QUERY_PARAMS = HTTP_PREFIX + "query_params";
 
+    public static final String HTTP_COOKIE_PREFIX = HTTP_PREFIX + "cookie_";
+
     /** Http content type */
     public static final String HTTP_CONTENT_TYPE = "Content-Type";
 

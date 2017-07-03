@@ -65,7 +65,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    protected Object buildMessagePayload(TestContext context, String messageType) {
+    public Object buildMessagePayload(TestContext context, String messageType) {
         if (message.getPayload() instanceof String) {
             return context.replaceDynamicContentInString(message.getPayload(String.class));
         } else {
@@ -74,7 +74,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    protected Map<String, Object> buildMessageHeaders(TestContext context) {
+    public Map<String, Object> buildMessageHeaders(TestContext context) {
         Map<String, Object> headers = super.buildMessageHeaders(context);
         headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders()));
 

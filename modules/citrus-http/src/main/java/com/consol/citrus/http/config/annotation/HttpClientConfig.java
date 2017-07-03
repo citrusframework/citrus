@@ -86,6 +86,12 @@ public @interface HttpClientConfig {
     boolean defaultAcceptHeader() default true;
 
     /**
+     * Handle cookies.
+     * @return
+     */
+    boolean handleCookies() default false;
+
+    /**
      * Content type.
      * @return
      */

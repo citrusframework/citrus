@@ -76,6 +76,12 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Auto add default accept header with os supported content-types */
     private boolean defaultAcceptHeader = true;
 
+    /** Should handle http attributes */
+    private boolean handleAttributeHeaders = false;
+
+    /** Should handle http cookies */
+    private boolean handleCookies = false;
+
     /**
      * Get the complete request URL.
      * @return the urlPath
@@ -302,5 +308,41 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public boolean isDefaultAcceptHeader() {
         return defaultAcceptHeader;
+    }
+
+    /**
+     * Gets the handleAttributeHeaders.
+     *
+     * @return
+     */
+    public boolean isHandleAttributeHeaders() {
+        return handleAttributeHeaders;
+    }
+
+    /**
+     * Sets the handleAttributeHeaders.
+     *
+     * @param handleAttributeHeaders
+     */
+    public void setHandleAttributeHeaders(boolean handleAttributeHeaders) {
+        this.handleAttributeHeaders = handleAttributeHeaders;
+    }
+
+    /**
+     * Gets the handleCookies.
+     *
+     * @return
+     */
+    public boolean isHandleCookies() {
+        return handleCookies;
+    }
+
+    /**
+     * Sets the handleCookies.
+     *
+     * @param handleCookies
+     */
+    public void setHandleCookies(boolean handleCookies) {
+        this.handleCookies = handleCookies;
     }
 }

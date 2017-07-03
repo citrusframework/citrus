@@ -193,6 +193,26 @@ public class HttpServerBuilder extends AbstractEndpointBuilder<HttpServer> {
     }
 
     /**
+     * Sets the handleAttributeHeaders property.
+     * @param flag
+     * @return
+     */
+    public HttpServerBuilder handleAttributeHeaders(boolean flag) {
+        endpoint.setHandleAttributeHeaders(flag);
+        return this;
+    }
+
+    /**
+     * Sets the handleCookies property.
+     * @param flag
+     * @return
+     */
+    public HttpServerBuilder handleCookies(boolean flag) {
+        endpoint.setHandleCookies(flag);
+        return this;
+    }
+
+    /**
      * Sets the default timeout.
      * @param timeout
      * @return

@@ -53,6 +53,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
             contentType="text/xml",
             charset="ISO-8859-1",
             defaultAcceptHeader=false,
+            handleCookies=true,
             timeout=10000L,
             messageConverter="messageConverter",
             requestFactory="soapRequestFactory",
@@ -121,6 +122,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader(), true);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().isHandleCookies(), false);
 
         // 2nd message sender
         Assert.assertNotNull(httpClient2.getEndpointConfiguration().getRestTemplate());
@@ -134,6 +136,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getEndpointUriResolver(), endpointResolver);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader(), false);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().isHandleCookies(), true);
 
         // 3rd message sender
         Assert.assertNotNull(httpClient3.getEndpointConfiguration().getRestTemplate());

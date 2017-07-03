@@ -29,7 +29,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UrlPathHelper;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.*;
 import java.util.Enumeration;
 
 /**
@@ -119,6 +119,19 @@ public class HttpMessageController {
             }
         }
 
+        if (endpointConfiguration.isHandleCookies()) {
+            request.setCookies(servletRequest.getCookies());
+        }
+
+        if (endpointConfiguration.isHandleAttributeHeaders()) {
+            Enumeration<String> attributeNames = servletRequest.getAttributeNames();
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                Object attribute = servletRequest.getAttribute(attributeName);
+                request.setHeader(attributeName, attribute);
+            }
+        }
+
         String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
 
         if (queryParams == null) {
@@ -136,7 +149,7 @@ public class HttpMessageController {
 
         Message response = endpointAdapter.handleMessage(request);
         if (response == null) {
-            responseCache = new ResponseEntity(HttpStatus.OK);
+            responseCache = new ResponseEntity<>(HttpStatus.OK);
         } else {
             HttpMessage httpResponse;
             if (response instanceof HttpMessage) {
@@ -149,7 +162,14 @@ public class HttpMessageController {
                 httpResponse.status(HttpStatus.OK);
             }
 
-            responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
+            responseCache = (ResponseEntity<String>) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
+
+            if (endpointConfiguration.isHandleCookies() && httpResponse.getCookies() != null) {
+                HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+                for (Cookie cookie : httpResponse.getCookies()) {
+                    servletResponse.addCookie(cookie);
+                }
+            }
         }
 
         return responseCache;

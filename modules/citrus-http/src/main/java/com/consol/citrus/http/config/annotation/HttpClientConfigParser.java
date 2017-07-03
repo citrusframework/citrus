@@ -83,6 +83,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         }
 
         builder.defaultAcceptHeader(annotation.defaultAcceptHeader());
+        builder.handleCookies(annotation.handleCookies());
         builder.charset(annotation.charset());
         builder.contentType(annotation.contentType());
         builder.pollingInterval(annotation.pollingInterval());

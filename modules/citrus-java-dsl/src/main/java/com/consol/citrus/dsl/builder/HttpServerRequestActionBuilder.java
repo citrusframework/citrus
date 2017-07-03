@@ -21,10 +21,14 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.Cookie;
 
 /**
  * @author Christoph Deppisch
@@ -124,6 +128,16 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
         return this;
     }
 
+    /**
+     * Adds cookie to response by "Cookie" header.
+     * @param cookie
+     * @return
+     */
+    public HttpServerRequestActionBuilder cookie(Cookie cookie) {
+        httpMessage.cookie(cookie);
+        return this;
+    }
+
     @Override
     public HttpServerRequestActionBuilder message(Message message) {
         if (message instanceof HttpMessage) {
@@ -135,9 +149,18 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
                 ((HttpMessage) message).path(this.httpMessage.getPath());
             }
 
+            if (StringUtils.hasText(this.httpMessage.getQueryParams())) {
+                ((HttpMessage) message).queryParams(this.httpMessage.getQueryParams());
+            }
+
             this.httpMessage = (HttpMessage) message;
+        } else {
+            this.httpMessage = new HttpMessage(message);
         }
 
-        return super.message(message);
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
+        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
+        getAction().setMessageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        return this;
     }
 }

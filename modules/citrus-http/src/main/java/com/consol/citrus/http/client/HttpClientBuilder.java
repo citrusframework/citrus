@@ -135,6 +135,16 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
     }
 
     /**
+     * Sets the handleCookies property.
+     * @param flag
+     * @return
+     */
+    public HttpClientBuilder handleCookies(boolean flag) {
+        endpoint.getEndpointConfiguration().setHandleCookies(flag);
+        return this;
+    }
+
+    /**
      * Sets the content type.
      * @param contentType
      * @return

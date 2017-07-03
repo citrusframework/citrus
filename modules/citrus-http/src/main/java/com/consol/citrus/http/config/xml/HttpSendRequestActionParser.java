@@ -21,8 +21,7 @@ import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -33,6 +32,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import javax.servlet.http.Cookie;
 import java.util.*;
 
 /**
@@ -83,8 +83,8 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
         Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
-            for (Iterator<?> iter = headerElements.iterator(); iter.hasNext();) {
-                Element header = (Element) iter.next();
+            for (Object headerElement : headerElements) {
+                Element header = (Element) headerElement;
                 httpMessage.setHeader(header.getAttribute("name"), header.getAttribute("value"));
             }
 
@@ -102,6 +102,12 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             if (StringUtils.hasText(version)) {
                 httpMessage.version(version);
             }
+
+            List<?> cookieElements = DomUtils.getChildElementsByTagName(headers, "cookie");
+            for (Object cookieElement : cookieElements) {
+                Element cookie = (Element) cookieElement;
+                httpMessage.cookie(new Cookie(cookie.getAttribute("name"), cookie.getAttribute("value")));
+            }
         }
 
         Element body = DomUtils.getChildElementByTagName(requestElement, "body");
@@ -117,13 +123,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(body);
-        Map<String, Object> messageHeaders = httpMessage.getHeaders();
-        messageHeaders.remove(MessageHeaders.ID);
-        messageHeaders.remove(MessageHeaders.TIMESTAMP);
-        messageBuilder.setMessageHeaders(messageHeaders);
-
-        builder.addPropertyValue("messageBuilder", messageBuilder);
+        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body)));
 
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         parseExtractHeaderElements(element, variableExtractors);

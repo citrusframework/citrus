@@ -53,6 +53,7 @@ public class WebServiceServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("security-handler"), "securityHandler");
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-mime-headers"), "handleMimeHeaders");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-header-attributes"), "handleAttributeHeaders");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("keep-soap-envelope"), "keepSoapEnvelope");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("soap-header-namespace"), "soapHeaderNamespace");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("soap-header-prefix"), "soapHeaderPrefix");
