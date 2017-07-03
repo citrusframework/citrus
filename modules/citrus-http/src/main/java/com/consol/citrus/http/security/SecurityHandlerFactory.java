@@ -39,39 +39,39 @@ import java.util.Map.Entry;
 public class SecurityHandlerFactory implements InitializingBean, FactoryBean<SecurityHandler> {
 
     /** User credentials known to login service */
-    private List<User> users = new ArrayList<User>();
-    
+    private List<User> users = new ArrayList<>();
+
     /** Realm name for this security handler */
     private String realm = "realm";
-    
+
     /** List of constraints with mapping path as key */
     private Map<String, Constraint> constraints = new HashMap<String, Constraint>();
-    
+
     /** User login service consolidated for user authentication */
     private LoginService loginService;
-    
+
     /** Authenticator implementation -  basic auth by default */
     private Authenticator authenticator = new BasicAuthenticator();
-    
+
     /**
      * Construct new security handler for basic authentication.
      */
     public SecurityHandler getObject() throws Exception {
-        
+
         ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
         securityHandler.setAuthenticator(authenticator);
         securityHandler.setRealmName(realm);
-        
+
         for (Entry<String, Constraint> constraint : constraints.entrySet()) {
             ConstraintMapping constraintMapping = new ConstraintMapping();
             constraintMapping.setConstraint(constraint.getValue());
             constraintMapping.setPathSpec(constraint.getKey());
-            
+
             securityHandler.addConstraintMapping(constraintMapping);
         }
 
         securityHandler.setLoginService(loginService);
-        
+
         return securityHandler;
     }
 
@@ -80,11 +80,12 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
      */
     public void afterPropertiesSet() throws Exception {
         if (loginService == null) {
-            loginService = new SimpleLoginService();
-            ((SimpleLoginService) loginService).setName(realm);
+            loginService = new HashLoginService();
+            ((HashLoginService) loginService).setName(realm);
+            ((HashLoginService) loginService).setUserStore(new SimplePropertyUserStore());
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -180,30 +181,13 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
     }
 
     /**
-     * Simple login service adds known users.
-     */
-    private class SimpleLoginService extends HashLoginService {
-        @Override
-        protected void doStart() throws Exception {
-            if (_propertyUserStore == null) {
-                _propertyUserStore = new SimplePropertyUserStore();
-                _propertyUserStore.setHotReload(hotReload);
-                _propertyUserStore.setConfigPath(_config);
-                _propertyUserStore.start();
-            }
-
-            super.doStart();
-        }
-    }
-
-    /**
      * Simple user store loads users from this factories user list.
      */
     private class SimplePropertyUserStore extends PropertyUserStore {
         @Override
         protected void loadUsers() throws IOException {
-            _knownUserIdentities.clear();
-            _knownUsers.clear();
+            getKnownUserIdentities().clear();
+            getUsers().clear();
 
             for (User user : users) {
                 Credential credential = Credential.getCredential(user.getPassword());
@@ -224,8 +208,8 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
 
                 subject.setReadOnly();
 
-                _knownUserIdentities.put(user.getName(),_identityService.newUserIdentity(subject, userPrincipal, roleArray));
-                _knownUsers.add(user.getName());
+                getKnownUserIdentities().put(user.getName(), getIdentityService().newUserIdentity(subject, userPrincipal, roleArray));
+                getUsers().add(user);
             }
         }
     }

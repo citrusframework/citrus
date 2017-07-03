@@ -76,7 +76,6 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command);
 
         when(dockerClient.pingCmd()).thenReturn(command);
-        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new Ping());
@@ -212,7 +211,6 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command);
 
         when(dockerClient.removeContainerCmd("container_inspect")).thenReturn(command);
-        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerRemove()
@@ -232,7 +230,6 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command);
 
         when(dockerClient.removeImageCmd("image_remove")).thenReturn(command);
-        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ImageRemove()
@@ -252,7 +249,6 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command);
 
         when(dockerClient.startContainerCmd("container_start")).thenReturn(command);
-        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerStart()
@@ -272,7 +268,6 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command);
 
         when(dockerClient.stopContainerCmd("container_stop")).thenReturn(command);
-        when(command.exec()).thenReturn(null);
 
         DockerExecuteAction action = new DockerExecuteAction();
         action.setCommand(new ContainerStop()
