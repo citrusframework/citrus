@@ -44,10 +44,12 @@ On the client side we have a simple HTTP message client component connecting to 
           request-url="http://localhost:8080/hello"
           request-method="GET"
           content-type="application/xml"
+          charset="UTF-8"
           timeout="60000"/>
 ```
 
-The **request-method** defines the HTTP method to use. In addition to that we can specify the content-type of the request we are about to send. The client builds the HTTP request and sends it to the HTTP server. While the client is waiting for the synchronous HTTP response to arrive we are able to poll several times for the response message in our test case. As usual aou can use the same client endpoint in your test case to send and receive messages synchronously. In case the reply message comes in too late according to the timeout settings a respective timeout error is raised.
+The **request-method** defines the HTTP method to use. In addition to that we can specify the content-type of the request we are about to send. The charset is also added to the content-type header. In case you do not want to set the charset at all please specify an empty string as the default value is *UTF-8*. 
+The client builds the HTTP request and sends it to the HTTP server. While the client is waiting for the synchronous HTTP response to arrive we are able to poll several times for the response message in our test case. As usual aou can use the same client endpoint in your test case to send and receive messages synchronously. In case the reply message comes in too late according to the timeout settings a respective timeout error is raised.
 
 Http defines several request methods that a client can use to access Http server resources. In the example client above we are using **GET** as default request method. Of course you can overwrite this setting in a test case action by setting the HTTP request method inside the sending test action. The Http client component can be used as normal endpoint in a sending test action. Use something like this in your test:
 

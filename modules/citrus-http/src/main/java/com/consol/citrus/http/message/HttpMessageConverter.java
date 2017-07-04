@@ -57,7 +57,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
         }
 
         if (httpHeaders.getContentType() == null) {
-            httpHeaders.setContentType(MediaType.parseMediaType(endpointConfiguration.getContentType().contains("charset") ?
+            httpHeaders.setContentType(MediaType.parseMediaType((endpointConfiguration.getContentType().contains("charset") || !StringUtils.hasText(endpointConfiguration.getCharset())) ?
                     endpointConfiguration.getContentType() : endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset()));
         }
 
