@@ -18,6 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -63,7 +64,11 @@ public class SQLActionParser implements BeanDefinitionParser {
         }
         
         beanDefinition.addPropertyReference("dataSource", dataSource);
-        
+
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("transaction-manager"), "transactionManager");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("transaction-timeout"), "transactionTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("transaction-isolation-level"), "transactionIsolationLevel");
+
         DescriptionElementParser.doParse(element, beanDefinition);
 
         List<String> statements = new ArrayList<String>();

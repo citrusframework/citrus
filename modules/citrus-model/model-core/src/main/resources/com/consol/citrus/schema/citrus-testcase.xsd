@@ -359,6 +359,9 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="datasource" type="xs:string" use="required"/>
+        <xs:attribute name="transaction-manager" type="xs:string"/>
+        <xs:attribute name="transaction-timeout" type="xs:string"/>
+        <xs:attribute name="transaction-isolation-level" type="xs:string"/>
         <xs:attribute name="ignore-errors" type="xs:boolean"/>
     </xs:complexType>
 
@@ -571,6 +574,9 @@
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="datasource" type="xs:string" use="required"/>
+        <xs:attribute name="transaction-manager" type="xs:string"/>
+        <xs:attribute name="transaction-timeout" type="xs:string"/>
+        <xs:attribute name="transaction-isolation-level" type="xs:string"/>
         <xs:attribute name="ignore-errors" type="xs:string"/>
     </xs:complexType>
 

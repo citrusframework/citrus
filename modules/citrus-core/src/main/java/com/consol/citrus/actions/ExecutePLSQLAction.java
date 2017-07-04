@@ -20,11 +20,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.SqlUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Class executes PLSQL statements either declared inline as PLSQL statements or given by an
@@ -68,22 +67,45 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             });
         }
 
+        if (getTransactionManager() != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
+            }
+
+            TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
+            transactionTemplate.setTimeout(Integer.valueOf(context.replaceDynamicContentInString(getTransactionTimeout())));
+            transactionTemplate.setIsolationLevelName(context.replaceDynamicContentInString(getTransactionIsolationLevel()));
+            transactionTemplate.execute(status -> {
+                executeStatements(context);
+                return null;
+            });
+        } else {
+            executeStatements(context);
+        }
+    }
+
+    /**
+     * Run all PLSQL statements.
+     * @param context
+     */
+    protected void executeStatements(TestContext context) {
         for (String stmt : statements) {
             try {
-                stmt = context.replaceDynamicContentInString(stmt.trim());
+                final String toExecute = context.replaceDynamicContentInString(stmt.trim());
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Executing PLSQL statement: " + stmt);
+                    log.debug("Executing PLSQL statement: " + toExecute);
                 }
-                
-                getJdbcTemplate().execute(stmt);
+
+                getJdbcTemplate().execute(toExecute);
+
                 log.info("PLSQL statement execution successful");
             } catch (DataAccessException e) {
                 if (ignoreErrors) {
-                    log.warn("Ignoring error while executing SQL statement: " + e.getMessage());
+                    log.warn("Ignoring error while executing PLSQL statement: " + e.getMessage());
                     continue;
                 } else {
-                    throw new CitrusRuntimeException("Failed to execute SQL statement", e);
+                    throw new CitrusRuntimeException("Failed to execute PLSQL statement", e);
                 }
             }
         }

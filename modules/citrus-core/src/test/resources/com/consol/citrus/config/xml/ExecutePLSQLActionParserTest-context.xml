@@ -10,7 +10,7 @@
                 <resource file="classpath:com/consol/citrus/actions/plsql.sql"/>
             </plsql>
             
-            <plsql datasource="testDataSource" ignore-errors="true">
+            <plsql datasource="testDataSource" ignore-errors="true" transaction-manager="testTransactionManager" transaction-timeout="5000" transaction-isolation-level="ISOLATION_READ_COMMITTED">
                 <script>
                     <![CDATA[
                         BEGIN
@@ -31,5 +31,9 @@
     
     <spring:bean id="testDataSource" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.sql.DataSource"/>
+    </spring:bean>
+
+    <spring:bean id="testTransactionManager" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg value="org.springframework.transaction.PlatformTransactionManager"/>
     </spring:bean>
 </spring:beans>

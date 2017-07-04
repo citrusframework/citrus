@@ -218,6 +218,58 @@ For the validation of multiple rows the ***`<validate>`*** element is able to ho
 **Important**
 It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add "order by" SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.
 
+### Transaction management
+
+By default no transactions are used when Citrus executes SQL statements on a datasource. You can enable transaction management by selecting a transaction manager.
+
+**XML DSL** 
+
+```xml
+<actions>
+    <sql datasource="someDataSource" 
+         transaction-manager="someTransactionManager" 
+         transaction-timeout="15000" 
+         transaction-isolation-level="ISOLATION_READ_COMMITTED">
+        <statement>DELETE FROM CUSTOMERS</statement>
+        <statement>DELETE FROM ORDERS</statement>
+    </sql>
+</actions>
+```
+
+**Java DSL** 
+
+```java
+@Autowired
+@Qualifier("myDataSource")
+private DataSource dataSource;
+
+@CitrusTest
+public void sqlTest() {
+    sql(dataSource)
+        .transactionManager(transactionManager)
+        .transactionTimeout(15000)
+        .transactionIsolationLevel("ISOLATION_READ_COMMITTED")
+        .statement("DELETE FROM CUSTOMERS")
+        .statement("DELETE FROM ORDERS");
+}
+```
+
+The *transaction-manager* attribute references a Spring bean of type "*org.springframework.transaction.PlatformTransactionManager*". You can add this transaction manager to the Spring bean configuration:
+
+```xml
+<bean id="someTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  <constructor-arg ref="someDataSource"/>
+</bean>
+```
+
+The transaction isolation level as well as the transaction timeout get set on the transaction definition used during SQL statement execution. The isolation level should evaluate to one of the constants given in "*org.springframework.transaction.TransactionDefinition*". Valid isolation level are:
+
+* ISOLATION_DEFAULT
+* ISOLATION_READ_UNCOMMITTED
+* ISOLATION_READ_COMMITTED
+* ISOLATION_REPEATABLE_READ
+* ISOLATION_SERIALIZABLE
+
 ### Groovy SQL result set validation
 
 Groovy provides great support for accessing Java list objects and maps. As a Java SQL result set is nothing but a list of map representations, where each entry in the list defines a row in the result set and each map entry represents the columns and values. So with Groovy's list and map access we have great possibilities to validate a SQL result set - out of the box.

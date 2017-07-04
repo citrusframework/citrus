@@ -16,14 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.actions.ExecutePLSQLAction;
 
 /**
  * Bean definition parser for plsql action in test case.
@@ -41,6 +41,10 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
         String dataSource = element.getAttribute("datasource");
         beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + dataSource);
         beanDefinition.addPropertyReference("dataSource", dataSource);
+
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("transaction-manager"), "transactionManager");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("transaction-timeout"), "transactionTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("transaction-isolation-level"), "transactionIsolationLevel");
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

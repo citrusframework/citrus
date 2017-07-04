@@ -22,12 +22,13 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.ScriptValidationContext;
+import org.apache.commons.codec.binary.Base64;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.apache.commons.codec.binary.Base64;
 
 import java.util.*;
 
@@ -39,11 +40,15 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
-	
+
+    private static final String DB_STMT_1 = "select ORDERTYPE, STATUS from orders where ID=5";
+    private static final String DB_STMT_2 = "select NAME, HEIGHT from customers where ID=1";
+
     private ExecuteSQLQueryAction executeSQLQueryAction;
     
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
-    
+    private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
+
     @BeforeMethod
     public void setUp() {
         executeSQLQueryAction  = new ExecuteSQLQueryAction();
@@ -52,7 +57,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
     
 	@Test
 	public void testSQLStatement() {
-	    String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+	    String sql = DB_STMT_1;
 	    reset(jdbcTemplate);
 	    
 	    Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -72,9 +77,33 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
 	}
 
+	@Test
+	public void testSQLStatementWithTransaction() {
+	    String sql = DB_STMT_1;
+	    reset(jdbcTemplate, transactionManager);
+
+	    Map<String, Object> resultMap = new HashMap<String, Object>();
+	    resultMap.put("ORDERTYPE", "small");
+	    resultMap.put("STATUS", "in_progress");
+
+	    when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.singletonList(resultMap));
+
+	    List<String> stmts = Collections.singletonList(sql);
+	    executeSQLQueryAction.setStatements(stmts);
+
+	    executeSQLQueryAction.setTransactionManager(transactionManager);
+
+	    executeSQLQueryAction.execute(context);
+
+	    Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+	    Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+	    Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+	}
+
     @Test
     public void testSQLStatementLowerCaseColumnNames() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -96,8 +125,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testSQLMultipleStatements() {
-        String sql1 = "select ORDERTYPE, STATUS from orders where ID=5";
-        String sql2 = "select NAME, HEIGHT from customers where ID=1";
+        String sql1 = DB_STMT_1;
+        String sql2 = DB_STMT_2;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap1 = new HashMap<String, Object>();
@@ -164,7 +193,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testNullValue() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -195,7 +224,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
-        when(jdbcTemplate.queryForList("select ORDERTYPE, STATUS from orders where ID=5")).thenReturn(Collections.singletonList(resultMap));
+        when(jdbcTemplate.queryForList(DB_STMT_1)).thenReturn(Collections.singletonList(resultMap));
 
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.setStatements(stmts);
@@ -210,7 +239,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testExtractToVariables() {
-	    String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+	    String sql = DB_STMT_1;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -238,7 +267,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExtractToVariablesLowerCaseColumnNames() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -269,7 +298,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testExtractToVariablesUnknownColumnMapping() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -291,7 +320,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testResultSetValidation() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -320,7 +349,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testResultSetValidationLowerCase() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -376,7 +405,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testResultSetValidationError() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -611,8 +640,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMultipleStatementsValidationError() {
-        String sql1 = "select ORDERTYPE, STATUS from orders where ID=5";
-        String sql2 = "select NAME, HEIGHT from customers where ID=1";
+        String sql1 = DB_STMT_1;
+        String sql2 = DB_STMT_2;
         reset(jdbcTemplate);
         
         Map<String, Object> resultMap1 = new HashMap<String, Object>();
@@ -656,7 +685,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSQLStatementsWithFileResource() {
-        String sql1 = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql1 = DB_STMT_1;
         String sql2 = "select NAME, HEIGHT\nfrom customers\nwhere ID=1";
         reset(jdbcTemplate);
         
@@ -814,7 +843,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testResultSetValidationWithVariableAndFunction() {
-        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql = DB_STMT_1;
         reset(jdbcTemplate);
 
         Map<String, Object> resultMap = new HashMap<String, Object>();

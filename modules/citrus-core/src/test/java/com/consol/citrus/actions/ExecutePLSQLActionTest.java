@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -33,7 +34,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
     private ExecutePLSQLAction executePLSQLAction;
     
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
-    
+    private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
+
     @BeforeMethod
     public void setUp() {
         executePLSQLAction  = new ExecutePLSQLAction();
@@ -61,6 +63,32 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
 	    
 	    reset(jdbcTemplate);
+	    executePLSQLAction.execute(context);
+	    verify(jdbcTemplate).execute(controlStatement);
+	}
+	
+	@Test
+	public void testPLSQLExecutionWithTransaction() {
+	    String stmt = "DECLARE " +
+                "Zahl1 number(2);" +
+                "Text varchar(20) := 'Hello World!';" +
+             "BEGIN" +
+                "EXECUTE IMMEDIATE \"" +
+                    "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
+             "END;/";
+
+	    executePLSQLAction.setTransactionManager(transactionManager);
+	    executePLSQLAction.setScript(stmt);
+
+	    String controlStatement = "DECLARE " +
+                "Zahl1 number(2);" +
+                "Text varchar(20) := 'Hello World!';" +
+             "BEGIN" +
+                "EXECUTE IMMEDIATE \"" +
+                    "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
+             "END;";
+
+	    reset(jdbcTemplate, transactionManager);
 	    executePLSQLAction.execute(context);
 	    verify(jdbcTemplate).execute(controlStatement);
 	}

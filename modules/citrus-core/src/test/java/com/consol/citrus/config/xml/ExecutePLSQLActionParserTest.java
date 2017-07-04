@@ -16,11 +16,11 @@
 
 package com.consol.citrus.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -37,6 +37,9 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
         Assert.assertNotNull(action.getSqlResourcePath());
         Assert.assertNull(action.getScript());
         Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertNull(action.getTransactionManager());
+        Assert.assertEquals(action.getTransactionTimeout(), "-1");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getName(), "plsql:testDataSource");
@@ -44,5 +47,8 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
         Assert.assertNull(action.getSqlResourcePath());
         Assert.assertTrue(action.getScript().length() > 0);
         Assert.assertEquals(action.isIgnoreErrors(), true);
+        Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
+        Assert.assertEquals(action.getTransactionTimeout(), "5000");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
 }

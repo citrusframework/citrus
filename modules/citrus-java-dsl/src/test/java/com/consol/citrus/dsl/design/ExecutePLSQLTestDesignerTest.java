@@ -21,6 +21,7 @@ import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,7 +29,8 @@ import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -37,7 +39,9 @@ import static org.mockito.Mockito.*;
 public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = Mockito.mock(DataSource.class);
     private Resource sqlResource = Mockito.mock(Resource.class);
-    
+
+    private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
+
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -63,6 +67,39 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(action.getScript());
         Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+
+    @Test
+    public void testExecutePLSQLBuilderWithTransaction() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                plsql(dataSource)
+                    .transactionManager(transactionManager)
+                    .transactionTimeout(5000)
+                    .transactionIsolationLevel("ISOLATION_READ_COMMITTED")
+                    .statement("TEST_STMT_1")
+                    .statement("TEST_STMT_2")
+                    .statement("TEST_STMT_3");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
+
+        ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "plsql");
+        Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
+        Assert.assertNull(action.getScript());
+        Assert.assertNull(action.getSqlResourcePath());
+        Assert.assertEquals(action.getDataSource(), dataSource);
+        Assert.assertEquals(action.getTransactionManager(), transactionManager);
+        Assert.assertEquals(action.getTransactionTimeout(), "5000");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
     
     @Test

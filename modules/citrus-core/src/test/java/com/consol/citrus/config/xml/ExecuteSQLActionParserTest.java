@@ -16,12 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -41,6 +41,9 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
         Assert.assertEquals(action.getStatements().get(0), "insert into foo_table values (foo, foo)");
         Assert.assertEquals(action.getStatements().get(1), "update foo_table set foo=foo where foo=foo");
         Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertNull(action.getTransactionManager());
+        Assert.assertEquals(action.getTransactionTimeout(), "-1");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
         
         // 2nd action
         action = getNextTestActionFromTest();
@@ -49,6 +52,9 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/actions/test-sql-statements.sql");
         Assert.assertEquals(action.getStatements().size(), 0);
         Assert.assertEquals(action.isIgnoreErrors(), true);
+        Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
+        Assert.assertEquals(action.getTransactionTimeout(), "5000");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
     
     @Test

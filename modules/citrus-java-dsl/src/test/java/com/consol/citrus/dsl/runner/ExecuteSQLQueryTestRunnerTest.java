@@ -27,6 +27,7 @@ import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -43,6 +44,7 @@ import static org.mockito.Mockito.*;
 public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
+    private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
     private Resource resource = Mockito.mock(Resource.class);
 
     private SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
@@ -144,6 +146,62 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS, SELECT COUNT(*) as CNT_EPISODES FROM EPISODES]");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
+        Assert.assertNull(action.getValidator());
+
+    }
+
+    @Test
+    public void testExecuteSQLQueryWithTransaction() {
+        List<Map<String, Object>> results = new ArrayList<>();
+        results.add(Collections.<String, Object>singletonMap("NAME", "Penny"));
+        results.add(Collections.<String, Object>singletonMap("NAME", "Sheldon"));
+
+        reset(jdbcTemplate, transactionManager);
+        when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
+        when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "9999")));
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                query(builder -> builder.jdbcTemplate(jdbcTemplate)
+                        .transactionManager(transactionManager)
+                        .transactionTimeout(5000)
+                        .transactionIsolationLevel("ISOLATION_READ_COMMITTED")
+                        .statement("SELECT NAME FROM ACTORS")
+                        .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
+                        .validate("NAME", "Penny", "Sheldon")
+                        .validate("CNT_EPISODES", "9999")
+                        .extract("CNT_EPISODES", "cntEpisodes"));
+            }
+        };
+
+        TestContext context = builder.getTestContext();
+        Assert.assertNotNull(context.getVariable("NAME"));
+        Assert.assertNotNull(context.getVariable("CNT_EPISODES"));
+        Assert.assertNotNull(context.getVariable("cntEpisodes"));
+        Assert.assertEquals(context.getVariable("NAME"), "Penny");
+        Assert.assertEquals(context.getVariable("CNT_EPISODES"), "9999");
+        Assert.assertEquals(context.getVariable("cntEpisodes"), "9999");
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
+
+        Assert.assertEquals(action.getName(), "sql-query");
+        Assert.assertEquals(action.getControlResultSet().size(), 2);
+        Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
+        Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Penny, Sheldon]");
+        Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[9999]");
+        Assert.assertEquals(action.getExtractVariables().size(), 1);
+        Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "CNT_EPISODES=cntEpisodes");
+        Assert.assertEquals(action.getStatements().size(), 2);
+        Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS, SELECT COUNT(*) as CNT_EPISODES FROM EPISODES]");
+        Assert.assertNull(action.getScriptValidationContext());
+        Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
+        Assert.assertEquals(action.getTransactionManager(), transactionManager);
+        Assert.assertEquals(action.getTransactionTimeout(), "5000");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
         Assert.assertNull(action.getValidator());
 
     }

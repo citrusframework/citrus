@@ -16,12 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -48,6 +48,9 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getControlResultSet().get("C").size(), 1);
         Assert.assertEquals(action.getControlResultSet().get("C").get(0), "NULL");
         Assert.assertEquals(action.getControlResultSet().get("CNT_F").get(0), "${count}");
+        Assert.assertNull(action.getTransactionManager());
+        Assert.assertEquals(action.getTransactionTimeout(), "-1");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         
@@ -59,6 +62,10 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getStatements().size(), 0);
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().get("foo").get(0), "1");
+        Assert.assertNotNull(action.getTransactionManager());
+        Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
+        Assert.assertEquals(action.getTransactionTimeout(), "5000");
+        Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         

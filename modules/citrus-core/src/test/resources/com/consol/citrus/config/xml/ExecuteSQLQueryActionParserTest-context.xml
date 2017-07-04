@@ -15,7 +15,7 @@
                 <validate column="CNT_F" value="${count}"/>
             </sql>
             
-            <sql datasource="testDataSource">
+            <sql datasource="testDataSource" transaction-manager="testTransactionManager" transaction-timeout="5000" transaction-isolation-level="ISOLATION_READ_COMMITTED">
                 <resource file="classpath:com/consol/citrus/actions/test-sql-query-statements.sql"/>
                 <validate column="foo" value="1"/>
             </sql>
@@ -54,6 +54,10 @@
     
     <spring:bean id="testDataSource" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.sql.DataSource"/>
+    </spring:bean>
+
+    <spring:bean id="testTransactionManager" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg value="org.springframework.transaction.PlatformTransactionManager"/>
     </spring:bean>
     
 </spring:beans>

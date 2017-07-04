@@ -384,6 +384,10 @@
             <value>2</value>
         </property>
     </bean>
+
+    <bean id="testTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <constructor-arg ref="testDataSource"/>
+    </bean>
     
     <!-- Citrus JMS Endpoints -->
     <citrus-jms:endpoint id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>

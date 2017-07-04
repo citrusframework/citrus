@@ -11,7 +11,7 @@
                 <statement>update foo_table set foo=foo where foo=foo</statement>
             </sql>
             
-            <sql datasource="testDataSource" ignore-errors="true">
+            <sql datasource="testDataSource" ignore-errors="true" transaction-manager="testTransactionManager" transaction-timeout="5000" transaction-isolation-level="ISOLATION_READ_COMMITTED">
                 <resource file="classpath:com/consol/citrus/actions/test-sql-statements.sql"/>
             </sql>
         </actions>
@@ -19,6 +19,10 @@
     
     <spring:bean id="testDataSource" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="javax.sql.DataSource"/>
+    </spring:bean>
+
+    <spring:bean id="testTransactionManager" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg value="org.springframework.transaction.PlatformTransactionManager"/>
     </spring:bean>
     
 </spring:beans>

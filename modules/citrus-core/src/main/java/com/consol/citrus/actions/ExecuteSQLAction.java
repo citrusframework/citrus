@@ -18,6 +18,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * Test action execute SQL statements. Use this action when executing
@@ -46,24 +47,48 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
             statements = createStatementsFromFileResource(context);
         }
 
+        if (getTransactionManager() != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
+            }
+
+            TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
+            transactionTemplate.setTimeout(Integer.valueOf(context.replaceDynamicContentInString(getTransactionTimeout())));
+            transactionTemplate.setIsolationLevelName(context.replaceDynamicContentInString(getTransactionIsolationLevel()));
+            transactionTemplate.execute(status -> {
+                executeStatements(context);
+                return null;
+            });
+        } else {
+            executeStatements(context);
+        }
+    }
+
+    /**
+     * Run all SQL statements.
+     * @param context
+     */
+    protected void executeStatements(TestContext context) {
         for (String stmt : statements)  {
             try {
-                stmt = context.replaceDynamicContentInString(stmt.trim());
+                final String toExecute;
 
-                if (stmt.endsWith(";")) {
-                    stmt = stmt.substring(0, stmt.length()-1);
+                if (stmt.trim().endsWith(";")) {
+                    toExecute = context.replaceDynamicContentInString(stmt.trim().substring(0, stmt.trim().length()-1));
+                } else {
+                    toExecute = context.replaceDynamicContentInString(stmt.trim());
                 }
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Executing SQL statement: " + stmt);
+                    log.debug("Executing SQL statement: " + toExecute);
                 }
 
-                getJdbcTemplate().execute(stmt);
+                getJdbcTemplate().execute(toExecute);
 
                 log.info("SQL statement execution successful");
             } catch (Exception e) {
                 if (ignoreErrors) {
-                    log.error("Error while executing statement " + stmt + " " + e.getLocalizedMessage());
+                    log.error("Ignoring error while executing SQL statement: " + e.getLocalizedMessage());
                     continue;
                 } else {
                     throw new CitrusRuntimeException(e);

@@ -41,10 +41,10 @@
                 <resource file="classpath:com/consol/citrus/actions/script.sql"/>
             </sql>
             <sql datasource="testDataSource">
-                <statement>select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'</statement>
-                <statement>select COUNT(1) as overall_cnt from ERRORS</statement>
-                <statement>select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'</statement>
-                <statement>select DESCRIPTION from ORDERS where ORDER_ID = 2</statement>
+                <statement>SELECT NAME FROM CUSTOMERS WHERE CUSTOMER_ID='${customerId}'</statement>
+                <statement>SELECT COUNT(1) AS overall_cnt FROM ERRORS</statement>
+                <statement>SELECT ORDER_ID FROM ORDERS WHERE DESCRIPTION LIKE 'Migrate%'</statement>
+                <statement>SELECT DESCRIPTION FROM ORDERS WHERE ORDER_ID = 2</statement>
                 <validate column="ORDER_ID" value="1"/>
                 <validate column="NAME" value="Christoph"/>
                 <validate column="OVERALL_CNT" value="${rowsCount}"/>
@@ -58,7 +58,7 @@
                 <validate column="DESCRIPTION" value="NULL"/>
             </sql>
             <sql datasource="testDataSource">
-            	<statement>select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS</statement>
+            	<statement>SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS</statement>
             	<validate column="RTAG">
             		<values>
             			<value>requestTag</value>
@@ -79,11 +79,11 @@
                 <statement>DELETE FROM CUSTOMERS</statement>
             </sql>
             <sql datasource="testDataSource">
-            	<statement>select DESCRIPTION as desc from ORDERS where ORDER_ID = 2</statement>
+            	<statement>SELECT DESCRIPTION AS desc FROM ORDERS WHERE ORDER_ID = 2</statement>
             	<validate column="DESC" value=""/>
             </sql>
             <sql datasource="testDataSource">
-                <statement>select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS</statement>
+                <statement>SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS</statement>
                 <validate-script type="groovy">
                     assert rows.size == 2
                     assert rows[0].RTAG == 'requestTag'

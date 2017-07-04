@@ -20,6 +20,7 @@ import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.util.SqlUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -28,76 +29,116 @@ import java.util.List;
  * Test action executes SQL statements. Use this action when executing
  * database altering statements like UPDATE, INSERT, ALTER, DELETE. Statements are either
  * embedded inline in the test case description or given by an external file resource.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.3
  */
 public class ExecuteSQLBuilder extends AbstractTestActionBuilder<ExecuteSQLAction> {
 
-	/**
-	 * Constructor using action field.
-	 * @param action
-	 */
-	public ExecuteSQLBuilder(ExecuteSQLAction action) {
-	    super(action);
+    /**
+     * Constructor using action field.
+     * @param action
+     */
+    public ExecuteSQLBuilder(ExecuteSQLAction action) {
+        super(action);
     }
 
-	/**
-	 * Default constructor.
-	 */
-	public ExecuteSQLBuilder() {
-		super(new ExecuteSQLAction());
-	}
+    /**
+     * Default constructor.
+     */
+    public ExecuteSQLBuilder() {
+        super(new ExecuteSQLAction());
+    }
 
-	/**
-	 * Sets the Spring JDBC template to use.
-	 * @param jdbcTemplate
-	 * @return
-	 */
-	public ExecuteSQLBuilder jdbcTemplate(JdbcTemplate jdbcTemplate) {
-		action.setJdbcTemplate(jdbcTemplate);
-		return this;
-	}
+    /**
+     * Sets the Spring JDBC template to use.
+     * @param jdbcTemplate
+     * @return
+     */
+    public ExecuteSQLBuilder jdbcTemplate(JdbcTemplate jdbcTemplate) {
+        action.setJdbcTemplate(jdbcTemplate);
+        return this;
+    }
 
-	/**
-	 * Sets the SQL data source.
-	 * @param dataSource
-	 * @return
-	 */
-	public ExecuteSQLBuilder dataSource(DataSource dataSource) {
-		action.setDataSource(dataSource);
-		return this;
-	}
+    /**
+     * Sets the transaction manager to use.
+     * @param transactionManager
+     * @return
+     */
+    public ExecuteSQLBuilder transactionManager(PlatformTransactionManager transactionManager) {
+        action.setTransactionManager(transactionManager);
+        return this;
+    }
 
-	/**
-     * List of statements to execute. Declared inline in the test case. 
+    /**
+     * Sets the transaction timeout to use.
+     * @param transactionTimeout
+     * @return
+     */
+    public ExecuteSQLBuilder transactionTimeout(int transactionTimeout) {
+        action.setTransactionTimeout(String.valueOf(transactionTimeout));
+        return this;
+    }
+
+    /**
+     * Sets the transaction timeout to use.
+     * @param transactionTimeout
+     * @return
+     */
+    public ExecuteSQLBuilder transactionTimeout(String transactionTimeout) {
+        action.setTransactionTimeout(transactionTimeout);
+        return this;
+    }
+
+    /**
+     * Sets the transaction isolation level to use.
+     * @param isolationLevel
+     * @return
+     */
+    public ExecuteSQLBuilder transactionIsolationLevel(String isolationLevel) {
+        action.setTransactionIsolationLevel(isolationLevel);
+        return this;
+    }
+
+    /**
+     * Sets the SQL data source.
+     * @param dataSource
+     * @return
+     */
+    public ExecuteSQLBuilder dataSource(DataSource dataSource) {
+        action.setDataSource(dataSource);
+        return this;
+    }
+
+    /**
+     * List of statements to execute. Declared inline in the test case.
      * @param statements
      */
-	public ExecuteSQLBuilder statements(List<String> statements) {
-		action.getStatements().addAll(statements);
-		return this;
-	}
-	
-	/**
-	 * Adds a new statement to the list of SQL executions.
-	 * @param sql
-	 * @return
-	 */
-	public ExecuteSQLBuilder statement(String sql) {
-	    action.getStatements().add(sql);
-		return this;
-	}
-	
-	/**
+    public ExecuteSQLBuilder statements(List<String> statements) {
+        action.getStatements().addAll(statements);
+        return this;
+    }
+
+    /**
+     * Adds a new statement to the list of SQL executions.
+     * @param sql
+     * @return
+     */
+    public ExecuteSQLBuilder statement(String sql) {
+        action.getStatements().add(sql);
+        return this;
+    }
+
+    /**
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
      */
-	public ExecuteSQLBuilder sqlResource(Resource sqlResource) {
-		statements(SqlUtils.createStatementsFromFileResource(sqlResource));
-		return this;
-	}
-	
-	/**
+    public ExecuteSQLBuilder sqlResource(Resource sqlResource) {
+        statements(SqlUtils.createStatementsFromFileResource(sqlResource));
+        return this;
+    }
+
+    /**
      * Setter for external file resource containing the SQL statements to execute.
      * @param filePath
      */
@@ -105,13 +146,13 @@ public class ExecuteSQLBuilder extends AbstractTestActionBuilder<ExecuteSQLActio
         action.setSqlResourcePath(filePath);
         return this;
     }
-	
-	/**
+
+    /**
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
      */
-	public ExecuteSQLBuilder ignoreErrors(boolean ignoreErrors) {
-		action.setIgnoreErrors(ignoreErrors);
-		return this;
-	}
+    public ExecuteSQLBuilder ignoreErrors(boolean ignoreErrors) {
+        action.setIgnoreErrors(ignoreErrors);
+        return this;
+    }
 }
