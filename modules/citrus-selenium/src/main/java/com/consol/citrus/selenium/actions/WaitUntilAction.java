@@ -49,7 +49,7 @@ public class WaitUntilAction extends FindElementAction {
         WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Math.round(timeout / 1000));
 
         if (condition.equals("hidden")) {
-            q.until(ExpectedConditions.invisibilityOfElementLocated(createBy(context)));
+            q.until(ExpectedConditions.invisibilityOf(webElement));
         } else if (condition.equals("visible")) {
             q.until(ExpectedConditions.visibilityOf(webElement));
         } else {

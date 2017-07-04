@@ -74,8 +74,6 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         action.execute(context);
-
-        verify(mouse).mouseMove(coordinates);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'id=myButton' on page")

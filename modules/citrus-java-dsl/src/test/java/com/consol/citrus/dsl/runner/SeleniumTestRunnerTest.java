@@ -314,7 +314,6 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         verify(alert).accept();
         verify(options).deleteAllCookies();
         verify(link).click();
-        verify(mouse).mouseMove(coordinates);
         verify(input).clear();
         verify(input).sendKeys("Citrus");
     }
