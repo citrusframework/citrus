@@ -127,10 +127,11 @@ public class EchoSteps {
 If we have a closer look at the step definition class we see that it is a normal POJO that uses a **@CitrusResource** annotated **TestDesigner**. The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. 
 
 We can set the injection mode for the Citrus Cucumber extension with a system property named *citrus.cucumber.injection.mode*. By default this is set to **DESIGNER** so Citrus will inject a test designer instance. In case you want to use the
-test runner instead you should set the system property in your project.
+test runner instead you should set the system property or environment property in your project.
 
 ```properties
 citrus.cucumber.injection.mode=RUNNER
+CITRUS_CUCUMBER_INJECTION_MODE=RUNNER
 ```
 
 Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.

@@ -119,7 +119,8 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
      * @return
      */
     private String getEncoding() {
-        return System.getProperty(Citrus.CITRUS_FILE_ENCODING, Charset.defaultCharset().displayName());
+        return System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY, System.getenv(Citrus.CITRUS_FILE_ENCODING_ENV) != null ?
+                System.getenv(Citrus.CITRUS_FILE_ENCODING_ENV) : Charset.defaultCharset().displayName());
     }
 
     /**

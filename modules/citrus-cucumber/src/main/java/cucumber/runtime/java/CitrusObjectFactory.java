@@ -33,6 +33,9 @@ import org.slf4j.LoggerFactory;
  */
 public class CitrusObjectFactory extends DefaultJavaObjectFactory {
 
+    public static final String INJECTION_MODE_PROPERTY = "citrus.cucumber.injection.mode";
+    public static final String INJECTION_MODE_ENV = "CITRUS_CUCUMBER_INJECTION_MODE";
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusObjectFactory.class);
 
@@ -63,7 +66,8 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
         InjectionMode fallback;
         if (mode == null) {
             log.info("Initializing injection mode for Citrus " + Citrus.getVersion());
-            fallback = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+            fallback = InjectionMode.valueOf(System.getProperty(INJECTION_MODE_PROPERTY, System.getenv(INJECTION_MODE_ENV) != null ?
+                    System.getenv(INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
         } else {
             fallback = mode;
         }
@@ -85,7 +89,8 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
         context = CitrusBackend.getCitrus().createTestContext();
 
         if (mode == null) {
-            mode = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+            mode = InjectionMode.valueOf(System.getProperty(INJECTION_MODE_PROPERTY, System.getenv(INJECTION_MODE_ENV) != null ?
+                    System.getenv(INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
         }
 
         if (InjectionMode.DESIGNER.equals(mode)) {

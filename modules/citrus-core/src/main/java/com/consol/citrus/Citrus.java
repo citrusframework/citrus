@@ -44,21 +44,11 @@ import java.util.*;
  */
 public final class Citrus {
 
-    /** Citrus version */
-    private static String version;
-
-    /** Test context factory **/
-    private TestContextFactory testContextFactory;
-    private TestSuiteListeners testSuiteListener;
-
-    private Collection<SequenceBeforeSuite> beforeSuite;
-    private Collection<SequenceAfterSuite> afterSuite;
-
-    /** Basic Spring application context */
-    private ApplicationContext applicationContext;
-
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Citrus.class);
+
+    /** Citrus version */
+    private static String version;
 
     /* Load Citrus version */
     static {
@@ -73,7 +63,10 @@ public final class Citrus {
     }
 
     /** Optional application property file */
-    private static final String APPLICATION_PROPERTY_FILE = System.getProperty("citrus.application.config", "citrus-application.properties");
+    private static final String APPLICATION_PROPERTY_FILE_PROPERTY = "citrus.application.properties";
+    private static final String APPLICATION_PROPERTY_FILE_ENV = "CITRUS_APPLICATION_PROPERTIES";
+    private static final String APPLICATION_PROPERTY_FILE = System.getProperty(APPLICATION_PROPERTY_FILE_PROPERTY, System.getenv(APPLICATION_PROPERTY_FILE_ENV) != null ?
+            System.getenv(APPLICATION_PROPERTY_FILE_ENV) : "citrus-application.properties");
 
     /* Load application properties */
     static {
@@ -99,12 +92,21 @@ public final class Citrus {
     }
 
     /** Default variable names */
-    public static final String TEST_NAME_VARIABLE = "citrus.test.name";
-    public static final String TEST_PACKAGE_VARIABLE = "citrus.test.package";
+    public static final String TEST_NAME_VARIABLE_PROPERTY = "citrus.test.name.variable";
+    public static final String TEST_NAME_VARIABLE_ENV = "CITRUS_TEST_NAME_VARIABLE";
+    public static final String TEST_NAME_VARIABLE = System.getProperty(TEST_NAME_VARIABLE_PROPERTY, System.getenv(TEST_NAME_VARIABLE_ENV) != null ?
+            System.getenv(TEST_NAME_VARIABLE_ENV) : "citrus.test.name");
+
+    public static final String TEST_PACKAGE_VARIABLE_PROPERTY = "citrus.test.package.variable";
+    public static final String TEST_PACKAGE_VARIABLE_ENV = "CITRUS_TEST_PACKAGE_VARIABLE";
+    public static final String TEST_PACKAGE_VARIABLE = System.getProperty(TEST_PACKAGE_VARIABLE_PROPERTY, System.getenv(TEST_PACKAGE_VARIABLE_ENV) != null ?
+            System.getenv(TEST_PACKAGE_VARIABLE_ENV) : "citrus.test.package");
 
     /** File encoding system property */
     public static final String CITRUS_FILE_ENCODING_PROPERTY = "citrus.file.encoding";
-    public static final String CITRUS_FILE_ENCODING = System.getProperty(CITRUS_FILE_ENCODING_PROPERTY, Charset.defaultCharset().displayName());
+    public static final String CITRUS_FILE_ENCODING_ENV = "CITRUS_FILE_ENCODING";
+    public static final String CITRUS_FILE_ENCODING = System.getProperty(CITRUS_FILE_ENCODING_PROPERTY, System.getenv(CITRUS_FILE_ENCODING_ENV) != null ?
+            System.getenv(CITRUS_FILE_ENCODING_ENV) : Charset.defaultCharset().displayName());
 
     /** Prefix/sufix used to identify variable expressions */
     public static final String VARIABLE_PREFIX = "${";
@@ -113,14 +115,21 @@ public final class Citrus {
 
     /** Default application context name */
     public static final String DEFAULT_APPLICATION_CONTEXT_PROPERTY = "citrus.spring.application.context";
-    public static final String DEFAULT_APPLICATION_CONTEXT = System.getProperty(DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath*:citrus-context.xml");
+    public static final String DEFAULT_APPLICATION_CONTEXT_ENV = "CITRUS_SPRING_APPLICATION_CONTEXT";
+    public static final String DEFAULT_APPLICATION_CONTEXT = System.getProperty(DEFAULT_APPLICATION_CONTEXT_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_ENV) != null ?
+            System.getenv(DEFAULT_APPLICATION_CONTEXT_ENV) : "classpath*:citrus-context.xml");
 
     /** Default application context class */
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY = "citrus.spring.java.config";
-    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY);
+    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_ENV = "CITRUS_SPRING_JAVA_CONFIG";
+    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) != null ?
+            System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) : null);
 
     /** Default test directories */
-    public static final String DEFAULT_TEST_SRC_DIRECTORY = "src" + File.separator + "test" + File.separator;
+    public static final String DEFAULT_TEST_SRC_DIRECTORY_PROPERTY = "citrus.default.src.directory";
+    public static final String DEFAULT_TEST_SRC_DIRECTORY_ENV = "CITRUS_DEFAULT_SRC_DIRECTORY";
+    public static final String DEFAULT_TEST_SRC_DIRECTORY = System.getProperty(DEFAULT_TEST_SRC_DIRECTORY_PROPERTY, System.getenv(DEFAULT_TEST_SRC_DIRECTORY_ENV) != null ?
+            System.getenv(DEFAULT_TEST_SRC_DIRECTORY_ENV) : "src" + File.separator + "test" + File.separator);
 
     /** Placeholder used in messages to ignore elements */
     public static final String IGNORE_PLACEHOLDER = "@ignore@";
@@ -130,14 +139,30 @@ public final class Citrus {
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
 
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
-    public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.xml,/**/*IT.xml");
+    public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
+    public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) != null ?
+            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.xml,/**/*IT.xml");
 
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
-    public static final String JAVA_TEST_FILE_NAME_PATTERN = System.getProperty(JAVA_TEST_FILE_NAME_PATTERN_PROPERTY, "/**/*Test.java,/**/*IT.java");
+    public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";
+    public static final String JAVA_TEST_FILE_NAME_PATTERN = System.getProperty(JAVA_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(JAVA_TEST_FILE_NAME_PATTERN_ENV) != null ?
+            System.getenv(JAVA_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.java,/**/*IT.java");
 
     /** Default message type used in message validation mechanism */
     public static final String DEFAULT_MESSAGE_TYPE_PROPERTY = "citrus.default.message.type";
-    public static final String DEFAULT_MESSAGE_TYPE = System.getProperty(DEFAULT_MESSAGE_TYPE_PROPERTY, MessageType.XML.toString());
+    public static final String DEFAULT_MESSAGE_TYPE_ENV = "CITRUS_DEFAULT_MESSAGE_TYPE";
+    public static final String DEFAULT_MESSAGE_TYPE = System.getProperty(DEFAULT_MESSAGE_TYPE_PROPERTY,  System.getenv(DEFAULT_MESSAGE_TYPE_ENV) != null ?
+            System.getenv(DEFAULT_MESSAGE_TYPE_ENV) : MessageType.XML.toString());
+
+    /** Test context factory **/
+    private TestContextFactory testContextFactory;
+    private TestSuiteListeners testSuiteListener;
+
+    private Collection<SequenceBeforeSuite> beforeSuite;
+    private Collection<SequenceAfterSuite> afterSuite;
+
+    /** Basic Spring application context */
+    private ApplicationContext applicationContext;
 
     /**
      * Private constructor with Spring bean application context that holds all basic Citrus

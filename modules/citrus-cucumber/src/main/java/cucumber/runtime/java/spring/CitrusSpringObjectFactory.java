@@ -25,8 +25,7 @@ import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.runtime.CucumberException;
-import cucumber.runtime.java.CitrusBackend;
-import cucumber.runtime.java.InjectionMode;
+import cucumber.runtime.java.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +65,8 @@ public class CitrusSpringObjectFactory extends SpringFactory {
         InjectionMode fallback;
         if (mode == null) {
             log.info("Initializing injection mode for Citrus " + Citrus.getVersion());
-            fallback = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+            fallback = InjectionMode.valueOf(System.getProperty(CitrusObjectFactory.INJECTION_MODE_PROPERTY, System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) != null ?
+                    System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
         } else {
             fallback = mode;
         }
@@ -88,7 +88,8 @@ public class CitrusSpringObjectFactory extends SpringFactory {
         context = getInstance(TestContext.class);
 
         if (mode == null) {
-            mode = InjectionMode.valueOf(System.getProperty("citrus.cucumber.injection.mode", InjectionMode.DESIGNER.name()));
+            mode = InjectionMode.valueOf(System.getProperty(CitrusObjectFactory.INJECTION_MODE_PROPERTY, System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) != null ?
+                    System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
         }
 
         if (InjectionMode.DESIGNER.equals(mode)) {

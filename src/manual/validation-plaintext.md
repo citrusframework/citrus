@@ -35,16 +35,18 @@ Of course test variables are supported in the plain text payloads. The variables
 Plaintext message payloads may only differ in system-dependent line separator characters (*CR*, *LF*, *CRLF*). By default the plain text message validation fails because of that differences even if only whitespace
 characters are different.
 
-You can disable this default validation behavior and ignore new line types with following system property:
+You can disable this default validation behavior and ignore new line types with following system property or environment variable:
 
 ```
 citrus.plaintext.validation.ignore.newline.type=true
+CITRUS_PLAINTEXT_VALIDATION_IGNORE_NEWLINE_TYPE=true
 ```
 
-In case you need to ignore all whitespaces during plain text validation such as multiple new line characters or tabs you need to set this system property:
+In case you need to ignore all whitespaces during plain text validation such as multiple new line characters or tabs you need to set this system property or environment variable:
 
 ```
 citrus.plaintext.validation.ignore.whitespace=true
+CITRUS_PLAINTEXT_VALIDATION_IGNORE_WHITESPACE=true
 ```
 
 This property will not only ignore new line types but also normalize the whitespaces. As a result all empty lines, tabs and double whitespace characters are filtered before comparison.

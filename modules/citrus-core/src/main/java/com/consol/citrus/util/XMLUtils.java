@@ -363,8 +363,9 @@ public final class XMLUtils {
      * @return
      */
     public static Charset getTargetCharset(Document doc) {
-        if (System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY) != null) {
-            return Charset.forName(System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY));
+        String defaultEncoding = System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY, System.getenv(Citrus.CITRUS_FILE_ENCODING_ENV));
+        if (StringUtils.hasText(defaultEncoding)) {
+            return Charset.forName(defaultEncoding);
         }
 
         if (doc.getInputEncoding() != null) {
@@ -382,8 +383,9 @@ public final class XMLUtils {
      * @return charsetName if supported.
      */
     private static Charset getTargetCharset(String messagePayload) throws UnsupportedEncodingException {
-        if (System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY) != null) {
-            return Charset.forName(System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY));
+        String defaultEncoding = System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY, System.getenv(Citrus.CITRUS_FILE_ENCODING_ENV));
+        if (StringUtils.hasText(defaultEncoding)) {
+            return Charset.forName(defaultEncoding);
         }
 
         // trim incoming payload

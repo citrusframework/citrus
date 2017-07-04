@@ -34,10 +34,14 @@ import org.springframework.util.StringUtils;
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     public static final String IGNORE_NEWLINE_TYPE_PROPERTY = "citrus.plaintext.validation.ignore.newline.type";
+    public static final String IGNORE_NEWLINE_TYPE_ENV = "CITRUS_PLAINTEXT_VALIDATION_IGNORE_NEWLINE_TYPE";
     public static final String IGNORE_WHITESPACE_PROPERTY = "citrus.plaintext.validation.ignore.whitespace";
+    public static final String IGNORE_WHITESPACE_ENV = "CITRUS_PLAINTEXT_VALIDATION_IGNORE_WHITESPACE";
 
-    private boolean ignoreNewLineType = Boolean.valueOf(System.getProperty(IGNORE_NEWLINE_TYPE_PROPERTY, "false"));
-    private boolean ignoreWhitespace = Boolean.valueOf(System.getProperty(IGNORE_WHITESPACE_PROPERTY, "false"));
+    private boolean ignoreNewLineType = Boolean.valueOf(System.getProperty(IGNORE_NEWLINE_TYPE_PROPERTY, System.getenv(IGNORE_NEWLINE_TYPE_ENV) != null ?
+            System.getenv(IGNORE_NEWLINE_TYPE_ENV) : "false"));
+    private boolean ignoreWhitespace = Boolean.valueOf(System.getProperty(IGNORE_WHITESPACE_PROPERTY, System.getenv(IGNORE_WHITESPACE_ENV) != null ?
+            System.getenv(IGNORE_WHITESPACE_ENV) : "false"));
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
