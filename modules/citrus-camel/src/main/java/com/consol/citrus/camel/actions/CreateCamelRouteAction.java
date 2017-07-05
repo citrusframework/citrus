@@ -19,9 +19,17 @@ package com.consol.citrus.camel.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.spring.CamelRouteContextFactoryBean;
+import org.apache.camel.spring.SpringModelJAXBContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.transform.StringSource;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +42,10 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     private static Logger log = LoggerFactory.getLogger(CreateCamelRouteAction.class);
 
     /** Camel route */
-    private List<RouteDefinition> routes;
+    private List<RouteDefinition> routes = new ArrayList<>();
+
+    /** Route context as XML */
+    private String routeContext;
 
     /**
      * Default constructor.
@@ -45,6 +56,20 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
     @Override
     public void doExecute(TestContext context) {
+        if (StringUtils.hasText(routeContext)) {
+            // now lets parse the routes with JAXB
+            try {
+                Object value = getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
+
+                if (value instanceof CamelRouteContextFactoryBean) {
+                    CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) value;
+                    routes = factoryBean.getRoutes();
+                }
+            } catch (JAXBException e) {
+                throw new BeanDefinitionStoreException("Failed to create the JAXB unmarshaller", e);
+            }
+        }
+
         for (RouteDefinition routeDefinition : routes) {
             try {
                 camelContext.addRouteDefinition(routeDefinition);
@@ -53,6 +78,15 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
                 throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
             }
         }
+    }
+
+    /**
+     * Creates new Camel JaxB context.
+     * @return
+     * @throws javax.xml.bind.JAXBException
+     */
+    public JAXBContext getJaxbContext() throws JAXBException {
+        return new SpringModelJAXBContextFactory().newJAXBContext();
     }
 
     /**
@@ -70,5 +104,23 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     public CreateCamelRouteAction setRoutes(List<RouteDefinition> routes) {
         this.routes = routes;
         return this;
+    }
+
+    /**
+     * Gets the routeContext.
+     *
+     * @return
+     */
+    public String getRouteContext() {
+        return routeContext;
+    }
+
+    /**
+     * Sets the routeContext.
+     *
+     * @param routeContext
+     */
+    public void setRouteContext(String routeContext) {
+        this.routeContext = routeContext;
     }
 }

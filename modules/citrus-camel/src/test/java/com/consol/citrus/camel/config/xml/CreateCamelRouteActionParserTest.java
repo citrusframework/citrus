@@ -19,6 +19,7 @@ package com.consol.citrus.camel.config.xml;
 import com.consol.citrus.camel.actions.CreateCamelRouteAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.apache.camel.CamelContext;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -32,11 +33,27 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
         CreateCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(action.getRoutes().size(), 2);
+        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+                    "<route id=\"route_1\">" +
+                        "<from uri=\"direct:test1\"/>" +
+                        "<to uri=\"mock:test1\"/>" +
+                    "</route>" +
+                    "<route id=\"route_2\">" +
+                        "<from uri=\"direct:test2\"/>" +
+                        "<to uri=\"mock:test2\"/>" +
+                    "</route>" +
+                "</routeContext>").replaceAll("\\s", ""));
+        Assert.assertEquals(action.getRoutes().size(), 0);
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRoutes().size(), 1);
+        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+                    "<route>" +
+                        "<from uri=\"direct:test3\"/>" +
+                        "<to uri=\"mock:test3\"/>" +
+                    "</route>" +
+                "</routeContext>").replaceAll("\\s", ""));
+        Assert.assertEquals(action.getRoutes().size(), 0);
     }
 }

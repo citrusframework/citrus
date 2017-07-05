@@ -34,7 +34,7 @@ public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
     private CamelContext camelContext = Mockito.mock(CamelContext.class);
 
     @Test
-     public void testStartRoute() throws Exception {
+    public void testStartRoute() throws Exception {
         reset(camelContext);
 
         when(camelContext.getName()).thenReturn("camel_context");
@@ -42,6 +42,23 @@ public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
         StartCamelRouteAction action = new StartCamelRouteAction();
         action.setCamelContext(camelContext);
         action.setRouteIds(Collections.singletonList("route_1"));
+
+        action.execute(context);
+
+        verify(camelContext).startRoute("route_1");
+    }
+    
+    @Test
+    public void testStartRouteVariableSupport() throws Exception {
+        reset(camelContext);
+
+        context.setVariable("routeId", "route_1");
+
+        when(camelContext.getName()).thenReturn("camel_context");
+
+        StartCamelRouteAction action = new StartCamelRouteAction();
+        action.setCamelContext(camelContext);
+        action.setRouteIds(Collections.singletonList("${routeId}"));
 
         action.execute(context);
 

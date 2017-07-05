@@ -33,7 +33,7 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
     private CamelContext camelContext = Mockito.mock(CamelContext.class);
 
     @Test
-     public void testRemoveRoute() throws Exception {
+    public void testRemoveRoute() throws Exception {
         reset(camelContext);
 
         when(camelContext.getName()).thenReturn("camel_context");
@@ -44,6 +44,25 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
         RemoveCamelRouteAction action = new RemoveCamelRouteAction();
         action.setCamelContext(camelContext);
         action.setRouteIds(Collections.singletonList("route_1"));
+
+        action.execute(context);
+
+    }
+    
+    @Test
+    public void testRemoveRouteVariableSupport() throws Exception {
+        reset(camelContext);
+
+        context.setVariable("routeId", "route_1");
+
+        when(camelContext.getName()).thenReturn("camel_context");
+
+        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+        when(camelContext.removeRoute("route_1")).thenReturn(true);
+
+        RemoveCamelRouteAction action = new RemoveCamelRouteAction();
+        action.setCamelContext(camelContext);
+        action.setRouteIds(Collections.singletonList("${routeId}"));
 
         action.execute(context);
 

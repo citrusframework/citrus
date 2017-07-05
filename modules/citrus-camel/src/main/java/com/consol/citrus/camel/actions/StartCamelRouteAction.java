@@ -39,13 +39,15 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
 
     @Override
     public void doExecute(TestContext context) {
-        try {
-            for (String routeId : routeIds) {
-                camelContext.startRoute(routeId);
-                log.info(String.format("Started Camel route '%s' on context '%s'", routeId, camelContext.getName()));
+        for (String routeId : routeIds) {
+            String route = context.replaceDynamicContentInString(routeId);
+
+            try {
+                camelContext.startRoute(route);
+                log.info(String.format("Started Camel route '%s' on context '%s'", route, camelContext.getName()));
+            } catch (Exception e) {
+                throw new CitrusRuntimeException("Failed to start Camel route: " + route, e);
             }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to start Camel routes", e);
         }
     }
 }

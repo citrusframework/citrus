@@ -347,8 +347,8 @@ Next operation we will discuss is the start and stop of existing Camel routes:
       </camel:start-routes>
 
       <camel:stop-routes camel-context="camelContext">
-      <route id="route_2"/>
-      <route id="route_3"/>
+        <route id="route_2"/>
+        <route id="route_3"/>
       </camel:stop-routes>
   </actions>
 </testcase>

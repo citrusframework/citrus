@@ -16,12 +16,14 @@
 
 package com.consol.citrus.camel.actions;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.camel.endpoint.CamelSyncEndpoint;
 import com.consol.citrus.camel.endpoint.CamelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -62,25 +64,30 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         CamelSyncEndpointConfiguration endpointConfiguration = new CamelSyncEndpointConfiguration();
 
         if (StringUtils.hasText(languageExpression)) {
-            endpointConfiguration.setEndpointUri(String.format("controlbus:language:%s", languageType));
+            endpointConfiguration.setEndpointUri(String.format("controlbus:language:%s", context.replaceDynamicContentInString(languageType)));
         } else {
-            endpointConfiguration.setEndpointUri(String.format("controlbus:route?routeId=%s&action=%s", routeId, action));
+            endpointConfiguration.setEndpointUri(String.format("controlbus:route?routeId=%s&action=%s",
+                    context.replaceDynamicContentInString(routeId), context.replaceDynamicContentInString(action)));
         }
 
         endpointConfiguration.setCamelContext(camelContext);
 
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
-        camelEndpoint.createProducer().send(new DefaultMessage(languageExpression), context);
+        
+        String expression = context.replaceDynamicContentInString(VariableUtils.cutOffVariablesPrefix(languageExpression));
+        camelEndpoint.createProducer().send(new DefaultMessage(VariableUtils.isVariableName(languageExpression) ? Citrus.VARIABLE_PREFIX + expression + Citrus.VARIABLE_SUFFIX : expression), context);
 
         Message response = camelEndpoint.createConsumer().receive(context);
 
         if (StringUtils.hasText(result)) {
-            log.info(String.format("Validating Camel controlbus response = '%s'", result));
-            if (response.getPayload(String.class).equals(result)) {
-                log.info("Validation of Camel controlbus response successful - All values OK");
-            } else {
-                throw new ValidationException(String.format("Failed to validate Camel control bus response expected '%s', but was '%s'", result, response.getPayload(String.class)));
+            String expectedResult = context.replaceDynamicContentInString(result);
+
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Validating Camel controlbus response = '%s'", expectedResult));
             }
+
+            ValidationUtils.validateValues(response.getPayload(String.class), expectedResult, "camelControlBusResult", context);
+            log.info("Validation of Camel controlbus response successful - All values OK");
         }
     }
 

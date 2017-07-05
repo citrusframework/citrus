@@ -18,15 +18,11 @@ package com.consol.citrus.camel.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
-import org.apache.camel.spring.SpringModelJAXBContextFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +37,8 @@ public abstract class AbstractCamelRouteActionParser implements BeanDefinitionPa
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("camel-context"), "camelContext", "citrusCamelContext");
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition,
+                element.getAttribute("camel-context"), "camelContext", "citrusCamelContext");
         parse(beanDefinition, element, parserContext);
 
         return beanDefinition.getBeanDefinition();
@@ -60,13 +57,4 @@ public abstract class AbstractCamelRouteActionParser implements BeanDefinitionPa
      * @param parserContext
      */
     protected abstract void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext);
-
-    /**
-     * Creates new Camel JaxB context.
-     * @return
-     * @throws javax.xml.bind.JAXBException
-     */
-    public JAXBContext getJaxbContext() throws JAXBException {
-        return new SpringModelJAXBContextFactory().newJAXBContext();
-    }
 }

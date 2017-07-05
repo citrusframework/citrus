@@ -22,6 +22,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.FailedToStartRouteException;
 import org.apache.camel.model.RouteDefinition;
 import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -35,7 +36,65 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
     private RouteDefinition route = Mockito.mock(RouteDefinition.class);
 
     @Test
-     public void testCreateRoute() throws Exception {
+    public void testCreateRouteContext() throws Exception {
+        reset(camelContext);
+
+        when(camelContext.getName()).thenReturn("camel_context");
+
+        CreateCamelRouteAction action = new CreateCamelRouteAction();
+        action.setCamelContext(camelContext);
+        action.setRouteContext("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">\n" +
+                    "<route id=\"route_1\">\n" +
+                        "<from uri=\"direct:test1\"/>\n" +
+                        "<to uri=\"mock:test1\"/>\n" +
+                    "</route>\n" +
+                    "<route id=\"route_2\">\n" +
+                        "<from uri=\"direct:test2\"/>\n" +
+                        "<to uri=\"mock:test2\"/>\n" +
+                    "</route>\n" +
+                "</routeContext>");
+
+        Assert.assertEquals(action.getRoutes().size(), 0L);
+
+        action.execute(context);
+
+        Assert.assertEquals(action.getRoutes().size(), 2L);
+        Assert.assertEquals(action.getRoutes().get(0).getId(), "route_1");
+        Assert.assertEquals(action.getRoutes().get(1).getId(), "route_2");
+
+        verify(camelContext, times(2)).addRouteDefinition(any(RouteDefinition.class));
+    }
+
+    @Test
+    public void testCreateRouteContextVariableSupport() throws Exception {
+        reset(camelContext);
+
+        context.setVariable("routeId", "route_1");
+        context.setVariable("endpointUri", "test1");
+
+        when(camelContext.getName()).thenReturn("camel_context");
+
+        CreateCamelRouteAction action = new CreateCamelRouteAction();
+        action.setCamelContext(camelContext);
+        action.setRouteContext("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">\n" +
+                    "<route id=\"${routeId}\">\n" +
+                        "<from uri=\"direct:${endpointUri}\"/>\n" +
+                        "<to uri=\"mock:${endpointUri}\"/>\n" +
+                    "</route>\n" +
+                "</routeContext>");
+
+        Assert.assertEquals(action.getRoutes().size(), 0L);
+
+        action.execute(context);
+
+        Assert.assertEquals(action.getRoutes().size(), 1L);
+        Assert.assertEquals(action.getRoutes().get(0).getId(), "route_1");
+
+        verify(camelContext).addRouteDefinition(any(RouteDefinition.class));
+    }
+
+    @Test
+    public void testCreateRoute() throws Exception {
         reset(camelContext, route);
 
         when(camelContext.getName()).thenReturn("camel_context");

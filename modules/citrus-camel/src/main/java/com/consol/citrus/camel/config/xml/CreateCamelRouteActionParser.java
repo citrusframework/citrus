@@ -17,16 +17,11 @@
 package com.consol.citrus.camel.config.xml;
 
 import com.consol.citrus.camel.actions.CreateCamelRouteAction;
-import org.apache.camel.spring.CamelRouteContextFactoryBean;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
+import com.consol.citrus.config.xml.PayloadElementParser;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import javax.xml.bind.Binder;
-import javax.xml.bind.JAXBException;
 
 /**
  * Bean definition parser for creating Camel routes action in test case.
@@ -38,19 +33,8 @@ public class CreateCamelRouteActionParser extends AbstractCamelRouteActionParser
 
     @Override
     public void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
-        // now lets parse the routes with JAXB
-        Binder<Node> binder;
-        try {
-            binder = getJaxbContext().createBinder();
-            Object value = binder.unmarshal(DomUtils.getChildElementByTagName(element, "routeContext"));
-
-            if (value instanceof CamelRouteContextFactoryBean) {
-                CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) value;
-                beanDefinition.addPropertyValue("routes", factoryBean.getRoutes());
-            }
-        } catch (JAXBException e) {
-            throw new BeanDefinitionStoreException("Failed to create the JAXB binder", e);
-        }
+        beanDefinition.addPropertyValue("routeContext",
+                PayloadElementParser.parseMessagePayload(DomUtils.getChildElementByTagName(element, "routeContext")));
     }
 
     @Override
