@@ -32,17 +32,18 @@ As you can see the endpoint uri just goes into the test case action in substitut
 
 Of course this mechanism is not limited to JMS endpoints. We can use all default Citrus message transports in the endpoint uri. Just pick the right keyword that defines the message transport to use. Here is a list of supported keywords:
 
-* jms: Creates a JMS endpoint for sending and receiving message to a queue or topic
-* channel: Creates a channel endpoint for sending and receiving messages using an in memory Spring Integration message channel
-* http: Creates a HTTP client for sending a request to some server URL synchronously waiting for the response message
-* ws: Creates a Web Socket client for sending messages to or receiving messages from a Web Socket server
-* soap: Creates a SOAP WebService client that send a proper SOAP message to the server URL and waits for the synchronous response to arrive
-* ssh: Creates a new ssh client for publishing a command to the server
-* mail: or smtp: Creates a new mail client for sending a mail mime message to a SMTP server
-* camel: Creates a new Apache Camel endpoint for sending and receiving Camel exchanges both to and from Camel routes.
-* vertx: or eventbus: Creates a new Vert.x instance sending and receiving messages with the network event bus
-* rmi: Creates a new RMI client instance sending and receiving messages for method invocation on remote interfaces
-* jmx: Creates a new JMX client instance sending and receiving messages to and from a managed bean server.
+[horizontal]
+jms:: Creates a JMS endpoint for sending and receiving message to a queue or topic
+channel:: Creates a channel endpoint for sending and receiving messages using an in memory Spring Integration message channel
+http:: Creates a HTTP client for sending a request to some server URL synchronously waiting for the response message
+ws:: Creates a Web Socket client for sending messages to or receiving messages from a Web Socket server
+soap:: Creates a SOAP WebService client that send a proper SOAP message to the server URL and waits for the synchronous response to arrive
+ssh:: Creates a new ssh client for publishing a command to the server
+mail:: or smtp: Creates a new mail client for sending a mail mime message to a SMTP server
+camel:: Creates a new Apache Camel endpoint for sending and receiving Camel exchanges both to and from Camel routes.
+vertx:: or eventbus: Creates a new Vert.x instance sending and receiving messages with the network event bus
+rmi:: Creates a new RMI client instance sending and receiving messages for method invocation on remote interfaces
+jmx:: Creates a new JMX client instance sending and receiving messages to and from a managed bean server.
 
 Depending on the message transport we have to add mandatory parameters to the endpoint uri. In the JMS example we had to specify the destination name. The mandatory parameters are always part of the endpoint uri. Optional parameters can be added as key value pairs to the endpoint uri. The available parameters depend on the endpoint keyword that you have chosen. See these example endpoint uri expressions:
 

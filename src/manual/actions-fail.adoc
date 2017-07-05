@@ -5,8 +5,7 @@ The fail action will generate an exception in order to terminate the test case w
 
 The user can specify a custom error message for the exception in order to describe the error cause. Here is a very simple example to clarify the syntax:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="failTest">
@@ -39,8 +38,7 @@ Tests successfully:  0 (0.0%)
 
 While using the Java DSL tester might want to raise some Java exceptions in the middle of configuring the test case. But this is not possible as we have to separate the design time and the execution time of the test case. The *@CitrusTest* annotated configuration method is called for building up the whole test case. After this method was processed the test gets executed in runtime oth the test. If you specify a throws exception statement in the configuration method this will not be done at runtime but at design time. This is why you have to use the special fail test action which raises a Java exception during the runtime of the test. The next example will not work as expected:
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -53,8 +51,7 @@ public void wrongUsageSample() {
 
 The validation exception above is directly raised before the test is able to start as the *@CitrusTest* annotated method does not represent the test runtime. Instead of this we have to use the fail action as follows:
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest

@@ -6,7 +6,7 @@ Java 8 runtime to work with Citrus. With this Java 8 base Citrus
 is proud to welcome two new crew members for supporting Selenium and Kubernetes in tests. Not enough we have the following
 features included in the box.
 
-[[java-8]]
+[[changes-java-8]]
 == Java 8
 
 Citrus is now using Java 8. This is mainly because we need to move on in using latest versions of Spring Framework,
@@ -15,7 +15,7 @@ Java 8. Please contact us in case you really can not update to Java 8 in your pr
 with Citrus 2.6 base that still supports Java 7 runtime. On the bright side we can now use the full power of Lambda expressions
 and other Java 8 features in Citrus code base.
 
-[[kubernetes-support]]
+[[changes-kubernetes-support]]
 == Kubernetes support
 
 Citrus is now able to interact with http://kubernetes.io/[Kubernetes] remote API in order to manage pods, services and other
@@ -26,7 +26,7 @@ This is very useful when dealing with container application environments as part
 for blog posts and tutorial samples on how Citrus can help you test Microservices with Docker and Kubernetes. The basic usage is
 described in section link:#kubernetes[kubernetes].
 
-[[selenium-support]]
+[[changes-selenium-support]]
 == Selenium support
 
 User interface and browser testing has not been a focus within Citrus integration testing until now that we can integrate
@@ -36,7 +36,7 @@ in a Citrus test case. The Citrus Java and XML DSL both provide comfortable acce
 simulate user interaction within a browser. The mix of user based actions and Citrus messaging transport simulation gives
 complete new ways of handling complex integration scenarios. Read more about this in chapter link:#selenium[Selenium].
 
-[[environment-based-before/after suite]]
+[[changes-before-after-suite]]
 == Environment based before/after suite
 
 You can enable/disable before and after suite actions based on optional environment or system properties. Users can give
@@ -50,21 +50,21 @@ We have improved the header customization options when using SOAP WSAddressing f
 WSAddressing headers per test action in addition to defining the headers on
 client endpoint component level.
 
-[[jsonpath-data-dictionary]]
+[[changes-jsonpath-data-dictionary]]
 == JsonPath data dictionary
 
 Json data dictionary was based on a simple dot notated syntax. Now you can also use more complex JsonPath expressions in
 order to overwrite elements in Json messages based on the data dictionary settings in Citrus. Read more about that in chapter
 link:#data-dictionaries[data-dictionary].
 
-[[java-dsl-test-behavior]]
+[[changes-java-dsl-test-behavior]]
 == Java DSL test behavior
 
 Test behaviors in Java DSL represent templates in XML DSL. The behavior encapsulates a set of test actions to a group that
 can be applied to multiple Java DSL tests. This enables you to combine common test actions in Java DSL with more comfortable
 reuse of test action definitions. See chapter link:#test-behavior[test-behavior] how to use that.
 
-[[auto-select-message-type]]
+[[changes-auto-select-message-type]]
 == Auto select message type
 
 Default message type for validation tasks in Citrus has been _XML_. Based on this message type the respective message validator
@@ -77,7 +77,7 @@ matching message validator for the incoming message. Before that Citrus has alwa
 
 Read about different message validators in link:#message-validation[message-validation].
 
-[[default-cucumber-steps]]
+[[changes-default-cucumber-steps]]
 == Default Cucumber steps
 
 The Citrus Cucumber extension now defines default step definitions for Http, Docker and Selenium. These default steps are ready
@@ -86,7 +86,7 @@ Cucumber options. After that you are ready to go for using the default steps dir
 extensions you can perform Docker and Selenium commands very easy. Also you can describe the Http REST client-server communication
 in BDD style. Read more about this in link:#cucumber[cucumber].
 
-[[refactoring]]
+[[changes-refactoring]]
 == Refactoring
 
 Deprecated APIs and classes that coexisted a long time are now removed. If your project is using on of these deprecated
@@ -94,7 +94,7 @@ classes you may run into compile time errors.
 Please have a look at the Citrus API JavaDocs and documentation in order to find out how to use the new APIs and classes
 that replaced the old deprecated stuff.
 
-[[bugfixes]]
+[[changes-bugfixes]]
 == Bugfixes
 
 Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues

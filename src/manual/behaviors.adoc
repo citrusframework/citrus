@@ -7,8 +7,7 @@ in many test cases.
 
 The behavior is a separate Java DSL class with a single _apply_ method that configures the test actions. Have a look at this first example:
 
-*Java DSL*
-
+.Java DSL
 [source,java]
 ----
 public class FooBehavior extends AbstractTestBehavior {
@@ -31,8 +30,7 @@ public class BarBehavior extends AbstractTestBehavior {
 As you can see the behavior class is able to use the Citrus Java DSL as usual. Each behavior is able to define test variables and actions. In a test case you can apply the behaviors
 as follows:
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest

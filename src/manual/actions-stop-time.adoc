@@ -6,8 +6,7 @@ The tester can of course use more than one time line with different ids simultan
 
 Read the next example and you will understand the mix of different time lines:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="StopTimeTest">
@@ -29,8 +28,7 @@ Read the next example and you will understand the mix of different time lines:
 </testcase>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -69,8 +67,7 @@ CITRUS_TIMELINE_VALUE:: latest time measurement value (time passed since first t
 
 According to your time line id you will get different test variable names. Also you can customize the time value suffix (default: *_VALUE*):
 
-*XML DSL* 
-
+.XML DSL
 [source,xml ]
 ----
 <trace-time id="custom_watcher" suffix="_1st"/>
@@ -78,8 +75,7 @@ According to your time line id you will get different test variable names. Also 
 <trace-time id="custom_watcher" suffix="_2nd"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest

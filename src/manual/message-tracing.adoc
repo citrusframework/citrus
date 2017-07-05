@@ -1,4 +1,4 @@
-[[tracing-incoming/outgoing messages]]
+[[tracing-incoming-outgoing-messages]]
 = Tracing incoming/outgoing messages
 
 As we deal with message based interfaces Citrus will send and receive a lot of messages during a test run. Now we may want to see these messages in chronological order as they were processed by Citrus. We can enable message tracing in Citrus in order to save messages to the file system for further investigations.

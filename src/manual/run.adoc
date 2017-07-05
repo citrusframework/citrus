@@ -50,7 +50,7 @@ If you are familiar with TestNG you will see that the generated Java class is no
 
 The good news is that we can still use the fantastic TestNG features in our test class. You can think of parallel test execution, test groups, setup and tear down operations and so on. Just to give an example we can simply add a test group to our test like this:
 
-*_@Test(groups = {"long-running"})_* 
+`@Test(groups = {"long-running"})`
 
 For more information on TestNG please visit the official homepage, where you find a complete reference documentation.
 
@@ -184,14 +184,14 @@ If you need to know more details about the test designer and on how to use the C
 [[run-xml-tests]]
 == Running XML tests
 
-Now we also use the @CitrusXmlTest annotation in the Java class. This annotation makes Citrus search for a XML file that represents the Citrus test within your classpath. Later on we will also discuss another Citrus annotation (**@CitrusTest**) which stands for defining the Citrus test just with Java domain specific language features. For now we continue to deal with the XML Citrus test execution.
+Now we also use the @CitrusXmlTest annotation in the Java class. This annotation makes Citrus search for a XML file that represents the Citrus test within your classpath. Later on we will also discuss another Citrus annotation (*@CitrusTest*) which stands for defining the Citrus test just with Java domain specific language features. For now we continue to deal with the XML Citrus test execution.
 
 The default naming convention requires a XML file with the tests name in the same package that the Java class is placed in. In the basic example above this means that Citrus searches for a XML test file in *com/consol/citrus/samples/SampleIT.xml* . You tell Citrus to search for another XML file by using the @CitrusXmlTest annotation properties. Following annotation properties are valid:
 
 [horizontal]
-name:: List of test case names to execute. Names also define XML file names to look for (**.xml** file extension is not needed here).
+name:: List of test case names to execute. Names also define XML file names to look for (*.xml* file extension is not needed here).
 packageName:: Custom package location for the XML files to load
-packageScan:: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with ****/*Test.xml** and ****/*IT.xml** file name pattern.
+packageScan:: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with `\\**/*Test.xml` and `**/*IT.xml` file name pattern.
 
 You can also mix the various CitrusXmlTest annotation patterns in a single Java class. So we are able to have several test cases in one single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.
 

@@ -41,10 +41,10 @@ just providing a system property or environment variable on your local environme
 | Default test source directory (default="src/test/")
 
 | citrus.xml.file.name.pattern
-| File name patterns used for XML test file package scan (default="/**/*Test.xml,/**/*IT.xml")
+| File name patterns used for XML test file package scan (default="/\\**/*Test.xml,/**/*IT.xml")
 
 | citrus.java.file.name.pattern
-| File name patterns used for Java test sources package scan (default="/**/*Test.java,/**/*IT.java")
+| File name patterns used for Java test sources package scan (default="/\\**/*Test.java,/**/*IT.java")
 |===
 
 Same properties are settable via environment variables.
@@ -78,10 +78,10 @@ Same properties are settable via environment variables.
 | Default test source directory (default="src/test/")
 
 | CITRUS_XML_FILE_NAME_PATTERN
-| File name patterns used for XML test file package scan (default="/**/*Test.xml,/**/*IT.xml")
+| File name patterns used for XML test file package scan (default="/\\**/*Test.xml,/**/*IT.xml")
 
 | CITRUS_JAVA_FILE_NAME_PATTERN
-| File name patterns used for Java test sources package scan (default="/**/*Test.java,/**/*IT.java")
+| File name patterns used for Java test sources package scan (default="/\\**/*Test.java,/**/*IT.java")
 |===
 
 [[application-property-file]]

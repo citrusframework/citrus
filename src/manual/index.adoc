@@ -13,17 +13,17 @@ Christoph Deppisch;Martin Maher
 :icons: font
 :docinfo1:
 :plugindir: {plugindir}
+:imagesdir: images
+:numbered:
 
 ifndef::ebook-format[:leveloffset: 1]
 
-*Copyright © 2017 ConSol Software GmbH*
-
-ifdef::basebackend-html[toc::[]]
-
-:numbered:
-:imagesdir: images
+*Copyright © 2017 ConSol Software GmbH* +
+*Version: {version}*
 
 image:citrus-logo-small.png[citrus-logo]
+
+ifdef::basebackend-html[toc::[]]
 
 include::preface.adoc[]
 include::changes-new.adoc[]

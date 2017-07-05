@@ -54,7 +54,7 @@ As you can see the library defines one to many validation matcher members either
 
 TIP: You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.
 
-[[ignore]]
+[[matcher-ignore]]
 == ignore()
 
 The ignore validation matcher is a special matcher that ignores the value and is always positive in its outcome. You should use the ignore validation matcher when
