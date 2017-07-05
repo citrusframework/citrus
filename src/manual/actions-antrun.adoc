@@ -1,0 +1,177 @@
+[[actions-ant-build]]
+== Apache Ant build
+
+The <ant> action loads a build.xml Ant file and executes one or more targets in the Ant project. The target is executed with optional build properties passed to the Ant run. The Ant build output is logged with Citrus logger and the test case success is bound to the Ant build success. This means in case the Ant build fails for some reason the test case will also fail with build exception accordingly.
+
+See this basic Ant run example to see how it works within your test case:
+
+*XML DSL* 
+
+[source,xml]
+----
+<testcase name="AntRunTest">
+    <variables>
+        <variable name="today" value="citrus:currentDate()"/>
+    </variables>
+    <actions>
+        <ant build-file="classpath:com/consol/citrus/actions/build.xml">
+            <execute target="sayHello"/>
+            <properties>
+                <property name="date" value="${today}"/>
+                <property name="welcomeText" value="Hello!"/>
+            </properties>
+        </ant>
+    </actions>
+</testcase>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+    
+    antrun("classpath:com/consol/citrus/actions/build.xml")
+        .target("sayHello")
+        .property("date", "${today}")
+        .property("welcomeText", "$Hello!");
+}
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+
+    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello")
+                .property("date", "${today}")
+                .property("welcomeText", "$Hello!"));
+}
+----
+
+The respective build.xml Ant file must provide the target to call. For example:
+
+[source,xml]
+----
+<project name="citrus-build" default="sayHello">
+    <property name="welcomeText" value="Welcome to Citrus!"></property>
+    
+    <target name="sayHello">
+        <echo message="${welcomeText} - Today is ${date}"></echo>
+    </target>
+    
+    <target name="sayGoodbye">
+        <echo message="Goodbye everybody!"></echo>
+    </target>
+</project>
+----
+
+As you can see you can pass custom build properties to the Ant build execution. Existing Ant build properties are replaced and you can use the properties in your build file as usual.
+
+You can also call multiple targets within one single build run by using a comma separated list of target names:
+
+*XML DSL* 
+
+[source,xml]
+----
+<testcase name="AntRunTest">
+    <variables>
+        <variable name="today" value="citrus:currentDate()"/>
+    </variables>
+    <actions>
+        <ant build-file="classpath:com/consol/citrus/actions/build.xml">
+            <execute targets="sayHello,sayGoodbye"/>
+            <properties>
+                <property name="date" value="${today}"/>
+            </properties>
+        </ant>
+    </actions>
+</testcase>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+    
+    antrun("classpath:com/consol/citrus/actions/build.xml")
+        .targets("sayHello", "sayGoodbye")
+        .property("date", "${today}");
+}
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+
+    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .targets("sayHello", "sayGoodbye")
+                .property("date", "${today}"));
+}
+----
+
+The build properties can live in external file resource as an alternative to the inline property definitions. You just have to use the respective file resource path and all nested properties get loaded as build properties.
+
+In addition to that you can also define a custom build listener. The build listener must implement the Ant API interface *org.apache.tools.ant.BuildListener* . During the Ant build run the build listener is called with several callback methods (e.g. buildStarted(), buildFinished(), targetStarted(), targetFinished(), …). This is how you can add additional logic to the Ant build run from Citrus. A custom build listener could manage the fail state of your test case, in particular by raising some exception forcing the test case to fail accordingly.
+
+*XML DSL* 
+
+[source,xml]
+----
+<testcase name="AntRunTest">
+    <actions>
+        <ant build-file="classpath:com/consol/citrus/actions/build.xml" 
+                build-listener="customBuildListener">
+            <execute target="sayHello"/>
+            <properties file="classpath:com/consol/citrus/actions/build.properties"/>
+        </ant>
+    </actions>
+</testcase>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+@Autowired
+private BuildListener customBuildListener;
+
+@CitrusTest
+public void antRunTest() {
+    antrun("classpath:com/consol/citrus/actions/build.xml")
+        .target("sayHello")
+        .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+        .listener(customBuildListener);
+}
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+@Autowired
+private BuildListener customBuildListener;
+
+@CitrusTest
+public void antRunTest() {
+    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+            .target("sayHello")
+            .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+            .listener(customBuildListener));
+}
+----
+
+The *customBuildListener* used in the example above should reference a Spring bean in the Citrus application context. The bean implements the interface *org.apache.tools.ant.BuildListener* and controls the Ant build run.

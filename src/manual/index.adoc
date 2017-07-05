@@ -1,0 +1,86 @@
+[[citrus]]
+= Citrus
+Christoph Deppisch;Martin Maher
+:revnumber: {version}
+:revdate: {localdate}
+:sectanchors:
+:sectlinks:
+:sectnumlevels: 4
+:toc: macro
+:toclevels: 3
+:toc-title: citrus-admin
+:doctype: book
+:icons: font
+:docinfo1:
+:plugindir: {plugindir}
+
+ifndef::ebook-format[:leveloffset: 1]
+
+*Copyright © 2017 ConSol Software GmbH*
+
+ifdef::basebackend-html[toc::[]]
+
+:numbered:
+:imagesdir: images
+
+image:citrus-logo-small.png[citrus-logo]
+
+include::preface.adoc[]
+include::changes-new.adoc[]
+include::introduction.adoc[]
+include::setup.adoc[]
+include::test-case.adoc[]
+include::test-variables.adoc[]
+include::run.adoc[]
+include::configuration.adoc[]
+include::endpoints.adoc[]
+
+include::validation.adoc[]
+
+include::xpath.adoc[]
+include::json-path.adoc[]
+
+include::actions.adoc[]
+
+include::templates.adoc[]
+include::behaviors.adoc[]
+
+include::containers.adoc[]
+
+include::jms.adoc[]
+include::http.adoc[]
+include::http-websocket.adoc[]
+include::soap.adoc[]
+include::ftp.adoc[]
+include::message-channel.adoc[]
+include::file.adoc[]
+include::camel.adoc[]
+include::vertx.adoc[]
+include::mail.adoc[]
+include::arquillian.adoc[]
+include::docker.adoc[]
+include::kubernetes.adoc[]
+include::ssh.adoc[]
+include::rmi.adoc[]
+include::jmx.adoc[]
+include::cucumber.adoc[]
+include::zookeeper.adoc[]
+include::restdocs.adoc[]
+include::selenium.adoc[]
+include::endpoint-component.adoc[]
+include::endpoint-adapter.adoc[]
+
+include::functions.adoc[]
+include::validation-matchers.adoc[]
+
+include::data-dictionary.adoc[]
+include::test-actors.adoc[]
+include::test-suite.adoc[]
+include::finally-section.adoc[]
+include::meta-info.adoc[]
+include::message-tracing.adoc[]
+include::reporting.adoc[]
+
+include::samples.adoc[]
+
+include::appendix.adoc[]

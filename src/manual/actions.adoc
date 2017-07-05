@@ -1,0 +1,31 @@
+[[actions]]
+= Test actions
+
+This chapter gives a brief description to all test actions that a tester can incorporate into the test case. Besides sending
+and receiving messages the tester may access these actions in order to build a more complex test scenario that fits the desired use case.
+
+include::actions-send.adoc[]
+include::actions-receive.adoc[]
+include::actions-database.adoc[]
+include::actions-sleep.adoc[]
+include::actions-java.adoc[]
+include::actions-timeout.adoc[]
+include::actions-echo.adoc[]
+include::actions-stop-time.adoc[]
+include::actions-create-variables.adoc[]
+include::actions-trace.adoc[]
+include::actions-transform.adoc[]
+include::actions-groovy.adoc[]
+include::actions-fail.adoc[]
+include::actions-input.adoc[]
+include::actions-load.adoc[]
+include::actions-wait.adoc[]
+include::actions-purge-jms.adoc[]
+include::actions-purge-channels.adoc[]
+include::actions-purge-endpoints.adoc[]
+include::actions-assert.adoc[]
+include::actions-catch.adoc[]
+include::actions-antrun.adoc[]
+include::actions-manage-server.adoc[]
+include::actions-stop-timer.adoc[]
+include::actions-generic-action.adoc[]

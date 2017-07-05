@@ -1,0 +1,86 @@
+[[tracing-incoming/outgoing messages]]
+= Tracing incoming/outgoing messages
+
+As we deal with message based interfaces Citrus will send and receive a lot of messages during a test run. Now we may want to see these messages in chronological order as they were processed by Citrus. We can enable message tracing in Citrus in order to save messages to the file system for further investigations.
+
+Citrus offers an easy way to debug all received messages to the file system. You need to enable some specific loggers and interceptors in the Spring application context.
+
+[source,xml]
+----
+<bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+----
+
+Just add this bean to the Spring configuration and Citrus will listen for sent and received messages for saving those to the file system. You will find files like these in the default test-output folder after the test run:
+
+For example:
+
+[source]
+----
+logs/trace/messages/MyTest.msgs 
+logs/trace/messages/FooTest.msgs 
+logs/trace/messages/SomeTest.msgs 
+----
+
+Each Citrus test writes a *.msgs* file containing all messages that went over the wire during the test. By default the debug directory is set to *_logs/trace/messages/_* relative to the project test output directory. But you can set your own output directory in the configuration
+
+[source,xml]
+----
+<bean class="com.consol.citrus.report.MessageTracingTestListener">
+  <property name="outputDirectory" value="file:/path/to/folder"/>
+</bean>
+----
+
+*Note*
+As the file names do not change with each test run message tracing files may be overwritten. So you eventually need to save the generated message debug files before running another group of test cases.
+
+Lets see some sample output for a test case with message communication over SOAP Http:
+
+[source,xml]
+----
+Sending SOAP request:
+<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+<SOAP-ENV:Header>
+<Operation xmlns="http://citrusframework.org/test">sayHello</Operation>
+</SOAP-ENV:Header>
+<SOAP-ENV:Body>
+<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+    <ns0:MessageId>0857041782</ns0:MessageId>
+    <ns0:CorrelationId>6915071793</ns0:CorrelationId>
+    <ns0:User>Christoph</ns0:User>
+    <ns0:Text>Hello WebServer</ns0:Text>
+</ns0:HelloRequest>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+
+======================================================================
+
+Received SOAP response:
+<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+<SOAP-ENV:Header/>
+<SOAP-ENV:Body>
+<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+    <ns0:MessageId>0857041782</ns0:MessageId>
+    <ns0:CorrelationId>6915071793</ns0:CorrelationId>
+    <ns0:User>WebServer</ns0:User>
+    <ns0:Text>Hello Christoph</ns0:Text>
+</ns0:HelloResponse>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+----
+
+For this message tracing to work we need to add logging listeners to our sender and receiver components accordingly.
+
+[source,xml]
+----
+<citrus-ws:client id="webServiceClient"
+    request-url="http://localhost:8071"
+    message-factory="messageFactory"
+    interceptors="clientInterceptors"/>
+    
+    <util:list id="clientInterceptors">
+        <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
+    </util:list>
+----
+
+*Important*
+Be aware of adding the Spring *util* XML namespace to the application context when using the *util:list* construct.

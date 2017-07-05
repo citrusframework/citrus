@@ -1,0 +1,374 @@
+[[actions-database]]
+== Database actions
+
+In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent
+data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this
+using the two database actions that are described in the following sections.
+
+In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing a SQL query with
+SELECT you are able to add validation steps on the result sets returned from the database. This is not allowed when executing update statements like
+INSERT, UPDATE, DELETE. 
+
+*Important*
+Do not mix statements of type *_SELECT_* with others in a single sql test action. This will lead to errors because validation steps are not valid
+for statements other than SELECT. Please use separate test actions for update statements.
+
+[[sql-update-insert-delete]]
+=== SQL update, insert, delete
+
+The <sql> action simply executes a group of SQL statements in order to change data in a database. Typically the action is used to prepare the database at the beginning of a test or to clean up the database at the end of a test. You can specify SQL statements like INSERT, UPDATE, DELETE, CREATE TABLE, ALTER TABLE and many more.
+
+On the one hand you can specify the statements as inline SQL or stored in an external SQL resource file as shown in the next two examples.
+
+*XML DSL* 
+
+[source,xml]
+----
+<actions>
+    <sql datasource="someDataSource">
+        <statement>DELETE FROM CUSTOMERS</statement>
+        <statement>DELETE FROM ORDERS</statement>
+    </sql>
+    
+    <sql datasource="myDataSource">
+        <resource file="file:tests/unit/resources/script.sql"/>
+    </sql>
+</actions>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+@Autowired
+@Qualifier("myDataSource")
+private DataSource dataSource;
+
+@CitrusTest
+public void sqlTest() {
+    sql(dataSource)
+        .statement("DELETE FROM CUSTOMERS")
+        .statement("DELETE FROM ORDERS");
+            
+    sql(dataSource)
+        .sqlResource("file:tests/unit/resources/script.sql");
+}
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+@Autowired
+@Qualifier("myDataSource")
+private DataSource dataSource;
+
+@CitrusTest
+public void sqlTest() {
+    sql(action -> action.dataSource(dataSource)
+        .statement("DELETE FROM CUSTOMERS")
+        .statement("DELETE FROM ORDERS"));
+
+    sql(action -> action.dataSource(dataSource)
+        .sqlResource("file:tests/unit/resources/script.sql"));
+}
+----
+
+The first action uses inline SQL statements defined directly inside the test case. The next action uses an external SQL resource file instead. The file resource can hold several SQL statements separated by new lines. All statements inside the file are executed sequentially by the framework.
+
+*Important*
+You have to pay attention to some rules when dealing with external SQL resources.
+
+* Each statement should begin in a new line
+* It is not allowed to define statements with word wrapping
+* Comments begin with two dashes "–"
+
+*Note*
+The external file is referenced either as file system resource or class path resource, by using the "file:" or "classpath:" prefix.
+
+Both examples use the "datasource" attribute. This value defines the database data source to be used. The connection to a data source is mandatory, because the test case does not know about user credentials or database names. The 'datasource' attribute references predefined data sources that are located in a separate Spring configuration file.
+
+[[sql-query]]
+=== SQL query
+
+The <sql> query action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to read data from a database. The query results are validated against expected data as shown in the next example.
+
+*XML DSL* 
+
+[source,xml]
+----
+<sql datasource="testDataSource">
+    <statement>select NAME from CUSTOMERS where ID='${customerId}'</statement>
+    <statement>select count(*) from ERRORS</statement>
+    <statement>select ID from ORDERS where DESC LIKE 'Def%'</statement>
+    <statement>select DESCRIPTION from ORDERS where ID='${id}'</statement>
+    
+    <validate column="ID" value="1"/>
+    <validate column="NAME" value="Christoph"/>
+    <validate column="COUNT(*)" value="${rowsCount}"/>
+    <validate column="DESCRIPTION" value="null"/>
+</sql>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+@Autowired
+@Qualifier("testDataSource")
+private DataSource dataSource;
+
+@CitrusTest
+public void databaseQueryTest() {
+    query(dataSource)
+          .statement("select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'")
+          .statement("select COUNT(1) as overall_cnt from ERRORS")
+          .statement("select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'")
+          .statement("select DESCRIPTION from ORDERS where ORDER_ID = 2")
+          .validate("ORDER_ID", "1")
+          .validate("NAME", "Christoph")
+          .validate("OVERALL_CNT", "${rowsCount}")
+          .validate("DESCRIPTION", "NULL");
+}
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+@Autowired
+@Qualifier("testDataSource")
+private DataSource dataSource;
+
+@CitrusTest
+public void databaseQueryTest() {
+    query(action -> action.dataSource(dataSource)
+            .statement("select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'")
+            .statement("select COUNT(1) as overall_cnt from ERRORS")
+            .statement("select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'")
+            .statement("select DESCRIPTION from ORDERS where ORDER_ID = 2")
+            .validate("ORDER_ID", "1")
+            .validate("NAME", "Christoph")
+            .validate("OVERALL_CNT", "${rowsCount}")
+            .validate("DESCRIPTION", "NULL"));
+}
+----
+
+The action offers a wide range of validating functionality for database result sets. First of all you have to select the data via SQL statements. Here again you have the choice to use inline SQL statements or external file resource pattern.
+
+The result sets are validated through <validate> elements. It is possible to do a detailed check on every selected column of the result set. Simply refer to the selected column name in order to validate its value. The usage of test variables is supported as well as database expressions like count(), avg(), min(), max().
+
+You simply define the <validate> entry with the column name as the "column" attribute and any expected value expression as expected "value". The framework then will check the column to fit the expected value and raise validation errors in case of mismatch.
+
+Looking at the first SELECT statement in the example you will see that test variables are supported in the SQL statements. The framework will replace the variable with its respective value before sending it to the database.
+
+In the validation section variables can be used too. Look at the third validation entry, where the variable "${rowsCount}" is used. The last validation in this example shows, that *_NULL_* values are also supported as expected values.
+
+If a single validation happens to fail, the whole action will fail with respective validation errors.
+
+*Important*
+The validation with *_"<validate column="..." value="..."/>"_* meets single row result sets as you specify a single column control value. In case you have multiple rows in a result set you rather need to validate the columns with multiple control values like this:
+
+[source,xml]
+----
+
+  <validate column="someColumnName">
+      <values>
+          <value>Value in 1st row</value>
+          <value>Value in 2nd row</value>
+          <value>Value in 3rd row</value>
+          <value>Value in x row</value>
+      </values>               
+  </validate>
+        
+----
+
+Within Java you can pass a variable argument list to the validate method like this:
+
+[source,java]
+----
+query(dataSource)
+    .statement("select NAME from WEEKDAYS where NAME LIKE 'S%'")
+    .validate("NAME", "Saturday", "Sunday")
+----
+
+Next example shows how to work with multiple row result sets and multiple values to expect within one column:
+
+[source,xml]
+----
+
+  <sql datasource="testDataSource">
+      <statement>select WEEKDAY as DAY, DESCRIPTION from WEEK</statement>
+      <validate column="DAY">
+          <values>
+              <value>Monday</value>
+              <value>Tuesday</value>
+              <value>Wednesday</value>
+              <value>Thursday</value>
+              <value>Friday</value>
+              <value>@ignore@</value>
+              <value>@ignore@</value>
+          </values>            	
+      </validate>
+      <validate column="DESCRIPTION">
+          <values>
+              <value>I hate Mondays!</value>
+              <value>Tuesday is sports day</value>
+              <value>The mid of the week</value>
+              <value>Thursday we play chess</value>
+              <value>Friday, the weekend is near!</value>
+              <value>@ignore@</value>
+              <value>@ignore@</value>
+          </values>            	
+      </validate>
+  </sql>
+      
+----
+
+For the validation of multiple rows the *_`&lt;validate&gt;`_* element is able to host a list of control values for a column. As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. Functions and variables are supported as usual.
+
+*Important*
+It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add "order by" SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.
+
+[[transaction-management]]
+=== Transaction management
+
+By default no transactions are used when Citrus executes SQL statements on a datasource. You can enable transaction management by selecting a transaction manager.
+
+*XML DSL* 
+
+[source,xml]
+----
+<actions>
+    <sql datasource="someDataSource" 
+         transaction-manager="someTransactionManager" 
+         transaction-timeout="15000" 
+         transaction-isolation-level="ISOLATION_READ_COMMITTED">
+        <statement>DELETE FROM CUSTOMERS</statement>
+        <statement>DELETE FROM ORDERS</statement>
+    </sql>
+</actions>
+----
+
+*Java DSL* 
+
+[source,java]
+----
+@Autowired
+@Qualifier("myDataSource")
+private DataSource dataSource;
+
+@CitrusTest
+public void sqlTest() {
+    sql(dataSource)
+        .transactionManager(transactionManager)
+        .transactionTimeout(15000)
+        .transactionIsolationLevel("ISOLATION_READ_COMMITTED")
+        .statement("DELETE FROM CUSTOMERS")
+        .statement("DELETE FROM ORDERS");
+}
+----
+
+The _transaction-manager_ attribute references a Spring bean of type "_org.springframework.transaction.PlatformTransactionManager_". You can add this transaction manager to the Spring bean configuration:
+
+[source,xml]
+----
+<bean id="someTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  <constructor-arg ref="someDataSource"/>
+</bean>
+----
+
+The transaction isolation level as well as the transaction timeout get set on the transaction definition used during SQL statement execution. The isolation level should evaluate to one of the constants given in "_org.springframework.transaction.TransactionDefinition_". Valid isolation level are:
+
+* ISOLATION_DEFAULT
+* ISOLATION_READ_UNCOMMITTED
+* ISOLATION_READ_COMMITTED
+* ISOLATION_REPEATABLE_READ
+* ISOLATION_SERIALIZABLE
+
+[[groovy-sql-result-set-validation]]
+=== Groovy SQL result set validation
+
+Groovy provides great support for accessing Java list objects and maps. As a Java SQL result set is nothing but a list of map representations, where each entry in the list defines a row in the result set and each map entry represents the columns and values. So with Groovy's list and map access we have great possibilities to validate a SQL result set - out of the box.
+
+*XML DSL* 
+
+[source,xml]
+----
+<sql datasource="testDataSource">
+    <statement>select ID from CUSTOMERS where NAME='${customerName}'</statement>
+    <statement>select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'</statement>
+    
+    <validate-script type="groovy">
+        assert rows.size() == 2
+        assert rows[0].ID == '1'
+        assert rows[1].STATUS == 'in progress'
+        assert rows[1] == [ORDERTYPE:'SampleOrder', STATUS:'in progress']               
+    </validate-script>
+</sql>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+query(dataSource)
+    .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
+    .validateScript("assert rows.size == 2;" +
+            "assert rows[0].ID == '1';" +
+            "assert rows[0].STATUS == 'in progress';", "groovy");
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+query(action -> action.dataSource(dataSource)
+    .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
+    .validateScript("assert rows.size == 2;" +
+            "assert rows[0].ID == '1';" +
+            "assert rows[0].STATUS == 'in progress';", "groovy"));
+----
+
+As you can see Groovy provides fantastic access methods to the SQL result set. We can browse the result set with named column values and check the size of the result set. We are also able to search for an entry, iterate over the result set and have other helpful operations. For a detailed description of the list and map handling in Groovy my advice for you is to have a look at the official Groovy documentation.
+
+*Note*
+In general other script languages do also support this kind of list and map access. For now we just have implemented the Groovy script support, but the framework is ready to work with all other great script languages out there, too (e.g. Scala, Clojure, Fantom, etc.). So if you prefer to work with another language join and help us implement those features.
+
+[[save-result-set-values]]
+=== Save result set values
+
+Now the validation of database entries is a very powerful feature but sometimes we simply do not know the persisted content values. The test may want to read database entries into test variables without validation. Citrus is able to do that with the following <extract> expressions:
+
+*XML DSL* 
+
+[source,xml]
+----
+<sql datasource="testDataSource">
+    <statement>select ID from CUSTOMERS where NAME='${customerName}'</statement>
+    <statement>select STATUS from ORDERS where ID='${orderId}'</statement>
+    
+    <extract column="ID" variable="${customerId}"/>
+    <extract column="STATUS" variable="${orderStatus}"/>
+</sql>
+----
+
+*Java DSL designer* 
+
+[source,java]
+----
+query(dataSource)
+    .statement("select STATUS from ORDERS where ID='${orderId}'")
+    .extract("STATUS", "orderStatus");
+----
+
+*Java DSL runner* 
+
+[source,java]
+----
+query(action -> action.dataSource(dataSource)
+    .statement("select STATUS from ORDERS where ID='${orderId}'")
+    .extract("STATUS", "orderStatus"));
+----
+
+We can save the database column values directly to test variables. Of course you can combine the value extraction with the normal column validation described earlier in this chapter. Please keep in mind that we can not use these operations on result sets with multiple rows. Citrus will always use the first row in a result set.

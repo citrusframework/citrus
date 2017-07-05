@@ -1,0 +1,16 @@
+[[appendix]]
+= Appendix
+:numbered!:
+
+This chapter gives a brief overview of all archived changes.
+
+include::changes-2-6.adoc[]
+include::changes-2-5.adoc[]
+include::changes-2-4.adoc[]
+include::changes-2-3.adoc[]
+include::changes-2-2.adoc[]
+include::changes-2-1.adoc[]
+include::changes-2-0.adoc[]
+include::changes-1-4.adoc[]
+include::changes-1-3.adoc[]
+include::changes-1-2.adoc[]

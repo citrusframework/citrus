@@ -1,0 +1,61 @@
+[[actions-java]]
+== Java
+
+The test framework is written in Java and runs inside a Java virtual machine. The functionality of calling other Java objects and methods in this same Java VM through Java Reflection is self-evident. With this action you can call any Java API available at runtime through the specified Java classpath.
+
+The action syntax looks like follows:
+
+[source,xml]
+----
+<java class="com.consol.citrus.test.util.InvocationDummy">
+    <constructor>
+        <argument type="">Test Invocation</argument>
+    </constructor>
+    <method name="invoke">
+        <argument type="String[]">1,2</argument>
+    </method>
+</java>
+
+<java class="com.consol.citrus.test.util.InvocationDummy">
+    <constructor>
+        <argument type="">Test Invocation</argument>
+    </constructor>
+    <method name="invoke">
+        <argument type="int">4</argument>
+        <argument type="String">Test Invocation</argument>
+        <argument type="boolean">true</argument>
+    </method>
+</java>
+    
+<java class="com.consol.citrus.test.util.InvocationDummy">
+    <method name="main">
+        <argument type="String[]">4,Test,true </argument>
+    </method>
+</java>
+----
+
+The Java class is specified by fully qualified class name. Constructor arguments are added using the <constructor> element with a list of <argument> child elements. The type of the argument is defined within the respective attribute "type". By default the type would be String.
+
+The invoked method on the Java object is simply referenced by its name. Method arguments do not bring anything new after knowing the constructor argument definition, do they?.
+
+Method arguments support data type conversion too, even string arrays (useful when calling CLIs). In the third action in the example code you can see that colon separated strings are automatically converted to string arrays.
+
+Simple data types are defined by their name (int, boolean, float etc.). Be sure that the invoked method and class constructor fit your arguments and vice versa, otherwise you will cause errors at runtime.
+
+Besides instantiating a fully new object instance for a class how about reusing a bean instance available in Spring bean container. Simply use the *ref* attribute and refer to an existing bean in Spring application context.
+
+[source,xml]
+----
+<java ref="invocationDummy">
+    <method name="invoke">
+        <argument type="int">4</argument>
+        <argument type="String">Test Invocation</argument>
+        <argument type="boolean">true</argument>
+    </method>
+</java>
+
+<bean id="invocationDummy" class="com.consol.citrus.test.util.InvocationDummy"/>
+    
+----
+
+The method is invoked on the Spring bean instance. This is very useful as you can inject other objects (e.g. via Autowiring) to the Spring bean instance before method invocation in test takes place. This enables you to execute any Java logic inside a test case.
