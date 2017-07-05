@@ -52,7 +52,7 @@ We want to use Citrus fo connect to dome FTP server as a client sending commands
       timeout="10000"/>
 ----
 
-The configuration above describes a Citrus ftp client connected to a ftp server with **ftp://localhost:22222**[ftp://localhost:22222**] . For authentication username and password are defined as well as the global connection timeout. The client will automatically send username and password for proper authentication to the server when opening a new connection.
+The configuration above describes a Citrus ftp client connected to a ftp server with `ftp://localhost:22222`. For authentication username and password are defined as well as the global connection timeout. The client will automatically send username and password for proper authentication to the server when opening a new connection.
 
 In a test case you are now able to use the client to push commands to the server.
 

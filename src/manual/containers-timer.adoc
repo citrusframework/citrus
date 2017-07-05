@@ -3,8 +3,7 @@
 
 Timers are very useful containers when you wish to execute a collection of test actions several times at regular intervals. The timer component generates an event which in turn triggers the execution of the nested test actions associated with timer. This can be useful in a number of test scenarios for example when Citrus needs to simulate a heart beat or if you are debugging a test and you wist to query the contents of the database, to mention just a few. The following code sample should demonstrate the power and flexibility of timers:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="timerTest">
@@ -33,8 +32,7 @@ Timers are very useful containers when you wish to execute a collection of test 
     </testcase>
 ----
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest

@@ -9,8 +9,8 @@ And this is quite easy. Citrus has a JSON message validator implementation activ
 
 Citrus provides several default message validator implementations for JOSN message format:
 
-* com.consol.citrus.validation.json.JsonTextMessageValidator: Basic JSON message validator implementation compares JSON objects (expected and received). The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. JSONArray as well as nested JSONObjects are supported, too. The JSON validator offers two different modes to operate. By default *strict* mode is set and the validator will also check the exact amount of control object fields to match. No additional fields in received JSON data structure will be accepted. In *soft* mode validator allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated. Additional fields in the received JSON data structure are ignored then.
-* com.consol.citrus.validation.script.GroovyJsonMessageValidator: Extended groovy message validator provides specific JSON slurper support. With JSON slurper the tester can validate the JSON message payload with closures for instance.
+com.consol.citrus.validation.json.JsonTextMessageValidator:: Basic JSON message validator implementation compares JSON objects (expected and received). The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. JSONArray as well as nested JSONObjects are supported, too. The JSON validator offers two different modes to operate. By default *strict* mode is set and the validator will also check the exact amount of control object fields to match. No additional fields in received JSON data structure will be accepted. In *soft* mode validator allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated. Additional fields in the received JSON data structure are ignored then.
+com.consol.citrus.validation.script.GroovyJsonMessageValidator:: Extended groovy message validator provides specific JSON slurper support. With JSON slurper the tester can validate the JSON message payload with closures for instance.
 
 You can overwrite this default message validators for JSON by placing a bean into the Spring Application context. The bean uses a default name as identifier. Then your custom bean will overwrite the default validator:
 
@@ -72,8 +72,7 @@ Again we tell Citrus that we expect a message of *type="json"* . Now we used a v
 
 There is even more object injection for the validation script. With the automatically added object *_receivedMessage_* You have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message payload or header.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <receive endpoint="httpMessageEndpoint">
@@ -94,8 +93,7 @@ The listing above shows some power of the validation script. We can access the m
 
 In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation scripts. The syntax looks like follows:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <receive endpoint="helloServiceClient" timeout="5000">
@@ -107,8 +105,7 @@ In general Groovy code inside the XML test case definition or as part of the Jav
 </receive>
 ----
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest

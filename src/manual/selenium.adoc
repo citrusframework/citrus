@@ -109,8 +109,7 @@ We have several Citrus test actions each representing a Selenium command. These 
 
 We added a special selenium namespace with prefix *selenium:* so now we can start to add Selenium test actions to the test case:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="SeleniumCommandIT">
@@ -174,8 +173,7 @@ selenium:stop:: Stops the browser instance
 
 Up to now we have only used the Citrus XML DSL. Of course all Selenium commands are also available in Java DSL as the next example shows.
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @Autowired
@@ -206,8 +204,7 @@ Now lets have a closer look at the different Selenium test actions supported in 
 You can start and stop the browser instance with a test action. This instantiates a new browser window and prepares everything for interacting with the web
 interface.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:start browser="seleniumBrowser"/>
@@ -217,8 +214,7 @@ interface.
 <selenium:stop browser="seleniumBrowser"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().start(seleniumBrowser);
@@ -228,7 +224,7 @@ selenium().start(seleniumBrowser);
 selenium().stop(seleniumBrowser);
 ----
 
-After starting a browser instance Citrus will automatically use this very same browser instance in all further Selenium actions. This mechanism is based on a test variable (**selenium_browser**) that
+After starting a browser instance Citrus will automatically use this very same browser instance in all further Selenium actions. This mechanism is based on a test variable (*selenium_browser*) that
 is automatically set. All other test actions are able to load the current browser instance by reading this test variable before execution. In case you need to explicitly use
 a different browser instance than the active instance you can add the *browser* attribute to all Selenium test actions.
 
@@ -251,8 +247,7 @@ xpath:: finds element based on XPath evaluation in the DOM
 The find element action will automatically fail in case there is no such element on the current page. In case the element is found you can add additional attributes and properties
 for further element validation:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:find>
@@ -272,8 +267,7 @@ for further element validation:
 </selenium:find>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().find().element(By.tagName("h1"))
@@ -298,8 +292,7 @@ is failing with validation errors.
 
 The action performs a click operation on the element.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:click>
@@ -307,8 +300,7 @@ The action performs a click operation on the element.
 </selenium:click>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().click().element(By.linkText("Click Me!"));
@@ -319,8 +311,7 @@ selenium().click().element(By.linkText("Click Me!"));
 
 The action performs a hover operation on the element.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:hover>
@@ -328,8 +319,7 @@ The action performs a hover operation on the element.
 </selenium:hover>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().hover().element(By.linkText("Find Me!"));
@@ -340,8 +330,7 @@ selenium().hover().element(By.linkText("Find Me!"));
 
 The following actions are used to access form input elements such as text fields, checkboxes and dropdown lists.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:set-input value="Citrus">
@@ -357,8 +346,7 @@ The following actions are used to access form input elements such as text fields
 </selenium:dropdown-select>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().setInput("Citrus").element(By.name("username"));
@@ -409,8 +397,7 @@ As you can see the page object is a Java POJO that implements the *WebPage* inte
 injected by Citrus and Selenium based on the *FindBy* annotation. Now the test case is able to load that page object and execute some action methods on the page such as
 _setUserName_ or _submit_.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
@@ -424,8 +411,7 @@ _setUserName_ or _submit_.
                action="submit"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().page(UserFormPage.class).argument("Citrus").execute("setUserName");
@@ -460,8 +446,7 @@ public class UserFormValidator implements PageValidator<UserFormPage> {
 The page validator is called with the web page instance, the browser and the test context. The validator should assert page objects and web elements for
 validation purpose. In a test case we can call the validator to validate the page.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <bean id ="userFormValidator" class="com.consol.citrus.selenium.pages.UserFormValidator"/>
@@ -471,8 +456,7 @@ validation purpose. In a test case we can call the validator to validate the pag
                validator="userFormValidator"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @Autowired
@@ -519,16 +503,14 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 }
 ----
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
                action="validate"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().page(UserFormPage.class).execute("validate");
@@ -540,8 +522,7 @@ selenium().page(UserFormPage.class).execute("validate");
 Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
 to be _visible_ or _hidden_.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:wait until="hidden">
@@ -549,8 +530,7 @@ to be _visible_ or _hidden_.
 </selenium:wait>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().waitUntil().hidden().element(By.id("info-dialog"));
@@ -564,8 +544,7 @@ to Selenium limitations the minimum wait time is 1000 milliseconds.
 
 The action navigates to a new page either by using a new relative path or a complete new Http URL. 
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:navigate page="http://localhost:8080"/>
@@ -573,8 +552,7 @@ The action navigates to a new page either by using a new relative path or a comp
 <selenium:navigate page="help"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().navigate("http://localhost:8080");
@@ -583,7 +561,7 @@ selenium().navigate("help");
 ----
 
 The sample above describes a new page with new Http URL. The browser will navigate to this new page. All further Selenium actions are performed on this new
-page. The second navigation action opens the relative page _help_ so the new page URL is **http://localhost:8080/help**[http://localhost:8080/help**].
+page. The second navigation action opens the relative page _help_ so the new page URL is `http://localhost:8080/help`.
 
 Navigation is always done on the active browser window. You can manage the opened windows as described in next section.
 
@@ -592,8 +570,7 @@ Navigation is always done on the active browser window. You can manage the opene
 
 Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test. 
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:open-window name="my_window"/>
@@ -601,8 +578,7 @@ Selenium is able to manage multiple windows. So you can open, close and switch a
 <selenium:close-window name="my_window"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().open().window("my_window");
@@ -623,8 +599,7 @@ selenium_last_window:: the last window handle when switched to other window
 
 We are able to access the alert dialog on the current page. Citrus will validate the displayed dialog text and accept or dismiss of the dialog.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:alert accept="true">
@@ -632,8 +607,7 @@ We are able to access the alert dialog on the current page. Citrus will validate
 </selenium:alert>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().alert().text("Hello!").accept();
@@ -648,8 +622,7 @@ In case the test action fails to find an open alert dialog the test action raise
 You can execute this action in case you want to take a screenshot of the current page. This action only works with browsers that actually display the user interface. The action will not have any effect
 when executed with Html unit web driver in headless mode.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:screenshot/>
@@ -657,8 +630,7 @@ when executed with Html unit web driver in headless mode.
 <selenium:screenshot output-dir="target"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().screenhsot();
@@ -675,16 +647,14 @@ The test action has an optional parameter _output-dir_ which represents the outp
 
 The browser uses a temporary storage for downloaded files. We can access this temporary storage during a test case.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:store-file file-path="classpath:download/file.txt"/>
 <selenium:get-stored-file file-name="file.txt"/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().store("classpath:download/file.txt");
@@ -703,15 +673,13 @@ Citrus will automatically create a new test variable *selenium_download_file* wh
 
 When clearing the browser cache all cookies and temporary files will be deleted.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selenium:clear-cache/>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 selenium().clearCache();

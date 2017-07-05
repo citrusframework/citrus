@@ -12,8 +12,7 @@ username=Mickey Mouse
 greeting.text=Hello Test Framework
 ----
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="loadPropertiesTest">
@@ -27,8 +26,7 @@ greeting.text=Hello Test Framework
 </testcase>
 ----
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest

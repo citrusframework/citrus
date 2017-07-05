@@ -5,10 +5,11 @@ JSONPath is the JSON equivalent to XPath in the XML message world. With JSONPath
 
 You will see that JSONPath is a very powerful technology when it comes to find object entries in a complex JSON hierarchy structure. Also JSONPath can help to do message manipulations before a message is sent out for instance. Citrus supports JSONPath expressions in various scenarios:
 
-* &lt;message&gt;&lt;element path="[JSONPath-Expression]"&gt;&lt;/message&gt;
-* &lt;validate&gt;&lt;json-path expression="[JSONPath-Expression]"/&gt;&lt;/validate&gt;
-* &lt;extract&gt;&lt;message path="[JSONPath-Expression]"&gt;&lt;/extract&gt;
-* &lt;ignore path="[JSONPath-Expression]"/&gt;
+[horizontal]
+message:: &lt;message&gt;&lt;element path="[JSONPath-Expression]"&gt;&lt;/message&gt;
+validate:: &lt;validate&gt;&lt;json-path expression="[JSONPath-Expression]"/&gt;&lt;/validate&gt;
+extract:: &lt;extract&gt;&lt;message path="[JSONPath-Expression]"&gt;&lt;/extract&gt;
+ignore:: &lt;ignore path="[JSONPath-Expression]"/&gt;
 
 [[manipulate-with-jsonpath]]
 == Manipulate with JSONPath
@@ -86,8 +87,7 @@ With this JSONPath mechanism ou are able to manipulate message content before it
 
 Lets continue to use JSONPath expressions when validating a receive message in Citrus:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <message type="json">
@@ -102,8 +102,7 @@ Lets continue to use JSONPath expressions when validating a receive message in C
 </message>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,xml]
 ----
 receive(someEndpoint)
@@ -123,8 +122,7 @@ IMPORTANT: JSONPath expressions will only work on JSON message formats. This is 
 
 Now lets get a bit more complex with validation matchers and JSON object functions. Citrus tries to give you the most comfortable validation capabilities when comparing JSON object values and JSON arrays. One first thing you can use is object functions like *keySet()* or *size()* . These functionality is not covered by JSONPath out of the bow but added by Citrus. Se the following example on how to use it:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <message type="json">
@@ -135,8 +133,7 @@ Now lets get a bit more complex with validation matchers and JSON object functio
 </message>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,xml]
 ----
 receive(someEndpoint)
@@ -149,8 +146,7 @@ The object functions do return special JSON object related properties such as th
 
 Now lets get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives us a very powerful way of validating JSON object elements and arrays. See the following examples that demonstrate how this works:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <message type="json">
@@ -161,8 +157,7 @@ Now lets get even more comfortable validation capabilities with matchers. Citrus
 </message>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,xml]
 ----
 receive(someEndpoint)

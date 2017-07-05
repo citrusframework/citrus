@@ -232,7 +232,7 @@ The route has an exception handling block defined that is called as soon as the 
 
 This message as response to the *seda:news-feed* route would cause Camel to enter the exception handling in the route definition. The exception handling is activated and calls the error handling route endpoint *seda:exceptions* . Of course Citrus would be able to receive such an exception exchange validating the exception handling outcome.
 
-In such failure scenarios the Apache Camel exchange holds the exception information (**CamelExceptionCaught**) such as causing exception class and error message. These headers are present in an error scenario and can be validated in Citrus when receiving error messages as follows:
+In such failure scenarios the Apache Camel exchange holds the exception information (*CamelExceptionCaught*) such as causing exception class and error message. These headers are present in an error scenario and can be validated in Citrus when receiving error messages as follows:
 
 [source,xml]
 ----
@@ -304,8 +304,7 @@ Since Citrus 2.4 we introduced some Camel specific test actions that enable easy
 
 We added a special camel namespace with prefix *camel:* so now we can start to add Camel test actions to the test case:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="CamelRouteIT">
@@ -344,8 +343,7 @@ In addition to that you can skip this lookup and directly reference a target Cam
 
 Removing routes at runtime is also supported.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="CamelRouteIT">
@@ -361,8 +359,7 @@ Removing routes at runtime is also supported.
 
 Next operation we will discuss is the start and stop of existing Camel routes:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="CamelRouteIT">
@@ -383,8 +380,7 @@ Starting and stopping Camel routes at runtime is important when temporarily Citr
 
 Of course all Camel route actions are also available in Java DSL.
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @Autowired
@@ -424,8 +420,7 @@ As you can see we have access to the Camel route builder that adds 1-n new Camel
 
 The Camel controlbus component is a good way to access route statistics and route status information within a Camel context. Citrus provides controlbus test actions to easily access the controlbus operations at runtime.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="CamelControlBusIT">
@@ -459,8 +454,7 @@ In case an controlbus operation has a result such as the *status* action we can 
 
 The Java DSL also supports these controlbus operations as the next example shows:
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @Autowired

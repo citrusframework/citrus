@@ -39,7 +39,7 @@ First of all we define a custom XSD schema describing the new elements:
 </schema>
 ----
 
-We have four simple elements (**requirement**, *pre-condition*, *result* and *classification*) all typed as string. These new elements later go into the test case meta information section.
+We have four simple elements (*requirement*, *pre-condition*, *result* and *classification*) all typed as string. These new elements later go into the test case meta information section.
 
 After we added the new XML schema file to the classpath of our project we need to announce the schema to Spring. As you might know already a Citrus test case is nothing else but a simple Spring configuration file with customized XML schema support. If we add new elements to a test case Spring needs to know the XML schema for parsing the test case configuration file. See the *spring.schemas* file usually placed in the META-INF/spring.schemas in your project.
 

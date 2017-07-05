@@ -120,8 +120,7 @@ specific test actions in our XML test as follows:
 
 We added a special kubernetes namespace with prefix *k8s:* so now we can start to add Kubernetes test actions to the test case:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="KubernetesCommandIT">
@@ -167,8 +166,7 @@ Citrus come in here to validate the results.
 
 Up to now we have only used the Citrus XML DSL. Of course all Kubernetes commands are also available in Java DSL as the next example shows.
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -193,8 +191,7 @@ In the example above the _InfoResult_ model object is passed as argument to the 
 
 Java 8 Lambda expressions add some syntactical sugar to the command result validation:
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -212,8 +209,7 @@ public void kubernetesTest() {
 By default Citrus tries to find a Kubernetes client component within the Citrus Spring application context. If not present Citrus will instantiate a default kubernetes client with all default settings.
 You can also explicitly set the kubernetes client instance when using the Java DSL Kubernetes command actions:
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @Autowired
@@ -238,8 +234,7 @@ public void kubernetesTest() {
 
 The info command just gets the client connection settings and provides them as a Json result to the action.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:info client="myK8sClient">
@@ -257,8 +252,7 @@ The info command just gets the client connection settings and provides them as a
 </k8s:info>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -278,8 +272,7 @@ We can list Kubernetes resources such as pods, services, endpoints and replicati
 
 The test action is able to define respective filters to the list so we get only pods the match the given attributes:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:list-pods label="app=todo">
@@ -298,8 +291,7 @@ The test action is able to define respective filters to the list so we get only 
 </k8s:list-pods>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -337,8 +329,7 @@ As you can see we have combined to label filters _stage!=test_ and _provider=fab
 Nodes and namespaces are special resources that are not filtered by their namespace as they are more global resources. The rest is pretty similar to listing pods or services. We can
 add filteres such as _name_ and _label_.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:list-namespaces label="provider=citrus">
@@ -348,8 +339,7 @@ add filteres such as _name_ and _label_.
 </k8s:list-namespaces>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -371,8 +361,7 @@ public void listPodsTest() {
 We can get a very special Kubernetes resource such as a pod or service for detailed validation of that resource. We need to specify a resource name
 in order to select the resource from list of available resources in Kubernetes.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:get-pod name="citrus_pod">
@@ -431,8 +420,7 @@ in order to select the resource from list of available resources in Kubernetes.
 </k8s:get-pod>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -516,8 +504,7 @@ that clients outside of Kubernetes are also able to access the service by using 
 
 In the test case we can use these YAML files to create the resources in Kubernetes: 
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:create-pod namespace="default">
@@ -529,8 +516,7 @@ In the test case we can use these YAML files to create the resources in Kubernet
 </k8s:create-service>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -570,8 +556,7 @@ With this repeat on error action we wait for the new _server=hello-jetty_ labele
 With that command we are able to delete a resource in Kubernetes. Up to now deletion of pods and services is supported. We have to give a name of the resource that we want
 to delete.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:delete-pod name="citrus_pod">
@@ -581,8 +566,7 @@ to delete.
 </k8s:delete-pod>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -602,8 +586,7 @@ NOTE: The watch operation is still in experimental state and may face severe adj
 When using a watch command we add a subscription to change events on a Kubernetes resources. So we can watch resources such as pods, services for future changes.
 Each change on that resource triggers a new watch event result that we can expect and validate.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <k8s:watch-pods label="provider=citrus">
@@ -613,8 +596,7 @@ Each change on that resource triggers a new watch event result that we can expec
 </k8s:watch-pods>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -640,8 +622,7 @@ multiple watch events to be triggered.
 We have seen how to access the Kubernetes remote REST API by using special Citrus test actions in out test. As an alternative to that we can also use more
 generic send/receive actions in Citrus for accessing the Kubernetes API. We demonstrate this with a simple example:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="KubernetesSendReceiveIT">

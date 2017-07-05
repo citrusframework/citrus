@@ -540,7 +540,7 @@ Usually we use CDATA sections to define message payload data inside a testcase. 
 <variable name="cdata" value="citrus:cdataSection('payload')"/>
 ----
 
-cdata = *`&lt;![CDATA[payload]]&gt;`* 
+cdata = `&lt;![CDATA[payload]]&gt;`
 
 [[functions-digest-auth-header]]
 == digestAuthHeader()
@@ -588,7 +588,7 @@ Test cases may use the local host address for some reason (e.g. used as authenti
 
 A possible value is either the host name as used in DNS entry or an IP address value:
 
-address = *`&lt;192.168.2.100&gt;`* 
+address = `&lt;192.168.2.100&gt;`
 
 [[functions-change-date]]
 == changeDate()
@@ -670,8 +670,7 @@ Let's see this function in action:
 
 The function above loads the message named *myRequest* from the local memory store. This requires a send or receive action to have handled the message before in the same test case.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <send endpoint="someEndpoint">
@@ -681,8 +680,7 @@ The function above loads the message named *myRequest* from the local memory sto
 </send>
 ----
 
-*Java DSL* 
-
+.Java DSL
 [source,java]
 ----
 send("someEndpoint")

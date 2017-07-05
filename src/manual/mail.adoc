@@ -57,11 +57,12 @@ This is how a Citrus mail client component is defined in the Spring application 
 
 We all know mail message contents. The mail message has some general properties set by the user:
 
-* from: The message sender mail address
-* to: The message recipient mail address. You can add multiple recipients by using a comma separated list.
-* cc: Copy recipient mail address. You can add multiple recipients by using a comma separated list.
-* bcc: Blind copy recipient mail address. You can add multiple recipients by using a comma separated list.
-* subject: Some subject used as mail head line.
+[horizontal]
+from:: The message sender mail address
+to:: The message recipient mail address. You can add multiple recipients by using a comma separated list.
+cc:: Copy recipient mail address. You can add multiple recipients by using a comma separated list.
+bcc:: Blind copy recipient mail address. You can add multiple recipients by using a comma separated list.
+subject:: Some subject used as mail head line.
 
 As a tester you are able to set these properties in your test case. Citrus defines a XML mail message representation that you can use inside your send action. Let us have a look at this:
 

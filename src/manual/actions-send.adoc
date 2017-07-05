@@ -7,8 +7,7 @@ image:figure_001.jpg[figure_001.jpg]
 
 A message consists of a message header (name-value pairs) and a message payload. Later in this section we will see different ways of constructing a message with payload and header values. But first of all let's concentrate on a simple sending message action inside a test case.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="SendMessageTest">
@@ -46,12 +45,11 @@ Now lets have a closer look at the sending action. The *'endpoint'* attribute mi
 
 The test case is not aware of any transport details, because it does not have to. The advantages are obvious: On the one hand multiple test cases can reference the message endpoint definition for better reuse. Secondly test cases are independent of message transport details. So connection factories, user credentials, endpoint uri values and so on are not present in the test case.
 
-In other words the *"endpoint"* attribute of the *`&lt;send&gt;`* element specifies which message endpoint definition to use and therefore where the message should go to. Once again all available message endpoints are configured in a separate Citrus configuration file. We will come to this later on. Be sure to always pick the right message endpoint type in order to publish your message to the right destination.
+In other words the *"endpoint"* attribute of the `&lt;send&gt;` element specifies which message endpoint definition to use and therefore where the message should go to. Once again all available message endpoints are configured in a separate Citrus configuration file. We will come to this later on. Be sure to always pick the right message endpoint type in order to publish your message to the right destination.
 
 If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint definition and reference this instance. The same test as shown above in Java DSL looks like this:
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 import org.testng.ITestContext;
@@ -80,8 +78,7 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
 }
 ----
 
-*Java DSL runner* 
-
+.Java DSL runner
 [source,java]
 ----
 import org.testng.ITestContext;
@@ -121,8 +118,7 @@ element:: Explicitly overwrite values in the XML message payload using XPath. Yo
 header:: Defines a header for the message (e.g. JMS header information or SOAP header):
 element:: Each header receives a "name" and "value". The "name" will be the name of the header entry and "value" its respective value. Again the usage of variable expressions as value is supported here, too.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <send endpoint="helloServiceEndpoint">
@@ -164,8 +160,7 @@ With this alternative you can skip the XML schema validation from your IDE at de
 
 The The same possibilities apply to the Citrus Java DSL.
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest
@@ -225,8 +220,7 @@ Before sending takes place you can explicitly overwrite some message values in p
 
 The message header is part of our duty of defining proper messages, too. So Citrus uses name-value pairs like "Operation" and "MessageId" in the next example to set message header entries. Depending on what message endpoint is used and which message transport underneath the header values will be shipped in different ways. In JMS the headers go to the header section of the message, in Http we set mime headers accordingly, in SOAP we can access the SOAP header elements and so on. Citrus aims to do the hard work for you. So Citrus knows how to set headers on different message transports.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <send endpoint="helloServiceEndpoint">
@@ -245,8 +239,7 @@ The message header is part of our duty of defining proper messages, too. So Citr
 
 The message headers to send are defined by a simple name and value pair. Of course you can use test variables in header values as well. Let's see how this looks like in Java DSL:
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest
@@ -259,8 +252,7 @@ public void messagingTest() {
 }
 ----
 
-*Java DSL runner* 
-
+.Java DSL runner
 [source,java]
 ----
 @CitrusTest

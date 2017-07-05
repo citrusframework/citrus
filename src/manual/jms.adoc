@@ -228,7 +228,7 @@ The JMS specification defines a set of special message header entries that can g
 </header>
 ----
 
-As you see all JMS specific message headers use the *`citrus_jms_`* prefix. This prefix comes from Spring Integration message header mappers that take care of setting those headers in the JMS message header properly.
+As you see all JMS specific message headers use the `citrus_jms_` prefix. This prefix comes from Spring Integration message header mappers that take care of setting those headers in the JMS message header properly.
 
 Typing of message header entries may also be of interest in order to meet the JMS standards of typed message headers. For instance the following message header is of type double and is therefore transferred via JMS as a double value.
 

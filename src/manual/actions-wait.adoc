@@ -12,8 +12,7 @@ message:: This condition checks for the existence of a message in the local mess
 
 Next let us have a look at a simple example:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="waitTest">
@@ -25,8 +24,7 @@ Next let us have a look at a simple example:
 </testcase>
 ----
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -39,8 +37,7 @@ The example waits for some Http server resource to be available with *Http 200 O
 
 Next let us have a look at the file condition usage:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="waitTest">
@@ -52,8 +49,7 @@ Next let us have a look at the file condition usage:
 </testcase>
 ----
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest
@@ -66,8 +62,7 @@ Citrus checks for the file to exist under the given path. Only if the file exist
 
 Next let us have a look at the message condition usage:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <testcase name="waitTest">
@@ -79,8 +74,7 @@ Next let us have a look at the message condition usage:
 </testcase>
 ----
 
-*Java DSL designer and runner* 
-
+.Java DSL
 [source,java]
 ----
 @CitrusTest

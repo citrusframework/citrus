@@ -5,8 +5,7 @@ Just like sending messages the receiving part is a very important action in an i
 
 As already mentioned before a message consists of a message header (name-value pairs) and a message payload. Later in this document we will see how to validate incoming messages with payload and header values. We start with a very simple example:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <receive endpoint="helloServiceEndpoint">
@@ -29,8 +28,7 @@ This message name is very useful when accessing the message content later on dur
 
 We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest
@@ -45,8 +43,7 @@ public void messagingTest() {
 }
 ----
 
-*Java DSL runner* 
-
+.Java DSL runner
 [source,java]
 ----
 @CitrusTest
@@ -80,8 +77,7 @@ The most detailed validation of incoming messages is to define some expected mes
 
 So by defining an expected message payload we validate the incoming message in syntax and semantics. In case a difference is identified by the message validator the validation and the test case fails with respective exceptions. This is how you can define message payloads in receive action:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <receive endpoint="helloServiceEndpoint">
@@ -123,8 +119,7 @@ With this alternative you can skip the XML schema validation from your IDE at de
 
 In Java DSL we also have multiple options for specifying the message payloads:
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest
@@ -187,8 +182,7 @@ In general the expected message content can be manipulated using XPath (link:#xp
 
 Message headers are used widely in enterprise messaging solution: The message headers are part of the message semantics and need to be validated, too. Citrus can validate message header by name and value.
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <receive endpoint="helloServiceEndpoint">
@@ -209,8 +203,7 @@ The expected message headers are defined by a name and value pair. Citrus will c
 
 Let's see how this looks like in Java DSL:
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest
@@ -223,8 +216,7 @@ public void messagingTest() {
 }
 ----
 
-*Java DSL runner* 
-
+.Java DSL runner
 [source,java]
 ----
 @CitrusTest
@@ -242,7 +234,7 @@ Header definition in Java DSL is straight forward as we just define name and val
 [[message-selectors]]
 === Message selectors
 
-The *`&lt;selector&gt;`* element inside the receiving action defines key-value pairs in order to filter the messages being received. The filter applies to the message headers. This means that a receiver will only accept messages matching a header element value. In messaging applications the header information often holds message ids, correlation ids, operation names and so on. With this information given you can explicitly listen for messages that belong to your test case. This is very helpful to avoid receiving messages that are still available on the message destination.
+The `&lt;selector&gt;` element inside the receiving action defines key-value pairs in order to filter the messages being received. The filter applies to the message headers. This means that a receiver will only accept messages matching a header element value. In messaging applications the header information often holds message ids, correlation ids, operation names and so on. With this information given you can explicitly listen for messages that belong to your test case. This is very helpful to avoid receiving messages that are still available on the message destination.
 
 Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry situations where the application error handling automatically tries to solve a communication problem that occurred during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not valid any more for the currently running test case. The test case might fail because the received message does not apply to the actual use case. So we will definitely run into validation errors as the expected message control values do not match.
 
@@ -250,8 +242,7 @@ Now we have to find a way to avoid these problems. The test could filter the mes
 
 Let us have a closer look at a message selector inside a receiving action:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <selector>
@@ -260,8 +251,7 @@ Let us have a closer look at a message selector inside a receiving action:
 </selector>
 ----
 
-*Java DSL designer* 
-
+.Java DSL designer
 [source,java]
 ----
 @CitrusTest
@@ -271,8 +261,7 @@ public void receiveMessageTest() {
 }
 ----
 
-*Java DSL runner* 
-
+.Java DSL runner
 [source,java]
 ----
 @CitrusTest
@@ -304,8 +293,7 @@ IMPORTANT: Previously only JMS message destinations offered support for message 
 
 With the Groovy MarkupBuilder you can build XML message payloads in a simple way, without having to write the typical XML overhead. For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML section or the nested payload XML data we write a Groovy script snippet. The Groovy MarkupBuilder generates the XML message payload with exactly the same result:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <send endpoint="helloServiceEndpoint">
@@ -338,8 +326,7 @@ We use the *builder* element with type *groovy* and the MarkupBuilder code is di
 
 The Groovy MarkupBuilder script may also be used within receive actions as shown in the following listing:
 
-*XML DSL* 
-
+.XML DSL
 [source,xml]
 ----
 <send endpoint="helloServiceEndpoint">

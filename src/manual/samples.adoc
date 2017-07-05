@@ -3,6 +3,4 @@
 
 This chapter gives some samples where you can see Citrus in action.
 
-* link:#samples-flightbooking[samples-flightbooking]
-
 include::samples-flightbooking.adoc[]

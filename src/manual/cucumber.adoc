@@ -228,7 +228,7 @@ In the feature package *my.company.features* we add a new XML file *EchoSteps.xm
 </spring:beans>
 ----
 
-The above steps definition is written in pure XML. Citrus will automatically read the step definition and add those to the Cucumber runtime. Following from that the step definitions are executed when matching to the feature story. The XML step files follow a naming convention. Citrus will look for all files located in the feature package with name pattern ****/**.Steps.xml** and load those definitions when Cucumber starts up.
+The above steps definition is written in pure XML. Citrus will automatically read the step definition and add those to the Cucumber runtime. Following from that the step definitions are executed when matching to the feature story. The XML step files follow a naming convention. Citrus will look for all files located in the feature package with name pattern `\\**/**.Steps.xml` and load those definitions when Cucumber starts up.
 
 The XML steps are able to receive parameters from the Gherkin regexp matcher. The parameters are passed to the step as test variable. The parameter names get declared in the optional attribute *parameter-names* . In the step definition actions you can use the parameter names as test variables.
 
