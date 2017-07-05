@@ -46,8 +46,7 @@ The condition string can be any Boolean expression and supports several operator
 * or (logical combining of two Boolean values)
 * () (brackets)
 
-*Important*
-It is very important to notice that the condition is evaluated before the very first iteration takes place. The loop therefore can be executed 0-n times according to the condition value.
+IMPORTANT: It is very important to notice that the condition is evaluated before the very first iteration takes place. The loop therefore can be executed 0-n times according to the condition value.
 
 Now the boolean expression evaluation as described above is limited to very basic operation such as *lower than*, *greater than* and so on. We also can use Hamcrest matchers in conditions that are way more powerful than that.
 

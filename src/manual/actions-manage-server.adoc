@@ -65,7 +65,6 @@ public void startStopServerTest() {
 }
 ----
 
-*Note*
-Starting and stopping server instances is a synchronous test action. This means that your test case is waiting for the server to start before other test actions take place. Startup times and shut down of server instances may delay your test accordingly.
+NOTE: Starting and stopping server instances is a synchronous test action. This means that your test case is waiting for the server to start before other test actions take place. Startup times and shut down of server instances may delay your test accordingly.
 
 As you can see starting and stopping Citrus server instances is very easy. You can also write your own server implementations by implementing the interface *com.consol.citrus.server.Server* . All custom server implementations can then be started and stopped during a test case.

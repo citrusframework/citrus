@@ -89,18 +89,19 @@ The example above creates a *AddBookRequestMessage* object and puts this as payl
 
 In the previous sections we have already seen some examples on how to overwrite default message validator implementations in Citrus. By default all message validators can be overwritten by placing a Spring bean of the same id to the Spring application context. The default implementations of Citrus are:
 
-* *defaultXmlMessageValidator*: com.consol.citrus.validation.xml.DomXmlMessageValidator
-* *defaultXpathMessageValidator*: com.consol.citrus.validation.xml.XpathMessageValidator
-* *defaultJsonMessageValidator*: com.consol.citrus.validation.json.JsonTextMessageValidator
-* *defaultJsonPathMessageValidator*: com.consol.citrus.validation.json.JsonPathMessageValidator
-* *defaultPlaintextMessageValidator*: com.consol.citrus.validation.text.PlainTextMessageValidator
-* *defaultMessageHeaderValidator*: com.consol.citrus.validation.DefaultMessageHeaderValidator
-* *defaultBinaryBase64MessageValidator*: com.consol.citrus.validation.text.BinaryBase64MessageValidator
-* *defaultGzipBinaryBase64MessageValidator*: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator
-* *defaultXhtmlMessageValidator*: com.consol.citrus.validation.xhtml.XhtmlMessageValidator
-* *defaultGroovyXmlMessageValidator*: com.consol.citrus.validation.script.GroovyXmlMessageValidator
-* *defaultGroovyTextMessageValidator*: com.consol.citrus.validation.script.GroovyScriptMessageValidator
-* *defaultGroovyJsonMessageValidator*: com.consol.citrus.validation.script.GroovyJsonMessageValidator
+[horizontal]
+defaultXmlMessageValidator:: com.consol.citrus.validation.xml.DomXmlMessageValidator
+defaultXpathMessageValidator:: com.consol.citrus.validation.xml.XpathMessageValidator
+defaultJsonMessageValidator:: com.consol.citrus.validation.json.JsonTextMessageValidator
+defaultJsonPathMessageValidator:: com.consol.citrus.validation.json.JsonPathMessageValidator
+defaultPlaintextMessageValidator:: com.consol.citrus.validation.text.PlainTextMessageValidator
+defaultMessageHeaderValidator:: com.consol.citrus.validation.DefaultMessageHeaderValidator
+defaultBinaryBase64MessageValidator:: com.consol.citrus.validation.text.BinaryBase64MessageValidator
+defaultGzipBinaryBase64MessageValidator:: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator
+defaultXhtmlMessageValidator:: com.consol.citrus.validation.xhtml.XhtmlMessageValidator
+defaultGroovyXmlMessageValidator:: com.consol.citrus.validation.script.GroovyXmlMessageValidator
+defaultGroovyTextMessageValidator:: com.consol.citrus.validation.script.GroovyScriptMessageValidator
+defaultGroovyJsonMessageValidator:: com.consol.citrus.validation.script.GroovyJsonMessageValidator
 
 Overwriting a single message validator with a custom implementation is then very easy. Just add your custom Spring bean to the application context using one of these default bean identifiers. In case you want to change the message validator gang by adding or removing a message validator implementation completely you can place a message validator component in the Spring application context.
 

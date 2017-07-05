@@ -73,8 +73,7 @@ mvn integration-test
 mvn integration-test -Dtest=MyFirstCitrusTest 
 ----
 
-*Note*
-If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on
+NOTE: If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on
 http://www.citfrusframework.org[http://www.citrusframework.org/tutorials.html].
 
 [[add-citrus-to-existing-maven-project]]
@@ -187,8 +186,7 @@ mvn integration-test
 mvn integration-test -Dtest=MyFirstCitrusTest 
 ----
 
-*Note*
-If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on http://www.citfrusframework.org[http://www.citrusframework.org/tutorials.html].
+NOTE: If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on http://www.citfrusframework.org[http://www.citrusframework.org/tutorials.html].
 
 [[using-ant]]
 == Using Ant
@@ -310,6 +308,5 @@ Citrus project artifacts in combination with the TestNG Ant tasks to run the tes
 </project>
 ----
 
-*Note*
-If you need detailed assistance for building Citrus with Ant do also visit our tutorials section on http://www.citrusframework.org[http://www.citrusframework.org].
+NOTE: If you need detailed assistance for building Citrus with Ant do also visit our tutorials section on http://www.citrusframework.org[http://www.citrusframework.org].
 There you can find a tutorial which describes the Citrus Java project set up with Ant from scratch.

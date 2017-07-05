@@ -7,8 +7,7 @@ The test scenario descriptions follow the Gherkin syntax with a *"Given-When-The
 
 There are lots of frameworks in the Java community that support BDD concepts. Citrus has dedicated support for the Cucumber framework because Cucumber is well suited for extensions and plugins. So with the Citrus and Cucumber integration you can write Gherkin syntax scenario and feature stories in order to execute the Citrus integration test capabilities. As usual we have a look at a first example. First lets see the Citrus cucumber dependency and XML schema definitions.
 
-*Note*
-The Cucumber components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Cucumber components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -146,8 +145,7 @@ CITRUS_CUCUMBER_INJECTION_MODE=RUNNER
 
 Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.
 
-*Important*
-Of course you can do the dependency injection with *@CitrusResource* annotations on *TestRunner* instances, too. Which variation should someone use *TestDesigner* or *TestRunner* ? In fact there is a significant difference when looking at the two approaches. The designer will use the Gherkin methods to build the whole Citrus test case first before any action is executed. The runner will execute each test action that has been built with a Gherkin step immediately. This means that a designer approach will always complete all BDD step definitions before taking action. This directly affects the Cucumber step reports. All steps are usually marked as successful when using a designer approach as the Citrus test is executed after the Cucumber steps have been executed. The runner approach in contrast will fail the step when the corresponding test action fails. The Cucumber test reports will definitely look different depending on what approach you are choosing. All other functions stay the same in both approaches. If you need to learn more about designer and runner approaches please see
+IMPORTANT: Of course you can do the dependency injection with *@CitrusResource* annotations on *TestRunner* instances, too. Which variation should someone use *TestDesigner* or *TestRunner* ? In fact there is a significant difference when looking at the two approaches. The designer will use the Gherkin methods to build the whole Citrus test case first before any action is executed. The runner will execute each test action that has been built with a Gherkin step immediately. This means that a designer approach will always complete all BDD step definitions before taking action. This directly affects the Cucumber step reports. All steps are usually marked as successful when using a designer approach as the Citrus test is executed after the Cucumber steps have been executed. The runner approach in contrast will fail the step when the corresponding test action fails. The Cucumber test reports will definitely look different depending on what approach you are choosing. All other functions stay the same in both approaches. If you need to learn more about designer and runner approaches please see
 
 If we run the Cucumber test the Citrus test case automatically performs its actions. That is a first combination of Citrus and Cucumber BDD. The story descriptions are translated to test actions and we are able to run integration tests with behavior driven development. Great! In a next step we will use XML step definitions rather than coding the steps in Java DSL.
 
@@ -234,11 +232,9 @@ The above steps definition is written in pure XML. Citrus will automatically rea
 
 The XML steps are able to receive parameters from the Gherkin regexp matcher. The parameters are passed to the step as test variable. The parameter names get declared in the optional attribute *parameter-names* . In the step definition actions you can use the parameter names as test variables.
 
-*Note*
-The test variables are visible in all upcoming steps, too. This is because the test variables are global by default. If you need to set local state for a step definition you can use another attribute *global-context* and set it to *false* in the step definition. This way all test variables and parameters are only visible in the step definition. Other steps will not see the test variables.
+NOTE: The test variables are visible in all upcoming steps, too. This is because the test variables are global by default. If you need to set local state for a step definition you can use another attribute *global-context* and set it to *false* in the step definition. This way all test variables and parameters are only visible in the step definition. Other steps will not see the test variables.
 
-*Note*
-Another notable thing is the XML escaping of reserved characters in the pattern definition. You can see that in the last step where the *then* attribute is escaping quotation characters.
+NOTE: Another notable thing is the XML escaping of reserved characters in the pattern definition. You can see that in the last step where the *then* attribute is escaping quotation characters.
 
 [source,xml]
 ----
@@ -387,15 +383,13 @@ Once again it should be said that the step definitions included in this package 
 
 There are several default step definitions for different aspects of integration testing. Please see the following packages that define default steps in Citrus:
 
-*Test designer packages*
-
+.Test designer packages
 * com.consol.citrus.cucumber.step.designer.core
 * com.consol.citrus.cucumber.step.designer.http
 * com.consol.citrus.cucumber.step.designer.docker
 * com.consol.citrus.cucumber.step.designer.selenium
 
-*Test runner packages*
-
+.Test runner packages
 * com.consol.citrus.cucumber.step.runner.core
 * com.consol.citrus.cucumber.step.runner.http
 * com.consol.citrus.cucumber.step.runner.docker

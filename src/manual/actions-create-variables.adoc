@@ -55,5 +55,4 @@ public void createVariableTest() {
 }
 ----
 
-*Note*
-Please note the difference between the *variable()* method and the *createVariable()* method. The first initializes the test case with the test variables. So all variables defined with this method are valid from the very beginning of the test. In contrary to that the *createVariable()* is executed within the test action chain. The newly created variables are then valid for the rest of the test. Trailing actions can reference the variables as usual with the variable expression.
+NOTE: Please note the difference between the *variable()* method and the *createVariable()* method. The first initializes the test case with the test variables. So all variables defined with this method are valid from the very beginning of the test. In contrary to that the *createVariable()* is executed within the test action chain. The newly created variables are then valid for the rest of the test. Trailing actions can reference the variables as usual with the variable expression.

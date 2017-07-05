@@ -5,8 +5,7 @@ RMI stands for Remote Method Invocation and is a standard way of calling Java me
 
 As a client Citrus is able to connect to some RMI registry that exposes some remote interfaces. As a server Citrus implements such a RMI registry and handles incoming method calls with providing the respective return value.
 
-*Note*
-The RMI components in Citrus are kept in a separate Maven module. So you should check that the module is available as Maven dependency in your project
+NOTE: The RMI components in Citrus are kept in a separate Maven module. So you should check that the module is available as Maven dependency in your project
 
 [source,xml]
 ----

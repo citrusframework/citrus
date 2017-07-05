@@ -5,8 +5,7 @@ You are able to load properties from external property files and store them as t
 
 Let us look at an example to get an idea about this action:
 
-*Content of load.properties:* 
-
+.Content of load.properties
 [source,xml]
 ----
 username=Mickey Mouse
@@ -40,8 +39,7 @@ public void loadPropertiesTest() {
 }
 ----
 
-*Output:* 
-
+.Output
 [source,xml]
 ----
 Current value of variable username = Mickey Mouse
@@ -50,5 +48,4 @@ Current value of variable greeting.text = Hello Test Framework
 
 The action will load all available properties in the file load.properties and store them to the test case as local variables.
 
-*Important*
-Please be aware of the fact that existing variables are overwritten!
+IMPORTANT: Please be aware of the fact that existing variables are overwritten!

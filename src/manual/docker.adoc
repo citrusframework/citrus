@@ -3,8 +3,7 @@
 
 Citrus provides configuration components and test actions for interaction with a Docker daemon. The Citrus docker client component will execute Docker commands for container management such as start, stop, build, inspect and so on. The Docker client by default uses the Docker remote REST API. As a user you can execute Docker commands as part of a Citrus test and validate possible command results.
 
-*Note*
-The Docker test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Docker test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -47,10 +46,11 @@ Citrus operates with the Docker remote REST API in order to interact with the Do
 
 The Docker client component above is using all default configuration values. By default Citrus is searching the system properties as well as environment variables for default Docker settings such as:
 
-* *DOCKER_HOST* ="tcp://localhost:2376[tcp://localhost:2376]"
-* *DOCKER_CERT_PATH* ="~/.docker/machine/machines/default"
-* *DOCKER_TLS_VERIFY* ="1"
-* *DOCKER_MACHINE_NAME* ="default"
+[horizontal]
+DOCKER_HOST:: tcp://localhost:2376
+DOCKER_CERT_PATH:: ~/.docker/machine/machines/default
+DOCKER_TLS_VERIFY:: 1
+DOCKER_MACHINE_NAME:: default
 
 In case these settings are not settable in your environment you can also use explicit settings in the Docker client component:
 

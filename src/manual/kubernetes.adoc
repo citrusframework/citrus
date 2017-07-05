@@ -4,8 +4,7 @@
 http://kubernetes.io/[Kubernetes] is one of the hottest management platforms for containerized applications these days. Kubernetes lets you deploy, scale and manage your containers on the platform so you get features like auto-scaling, self-healing, service discovery and load balancing.
 Citrus provides interaction with the Kubernetes REST API so you can access the Kubernetes platform and its resources within a Citrus test case.
 
-*Note*
-The Kubernetes test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Kubernetes test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -598,8 +597,7 @@ public void deletePodsTest() {
 [[watch-resources]]
 == Watch resources
 
-*Note*
-The watch operation is still in experimental state and may face severe adjustments and improvements in near future.
+NOTE: The watch operation is still in experimental state and may face severe adjustments and improvements in near future.
 
 When using a watch command we add a subscription to change events on a Kubernetes resources. So we can watch resources such as pods, services for future changes.
 Each change on that resource triggers a new watch event result that we can expect and validate.
@@ -632,8 +630,7 @@ public void listPodsTest() {
 }
 ----
 
-*Note*
-The watch command may be triggered several times for multiple changes on the respective Kubernetes resource. The watch action will always handle one single event result. The first
+NOTE: The watch command may be triggered several times for multiple changes on the respective Kubernetes resource. The watch action will always handle one single event result. The first
 event trigger is forwarded to the action validation. All further watch events on that same resource are ignored. This means that you may need multiple watch actions in your test case in case you expect
 multiple watch events to be triggered.
 

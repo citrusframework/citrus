@@ -3,8 +3,7 @@
 
 Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous communication. So in this chapter we explain how to setup JMS message endpoints for synchronous and asynchronous outbound and inbound communication
 
-*Note*
-The JMS components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The JMS components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -63,11 +62,9 @@ The endpoint needs a JMS connection factory for connecting to a JMS message brok
 
 The JMS connection factory receives the JMS message broker URL and is able to hold many other connection specific options. In this example we use the Apache ActiveMQ connection factory implementation as we want to use the ActiveMQ message broker. Citrus works by default with a bean id *connectionFactory* . All Citrus JMS component will automatically recognize this connection factory.
 
-*Tip*
-Spring makes it very easy to connect to other JMS broker implementations too (e.g. Apache ActiveMQ, TIBCO Enterprise Messaging Service, IBM Websphere MQ). Just add the required connection factory implementation as *connectionFactory* bean.
+TIP: Spring makes it very easy to connect to other JMS broker implementations too (e.g. Apache ActiveMQ, TIBCO Enterprise Messaging Service, IBM Websphere MQ). Just add the required connection factory implementation as *connectionFactory* bean.
 
-*Note*
-All of the Citrus JMS endpoint components will automatically look for a bean named *connectionFactory* by default. You can use the *connection-factory* endpoint attribute in order to use another connection factory instance with different bean names.
+NOTE: All of the Citrus JMS endpoint components will automatically look for a bean named *connectionFactory* by default. You can use the *connection-factory* endpoint attribute in order to use another connection factory instance with different bean names.
 
 [source,xml]
 ----
@@ -89,8 +86,7 @@ The endpoint is now ready to be used inside a test case. Inside a test case you 
 
 When receiving a messages with this endpoint the endpoint creates a JMS consumer on the JMS destination. The endpoint then acts as a message driven listener. This means that the message consumer connects to the given destination and waits for messages to arrive.
 
-*Note*
-Besides the destination-name attribute you can also provide a reference to a destination implementation.
+NOTE: Besides the destination-name attribute you can also provide a reference to a destination implementation.
 
 [source,xml]
 ----
@@ -159,8 +155,7 @@ If you rather want to define a static reply destination you can do so, too. The 
 
 Instead of using the *reply-destination-name* feel free to use the destination reference with *reply-destination* attribute. Again you can use a JNDI lookup then to reference a destination object.
 
-*Important*
-Be aware of permissions that are mandatory for creating temporary destinations. Citrus tries to create temporary queues on the JMS message broker. Following from that the Citrus JMS user has to have the permission to do so. Be sure that the user has the sufficient rights when using temporary reply destinations.
+IMPORTANT: Be aware of permissions that are mandatory for creating temporary destinations. Citrus tries to create temporary queues on the JMS message broker. Following from that the Citrus JMS user has to have the permission to do so. Be sure that the user has the sufficient rights when using temporary reply destinations.
 
 Up to now we have sent a message and waited for a synchronous response in the next step. Now it is also possible to switch the directions of send and receive actions. Then we have the situation where Citrus receives a JMS message first and then Citrus is in charge of providing a proper synchronous response message to the initial sender.
 
@@ -216,8 +211,7 @@ The Citrus JMS endpoints offer the attribute *'pub-sub-domain'* . Once this attr
 
 When using JMS topics you will be able to subscribe several test actions to the topic destination and receive a message multiple times as all subscribers will receive the message.
 
-*Important*
-It is very important to keep in mind that Citrus does not deal with durable subscribers. This means that messages that were sent in advance to the message subscription are not delivered to the message endpoint. So racing conditions may cause problems when using JMS topic endpoints in Citrus. Be sure to let Citrus subscribe to the topic before messages are sent to it. Otherwise you may loose some messages that were sent in advance to the subscription.
+IMPORTANT: It is very important to keep in mind that Citrus does not deal with durable subscribers. This means that messages that were sent in advance to the message subscription are not delivered to the message endpoint. So racing conditions may cause problems when using JMS topic endpoints in Citrus. Be sure to let Citrus subscribe to the topic before messages are sent to it. Otherwise you may loose some messages that were sent in advance to the subscription.
 
 [[jms-message-headers]]
 == JMS message headers

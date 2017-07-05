@@ -9,8 +9,7 @@ In general Citrus handles SELECT statements differently to other statements like
 SELECT you are able to add validation steps on the result sets returned from the database. This is not allowed when executing update statements like
 INSERT, UPDATE, DELETE. 
 
-*Important*
-Do not mix statements of type *_SELECT_* with others in a single sql test action. This will lead to errors because validation steps are not valid
+IMPORTANT: Do not mix statements of type *_SELECT_* with others in a single sql test action. This will lead to errors because validation steps are not valid
 for statements other than SELECT. Please use separate test actions for update statements.
 
 [[sql-update-insert-delete]]
@@ -76,15 +75,13 @@ public void sqlTest() {
 
 The first action uses inline SQL statements defined directly inside the test case. The next action uses an external SQL resource file instead. The file resource can hold several SQL statements separated by new lines. All statements inside the file are executed sequentially by the framework.
 
-*Important*
-You have to pay attention to some rules when dealing with external SQL resources.
+IMPORTANT: You have to pay attention to some rules when dealing with external SQL resources.
 
 * Each statement should begin in a new line
 * It is not allowed to define statements with word wrapping
 * Comments begin with two dashes "–"
 
-*Note*
-The external file is referenced either as file system resource or class path resource, by using the "file:" or "classpath:" prefix.
+NOTE: The external file is referenced either as file system resource or class path resource, by using the "file:" or "classpath:" prefix.
 
 Both examples use the "datasource" attribute. This value defines the database data source to be used. The connection to a data source is mandatory, because the test case does not know about user credentials or database names. The 'datasource' attribute references predefined data sources that are located in a separate Spring configuration file.
 
@@ -166,8 +163,7 @@ In the validation section variables can be used too. Look at the third validatio
 
 If a single validation happens to fail, the whole action will fail with respective validation errors.
 
-*Important*
-The validation with *_"<validate column="..." value="..."/>"_* meets single row result sets as you specify a single column control value. In case you have multiple rows in a result set you rather need to validate the columns with multiple control values like this:
+IMPORTANT: The validation with *_"<validate column="..." value="..."/>"_* meets single row result sets as you specify a single column control value. In case you have multiple rows in a result set you rather need to validate the columns with multiple control values like this:
 
 [source,xml]
 ----
@@ -227,8 +223,7 @@ Next example shows how to work with multiple row result sets and multiple values
 
 For the validation of multiple rows the *_`&lt;validate&gt;`_* element is able to host a list of control values for a column. As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. Functions and variables are supported as usual.
 
-*Important*
-It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add "order by" SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.
+IMPORTANT: It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add "order by" SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.
 
 [[transaction-management]]
 === Transaction management
@@ -332,8 +327,7 @@ query(action -> action.dataSource(dataSource)
 
 As you can see Groovy provides fantastic access methods to the SQL result set. We can browse the result set with named column values and check the size of the result set. We are also able to search for an entry, iterate over the result set and have other helpful operations. For a detailed description of the list and map handling in Groovy my advice for you is to have a look at the official Groovy documentation.
 
-*Note*
-In general other script languages do also support this kind of list and map access. For now we just have implemented the Groovy script support, but the framework is ready to work with all other great script languages out there, too (e.g. Scala, Clojure, Fantom, etc.). So if you prefer to work with another language join and help us implement those features.
+NOTE: In general other script languages do also support this kind of list and map access. For now we just have implemented the Groovy script support, but the framework is ready to work with all other great script languages out there, too (e.g. Scala, Clojure, Fantom, etc.). So if you prefer to work with another language join and help us implement those features.
 
 [[save-result-set-values]]
 === Save result set values

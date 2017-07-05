@@ -27,8 +27,7 @@ The listing above describes a normal message validation block inside a receive t
 
 Please note the special validation matcher syntax. The statements are surrounded with '@' markers and are identified by some unique name. The optional parameters passed to the matcher implementation state the expected values to match.
 
-*Tip*
-You can use validation matcher with all validation mechanisms - not only with XML validation. Plaintext, JSON, SQL result set validation are also supported.
+TIP: You can use validation matcher with all validation mechanisms - not only with XML validation. Plaintext, JSON, SQL result set validation are also supported.
 
 A set of validation matcher implementations is usually combined to a validation matcher library. The library has a prefix that will identify the validation matcher inside the test case. The default test framework validation matcher library uses a default prefix (citrus). You can write your own validation matcher library using your own prefix in order to extend the test framework functionality whenever you want.
 
@@ -53,8 +52,7 @@ As you can see the library defines one to many validation matcher members either
       @foo:customMatcher()@
 ----
 
-*Tip*
-You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.
+TIP: You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.
 
 [[ignore]]
 == ignore()
@@ -78,9 +76,7 @@ only validating the pure existence of an element. The value is ignored but the e
 </message>
 ----
 
-*Note*
-
-The ignore validation matcher is the only validation matcher that is able to skip the function parameter body. So you can use both `@ignore()@` and `@ignore@`.
+NOTE: The ignore validation matcher is the only validation matcher that is able to skip the function parameter body. So you can use both `@ignore()@` and `@ignore@`.
 
 [[matcher-matches-xml]]
 == matchesXml()
@@ -127,8 +123,7 @@ As you can see the message payload contains some configuration as nested XML dat
 
 With the validation matcher you are able to validate the nested XML with full validation power. Ignoring elements is possible and we can also use variables in our control XML.
 
-*Note*
-Nested CDATA elements within other CDATA sections are not allowed by XML standard. This is why we create the nested CDATA section on the fly with the function cdataSection().
+NOTE: Nested CDATA elements within other CDATA sections are not allowed by XML standard. This is why we create the nested CDATA section on the fly with the function cdataSection().
 
 [[matcher-equals-ignore-case]]
 == equalsIgnoreCase()

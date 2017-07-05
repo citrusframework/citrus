@@ -5,9 +5,10 @@ With this action you can make your test wait until a certain condition is satisf
 
 If the check does not exceed within the defined overall waiting time then the test execution fails with an appropriate error message. There are different types of conditions to check.
 
-* *http* : This condition is based on a Http request call on a server endpoint. Citrus will wait until the Http response is as defined (e.g. Http 200 OK). This is useful when you want to wait for a server to start.
-* *file* : This condition checks for the existence of a file on the local file system. Citrus will wait until the file is present.
-* *message* : This condition checks for the existence of a message in the local message store of the current test case. Citrus will wait until the message with the given name is present.
+[horizontal]
+http:: This condition is based on a Http request call on a server endpoint. Citrus will wait until the Http response is as defined (e.g. Http 200 OK). This is useful when you want to wait for a server to start.
+file:: This condition checks for the existence of a file on the local file system. Citrus will wait until the file is present.
+message:: This condition checks for the existence of a message in the local message store of the current test case. Citrus will wait until the message with the given name is present.
 
 Next let us have a look at a simple example:
 

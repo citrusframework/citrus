@@ -48,8 +48,9 @@ public void receiveTimeoutTest() {
 
 The action offers two attributes:
 
-* *endpoint* : Reference to a message endpoint that will try to receive messages.
-* *wait/timeout* : Time period to wait for messages to arrive
+[horizontal]
+endpoint:: Reference to a message endpoint that will try to receive messages.
+wait/timeout:: Time period to wait for messages to arrive
 
 Sometimes you may want to add some selector on the timeout receiving action. This way you can very selective check on a message to not be present on a message destination. This is possible with defining a message selector on the test action as follows.
 

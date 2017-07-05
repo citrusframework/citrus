@@ -53,8 +53,7 @@ Another possibility to set global variables is to load those from external prope
 
 We have just added a file path reference to the global variables component. Citrus loads the property file content as global test variables. You can mix property file and name-value pair variable definitions in the global variables component.
 
-*Note*
-The global variables can have variable expressions and Citrus functions. It is possible to use previously defined global variables as values of new variables, like in this example:
+NOTE: The global variables can have variable expressions and Citrus functions. It is possible to use previously defined global variables as values of new variables, like in this example:
 
 [source,xml]
 ----

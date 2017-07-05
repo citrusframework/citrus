@@ -54,8 +54,7 @@ No doubt the behavior will fail as soon as special variables with respective val
 So a good approach would be to harmonize variable usage across behaviors and test cases, so that templates and test cases do use the same variable naming. The behavior automatically knows all variables in the test case.
 And all test variables created inside the behavior are visible to the test case after applying.
 
-*Important*
-When a behavior changes variables this will automatically affect the variables in the whole test. So if you change a variable's value inside a behavior and the variable is defined inside the test case the changes will affect
+IMPORTANT: When a behavior changes variables this will automatically affect the variables in the whole test. So if you change a variable's value inside a behavior and the variable is defined inside the test case the changes will affect
 the variable in a global test context. This means we have to be careful when executing a behavior several times in a test, especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
 
 [[behavior-types]]

@@ -3,8 +3,7 @@
 
 SOAP Web Services over HTTP is a widely used communication scenario in modern enterprise applications. A SOAP Web Service client is posting a SOAP request via HTTP to a server. SOAP via HTTP is a synchronous message protocol by default so the client is waiting synchronously for the response message. Citrus provides both SOAP client and server components in order to meet both directions of this scenario. The components used are very similar to the HTTP components that were have discussed in the sections before.
 
-*Note*
-The SOAP WebService components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
+NOTE: The SOAP WebService components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
 
 [source,xml]
 ----
@@ -54,8 +53,7 @@ The client component uses the *request-url* in order to access the server resour
 
 In detail you as a tester just send and receive using the same client endpoint reference just as you would do with a synchronous JMS or channel communication. In case no response message is available in time according to the timeout settings Citrus raises a timeout error and the test will fail.
 
-*Important*
-The SOAP client component uses a SoapMessageFactory implementation in order to create the SOAP messages. This is a Spring bean added to the Citrus Spring application context. Spring offers several reference implementations as message factories so you can choose one of them (e.g. for SOAP 1.1 or 1.2 implementations).
+IMPORTANT: The SOAP client component uses a SoapMessageFactory implementation in order to create the SOAP messages. This is a Spring bean added to the Citrus Spring application context. Spring offers several reference implementations as message factories so you can choose one of them (e.g. for SOAP 1.1 or 1.2 implementations).
 
 [source,xml]
 ----
@@ -79,8 +77,7 @@ By default Citrus will search for a bean with id *'messageFactory'* . In case yo
          message-factory="soap12MessageFactory"/>
 ----
 
-*Tip*
-Up to now we have used a static endpoint request url for the SOAP message sender. Besides that we can use dynamic endpoint uri in configuration. We just use an endpoint uri resolver instead of the static request url like this:
+TIP: Up to now we have used a static endpoint request url for the SOAP message sender. Besides that we can use dynamic endpoint uri in configuration. We just use an endpoint uri resolver instead of the static request url like this:
 
 [source,xml]
 ----
@@ -127,8 +124,7 @@ The client component is able to add custom interceptors that participate in the 
 
 The sample above adds Wss4J WsSecurity interceptors in order to add security constraints to the request messages.
 
-*Note*
-When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors explicitly as shown with the _com.consol.citrus.ws.interceptor.LoggingClientInterceptor_ which
+NOTE: When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors explicitly as shown with the _com.consol.citrus.ws.interceptor.LoggingClientInterceptor_ which
 is able to log request/response messages during communication.
 
 [[soap-server]]
@@ -179,8 +175,7 @@ As you can see we reference the server id in both receive and send actions. The 
 
 Just like the HTTP server component the SOAP server component by default uses the channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Citrus configuration has become a lot easier here so you do not have to configure this by default. When nothing else is set the test case does not worry about that settings on the server and just uses the server id reference as synchronous endpoint.
 
-*Tip*
-The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
+TIP: The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
 
 However we do not want to loose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus SOAP server. We provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper SOAP response messages for the client in various ways. Before we have a closer look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.
 
@@ -308,8 +303,7 @@ public void soapActionTest() {
 
 The SOAP action header is added to the message before sending and validated when used in a receive operation.
 
-*Note*
-The *soap-action* attribute is defined in the special SOAP namespace in Citrus. We recommend to use this namespace for all your send and receive operations that deal with SOAP message content. However you can also set the special SOAP action header when not using the special SOAP namespace: Just set this header in your test action:
+NOTE: The *soap-action* attribute is defined in the special SOAP namespace in Citrus. We recommend to use this namespace for all your send and receive operations that deal with SOAP message content. However you can also set the special SOAP action header when not using the special SOAP namespace: Just set this header in your test action:
 
 [source,xml]
 ----
@@ -515,8 +509,7 @@ chain on the server component as follows:
 
 The custom interceptors are used to enable WsSecurity features on the soap server component via Wss4J.
 
-*Note*
-When customizing the interceptor chain of the soap server component all default interceptors (like logging interceptors) are lost. You can see that we had to add
+NOTE: When customizing the interceptor chain of the soap server component all default interceptors (like logging interceptors) are lost. You can see that we had to add
 the _com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor_ explicitly in order to log request/response messages for the server communication.
 
 [[soap-1-2]]
@@ -646,8 +639,7 @@ Server: Jetty(7.0.0.pre5)
 </SOAP-ENV:Envelope>
 ----
 
-*Important*
-Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root *`&lt;spring:beans&gt;`* element where we simply declare the citrus-ws specific namespace like follows.
+IMPORTANT: Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root *`&lt;spring:beans&gt;`* element where we simply declare the citrus-ws specific namespace like follows.
 
 [source,xml]
 ----
@@ -741,8 +733,7 @@ Please see the API documentation for details on the available reference implemen
 </ws:assert-fault>
 ----
 
-*Important*
-Another important thing to notice when asserting SOAP faults is the fact, that Citrus needs to have a *_SoapMessageFactory_* available in the Spring application context. If you deal with SOAP messaging in general you will already have such a bean in the context.
+IMPORTANT: Another important thing to notice when asserting SOAP faults is the fact, that Citrus needs to have a *_SoapMessageFactory_* available in the Spring application context. If you deal with SOAP messaging in general you will already have such a bean in the context.
 
 [source,xml]
 ----
@@ -762,8 +753,7 @@ Choose one of Spring's reference implementations or some other implementation as
 </ws:assert-fault>
 ----
 
-*Important*
-Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the *ws:assert* action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.
+IMPORTANT: Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the *ws:assert* action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.
 
 [source,xml]
 ----
@@ -1035,8 +1025,7 @@ As client Citrus is able to add attachments to the SOAP message. I think it is b
 </ws:send>
 ----
 
-*Note*
-In the previous chapters you may have already noticed the *citrus-ws* namespace that stands for the SOAP extensions in Citrus. Please include the *citrus-ws* namespace in your test case as described earlier in this chapter so you can use the attachment support.
+NOTE: In the previous chapters you may have already noticed the *citrus-ws* namespace that stands for the SOAP extensions in Citrus. Please include the *citrus-ws* namespace in your test case as described earlier in this chapter so you can use the attachment support.
 
 The special send action of the SOAP extension namespace is aware of SOAP attachments. The attachment content usually consists of a *content-id* a *content-type* and the actual content as plain text or binary content. Inside the test case you can use external file resources or inline CDATA sections for the attachment content. As you are familiar with Citrus you may know this already from other actions.
 
@@ -1067,8 +1056,7 @@ When Citrus calls SOAP WebServices as a client we may receive SOAP responses wit
 
 Again we use the Citrus SOAP extension namespace with the specific receive action that is aware of SOAP attachment validation. The tester can validate the *content-id*, the *content-type* and the attachment content. Instead of using the external file resource you could also define an expected attachment template directly in the test case as inline CDATA section.
 
-*Note*
-The *ws:attachment* element specifies a validator instance. This validator determines how to validate the attachment content. SOAP attachments are not limited to XML content. Plain text content and binary content is possible, too. So each SOAP attachment validating action can use a different *_SoapAttachmentValidator_* instance which is responsible for validating and comparing received attachments to expected template attachments. In the Citrus configuration the validator is set as normal Spring bean with the respective identifier.
+NOTE: The *ws:attachment* element specifies a validator instance. This validator determines how to validate the attachment content. SOAP attachments are not limited to XML content. Plain text content and binary content is possible, too. So each SOAP attachment validating action can use a different *_SoapAttachmentValidator_* instance which is responsible for validating and comparing received attachments to expected template attachments. In the Citrus configuration the validator is set as normal Spring bean with the respective identifier.
 
 [source,xml]
 ----
@@ -1217,8 +1205,7 @@ Citrus provides a comfortable way to set the HTTP message sender with basic auth
 
 The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. By default preemptive authentication is used. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus can setup an authentication cache within the HTTP context in order to have preemptive authentication.
 
-*Tip*
-You can also skip the message sender configuration and set the *Authorization* header on each request in your send action definition on your own. Be aware of setting the header as HTTP mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the *username:password* phrase.
+TIP: You can also skip the message sender configuration and set the *Authorization* header on each request in your send action definition on your own. Be aware of setting the header as HTTP mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the *username:password* phrase.
 
 [source,xml]
 ----
@@ -1268,8 +1255,7 @@ We have set a security handler on the server web container with a constraint on 
 
 You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and inspect the settings and properties offered by the security handler interface.
 
-*Tip*
-This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.
+TIP: This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.
 
 [[ws-addressing-support]]
 == WS-Addressing support
@@ -1314,21 +1300,22 @@ The WsAddressing header values will be used for all request messages that are se
 header in each send test action in your test though. Just set the special WsAddressing message header on your request. You can use the following message header names in
 order to overwrite the default addressing headers specified in the message converter configuration (also see the class _com.consol.citrus.ws.addressing.WsAddressingMessageHeaders_).
 
-* *citrus_soap_ws_addressing_messageId* addressing message id as URI
-* *citrus_soap_ws_addressing_from* addressing from endpoint reference as URI
-* *citrus_soap_ws_addressing_to* addressing to URI
-* *citrus_soap_ws_addressing_action* addressing action URI
-* *citrus_soap_ws_addressing_replyTo* addressing reply to endpoint reference as URI
-* *citrus_soap_ws_addressing_faultTo* addressing fault to endpoint reference as URI
+[horizontal]
+citrus_soap_ws_addressing_messageId:: addressing message id as URI
+citrus_soap_ws_addressing_from:: addressing from endpoint reference as URI
+citrus_soap_ws_addressing_to:: addressing to URI
+citrus_soap_ws_addressing_action:: addressing action URI
+citrus_soap_ws_addressing_replyTo:: addressing reply to endpoint reference as URI
+citrus_soap_ws_addressing_faultTo:: addressing fault to endpoint reference as URI
 
 When using this message headers you are able to explicitly overwrite the WsAddressing headers. Test variables are supported of course when specifying the values. Most of the values
 are parsed to a URI value at the end so please make sure to use correct URI String representations.
 
-*Note*
-The WS-Addressing specification knows several versions. Supported version are: 
+NOTE: The WS-Addressing specification knows several versions. Supported version are:
 
-* *VERSION10 (WS-Addressing 1.0 May 2006)*
-* *VERSION200408 (August 2004 edition of the WS-Addressing specification)*
+[horizontal]
+VERSION10:: WS-Addressing 1.0 May 2006
+VERSION200408:: August 2004 edition of the WS-Addressing specification
 
 The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request with WS addressing headers looks like follows:
 
@@ -1357,8 +1344,7 @@ The addressing headers find a place in the SOAP message header with respective n
 </SOAP-ENV:Envelope>
 ----
 
-*Important*
-By default when not set explicitly on the message headers the WsAddressing message id property is automatically generated for each request. You can set the message id generation strategy in the Spring application context message converter configuration:
+IMPORTANT: By default when not set explicitly on the message headers the WsAddressing message id property is automatically generated for each request. You can set the message id generation strategy in the Spring application context message converter configuration:
 
 [source,xml]
 ----
@@ -1394,8 +1380,7 @@ You can separate the SOAP send action from the rest of the test case by using th
 
 With the *"fork"* mode enabled the test continues with execution while the sending action waits for the synchronous response in a separate Java Thread. You could reach the same behaviour with a complex <parallel>/<sequential> container construct, but forking the send action is much more straight forward.
 
-*Important*
-It is highly recommended to use a proper *"timeout"* setting on the SOAP receive action when using fork mode. The forked send operation might take some time and the corresponding receive action might run into failure as the response was has not been received yet. The result would be a broken test because of the missing response message. A proper *"timeout"* setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message. The following listing sets the receive timeout to 10 seconds, so the action waits for the forked send action to deliver the SOAP response in time.
+IMPORTANT: It is highly recommended to use a proper *"timeout"* setting on the SOAP receive action when using fork mode. The forked send operation might take some time and the corresponding receive action might run into failure as the response was has not been received yet. The result would be a broken test because of the missing response message. A proper *"timeout"* setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message. The following listing sets the receive timeout to 10 seconds, so the action waits for the forked send action to deliver the SOAP response in time.
 
 [source,xml]
 ----

@@ -74,8 +74,7 @@ After this basic Groovy code usage inside a test case we might be interested acc
 </testcase>
 ----
 
-*Note*
-The implicit TestContext access that was shown in the previous sample works with a default Groovy script template provided by Citrus. The Groovy code you write in the test case is automatically surrounded with a Groovy script which takes care of handling the TestContext. The default template looks like follows:
+NOTE: The implicit TestContext access that was shown in the previous sample works with a default Groovy script template provided by Citrus. The Groovy code you write in the test case is automatically surrounded with a Groovy script which takes care of handling the TestContext. The default template looks like follows:
 
 [source,java]
 ----

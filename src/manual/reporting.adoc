@@ -56,16 +56,16 @@ The report consists of two parts. The test summary on top shows the total number
 
 The failed tests give detailed error information with error messages and Java StackTrace information. In addition to that the report tries to find the test action inside the XML test part that failed in execution. With the failing code snippet you can see where the test stopped.
 
-*Note*
-JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.
+NOTE: JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.
 
 The HTML reports are customizable by system properties. Use following properties e.g. in your *citrus.properties* file:
 
-* *citrus.html.report.enabled* : Enables/disables HTML report generation (default= *_true_*).
-* *citrus.html.report.directory* : Output directory path (default= *_${project.build.directory}/test-output/citrus-reports_*).
-* *citrus.html.report.file* : File name for the report file (default= *_citrus-test-results.html_*).
-* *citrus.html.report.template* : Template HTML file with placeholders for report results.
-* *citrus.html.report.detail.template* : Template file for detailed test results.
-* *citrus.html.report.logo* : File resource path pointing to a image that is added to top of HTML report.
+[horizontal]
+citrus.html.report.enabled:: Enables/disables HTML report generation (default= *_true_*).
+citrus.html.report.directory:: Output directory path (default= *_${project.build.directory}/test-output/citrus-reports_*).
+citrus.html.report.file:: File name for the report file (default= *_citrus-test-results.html_*).
+citrus.html.report.template:: Template HTML file with placeholders for report results.
+citrus.html.report.detail.template:: Template file for detailed test results.
+citrus.html.report.logo:: File resource path pointing to a image that is added to top of HTML report.
 
 The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report[report-templates sources].

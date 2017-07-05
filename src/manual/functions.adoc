@@ -26,8 +26,7 @@ foo:randomNumber()
       foo:customFunction()
 ----
 
-*Tip*
-You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library uses the *citrus:* prefix.In the next chapters the default functions offered by the framework will be described in detail.
+TIP: You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library uses the *citrus:* prefix.In the next chapters the default functions offered by the framework will be described in detail.
 
 [[functions-concat]]
 == concat()

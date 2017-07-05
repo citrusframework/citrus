@@ -11,8 +11,7 @@ src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml
 src/it/java/com/consol/citrus/MyFirstCitrusTest.java 
 ----
 
-*Note*
-If you prefer to just write Java code you can throw away the XML part immediately and continue working with the Java part only. In case you are familiar with writing Java code you may just skip the test template generation via Maven or ANT and preferably just create new Citrus Java test classes on your own.
+NOTE: If you prefer to just write Java code you can throw away the XML part immediately and continue working with the Java part only. In case you are familiar with writing Java code you may just skip the test template generation via Maven or ANT and preferably just create new Citrus Java test classes on your own.
 
 With the creation of this test we have already made a very important decision. During creation, Citrus asks you which execution framework should be used for this test. There are basically three options available: *_testng_* and *_junit_* .
 
@@ -141,8 +140,7 @@ JUnit and TestNG as frameworks reveal slight differences, but the idea is the sa
 
 The Java JUnit classes are simply responsible for loading and executing the Citrus test cases. Citrus takes care on loading the XML test as a file system resource and to set up the Spring application context. The test is executed and success/failure state is reported exactly like a usual JUnit unit test would do. This also means that you can execute this Citrus JUnit class like every other JUnit test, especially out of any Java IDE, with Maven, with ANT and so on. This means that you can easily include the Citrus test execution into you software building lifecycle and continuous build.
 
-*Tip*
-So now we know both TestNG and JUnit support in Citrus. Which framework should someone choose? To be honest, there is no easy answer to this question. The basic features are equivalent, but TestNG offers better possibilities for designing more complex test setup with test groups and tasks before and after a group of tests. This is why TestNG is the default option in Citrus. But in the end you have to decide on your own which framework fits best for your project.
+TIP: So now we know both TestNG and JUnit support in Citrus. Which framework should someone choose? To be honest, there is no easy answer to this question. The basic features are equivalent, but TestNG offers better possibilities for designing more complex test setup with test groups and tasks before and after a group of tests. This is why TestNG is the default option in Citrus. But in the end you have to decide on your own which framework fits best for your project.
 
 The first example seen here is using *@CitrusXmlTest* annotation in order to load a XML file as test. The Java part is then just an empty envelope for executing the test with JUnit. This approach is for those of you that are not familiar with Java at all. You can find more information on loading XML files as Citrus tests in link:#run-xml-tests[run-xml-tests]. Secondly of course we also have the possibility to use the Citrus Java DSL with JUnit. See the following example on how this looks like:
 
@@ -190,9 +188,10 @@ Now we also use the @CitrusXmlTest annotation in the Java class. This annotation
 
 The default naming convention requires a XML file with the tests name in the same package that the Java class is placed in. In the basic example above this means that Citrus searches for a XML test file in *com/consol/citrus/samples/SampleIT.xml* . You tell Citrus to search for another XML file by using the @CitrusXmlTest annotation properties. Following annotation properties are valid:
 
-* *name*: List of test case names to execute. Names also define XML file names to look for (**.xml** file extension is not needed here).
-* *packageName*: Custom package location for the XML files to load
-* *packageScan*: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with ****/*Test.xml** and ****/*IT.xml** file name pattern.
+[horizontal]
+name:: List of test case names to execute. Names also define XML file names to look for (**.xml** file extension is not needed here).
+packageName:: Custom package location for the XML files to load
+packageScan:: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with ****/*Test.xml** and ****/*IT.xml** file name pattern.
 
 You can also mix the various CitrusXmlTest annotation patterns in a single Java class. So we are able to have several test cases in one single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.
 
@@ -216,8 +215,7 @@ public class SampleIT extends AbstractTestNGCitrusTest {
 
 You are free to combine these test annotations as you like in your class. As the whole Java class is annotated with the TestNG *@Test* annotation each method gets executed automatically. Citrus will also take care on executing each XML test case as a separate unit test. So the test reports will have the exact number of executed tests and the JUnit/TestNG test reports do have the exact test outline for further usage (e.g. in continuous build reports).
 
-*Note*
-When test execution takes place each test method annotation is evaluated in sequence. XML test cases that match several times, for instance by explicit name reference and a package scan will be executed several times respectively.
+NOTE: When test execution takes place each test method annotation is evaluated in sequence. XML test cases that match several times, for instance by explicit name reference and a package scan will be executed several times respectively.
 
 The best thing about using the *@CitrusXmlTest* annotation is that you can continue to use the fabulous TestNG capabilities (e.g. test groups, invocation count, thread pools, data providers, and so on).
 

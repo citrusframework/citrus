@@ -43,7 +43,6 @@ In the test case receiving action we tell Citrus to use gzip message validation.
 With the message format type *type="gzip_base64"* Citrus performs the gzip base64 character sequence validation. Incoming message content is automatically unzipped and encoded as base64 String and
 compared to the expected data. This way we can make sure that the binary content is as expected.
 
-*Note*
-If you are using http client and server components the gzip compression support is built in with the underlying Spring and http commons libraries. So in http communication
+NOTE: If you are using http client and server components the gzip compression support is built in with the underlying Spring and http commons libraries. So in http communication
 you just have to set the header *Accept-Encoding=gzip* or *Content-Encoding=gzip*. The message data is then automatically zipped/unzipped before Citrus gets the message data
 for validation. Read more about this http specific gzip compression in link:#http-rest[chapter http].

@@ -3,8 +3,7 @@
 
 Spring Restdocs project helps to easily generate API documentation for RESTful services. While messages are exchanged the Restdocs library generates request/response snippets and API documentation. You can add the Spring Restdocs documentation to the Citrus client components for Http *and* SOAP endpoints.
 
-*Note*
-The Spring Restdocs support components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Spring Restdocs support components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -279,5 +278,4 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
 
 The mechanism is quite similar to the XML configuration. We add the Restdocs configurer and interceptor to the list of interceptors for the Http client. If we do this all client communication is automatically documented. The Citrus Java DSL provides some convenient configuration methods in class *CitrusRestDocsSupport* for creating the configurer and interceptor objects.
 
-*Note*
-The configurer must be added to the list of test listeners. This is a mandatory step in order to enable the configurer for documentation preparations before each test. Otherwise we would not be able to generate proper documentation. If you are using the XML configuration this is done automatically for you.
+NOTE: The configurer must be added to the list of test listeners. This is a mandatory step in order to enable the configurer for documentation preparations before each test. Otherwise we would not be able to generate proper documentation. If you are using the XML configuration this is done automatically for you.

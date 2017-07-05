@@ -87,7 +87,7 @@ Refactoring in terms of simplification and standardization is part of our daily 
 
 Some of the changes that we have made might hit you right away. These changes are:
 
-* *ws:assert* element in SOAP testcase schema has been renamed to *ws:assert-fault* . This was done for better interoperability reasons with *assert* action in core schema and to be compliant to *send-fault* action.
+* `ws:assert` element in SOAP testcase schema has been renamed to *ws:assert-fault* . This was done for better interoperability reasons with *assert* action in core schema and to be compliant to *send-fault* action.
 * Java DSL module has had Maven dependencies to several other modules in Citrus (e.g. citrus-jms, citrus-soap). These dependencies were declared as compile dependencies, which is not very nice as you might not need JMS or SOAP functionalities in your project. We have added optional and provided markers to that dependencies which means that you have to decide in your project which of the modules to include.
 
 You may face some missing dependencies errors when running the Maven project. As a result you need to include the Citrus modules (e.g. citrus-http, citrus-docker, and so on) in your project Maven POM explicitly.

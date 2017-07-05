@@ -40,9 +40,10 @@ The user input is stored to the respective variable value.
 
 As you can see the input action is customizable with a prompt message that is displayed to the user and some valid answer possibilities. The user input is stored to a test variable for further use in the test case. In detail the input action offers following attributes:
 
-* *message* -&gt; message displayed to the user
-* *valid-answers* -&gt; optional slash separated string containing the possible valid answers
-* *variable* -&gt; result variable name holding the user input (default = ${userinput})
+[horizontal]
+message:: message displayed to the user
+valid-answers:: possible valid answers separated with '/' character
+variable:: result variable name holding the user input (default = ${userinput})
 
 The same action in Java DSL now looks quite familiar to us although attribute naming is slightly different:
 
@@ -98,5 +99,4 @@ public void inputActionTest() {
 
 When the user input is restricted to a set of valid answers the input validation of course can fail due to mismatch. This is the case when the user provides some input not matching the valid answers given. In this case the user is again asked to provide valid input. The test action will continue to ask for valid input until a valid answer is given.
 
-*Note*
-User inputs may not fit to automatic testing in terms of continuous integration testing where no user is present to type in the correct answer over the keyboard. In this case you can always skip the user input in advance by specifying a variable that matches the user input variable name. As the user input variable is then already present the user input is missed out and the test proceeds automatically.
+NOTE: User inputs may not fit to automatic testing in terms of continuous integration testing where no user is present to type in the correct answer over the keyboard. In this case you can always skip the user input in advance by specifying a variable that matches the user input variable name. As the user input variable is then already present the user input is missed out and the test proceeds automatically.

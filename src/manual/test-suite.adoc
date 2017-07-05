@@ -3,8 +3,7 @@
 
 A test framework should also provide the functionality to do some work before and after the test run. You could think of preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit best into the initialization and cleanup phases of Citrus.
 
-*Note*
-It is important to notice that the Citrus configuration components that we are going to use in the next section belong to a separate XML namespace *citrus-test* . We have to add the namespace declaration to the XML root element of our XML configuration file accordingly.
+NOTE: It is important to notice that the Citrus configuration components that we are going to use in the next section belong to a separate XML namespace *citrus-test* . We have to add the namespace declaration to the XML root element of our XML configuration file accordingly.
 
 [source,xml]
 ----
@@ -56,8 +55,7 @@ The Citrus configuration component holds a list of Citrus test actions that get 
 
 Note that we must use the Citrus test case namespace for the nested test action definitions. We access the database and create a table PERSON which is obviously needed in our test cases. You can think of several actions here to prepare the database for instance.
 
-*Tip*
-Citrus offers special startup and shutdown actions that may start and stop server implementations automatically. This might be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a JMS broker before a test run.
+TIP: Citrus offers special startup and shutdown actions that may start and stop server implementations automatically. This might be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a JMS broker before a test run.
 
 So far we have used XML DSL actions in before suite configuration. Now if you exclusively want to use Java DSL you can do the same with adding a custom class that extends *TestDesignerBeforeSuiteSupport* or *TestRunnerBeforeSuiteSupport* .
 

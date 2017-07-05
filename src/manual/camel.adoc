@@ -3,8 +3,7 @@
 
 Apache Camel project implements the enterprise integration patterns for building mediation and routing rules in your enterprise application. With the Citrus Camel support you are able to directly interact with the Apache Camel components and route definitions. You can call Camel routes and receive synchronous response messages. You can also simulate the Camel route endpoint with receiving messages and providing simulated response messages.
 
-*Note*
-The camel components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
+NOTE: The camel components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
 
 [source,xml]
 ----
@@ -115,8 +114,7 @@ You can use the Citrus camel endpoint in your test case receive action in order 
 </receive>
 ----
 
-*Tip*
-Instead of defining a static Citrus camel component you could also use the dynamic endpoint components in Citrus. This would enable you to send your message directly using the endpoint uri *direct:news* in your test case. Read more about this in link:#dynamic-endpoint-components[dynamic-endpoint-components].
+TIP: Instead of defining a static Citrus camel component you could also use the dynamic endpoint components in Citrus. This would enable you to send your message directly using the endpoint uri *direct:news* in your test case. Read more about this in link:#dynamic-endpoint-components[dynamic-endpoint-components].
 
 Citrus is able to send and receive messages with Camel route endpoint uri. This enables you to invoke a Camel route. The Camel components used is defined by the endpoint uri as usual. When interacting with Camel routes you might need to send back some response messages in order to simulate boundary applications. We will discuss the synchronous communication in the next section.
 

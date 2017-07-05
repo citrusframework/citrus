@@ -26,8 +26,7 @@ The template always has a unique name. Inside a test case we call the template b
 
 The code example above describes two template definitions. Templates hold a sequence of test actions or call other templates themselves as seen in the example above.
 
-*Note*
-The <call-template> action calls other templates by their name. The called template not necessarily has to be located in the same test case XML file. The template might be defined in a separate XML file other than the test case itself:
+NOTE: The <call-template> action calls other templates by their name. The called template not necessarily has to be located in the same test case XML file. The template might be defined in a separate XML file other than the test case itself:
 
 *XML DSL* 
 
@@ -111,8 +110,7 @@ Template parameters may contain more complex values like XML fragments. The call
 </call-template>
 ----
 
-*Important*
-When a template works on variable values and parameters changes to these variables will automatically affect the variables in the whole test. So if you change a variable's value inside a template and the variable is defined inside the test case the changes will affect the variable in a global context. We have to be careful with this when executing a template several times in a test, especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
+IMPORTANT: When a template works on variable values and parameters changes to these variables will automatically affect the variables in the whole test. So if you change a variable's value inside a template and the variable is defined inside the test case the changes will affect the variable in a global context. We have to be careful with this when executing a template several times in a test, especially in combination with parallel containers (see link:#containers-parallel[containers-parallel]).
 
 [source,xml]
 ----

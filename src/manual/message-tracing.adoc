@@ -30,8 +30,7 @@ Each Citrus test writes a *.msgs* file containing all messages that went over th
 </bean>
 ----
 
-*Note*
-As the file names do not change with each test run message tracing files may be overwritten. So you eventually need to save the generated message debug files before running another group of test cases.
+NOTE: As the file names do not change with each test run message tracing files may be overwritten. So you eventually need to save the generated message debug files before running another group of test cases.
 
 Lets see some sample output for a test case with message communication over SOAP Http:
 
@@ -82,5 +81,4 @@ For this message tracing to work we need to add logging listeners to our sender 
     </util:list>
 ----
 
-*Important*
-Be aware of adding the Spring *util* XML namespace to the application context when using the *util:list* construct.
+IMPORTANT: Be aware of adding the Spring *util* XML namespace to the application context when using the *util:list* construct.

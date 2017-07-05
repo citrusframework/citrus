@@ -86,5 +86,4 @@ public void finallySectionTest() {
 }
 ----
 
-*Note*
-Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The *@CitrusTest* annotated method is called at design time of the test case. The method builds the test case afterwards the test is executed at runtime. This means that a try-finally block within the *@CitrusTest* annotated method will never perform during the test run but at design time before the test gets executed. This is why we have to add the finally section as part of the test case with *doFinally()* .
+NOTE: Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The *@CitrusTest* annotated method is called at design time of the test case. The method builds the test case afterwards the test is executed at runtime. This means that a try-finally block within the *@CitrusTest* annotated method will never perform during the test run but at design time before the test gets executed. This is why we have to add the finally section as part of the test case with *doFinally()* .

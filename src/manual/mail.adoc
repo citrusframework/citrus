@@ -5,8 +5,7 @@ Sending and receiving mails is the next interest we are going to talk about. Whe
 
 This is why Citrus provides *just* a SMTP mail server which accepts mail messages from clients. Once the SMTP server has accepted an incoming mail it forwards those data to the running test case. In the test case you can receive the incoming mail message and perform message validation as usual. The mail sending part is easy as Citrus offers a mail client that connects to some SMTP server for sending mails to the outside world.
 
-*Note*
-The mail components in Citrus are kept in a separate Maven module. So you should check that the module is available as Maven dependency in your project
+NOTE: The mail components in Citrus are kept in a separate Maven module. So you should check that the module is available as Maven dependency in your project
 
 [source,xml]
 ----
@@ -147,8 +146,7 @@ We assert the *_MailSendException_* from Spring to be thrown while sending the m
 
 Consuming mail messages is a more complicated task as we need to have some sort of server that clients can connect to. In your mail client software you typically point to some IMAP or POP inbox and receive mails from that endpoint. In Citrus we do not want to manage a whole personal mail inbox such as IMAP or POP would provide. We just need a SMTP server endpoint for clients to send mails to. The SMTP server accepts mail messages and forwards those to a running test case for further validation.
 
-*Note*
-We have no user inbox where incoming mails are stored. The mail server just forwards incoming mails to the running test for validation. After the test the incoming mail message is gone.
+NOTE: We have no user inbox where incoming mails are stored. The mail server just forwards incoming mails to the running test for validation. After the test the incoming mail message is gone.
 
 And this is exactly what the Citrus mail server is capable of. The server is a very lightweight SMTP server. All incoming mail client connections are accepted by default and the mail data is converted into a Citrus XML mail interface representation. The XML mail message is then passed to the running test for validation.
 

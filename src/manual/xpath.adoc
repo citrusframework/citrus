@@ -58,8 +58,7 @@ The XPath expression evaluates and searches for the right element in the message
 
 Both ways via XPath or inline variable expressions are equal to each other. With respect to the complexity of XML namespaces and XPath you may find the inline variable expression more comfortable to use. Anyway feel free to choose the way that fits best for you. This is how we can add dynamic variable values to the control template in order to increase maintainability and robustness of message validation.
 
-*Tip*
-Validation matchers put validation mechanisms to a new level offering dynamic assertion statements for validation. Have a look at the possibilities with assertion statements in link:#validation-matcher[validation-matcher].
+TIP: Validation matchers put validation mechanisms to a new level offering dynamic assertion statements for validation. Have a look at the possibilities with assertion statements in link:#validation-matcher[validation-matcher].
 
 [[xpath-validation]]
 == Validate with XPath
@@ -93,11 +92,9 @@ public void receiveMessageTest() {
 
 Instead of comparing the whole message some message elements are validated explicitly via XPath. Citrus evaluates the XPath expression on the received message and compares the result value to the control value. The basic message structure as well as all other message elements are not included into this explicit validation.
 
-*Note*
-If this type of element validation is chosen neither <payload> nor <data> nor <resource> template definitions are allowed in Citrus XML test cases.
+NOTE: If this type of element validation is chosen neither <payload> nor <data> nor <resource> template definitions are allowed in Citrus XML test cases.
 
-*Tip*
-Citrus offers an alternative dot-notated syntax in order to walk through XML trees. In case you are not familiar with XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every element hierarchy in the XML tree is represented with a simple dot - for example:
+TIP: Citrus offers an alternative dot-notated syntax in order to walk through XML trees. In case you are not familiar with XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every element hierarchy in the XML tree is represented with a simple dot - for example:
 
 *_TestRequest.VersionId_* 
 
@@ -201,8 +198,7 @@ public void receiveMessageTest() {
 
 As you can see Citrus is able to extract both header and message payload content into test variables. It does not matter if you use new test variables or existing variables as target. The extraction will automatically create a new variable in case it does not exist. The time the variable was created all following test actions can access the test variables as usual. So you can reference the variable values in response messages or other test steps ahead.
 
-*Tip*
-We can also use expression result types in order to manipulate the test variable outcome. In case we use a *boolean* result type the existence of elements can be saved to variable values. The result type *node-set* translates a node list result to a comma separated string of all values in this node list. Simply use the expression result type attributes as shown in previous sections.
+TIP: We can also use expression result types in order to manipulate the test variable outcome. In case we use a *boolean* result type the existence of elements can be saved to variable values. The result type *node-set* translates a node list result to a comma separated string of all values in this node list. Simply use the expression result type attributes as shown in previous sections.
 
 [[xml-namespaces-in-xpath]]
 == XML namespaces in XPath
@@ -265,8 +261,7 @@ You can avoid this effect when specifying your own namespace context and your ow
 
 Now the test in independent from any namespace prefix in the received message. The namespace context will resolve the namespaces and find the elements although the message might use different prefixes. The only thing that matters is that the namespace value (http://citrus.com/namespace[http://citrus.com/namespace]) matches.
 
-*Tip*
-Instead of this namespace context on validation level you can also have a global namespace context which is valid in all test cases. We just add a bean in the basic Spring application context configuration which defines global namespace mappings.
+TIP: Instead of this namespace context on validation level you can also have a global namespace context which is valid in all test cases. We just add a bean in the basic Spring application context configuration which defines global namespace mappings.
 
 [source,xml]
 ----
@@ -322,5 +317,4 @@ Even default namespaces need to be specified in the XPath expressions. Look at t
 </message>
 ----
 
-*Tip*
-It is recommended to use the namespace context as described in the previous chapter when validating. Only this approach ensures flexibility and stable test cases regarding namespace changes.
+TIP: It is recommended to use the namespace context as described in the previous chapter when validating. Only this approach ensures flexibility and stable test cases regarding namespace changes.

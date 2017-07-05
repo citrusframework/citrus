@@ -5,8 +5,7 @@ JMX is a standard Java API for making beans accessible to others in terms of man
 
 Citrus is able to connect to JMX managed beans as client and server. As a client Citrus can invoke managed bean operations and read write managed bean attributes. As a server Citrus is able to expose managed beans as mbean server. Clients can access those Citrus managed beans and get proper response objects as result. Doing so you can use the JVM platform managed bean server or some RMI registry for providing remote access.
 
-*Note*
-The JMX components in Citrus are kept in a separate Maven module. So you should check that the module is available as Maven dependency in your project
+NOTE: The JMX components in Citrus are kept in a separate Maven module. So you should check that the module is available as Maven dependency in your project
 
 [source,xml]
 ----

@@ -3,8 +3,7 @@
 
 http://www.seleniumhq.org/[Selenium] is a very popular tool for testing user interfaces with browser automation. Citrus is able to integrate with the Selenium Java API in order to execute Selenium commands.
 
-*Note*
-The Selenium test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Selenium test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -72,8 +71,7 @@ you need to customize the Selenium web driver you can use the _browserType="cust
 
 Now Citrus is using the customized Selenium web driver implementation.
 
-*Note*
-When using Firefox as browser you may also want to set the optional properties *firefox-profile* and *version*.
+NOTE: When using Firefox as browser you may also want to set the optional properties *firefox-profile* and *version*.
 
 [source,xml]
 ----
@@ -142,37 +140,37 @@ tag-name and text. We also validate the element style _font-size_ to meet the ex
 
 In addition to that the example performs a click operation on the element with the id _ok-button_. Selenium supports element find operations on different properties:
 
-* *id* finds element based on the _id_ attribute
-* *name* finds element based on the _name_ attribute
-* *tag-name* finds element based on the _tag name_
-* *class-name* finds element based on the css _class name_
-* *link-text* finds link element based on the _link-text_
-* *xpath* finds element based on XPath evaluation in the DOM
+[horizontal]
+id:: finds element based on the _id_ attribute
+name:: finds element based on the _name_ attribute
+tag-name:: finds element based on the _tag name_
+class-name:: finds element based on the css _class name_
+link-text:: finds link element based on the _link-text_
+xpath:: finds element based on XPath evaluation in the DOM
 
-Based on that we can execute several Selenium commands in a test case and validate the results such as web elements.
+Based on that we can execute several Selenium commands in a test case and validate the results such as web elements. Citrus supports the following Selenium commands with respective test actions:
 
-Citrus supports the following Selenium commands with respective test actions:
-
-* *selenium:start* Start the browser instance
-* *selenium:find* Finds element on current page and validates element properties
-* *selenium:click* Performs click operation on element
-* *selenium:hover* Performs hover operation on element
-* *selenium:navigate* Navigates to new page url (including history back, forward and refresh)
-* *selenium:set-input* Finds input element and sets value
-* *selenium:check-input* Finds checkbox element and sets/unsets value
-* *selenium:dropdown-select* Finds dropdown element and selects single or multiple value/s
-* *selenium:page* Instantiate page object with dependency injection and execute page action with verification
-* *selenium:open* Open new window
-* *selenium:close* Close window by given name
-* *selenium:switch* Switch focus to window with given name
-* *selenium:wait-until* Wait for element to be _hidden_ or _visible_
-* *selenium:alert* Access current alert dialog (with action _access_ or _dismiss_)
-* *selenium:screenshot* Makes screenshot of current page
-* *selenium:store-file* Store file to temporary browser directory
-* *selenium:get-stored-file* Gets stored file from temporary browser directory
-* *selenium:javascript* Execute Javascript code in browser
-* *selenium:clear-cache* Clear browser cache and all cookies
-* *selenium:stop* Stops the browser instance
+[horizontal]
+selenium:start:: Start the browser instance
+selenium:find:: Finds element on current page and validates element properties
+selenium:click:: Performs click operation on element
+selenium:hover:: Performs hover operation on element
+selenium:navigate:: Navigates to new page url (including history back, forward and refresh)
+selenium:set-input:: Finds input element and sets value
+selenium:check-input:: Finds checkbox element and sets/unsets value
+selenium:dropdown-select:: Finds dropdown element and selects single or multiple value/s
+selenium:page:: Instantiate page object with dependency injection and execute page action with verification
+selenium:open:: Open new window
+selenium:close:: Close window by given name
+selenium:switch:: Switch focus to window with given name
+selenium:wait-until:: Wait for element to be _hidden_ or _visible_
+selenium:alert:: Access current alert dialog (with action _access_ or _dismiss_)
+selenium:screenshot:: Makes screenshot of current page
+selenium:store-file:: Store file to temporary browser directory
+selenium:get-stored-file:: Gets stored file from temporary browser directory
+selenium:javascript:: Execute Javascript code in browser
+selenium:clear-cache:: Clear browser cache and all cookies
+selenium:stop:: Stops the browser instance
 
 Up to now we have only used the Citrus XML DSL. Of course all Selenium commands are also available in Java DSL as the next example shows.
 
@@ -234,9 +232,7 @@ After starting a browser instance Citrus will automatically use this very same b
 is automatically set. All other test actions are able to load the current browser instance by reading this test variable before execution. In case you need to explicitly use
 a different browser instance than the active instance you can add the *browser* attribute to all Selenium test actions.
 
-*Note*
-
-It is a good idea to start and stop the browser instance before each test case. This makes sure that tests are also executable in single run and it always sets up a new browser instance so tests
+NOTE: It is a good idea to start and stop the browser instance before each test case. This makes sure that tests are also executable in single run and it always sets up a new browser instance so tests
 will not influence each other.
 
 [[find]]
@@ -244,12 +240,13 @@ will not influence each other.
 
 The find element test action searches for an element on the current page. The element is specified by one of the following settings:
 
-* *id* finds element based on the _id_ attribute
-* *name* finds element based on the _name_ attribute
-* *tag-name* finds element based on the _tag name_
-* *class-name* finds element based on the css _class name_
-* *link-text* finds link element based on the _link-text_
-* *xpath* finds element based on XPath evaluation in the DOM
+[horizontal]
+id:: finds element based on the _id_ attribute
+name:: finds element based on the _name_ attribute
+tag-name:: finds element based on the _tag name_
+class-name:: finds element based on the css _class name_
+link-text:: finds link element based on the _link-text_
+xpath:: finds element based on XPath evaluation in the DOM
 
 The find element action will automatically fail in case there is no such element on the current page. In case the element is found you can add additional attributes and properties
 for further element validation:
@@ -617,8 +614,9 @@ When a new window is opened Selenium creates a window handle for us. This window
 window by its name in further actions. All upcoming Selenium actions will take place in this new active window. Of course the test actions will fail as soon as the window with that given
 name is missing. Citrus uses default window names that are automatically used as test variables:
 
-* *selenium_active_window* the active window handle
-* *selenium_last_window* the last window handle when switched to other window
+[horizontal]
+selenium_active_window:: the active window handle
+selenium_last_window:: the last window handle when switched to other window
 
 [[alert]]
 == Alert

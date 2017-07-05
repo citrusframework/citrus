@@ -134,8 +134,7 @@ public class TimeBasedMessageSelector implements MessageSelector {
 }
 ----
 
-*Note*
-The message selector returns *false* for those messages that should be deleted from the channel!
+NOTE: The message selector returns *false* for those messages that should be deleted from the channel!
 
 You simply define the message selector as a new Spring bean in the Citrus application context and reference it in your test action property.
 
@@ -211,5 +210,4 @@ When using the special action sequence before test cases we are able to purge ch
 
 Just use this before-test bean in the Spring bean application context and the purge channel action is active. Obsolete messages that are waiting on the message channels for consumption are purged before the next test in line is executed.
 
-*Tip*
-Purging message channels becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
+TIP: Purging message channels becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.

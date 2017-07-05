@@ -3,8 +3,7 @@
 
 Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending messages to the same JMS destinations. A test case should only receive those messages that actually belong to it. Therefore it is a good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some reason are then removed so that the following test case is not offended.
 
-*Note*
-Citrus provides special support for JMS related features. We have to activate those JMS features in our test case by adding a special "jms" namespace and schema definition location to the test case XML.
+NOTE: Citrus provides special support for JMS related features. We have to activate those JMS features in our test case by adding a special "jms" namespace and schema definition location to the test case XML.
 
 [source,xml]
 ----
@@ -108,8 +107,7 @@ As you can see in the next example it is quite easy to specify a group of destin
 </citrus:before-test>
 ----
 
-*Note*
-Please keep in mind that the JMS related configuration components in Citrus belong to a separate XML namespace *jms:* . We have to add this namespace declaration to each test case XML and Spring bean XML configuration file as described at the very beginning of this section.
+NOTE: Please keep in mind that the JMS related configuration components in Citrus belong to a separate XML namespace *jms:* . We have to add this namespace declaration to each test case XML and Spring bean XML configuration file as described at the very beginning of this section.
 
 The syntax for purging the destinations is the same as we used it inside the test case. So now we are able to purge JMS destinations with given destination names. But sometimes we do not want to rely on queue or topic names as we retrieve destinations over JNDI for instance. We can deal with destinations coming from JNDI lookup like follows:
 
@@ -186,5 +184,4 @@ public void purgeTest() {
 }
 ----
 
-*Note*
-You can mix queue name and queue object references as you like within one single purge queue test action.
+NOTE: You can mix queue name and queue object references as you like within one single purge queue test action.

@@ -135,8 +135,7 @@ See the following sample XML configuration which is a normal Spring bean XML con
 
 Now you can add some Spring beans and you can use the Citrus XML components such as *schema-repository* for adding custom beans and components to your Citrus project. Citrus provides several namespaces for custom Spring XML components. These are described in more detail in the respective chapters and sections in this reference guide.
 
-*Tip*
-You can also use import statements in this Spring application context in order to load other configuration files. So you are free to modularize your configuration in several files that get loaded by Citrus.
+TIP: You can also use import statements in this Spring application context in order to load other configuration files. So you are free to modularize your configuration in several files that get loaded by Citrus.
 
 [[spring-java-config]]
 == Spring Java config

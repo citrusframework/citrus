@@ -71,8 +71,7 @@ public void receiveMessageTest() {
 
 Message headers are represented as name-value pairs. Each expected header element identified by its name has to be present in the received message. In addition to that the header value is compared to the given control value. If a header entry is not found by its name or the value does not fit accordingly Citrus will raise validation errors and the test case will fail.
 
-*Note*
-Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML fragments. Citrus supports these kind of headers too. Please see the SOAP chapter for more details.
+NOTE: Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML fragments. Citrus supports these kind of headers too. Please see the SOAP chapter for more details.
 
 [[xml-ignore]]
 == Ignore XML elements
@@ -124,16 +123,18 @@ When working with XML data format parsing and serializing is a common task. XML 
 to process elements, attributes and text nodes. Also DOM node objects get serialized to a String message payload representation. The XML parser and serializer is customizable
 to a certain level. By default Citrus uses the https://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/[DOM Level 3 Load and Save] implementation with following settings:
 
-_Parser settings_
-* *cdata-sections* = *true*
-* *split-cdata-sections* = *false*
-* *validate-if-schema* = *true*
-* *element-content-whitespace* = *false*
+.Parser settings
+[horizontal]
+cdata-sections:: *true*
+split-cdata-sections:: *false*
+validate-if-schema:: *true*
+element-content-whitespace:: *false*
 
-_Serializer settings_
-* *format-pretty-print* = *true*
-* *split-cdata-sections* = *false*
-* *element-content-whitespace* = *true*
+.Serializer settings
+[horizontal]
+format-pretty-print:: *true*
+split-cdata-sections:: *false*
+element-content-whitespace:: *true*
 
 The parameters are also described in https://www.w3.org/TR/DOM-Level-3-Core/core.html#DOMConfiguration[W3C DOM configuration] documentation. We can customize the default settings by adding
 a _XmlConfigurer_ Spring bean to the Citrus application context.
@@ -155,8 +156,7 @@ a _XmlConfigurer_ Spring bean to the Citrus application context.
 </bean>
 ----
 
-*Note*
-This configuration is of global nature. All XML processing operations will be affected with this configuration.
+NOTE: This configuration is of global nature. All XML processing operations will be affected with this configuration.
 
 [[groovy-xml-validation]]
 === Groovy XML validation
@@ -262,6 +262,5 @@ public void receiveMessageTest() {
 
 We referenced some external file resource *_validationScript.groovy_* . This file content is loaded at runtime and is used as script body. Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite Groovy editor.
 
-*Note*
-You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath validation.**Tip**
+NOTE: You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath validation.**Tip**
 For further information on the Groovy XmlSlurper please see the official Groovy website and documentation
