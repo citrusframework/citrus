@@ -332,6 +332,11 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
         <artifactId>spring-context-support</artifactId>
         <version>${spring.version}</version>
       </dependency>
@@ -532,6 +537,12 @@
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-spring</artifactId>
         <version>${apache.camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Citrus ftp dependencies -->
@@ -726,6 +737,10 @@
           <exclusion>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1070,6 +1085,7 @@
           <inherited>false</inherited>
           <configuration>
             <sourceDirectory>src/manual</sourceDirectory>
+            <sourceDocumentName>index.adoc</sourceDocumentName>
             <attributes>
               <icons>font</icons>
               <pagenums/>
