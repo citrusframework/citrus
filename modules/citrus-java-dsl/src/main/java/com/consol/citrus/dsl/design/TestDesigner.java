@@ -63,6 +63,27 @@ public interface TestDesigner extends ApplicationContextAware {
     void description(String description);
 
     /**
+     * Adds requirementID to the test case.
+     *
+     * @param requirementID
+     */
+    void requirementID(String requirementID);
+
+    /**
+     * Adds project to the test case.
+     *
+     * @param project
+     */
+    void project(String project);
+
+    /**
+     * Adds scenario to the test case.
+     *
+     * @param scenario
+     */
+    void scenario(String scenario);
+
+    /**
      * Adds author to the test case.
      *
      * @param author

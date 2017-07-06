@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
+       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+       http://www.citrusframework.org/schema/cucumber/testcase
+        http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd
+       http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
+       http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <!-- Common settings -->
+    <context:property-placeholder location="classpath:citrus.properties"/>
+
+
+    <citrus:global-variables>
+        <citrus:variable name="project.name" value="Citrus Integration Tests"/>
+    </citrus:global-variables>
+
+    <citrus-http:client id="getURL"
+                        request-url ="http://httpbin.org/get"
+                        request-method="GET"
+                        timeout="60000"/>
+
+    <citrus-http:client id="GetSportAPI"
+                        request-url ="http://localhost:8080"
+                        request-method="GET"
+                        timeout="60000"/>
+
+    <citrus-http:client id="postURL"
+                        request-url="http://httpbin.org/post"
+                        request-method="POST"
+                        timeout="60000"/>
+
+    <citrus-http:client id="putURL"
+                        request-url="http://httpbin.org/put"
+                        request-method="PUT"
+                        timeout="60000"/>
+
+    <citrus-http:client id="deleteURL"
+                        request-url="http://httpbin.org/delete"
+                        request-method="DELETE"
+                        timeout="60000"/>
+
+    <citrus-http:client id="petResource"
+                        request-url="http://petstore.swagger.io/v2/pet"
+                        request-method="GET"
+                        timeout="60000"/>
+
+    <citrus-http:client id="VTNZUrl"
+                        request-url="https://dtint.dev.vtnz.co.nz"
+                        request-method="POST"
+                        timeout="60000"/>
+
+    <citrus-http:client id="documentURL"
+                        request-url=" https://www.dropbox.com/s/mpnj7qndembcim3/High%20Level%20As%20Built.docx?dl=0"
+                        request-method="GET"
+                        timeout="60000"/>
+
+
+    <bean class="com.consol.citrus.report.MessageTracingTestListener">
+        <property name="outputDirectory" value="file:/CitrusFrameWorkTest/Request_Response/"/>
+    </bean>
+
+    <bean id = "defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
+
+</beans>

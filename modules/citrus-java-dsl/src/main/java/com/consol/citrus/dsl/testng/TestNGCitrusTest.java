@@ -64,14 +64,6 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
             }
 
             super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
-
-            if (testResult.getThrowable() != null) {
-                if (testResult.getThrowable() instanceof RuntimeException) {
-                    throw (RuntimeException) testResult.getThrowable();
-                } else {
-                    throw new CitrusRuntimeException(testResult.getThrowable());
-                }
-            }
         } else {
             super.run(callBack, testResult);
         }
@@ -84,7 +76,6 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
         } else {
             TestDesigner testDesigner = null;
             TestRunner testRunner = null;
-
             try {
                 if (citrus == null) {
                     citrus = Citrus.newInstance(applicationContext);
@@ -175,6 +166,26 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
         } else {
             testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
         }
+
+        TestMetaInfo metaTestInfo = null;
+        if(null != (metaTestInfo = method.getAnnotation(TestMetaInfo.class))) {
+            if (StringUtils.hasText(metaTestInfo.description()))
+                testDesigner.description(metaTestInfo.description());
+
+            if (StringUtils.hasText(metaTestInfo.requirementID()))
+                testDesigner.requirementID(metaTestInfo.requirementID());
+
+            if (StringUtils.hasText(metaTestInfo.scenario()))
+                testDesigner.scenario(metaTestInfo.scenario());
+
+            if (StringUtils.hasText(metaTestInfo.author()))
+                testDesigner.author(metaTestInfo.author());
+
+        }
+
+        JIRAMetaInfo metaJIRAInfo = null;
+        if(null != (metaJIRAInfo = method.getAnnotation(JIRAMetaInfo.class)))
+            testDesigner.project(metaJIRAInfo.project());
 
         return testDesigner;
     }

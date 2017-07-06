@@ -112,6 +112,8 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
                     detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? unknown : detail.getMetaInfo().getLastUpdatedBy());
                     detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? unknown : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
                     detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? unknown : detail.getDescription());
+                    detailProps.put("test.requirementID", !StringUtils.hasText(detail.getRequirementID()) ? unknown : detail.getRequirementID());
+                    detailProps.put("test.scenario", !StringUtils.hasText(detail.getScenario()) ? unknown : detail.getScenario());
                     detailProps.put("test.result", result.getResult());
 
                     reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
@@ -389,6 +391,12 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         
         /** Description of the test */
         private String description;
+
+        /** requirementID of the test */
+        private String requirementID;
+
+        /** scenario of the test */
+        private String scenario;
         
         /**
          * Builds a new result detail from test case.
@@ -398,6 +406,8 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         public static ResultDetail build(TestCase test) {
             ResultDetail detail = new ResultDetail();
             detail.setDescription(test.getDescription());
+            detail.setRequirementID(test.getRequirementID());
+            detail.setScenario(test.getScenario());
             detail.setMetaInfo(test.getMetaInfo());
             
             return detail;
@@ -434,6 +444,39 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         public void setDescription(String description) {
             this.description = description;
         }
+
+        /**
+         * Gets the test requirementID.
+         * @return the requirementID
+         */
+        public String getRequirementID() {
+            return requirementID;
+        }
+
+        /**
+         * Sets the test requirementID.
+         * @param requirementID the requirementID to set
+         */
+        public void setRequirementID(String requirementID) {
+            this.requirementID = requirementID;
+        }
+
+        /**
+         * Gets the test scenario.
+         * @return the scenario
+         */
+        public String getScenario() {
+            return scenario;
+        }
+
+        /**
+         * Sets the test scenario.
+         * @param scenario the scenario to set
+         */
+        public void setScenario(String scenario) {
+            this.scenario = scenario;
+        }
+
     }
 
 }

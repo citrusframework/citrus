@@ -1,21 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>citrus</artifactId>
-    <groupId>com.consol.citrus</groupId>
-    <version>2.7.2-SNAPSHOT</version>
+    <groupId>works.integration.citrus</groupId>
+    <version>2.8.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
-  
-  <groupId>com.consol.citrus</groupId>
+
+
   <artifactId>citrus-java-dsl</artifactId>
   <name>citrus-java-dsl</name>
-  
+
   <dependencies>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>works.integration.citrus</groupId>
       <artifactId>citrus-core</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jms</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ws</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-http</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-docker</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -55,15 +55,15 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-kubernetes</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
-    
+
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-selenium</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-camel</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -79,7 +79,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jmx</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -87,7 +87,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-rmi</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -95,7 +95,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-mail</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -103,7 +103,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ftp</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -111,7 +111,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ssh</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -119,7 +119,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-vertx</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -127,7 +127,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-websocket</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -135,7 +135,7 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-zookeeper</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
@@ -145,7 +145,7 @@
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
@@ -157,10 +157,11 @@
       <artifactId>junit</artifactId>
       <optional>true</optional>
     </dependency>
-    
+
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
+      <version>6.11</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -169,6 +170,23 @@
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.jms</groupId>
+      <artifactId>jms-api</artifactId>
+      <version>1.1-rev-1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.jms</groupId>
+      <artifactId>com.springsource.javax.jms</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <version>2.0.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

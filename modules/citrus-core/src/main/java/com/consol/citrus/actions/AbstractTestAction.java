@@ -29,6 +29,15 @@ public abstract class AbstractTestAction implements TestAction {
     /** Describing the test action */
     protected String description;
 
+    /** Describing the test action */
+    protected String requirementID;
+
+    /** Describing the test action */
+    protected String project;
+
+    /** Describing the test scenario */
+    protected String scenario;
+
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
     
@@ -76,6 +85,53 @@ public abstract class AbstractTestAction implements TestAction {
         this.description = description;
         return this;
     }
+
+    /**
+     * @return the requirementID
+     */
+    public String getRequirementID() {
+        return requirementID;
+    }
+
+    /**
+     * @param requirementID the requirementID to set
+     */
+    public AbstractTestAction setRequirementID(String requirementID) {
+        this.requirementID = requirementID;
+        return this;
+    }
+
+    /**
+     * @return the project
+     */
+    public String getProject() {
+        return project;
+    }
+
+    /**
+     * @param project the project to set
+     */
+    public AbstractTestAction setProject(String project) {
+        this.project = project;
+        return this;
+    }
+
+    /**
+     * @return the scenario
+     */
+    public String getScenario() {
+        return scenario;
+    }
+
+    /**
+     * @param scenario the scenario to set
+     */
+    public AbstractTestAction setScenario(String scenario) {
+        this.scenario = scenario;
+        return this;
+    }
+
+    /**
 
     /**
      * @return the name

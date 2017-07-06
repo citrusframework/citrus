@@ -153,6 +153,21 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public void requirementID(String requirementID) {
+        getTestCase().setRequirementID(requirementID);
+    }
+
+    @Override
+    public void project(String project) {
+        getTestCase().setProject(project);
+    }
+
+    @Override
+    public void scenario(String scenario) {
+        getTestCase().setScenario(scenario);
+    }
+
+    @Override
     public void author(String author) {
         getTestCase().getMetaInfo().setAuthor(author);
     }

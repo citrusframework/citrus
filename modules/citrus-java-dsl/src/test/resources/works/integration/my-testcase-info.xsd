@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.citrusframework.org/samples/my-testcase-info"
+           targetNamespace="http://www.citrusframework.org/samples/my-testcase-info"
+           elementFormDefault="qualified">
+
+    <xs:element name="requirement" type="xs:string"/>
+    <xs:element name="pre-condition" type="xs:string"/>
+    <xs:element name="result" type="xs:string"/>
+    <xs:element name="classification" type="xs:string"/>
+</xs:schema>
