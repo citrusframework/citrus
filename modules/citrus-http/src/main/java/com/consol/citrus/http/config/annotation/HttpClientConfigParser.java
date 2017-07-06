@@ -90,7 +90,9 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         builder.pollingInterval(annotation.pollingInterval());
 
         builder.errorHandlingStrategy(annotation.errorStrategy());
-        builder.errorHandler(getReferenceResolver().resolve(annotation.errorHandler(), ResponseErrorHandler.class));
+        if (StringUtils.hasText(annotation.errorHandler())) {
+            builder.errorHandler(getReferenceResolver().resolve(annotation.errorHandler(), ResponseErrorHandler.class));
+        }
 
         builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
 

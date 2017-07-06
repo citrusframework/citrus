@@ -103,7 +103,6 @@ public @interface HttpClientConfig {
      */
     int pollingInterval() default 500;
 
-
     /**
      * Error handling strategy.
      * @return

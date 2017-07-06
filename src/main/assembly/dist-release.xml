@@ -59,7 +59,7 @@
   <fileSets>
     <!-- Reference documentation -->
     <fileSet>
-      <directory>target/site/reference/html</directory>
+      <directory>target/generated-docs</directory>
       <outputDirectory>docs/reference/html</outputDirectory>
     </fileSet>
     
@@ -325,7 +325,7 @@
   <files>
     <!-- PDF reference documentation -->
     <file>
-      <source>target/site/reference/pdf/citrus-reference-2.7.2-SNAPSHOT.pdf</source>
+      <source>target/generated-docs/index.pdf</source>
       <outputDirectory>docs/reference/pdf</outputDirectory>
     </file>
   </files>

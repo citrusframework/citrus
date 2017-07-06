@@ -1,5 +1,5 @@
 - version: ${project.version}
-  date: 2017-07-06
+  date: 2017-07-07
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
