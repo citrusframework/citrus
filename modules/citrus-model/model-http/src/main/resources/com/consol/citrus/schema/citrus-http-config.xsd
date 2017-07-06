@@ -68,6 +68,7 @@
         <xs:attribute name="default-accept-header" type="xs:boolean"/>
         <xs:attribute name="handle-cookies" type="xs:boolean"/>
         <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="error-handler" type="xs:string"/>
         <xs:attribute name="error-strategy">
           <xs:simpleType>
             <xs:restriction base="xs:string">

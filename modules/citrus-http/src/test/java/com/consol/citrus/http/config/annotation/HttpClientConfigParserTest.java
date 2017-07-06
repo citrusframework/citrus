@@ -22,15 +22,16 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpResponseErrorHandler;
 import com.consol.citrus.http.message.HttpMessageConverter;
-import com.consol.citrus.message.DefaultMessageCorrelator;
-import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.*;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -55,6 +56,8 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
             defaultAcceptHeader=false,
             handleCookies=true,
             timeout=10000L,
+            errorStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION,
+            errorHandler = "errorHandler",
             messageConverter="messageConverter",
             requestFactory="soapRequestFactory",
             endpointResolver="endpointResolver")
@@ -89,6 +92,8 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private ClientHttpRequestInterceptor clientInterceptor = Mockito.mock(ClientHttpRequestInterceptor.class);
     @Mock
+    private ResponseErrorHandler errorHandler = Mockito.mock(ResponseErrorHandler.class);
+    @Mock
     private TestActor testActor = Mockito.mock(TestActor.class);
     @Mock
     private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
@@ -106,6 +111,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
         when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
         when(applicationContext.getBean("clientInterceptor", ClientHttpRequestInterceptor.class)).thenReturn(clientInterceptor);
+        when(applicationContext.getBean("errorHandler", ResponseErrorHandler.class)).thenReturn(errorHandler);
         when(applicationContext.getBean("", ClientHttpRequestFactory.class)).thenThrow(new RuntimeException("Unexpected call to getBean on application context"));
     }
 
@@ -123,6 +129,8 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().isHandleCookies(), false);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
 
         // 2nd message sender
         Assert.assertNotNull(httpClient2.getEndpointConfiguration().getRestTemplate());
@@ -137,6 +145,8 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader(), false);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().isHandleCookies(), true);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandler(), errorHandler);
 
         // 3rd message sender
         Assert.assertNotNull(httpClient3.getEndpointConfiguration().getRestTemplate());

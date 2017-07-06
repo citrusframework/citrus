@@ -29,6 +29,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -89,6 +90,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         builder.pollingInterval(annotation.pollingInterval());
 
         builder.errorHandlingStrategy(annotation.errorStrategy());
+        builder.errorHandler(getReferenceResolver().resolve(annotation.errorHandler(), ResponseErrorHandler.class));
 
         builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
 

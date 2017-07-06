@@ -30,6 +30,7 @@ import org.springframework.web.client.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 
@@ -81,7 +82,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -127,7 +127,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -178,7 +177,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         verify(messageConverter, atLeastOnce()).setWriteAcceptCharset(false);
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -225,7 +223,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -268,7 +265,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -310,7 +306,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -352,7 +347,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -389,7 +383,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -425,7 +418,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -447,8 +439,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
-        when(restTemplate.exchange(eq(requestUrl), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(new ResponseEntity<String>(responseBody, HttpStatus.FORBIDDEN));
+        doThrow(new HttpErrorPropagatingException(HttpStatus.FORBIDDEN, "Not allowed", new HttpHeaders(), responseBody.getBytes(), Charset.forName("UTF-8"))).when(restTemplate).exchange(eq(requestUrl), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
 
         httpClient.send(requestMessage, context);
 
@@ -457,7 +448,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "FORBIDDEN");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 
     @Test
@@ -487,7 +477,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(e.getMessage(), "403 FORBIDDEN");
 
             verify(restTemplate).setInterceptors(any(List.class));
-            verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
         }
     }
 
@@ -530,6 +519,5 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
 
         verify(restTemplate).setInterceptors(any(List.class));
-        verify(restTemplate).setErrorHandler(any(ResponseErrorHandler.class));
     }
 }

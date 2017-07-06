@@ -18,7 +18,9 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpResponseErrorHandler;
 import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.http.HttpMethod;
@@ -46,6 +48,8 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
         Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
         Assert.assertNull(httpClient.getEndpointConfiguration().getClientInterceptors());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
         Assert.assertEquals(httpClient.getEndpointConfiguration().isDefaultAcceptHeader(), true);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
@@ -66,6 +70,8 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(httpClient.getEndpointConfiguration().isDefaultAcceptHeader(), false);
         Assert.assertEquals(httpClient.getEndpointConfiguration().isHandleCookies(), true);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler(), beanDefinitionContext.getBean("errorHandler"));
 
         // 3rd message sender
         httpClient = clients.get("httpClient3");

@@ -111,6 +111,12 @@ public @interface HttpClientConfig {
     ErrorHandlingStrategy errorStrategy() default ErrorHandlingStrategy.PROPAGATE;
 
     /**
+     * Error handler.
+     * @return
+     */
+    String errorHandler() default "";
+
+    /**
      * Client interceptors.
      * @return
      */

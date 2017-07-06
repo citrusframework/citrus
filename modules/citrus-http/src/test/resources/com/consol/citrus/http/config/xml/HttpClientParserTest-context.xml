@@ -20,6 +20,8 @@
                           timeout="10000"
                           default-accept-header="false"
                           handle-cookies="true"
+                          error-strategy="throwsException"
+                          error-handler="errorHandler"
                           message-converter="messageConverter"
                           request-factory="soapRequestFactory"
                           endpoint-resolver="endpointResolver"/>
@@ -44,6 +46,10 @@
   <util:list id="clientInterceptors">
     <ref bean="clientInterceptor"/>
   </util:list>
+
+  <bean id="errorHandler" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="org.springframework.web.client.ResponseErrorHandler"/>
+  </bean>
 
   <bean id="clientInterceptor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
