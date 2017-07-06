@@ -1,9 +1,121 @@
 - version: ${project.version}
-  date: 2017-05-31
+  date: 2017-07-06
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+  - title: Http error handling thread safety
+    id: 265
+    type: Fix
+    author: christophd
+  - title: Switch to asciidoctor refactoring
+    id: 262
+    type: Update
+    author: christophd
+  - title: Access test case variables in Camel Routes definitions
+    id: 243
+    type: Update
+    author: christophd
+  - title: charset=UTF-8 appending to Content-Type for client defined in xml
+    id: 246
+    type: Fix
+    author: christophd
+  - title: SQL Testaction does not handle transactions
+    id: 244
+    type: Update
+    author: christophd
+  - title: Update dependency versions
+    id: 263
+    type: Update
+    author: christophd
+  - title: Support environment properties
+    id: 264
+    type: Update
+    author: christophd
+  - title: Unable to retrieve X-CSRF-TOKEN using Header
+    id: 187
+    type: Fix
+    author: christophd
+  - title: Needing extractFromCookies()
+    id: 184
+    type: Update
+    author: christophd
+  - title: Http client squeezed double slashes
+    id: 231
+    type: Update
+    author: christophd
+  - title: SoapJmsMessageConverter does not create a SOAP Header
+    id: 238
+    type: Fix
+    author: christophd
+  - title: Documentation for custom servlet filters
+    id: 235
+    type: Update
+    author: christophd
+  - title: Add documentation on Cucumber injection mode
+    id: 229
+    type: Fix
+    author: christophd
+  - title: Support header child elements
+    id: 239
+    type: Update
+    author: christophd
+  - title: WsdlXsdSchema NullPointerException for valid WSDLs
+    id: 241
+    type: Fix
+    author: christophd
+  - title: How to Query ?WSDL from a WebService or HTTP Endpoint
+    id: 245
+    type: Fix
+    author: christophd
+  - title: Camel Documentation does not state citrusCamelContext as default name
+    id: 242
+    type: Update
+    author: christophd
+  - title: JMS Endpoints should allow dynamic destination name
+    id: 256
+    type: Update
+    author: christophd
+  - title: Purge JMS queue action doesn't support variable substitution
+    id: 257
+    type: Update
+    author: christophd
+  - title: HTTP client send doesn't support variable substitution for header names
+    id: 258
+    type: Update
+    author: s1hofmann
+  - title: Charset cannot be set per file for resources
+    id: 247
+    type: Update
+    author: christophd
+  - title: PlainTextValidator does not ignore whitespaces
+    id: 248
+    type: Fix
+    author: christophd
+  - title: Validation fails with null edge case
+    id: 249
+    type: Fix
+    author: christophd
+  - title: missing variable support in wait action file condition
+    id: 250
+    type: Fix
+    author: christophd
+  - title: custom web-driver is not working with citrus-selenium
+    id: 260
+    type: Fix
+    author: christophd
+  - title: Support Hamcrest matchers in header validation
+    id: 233
+    type: Update
+    author: christophd
+  - title: Handle JMS priority header
+    id: 234
+    type: Update
+    author: christophd
+  - title: Java DSL depends on citrus-selenium although declared optional
+    id: 228
+    type: Fix
+    author: christophd
 
 - version: 2.7.1
   date: 2017-03-15
@@ -31,7 +143,7 @@
     id: 197
     type: Fix
     author: christophd
-  - title: Auto select message type for validation enhancement
+  - title: Auto select message type for validation
     id: 218
     type: Add
     author: christophd

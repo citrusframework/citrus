@@ -36,6 +36,25 @@ to receive your request on the citrus-dev [mailing list](mailto:dev@citrusframew
 through the issue tracker on [GitHub](http://github.com/christophd/citrus/isues). We will discuss the benefit of the new feature 
 with you and help you to get the best out of Citrus for your needs.
 
+## Site generation
+
+If you would like to improve the site content you may need to build the html sources locally. The site generation process is 
+designed to run with [Jekyll](https://jekyllrb.com/) Docker image. You need to start Docker on your local machine and then call:
+
+```bash
+mvn clean resources:resources package site-deploy -Psite,release-local -N
+```
+
+This will automatically start the Jekyll Docker container for site generation. As a result you have the generated site html sources 
+in the local Maven *target/site* build folder. For local deployment call
+
+```bash
+mvn docker:start -Psite -N
+```
+
+Wait for the Docker container to start and open your browser pointing to [http://localhost:4000](). You will be able to see and 
+navigate through the generated site locally.
+
 ## A thank you
 
 Thanks! Hacking on Citrus should be fun. If you find any of this hard to figure out, let us know so we can improve our process 
