@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.3">
+<title>Selenium support</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+/* Remove comment around @import statement below when using as a custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+[hidden],template{display:none}
+script{display:none!important}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body{margin:0}
+a{background:transparent}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
+input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+body{-webkit-font-smoothing:antialiased}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.spread{width:100%}
+p.lead,.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{font-size:1.21875em;line-height:1.6}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:none}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.no-bullet{list-style:none}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite:before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media only screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7;font-weight:bold}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+body{tab-size:4}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
+.clearfix:after,.float-group:after{clear:both}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menu{color:rgba(0,0,0,.8)}
+b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
+b.button:before{content:"[";padding:0 3px 0 2px}
+b.button:after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header:before,#header:after,#content:before,#content:after,#footnotes:before,#footnotes:after,#footer:before,#footer:after{content:" ";display:table}
+#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
+#content{margin-top:1.25em}
+#content:before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
+#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span:before{content:"\00a0\2013\00a0"}
+#header .details br+span.author:before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark:before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber:after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media only screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
+@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+.sect1{padding-bottom:.625em}
+@media only screen and (min-width:768px){.sect1{padding-bottom:1.25em}}
+.sect1+.sect1{border-top:1px solid #efefed}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor:before,h2>a.anchor:before,h3>a.anchor:before,#toctitle>a.anchor:before,.sidebarblock>.content>.title>a.anchor:before,h4>a.anchor:before,h5>a.anchor:before,h6>a.anchor:before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
+.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
+.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
+.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
+.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
+@media only screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media only screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]:before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]:before{display:block}
+.listingblock.terminal pre .command:before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt]):before{content:"$"}
+table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
+table.pyhltable td.code{padding-left:.75em;padding-right:0}
+pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
+pre.pygments .lineno{display:inline-block;margin-right:.25em}
+table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote:before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
+.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
+.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
+.quoteblock .quoteblock blockquote:before{display:none}
+.verseblock{margin:0 1em 1.25em 1em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract{margin:0 0 1.25em 0;display:block}
+.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{text-align:left;word-spacing:0}
+.quoteblock.abstract blockquote:before,.quoteblock.abstract blockquote p:first-of-type:before{display:none}
+table.tableblock{max-width:100%;border-collapse:separate}
+table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
+table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
+table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
+table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
+table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
+table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
+table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot{border-width:1px 0}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+td>div.verse{white-space:pre}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
+ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
+ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
+ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
+ul.inline>li>*{display:block}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
+.colist>table tr>td:last-of-type{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
+.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em 0;border-width:1px 0 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;text-indent:-1.05em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background-color:#00fafa}
+.black{color:#000}
+.black-background{background-color:#000}
+.blue{color:#0000bf}
+.blue-background{background-color:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background-color:#fa00fa}
+.gray{color:#606060}
+.gray-background{background-color:#7d7d7d}
+.green{color:#006000}
+.green-background{background-color:#007d00}
+.lime{color:#00bf00}
+.lime-background{background-color:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background-color:#7d0000}
+.navy{color:#000060}
+.navy-background{background-color:#00007d}
+.olive{color:#606000}
+.olive-background{background-color:#7d7d00}
+.purple{color:#600060}
+.purple-background{background-color:#7d007d}
+.red{color:#bf0000}
+.red-background{background-color:#fa0000}
+.silver{color:#909090}
+.silver-background{background-color:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background-color:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background-color:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background-color:#fafa00}
+span.icon>.fa{cursor:default}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]:after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@media print{@page{margin:1.25cm .75cm}
+*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare):after,a[href^="https:"]:not(.bare):after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]:after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
+.sect1{padding-bottom:0!important}
+.sect1+.sect1{border:0!important}
+#header>h1:first-child{margin-top:1.25rem}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em 0}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span:before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]:before{display:block}
+#footer{background:none!important;padding:0 .9375em}
+#footer-text{color:rgba(0,0,0,.6)!important;font-size:.9em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<style>
+/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
+/*pre.CodeRay {background-color:#f7f7f8;}*/
+.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
+.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
+.CodeRay .line-numbers strong{color:rgba(0,0,0,.4)}
+table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
+table.CodeRay td{vertical-align: top;line-height:1.45}
+table.CodeRay td.line-numbers{text-align:right}
+table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
+table.CodeRay td.code{padding:0 0 0 .5em}
+table.CodeRay td.code>pre{padding:0}
+.CodeRay .debug{color:#fff !important;background:#000080 !important}
+.CodeRay .annotation{color:#007}
+.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-value{color:#700}
+.CodeRay .binary{color:#509}
+.CodeRay .comment{color:#998;font-style:italic}
+.CodeRay .char{color:#04d}
+.CodeRay .char .content{color:#04d}
+.CodeRay .char .delimiter{color:#039}
+.CodeRay .class{color:#458;font-weight:bold}
+.CodeRay .complex{color:#a08}
+.CodeRay .constant,.CodeRay .predefined-constant{color:#008080}
+.CodeRay .color{color:#099}
+.CodeRay .class-variable{color:#369}
+.CodeRay .decorator{color:#b0b}
+.CodeRay .definition{color:#099}
+.CodeRay .delimiter{color:#000}
+.CodeRay .doc{color:#970}
+.CodeRay .doctype{color:#34b}
+.CodeRay .doc-string{color:#d42}
+.CodeRay .escape{color:#666}
+.CodeRay .entity{color:#800}
+.CodeRay .error{color:#808}
+.CodeRay .exception{color:inherit}
+.CodeRay .filename{color:#099}
+.CodeRay .function{color:#900;font-weight:bold}
+.CodeRay .global-variable{color:#008080}
+.CodeRay .hex{color:#058}
+.CodeRay .integer,.CodeRay .float{color:#099}
+.CodeRay .include{color:#555}
+.CodeRay .inline{color:#000}
+.CodeRay .inline .inline{background:#ccc}
+.CodeRay .inline .inline .inline{background:#bbb}
+.CodeRay .inline .inline-delimiter{color:#d14}
+.CodeRay .inline-delimiter{color:#d14}
+.CodeRay .important{color:#555;font-weight:bold}
+.CodeRay .interpreted{color:#b2b}
+.CodeRay .instance-variable{color:#008080}
+.CodeRay .label{color:#970}
+.CodeRay .local-variable{color:#963}
+.CodeRay .octal{color:#40e}
+.CodeRay .predefined{color:#369}
+.CodeRay .preprocessor{color:#579}
+.CodeRay .pseudo-class{color:#555}
+.CodeRay .directive{font-weight:bold}
+.CodeRay .type{font-weight:bold}
+.CodeRay .predefined-type{color:inherit}
+.CodeRay .reserved,.CodeRay .keyword {color:#000;font-weight:bold}
+.CodeRay .key{color:#808}
+.CodeRay .key .delimiter{color:#606}
+.CodeRay .key .char{color:#80f}
+.CodeRay .value{color:#088}
+.CodeRay .regexp .delimiter{color:#808}
+.CodeRay .regexp .content{color:#808}
+.CodeRay .regexp .modifier{color:#808}
+.CodeRay .regexp .char{color:#d14}
+.CodeRay .regexp .function{color:#404;font-weight:bold}
+.CodeRay .string{color:#d20}
+.CodeRay .string .string .string{background:#ffd0d0}
+.CodeRay .string .content{color:#d14}
+.CodeRay .string .char{color:#d14}
+.CodeRay .string .delimiter{color:#d14}
+.CodeRay .shell{color:#d14}
+.CodeRay .shell .delimiter{color:#d14}
+.CodeRay .symbol{color:#990073}
+.CodeRay .symbol .content{color:#a60}
+.CodeRay .symbol .delimiter{color:#630}
+.CodeRay .tag{color:#008080}
+.CodeRay .tag-special{color:#d70}
+.CodeRay .variable{color:#036}
+.CodeRay .insert{background:#afa}
+.CodeRay .delete{background:#faa}
+.CodeRay .change{color:#aaf;background:#007}
+.CodeRay .head{color:#f8f;background:#505}
+.CodeRay .insert .insert{color:#080}
+.CodeRay .delete .delete{color:#800}
+.CodeRay .change .change{color:#66f}
+.CodeRay .head .head{color:#f4f}
+</style>
+</head>
+<body id="selenium" class="article toc2 toc-left">
+<div id="header">
+<h1>Selenium support</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#selenium-browser">Selenium browser</a></li>
+<li><a href="#selenium-actions">Selenium actions</a></li>
+<li><a href="#find">Find</a></li>
+<li><a href="#click">Click</a></li>
+<li><a href="#hover">Hover</a></li>
+<li><a href="#form-input-actions">Form input actions</a></li>
+<li><a href="#page-actions">Page actions</a></li>
+<li><a href="#page-validation">Page validation</a></li>
+<li><a href="#wait">Wait</a></li>
+<li><a href="#navigate">Navigate</a></li>
+<li><a href="#window-actions">Window actions</a></li>
+<li><a href="#alert">Alert</a></li>
+<li><a href="#make-screenshot">Make screenshot</a></li>
+<li><a href="#clear-browser-cache">Clear browser cache</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://www.seleniumhq.org/">Selenium</a> is a very popular tool for testing user interfaces with browser automation. Citrus is able to integrate with the Selenium Java API in order to execute Selenium commands.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Selenium test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-selenium<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Citrus provides a "citrus-selenium" configuration namespace and schema definition for Selenium related components and actions. Include this namespace into your Spring configuration in order to use the Citrus Selenium configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span>
+       <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+       <span class="attribute-name">xmlns:citrus-selenium</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/selenium/config</span><span class="delimiter">&quot;</span></span>
+       <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span>
+       <span class="content">http://www.springframework.org/schema/beans</span>
+       <span class="content">http://www.springframework.org/schema/beans/spring-beans.xsd</span>
+       <span class="content">http://www.citrusframework.org/schema/selenium/config</span>
+       <span class="content">http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+
+    [...]
+
+<span class="tag">&lt;/beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="selenium-browser">Selenium browser</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Selenium uses browser automation in order to simulate the user interact with web applications. You can configure the Selenium browser and web driver as Spring bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-selenium:browser</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seleniumBrowser</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">firefox</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">start-page</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Selenium browser component supports different browser types for the commonly used browsers out in the wild.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>htmlunit</strong></p>
+</li>
+<li>
+<p><strong>firefox</strong></p>
+</li>
+<li>
+<p><strong>safari</strong></p>
+</li>
+<li>
+<p><strong>chrome</strong></p>
+</li>
+<li>
+<p><strong>googlechrome</strong></p>
+</li>
+<li>
+<p><strong>internet explorer</strong></p>
+</li>
+<li>
+<p><strong>edge</strong></p>
+</li>
+<li>
+<p><strong>custom</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Html unit is the default browser type and represents a headless browser that executed without displaying the graphical user interface. In case you need a totally different browser or
+you need to customize the Selenium web driver you can use the <em>browserType="custom"</em> in combination with a web driver reference:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-selenium:browser</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mySeleniumBrowser</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">custom</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">web-driver</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">operaWebDriver</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">operaWebDriver</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.openqa.selenium.opera.OperaDriver</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now Citrus is using the customized Selenium web driver implementation.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When using Firefox as browser you may also want to set the optional properties <strong>firefox-profile</strong> and <strong>version</strong>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-selenium:browser</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mySeleniumBrowser</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">firefox</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">firefox-profile</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">firefoxProfile</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">version</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">FIREFOX_38</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">start-page</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">firefoxProfile</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.openqa.selenium.firefox.FirefoxProfile</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now Citrus is able to execute Selenium operations as a user.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="selenium-actions">Selenium actions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have several Citrus test actions each representing a Selenium command. These actions can be part of a Citrus test case. As a prerequisite we have to enable the Selenium specific test actions in our XML test as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span>
+        <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
+        <span class="attribute-name">xmlns:selenium</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/selenium/testcase</span><span class="delimiter">&quot;</span></span>
+        <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">&quot;</span>
+        <span class="content">http://www.springframework.org/schema/beans</span>
+        <span class="content">http://www.springframework.org/schema/beans/spring-beans.xsd</span>
+        <span class="content">http://www.citrusframework.org/schema/selenium/testcase</span>
+        <span class="content">http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+
+    [...]
+
+<span class="tag">&lt;/beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We added a special selenium namespace with prefix <strong>selenium:</strong> so now we can start to add Selenium test actions to the test case:</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">SeleniumCommandIT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+      <span class="tag">&lt;selenium:start</span> <span class="attribute-name">browser</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">webBrowser</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+      <span class="tag">&lt;selenium:navigate</span> <span class="attribute-name">page</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+      <span class="tag">&lt;selenium:find&gt;</span>
+        <span class="tag">&lt;selenium:element</span> <span class="attribute-name">tag-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">h1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Welcome!</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;selenium:styles&gt;</span>
+            <span class="tag">&lt;selenium:style</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">font-size</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">40px</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+          <span class="tag">&lt;/selenium:styles&gt;</span>
+        <span class="tag">&lt;/selenium:element&gt;</span>
+      <span class="tag">&lt;/selenium:find&gt;</span>
+
+      <span class="tag">&lt;selenium:click&gt;</span>
+        <span class="tag">&lt;selenium:element</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ok-button</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;/selenium:click&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/testcase&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this very simple example we first start the Selenium browser instance. After that we can continue to use Selenium commands without browser attribute explicitly set. Citrus
+knows which browser instance is currently active and will automatically use this opened browser instance. Next in this example we find some element on the displayed page by its
+tag-name and text. We also validate the element style <em>font-size</em> to meet the expected value <em>40px</em> in this step.</p>
+</div>
+<div class="paragraph">
+<p>In addition to that the example performs a click operation on the element with the id <em>ok-button</em>. Selenium supports element find operations on different properties:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+id
+</td>
+<td class="hdlist2">
+<p>finds element based on the <em>id</em> attribute</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+name
+</td>
+<td class="hdlist2">
+<p>finds element based on the <em>name</em> attribute</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+tag-name
+</td>
+<td class="hdlist2">
+<p>finds element based on the <em>tag name</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+class-name
+</td>
+<td class="hdlist2">
+<p>finds element based on the css <em>class name</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+link-text
+</td>
+<td class="hdlist2">
+<p>finds link element based on the <em>link-text</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+xpath
+</td>
+<td class="hdlist2">
+<p>finds element based on XPath evaluation in the DOM</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Based on that we can execute several Selenium commands in a test case and validate the results such as web elements. Citrus supports the following Selenium commands with respective test actions:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+selenium:start
+</td>
+<td class="hdlist2">
+<p>Start the browser instance</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:find
+</td>
+<td class="hdlist2">
+<p>Finds element on current page and validates element properties</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:click
+</td>
+<td class="hdlist2">
+<p>Performs click operation on element</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:hover
+</td>
+<td class="hdlist2">
+<p>Performs hover operation on element</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:navigate
+</td>
+<td class="hdlist2">
+<p>Navigates to new page url (including history back, forward and refresh)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:set-input
+</td>
+<td class="hdlist2">
+<p>Finds input element and sets value</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:check-input
+</td>
+<td class="hdlist2">
+<p>Finds checkbox element and sets/unsets value</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:dropdown-select
+</td>
+<td class="hdlist2">
+<p>Finds dropdown element and selects single or multiple value/s</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:page
+</td>
+<td class="hdlist2">
+<p>Instantiate page object with dependency injection and execute page action with verification</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:open
+</td>
+<td class="hdlist2">
+<p>Open new window</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:close
+</td>
+<td class="hdlist2">
+<p>Close window by given name</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:switch
+</td>
+<td class="hdlist2">
+<p>Switch focus to window with given name</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:wait-until
+</td>
+<td class="hdlist2">
+<p>Wait for element to be <em>hidden</em> or <em>visible</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:alert
+</td>
+<td class="hdlist2">
+<p>Access current alert dialog (with action <em>access</em> or <em>dismiss</em>)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:screenshot
+</td>
+<td class="hdlist2">
+<p>Makes screenshot of current page</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:store-file
+</td>
+<td class="hdlist2">
+<p>Store file to temporary browser directory</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:get-stored-file
+</td>
+<td class="hdlist2">
+<p>Gets stored file from temporary browser directory</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:javascript
+</td>
+<td class="hdlist2">
+<p>Execute Javascript code in browser</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:clear-cache
+</td>
+<td class="hdlist2">
+<p>Clear browser cache and all cookies</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium:stop
+</td>
+<td class="hdlist2">
+<p>Stops the browser instance</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Up to now we have only used the Citrus XML DSL. Of course all Selenium commands are also available in Java DSL as the next example shows.</p>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Autowired</span>
+<span class="directive">private</span> SeleniumBrowser seleniumBrowser;
+
+<span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> seleniumTest() {
+    selenium().start(seleniumBrowser);
+
+    selenium().navigate(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080</span><span class="delimiter">&quot;</span></span>);
+
+    selenium().find().element(By.id(<span class="string"><span class="delimiter">&quot;</span><span class="content">header</span><span class="delimiter">&quot;</span></span>));
+                .tagName(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1</span><span class="delimiter">&quot;</span></span>)
+                .enabled(<span class="predefined-constant">true</span>)
+                .displayed(<span class="predefined-constant">true</span>)
+                .text(<span class="string"><span class="delimiter">&quot;</span><span class="content">Welcome!</span><span class="delimiter">&quot;</span></span>)
+                .style(<span class="string"><span class="delimiter">&quot;</span><span class="content">font-size</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">40px</span><span class="delimiter">&quot;</span></span>);
+
+    selenium().click().element(By.linkText(<span class="string"><span class="delimiter">&quot;</span><span class="content">Click Me!</span><span class="delimiter">&quot;</span></span>));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now lets have a closer look at the different Selenium test actions supported in Citrus.</p>
+</div>
+<div class="paragraph">
+<p>[[start/stop browser]]
+== Start/stop browser</p>
+</div>
+<div class="paragraph">
+<p>You can start and stop the browser instance with a test action. This instantiates a new browser window and prepares everything for interacting with the web
+interface.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:start</span> <span class="attribute-name">browser</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seleniumBrowser</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="comment">&lt;!-- Do something in browser --&gt;</span>
+
+<span class="tag">&lt;selenium:stop</span> <span class="attribute-name">browser</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seleniumBrowser</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().start(seleniumBrowser);
+
+<span class="comment">// do something in browser</span>
+
+selenium().stop(seleniumBrowser);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After starting a browser instance Citrus will automatically use this very same browser instance in all further Selenium actions. This mechanism is based on a test variable (<strong>selenium_browser</strong>) that
+is automatically set. All other test actions are able to load the current browser instance by reading this test variable before execution. In case you need to explicitly use
+a different browser instance than the active instance you can add the <strong>browser</strong> attribute to all Selenium test actions.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is a good idea to start and stop the browser instance before each test case. This makes sure that tests are also executable in single run and it always sets up a new browser instance so tests
+will not influence each other.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="find">Find</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The find element test action searches for an element on the current page. The element is specified by one of the following settings:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+id
+</td>
+<td class="hdlist2">
+<p>finds element based on the <em>id</em> attribute</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+name
+</td>
+<td class="hdlist2">
+<p>finds element based on the <em>name</em> attribute</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+tag-name
+</td>
+<td class="hdlist2">
+<p>finds element based on the <em>tag name</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+class-name
+</td>
+<td class="hdlist2">
+<p>finds element based on the css <em>class name</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+link-text
+</td>
+<td class="hdlist2">
+<p>finds link element based on the <em>link-text</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+xpath
+</td>
+<td class="hdlist2">
+<p>finds element based on XPath evaluation in the DOM</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The find element action will automatically fail in case there is no such element on the current page. In case the element is found you can add additional attributes and properties
+for further element validation:</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:find&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">tag-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">h1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Welcome!</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;selenium:styles&gt;</span>
+      <span class="tag">&lt;selenium:style</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">font-size</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">40px</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/selenium:styles&gt;</span>
+  <span class="tag">&lt;/selenium:element&gt;</span>
+<span class="tag">&lt;/selenium:find&gt;</span>
+
+<span class="tag">&lt;selenium:find&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ok-button</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Ok</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">enabled</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">displayed</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;selenium:attributes&gt;</span>
+      <span class="tag">&lt;selenium:attribute</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/selenium:attributes&gt;</span>
+  <span class="tag">&lt;/selenium:element&gt;</span>
+<span class="tag">&lt;/selenium:find&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().find().element(By.tagName(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1</span><span class="delimiter">&quot;</span></span>))
+        .text(<span class="string"><span class="delimiter">&quot;</span><span class="content">Welcome!</span><span class="delimiter">&quot;</span></span>)
+        .style(<span class="string"><span class="delimiter">&quot;</span><span class="content">font-size</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">40px</span><span class="delimiter">&quot;</span></span>);
+
+selenium().find().element(By.id(<span class="string"><span class="delimiter">&quot;</span><span class="content">ok-button</span><span class="delimiter">&quot;</span></span>))
+        .tagName(<span class="string"><span class="delimiter">&quot;</span><span class="content">button</span><span class="delimiter">&quot;</span></span>)
+        .enabled(<span class="predefined-constant">true</span>)
+        .displayed(<span class="predefined-constant">true</span>)
+        .text(<span class="string"><span class="delimiter">&quot;</span><span class="content">Ok</span><span class="delimiter">&quot;</span></span>)
+        .style(<span class="string"><span class="delimiter">&quot;</span><span class="content">color</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">red</span><span class="delimiter">&quot;</span></span>)
+        .attribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example above finds the <strong>h1</strong> element by its tag name and validates the text and css style attributes. Secondly the <strong>ok-button</strong> is validated with expected
+enabled, displayed, text, style and attribute values. The elements must be present on the current page and all expected element properties have to match. Otherwise the test action and the test case
+is failing with validation errors.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="click">Click</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The action performs a click operation on the element.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:click&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">link-text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Click Me!</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/selenium:click&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().click().element(By.linkText(<span class="string"><span class="delimiter">&quot;</span><span class="content">Click Me!</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hover">Hover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The action performs a hover operation on the element.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:hover&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">link-text</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Find Me!</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/selenium:hover&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().hover().element(By.linkText(<span class="string"><span class="delimiter">&quot;</span><span class="content">Find Me!</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="form-input-actions">Form input actions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following actions are used to access form input elements such as text fields, checkboxes and dropdown lists.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:set-input</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/selenium:set-input&gt;</span>
+
+<span class="tag">&lt;selenium:check-input</span> <span class="attribute-name">checked</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">xpath</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">//input[@type='checkbox']</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/selenium:check-input&gt;</span>
+
+<span class="tag">&lt;selenium:dropdown-select</span> <span class="attribute-name">option</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">happy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;selenium:element</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">user-mood</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/selenium:dropdown-select&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().setInput(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus</span><span class="delimiter">&quot;</span></span>).element(By.name(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>));
+selenium().checkInput(<span class="predefined-constant">true</span>).element(By.xpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">//input[@type='checkbox']</span><span class="delimiter">&quot;</span></span>));
+
+selenium().select(<span class="string"><span class="delimiter">&quot;</span><span class="content">happy</span><span class="delimiter">&quot;</span></span>).element(By.id(<span class="string"><span class="delimiter">&quot;</span><span class="content">user-mood</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The actions above select dropdown options and set user input on text fields and checkboxes. As usual the form elements are selected by some properties such as
+ids, names or xpath expressions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="page-actions">Page actions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Page objects are a well known pattern when using Selenium. The page objects define elements that the page is working with. In addition to that the
+page objects define actions that can be executed from outside. This object oriented approach for accessing pages and their elements is a very good idea.
+Lets have a look at a sample page object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">UserFormPage</span> <span class="directive">implements</span> WebPage {
+
+    <span class="annotation">@FindBy</span>(id = <span class="string"><span class="delimiter">&quot;</span><span class="content">userForm</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> WebElement form;
+
+    <span class="annotation">@FindBy</span>(id = <span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> WebElement userName;
+
+    <span class="comment">/**
+     * Sets the user name.
+     */</span>
+    <span class="directive">public</span> <span class="type">void</span> setUserName(<span class="predefined-type">String</span> value, TestContext context) {
+        userName.clear();
+        userName.sendKeys(value);
+    }
+
+    <span class="comment">/**
+     * Submits the form.
+     * @param context
+     */</span>
+    <span class="directive">public</span> <span class="type">void</span> submit(TestContext context) {
+        form.submit();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see the page object is a Java POJO that implements the <strong>WebPage</strong> interface. The page defines <strong>WebElement</strong> members. These are automatically
+injected by Citrus and Selenium based on the <strong>FindBy</strong> annotation. Now the test case is able to load that page object and execute some action methods on the page such as
+<em>setUserName</em> or <em>submit</em>.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:page</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.selenium.pages.UserFormPage</span><span class="delimiter">&quot;</span></span>
+               <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">setUserName</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;selenium:arguments&gt;</span>
+    <span class="tag">&lt;selenium:argument&gt;</span>Citrus<span class="tag">&lt;/selenium:argument&gt;</span>
+  <span class="tag">&lt;/selenium:arguments&gt;</span>
+<span class="tag">&lt;/selenium:page&gt;</span>
+
+<span class="tag">&lt;selenium:page</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.selenium.pages.UserFormPage</span><span class="delimiter">&quot;</span></span>
+               <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().page(UserFormPage.class).argument(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus</span><span class="delimiter">&quot;</span></span>).execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">setUserName</span><span class="delimiter">&quot;</span></span>);
+
+selenium().page(UserFormPage.class).execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The page object class is automatically loaded and instantiated with dependency injection for all <em>FindBy</em> annotated web elements. After that the action method is executed.
+The action methods can also have method parameters as seen in <em>setUserName</em>. The value parameter is automatically set when calling the method.</p>
+</div>
+<div class="paragraph">
+<p>Methods can also use the optional parameter <em>TestContext</em>. With this context you can access the current test context with all test variables for instance. This method parameter
+should always be the last parameter.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="page-validation">Page validation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can also use page object for validation purpose. The page object is loaded and instantiated as described in previous section. Then the page validator
+is called. The validator performs assertions and validation operations with the page object. Lets see a sample page validator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">UserFormValidator</span> <span class="directive">implements</span> PageValidator&lt;UserFormPage&gt; {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.isTrue(webPage.getUserName() != <span class="predefined-constant">null</span>);
+        Assert.isTrue(StringUtils.hasText(webPage.getUserName().getAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>)));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The page validator is called with the web page instance, the browser and the test context. The validator should assert page objects and web elements for
+validation purpose. In a test case we can call the validator to validate the page.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;bean</span> <span class="attribute-name">id</span> =<span class="string"><span class="delimiter">&quot;</span><span class="content">userFormValidator</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.selenium.pages.UserFormValidator</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;selenium:page</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.selenium.pages.UserFormPage</span><span class="delimiter">&quot;</span></span>
+               <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">validate</span><span class="delimiter">&quot;</span></span>
+               <span class="attribute-name">validator</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">userFormValidator</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Autowired</span>
+<span class="directive">private</span> UserFormValidator userFormValidator;
+
+selenium().page(UserFormPage.class).execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">validate</span><span class="delimiter">&quot;</span></span>).validator(userFormValidator);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of using a separate validator class you can also put the validation method to the page object itself. Then page object and validation is
+done within the same class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">UserFormPage</span> <span class="directive">implements</span> WebPage, PageValidator&lt;UserFormPage&gt; {
+
+    <span class="annotation">@FindBy</span>(id = <span class="string"><span class="delimiter">&quot;</span><span class="content">userForm</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> WebElement form;
+
+    <span class="annotation">@FindBy</span>(id = <span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> WebElement userName;
+
+    <span class="comment">/**
+     * Sets the user name.
+     */</span>
+    <span class="directive">public</span> <span class="type">void</span> setUserName(<span class="predefined-type">String</span> value, TestContext context) {
+        userName.clear();
+        userName.sendKeys(value);
+    }
+
+    <span class="comment">/**
+     * Submits the form.
+     * @param context
+     */</span>
+    <span class="directive">public</span> <span class="type">void</span> submit(TestContext context) {
+        form.submit();
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
+        Assert.isTrue(userName != <span class="predefined-constant">null</span>);
+        Assert.isTrue(StringUtils.hasText(userName.getAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>)));
+        Assert.isTrue(form != <span class="predefined-constant">null</span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:page</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.selenium.pages.UserFormPage</span><span class="delimiter">&quot;</span></span>
+               <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">validate</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().page(UserFormPage.class).execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">validate</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="wait">Wait</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
+to be <em>visible</em> or <em>hidden</em>.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:wait</span> <span class="attribute-name">until</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">hidden</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;selenium:element</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">info-dialog</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/selenium:wait&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().waitUntil().hidden().element(By.id(<span class="string"><span class="delimiter">&quot;</span><span class="content">info-dialog</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example waits for the element <em>info-dialog</em> to disappear. The time to wait is 5000 milliseconds by default. You can set the timeout on the action. Due
+to Selenium limitations the minimum wait time is 1000 milliseconds.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="navigate">Navigate</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The action navigates to a new page either by using a new relative path or a complete new Http URL.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:navigate</span> <span class="attribute-name">page</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;selenium:navigate</span> <span class="attribute-name">page</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">help</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().navigate(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080</span><span class="delimiter">&quot;</span></span>);
+
+selenium().navigate(<span class="string"><span class="delimiter">&quot;</span><span class="content">help</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The sample above describes a new page with new Http URL. The browser will navigate to this new page. All further Selenium actions are performed on this new
+page. The second navigation action opens the relative page <em>help</em> so the new page URL is <code><a href="http://localhost:8080/help" class="bare">http://localhost:8080/help</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>Navigation is always done on the active browser window. You can manage the opened windows as described in next section.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="window-actions">Window actions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:open-window</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_window</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;selenium:switch-window</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_window</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;selenium:close-window</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_window</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().open().window(<span class="string"><span class="delimiter">&quot;</span><span class="content">my_window</span><span class="delimiter">&quot;</span></span>);
+selenium().focus().window(<span class="string"><span class="delimiter">&quot;</span><span class="content">my_window</span><span class="delimiter">&quot;</span></span>);
+selenium().close().window(<span class="string"><span class="delimiter">&quot;</span><span class="content">my_window</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When a new window is opened Selenium creates a window handle for us. This window handle is saved as test variable using a given window name. So after opening the window you can access the
+window by its name in further actions. All upcoming Selenium actions will take place in this new active window. Of course the test actions will fail as soon as the window with that given
+name is missing. Citrus uses default window names that are automatically used as test variables:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+selenium_active_window
+</td>
+<td class="hdlist2">
+<p>the active window handle</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+selenium_last_window
+</td>
+<td class="hdlist2">
+<p>the last window handle when switched to other window</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="alert">Alert</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We are able to access the alert dialog on the current page. Citrus will validate the displayed dialog text and accept or dismiss of the dialog.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:alert</span> <span class="attribute-name">accept</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;selenium:alert-text&gt;</span>Hello!<span class="tag">&lt;/selenium:alert-text&gt;</span>
+<span class="tag">&lt;/selenium:alert&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().alert().text(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello!</span><span class="delimiter">&quot;</span></span>).accept();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The alert dialog text is validated when expected text is given on the test action. The user can decide to accept or dismiss the dialog. After that the dialog should be closed.
+In case the test action fails to find an open alert dialog the test action raises runtime errors and the test will fail.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="make-screenshot">Make screenshot</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can execute this action in case you want to take a screenshot of the current page. This action only works with browsers that actually display the user interface. The action will not have any effect
+when executed with Html unit web driver in headless mode.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:screenshot</span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;selenium:screenshot</span> <span class="attribute-name">output-dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">target</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().screenhsot();
+
+selenium().screenhsot(<span class="string"><span class="delimiter">&quot;</span><span class="content">target</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test action has an optional parameter <em>output-dir</em> which represents the output directory where the screenshot is saved to.</p>
+</div>
+<div class="paragraph">
+<p>[[temporary-storage-(firefox)]]
+== Temporary storage (Firefox)</p>
+</div>
+<div class="paragraph">
+<p><strong>Important</strong> This action only works with Firefox web driver! Other browsers are not working with the temporary download storage.</p>
+</div>
+<div class="paragraph">
+<p>The browser uses a temporary storage for downloaded files. We can access this temporary storage during a test case.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:store-file</span> <span class="attribute-name">file-path</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:download/file.txt</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;selenium:get-stored-file</span> <span class="attribute-name">file-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">file.txt</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().store(<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:download/file.txt</span><span class="delimiter">&quot;</span></span>);
+selenium().getStored(<span class="string"><span class="delimiter">&quot;</span><span class="content">file.txt</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see the test case is able to store new files to the temporary browser storage. We have to give the file path as classpath
+or file system path. When reading the temporary file storage we need to specify the file name that we want to access in the temporary storage. The
+temporary storage is not capable of subdirectories all files are stored directly to the storage in one single directory.</p>
+</div>
+<div class="paragraph">
+<p>In case the stored file is not found by that name the test action fails with respective errors. On the other hand when the file is found in temporary storage
+Citrus will automatically create a new test variable <strong>selenium_download_file</strong> which contains the file name as value.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="clear-browser-cache">Clear browser cache</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When clearing the browser cache all cookies and temporary files will be deleted.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:clear-cache</span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().clearCache();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-07-05 17:34:29 MESZ
+</div>
+</div>
+</body>
+</html>
