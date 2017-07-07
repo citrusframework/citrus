@@ -527,26 +527,30 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Christoph Deppisch</span><br>
 <span id="author2" class="author">Martin Maher</span><br>
-<span id="revnumber">version 2.7.2-SNAPSHOT,</span>
-<span id="revdate">2017-07-06</span>
+<span id="revnumber">version 2.7.2,</span>
+<span id="revdate">2017-07-07</span>
 </div>
 <div id="toc" class="toc2">
-<div id="toctitle">citrus-admin</div>
+<div id="toctitle">citrus</div>
 <ul class="sectlevel1">
 <li><a href="#preface">1. Preface</a></li>
 <li><a href="#changes-new">2. What&#8217;s new in Citrus 2.7?!</a>
 <ul class="sectlevel2">
-<li><a href="#changes-java-8">2.1. Java 8</a></li>
-<li><a href="#changes-kubernetes-support">2.2. Kubernetes support</a></li>
-<li><a href="#changes-selenium-support">2.3. Selenium support</a></li>
-<li><a href="#changes-before-after-suite">2.4. Environment based before/after suite</a></li>
-<li><a href="#wsaddressing-header-customization">2.5. WsAddressing header customization</a></li>
-<li><a href="#changes-jsonpath-data-dictionary">2.6. JsonPath data dictionary</a></li>
-<li><a href="#changes-java-dsl-test-behavior">2.7. Java DSL test behavior</a></li>
-<li><a href="#changes-auto-select-message-type">2.8. Auto select message type</a></li>
-<li><a href="#changes-default-cucumber-steps">2.9. Default Cucumber steps</a></li>
-<li><a href="#changes-refactoring">2.10. Refactoring</a></li>
-<li><a href="#changes-bugfixes">2.11. Bugfixes</a></li>
+<li><a href="#changes-db-transactions">2.1. Database transaction handling</a></li>
+<li><a href="#changes-environment-settings">2.2. Environment settings</a></li>
+<li><a href="#changes-http-cookies">2.3. Http cookie support</a></li>
+<li><a href="#changes-file-encoding">2.4. File resource encoding</a></li>
+<li><a href="#changes-java-8">2.5. Java 8</a></li>
+<li><a href="#changes-kubernetes">2.6. Kubernetes support</a></li>
+<li><a href="#changes-selenium">2.7. Selenium support</a></li>
+<li><a href="#changes-before-after-suite">2.8. Environment based before/after suite</a></li>
+<li><a href="#wsaddressing-header-customization">2.9. WsAddressing header customization</a></li>
+<li><a href="#changes-jsonpath-data-dictionary">2.10. JsonPath data dictionary</a></li>
+<li><a href="#changes-java-dsl-test-behavior">2.11. Java DSL test behavior</a></li>
+<li><a href="#changes-auto-select-message-type">2.12. Auto select message type</a></li>
+<li><a href="#changes-default-cucumber-steps">2.13. Default Cucumber steps</a></li>
+<li><a href="#changes-refactoring">2.14. Refactoring</a></li>
+<li><a href="#changes-bugfixes">2.15. Bugfixes</a></li>
 </ul>
 </li>
 <li><a href="#introduction">3. Introduction</a>
@@ -677,11 +681,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#groovy-markupbuilder">13.2.4. Groovy MarkupBuilder</a></li>
 </ul>
 </li>
-<li><a href="#actions-database">13.3. Database actions</a>
+<li><a href="#actions-sql">13.3. Database actions</a>
 <ul class="sectlevel3">
 <li><a href="#sql-update-insert-delete">13.3.1. SQL update, insert, delete</a></li>
 <li><a href="#sql-query">13.3.2. SQL query</a></li>
-<li><a href="#transaction-management">13.3.3. Transaction management</a></li>
+<li><a href="#sql-transaction-management">13.3.3. Transaction management</a></li>
 <li><a href="#groovy-sql-result-set-validation">13.3.4. Groovy SQL result set validation</a></li>
 <li><a href="#save-result-set-values">13.3.5. Save result set values</a></li>
 </ul>
@@ -689,7 +693,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#actions-sleep">13.4. Sleep</a></li>
 <li><a href="#actions-java">13.5. Java</a></li>
 <li><a href="#actions-receive-timeout">13.6. Receive timeout</a></li>
-<li><a href="#echo">13.7. Echo</a></li>
+<li><a href="#actions-echo">13.7. Echo</a></li>
 <li><a href="#actions-stop-time">13.8. Stop time</a></li>
 <li><a href="#actions-create-variables">13.9. Create variables</a></li>
 <li><a href="#actions-trace-variables">13.10. Trace variables</a></li>
@@ -728,7 +732,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#containers-custom">16.8. Custom containers</a></li>
 </ul>
 </li>
-<li><a href="#jms-support">17. JMS support</a>
+<li><a href="#jms">17. JMS support</a>
 <ul class="sectlevel2">
 <li><a href="#jms-endpoints">17.1. JMS endpoints</a></li>
 <li><a href="#jms-synchronous-endpoints">17.2. JMS synchronous endpoints</a></li>
@@ -755,7 +759,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#http-servlet-context-customization">18.13. HTTP servlet context customization</a></li>
 </ul>
 </li>
-<li><a href="#websocket-support">19. WebSocket support</a>
+<li><a href="#websocket">19. WebSocket support</a>
 <ul class="sectlevel2">
 <li><a href="#websocket-client">19.1. WebSocket client</a></li>
 <li><a href="#websocket-server-endpoints">19.2. WebSocket server endpoints</a></li>
@@ -778,18 +782,18 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#receive-soap-faults">20.12. Receive SOAP faults</a></li>
 <li><a href="#multiple-soap-fault-details">20.13. Multiple SOAP fault details</a></li>
 <li><a href="#send-http-error-codes-with-soap">20.14. Send HTTP error codes with SOAP</a></li>
-<li><a href="#soap-attachment-support">20.15. SOAP attachment support</a></li>
+<li><a href="#soap-attachment">20.15. SOAP attachment support</a></li>
 <li><a href="#send-soap-attachments">20.16. Send SOAP attachments</a></li>
 <li><a href="#receive-soap-attachments">20.17. Receive SOAP attachments</a></li>
-<li><a href="#soap-mtom-support">20.18. SOAP MTOM support</a></li>
+<li><a href="#soap-mtom">20.18. SOAP MTOM support</a></li>
 <li><a href="#soap-client-basic-authentication">20.19. SOAP client basic authentication</a></li>
 <li><a href="#soap-server-basic-authentication">20.20. SOAP server basic authentication</a></li>
-<li><a href="#ws-addressing-support">20.21. WS-Addressing support</a></li>
+<li><a href="#ws-addressing">20.21. WS-Addressing support</a></li>
 <li><a href="#soap-client-fork-mode">20.22. SOAP client fork mode</a></li>
 <li><a href="#soap-servlet-context-customization">20.23. SOAP servlet context customization</a></li>
 </ul>
 </li>
-<li><a href="#ftp-support">21. FTP support</a>
+<li><a href="#ftp">21. FTP support</a>
 <ul class="sectlevel2">
 <li><a href="#ftp-client">21.1. FTP client</a></li>
 <li><a href="#ftp-server">21.2. FTP server</a></li>
@@ -799,18 +803,18 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#channel-endpoint">22.1. Channel endpoint</a></li>
 <li><a href="#synchronous-channel-endpoints">22.2. Synchronous channel endpoints</a></li>
-<li><a href="#message-channel-selector-support">22.3. Message selectors on channels</a></li>
+<li><a href="#message-channel-selector">22.3. Message selectors on channels</a></li>
 <li><a href="#root-qname-message-selector">22.4. Root QName Message Selector</a></li>
 <li><a href="#xpath-evaluating-message-selector">22.5. XPath Evaluating Message Selector</a></li>
 </ul>
 </li>
-<li><a href="#file-support">23. File support</a>
+<li><a href="#file">23. File support</a>
 <ul class="sectlevel2">
 <li><a href="#write-files">23.1. Write files</a></li>
 <li><a href="#read-files">23.2. Read files</a></li>
 </ul>
 </li>
-<li><a href="#apache-camel-support">24. Apache Camel support</a>
+<li><a href="#apache-camel">24. Apache Camel support</a>
 <ul class="sectlevel2">
 <li><a href="#camel-endpoint">24.1. Camel endpoint</a></li>
 <li><a href="#synchronous-camel-endpoint">24.2. Synchronous Camel endpoint</a></li>
@@ -821,20 +825,20 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#camel-controlbus-actions">24.7. Camel controlbus actions</a></li>
 </ul>
 </li>
-<li><a href="#vert-x-event-bus-support">25. Vert.x event bus support</a>
+<li><a href="#vert-x-event-bus">25. Vert.x event bus support</a>
 <ul class="sectlevel2">
 <li><a href="#vert-x-endpoint">25.1. Vert.x endpoint</a></li>
 <li><a href="#synchronous-vert-x-endpoint">25.2. Synchronous Vert.x endpoint</a></li>
 <li><a href="#vert-x-instance-factory">25.3. Vert.x instance factory</a></li>
 </ul>
 </li>
-<li><a href="#mail-support">26. Mail support</a>
+<li><a href="#mail">26. Mail support</a>
 <ul class="sectlevel2">
 <li><a href="#mail-client">26.1. Mail client</a></li>
 <li><a href="#mail-server">26.2. Mail server</a></li>
 </ul>
 </li>
-<li><a href="#arquillian-support">27. Arquillian support</a>
+<li><a href="#arquillian">27. Arquillian support</a>
 <ul class="sectlevel2">
 <li><a href="#citrus-arquillian-extension">27.1. Citrus Arquillian extension</a></li>
 <li><a href="#client-side-testing">27.2. Client side testing</a></li>
@@ -842,7 +846,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#test-runners">27.4. Test runners</a></li>
 </ul>
 </li>
-<li><a href="#docker-support">28. Docker support</a>
+<li><a href="#docker">28. Docker support</a>
 <ul class="sectlevel2">
 <li><a href="#docker-client">28.1. Docker client</a></li>
 <li><a href="#docker-commands">28.2. Docker commands</a></li>
@@ -863,19 +867,19 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#kubernetes-messaging">29.11. Kubernetes messaging</a></li>
 </ul>
 </li>
-<li><a href="#ssh-support">30. SSH support</a>
+<li><a href="#ssh">30. SSH support</a>
 <ul class="sectlevel2">
 <li><a href="#ssh-client">30.1. SSH Client</a></li>
 <li><a href="#ssh-server">30.2. SSH Server</a></li>
 </ul>
 </li>
-<li><a href="#rmi-support">31. RMI support</a>
+<li><a href="#rmi">31. RMI support</a>
 <ul class="sectlevel2">
 <li><a href="#rmi-client">31.1. RMI client</a></li>
 <li><a href="#rmi-server">31.2. RMI server</a></li>
 </ul>
 </li>
-<li><a href="#jmx-support">32. JMX support</a>
+<li><a href="#jmx">32. JMX support</a>
 <ul class="sectlevel2">
 <li><a href="#jmx-client">32.1. JMX client</a></li>
 <li><a href="#jmx-server">32.2. JMX server</a></li>
@@ -885,7 +889,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#cucumber-integration">33.1. Cucumber integration</a></li>
 <li><a href="#cucumber-xml-steps">33.2. Cucumber XML steps</a></li>
-<li><a href="#cucumber-spring-support">33.3. Cucumber Spring support</a></li>
+<li><a href="#cucumber-spring">33.3. Cucumber Spring support</a></li>
 <li><a href="#citrus-step-definitions">33.4. Citrus step definitions</a></li>
 <li><a href="#variable-steps">33.5. Variable steps</a></li>
 <li><a href="#messaging-steps">33.6. Messaging steps</a></li>
@@ -898,13 +902,13 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#selenium-steps">33.13. Selenium steps</a></li>
 </ul>
 </li>
-<li><a href="#zookeeper-support">34. Zookeeper support</a>
+<li><a href="#zookeeper">34. Zookeeper support</a>
 <ul class="sectlevel2">
 <li><a href="#zookeeper-client">34.1. Zookeeper client</a></li>
 <li><a href="#zookeeper-commands">34.2. Zookeeper commands</a></li>
 </ul>
 </li>
-<li><a href="#spring-restdocs-support">35. Spring Restdocs support</a>
+<li><a href="#spring-restdocs">35. Spring Restdocs support</a>
 <ul class="sectlevel2">
 <li><a href="#spring-restdocs-using-http">35.1. Spring Restdocs using Http</a></li>
 <li><a href="#spring-restdocs-using-soap">35.2. Spring Restdocs using SOAP</a></li>
@@ -1052,10 +1056,10 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#changes-local-message-store">Local message store</a></li>
 <li><a href="#changes-wait-message-condition">Wait message condition</a></li>
 <li><a href="#changes-xpath-and-jsonpath-function">Xpath and JsonPath Function</a></li>
-<li><a href="#changes-static-response-adapter-variables-support">Static response adapter variables support</a></li>
-<li><a href="#changes-cucumber-bdd-support">Cucumber BDD support</a></li>
-<li><a href="#changes-zookeeper-support">Zookeeper support</a></li>
-<li><a href="#changes-spring-restdocs-support">Spring Restdocs support</a></li>
+<li><a href="#changes-static-response-adapter-variables">Static response adapter variables support</a></li>
+<li><a href="#changes-cucumber-bdd">Cucumber BDD support</a></li>
+<li><a href="#changes-zookeeper">Zookeeper support</a></li>
+<li><a href="#changes-spring-restdocs">Spring Restdocs support</a></li>
 <li><a href="#changes-hamcrest-matcher-conditions">Hamcrest matcher conditions</a></li>
 <li><a href="#changes-soap-java-dsl">SOAP Java DSL</a></li>
 <li><a href="#changes-refactoring">Refactoring</a></li>
@@ -1063,10 +1067,10 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#changes-2-5">Changes in Citrus 2.5</a>
 <ul class="sectlevel3">
-<li><a href="#changes-hamcrest-matcher-support">Hamcrest matcher support</a></li>
+<li><a href="#changes-hamcrest-matcher">Hamcrest matcher support</a></li>
 <li><a href="#changes-binary-base64-message-validator">Binary base64 message validator</a></li>
-<li><a href="#changes-rmi-support">RMI support</a></li>
-<li><a href="#changes-jmx-support">JMX support</a></li>
+<li><a href="#changes-rmi">RMI support</a></li>
+<li><a href="#changes-jmx">JMX support</a></li>
 <li><a href="#changes-resource-injection">Resource injection</a></li>
 <li><a href="#changes-http-x-www-form-urlencoded-message-validator">Http x-www-form-urlencoded message validator</a></li>
 <li><a href="#changes-date-range-validation-matcher">Date range validation matcher</a></li>
@@ -1077,7 +1081,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#changes-2-4">Changes in Citrus 2.4</a>
 <ul class="sectlevel3">
-<li><a href="#changes-docker-support">Docker support</a></li>
+<li><a href="#changes-docker">Docker support</a></li>
 <li><a href="#changes-http-rest-actions">Http REST actions</a></li>
 <li><a href="#changes-wait-test-action">Wait test action</a></li>
 <li><a href="#changes-camel-actions">Camel actions</a></li>
@@ -1088,8 +1092,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#changes-2-3">Changes in Citrus 2.3</a>
 <ul class="sectlevel3">
 <li><a href="#changes-test-runner-and-test-designer">Test runner and test designer</a></li>
-<li><a href="#changes-websocket-support">WebSocket support</a></li>
-<li><a href="#changes-jsonpath-support">JSONPath support</a></li>
+<li><a href="#changes-websocket">WebSocket support</a></li>
+<li><a href="#changes-jsonpath">JSONPath support</a></li>
 <li><a href="#changes-customize-message-validators">Customize message validators</a></li>
 <li><a href="#changes-library-upgrades">Library upgrades</a></li>
 <li><a href="#changes-upgrade-from-citrus-2-2">Upgrade from Citrus 2.2</a></li>
@@ -1098,8 +1102,8 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#changes-2-2">Changes in Citrus 2.2</a>
 <ul class="sectlevel3">
-<li><a href="#changes-arquillian-support">Arquillian support</a></li>
-<li><a href="#changes-junit-support">JUnit support</a></li>
+<li><a href="#changes-arquillian">Arquillian support</a></li>
+<li><a href="#changes-junit">JUnit support</a></li>
 <li><a href="#changes-start-stop-server-action">Start/Stop server action</a></li>
 <li><a href="#changes-citrus-ant-tasks">Citrus Ant tasks</a></li>
 <li><a href="#changes-bugfixes">Bugfixes</a></li>
@@ -1107,7 +1111,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#changes-2-1">Changes in Citrus 2.1</a>
 <ul class="sectlevel3">
-<li><a href="#changes-soap-mtom-support">SOAP MTOM support</a></li>
+<li><a href="#changes-soap-mtom">SOAP MTOM support</a></li>
 <li><a href="#changes-soap-envelope-handling">SOAP envelope handling</a></li>
 <li><a href="#changes-soap-1-2-message-factory">SOAP 1.2 message factory</a></li>
 <li><a href="#changes-testng-data-provider-handling">TestNG data provider handling</a></li>
@@ -1119,7 +1123,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#changes-refactoring">Refactoring</a></li>
 <li><a href="#changes-spring-framework-4-x">Spring framework 4.x</a></li>
-<li><a href="#changes-ftp-support">FTP support</a></li>
+<li><a href="#changes-ftp">FTP support</a></li>
 <li><a href="#changes-functions-with-test-context-access">Functions with test context access</a></li>
 <li><a href="#changes-validation-matcher-with-test-context-access">Validation matcher with test context access</a></li>
 <li><a href="#changes-message-listener-with-test-context-access">Message listener with test context access</a></li>
@@ -1142,7 +1146,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Copyright © 2017 ConSol Software GmbH</strong><br>
-<strong>Version: 2.7.2-SNAPSHOT</strong></p>
+<strong>Version: 2.7.2</strong></p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="images/citrus-logo-small.png" alt="citrus-logo"></span></p>
@@ -1200,7 +1204,39 @@ is proud to welcome two new crew members for supporting Selenium and Kubernetes 
 features included in the box.</p>
 </div>
 <div class="sect2">
-<h3 id="changes-java-8"><a class="anchor" href="#changes-java-8"></a>2.1. Java 8</h3>
+<h3 id="changes-db-transactions"><a class="anchor" href="#changes-db-transactions"></a>2.1. Database transaction handling</h3>
+<div class="paragraph">
+<p>When Citrus accesses data storage in form of SQL statements executed on some datasource the transaction handling has not been set in the past. Each SQL
+statement has been committed immediately. Especially when executing multiple SQL statement via script this could lead to inconsistencies. With the new release you
+can make use of Spring&#8217;s transaction handling when executing SQL statements with Citrus. You can set a transaction handler with isolation levels and default transaction timeout settings.
+This enables you to use transaction blocks for multiple statements with one single commit or rollback. Read more about this in chapter [actions accessing the database](/reference/html/#sql-transaction-management).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="changes-environment-settings"><a class="anchor" href="#changes-environment-settings"></a>2.2. Environment settings</h3>
+<div class="paragraph">
+<p>We added a mechanism to overwrite general settings in Citrus via system properties and environment variables. This makes Citrus ready for runtime environments such as Docker and Kubernetes where
+you can use environment variables to change Citrus behavior. The available settings and variable names can be seen in chapter [configuration](/reference/html/#configuration).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="changes-http-cookies"><a class="anchor" href="#changes-http-cookies"></a>2.3. Http cookie support</h3>
+<div class="paragraph">
+<p>Setting Http cookie related Http headers has been possible in previous versions. We improved that cookie handling in Http request and response messages with a dedicated DSL for adding and verifying cookie information
+in Http headers. The Citrus http-server is able to advice the client to set a new cookie with respective <strong>Set-Cookie</strong> headers in response messages. The http-client is able to verify the cookie attributes such as name, value, max-age and so on.
+In addition to that the client is able to send the cookie name value pair in further requests as a reference via "<strong>Cookie</strong>" message headers. The complete new cookie handling is described in section [Http cookie handling](/reference/html/#http-cookies).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="changes-file-encoding"><a class="anchor" href="#changes-file-encoding"></a>2.4. File resource encoding</h3>
+<div class="paragraph">
+<p>The Citrus test case is able to load file resources in various situations e.g. when defining expected message contents. The file resource encoding and charset used a system-wide default setting which has been settable via system property (<strong>citrus.file.encoding</strong>).
+In addition to that we have added the opportunity to overwrite this system-wide setting in each resource read operation. This means that everywhere where it is possible to load a file resource you can explicitly set a file encoding and charset for this read operation.
+This enables you to use more than one system-wide file encoding setting when reading data from external file resources in Citrus.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="changes-java-8"><a class="anchor" href="#changes-java-8"></a>2.5. Java 8</h3>
 <div class="paragraph">
 <p>Citrus is now using Java 8. This is mainly because we need to move on in using latest versions of Spring Framework,
 Apache Camel and so on. If you are still stuck on Java 7 you can not update to 2.7 as the Citrus sources are compiled with
@@ -1210,7 +1246,7 @@ and other Java 8 features in Citrus code base.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-kubernetes-support"><a class="anchor" href="#changes-kubernetes-support"></a>2.2. Kubernetes support</h3>
+<h3 id="changes-kubernetes"><a class="anchor" href="#changes-kubernetes"></a>2.6. Kubernetes support</h3>
 <div class="paragraph">
 <p>Citrus is now able to interact with <a href="http://kubernetes.io/">Kubernetes</a> remote API in order to manage pods, services and other
 resources on the Kubernetes platform. The Kubernetes client is based on the <a href="https://github.com/fabric8io/kubernetes-client">Fabric8 Java client</a>
@@ -1222,7 +1258,7 @@ described in section <a href="#kubernetes">kubernetes</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-selenium-support"><a class="anchor" href="#changes-selenium-support"></a>2.3. Selenium support</h3>
+<h3 id="changes-selenium"><a class="anchor" href="#changes-selenium"></a>2.7. Selenium support</h3>
 <div class="paragraph">
 <p>User interface and browser testing has not been a focus within Citrus integration testing until now that we can integrate
 with the famous <a href="http://www.seleniumhq.org/">Selenium</a> UI testing library. Thanks to the great contributions made by the
@@ -1233,7 +1269,7 @@ complete new ways of handling complex integration scenarios. Read more about thi
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-before-after-suite"><a class="anchor" href="#changes-before-after-suite"></a>2.4. Environment based before/after suite</h3>
+<h3 id="changes-before-after-suite"><a class="anchor" href="#changes-before-after-suite"></a>2.8. Environment based before/after suite</h3>
 <div class="paragraph">
 <p>You can enable/disable before and after suite actions based on optional environment or system properties. Users can give
 property names or property values that are checked before execution.
@@ -1241,7 +1277,7 @@ Only in case the environment property checks do pass the actions are executed be
 </div>
 </div>
 <div class="sect2">
-<h3 id="wsaddressing-header-customization"><a class="anchor" href="#wsaddressing-header-customization"></a>2.5. WsAddressing header customization</h3>
+<h3 id="wsaddressing-header-customization"><a class="anchor" href="#wsaddressing-header-customization"></a>2.9. WsAddressing header customization</h3>
 <div class="paragraph">
 <p>We have improved the header customization options when using SOAP WSAddressing feature. You can now overwrite the default
 WSAddressing headers per test action in addition to defining the headers on
@@ -1249,7 +1285,7 @@ client endpoint component level.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-jsonpath-data-dictionary"><a class="anchor" href="#changes-jsonpath-data-dictionary"></a>2.6. JsonPath data dictionary</h3>
+<h3 id="changes-jsonpath-data-dictionary"><a class="anchor" href="#changes-jsonpath-data-dictionary"></a>2.10. JsonPath data dictionary</h3>
 <div class="paragraph">
 <p>Json data dictionary was based on a simple dot notated syntax. Now you can also use more complex JsonPath expressions in
 order to overwrite elements in Json messages based on the data dictionary settings in Citrus. Read more about that in chapter
@@ -1257,7 +1293,7 @@ order to overwrite elements in Json messages based on the data dictionary settin
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-java-dsl-test-behavior"><a class="anchor" href="#changes-java-dsl-test-behavior"></a>2.7. Java DSL test behavior</h3>
+<h3 id="changes-java-dsl-test-behavior"><a class="anchor" href="#changes-java-dsl-test-behavior"></a>2.11. Java DSL test behavior</h3>
 <div class="paragraph">
 <p>Test behaviors in Java DSL represent templates in XML DSL. The behavior encapsulates a set of test actions to a group that
 can be applied to multiple Java DSL tests. This enables you to combine common test actions in Java DSL with more comfortable
@@ -1265,7 +1301,7 @@ reuse of test action definitions. See chapter <a href="#test-behavior">test-beha
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-auto-select-message-type"><a class="anchor" href="#changes-auto-select-message-type"></a>2.8. Auto select message type</h3>
+<h3 id="changes-auto-select-message-type"><a class="anchor" href="#changes-auto-select-message-type"></a>2.12. Auto select message type</h3>
 <div class="paragraph">
 <p>Default message type for validation tasks in Citrus has been <em>XML</em>. Based on this message type the respective message validator
 implementation applies for <em>XML</em>, <em>JSON</em>, <em>plain text</em> and so on. You can now change this default message type by setting a
@@ -1280,7 +1316,7 @@ matching message validator for the incoming message. Before that Citrus has alwa
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-default-cucumber-steps"><a class="anchor" href="#changes-default-cucumber-steps"></a>2.9. Default Cucumber steps</h3>
+<h3 id="changes-default-cucumber-steps"><a class="anchor" href="#changes-default-cucumber-steps"></a>2.13. Default Cucumber steps</h3>
 <div class="paragraph">
 <p>The Citrus Cucumber extension now defines default step definitions for Http, Docker and Selenium. These default steps are ready
 for usage in any Cucumber Citrus feature specification. You can load the default steps as additional glue packages in your
@@ -1290,7 +1326,7 @@ in BDD style. Read more about this in <a href="#cucumber">cucumber</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-refactoring"><a class="anchor" href="#changes-refactoring"></a>2.10. Refactoring</h3>
+<h3 id="changes-refactoring"><a class="anchor" href="#changes-refactoring"></a>2.14. Refactoring</h3>
 <div class="paragraph">
 <p>Deprecated APIs and classes that coexisted a long time are now removed. If your project is using on of these deprecated
 classes you may run into compile time errors.
@@ -1299,7 +1335,7 @@ that replaced the old deprecated stuff.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-bugfixes"><a class="anchor" href="#changes-bugfixes"></a>2.11. Bugfixes</h3>
+<h3 id="changes-bugfixes"><a class="anchor" href="#changes-bugfixes"></a>2.15. Bugfixes</h3>
 <div class="paragraph">
 <p>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues
 makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete
@@ -1502,7 +1538,7 @@ in your Maven pom.xml as a dependency like follows.</p>
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
-  &lt;version&gt;2.7.2-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;2.7.2&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 </div>
@@ -1519,7 +1555,7 @@ in your Maven pom.xml as a dependency like follows.</p>
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-java-dsl&lt;/artifactId&gt;
-  &lt;version&gt;2.7.2-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;2.7.2&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 </div>
@@ -1536,7 +1572,7 @@ in your Maven pom.xml as a dependency like follows.</p>
 <pre>&lt;plugin&gt;
   &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;2.7.2-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;2.7.2&lt;/version&gt;
   &lt;configuration&gt;
     &lt;author&gt;Donald Duck&lt;/author&gt;
     &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
@@ -1924,7 +1960,7 @@ There you can find a tutorial which describes the Citrus Java project set up wit
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-java-dsl<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
   <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -6456,7 +6492,7 @@ Previously only JMS message destinations offered support for message selectors! 
 </div>
 </div>
 <div class="sect2">
-<h3 id="actions-database"><a class="anchor" href="#actions-database"></a>13.3. Database actions</h3>
+<h3 id="actions-sql"><a class="anchor" href="#actions-sql"></a>13.3. Database actions</h3>
 <div class="paragraph">
 <p>In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent
 data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this
@@ -6747,7 +6783,7 @@ It is important, that the control values are defined in the correct order, becau
 </div>
 </div>
 <div class="sect3">
-<h4 id="transaction-management"><a class="anchor" href="#transaction-management"></a>13.3.3. Transaction management</h4>
+<h4 id="sql-transaction-management"><a class="anchor" href="#sql-transaction-management"></a>13.3.3. Transaction management</h4>
 <div class="paragraph">
 <p>By default no transactions are used when Citrus executes SQL statements on a datasource. You can enable transaction management by selecting a transaction manager.</p>
 </div>
@@ -7118,7 +7154,7 @@ wait/timeout
 </div>
 </div>
 <div class="sect2">
-<h3 id="echo"><a class="anchor" href="#echo"></a>13.7. Echo</h3>
+<h3 id="actions-echo"><a class="anchor" href="#actions-echo"></a>13.7. Echo</h3>
 <div class="paragraph">
 <p>The &lt;echo&gt; action prints messages to the console/logger. This functionality is useful when debugging test runs. The property "message" defines the text that is printed. Tester might use it to print out debug messages and variables as shown the next code example:</p>
 </div>
@@ -10317,7 +10353,7 @@ public void containerTest() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="jms-support"><a class="anchor" href="#jms-support"></a>17. JMS support</h2>
+<h2 id="jms"><a class="anchor" href="#jms"></a>17. JMS support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous communication. So in this chapter we explain how to setup JMS message endpoints for synchronous and asynchronous outbound and inbound communication</p>
@@ -10339,7 +10375,7 @@ The JMS components in Citrus are kept in a separate Maven module. If not already
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-jms<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -10716,7 +10752,7 @@ The http components in Citrus are kept in a separate Maven module. So you should
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-http<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -12039,7 +12075,7 @@ chain including default servlet filters mentioned above.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="websocket-support"><a class="anchor" href="#websocket-support"></a>19. WebSocket support</h2>
+<h2 id="websocket"><a class="anchor" href="#websocket"></a>19. WebSocket support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. Citrus is able to send and receive messages with WebSocket connections as client and server. The Http server implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish and consumer messages via bidirectional WebSocket protocol.</p>
@@ -12052,7 +12088,7 @@ chain including default servlet filters mentioned above.</p>
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>citrus-websocket<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -12303,7 +12339,7 @@ The SOAP WebService components in Citrus are kept in a separate Maven module. So
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-ws<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -13485,7 +13521,7 @@ Server: Jetty(7.0.0.pre5)
 </div>
 </div>
 <div class="sect2">
-<h3 id="soap-attachment-support"><a class="anchor" href="#soap-attachment-support"></a>20.15. SOAP attachment support</h3>
+<h3 id="soap-attachment"><a class="anchor" href="#soap-attachment"></a>20.15. SOAP attachment support</h3>
 <div class="paragraph">
 <p>Citrus is able to add attachments to a SOAP request on client and server side. As usual you can validate the SOAP attachment content on a received SOAP message. The next chapters describe how to handle SOAP attachments in Citrus.</p>
 </div>
@@ -13579,7 +13615,7 @@ The <strong>ws:attachment</strong> element specifies a validator instance. This 
 </div>
 </div>
 <div class="sect2">
-<h3 id="soap-mtom-support"><a class="anchor" href="#soap-mtom-support"></a>20.18. SOAP MTOM support</h3>
+<h3 id="soap-mtom"><a class="anchor" href="#soap-mtom"></a>20.18. SOAP MTOM support</h3>
 <div class="paragraph">
 <p>MTOM (Message Transmission Optimization Mechanism) enables you to send and receive large SOAP message content using streamed data handlers. This optimizes the resource allocation on server and client side where not all data is loaded into memory when marshalling/unmarshalling the message payload data. In detail MTOM enabled messages do have a XOP package inside the message payload replacing the actual large content data. The content is then streamed aas separate attachment. Server and client can operate with a data handler providing access to the streamed content. This is very helpful when using large binary content inside a SOAP message for instance.</p>
 </div>
@@ -13806,7 +13842,7 @@ This mechanism is not restricted to basic authentication only. With other settin
 </div>
 </div>
 <div class="sect2">
-<h3 id="ws-addressing-support"><a class="anchor" href="#ws-addressing-support"></a>20.21. WS-Addressing support</h3>
+<h3 id="ws-addressing"><a class="anchor" href="#ws-addressing"></a>20.21. WS-Addressing support</h3>
 <div class="paragraph">
 <p>The web service stack offers a lot of different technologies and standards within the context of SOAP WebServices. We speak of WS-* specifications in particular. One of these specifications deals with addressing. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.</p>
 </div>
@@ -14139,7 +14175,7 @@ It is highly recommended to use a proper <strong>"timeout"</strong> setting on t
 </div>
 </div>
 <div class="sect1">
-<h2 id="ftp-support"><a class="anchor" href="#ftp-support"></a>21. FTP support</h2>
+<h2 id="ftp"><a class="anchor" href="#ftp"></a>21. FTP support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>With Citrus it is possible to start your own ftp server for accepting incoming client requests. You can also use Citrus as a FTP client to send FTP commands. The next sections deal with FTP connectivity.</p>
@@ -14161,7 +14197,7 @@ The FTP components in Citrus are maintained in their own Maven module. So you sh
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-ftp<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -14552,7 +14588,7 @@ By default the channel endpoint uses temporary reply channel destinations. The t
 </div>
 </div>
 <div class="sect2">
-<h3 id="message-channel-selector-support"><a class="anchor" href="#message-channel-selector-support"></a>22.3. Message selectors on channels</h3>
+<h3 id="message-channel-selector"><a class="anchor" href="#message-channel-selector"></a>22.3. Message selectors on channels</h3>
 <div class="paragraph">
 <p>Unfortunately Spring Integration message channels do not support message selectors on header values as described in <a href="#message-selectors">message-selector</a>. With Citrus version 1.2 we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel implementation in our configuration.</p>
 </div>
@@ -14681,7 +14717,7 @@ By default the channel endpoint uses temporary reply channel destinations. The t
 </div>
 </div>
 <div class="sect1">
-<h2 id="file-support"><a class="anchor" href="#file-support"></a>23. File support</h2>
+<h2 id="file"><a class="anchor" href="#file"></a>23. File support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In chapter <a href="#message-channels">message-channels</a>we discussed the native Spring Integration channel support which enables Citrus to interact with all Spring Integration messaging adapter implementations. This is a fantastic way to extend Citrus for additional transports. This interaction now comes handy when writing and reading files from the file system in Citrus.</p>
@@ -14783,7 +14819,7 @@ The file inbound adapter constructs Java file objects as the message payload by 
 </div>
 </div>
 <div class="sect1">
-<h2 id="apache-camel-support"><a class="anchor" href="#apache-camel-support"></a>24. Apache Camel support</h2>
+<h2 id="apache-camel"><a class="anchor" href="#apache-camel"></a>24. Apache Camel support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Apache Camel project implements the enterprise integration patterns for building mediation and routing rules in your enterprise application. With the Citrus Camel support you are able to directly interact with the Apache Camel components and route definitions. You can call Camel routes and receive synchronous response messages. You can also simulate the Camel route endpoint with receiving messages and providing simulated response messages.</p>
@@ -14805,7 +14841,7 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-camel<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -15324,7 +15360,7 @@ route operations will target this Camel context then.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="vert-x-event-bus-support"><a class="anchor" href="#vert-x-event-bus-support"></a>25. Vert.x event bus support</h2>
+<h2 id="vert-x-event-bus"><a class="anchor" href="#vert-x-event-bus"></a>25. Vert.x event bus support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Vert.x is an application platform for the JVM that provides a network event bus for lightweight scalable messaging solutions. The Citrus Vert.x
@@ -15348,7 +15384,7 @@ The Vert.x components in Citrus are kept in a separate Maven module. So you shou
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-vertx<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -15581,7 +15617,7 @@ The Vert.x instance factory is set on the Vert.x endpoint as follows:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="mail-support"><a class="anchor" href="#mail-support"></a>26. Mail support</h2>
+<h2 id="mail"><a class="anchor" href="#mail"></a>26. Mail support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Sending and receiving mails is the next interest we are going to talk about. When dealing with mail communication you most certainly need to interact with some sort of IMAP or POP mail server. But in Citrus we do not want to manage mails in a personal inbox. We just need to be able to exchange mail messages the persisting in a user inbox is not part of our business.</p>
@@ -15606,7 +15642,7 @@ The mail components in Citrus are kept in a separate Maven module. So you should
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-mail<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -15978,7 +16014,7 @@ We have no user inbox where incoming mails are stored. The mail server just forw
 </div>
 </div>
 <div class="sect1">
-<h2 id="arquillian-support"><a class="anchor" href="#arquillian-support"></a>27. Arquillian support</h2>
+<h2 id="arquillian"><a class="anchor" href="#arquillian"></a>27. Arquillian support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries.</p>
@@ -15994,7 +16030,7 @@ We have no user inbox where incoming mails are stored. The mail server just forw
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;extension</span> <span class="attribute-name">qualifier</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrusVersion</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/property&gt;</span>
+    <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrusVersion</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>2.7.2<span class="tag">&lt;/property&gt;</span>
     <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">autoPackage</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>true<span class="tag">&lt;/property&gt;</span>
     <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">suiteName</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>citrus-arquillian-suite<span class="tag">&lt;/property&gt;</span>
 <span class="tag">&lt;/extension&gt;</span></code></pre>
@@ -16035,7 +16071,7 @@ com.consol.citrus.config.CitrusSpringConfig is loaded to set up the Spring appli
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-arquillian<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
   <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -16332,7 +16368,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
 </div>
 </div>
 <div class="sect1">
-<h2 id="docker-support"><a class="anchor" href="#docker-support"></a>28. Docker support</h2>
+<h2 id="docker"><a class="anchor" href="#docker"></a>28. Docker support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Citrus provides configuration components and test actions for interaction with a Docker daemon. The Citrus docker client component will execute Docker commands for container management such as start, stop, build, inspect and so on. The Docker client by default uses the Docker remote REST API. As a user you can execute Docker commands as part of a Citrus test and validate possible command results.</p>
@@ -16354,7 +16390,7 @@ The Docker test components in Citrus are kept in a separate Maven module. If not
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-docker<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -16660,7 +16696,7 @@ The Kubernetes test components in Citrus are kept in a separate Maven module. If
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-kubernetes<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -17446,7 +17482,7 @@ Of course JsonPath expressions also come in here in order to validate Json eleme
 </div>
 </div>
 <div class="sect1">
-<h2 id="ssh-support"><a class="anchor" href="#ssh-support"></a>30. SSH support</h2>
+<h2 id="ssh"><a class="anchor" href="#ssh"></a>30. SSH support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In the spirit of other Citrus mock services, there is support for simulating an external SSH server as well as for connecting to SSH servers as a client during the test execution. Citrus translates SSH requests and responses to simple XML documents for better validation with the common Citrus mechanisms.</p>
@@ -17781,7 +17817,7 @@ endpoint-adapter
 </div>
 </div>
 <div class="sect1">
-<h2 id="rmi-support"><a class="anchor" href="#rmi-support"></a>31. RMI support</h2>
+<h2 id="rmi"><a class="anchor" href="#rmi"></a>31. RMI support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>RMI stands for Remote Method Invocation and is a standard way of calling Java method interfaces where caller and callee (client and server) are not located within the same JVM. So the object passed to the method as argument as well as the method return value are transmitted over the wire.</p>
@@ -17806,7 +17842,7 @@ The RMI components in Citrus are kept in a separate Maven module. So you should 
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-rmi<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -18089,7 +18125,7 @@ The RMI components in Citrus are kept in a separate Maven module. So you should 
 </div>
 </div>
 <div class="sect1">
-<h2 id="jmx-support"><a class="anchor" href="#jmx-support"></a>32. JMX support</h2>
+<h2 id="jmx"><a class="anchor" href="#jmx"></a>32. JMX support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>JMX is a standard Java API for making beans accessible to others in terms of management and remote configuration. JMX is the short term for Java Management Extensions and is often used in JEE application servers to manage bean attributes and operations from outside (e.g. another JVM). A managed bean server hosts multiple managed beans for JMX access. Remote connections to JMX can be realized with RMI (Remote method invocation) capabilities.</p>
@@ -18114,7 +18150,7 @@ The JMX components in Citrus are kept in a separate Maven module. So you should 
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-jmx<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -18530,7 +18566,7 @@ The Cucumber components in Citrus are kept in a separate Maven module. If not al
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-cucumber<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -18813,7 +18849,7 @@ Another notable thing is the XML escaping of reserved characters in the pattern 
 </div>
 </div>
 <div class="sect2">
-<h3 id="cucumber-spring-support"><a class="anchor" href="#cucumber-spring-support"></a>33.3. Cucumber Spring support</h3>
+<h3 id="cucumber-spring"><a class="anchor" href="#cucumber-spring"></a>33.3. Cucumber Spring support</h3>
 <div class="paragraph">
 <p>Cucumber provides support for Spring dependency injection in step definition classes. The Cucumber Spring capabilities are included in a separate module. So we first of all we have to add this dependency to our project:</p>
 </div>
@@ -19536,7 +19572,7 @@ the page object. Then action method can perform as well as validation tasks can 
 </div>
 </div>
 <div class="sect1">
-<h2 id="zookeeper-support"><a class="anchor" href="#zookeeper-support"></a>34. Zookeeper support</h2>
+<h2 id="zookeeper"><a class="anchor" href="#zookeeper"></a>34. Zookeeper support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Citrus provides configuration components and test actions for interacting with Zookeeper. The Citrus Zookeeper client component executes commands like create-node, check node-exists, delete-node, get node-data or set node-data. As a user you can execute Zookeeper commands as part of a Citrus test and validate possible command results.</p>
@@ -19558,7 +19594,7 @@ The Zookeeper test components in Citrus are kept in a separate Maven module. If 
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
       <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
       <span class="tag">&lt;artifactId&gt;</span>citrus-zookeeper<span class="tag">&lt;/artifactId&gt;</span>
-      <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
       <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -19803,7 +19839,7 @@ zookeeper()
 </div>
 </div>
 <div class="sect1">
-<h2 id="spring-restdocs-support"><a class="anchor" href="#spring-restdocs-support"></a>35. Spring Restdocs support</h2>
+<h2 id="spring-restdocs"><a class="anchor" href="#spring-restdocs"></a>35. Spring Restdocs support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Spring Restdocs project helps to easily generate API documentation for RESTful services. While messages are exchanged the Restdocs library generates request/response snippets and API documentation. You can add the Spring Restdocs documentation to the Citrus client components for Http <strong>and</strong> SOAP endpoints.</p>
@@ -19825,7 +19861,7 @@ The Spring Restdocs support components in Citrus are kept in a separate Maven mo
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-restdocs<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -20140,7 +20176,7 @@ The Selenium test components in Citrus are kept in a separate Maven module. If n
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-selenium<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.2-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.2<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -24881,26 +24917,26 @@ storage. See how to use this functions in chapter <a href="functions">functions<
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-static-response-adapter-variables-support"><a class="anchor" href="#changes-static-response-adapter-variables-support"></a>Static response adapter variables support</h4>
+<h4 id="changes-static-response-adapter-variables"><a class="anchor" href="#changes-static-response-adapter-variables"></a>Static response adapter variables support</h4>
 <div class="paragraph">
 <p>Server components can use static response adapters that automatically send response messages to any calling client. The response adapter is now able to use test variables and functions. In addition to that
 you can map values from the actual request message that has triggered the response adapter by using the local message store in combination with Xpath or JsonPath. Read about this in <a href="endpoint-adapter">endpoint-adapter</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-cucumber-bdd-support"><a class="anchor" href="#changes-cucumber-bdd-support"></a>Cucumber BDD support</h4>
+<h4 id="changes-cucumber-bdd"><a class="anchor" href="#changes-cucumber-bdd"></a>Cucumber BDD support</h4>
 <div class="paragraph">
 <p>Behavior driven development is more and more coming up also in the integration testing environment. Cucumber is a fantastic behavior driven development library that provides support for BDD concepts with Gherkin. The new Citrus integration with Cucumber enables the mix of Gherkin syntax feature scenarios with Citrus test case execution. You write feature stories as usual and create Citrus test cases with lots of actions for the integration test. See details for this feature in <a href="cucumber">cucumber</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-zookeeper-support"><a class="anchor" href="#changes-zookeeper-support"></a>Zookeeper support</h4>
+<h4 id="changes-zookeeper"><a class="anchor" href="#changes-zookeeper"></a>Zookeeper support</h4>
 <div class="paragraph">
 <p>Zookeeper from Apache lets you manage configuration with distributed coordination. As a user you create and edit values on a Zookeeper server. Other clients then can retrieve this information. With Citrus you are able to access this information from within a test case. The Zookeeper Citrus client lets you manage information on the Zookeeper server. See details for this feature in <a href="zookeeper">zookeeper</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-spring-restdocs-support"><a class="anchor" href="#changes-spring-restdocs-support"></a>Spring Restdocs support</h4>
+<h4 id="changes-spring-restdocs"><a class="anchor" href="#changes-spring-restdocs"></a>Spring Restdocs support</h4>
 <div class="paragraph">
 <p>Restdocs is a fantastic way of generating documentation for RESTful APIs. While exchanging request/response data with the server Restdocs creates documentation information on the data. The documentation includes field descriptions, headers and snippets for body content. With new Citrus version Http clients in Citrus can add Restdoc interceptors that generate the documentation while executing the test cases. This way you are able to document what messages were exchanged in tests. The Restdocs support is also available for the SOAP Http client in Citrus. See details in <a href="restdocs">restdocs</a>.</p>
 </div>
@@ -24948,7 +24984,7 @@ you can map values from the actual request message that has triggered the respon
 <p>We have added lots of new features and improvements with Citrus 2.5. Namely these are the new modules for RMI and JMX support, a new x-www-form-urlencoded message validator and new functions anc test actions. Just have a look at the following features that made it to the box.</p>
 </div>
 <div class="sect3">
-<h4 id="changes-hamcrest-matcher-support"><a class="anchor" href="#changes-hamcrest-matcher-support"></a>Hamcrest matcher support</h4>
+<h4 id="changes-hamcrest-matcher"><a class="anchor" href="#changes-hamcrest-matcher"></a>Hamcrest matcher support</h4>
 <div class="paragraph">
 <p>Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations for message validation purpose. Citrus now supports these matchers coming from Hamcrest library. On the one hand you can use Hamcrest matchers as a Citrus validation matcher as described in <a href="validation-matcher-hamcrest">validation-matcher-hamcrest</a>. On the other hand you can use Hamcrest matchers now directly using the Citrus Java DSL. See details for this feature in <a href="json-path-validate">json-path-validate</a>.</p>
 </div>
@@ -24960,13 +24996,13 @@ you can map values from the actual request message that has triggered the respon
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-rmi-support"><a class="anchor" href="#changes-rmi-support"></a>RMI support</h4>
+<h4 id="changes-rmi"><a class="anchor" href="#changes-rmi"></a>RMI support</h4>
 <div class="paragraph">
 <p>Remote method invocation is a standard Java technology and API for calling methods on remote objects across different JVM instances. Although RMI has lost its popularity it is still used in legacy components. Testing RMI bean invocation is a hard thing to do. Now Citrus provides client and server support for remote interface invocation. See <a href="rmi">rmi</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-jmx-support"><a class="anchor" href="#changes-jmx-support"></a>JMX support</h4>
+<h4 id="changes-jmx"><a class="anchor" href="#changes-jmx"></a>JMX support</h4>
 <div class="paragraph">
 <p>Similar to RMI JMX can be used to connect to remote bean invocation. This time we expose some beans to a managed bean server in order to be managed by JMX operations for read and write. With Citrus 2.5 we have added a client and server support for calling and providing managed beans on a mbean server. See <a href="jmx">jmx</a> for details.</p>
 </div>
@@ -25014,7 +25050,7 @@ you can map values from the actual request message that has triggered the respon
 <p>Citrus 2.4 comes with a set of new features especially regarding Apache Camel and Docker integrations. Bugfixes of course are also part of the package. See the following overview on what has changed.</p>
 </div>
 <div class="sect3">
-<h4 id="changes-docker-support"><a class="anchor" href="#changes-docker-support"></a>Docker support</h4>
+<h4 id="changes-docker"><a class="anchor" href="#changes-docker"></a>Docker support</h4>
 <div class="paragraph">
 <p>Docker and Microservices are frequent topics in software development recently. We have added interaction with Docker in Citrus so the user can manage Docker containers within a test case. Citrus now provides special Docker test actions for building, starting, stopping and inspecting Docker images and containers in a test. See <a href="docker">docker</a> for details.</p>
 </div>
@@ -25062,13 +25098,13 @@ you can map values from the actual request message that has triggered the respon
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-websocket-support"><a class="anchor" href="#changes-websocket-support"></a>WebSocket support</h4>
+<h4 id="changes-websocket"><a class="anchor" href="#changes-websocket"></a>WebSocket support</h4>
 <div class="paragraph">
 <p>The WebSocket message protocol builds on top of Http standard and brings bidirectional communication to the Http client-server world. With this release Citrus users are able to send and receive messages with WebSocket connections. The Http server implementation is now able to define multiple WebSocket endpoints. The new Citrus WebSocket client is able to publish messages to the server via bidirectional WebSocket protocol. See <a href="http-websocket">http-websocket</a>for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-jsonpath-support"><a class="anchor" href="#changes-jsonpath-support"></a>JSONPath support</h4>
+<h4 id="changes-jsonpath"><a class="anchor" href="#changes-jsonpath"></a>JSONPath support</h4>
 <div class="paragraph">
 <p>Citrus is able to work with Xpath expressions in several fields within the testing domain (overwrite elements, ignore elements, extract values from payloads). Now this support of manipulating message payloads via expressions is extended with JSONPath. Similar to Xpath the JSONPath expression statements enable you to find elements and values within a message payload. Not very surprising the JSONPath expressions work with Json message payloads. With the new release you can overwrite, ignore and manipulate Json elements using JSONPath expressions. See <a href="json-path">json-path</a>for details.</p>
 </div>
@@ -25120,13 +25156,13 @@ you can map values from the actual request message that has triggered the respon
 <p>Citrus 2.2 is a release mostly adding new features as well as improvements to given Citrus features. Bugfixes of course are also part of the package. See the following overview on what has changed.</p>
 </div>
 <div class="sect3">
-<h4 id="changes-arquillian-support"><a class="anchor" href="#changes-arquillian-support"></a>Arquillian support</h4>
+<h4 id="changes-arquillian"><a class="anchor" href="#changes-arquillian"></a>Arquillian support</h4>
 <div class="paragraph">
 <p>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries. See <a href="arquillian">arquillian</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-junit-support"><a class="anchor" href="#changes-junit-support"></a>JUnit support</h4>
+<h4 id="changes-junit"><a class="anchor" href="#changes-junit"></a>JUnit support</h4>
 <div class="paragraph">
 <p>Citrus supports both major players in unit testing TestNG and JUnit. Unfortunately we did not offer the same feature support for JUnit as it was done for TestNG. Now with Citrus 2.2 we improved the JUnit support in Citrus so you are able to use all features with both frameworks. This is especially related to using the <strong>@CitrusTest</strong> and <strong>@CitrusXmlTest</strong> method annotations in test classes. See <a href="run-junit">run-junit</a>how it works.</p>
 </div>
@@ -25156,7 +25192,7 @@ you can map values from the actual request message that has triggered the respon
 <p>Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes and improvements. See the following overview on what has changed.</p>
 </div>
 <div class="sect3">
-<h4 id="changes-soap-mtom-support"><a class="anchor" href="#changes-soap-mtom-support"></a>SOAP MTOM support</h4>
+<h4 id="changes-soap-mtom"><a class="anchor" href="#changes-soap-mtom"></a>SOAP MTOM support</h4>
 <div class="paragraph">
 <p>SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See <a href="soap-attachment-mtom">soap-attachment-mtom</a>for details.</p>
 </div>
@@ -25246,7 +25282,7 @@ you can map values from the actual request message that has triggered the respon
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-ftp-support"><a class="anchor" href="#changes-ftp-support"></a>FTP support</h4>
+<h4 id="changes-ftp"><a class="anchor" href="#changes-ftp"></a>FTP support</h4>
 <div class="paragraph">
 <p>New member of the Citrus family deals with FTP connectivity. The new <strong>citrus-ftp</strong> module provides a neat ftp server and client implementation so you can send and receive messages vie FTP message transport. <a href="ftp">ftp</a> describes the new functionality in detail.</p>
 </div>
@@ -25337,8 +25373,8 @@ you can map values from the actual request message that has triggered the respon
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.7.2-SNAPSHOT<br>
-Last updated 2017-07-06 08:52:34 MESZ
+Version 2.7.2<br>
+Last updated 2017-07-07 14:37:32 MESZ
 </div>
 </div>
 <style>
