@@ -10,7 +10,7 @@ NOTE: The http components in Citrus are kept in a separate Maven module. So you 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-http</artifactId>
-  <version>2.7.2</version>
+  <version>2.7.3-SNAPSHOT</version>
 </dependency>
 ----
 

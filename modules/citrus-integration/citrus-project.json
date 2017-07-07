@@ -1,10 +1,10 @@
 {
   "name" : "citrus-integration",
   "description" : "",
-  "version" : "2.7.2",
+  "version" : "2.7.3-SNAPSHOT",
   "settings" : {
     "basePackage" : "com.consol.citrus",
-    "citrusVersion" : "2.7.2",
+    "citrusVersion" : "2.7.3-SNAPSHOT",
     "springApplicationContext" : "classpath*:citrus-context.xml",
     "springJavaConfig" : "com.consol.citrus.CitrusEndpointConfig",
     "javaSrcDirectory" : "src/it/java/",
