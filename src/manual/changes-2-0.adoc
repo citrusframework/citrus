@@ -22,7 +22,7 @@ WebServiceEndpoint class renamed:: In terms of package refactoring the *com.cons
 
 In terms of upgrading the Citrus API dependencies we introduced Spring 4.x versions. This includes the core Spring framework libraries as well as the Spring Integration and Spring WebService project artifacts. So with the major version upgrade lots of API changes were also done in Citrus code in order to meet the new Spring 4.x API. So we recommend for you to also use Spring 4.x version in your Citrus projects.
 
-[[changes-ftp-support]]
+[[changes-ftp]]
 === FTP support
 
 New member of the Citrus family deals with FTP connectivity. The new *citrus-ftp* module provides a neat ftp server and client implementation so you can send and receive messages vie FTP message transport. link:ftp[ftp] describes the new functionality in detail.

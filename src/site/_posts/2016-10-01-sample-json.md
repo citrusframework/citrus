@@ -8,7 +8,7 @@ permalink: /samples/json/
 ---
 
 This sample deals with Json message payloads when sending and receiving messages to the todo sample
-application. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/validation-json.html)
+application. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/#validation-json)
 
 Objectives
 ---------

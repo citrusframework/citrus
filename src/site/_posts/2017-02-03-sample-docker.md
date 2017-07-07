@@ -13,7 +13,7 @@ todo-list container. This way Citrus is able to participate on the Docker infras
 
 The sample uses the [Fabric8 Docker Maven plugin](https://maven.fabric8.io/) for smooth Docker integration into the Maven build lifecylce.
 
-Read about the Citrus Docker integration in the [reference guide](http://www.citrusframework.org/reference/html/docker.html)
+Read about the Citrus Docker integration in the [reference guide](http://www.citrusframework.org/reference/html/#docker)
 
 Objectives
 ---------

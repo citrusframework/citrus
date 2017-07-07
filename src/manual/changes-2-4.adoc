@@ -3,7 +3,7 @@
 
 Citrus 2.4 comes with a set of new features especially regarding Apache Camel and Docker integrations. Bugfixes of course are also part of the package. See the following overview on what has changed.
 
-[[changes-docker-support]]
+[[changes-docker]]
 === Docker support
 
 Docker and Microservices are frequent topics in software development recently. We have added interaction with Docker in Citrus so the user can manage Docker containers within a test case. Citrus now provides special Docker test actions for building, starting, stopping and inspecting Docker images and containers in a test. See link:docker[docker] for details.

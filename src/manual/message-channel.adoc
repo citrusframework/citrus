@@ -168,7 +168,7 @@ The scenario we are talking about is that Citrus receives a message and we need 
 
 The synchronous message channel endpoint will handle all reply channel destinations and provide those behind the scenes.
 
-[[message-channel-selector-support]]
+[[message-channel-selector]]
 == Message selectors on channels
 
 Unfortunately Spring Integration message channels do not support message selectors on header values as described in link:#message-selectors[message-selector]. With Citrus version 1.2 we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel implementation in our configuration.

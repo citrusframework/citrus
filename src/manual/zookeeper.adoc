@@ -1,4 +1,4 @@
-[[zookeeper-support]]
+[[zookeeper]]
 = Zookeeper support
 
 Citrus provides configuration components and test actions for interacting with Zookeeper. The Citrus Zookeeper client component executes commands like create-node, check node-exists, delete-node, get node-data or set node-data. As a user you can execute Zookeeper commands as part of a Citrus test and validate possible command results.

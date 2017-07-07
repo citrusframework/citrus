@@ -8,7 +8,7 @@ permalink: /samples/soap-wsaddressing/
 ---
 
 This sample uses SOAP web services with WSAddressing SOAP header elements. Clients must use proper addressing header elements. 
-You can read more about the Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/soap.html)
+You can read more about the Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/#soap)
 
 Objectives
 ---------

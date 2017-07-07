@@ -1,4 +1,4 @@
-[[rmi-support]]
+[[rmi]]
 = RMI support
 
 RMI stands for Remote Method Invocation and is a standard way of calling Java method interfaces where caller and callee (client and server) are not located within the same JVM. So the object passed to the method as argument as well as the method return value are transmitted over the wire.

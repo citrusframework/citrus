@@ -8,7 +8,7 @@ permalink: /samples/xhtml/
 ---
 
 This sample uses XHTML validation features to verify HTML response from a web container. This feature is
-also described in detail in [reference guide](http://www.citrusframework.org/reference/html/validation-xhtml.html)
+also described in detail in [reference guide](http://www.citrusframework.org/reference/html/#validation-xhtml)
 
 Objectives
 ---------

@@ -7,7 +7,7 @@ categories: [samples]
 permalink: /samples/dataprovider/
 ---
 
-This sample demonstrates how to use TestNG data providers in Citrus tests. You can also read about this in [reference guide](http://www.citrusframework.org/reference/html/run-testng-data-providers.html).
+This sample demonstrates how to use TestNG data providers in Citrus tests. You can also read about this in [reference guide](http://www.citrusframework.org/reference/html/#run-testng-data-providers).
 
 Objectives
 ---------

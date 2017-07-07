@@ -7,7 +7,7 @@ categories: [samples]
 permalink: /samples/https/
 ---
 
-This sample demonstrates the usage of secure Http connections with client and server certificates. Http support is described in detail in [reference guide](http://www.citrusframework.org/reference/html/http.html)
+This sample demonstrates the usage of secure Http connections with client and server certificates. Http support is described in detail in [reference guide](http://www.citrusframework.org/reference/html/#http-rest)
 
 Objectives
 ---------

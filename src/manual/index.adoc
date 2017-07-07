@@ -8,7 +8,7 @@ Christoph Deppisch;Martin Maher
 :sectnumlevels: 4
 :toc: macro
 :toclevels: 3
-:toc-title: citrus-admin
+:toc-title: citrus
 :doctype: book
 :icons: font
 :docinfo1:

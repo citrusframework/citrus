@@ -1,4 +1,4 @@
-[[actions-database]]
+[[actions-sql]]
 == Database actions
 
 In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent
@@ -219,7 +219,7 @@ For the validation of multiple rows the *_`&lt;validate&gt;`_* element is able t
 
 IMPORTANT: It is important, that the control values are defined in the correct order, because they are compared one on one with the actual result set coming from database query. You may need to add "order by" SQL expressions to get the right order of rows returned. If any of the values fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.
 
-[[transaction-management]]
+[[sql-transaction-management]]
 === Transaction management
 
 By default no transactions are used when Citrus executes SQL statements on a datasource. You can enable transaction management by selecting a transaction manager.

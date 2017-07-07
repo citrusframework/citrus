@@ -8,7 +8,7 @@ permalink: /samples/jms/
 ---
 
 This sample uses JMS queue destinations in order to place new todo entries in the system under test. The JMS capabilities are
-also described in [reference guide](http://www.citrusframework.org/reference/html/jms.html)
+also described in [reference guide](http://www.citrusframework.org/reference/html/#jms)
 
 Objectives
 ---------

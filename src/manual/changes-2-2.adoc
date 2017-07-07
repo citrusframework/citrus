@@ -3,12 +3,12 @@
 
 Citrus 2.2 is a release mostly adding new features as well as improvements to given Citrus features. Bugfixes of course are also part of the package. See the following overview on what has changed.
 
-[[changes-arquillian-support]]
+[[changes-arquillian]]
 === Arquillian support
 
 Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries. See link:arquillian[arquillian] for details.
 
-[[changes-junit-support]]
+[[changes-junit]]
 === JUnit support
 
 Citrus supports both major players in unit testing TestNG and JUnit. Unfortunately we did not offer the same feature support for JUnit as it was done for TestNG. Now with Citrus 2.2 we improved the JUnit support in Citrus so you are able to use all features with both frameworks. This is especially related to using the *@CitrusTest* and *@CitrusXmlTest* method annotations in test classes. See link:run-junit[run-junit]how it works.

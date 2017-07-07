@@ -1,4 +1,4 @@
-[[ssh-support]]
+[[ssh]]
 = SSH support
 
 In the spirit of other Citrus mock services, there is support for simulating an external SSH server as well as for connecting to SSH servers as a client during the test execution. Citrus translates SSH requests and responses to simple XML documents for better validation with the common Citrus mechanisms.

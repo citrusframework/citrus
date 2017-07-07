@@ -7,7 +7,7 @@ categories: [samples]
 permalink: /samples/dynamic-endpoints/
 ---
 
-This sample shows how to use dynamic endpoints in Citrus. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/endpoint-components.html)
+This sample shows how to use dynamic endpoints in Citrus. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/#endpoint-components)
 
 Objectives
 ---------

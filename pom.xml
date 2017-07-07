@@ -211,9 +211,9 @@
         <version>2.7.2</version>
       </dependency>
       <dependency>
-          <groupId>javax.jms</groupId>
-          <artifactId>com.springsource.javax.jms</artifactId>
-          <version>1.1.0</version>
+        <groupId>javax.jms</groupId>
+        <artifactId>com.springsource.javax.jms</artifactId>
+        <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>javax.activation</groupId>
@@ -1064,7 +1064,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>2.6</version>
         </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
@@ -1518,11 +1518,50 @@
             <inherited>false</inherited>
             <executions>
               <execution>
+                <id>copy-generated-docs</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/reference/html</outputDirectory>
+                  <resources>          
+                    <resource>
+                      <directory>${project.build.directory}/generated-docs</directory>
+                      <includes>
+                        <include>**/**</include>
+                      </includes>
+                      <excludes>
+                        <exclude>index.pdf</exclude>
+                      </excludes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-generated-docs-pdf</id>
+                <phase>package</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/_site/reference/pdf</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.build.directory}/generated-docs</directory>
+                      <includes>
+                        <include>index.pdf</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
                 <id>copy-citrus-core-config-schemas</id>
                 <phase>package</phase>
                 <configuration>
                   <outputDirectory>${project.build.directory}/site/_site/schema/config</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>modules/citrus-model/model-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>

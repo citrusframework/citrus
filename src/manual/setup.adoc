@@ -21,8 +21,8 @@ In case you already use Maven it is most suitable for you to include Citrus as a
 As Maven handles all project dependencies automatically you do not need to download any Citrus project artifacts in advance.
 If you are new to Maven please refer to the official Maven documentation to find out how to set up a Maven project.
 
-[[use-citrus-maven-archetype]]
-== Use Citrus Maven archetype
+[[maven-archetypes]]
+=== Maven archetype
 
 If you start from scratch or in case you would like to have Citrus operating in a separate Maven module you can use the
 Citrus Maven archetype to create a new Maven project. The archetype will setup a basic Citrus project structure with basic
@@ -76,8 +76,8 @@ mvn integration-test -Dtest=MyFirstCitrusTest
 NOTE: If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on
 http://www.citfrusframework.org[http://www.citrusframework.org/tutorials.html].
 
-[[add-citrus-to-existing-maven-project]]
-== Add Citrus to existing Maven project
+[[existing-maven-projects]]
+=== Existing Maven projects
 
 In case you already have a proper Maven project you can also integrate Citrus with it. Just add the Citrus project dependencies
 in your Maven pom.xml as a dependency like follows.
@@ -126,56 +126,27 @@ mvn citrus:create-test
 ----
 
 Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecycle.
-The tests will be included into your projects integration-test phase using the Maven surefire plugin. Here is a sample surefire configuration for Citrus.
+The tests will be included into your projects integration-test phase using the Maven failsafe plugin. Here is a sample failsafe configuration for Citrus.
 
 [source,xml]
 ----
 <plugin>
-  <artifactId>maven-surefire-plugin</artifactId>
-  <version>2.4.3</version>
-  <configuration>
-    <skip>true</skip>
-  </configuration>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-failsafe-plugin</artifactId>
+  <version>2.20</version>
   <executions>
     <execution>
-      <id>citrus-tests</id>
-      <phase>integration-test</phase>
+      <id>integration-tests</id>
       <goals>
-        <goal>test</goal>
+        <goal>integration-test</goal>
+        <goal>verify</goal>
       </goals>
-      <configuration>
-        <skip>false</skip>
-      </configuration>
     </execution>
   </executions>
-</plugin>
+ </plugin>
 ----
 
-The Citrus source directories are defined as test sources like follows:
-
-[source,xml]
-----
-<testSourceDirectory>src/it/java</testSourceDirectory>
-<testResources>
-  <testResource>
-    <directory>src/it/java</directory>
-    <includes>
-      <include>**</include>
-    </includes>
-    <excludes>
-      <exclude>*.java</exclude>
-    </excludes>
-  </testResource>
-  <testResource>
-    <directory>src/it/tests</directory>
-    <includes>
-      <include>**/*</include>
-    </includes>
-    <excludes>
-    </excludes>
-  </testResource>
-</testResources>
-----
+The Citrus test sources go to the default Maven test sources directory `src/test/java` and `src/test/resources`:
 
 Now everything is set up and you can call the usual Maven *install* goal (mvn clean install) in order to build your project.
 The Citrus integration tests are executed automatically during the build process. Besides that you can call the Maven integration-test phase explicitly to execute all Citrus tests or a specific test by its name:
@@ -183,10 +154,92 @@ The Citrus integration tests are executed automatically during the build process
 [source,xml]
 ----
 mvn integration-test 
-mvn integration-test -Dtest=MyFirstCitrusTest 
+mvn integration-test -Dtest=MyFirstCitrusIT
 ----
 
+IMPORTANT: The Maven failsafe plugin by default executed tests with specific name pattern. This is because integration tests should not execute in Maven unit test phase, too. Therefore integration tests should follow
+the failsafe name pattern with each test name beginning or ending with *'IT'*.
+
 NOTE: If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on http://www.citfrusframework.org[http://www.citrusframework.org/tutorials.html].
+
+[[using-gradle]]
+== Using Gradle
+
+As Citrus tests are nothing but normal JUnit or TestNG tests the integration to Gradle as build tool is as easy as adding the source files to a folder in your project. With the Gradle task execution for
+integration tests you are able to execute the Citrus tests like you would do with normal unit tests.
+
+[[gradle-configuration]]
+=== Configuration
+
+The Gradle build configuration is done in the **build.gradle** and **settings.gradle** files. Here we define the project name
+and the project version.
+
+[source,groovy]
+----
+rootProject.name = 'citrus-sample-gradle'
+group 'com.consol.citrus.samples'
+version '2.7.2'
+----
+
+Now as Citrus libraries are available on Maven central repository we add these repositories so Gradle knows how to download the required
+Citrus artifacts.
+
+[source,groovy]
+----
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://labs.consol.de/maven/snapshots-repository/'
+    }
+}
+----
+
+Citrus stable release versions are available on Maven central. If you want to use the very latest next version as snapshot preview you need
+to add the ConSol Labs snapshot repository which is optional. Now lets move on with adding the Citrus libraries to the project.
+
+[source,groovy]
+----
+dependencies {
+    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7.2'
+    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7.2'
+    testCompile group: 'org.testng', name: 'testng', version: '6.11'
+    [...]
+}
+----
+
+This enables the Citrus support for the project so we can use the Citrus classes and APIs. We decided to use TestNG unit test library.
+
+[source,groovy]
+----
+test {
+    useTestNG()
+}
+----
+
+Of course JUnit is also supported. This is all for build configuration settings. We can move on to writing some Citrus integration tests. You can
+find those tests in *src/test/java* directory.
+
+[[gradle-run]]
+=== Run with Gradle
+
+You can use the Gradle wrapper for compile, package and test the sample with Gradle build command line.
+
+[source,bash]
+----
+ gradlew clean build
+----
+
+This executes all Citrus test cases during the build and you will see Citrus performing some integration test logging output.
+After the tests are finished build is successful and you are ready to go for writing some tests on your own.
+
+If you just want to execute all tests you can call
+
+[source,bash]
+----
+gradlew clean check
+----
+
+Of course you can also start the Citrus tests from your favorite IDE. Just start the Citrus test using the Gradle integration in IntelliJ, Eclipse or Netbeans.
 
 [[using-ant]]
 == Using Ant
@@ -195,7 +248,7 @@ Ant is a very popular way to compile, test, package and execute Java projects. T
 standard in building Java projects. You can run Citrus test cases with Ant as Citrus is nothing but a Java application. This section describes the steps to setup a proper Citrus Ant project.
 
 [[preconditions]]
-== Preconditions
+=== Preconditions
 
 Before we start with the Citrus setup be sure to meet the following preconditions. The following software should be installed on your computer, in order to use the Citrus framework:
 
@@ -213,7 +266,7 @@ You can use the any Java IDE (e.g. Eclipse or IntelliJ IDEA) but also any conven
 Ant (http://ant.apache.org/[http://ant.apache.org/]) will run tests and compile your Citrus code extensions if necessary.
 
 [[download]]
-== Download
+=== Download
 
 First of all we need to download the latest Citrus release archive from the official website http://www.citrusframework.org[http://www.citrusframework.org]
 
@@ -229,7 +282,7 @@ you the complete Citrus Java code sources. The whole Citrus project is also acce
 This open git repository on GitHub enables you to build Citrus from scratch with Maven and contribute code changes.
 
 [[installation]]
-== Installation
+=== Installation
 
 After downloading the Citrus archives we extract those into an appropriate location on the local storage. We are seeking for the
 Citrus project artifacts coming as normal Java archives (e.g. citrus-core.jar, citrus-ws.jar, etc.)

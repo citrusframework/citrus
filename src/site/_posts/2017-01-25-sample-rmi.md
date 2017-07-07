@@ -8,7 +8,7 @@ permalink: /samples/rmi/
 ---
 
 This sample demonstrates interaction with Remote Method Invocation (RMI) technology.  Citrus provides client and server components for connecting to services via RMI. 
-Read more about this in detail in [reference guide](http://www.citrusframework.org/reference/html/rmi.html)
+Read more about this in detail in [reference guide](http://www.citrusframework.org/reference/html/#rmi)
 
 Objectives
 ---------

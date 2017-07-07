@@ -3,7 +3,7 @@
 
 We have added lots of new features and improvements with Citrus 2.5. Namely these are the new modules for RMI and JMX support, a new x-www-form-urlencoded message validator and new functions anc test actions. Just have a look at the following features that made it to the box.
 
-[[changes-hamcrest-matcher-support]]
+[[changes-hamcrest-matcher]]
 === Hamcrest matcher support
 
 Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations for message validation purpose. Citrus now supports these matchers coming from Hamcrest library. On the one hand you can use Hamcrest matchers as a Citrus validation matcher as described in link:validation-matcher-hamcrest[validation-matcher-hamcrest]. On the other hand you can use Hamcrest matchers now directly using the Citrus Java DSL. See details for this feature in link:json-path-validate[json-path-validate].
@@ -13,12 +13,12 @@ Hamcrest is a very powerful matcher library that provides a fantastic set of mat
 
 There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message payload. See link:validation-binary[validation-binary]how this is working for you.
 
-[[changes-rmi-support]]
+[[changes-rmi]]
 === RMI support
 
 Remote method invocation is a standard Java technology and API for calling methods on remote objects across different JVM instances. Although RMI has lost its popularity it is still used in legacy components. Testing RMI bean invocation is a hard thing to do. Now Citrus provides client and server support for remote interface invocation. See link:rmi[rmi] for details.
 
-[[changes-jmx-support]]
+[[changes-jmx]]
 === JMX support
 
 Similar to RMI JMX can be used to connect to remote bean invocation. This time we expose some beans to a managed bean server in order to be managed by JMX operations for read and write. With Citrus 2.5 we have added a client and server support for calling and providing managed beans on a mbean server. See link:jmx[jmx] for details.

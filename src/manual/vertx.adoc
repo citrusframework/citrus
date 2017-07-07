@@ -1,4 +1,4 @@
-[[vert-x-event-bus-support]]
+[[vert-x-event-bus]]
 = Vert.x event bus support
 
 Vert.x is an application platform for the JVM that provides a network event bus for lightweight scalable messaging solutions. The Citrus Vert.x

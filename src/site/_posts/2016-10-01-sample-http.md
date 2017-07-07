@@ -8,7 +8,7 @@ permalink: /samples/http/
 ---
 
 This sample demonstrates the Http REST capabilities in Citrus where Citrus calls REST API on a todo web application. REST features are
-also described in detail in [reference guide](http://www.citrusframework.org/reference/html/http.html)
+also described in detail in [reference guide](http://www.citrusframework.org/reference/html/#http-rest)
 
 Objectives
 ---------

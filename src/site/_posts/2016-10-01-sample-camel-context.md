@@ -7,7 +7,7 @@ categories: [samples]
 permalink: /samples/camel-context/
 ---
 
-This sample demonstrates how Citrus is able to interact with Apache Camel. Read more about this in [reference guide](http://www.citrusframework.org/reference/html/camel.html)
+This sample demonstrates how Citrus is able to interact with Apache Camel. Read more about this in [reference guide](http://www.citrusframework.org/reference/html/#camel)
 
 Objectives
 ---------

@@ -1,4 +1,4 @@
-[[ftp-support]]
+[[ftp]]
 = FTP support
 
 With Citrus it is possible to start your own ftp server for accepting incoming client requests. You can also use Citrus as a FTP client to send FTP commands. The next sections deal with FTP connectivity.

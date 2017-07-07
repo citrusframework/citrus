@@ -7,7 +7,7 @@ categories: [samples]
 permalink: /samples/mail/
 ---
 
-This sample demonstrates the usage of mail server activities in Citrus tests. You can also read about this in [reference guide](http://www.citrusframework.org/reference/html/mail.html).
+This sample demonstrates the usage of mail server activities in Citrus tests. You can also read about this in [reference guide](http://www.citrusframework.org/reference/html/#mail).
 
 Objectives
 ---------

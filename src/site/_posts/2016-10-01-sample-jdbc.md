@@ -14,7 +14,7 @@ Objectives
 
 The [todo-list](/samples/todo-app/) sample application stores data to a relational database. This sample shows 
 the usage of database JDBC validation actions in Citrus. We are able to execute SQL statements on a database target. 
-See the [reference guide](http://www.citrusframework.org/reference/html/actions-database.html) database chapter for details.
+See the [reference guide](http://www.citrusframework.org/reference/html/#actions-sql) database chapter for details.
 
 The database source is configured as Spring datasource in the application context ***citrus-context.xml***.
   

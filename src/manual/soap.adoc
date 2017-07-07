@@ -987,7 +987,7 @@ The mechanism on HTTP error code simulation is not different to the usual SOAP r
 
 The SOAP response must be empty and the HTTP status code is set to a value other than 200, like 500. This results in a HTTP error sent to the calling client with error 500 "Internal server error".
 
-[[soap-attachment-support]]
+[[soap-attachment]]
 == SOAP attachment support
 
 Citrus is able to add attachments to a SOAP request on client and server side. As usual you can validate the SOAP attachment content on a received SOAP message. The next chapters describe how to handle SOAP attachments in Citrus.
@@ -1054,7 +1054,7 @@ NOTE: The *ws:attachment* element specifies a validator instance. This validator
 
 You can define several validator instances in the Citrus configuration. The validator with the general id *"soapAttachmentValidator"* is the default validator for all actions that do not explicitly set a validator instance. Citrus offers a set of reference validator implementations. The *_SimpleSoapAttachmentValidator_* will use a simple plain text comparison. Of course you are able to add individual validator implementations, too.
 
-[[soap-mtom-support]]
+[[soap-mtom]]
 == SOAP MTOM support
 
 MTOM (Message Transmission Optimization Mechanism) enables you to send and receive large SOAP message content using streamed data handlers. This optimizes the resource allocation on server and client side where not all data is loaded into memory when marshalling/unmarshalling the message payload data. In detail MTOM enabled messages do have a XOP package inside the message payload replacing the actual large content data. The content is then streamed aas separate attachment. Server and client can operate with a data handler providing access to the streamed content. This is very helpful when using large binary content inside a SOAP message for instance.
@@ -1245,7 +1245,7 @@ You can customize the security handler for your very specific needs (e.g. load u
 
 TIP: This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.
 
-[[ws-addressing-support]]
+[[ws-addressing]]
 == WS-Addressing support
 
 The web service stack offers a lot of different technologies and standards within the context of SOAP WebServices. We speak of WS-* specifications in particular. One of these specifications deals with addressing. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.

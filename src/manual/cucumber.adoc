@@ -245,7 +245,7 @@ We have to do this because otherwise the quotation characters will interfere wit
 
 This completes the description of how to add XML step definitions to the cucumber BDD tests. In a next section we will use predefined steps for sending and receiving messages.
 
-[[cucumber-spring-support]]
+[[cucumber-spring]]
 == Cucumber Spring support
 
 Cucumber provides support for Spring dependency injection in step definition classes. The Cucumber Spring capabilities are included in a separate module. So we first of all we have to add this dependency to our project:

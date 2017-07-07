@@ -1,4 +1,4 @@
-[[jms-support]]
+[[jms]]
 = JMS support
 
 Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous communication. So in this chapter we explain how to setup JMS message endpoints for synchronous and asynchronous outbound and inbound communication

@@ -3,7 +3,7 @@
 
 Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes and improvements. See the following overview on what has changed.
 
-[[changes-soap-mtom-support]]
+[[changes-soap-mtom]]
 === SOAP MTOM support
 
 SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See link:soap-attachment-mtom[soap-attachment-mtom]for details.

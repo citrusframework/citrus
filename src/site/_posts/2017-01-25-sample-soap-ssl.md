@@ -8,7 +8,7 @@ permalink: /samples/soap-ssl/
 ---
 
 This sample uses SOAP web services in combination with SSL secure connectivity on both client and server. You can read more about the 
-Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/soap.html)
+Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/#soap)
 
 Objectives
 ---------

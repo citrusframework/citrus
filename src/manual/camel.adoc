@@ -1,4 +1,4 @@
-[[apache-camel-support]]
+[[apache-camel]]
 = Apache Camel support
 
 Apache Camel project implements the enterprise integration patterns for building mediation and routing rules in your enterprise application. With the Citrus Camel support you are able to directly interact with the Apache Camel components and route definitions. You can call Camel routes and receive synchronous response messages. You can also simulate the Camel route endpoint with receiving messages and providing simulated response messages.

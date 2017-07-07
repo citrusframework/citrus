@@ -8,7 +8,7 @@ permalink: /samples/soap-wssecurity/
 ---
 
 This sample uses SOAP web services with WSSecurity username token authentication. Clients must authenticate with proper wsse security elements and username
-password. You can read more about the Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/soap.html)
+password. You can read more about the Citrus SOAP features in [reference guide](http://www.citrusframework.org/reference/html/#soap)
 
 Objectives
 ---------

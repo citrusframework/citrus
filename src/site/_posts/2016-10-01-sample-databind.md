@@ -8,7 +8,7 @@ permalink: /samples/databind/
 ---
 
 This sample demonstrates the usage of object mapping in Citrus. We are able to handle automatic object mapping
-when sending and receiving message payloads. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/validation-callback.html)
+when sending and receiving message payloads. Read about this feature in [reference guide](http://www.citrusframework.org/reference/html/#validation-callback)
 
 Objectives
 ---------

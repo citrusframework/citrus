@@ -12,7 +12,7 @@ With Arquillian the tests are executed within application container boundaries. 
 as container and provides access to EJB resources, Mail services and JNDI JMS resources such as destinations and connection factories.
 
 The sample integrates with Citrus and Arquillian for automated integration testing of JavaEE applications. You can read more about the
-cooperation of Citrus and Arquillian in [reference guide](http://www.citrusframework.org/reference/html/arquillian.html).
+cooperation of Citrus and Arquillian in [reference guide](http://www.citrusframework.org/reference/html/#arquillian).
   
 Objectives
 ---------
