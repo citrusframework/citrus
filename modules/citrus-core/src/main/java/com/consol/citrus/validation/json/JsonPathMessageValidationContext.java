@@ -50,7 +50,7 @@ public class JsonPathMessageValidationContext implements ValidationContext {
     }
 
     /**
-     * Check wheather give path expression is a JSONPath expression.
+     * Check whether given path expression is a JSONPath expression.
      * @param pathExpression
      * @return
      */
