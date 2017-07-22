@@ -80,9 +80,9 @@
             <trace-variables>
               <variable name="${id}"/>
               <variable name="${correlationId}"/>
-                      <variable name="${operation}"/>
-                      <variable name="${messageId}"/>
-                      <variable name="${user}"/>
+              <variable name="${operation}"/>
+              <variable name="${messageId}"/>
+              <variable name="${user}"/>
             </trace-variables>
         </actions>
     </testcase>

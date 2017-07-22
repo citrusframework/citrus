@@ -54,8 +54,18 @@ public class GenericPayloadVariableExtractor implements VariableExtractor {
         Map<String, String> xPath = new HashMap<>();
 
         for(Map.Entry<String, String> pathExpression : pathExpressions.entrySet()) {
-            final String path = context.replaceDynamicContentInString(pathExpression.getKey());
-            final String variable = context.replaceDynamicContentInString(pathExpression.getValue());
+            String path = pathExpression.getKey();
+            String variable = pathExpression.getValue();
+            // Try to substitute variable to include XPath / JSONPath expressions stored in variables
+            try {
+                path = context.replaceDynamicContentInString(path);
+                variable = context.replaceDynamicContentInString(variable);
+            } catch (CitrusRuntimeException e) {
+                // Skip invalid variable substitution errors, rethrow others
+                if(!e.getMessage().contains("Unknown variable")) {
+                    throw e;
+                }
+            }
 
             if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
                 jsonPath.put(path, variable);

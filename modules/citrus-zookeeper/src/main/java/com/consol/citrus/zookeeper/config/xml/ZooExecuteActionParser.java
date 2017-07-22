@@ -111,9 +111,9 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
         List<VariableExtractor> variableExtractors = new ArrayList<>();
         Map<String, String> extractJsonPath = new HashMap<>();
         List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
-        VariableExtractorParserUtil.parseMessageElement(messageValueElements, null, extractJsonPath);
+        VariableExtractorParserUtil.parseMessageElement(messageValueElements, extractJsonPath);
         if (!CollectionUtils.isEmpty(extractJsonPath)) {
-            VariableExtractorParserUtil.addJsonVariableExtractors(variableExtractors, extractJsonPath);
+            VariableExtractorParserUtil.addVariableExtractors(extractElement, variableExtractors, extractJsonPath);
         }
         return variableExtractors;
     }

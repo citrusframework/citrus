@@ -55,15 +55,17 @@ public class VariableExtractorParserUtil {
         GenericPayloadVariableExtractor payloadVariableExtractor = new GenericPayloadVariableExtractor();
         payloadVariableExtractor.setPathExpressions(extractFromPath);
         Map<String, String> namespaces = new HashMap<>();
-        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-        if (messageElement != null) {
-            List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-            if (namespaceElements.size() > 0) {
-                for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext(); ) {
-                    Element namespaceElement = (Element) iter.next();
-                    namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+        if(element != null) {
+            Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+            if (messageElement != null) {
+                List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+                if (namespaceElements.size() > 0) {
+                    for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext(); ) {
+                        Element namespaceElement = (Element) iter.next();
+                        namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+                    }
+                    payloadVariableExtractor.setNamespaces(namespaces);
                 }
-                payloadVariableExtractor.setNamespaces(namespaces);
             }
         }
 
