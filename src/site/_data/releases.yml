@@ -4,6 +4,13 @@
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+
+- version: 2.7.2
+  date: 2017-07-07
+  tag: v2-7-2
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
   - title: Http error handling thread safety
     id: 265
     type: Fix
