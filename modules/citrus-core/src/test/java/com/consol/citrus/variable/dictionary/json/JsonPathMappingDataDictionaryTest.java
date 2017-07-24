@@ -47,6 +47,27 @@ public class JsonPathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testTranslateMultipleNodes() {
+        Message message = new DefaultMessage("[" +
+                    "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\", \"OtherNumber\": 10}}, " +
+                    "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\", \"OtherNumber\": 10}}" +
+                "]");
+
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("$.Something.Else", "NotFound");
+        mappings.put("$..Text", "Hello!");
+
+        JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Assert.assertEquals(intercepted.getPayload(String.class), "[" +
+                    "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}," +
+                    "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}" +
+                "]");
+    }
+
+    @Test
     public void testTranslateWithVariables() {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 

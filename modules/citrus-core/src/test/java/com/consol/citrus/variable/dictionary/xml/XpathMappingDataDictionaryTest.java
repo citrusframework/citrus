@@ -67,6 +67,24 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
                 "   <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
     }
+    
+    @Test
+    public void testTranslateMultipleNodes() throws Exception {
+        Message message = new DefaultMessage(payload);
+
+        Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("//*[string-length(normalize-space(text())) > 0]", "Hello!");
+        mappings.put("//@*", "bar");
+
+        XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
+        dictionary.setMappings(mappings);
+
+        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+                "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
+                "   <OtherText name=\"bar\">Hello!</OtherText>" + System.getProperty("line.separator") +
+                "</TestMessage>");
+    }
 
     @Test
     public void testTranslateWithNamespaceLookup() throws Exception {
