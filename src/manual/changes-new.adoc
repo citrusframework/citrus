@@ -12,20 +12,20 @@ features included in the box.
 When Citrus accesses data storage in form of SQL statements executed on some datasource the transaction handling has not been set in the past. Each SQL
 statement has been committed immediately. Especially when executing multiple SQL statement via script this could lead to inconsistencies. With the new release you
 can make use of Spring's transaction handling when executing SQL statements with Citrus. You can set a transaction handler with isolation levels and default transaction timeout settings.
-This enables you to use transaction blocks for multiple statements with one single commit or rollback. Read more about this in chapter [actions accessing the database](/reference/html/#sql-transaction-management).
+This enables you to use transaction blocks for multiple statements with one single commit or rollback. Read more about this in chapter link:#sql-transaction-management[actions accessing the database].
 
 [[changes-environment-settings]]
 == Environment settings
 
 We added a mechanism to overwrite general settings in Citrus via system properties and environment variables. This makes Citrus ready for runtime environments such as Docker and Kubernetes where
-you can use environment variables to change Citrus behavior. The available settings and variable names can be seen in chapter [configuration](/reference/html/#configuration).
+you can use environment variables to change Citrus behavior. The available settings and variable names can be seen in chapter link:#configuration[configuration].
 
 [[changes-http-cookies]]
 == Http cookie support
 
 Setting Http cookie related Http headers has been possible in previous versions. We improved that cookie handling in Http request and response messages with a dedicated DSL for adding and verifying cookie information
 in Http headers. The Citrus http-server is able to advice the client to set a new cookie with respective *Set-Cookie* headers in response messages. The http-client is able to verify the cookie attributes such as name, value, max-age and so on.
-In addition to that the client is able to send the cookie name value pair in further requests as a reference via "*Cookie*" message headers. The complete new cookie handling is described in section [Http cookie handling](/reference/html/#http-cookies).
+In addition to that the client is able to send the cookie name value pair in further requests as a reference via "*Cookie*" message headers. The complete new cookie handling is described in section link:#http-cookies[Http cookie handling].
 
 [[changes-file-encoding]]
 == File resource encoding
