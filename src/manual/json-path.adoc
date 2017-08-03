@@ -30,9 +30,9 @@ We use a basic message content file that is called *user.json* . The content of 
 
 [source,xml]
 ----
-{ user:
+{ "user":
   {
-    "id": citrus:randomNumber(10)
+    "id": citrus:randomNumber(10),
     "name": "Unknown",
     "admin": "?",
     "projects":
@@ -56,9 +56,9 @@ Citrus loads the file content and used it as message payload. Before the message
 
 [source,xml]
 ----
-{ user:
+{ "user":
   {
-    "id": citrus:randomNumber(10)
+    "id": citrus:randomNumber(10),
     "name": "Admin",
     "admin": "true",
     "projects":
@@ -116,11 +116,11 @@ receive(someEndpoint)
 
 The above JSONPath expressions will be evaluated when Citrus validates the received message. The expression result is compared to the expected value where expectations can be static values as well as test variables and validation matcher expressions. In case a JSONPath expression should not be able to find any elements the test case will also fail.
 
-JSON is a pretty simple yet powerful message format. Simplified a JSON message just knows JSONObject, JSONArray and JSONValue items. The handling of JSONObject and JSONValue items in JSONPath expressions is straight forward. We just use a dot notated syntax for walking through the JSONObject hierarchy. The handling of JSONArray items is also not very difficult either. Citrus will try the best to convert JSONArray items to String representation values for comparison.
+JSON is a pretty simple yet powerful message format. Simply put, a JSON message just knows JSONObject, JSONArray and JSONValue items. The handling of JSONObject and JSONValue items in JSONPath expressions is straight forward. We just use a dot notated syntax for walking through the JSONObject hierarchy. The handling of JSONArray items is also not very difficult either. Citrus will try the best to convert JSONArray items to String representation values for comparison.
 
 IMPORTANT: JSONPath expressions will only work on JSON message formats. This is why we have to tell Citrus the correct message format. By default Citrus is working with XML message data and therefore the XML validation mechanisms do apply by default. With the message type attribute set to *json* we make sure that Citrus enables JSON specific features on the message validation such as JSONPath support.
 
-Now lets get a bit more complex with validation matchers and JSON object functions. Citrus tries to give you the most comfortable validation capabilities when comparing JSON object values and JSON arrays. One first thing you can use is object functions like *keySet()* or *size()* . These functionality is not covered by JSONPath out of the bow but added by Citrus. Se the following example on how to use it:
+Now lets get a bit more complex with validation matchers and JSON object functions. Citrus tries to give you the most comfortable validation capabilities when comparing JSON object values and JSON arrays. One first thing you can use is object functions like *keySet()* or *size()* . This functionality is not covered by JSONPath out of the box but added by Citrus. See the following example on how to use it:
 
 .XML DSL
 [source,xml]
@@ -177,7 +177,7 @@ Citrus is able to save message content to test variables at test runtime. When a
 ----
 <message type="json">
   <data>
-    { user:
+    { "user":
       {
         "name": "Admin",
         "password": "secret",
