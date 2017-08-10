@@ -56,6 +56,7 @@
     <module>modules/citrus-cucumber</module>
     <module>modules/citrus-arquillian</module>
     <module>modules/citrus-integration</module>
+    <module>modules/citrus-bom</module>
   </modules>
 
   <developers>
