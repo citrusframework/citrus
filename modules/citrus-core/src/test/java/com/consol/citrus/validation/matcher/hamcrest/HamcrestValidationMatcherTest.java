@@ -68,7 +68,9 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "9", Collections.singletonList("lessThanOrEqualTo(9)")},
             new Object[]{"foo", "", Arrays.asList("1", "lessThanOrEqualTo(9)")},
             new Object[]{"foo", "", Arrays.asList("9", "lessThanOrEqualTo(9)")},
-            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("hasSize(5)") }
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("hasSize(5)") },
+            new Object[]{"foo", "[\"unique_value\",\"different_unique_value\"]", Collections.singletonList("hasSize(2)") },
+            new Object[]{"foo", "[\"duplicate_value\",\"duplicate_value\"]", Collections.singletonList("hasSize(2)") }
         };
     }
 

@@ -22,14 +22,23 @@
         <http:send-request client="httpClient">
           <http:POST>
             <http:body>
-              <http:data>
-                {
-                  "type" : "read",
-                  "mbean" : "java.lang:type=Memory",
-                  "attribute" : "HeapMemoryUsage",
-                  "path" : "used",
-                  "lastModified": null
-                }
+              <http:data>{
+                "type": "read",
+                "mbean": "java.lang:type=Memory",
+                "attribute": "HeapMemoryUsage",
+                "path": "used",
+                "lastModified": null,
+                "test_array": [
+                  {
+                    "key_with_identical_values": "identical_value",
+                    "key_with_unique_values": "unique_value"
+                  },
+                  {
+                    "key_with_identical_values": "identical_value",
+                    "key_with_unique_values": "different_unique_value"
+                  }
+                ]
+              }
               </http:data>
             </http:body>
           </http:POST>
@@ -45,6 +54,8 @@
                     <http:json-path expression="$..attribute" value="HeapMemoryUsage"/>
                     <http:json-path expression="$.path" value="@equalsIgnoreCase('USED')@"/>
                     <http:json-path expression="$.lastModified" value="@assertThat(nullValue())@"/>
+                    <http:json-path expression="$..key_with_identical_values" value="@assertThat(hasSize(2))@"/>
+                    <http:json-path expression="$..key_with_unique_values" value="@assertThat(hasSize(2))@"/>
                 </http:validate>
               </http:body>
             </http:POST>
