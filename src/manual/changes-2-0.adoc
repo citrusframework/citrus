@@ -30,7 +30,7 @@ New member of the Citrus family deals with FTP connectivity. The new *citrus-ftp
 [[changes-functions-with-test-context-access]]
 === Functions with test context access
 
-Functions are now able to access the test context. This enables you to access all test variables and other central test related components in a function implementation. Therefore the function Java interface has now an additional test context parameter. Refactor your custom written functions accordingly to meet the new interface rules. See [http://www.citrusframework.org/tutorials-functions.html](how to write custom functions)for details.
+Functions are now able to access the test context. This enables you to access all test variables and other central test related components in a function implementation. Therefore the function Java interface has now an additional test context parameter. Refactor your custom written functions accordingly to meet the new interface rules. See link:http://www.citrusframework.org/tutorials-functions.html[how to write custom functions] for details.
 
 [[changes-validation-matcher-with-test-context-access]]
 === Validation matcher with test context access

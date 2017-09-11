@@ -413,7 +413,7 @@ public void camelRouteTest() {
 }
 ----
 
-As you can see we have access to the Camel route builder that adds 1-n new Camel routes to the context. After that we can start, stop and remove the routes within the test case.
+As you can see we have access to the Camel route builder that adds `n-1` new Camel routes to the context. After that we can start, stop and remove the routes within the test case.
 
 [[camel-controlbus-actions]]
 == Camel controlbus actions

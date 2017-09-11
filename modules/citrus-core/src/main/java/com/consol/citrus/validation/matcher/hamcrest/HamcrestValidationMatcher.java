@@ -22,11 +22,16 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.springframework.util.*;
+import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -173,14 +178,14 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
      * @param value
      * @return
      */
-    private Set<String> getCollection(String value) {
+    private List<String> getCollection(String value) {
         String arrayString = value;
 
         if (arrayString.startsWith("[") && arrayString.endsWith("]")) {
             arrayString = arrayString.substring(1, arrayString.length()-1);
         }
 
-        return StringUtils.commaDelimitedListToSet(arrayString);
+        return Arrays.asList(StringUtils.commaDelimitedListToStringArray(arrayString));
     }
 
     /**
