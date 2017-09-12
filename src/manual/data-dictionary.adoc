@@ -8,7 +8,7 @@ You can translate common message elements that are used widely throughout your d
 [[xml-data-dictionaries]]
 == XML data dictionaries
 
-XML data dictionaries do apply to XML message format payloads, of course. In general we add a dictionary to the basic Citrus Spring application context in order to make the dictionary visible to all test cases:
+As you would expect XML data dictionaries can be used together with XML formatted message payloads. To do so a dictionary has to be added to the basic Citrus Spring application context which will make the dictionary visible to all test cases:
 
 [source,xml]
 ----
@@ -22,9 +22,9 @@ XML data dictionaries do apply to XML message format payloads, of course. In gen
 </citrus:xml-data-dictionary>
 ----
 
-As you can see the dictionary is nothing but a normal Spring bean definition. The *NodeMappingDataDictionary* implementation receives a map of key value pairs where the key is a message element path expression. For XML payloads the message element tree is traversed so the path expression is built for an exact message element inside the payload. If matched the respective value is set accordingly through the dictionary.
+As you can see the dictionary is nothing but a normal Spring bean definition. The *NodeMappingDataDictionary* implementation receives a map of key value pairs where the key is a message element path expression. For XML payloads the message element tree is traversed so the path expression is built for an exact message element inside the payload. When matched the respective value is set according to the value stored within the dictionary.
 
-Besides defining the dictionary key value mappings as property map inside the bean definition we can extract the mapping data to an external file.
+Alternatively the key-value mappings can be defined in an external file and a reference to the file can be provided:
 
 [source,xml]
 ----
@@ -43,7 +43,7 @@ TestMessage.User=Christoph
 TestMessage.TimeStamp=citrus:currentDate()
 ----
 
-You can set any message element value inside the XML message payload. The path expression also supports XML attributes. Just use the attribute name as last part of the path expression. Let us have a closer look at a sample XML message payload with attributes:
+You can set any message element value inside the XML message payload. The path expression also supports XML attributes. Just use the attribute name as the last part of the path expression. Let us have a closer look at a sample XML message payload with attributes:
 
 [source,xml]
 ----
@@ -52,7 +52,7 @@ You can set any message element value inside the XML message payload. The path e
 </TestMessage>
 ----
 
-With this sample XML payload given we can access the attributes in the data dictionary as follows:
+Using this sample XML payload we can access the attributes in the data dictionary as follows:
 
 [source,xml]
 ----
@@ -60,9 +60,9 @@ With this sample XML payload given we can access the attributes in the data dict
 <citrus:mapping path="TestMessage.User.age" value="${userAge}"/>
 ----
 
-The *NodeMappingDataDictionary* implementation is easy to use and fits the basic needs for XML data dictionaries. The message element path expressions are very simple and do fit basic needs. However when more complex XML payloads apply for translation we might reach the boundaries here.
+The *NodeMappingDataDictionary* implementation is easy to use and can be used with most basic XML payloads.
 
-For more complex XML message payloads XPath data dictionaries are very effective:
+For more complex XML payloads where more flexibility is required the XPath data dictionaries may be better suited:
 
 [source,xml]
 ----
@@ -77,9 +77,9 @@ For more complex XML message payloads XPath data dictionaries are very effective
 </citrus:xpath-data-dictionary>
 ----
 
-As expected XPath mapping expressions are way more powerful and can also handle very complex scenarios with XML namespaces, attributes and node lists. Just like the node mapping dictionary the XPath mapping dictionary does also support variables, functions and an external mapping file.
+As expected XPath mapping expressions are more powerful and can better handle complex scenarios with XML namespaces, attributes and node lists. Just like the node mapping dictionary the XPath mapping dictionary also supports variables, functions and an external mapping file.
 
-XPath works fine with namespaces. In general it is good practice to define a namespace context where you map namespace URI values with prefix values. So your XPath expression is always exact and evaluation is strict. In Citrus the *NamespaceContextBuilder* which is also added as normal Spring bean to the application context manages namespaces used in your XPath expressions. See our XML and XPAth chapters in this documentation for detailed description how to accomplish fail safe XPath expressions with namespaces.
+XPath works fine with namespaces. In general it is good practice to define a namespace context where you map namespace URI values with prefix values. So your XPath expression is more precise and evaluation is strict. In Citrus the *NamespaceContextBuilder* which is also added as a normal Spring bean to the application context manages namespaces used in your XPath expressions. See our XML and XPath chapters in this documentation for detailed description how to accomplish fail safe XPath expressions with namespaces.
 
 This completes the XML data dictionary usage in Citrus. Later on we will see some more advanced data dictionary scenarios where we will discuss the usage of dictionary scopes and mapping strategies. But before that let us have a look at other message formats like JSON messages.
 
