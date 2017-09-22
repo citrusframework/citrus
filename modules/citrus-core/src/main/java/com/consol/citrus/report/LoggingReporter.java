@@ -41,7 +41,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     private static Logger outboundMsgLogger = LoggerFactory.getLogger("Logger.Message_OUT");
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Citrus.class);
+    private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
 
     @Override
     public void clearTestResults() {
