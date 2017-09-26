@@ -57,7 +57,6 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
      * Construct new security handler for basic authentication.
      */
     public SecurityHandler getObject() throws Exception {
-
         ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
         securityHandler.setAuthenticator(authenticator);
         securityHandler.setRealmName(realm);
@@ -80,9 +79,8 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
      */
     public void afterPropertiesSet() throws Exception {
         if (loginService == null) {
-            loginService = new HashLoginService();
-            ((HashLoginService) loginService).setName(realm);
-            ((HashLoginService) loginService).setUserStore(new SimplePropertyUserStore());
+            loginService = new SimpleLoginService();
+            ((SimpleLoginService) loginService).setName(realm);
         }
     }
 
@@ -181,14 +179,25 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
     }
 
     /**
+     * Simple login service adds known users.
+     */
+    private class SimpleLoginService extends HashLoginService {
+        @Override
+        protected void doStart() throws Exception {
+            SimplePropertyUserStore userStore = new SimplePropertyUserStore();
+            setUserStore(userStore);
+            userStore.start();
+
+            super.doStart();
+        }
+    }
+
+    /**
      * Simple user store loads users from this factories user list.
      */
     private class SimplePropertyUserStore extends PropertyUserStore {
         @Override
         protected void loadUsers() throws IOException {
-            getKnownUserIdentities().clear();
-            getUsers().clear();
-
             for (User user : users) {
                 Credential credential = Credential.getCredential(user.getPassword());
 
@@ -209,7 +218,6 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
                 subject.setReadOnly();
 
                 getKnownUserIdentities().put(user.getName(), getIdentityService().newUserIdentity(subject, userPrincipal, roleArray));
-                getUsers().add(user);
             }
         }
     }
