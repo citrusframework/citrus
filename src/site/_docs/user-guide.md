@@ -19,6 +19,7 @@ for the latest Citrus release version.
 ## Additional documentation material
 
 - [Quickstart Maven](${site.path}/docs/setup-maven)
+- [Quickstart Gradle](${site.path}/docs/setup-gradle)
 - [Quickstart Ant](${site.path}/docs/setup-ant)
 - [Blog](http://labs.consol.de/tags/citrus)
 - [Java API](${site.path}/apidocs/index.html)

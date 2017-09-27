@@ -22,8 +22,11 @@ are most relevant to you.
 - Use advanced logic in test cases (loops, delays, retries, parallel sections, ...)
 - Message validation
 
-## Message header validation
+## Message validation
 
+- Json message payload validation
+- JsonPath element validation
+- Groovy Json validation
 - XML message payload validation
 - XML tree comparison
 - XPath element validation
