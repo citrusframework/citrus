@@ -147,7 +147,7 @@ As you can see we used the exact dynamic endpoint uri in both send and receive a
 </testcase>
 ----
 
-We have to use the exact same endpoint uri when receiving the synchronous service response. This is not very straight forward. This is why Citrus also supports dynamic endpoint names. With a special endpoint uri parameter called *endpointName* you can name the dynamic endpoint. In a corresponding receive action you just use the endpoint name as reference which makes life more easy:
+We have to use the exact same endpoint uri when receiving the synchronous service response. This is not very straight forward. This is why Citrus also supports dynamic endpoint names. With a special endpoint uri parameter called *endpointName* you can name the dynamic endpoint. In a corresponding receive action you just use the endpoint name as reference which makes life easier:
 
 [source,xml]
 ----
