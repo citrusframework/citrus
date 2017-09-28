@@ -1479,6 +1479,7 @@
               <include>_posts/**</include>
               <include>_includes/**</include>
               <include>help/**</include>
+              <include>projects/**</include>
               <include>index.html</include>
               <include>_config.yml</include>
               <include>latest_version.txt</include>

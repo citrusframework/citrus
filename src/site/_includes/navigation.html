@@ -5,8 +5,11 @@
   <li class="{% if page.overview %}current{% endif %}">
     <a href="${site.path}/">Home</a>
   </li>
+  <li class="{% if page.url contains '${site.path}/projects/' %}current{% endif %}">
+    <a href="${site.path}/projects/">Projects</a>
+  </li>
   <li class="{% if page.url contains '${site.path}/docs/' %}current{% endif %}">
-    <a href="${site.path}/docs/home/">Doc<span class="show-on-mobiles">s</span><span class="hide-on-mobiles">umentation</span></a>
+    <a href="${site.path}/docs/home/">Doc<span class="hide-on-mobiles">umentation</span><span class="show-on-mobiles">s</span></a>
   </li>
   <li class="{% if page.sample %}current{% endif %}">
     <a href="${site.path}/samples/">Samples</a>
@@ -18,6 +21,6 @@
     <a href="${site.path}/help/">Help</a>
   </li>
   <li>
-    <a href="{{ site.repository }}"><span class="hide-on-mobiles">View on </span>GitHub</a>
+    <a href="{{ site.repository }}" target="_blank"><span class="hide-on-mobiles">View on </span>GitHub</a>
   </li>
 </ul>
