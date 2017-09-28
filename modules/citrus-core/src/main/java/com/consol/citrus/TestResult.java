@@ -29,7 +29,7 @@ import java.util.*;
 public final class TestResult {
 
     /** Possible test results */
-    private static enum RESULT {SUCCESS, FAILURE, SKIP};
+    private enum RESULT {SUCCESS, FAILURE, SKIP}
 
     /** Actual result */
     private RESULT result;

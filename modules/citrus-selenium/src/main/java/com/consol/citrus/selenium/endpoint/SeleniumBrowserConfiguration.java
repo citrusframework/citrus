@@ -187,8 +187,6 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
 
             /* do not show download manager */
             firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-
-            firefoxProfile.setEnableNativeEvents(true);
         }
 
         return firefoxProfile;
