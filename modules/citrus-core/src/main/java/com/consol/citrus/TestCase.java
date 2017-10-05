@@ -253,7 +253,13 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
                 /* walk through the finally chain and execute the actions in there */
                 for (TestAction action : finalActions) {
-                    action.execute(context);
+                    if (!action.isDisabled(context)) {
+                        testActionListeners.onTestActionStart(this, action);
+                        action.execute(context);
+                        testActionListeners.onTestActionFinish(this, action);
+                    } else {
+                        testActionListeners.onTestActionSkipped(this, action);
+                    }
                 }
             }
 
