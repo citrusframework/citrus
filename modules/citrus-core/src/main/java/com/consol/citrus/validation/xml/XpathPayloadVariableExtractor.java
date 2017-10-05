@@ -65,7 +65,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
         NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
 
         for (Entry<String, String> entry : xPathExpressions.entrySet()) {
-            String pathExpression = entry.getKey();
+            String pathExpression = context.replaceDynamicContentInString(entry.getKey());
             String variableName = entry.getValue();
 
             if (log.isDebugEnabled()) {

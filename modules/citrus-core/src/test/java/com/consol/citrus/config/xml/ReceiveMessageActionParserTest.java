@@ -19,7 +19,7 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.consol.citrus.validation.GenericPayloadVariableExtractor;
+import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -174,8 +174,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof GenericPayloadVariableExtractor);
-        GenericPayloadVariableExtractor variableExtractor = (GenericPayloadVariableExtractor)action.getVariableExtractors().get(1);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof DefaultPayloadVariableExtractor);
+        DefaultPayloadVariableExtractor variableExtractor = (DefaultPayloadVariableExtractor)action.getVariableExtractors().get(1);
         
         Assert.assertEquals(variableExtractor.getNamespaces().size(), 0L);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
@@ -353,8 +353,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof GenericPayloadVariableExtractor);
-        GenericPayloadVariableExtractor jsonVariableExtractor = (GenericPayloadVariableExtractor) action.getVariableExtractors().get(1);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof DefaultPayloadVariableExtractor);
+        DefaultPayloadVariableExtractor jsonVariableExtractor = (DefaultPayloadVariableExtractor) action.getVariableExtractors().get(1);
 
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");

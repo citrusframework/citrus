@@ -185,7 +185,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             VariableExtractorParserUtil.parseMessageElement(messageValueElements, extractFromPath);
 
             if (!CollectionUtils.isEmpty(extractFromPath)) {
-                VariableExtractorParserUtil.addVariableExtractors(element, variableExtractors, extractFromPath);
+                VariableExtractorParserUtil.addPayloadVariableExtractors(element, variableExtractors, extractFromPath);
             }
         }
         return variableExtractors;

@@ -1,31 +1,41 @@
+/*
+ * Copyright 2006-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-/**
- * Created by Simon Hofmann on 18.07.17.
- */
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
- * Generic extractor implementation which reads messages via JSONPath or XPath
+ * Generic extractor implementation delegating to JSONPath or XPath variable extractor based on given expression
+ * type.
  *
  * @author Simon Hofmann
  * @since 2.7.3
  */
-public class GenericPayloadVariableExtractor implements VariableExtractor {
+public class DefaultPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines path expressions and target variable names */
     private Map<String, String> pathExpressions = new HashMap<>();
@@ -33,7 +43,7 @@ public class GenericPayloadVariableExtractor implements VariableExtractor {
     private Map<String, String> namespaces = new HashMap<>();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(GenericPayloadVariableExtractor.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultPayloadVariableExtractor.class);
 
     @Override
     public void extractVariables(Message message, TestContext context) {
@@ -46,45 +56,32 @@ public class GenericPayloadVariableExtractor implements VariableExtractor {
         JsonPathVariableExtractor jsonPathVariableExtractor = new JsonPathVariableExtractor();
         XpathPayloadVariableExtractor xpathPayloadVariableExtractor = new XpathPayloadVariableExtractor();
 
-        if(!this.namespaces.isEmpty()) {
+        if (!this.namespaces.isEmpty()) {
             xpathPayloadVariableExtractor.setNamespaces(this.namespaces);
         }
 
-        Map<String, String> jsonPath = new HashMap<>();
-        Map<String, String> xPath = new HashMap<>();
+        Map<String, String> jsonPathExpressions = new LinkedHashMap<>();
+        Map<String, String> xpathExpressions = new LinkedHashMap<>();
 
-        for(Map.Entry<String, String> pathExpression : pathExpressions.entrySet()) {
-            String path = pathExpression.getKey();
-            String variable = pathExpression.getValue();
-            // Try to substitute variable to include XPath / JSONPath expressions stored in variables
-            try {
-                path = context.replaceDynamicContentInString(path);
-                variable = context.replaceDynamicContentInString(variable);
-            } catch (CitrusRuntimeException e) {
-                // Skip invalid variable substitution errors, rethrow others
-                if(!e.getMessage().contains("Unknown variable")) {
-                    throw e;
-                }
-            }
+        for (Map.Entry<String, String> pathExpression : pathExpressions.entrySet()) {
+            final String path = context.replaceDynamicContentInString(pathExpression.getKey());
+            final String variable = pathExpression.getValue();
 
             if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-                jsonPath.put(path, variable);
+                jsonPathExpressions.put(path, variable);
             } else {
-                xPath.put(path, variable);
+                xpathExpressions.put(path, variable);
             }
         }
 
-        try {
-            if(!jsonPath.isEmpty()) {
-                jsonPathVariableExtractor.setJsonPathExpressions(jsonPath);
-                jsonPathVariableExtractor.extractVariables(message, context);
-            }
-            if(!xPath.isEmpty()) {
-                xpathPayloadVariableExtractor.setXpathExpressions(xPath);
-                xpathPayloadVariableExtractor.extractVariables(message, context);
-            }
-        } catch (CitrusRuntimeException e) {
-            throw e;
+        if (!jsonPathExpressions.isEmpty()) {
+            jsonPathVariableExtractor.setJsonPathExpressions(jsonPathExpressions);
+            jsonPathVariableExtractor.extractVariables(message, context);
+        }
+
+        if (!xpathExpressions.isEmpty()) {
+            xpathPayloadVariableExtractor.setXpathExpressions(xpathExpressions);
+            xpathPayloadVariableExtractor.extractVariables(message, context);
         }
     }
 

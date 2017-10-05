@@ -16,18 +16,12 @@
 
 package com.consol.citrus.config.util;
 
-import com.consol.citrus.validation.GenericPayloadVariableExtractor;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helper for parsing 'extract' elements containing nested xpath or json variable-extractors.
@@ -38,30 +32,30 @@ import java.util.Map;
 public class VariableExtractorParserUtil {
 
     public static void parseMessageElement(List<?> messageElements, Map<String, String> pathMessages) {
-        for (Iterator<?> iter = messageElements.iterator(); iter.hasNext(); ) {
-            Element messageValue = (Element) iter.next();
-            String pathExpression = messageValue.getAttribute("path");
+        for (Object messageElementObject : messageElements) {
+            Element messageElement = (Element) messageElementObject;
+            String pathExpression = messageElement.getAttribute("path");
 
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-            if (messageValue.hasAttribute("result-type")) {
-                pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
+            if (messageElement.hasAttribute("result-type")) {
+                pathExpression = messageElement.getAttribute("result-type") + ":" + pathExpression;
             }
 
-            pathMessages.put(pathExpression, messageValue.getAttribute("variable"));
+            pathMessages.put(pathExpression, messageElement.getAttribute("variable"));
         }
     }
 
-    public static void addVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractFromPath) {
-        GenericPayloadVariableExtractor payloadVariableExtractor = new GenericPayloadVariableExtractor();
+    public static void addPayloadVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractFromPath) {
+        DefaultPayloadVariableExtractor payloadVariableExtractor = new DefaultPayloadVariableExtractor();
         payloadVariableExtractor.setPathExpressions(extractFromPath);
         Map<String, String> namespaces = new HashMap<>();
-        if(element != null) {
+        if (element != null) {
             Element messageElement = DomUtils.getChildElementByTagName(element, "message");
             if (messageElement != null) {
                 List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
                 if (namespaceElements.size() > 0) {
-                    for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext(); ) {
-                        Element namespaceElement = (Element) iter.next();
+                    for (Object namespaceElementObject : namespaceElements) {
+                        Element namespaceElement = (Element) namespaceElementObject;
                         namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                     }
                     payloadVariableExtractor.setNamespaces(namespaces);
