@@ -24,7 +24,11 @@ import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.Assert;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -44,13 +48,16 @@ import java.util.Iterator;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class SoapJmsMessageConverter extends JmsMessageConverter {
+public class SoapJmsMessageConverter extends JmsMessageConverter implements InitializingBean, ApplicationContextAware {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SoapJmsMessageConverter.class);
 
-    @Autowired
+    /** Soap message factory - either set explicitly or auto configured through application context */
     private SoapMessageFactory soapMessageFactory;
+
+    /** Spring application context used for auto configuration of soap message factory */
+    private ApplicationContext applicationContext;
 
     /** Message transformer */
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -160,5 +167,36 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
      */
     public String getJmsSoapActionHeader() {
         return jmsSoapActionHeader;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (soapMessageFactory == null) {
+            Assert.notNull(applicationContext, "Missing Spring application context for auto configuration of soap message factory");
+            soapMessageFactory = applicationContext.getBean(SoapMessageFactory.class);
+        }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Gets the soapMessageFactory.
+     *
+     * @return
+     */
+    public SoapMessageFactory getSoapMessageFactory() {
+        return soapMessageFactory;
+    }
+
+    /**
+     * Sets the soapMessageFactory.
+     *
+     * @param soapMessageFactory
+     */
+    public void setSoapMessageFactory(SoapMessageFactory soapMessageFactory) {
+        this.soapMessageFactory = soapMessageFactory;
     }
 }
