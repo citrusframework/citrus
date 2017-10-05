@@ -132,7 +132,7 @@ public class SeleniumActionBuilder extends AbstractTestActionBuilder<DelegatingT
     /**
      * Page action.
      */
-    public PageActionBuilder page(Class<WebPage> pageType) {
+    public PageActionBuilder page(Class<? extends WebPage> pageType) {
         PageAction action = new PageAction();
         action.setType(pageType.getName());
         action(action);
