@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.util;
 
+import com.consol.citrus.validation.GenericPayloadVariableExtractor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
@@ -36,7 +37,7 @@ import java.util.Map;
  */
 public class VariableExtractorParserUtil {
 
-    public static void parseMessageElement(List<?> messageElements, Map<String, String> xpathMessages, Map<String, String> jsonMessages) {
+    public static void parseMessageElement(List<?> messageElements, Map<String, String> pathMessages) {
         for (Iterator<?> iter = messageElements.iterator(); iter.hasNext(); ) {
             Element messageValue = (Element) iter.next();
             String pathExpression = messageValue.getAttribute("path");
@@ -46,37 +47,27 @@ public class VariableExtractorParserUtil {
                 pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
             }
 
-            if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
-                jsonMessages.put(pathExpression, messageValue.getAttribute("variable"));
-            } else {
-                xpathMessages.put(pathExpression, messageValue.getAttribute("variable"));
-            }
+            pathMessages.put(pathExpression, messageValue.getAttribute("variable"));
         }
     }
 
-    public static void addXpathVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractXpath) {
-        XpathPayloadVariableExtractor payloadVariableExtractor = new XpathPayloadVariableExtractor();
-        payloadVariableExtractor.setXpathExpressions(extractXpath);
-
+    public static void addVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractFromPath) {
+        GenericPayloadVariableExtractor payloadVariableExtractor = new GenericPayloadVariableExtractor();
+        payloadVariableExtractor.setPathExpressions(extractFromPath);
         Map<String, String> namespaces = new HashMap<>();
-        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-        if (messageElement != null) {
-            List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-            if (namespaceElements.size() > 0) {
-                for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext(); ) {
-                    Element namespaceElement = (Element) iter.next();
-                    namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+        if(element != null) {
+            Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+            if (messageElement != null) {
+                List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+                if (namespaceElements.size() > 0) {
+                    for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext(); ) {
+                        Element namespaceElement = (Element) iter.next();
+                        namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+                    }
+                    payloadVariableExtractor.setNamespaces(namespaces);
                 }
-                payloadVariableExtractor.setNamespaces(namespaces);
             }
         }
-
-        variableExtractors.add(payloadVariableExtractor);
-    }
-
-    public static void addJsonVariableExtractors(List<VariableExtractor> variableExtractors, Map<String, String> extractJsonPath) {
-        JsonPathVariableExtractor payloadVariableExtractor = new JsonPathVariableExtractor();
-        payloadVariableExtractor.setJsonPathExpressions(extractJsonPath);
 
         variableExtractors.add(payloadVariableExtractor);
     }

@@ -19,12 +19,17 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.testng.AbstractActionParserTest;
+import com.consol.citrus.validation.GenericPayloadVariableExtractor;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
-import com.consol.citrus.validation.json.*;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -169,14 +174,14 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
-        XpathPayloadVariableExtractor variableExtractor = (XpathPayloadVariableExtractor)action.getVariableExtractors().get(1);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof GenericPayloadVariableExtractor);
+        GenericPayloadVariableExtractor variableExtractor = (GenericPayloadVariableExtractor)action.getVariableExtractors().get(1);
         
         Assert.assertEquals(variableExtractor.getNamespaces().size(), 0L);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
-        Assert.assertEquals(variableExtractor.getXpathExpressions().size(), 1);
-        Assert.assertEquals(variableExtractor.getXpathExpressions().get("/TestMessage/text()"), "text");
+        Assert.assertEquals(variableExtractor.getPathExpressions().size(), 1);
+        Assert.assertEquals(variableExtractor.getPathExpressions().get("/TestMessage/text()"), "text");
 
         Assert.assertNotNull(action.getDataDictionary());
 
@@ -348,12 +353,12 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof JsonPathVariableExtractor);
-        JsonPathVariableExtractor jsonVariableExtractor = (JsonPathVariableExtractor)action.getVariableExtractors().get(1);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof GenericPayloadVariableExtractor);
+        GenericPayloadVariableExtractor jsonVariableExtractor = (GenericPayloadVariableExtractor) action.getVariableExtractors().get(1);
 
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
-        Assert.assertEquals(jsonVariableExtractor.getJsonPathExpressions().size(), 1);
-        Assert.assertEquals(jsonVariableExtractor.getJsonPathExpressions().get("$.message.text"), "text");
+        Assert.assertEquals(jsonVariableExtractor.getPathExpressions().size(), 1);
+        Assert.assertEquals(jsonVariableExtractor.getPathExpressions().get("$.message.text"), "text");
     }
 }

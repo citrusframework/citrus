@@ -23,6 +23,7 @@ import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractActionParserTest;
+import com.consol.citrus.validation.GenericPayloadVariableExtractor;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -94,8 +95,8 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertNull(action.getEndpointUri());
 
         Assert.assertEquals(action.getVariableExtractors().size(), 1L);
-        Assert.assertEquals(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().size(), 1L);
-        Assert.assertEquals(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().get("$.user.id"), "userId");
+        Assert.assertEquals(((GenericPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().size(), 1L);
+        Assert.assertEquals(((GenericPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().get("$.user.id"), "userId");
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
