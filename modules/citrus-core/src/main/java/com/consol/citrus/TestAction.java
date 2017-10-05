@@ -67,5 +67,11 @@ public interface TestAction {
      * @return
      */
     TestActor getActor();
+
+    /**
+     * Sets the test actor associated with this test action.
+     * @param actor
+     */
+    TestAction setActor(TestActor actor);
     
 }

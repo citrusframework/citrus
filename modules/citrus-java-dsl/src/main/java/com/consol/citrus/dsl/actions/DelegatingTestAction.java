@@ -66,13 +66,31 @@ public class DelegatingTestAction<T extends TestAction> extends AbstractTestActi
     }
 
     @Override
+    public AbstractTestAction setActor(TestActor actor) {
+        delegate.setActor(actor);
+        return this;
+    }
+
+    @Override
     public String getDescription() {
         return delegate.getDescription();
     }
 
     @Override
+    public AbstractTestAction setDescription(String description) {
+        delegate.setDescription(description);
+        return this;
+    }
+
+    @Override
     public String getName() {
         return delegate.getName();
+    }
+
+    @Override
+    public AbstractTestAction setName(String name) {
+        delegate.setName(name);
+        return this;
     }
 
     /**
