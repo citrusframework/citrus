@@ -44,7 +44,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
     private boolean globalScope = true;
 
     /** Known mappings to this dictionary */
-    protected Map<String, String> mappings = new HashMap<>();
+    protected Map<String, String> mappings = new LinkedHashMap<>();
 
     /** mapping file resource */
     protected Resource mappingFile;
