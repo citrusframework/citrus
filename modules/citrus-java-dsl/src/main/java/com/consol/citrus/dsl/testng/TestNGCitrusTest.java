@@ -16,8 +16,7 @@
 
 package com.consol.citrus.dsl.testng;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.annotations.*;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
@@ -26,11 +25,11 @@ import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 
@@ -110,10 +109,6 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
                 invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
             } finally {
-                if (testRunner != null) {
-                    testRunner.stop();
-                }
-
                 testResult.removeAttribute(DESIGNER_ATTRIBUTE);
                 testResult.removeAttribute(RUNNER_ATTRIBUTE);
             }
@@ -130,16 +125,31 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
      */
     protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
         if (testResult.getAttribute(DESIGNER_ATTRIBUTE) != null) {
-            ReflectionUtils.invokeMethod(method, this,
-                    resolveParameter(testResult, method, testCase, context, invocationCount));
+            try {
+                ReflectionUtils.invokeMethod(method, this,
+                        resolveParameter(testResult, method, testCase, context, invocationCount));
 
-            citrus.run(testCase, context);
+                citrus.run(testCase, context);
+            } catch (TestCaseFailedException e) {
+                throw e;
+            } catch (Exception | AssertionError e) {
+                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.finish(context);
+                throw new TestCaseFailedException(e);
+            }
         } else if (testResult.getAttribute(RUNNER_ATTRIBUTE) != null) {
             TestRunner testRunner = (TestRunner) testResult.getAttribute(RUNNER_ATTRIBUTE);
 
-            Object[] params = resolveParameter(testResult, method, testCase, context, invocationCount);
-            testRunner.start();
-            ReflectionUtils.invokeMethod(method, this, params);
+            try {
+                Object[] params = resolveParameter(testResult, method, testCase, context, invocationCount);
+                testRunner.start();
+                ReflectionUtils.invokeMethod(method, this, params);
+            } catch (Exception | AssertionError e) {
+                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                throw new TestCaseFailedException(e);
+            } finally {
+                testRunner.stop();
+            }
         }
     }
 

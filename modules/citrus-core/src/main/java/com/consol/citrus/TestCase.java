@@ -124,10 +124,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             }
 
             beforeTest(context);
-        } catch (Exception e) {
-            testResult = TestResult.failed(getName(), e);
-            throw new TestCaseFailedException(e);
-        } catch (AssertionError e) {
+        } catch (Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
         }
@@ -138,7 +135,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public void doExecute(TestContext context) {
         if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
-
             try {
                 start(context);
                 for (TestAction action: actions) {
@@ -148,10 +144,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 testResult = TestResult.success(getName());
             } catch (TestCaseFailedException e) {
                 throw e;
-            } catch (Exception e) {
-                testResult = TestResult.failed(getName(), e);
-                throw new TestCaseFailedException(e);
-            } catch (AssertionError e) {
+            } catch (Exception | AssertionError e) {
                 testResult = TestResult.failed(getName(), e);
                 throw new TestCaseFailedException(e);
             } finally {
@@ -231,10 +224,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             } else {
                 testActionListeners.onTestActionSkipped(this, action);
             }
-        } catch (Exception e) {
-            testResult = TestResult.failed(getName(), e);
-            throw new TestCaseFailedException(e);
-        } catch (AssertionError e) {
+        } catch (Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
         }
@@ -266,10 +256,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             if (testResult == null) {
                 testResult = TestResult.success(getName());
             }
-        } catch (Exception e) {
-            testResult = TestResult.failed(getName(), e);
-            throw new TestCaseFailedException(e);
-        } catch (AssertionError e) {
+        } catch (Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
         } finally {

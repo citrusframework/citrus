@@ -16,8 +16,7 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
@@ -25,6 +24,7 @@ import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import org.slf4j.Logger;
@@ -49,31 +49,25 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
         TestDesigner testDesigner = null;
         TestRunner testRunner = null;
 
-        try {
-            if (citrus == null) {
-                citrus = Citrus.newInstance(applicationContext);
-            }
-
-            TestContext ctx = prepareTestContext(citrus.createTestContext());
-
-            if (isDesignerMethod(frameworkMethod.getMethod())) {
-                testDesigner = createTestDesigner(frameworkMethod, ctx);
-            } else if (isRunnerMethod(frameworkMethod.getMethod())) {
-                testRunner = createTestRunner(frameworkMethod, ctx);
-            } else {
-                throw new CitrusRuntimeException("Missing designer or runner method parameter");
-            }
-
-            TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
-
-            CitrusAnnotations.injectAll(this, citrus, ctx);
-
-            invokeTestMethod(frameworkMethod, testCase, ctx);
-        } finally {
-            if (testRunner != null) {
-                testRunner.stop();
-            }
+        if (citrus == null) {
+            citrus = Citrus.newInstance(applicationContext);
         }
+
+        TestContext ctx = prepareTestContext(citrus.createTestContext());
+
+        if (isDesignerMethod(frameworkMethod.getMethod())) {
+            testDesigner = createTestDesigner(frameworkMethod, ctx);
+        } else if (isRunnerMethod(frameworkMethod.getMethod())) {
+            testRunner = createTestRunner(frameworkMethod, ctx);
+        } else {
+            throw new CitrusRuntimeException("Missing designer or runner method parameter");
+        }
+
+        TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
+
+        CitrusAnnotations.injectAll(this, citrus, ctx);
+
+        invokeTestMethod(frameworkMethod, testCase, ctx);
     }
 
     /**
@@ -84,16 +78,31 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
      */
     protected void invokeTestMethod(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
         if (frameworkMethod.getAttribute(DESIGNER_ATTRIBUTE) != null) {
-            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
-                    resolveParameter(frameworkMethod, testCase, context));
+            try {
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
+                        resolveParameter(frameworkMethod, testCase, context));
 
-            citrus.run(testCase, context);
+                citrus.run(testCase, context);
+            } catch (TestCaseFailedException e) {
+                throw e;
+            } catch (Exception | AssertionError e) {
+                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.finish(context);
+                throw new TestCaseFailedException(e);
+            }
         } else if (frameworkMethod.getAttribute(RUNNER_ATTRIBUTE) != null) {
             TestRunner testRunner = (TestRunner) frameworkMethod.getAttribute(RUNNER_ATTRIBUTE);
 
-            Object[] params = resolveParameter(frameworkMethod, testCase, context);
-            testRunner.start();
-            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this, params);
+            try {
+                Object[] params = resolveParameter(frameworkMethod, testCase, context);
+                testRunner.start();
+                ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this, params);
+            } catch (Exception | AssertionError e) {
+                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                throw new TestCaseFailedException(e);
+            } finally {
+                testRunner.stop();
+            }
         }
     }
 

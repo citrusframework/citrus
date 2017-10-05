@@ -24,6 +24,7 @@ import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.simulation.TestSimulator;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.server.Server;
 import org.slf4j.Logger;
@@ -67,8 +68,16 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     protected void invokeTestMethod(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
         if (isConfigure(frameworkMethod.getMethod())) {
-            configure();
-            citrus.run(testCase, context);
+            try {
+                configure();
+                citrus.run(testCase, context);
+            } catch (TestCaseFailedException e) {
+                throw e;
+            } catch (Exception | AssertionError e) {
+                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.finish(context);
+                throw new TestCaseFailedException(e);
+            }
         } else {
             super.invokeTestMethod(frameworkMethod, testCase, context);
         }
