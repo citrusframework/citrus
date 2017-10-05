@@ -31,6 +31,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -52,6 +53,7 @@ import java.util.Set;
 public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> {
 
     /** Should also check exact amount of object fields */
+    @Value("${citrus.json.message.validation.strict:true}")
     private boolean strict = true;
 
     @Override

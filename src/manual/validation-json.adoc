@@ -9,10 +9,15 @@ And this is quite easy. Citrus has a JSON message validator implementation activ
 
 Citrus provides several default message validator implementations for JOSN message format:
 
-com.consol.citrus.validation.json.JsonTextMessageValidator:: Basic JSON message validator implementation compares JSON objects (expected and received). The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. JSONArray as well as nested JSONObjects are supported, too. The JSON validator offers two different modes to operate. By default *strict* mode is set and the validator will also check the exact amount of control object fields to match. No additional fields in received JSON data structure will be accepted. In *soft* mode validator allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated. Additional fields in the received JSON data structure are ignored then.
+.JsonMessageValidators
+com.consol.citrus.validation.json.JsonTextMessageValidator:: Basic JSON message validator implementation compares JSON objects (expected and received). The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. JSONArray as well as nested JSONObjects are supported, too.
 com.consol.citrus.validation.script.GroovyJsonMessageValidator:: Extended groovy message validator provides specific JSON slurper support. With JSON slurper the tester can validate the JSON message payload with closures for instance.
 
-You can overwrite this default message validators for JSON by placing a bean into the Spring Application context. The bean uses a default name as identifier. Then your custom bean will overwrite the default validator:
+IMPORTANT: The JSON validator offers two different modes to operate. By default *strict* mode is enabled and the validator will also check the exact amount of object fields to match in received and control message. No additional fields in received JSON data structure will be accepted then. In *soft* mode the validator allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated. Additional fields in the received JSON data structure are ignored then.
+
+TIP: The JSON validation mode (strict or soft) is settable via system property `citrus.json.message.validation.strict=false`. This will set soft mode to all JSON text messag validators.
+
+You can also overwrite this default message validators for JSON by placing a bean into the Spring Application context. The bean uses a default name as identifier. Then your custom bean will overwrite the default validator:
 
 [source,xml]
 ----
