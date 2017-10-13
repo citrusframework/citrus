@@ -48,7 +48,10 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     @Override
     public Message buildMessageContent(TestContext context, String messageType) {
-        delegate.setMessageHeaders(message.getHeaders());
+        delegate.getMessageHeaders().putAll(message.getHeaders());
+        message.getHeaders().clear();
+        message.getHeaders().put(MessageHeaders.ID, delegate.getMessageHeaders().get(MessageHeaders.ID));
+        message.getHeaders().put(MessageHeaders.TIMESTAMP, delegate.getMessageHeaders().get(MessageHeaders.TIMESTAMP));
 
         Message delegateMessage = delegate.buildMessageContent(context, messageType);
 
