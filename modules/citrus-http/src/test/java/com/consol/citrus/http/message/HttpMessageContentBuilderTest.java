@@ -19,6 +19,7 @@ package com.consol.citrus.http.message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.testng.Assert;
@@ -44,6 +45,8 @@ public class HttpMessageContentBuilderTest {
         Message builtMessage = builder.buildMessageContent(ctx, String.valueOf(MessageType.XML));
 
         Assert.assertEquals(builtMessage.getHeaders().entrySet().size(), 3);
+        Assert.assertEquals(msg.getHeader(MessageHeaders.ID), builtMessage.getHeader(MessageHeaders.ID));
+        Assert.assertEquals(msg.getHeader(MessageHeaders.TIMESTAMP), builtMessage.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(builtMessage.getHeader("foo"), "bar");
     }
 }
