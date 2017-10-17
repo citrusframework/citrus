@@ -17,8 +17,7 @@
 package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.config.xml.*;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -103,7 +102,7 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             }
         }
 
-        parseMessageSelector(element, builder);
+        MessageSelectorParser.doParse(element, builder);
 
         Element body = DomUtils.getChildElementByTagName(requestElement, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);

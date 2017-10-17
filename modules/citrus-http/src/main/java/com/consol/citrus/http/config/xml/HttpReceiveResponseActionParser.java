@@ -17,8 +17,7 @@
 package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.config.xml.*;
 import com.consol.citrus.http.message.*;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
@@ -118,7 +117,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
             }
         }
 
-        parseMessageSelector(element, builder);
+        MessageSelectorParser.doParse(element, builder);
 
         Element body = DomUtils.getChildElementByTagName(element, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
