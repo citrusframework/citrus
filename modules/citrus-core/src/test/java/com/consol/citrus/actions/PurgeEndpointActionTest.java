@@ -91,11 +91,11 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
     }
 	
 	@Test
-    public void testPurgeWithMessageSelectorString() throws Exception {
+    public void testPurgeWithMessageSelector() throws Exception {
         PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction();
         purgeEndpointAction.setBeanFactory(applicationContext);
 
-        purgeEndpointAction.setMessageSelectorString("operation = 'sayHello'");
+        purgeEndpointAction.setMessageSelector("operation = 'sayHello'");
         
         List<Endpoint> endpoints = new ArrayList<>();
         endpoints.add(mockEndpoint);
@@ -112,11 +112,11 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testPurgeWithMessageSelector() throws Exception {
+    public void testPurgeWithMessageSelectorMap() throws Exception {
         PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction();
         purgeEndpointAction.setBeanFactory(applicationContext);
 
-        purgeEndpointAction.setMessageSelector(Collections.<String, Object>singletonMap("operation", "sayHello"));
+        purgeEndpointAction.setMessageSelectorMap(Collections.singletonMap("operation", "sayHello"));
 
         List<Endpoint> endpoints = new ArrayList<>();
         endpoints.add(mockEndpoint);

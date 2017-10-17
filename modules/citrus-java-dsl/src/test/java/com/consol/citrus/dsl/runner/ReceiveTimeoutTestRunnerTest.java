@@ -59,7 +59,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 receiveTimeout(builder -> builder.endpoint(messageEndpoint)
                         .timeout(250)
-                        .selector("TestMessageSelectorString"));
+                        .selector("TestMessageSelector"));
             }
         };
 
@@ -71,7 +71,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
+        Assert.assertEquals(action.getMessageSelector(),"TestMessageSelector");
         Assert.assertEquals(action.getTimeout(), 250);
 
     }
@@ -127,7 +127,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
                 public void execute() {
                     receiveTimeout(builder -> builder.endpoint(messageEndpoint)
                             .timeout(250)
-                            .selector("TestMessageSelectorString"));
+                            .selector("TestMessageSelector"));
                 }
             };
 

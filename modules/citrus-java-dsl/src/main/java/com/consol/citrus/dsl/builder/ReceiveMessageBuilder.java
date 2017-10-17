@@ -635,7 +635,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T selector(String messageSelector) {
-        getAction().setMessageSelectorString(messageSelector);
+        getAction().setMessageSelector(messageSelector);
 
         return self;
     }
@@ -646,7 +646,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T selector(Map<String, Object> messageSelector) {
-        getAction().setMessageSelector(messageSelector);
+        getAction().setMessageSelectorMap(messageSelector);
 
         return self;
     }

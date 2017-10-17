@@ -73,7 +73,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
         
-        parseMessageSelector(element, builder);
+        MessageSelectorParser.doParse(element, builder);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         List<ValidationContext> validationContexts = parseValidationContexts(messageElement, builder);
@@ -141,29 +141,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         }
 
         return validationContexts;
-    }
-
-    /**
-     * Added message selector if set.
-     * @param element
-     * @param builder
-     */
-    protected void parseMessageSelector(Element element, BeanDefinitionBuilder builder) {
-        Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
-        if (messageSelectorElement != null) {
-            Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");
-            if (selectorStringElement != null) {
-                builder.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
-            }
-
-            Map<String, String> messageSelector = new HashMap<String, String>();
-            List<?> messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
-            for (Iterator<?> iter = messageSelectorElements.iterator(); iter.hasNext();) {
-                Element selectorElement = (Element) iter.next();
-                messageSelector.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
-            }
-            builder.addPropertyValue("messageSelector", messageSelector);
-        }
     }
 
     /**

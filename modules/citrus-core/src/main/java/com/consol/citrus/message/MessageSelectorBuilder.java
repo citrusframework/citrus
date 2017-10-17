@@ -16,6 +16,10 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.context.TestContext;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -37,7 +41,25 @@ public class MessageSelectorBuilder {
     public MessageSelectorBuilder(String selectorString) {
         this.selectorString = selectorString;
     }
-    
+
+    /**
+     * Build message selector from string expression or from key value map. Automatically replaces test variables.
+     * @param messageSelector
+     * @param messageSelectorMap
+     * @param context
+     * @return
+     */
+    public static String build(String messageSelector, Map<String, Object> messageSelectorMap, TestContext context) {
+        if (StringUtils.hasText(messageSelector)) {
+            return context.replaceDynamicContentInString(messageSelector);
+        } else if (!CollectionUtils.isEmpty(messageSelectorMap)) {
+            return MessageSelectorBuilder.fromKeyValueMap(
+                    context.resolveDynamicValuesInMap(messageSelectorMap)).build();
+        }
+
+        return "";
+    }
+
     /**
      * Static builder method using a selector string.
      * @param selectorString

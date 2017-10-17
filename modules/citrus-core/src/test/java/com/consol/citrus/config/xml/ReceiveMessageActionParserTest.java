@@ -49,8 +49,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         
         // 1st action
         ReceiveMessageAction action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelector().isEmpty());
-        Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
@@ -74,8 +74,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelector().isEmpty());
-        Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -101,9 +101,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 3rd action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageSelector().size(), 1);
-        Assert.assertEquals(action.getMessageSelector().get("operation"), "Test");
-        Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 1);
+        Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "Test");
+        Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
@@ -123,15 +123,15 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         
         // 4th action
         action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelector().isEmpty());
-        Assert.assertEquals(action.getMessageSelectorString(), "operation = 'Test'");
+        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assert.assertEquals(action.getMessageSelector(), "operation = 'Test'");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
         // 5th action
         action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelector().isEmpty());
-        Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         
@@ -152,8 +152,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         
         // 6th action
         action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelector().isEmpty());
-        Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assert.assertNull(action.getMessageSelector());
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         

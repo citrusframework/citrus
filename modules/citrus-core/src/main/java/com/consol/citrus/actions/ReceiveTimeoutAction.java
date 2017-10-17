@@ -21,11 +21,15 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action expecting a timeout on a message destination, this means that no message 
@@ -43,6 +47,9 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
 
     /** Message endpoint uri */
     private String endpointUri;
+
+    /** Build message selector with name value pairs */
+    private Map<String, Object> messageSelectorMap = new HashMap<>();
 
     /** Message selector string */
     private String messageSelector;
@@ -63,8 +70,10 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             Message receivedMessage;
             Consumer consumer = getOrCreateEndpoint(context).createConsumer();
 
-            if (StringUtils.hasText(messageSelector) && consumer instanceof SelectiveConsumer) {
-                receivedMessage = ((SelectiveConsumer)consumer).receive(messageSelector, context, timeout);
+            String selector = MessageSelectorBuilder.build(messageSelector, messageSelectorMap, context);
+
+            if (StringUtils.hasText(selector) && consumer instanceof SelectiveConsumer) {
+                receivedMessage = ((SelectiveConsumer)consumer).receive(selector, context, timeout);
             } else {
                 receivedMessage = consumer.receive(context, timeout);
             }
@@ -118,6 +127,33 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     }
 
     /**
+     * Gets the messageSelector.
+     *
+     * @return
+     */
+    public String getMessageSelector() {
+        return messageSelector;
+    }
+
+    /**
+     * Set message selector string.
+     * @param messageSelector
+     */
+    public ReceiveTimeoutAction setMessageSelectorMap(Map<String, Object> messageSelector) {
+        this.messageSelectorMap = messageSelector;
+        return this;
+    }
+
+    /**
+     * Gets the messageSelectorMap.
+     *
+     * @return
+     */
+    public Map<String, Object> getMessageSelectorMap() {
+        return messageSelectorMap;
+    }
+
+    /**
      * Set message endpoint instance.
      * @param endpoint the message endpoint
      */
@@ -140,14 +176,6 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
      */
     public long getTimeout() {
         return timeout;
-    }
-
-    /**
-     * Gets the messageSelector.
-     * @return the messageSelector
-     */
-    public String getMessageSelector() {
-        return messageSelector;
     }
 
     /**

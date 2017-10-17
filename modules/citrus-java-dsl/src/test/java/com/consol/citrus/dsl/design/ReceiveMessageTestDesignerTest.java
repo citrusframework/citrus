@@ -911,7 +911,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
-        Assert.assertEquals(action.getMessageSelector(), messageSelector);
+        Assert.assertEquals(action.getMessageSelectorMap(), messageSelector);
     }
     
     @Test
@@ -938,8 +938,8 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
-        Assert.assertTrue(action.getMessageSelector().isEmpty());
-        Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
+        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
     }
     
     @Test

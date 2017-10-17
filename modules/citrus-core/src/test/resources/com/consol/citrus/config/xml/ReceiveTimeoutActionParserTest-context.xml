@@ -13,6 +13,12 @@
             <expect-timeout endpoint="myMessageEndpoint" wait="10000">
                 <select>operation='Test'</select>
             </expect-timeout>
+
+            <expect-timeout endpoint="myMessageEndpoint" wait="10000">
+                <selector>
+                    <element name="operation" value="Test"/>
+                </selector>
+            </expect-timeout>
         </actions>
     </testcase>
     

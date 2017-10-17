@@ -66,8 +66,8 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
         PurgeEndpointAction action = (PurgeEndpointAction) test.getActions().get(0);
         Assert.assertEquals(action.getEndpoints().size(), 3);
         Assert.assertEquals(action.getEndpoints().toString(), "[" + endpoint1.toString() + ", " + endpoint2.toString() + ", " + endpoint3.toString() + "]");
-        Assert.assertNull(action.getMessageSelectorString());
-        Assert.assertEquals(action.getMessageSelector().size(), 0);
+        Assert.assertNull(action.getMessageSelector());
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
     }
     
     @Test
@@ -99,8 +99,8 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointNames().size(), 4);
         Assert.assertEquals(action.getEndpointNames().toString(), "[e1, e2, e3, e4]");
         Assert.assertEquals(action.getBeanFactory(), applicationContextMock);
-        Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
-        Assert.assertEquals(action.getMessageSelector().size(), 0);
+        Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
 
     }
 
@@ -133,8 +133,8 @@ public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointNames().size(), 4);
         Assert.assertEquals(action.getEndpointNames().toString(), "[e1, e2, e3, e4]");
         Assert.assertEquals(action.getBeanFactory(), applicationContextMock);
-        Assert.assertNull(action.getMessageSelectorString());
-        Assert.assertEquals(action.getMessageSelector().size(), 1);
+        Assert.assertNull(action.getMessageSelector());
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 1);
 
     }
     

@@ -33,15 +33,19 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
         assertActionClassAndName(PurgeEndpointAction.class, "purge-endpoint");
         
         PurgeEndpointAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getMessageSelector());
+        Assert.assertNull(action.getMessageSelector());
+        Assert.assertNotNull(action.getMessageSelectorMap());
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
         Assert.assertEquals(action.getEndpoints().size(), 0);
         Assert.assertEquals(action.getEndpointNames().size(), 3);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
         Assert.assertEquals(action.getEndpointNames().get(1), "testEndpoint2");
         Assert.assertEquals(action.getEndpointNames().get(2), "testEndpoint3");
-        
+
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getMessageSelector());
+        Assert.assertNull(action.getMessageSelector());
+        Assert.assertNotNull(action.getMessageSelectorMap());
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
         Assert.assertEquals(action.getEndpoints().size(), 1);
         Assert.assertEquals(action.getEndpointNames().size(), 3);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
@@ -49,17 +53,17 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
         Assert.assertEquals(action.getEndpointNames().get(2), "testEndpoint3");
         
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
-        Assert.assertEquals(action.getMessageSelector().size(), 0);
+        Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
         Assert.assertEquals(action.getEndpoints().size(), 1);
         Assert.assertEquals(action.getEndpointNames().size(), 1);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getMessageSelectorString());
-        Assert.assertEquals(action.getMessageSelector().size(), 2);
-        Assert.assertEquals(action.getMessageSelector().get("operation"), "sayHello");
-        Assert.assertEquals(action.getMessageSelector().get("id"), "12345");
+        Assert.assertNull(action.getMessageSelector());
+        Assert.assertEquals(action.getMessageSelectorMap().size(), 2);
+        Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "sayHello");
+        Assert.assertEquals(action.getMessageSelectorMap().get("id"), "12345");
         Assert.assertEquals(action.getEndpoints().size(), 0);
         Assert.assertEquals(action.getEndpointNames().size(), 1);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");

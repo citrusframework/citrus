@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -24,9 +26,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for receive-timeout action in test case.
@@ -62,6 +61,8 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
         if (messageSelectorElement != null) {
             beanDefinition.addPropertyValue("messageSelector", DomUtils.getTextValue(messageSelectorElement));
         }
+
+        MessageSelectorParser.doParse(element, beanDefinition);
 
         return beanDefinition.getBeanDefinition();
     }

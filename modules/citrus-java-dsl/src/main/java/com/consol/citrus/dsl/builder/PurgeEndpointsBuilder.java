@@ -52,7 +52,7 @@ public class PurgeEndpointsBuilder extends AbstractTestActionBuilder<PurgeEndpoi
      * @param messageSelector the messageSelector to set
      */
 	public PurgeEndpointsBuilder selector(String messageSelector) {
-		action.setMessageSelectorString(messageSelector);
+		action.setMessageSelector(messageSelector);
 		return this;
 	}
 
@@ -61,7 +61,7 @@ public class PurgeEndpointsBuilder extends AbstractTestActionBuilder<PurgeEndpoi
 	 * @param messageSelector the messageSelector to set
 	 */
 	public PurgeEndpointsBuilder selector(Map<String, Object> messageSelector) {
-		action.setMessageSelector(messageSelector);
+		action.setMessageSelectorMap(messageSelector);
 		return this;
 	}
 

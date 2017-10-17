@@ -1279,7 +1279,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveSelectedWithMessageSelectorString() {
+    public void testReceiveSelectedWithMessageSelector() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
@@ -1288,8 +1288,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        String messageSelectorString = "Operation = 'sayHello'";
-        receiveAction.setMessageSelectorString(messageSelectorString);
+        String messageSelector = "Operation = 'sayHello'";
+        receiveAction.setMessageSelector(messageSelector);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
@@ -1300,7 +1300,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        when(consumer.receive(messageSelectorString, context, 5000L)).thenReturn(controlMessage);
+        when(consumer.receive(messageSelector, context, 5000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1312,7 +1312,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveSelectedWithMessageSelectorStringAndTimeout() {
+    public void testReceiveSelectedWithMessageSelectorAndTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
@@ -1323,8 +1323,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         receiveAction.setReceiveTimeout(5000L);
         
-        String messageSelectorString = "Operation = 'sayHello'";
-        receiveAction.setMessageSelectorString(messageSelectorString);
+        String messageSelector = "Operation = 'sayHello'";
+        receiveAction.setMessageSelector(messageSelector);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
@@ -1335,7 +1335,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        when(consumer.receive(messageSelectorString, context, 5000L)).thenReturn(controlMessage);
+        when(consumer.receive(messageSelector, context, 5000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1358,7 +1358,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
-        receiveAction.setMessageSelector(messageSelector);
+        receiveAction.setMessageSelectorMap(messageSelector);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
@@ -1394,7 +1394,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
-        receiveAction.setMessageSelector(messageSelector);
+        receiveAction.setMessageSelectorMap(messageSelector);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");

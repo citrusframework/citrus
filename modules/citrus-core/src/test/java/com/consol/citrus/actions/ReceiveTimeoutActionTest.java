@@ -52,7 +52,6 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
         
 		receiveTimeout.execute(context);
-
 	}
 	
 	@Test
@@ -71,7 +70,6 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
         
         receiveTimeout.execute(context);
-
     }
 	
     @Test
@@ -101,7 +99,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveTimeoutWithMessageSelectorString() {
+    public void testReceiveTimeoutWithMessageSelector() {
         ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
         receiveTimeout.setEndpoint(endpoint);
         receiveTimeout.setMessageSelector("Operation = 'sayHello'");
@@ -115,6 +113,24 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
         
         receiveTimeout.execute(context);
+    }
+    
+    @Test
+    public void testReceiveTimeoutWithMessageSelectorVariableSupport() {
+        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
+        receiveTimeout.setEndpoint(endpoint);
+        receiveTimeout.setMessageSelector("Operation = '${operation}'");
 
+	    context.setVariable("operation", "sayHello");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+
+        when(consumer.receive("Operation = 'sayHello'", context, 1000L)).thenReturn(null);
+        when(endpoint.getActor()).thenReturn(null);
+
+        receiveTimeout.execute(context);
     }
 }

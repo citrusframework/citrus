@@ -37,7 +37,6 @@ import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -55,10 +54,10 @@ import java.util.*;
  */
 public class ReceiveMessageAction extends AbstractTestAction {
     /** Build message selector with name value pairs */
-    private Map<String, Object> messageSelector = new HashMap<>();
+    private Map<String, Object> messageSelectorMap = new HashMap<>();
 
     /** Select messages via message selector string */
-    private String messageSelectorString;
+    private String messageSelector;
 
     /** Message endpoint */
     private Endpoint endpoint;
@@ -110,21 +109,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     @Override
     public void doExecute(TestContext context) {
-        Message receivedMessage;
-        String selectorString = null;
-        
         try {
-            //build message selector string if present
-            if (StringUtils.hasText(messageSelectorString)) {
-                selectorString = messageSelectorString;
-            } else if (!CollectionUtils.isEmpty(messageSelector)) {
-                selectorString = MessageSelectorBuilder.fromKeyValueMap(
-                        context.resolveDynamicValuesInMap(messageSelector)).build(); 
-            }
-            
+            Message receivedMessage;
+            String selector = MessageSelectorBuilder.build(messageSelector, messageSelectorMap, context);
+
             //receive message either selected or plain with message receiver
-            if (StringUtils.hasText(selectorString)) {
-                receivedMessage = receiveSelected(context, selectorString);
+            if (StringUtils.hasText(selector)) {
+                receivedMessage = receiveSelected(context, selector);
             } else {
                 receivedMessage = receive(context);
             }
@@ -264,20 +255,20 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for messageSelector.
-     * @param messageSelector
+     * Setter for messageSelectorMap.
+     * @param messageSelectorMap
      */
-    public ReceiveMessageAction setMessageSelector(Map<String, Object> messageSelector) {
-        this.messageSelector = messageSelector;
+    public ReceiveMessageAction setMessageSelectorMap(Map<String, Object> messageSelectorMap) {
+        this.messageSelectorMap = messageSelectorMap;
         return this;
     }
 
     /**
      * Set message selector string.
-     * @param messageSelectorString
+     * @param messageSelector
      */
-    public ReceiveMessageAction setMessageSelectorString(String messageSelectorString) {
-        this.messageSelectorString = messageSelectorString;
+    public ReceiveMessageAction setMessageSelector(String messageSelector) {
+        this.messageSelector = messageSelector;
         return this;
     }
 
@@ -401,19 +392,19 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Gets the messageSelector.
-     * @return the messageSelector
+     * Gets the messageSelectorMap.
+     * @return the messageSelectorMap
      */
-    public Map<String, Object> getMessageSelector() {
-        return messageSelector;
+    public Map<String, Object> getMessageSelectorMap() {
+        return messageSelectorMap;
     }
 
     /**
-     * Gets the messageSelectorString.
-     * @return the messageSelectorString
+     * Gets the messageSelector.
+     * @return the messageSelector
      */
-    public String getMessageSelectorString() {
-        return messageSelectorString;
+    public String getMessageSelector() {
+        return messageSelector;
     }
 
     /**

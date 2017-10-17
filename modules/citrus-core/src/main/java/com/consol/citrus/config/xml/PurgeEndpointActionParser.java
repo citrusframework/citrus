@@ -41,22 +41,7 @@ public class PurgeEndpointActionParser implements BeanDefinitionParser {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeEndpointAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
-
-        Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
-        if (messageSelectorElement != null) {
-            Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");
-            if (selectorStringElement != null) {
-                beanDefinition.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
-            }
-
-            Map<String, String> messageSelector = new HashMap<String, String>();
-            List<?> messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
-            for (Iterator<?> iter = messageSelectorElements.iterator(); iter.hasNext();) {
-                Element selectorElement = (Element) iter.next();
-                messageSelector.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
-            }
-            beanDefinition.addPropertyValue("messageSelector", messageSelector);
-        }
+        MessageSelectorParser.doParse(element, beanDefinition);
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("receive-timeout"), "receiveTimeout");
 

@@ -502,7 +502,20 @@
     <xs:complexType name="ExpectTimeoutActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
-            <xs:element name="select" type="xs:string" minOccurs="0"/>
+            <xs:element name="select" type="xs:string" minOccurs="0"/> <!-- TODO remove in major version upgrade-->
+            <xs:element name="selector" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="value" type="xs:string"/>
+                        <xs:element name="element" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="endpoint" type="xs:string"/>
         <xs:attribute name="wait" type="xs:int"/>
