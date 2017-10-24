@@ -16,11 +16,17 @@
 
 package com.consol.citrus.xml.xpath;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.util.XMLUtils;
+import org.springframework.util.xml.SimpleNamespaceContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
+import javax.xml.xpath.XPathFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -47,7 +53,6 @@ public class XPathUtilsTest {
         Assert.assertEquals(namespaces.get("dns1"), "http://citrusframework.org/foo");
         Assert.assertEquals(namespaces.get("dns2"), "http://citrusframework.org/bar");
         Assert.assertEquals(namespaces.get("dns3"), "urn:citrus");
-        
     }
     
     @Test
@@ -68,5 +73,34 @@ public class XPathUtilsTest {
         
         Assert.assertEquals(XPathUtils.replaceDynamicNamespaces("//{http://citrusframework.org/unkown}Foo/{http://citrusframework.org/unknown}bar", namespaces),
                 "//{http://citrusframework.org/unkown}Foo/{http://citrusframework.org/unknown}bar");
+    }
+
+    @Test
+    public void testEvaluate() {
+        Document personNode = XMLUtils.parseMessagePayload("<person status=\"single\">" +
+                    "<name>foo</name>" +
+                    "<age>23</age>" +
+                "</person>");
+
+        NamespaceContext namespaceContext = new SimpleNamespaceContext();
+
+        Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/name", namespaceContext, XPathExpressionResult.STRING), "foo");
+        Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.NUMBER), 23.0D);
+        Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.INTEGER), 23);
+        Assert.assertEquals(XPathUtils.evaluateAsNode(personNode, "/person/name", namespaceContext).getFirstChild().getNodeValue(), "foo");
+        Assert.assertEquals(XPathUtils.evaluateAsNodeList(personNode, "/person/name", namespaceContext).item(0).getFirstChild().getNodeValue(), "foo");
+        Assert.assertEquals(XPathUtils.evaluateAsNodeList(personNode, "/person/unknown", namespaceContext).getLength(), 0L);
+        Assert.assertTrue(XPathUtils.evaluateAsBoolean(personNode, "/person/name", namespaceContext));
+        Assert.assertFalse(XPathUtils.evaluateAsBoolean(personNode, "/person/unknown", namespaceContext));
+        Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/name", namespaceContext), "foo");
+        Assert.assertEquals(XPathUtils.evaluateAsObject(personNode, "/person/name", namespaceContext, new QName("http://www.w3.org/1999/XSL/Transform", "STRING")), "foo");
+        Assert.assertEquals(XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext), 23.0D);
+        Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/@status", namespaceContext), "single");
+    }
+
+    @Test(priority = 1)
+    public void testCustomXPathFactory() {
+        System.setProperty(XPathFactory.DEFAULT_PROPERTY_NAME + ":" + XPathFactory.DEFAULT_OBJECT_MODEL_URI, "");
+        testEvaluate();
     }
 }

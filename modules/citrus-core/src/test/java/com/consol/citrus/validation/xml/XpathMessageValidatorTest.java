@@ -244,7 +244,12 @@ public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</root>");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(Collections.<String, Object>singletonMap("number:count(//element/sub-element[.='text-value'])", "2.0"));
+        HashMap<String, Object> expressions = new HashMap<>();
+        expressions.put("number:count(//element/sub-element[.='text-value'])", "2.0");
+        expressions.put("integer:count(//element/sub-element[.='text-value'])", "2");
+        expressions.put("number:count(//element/sub-element)", greaterThan(1.0));
+        expressions.put("integer:count(//element/sub-element)", greaterThan(1));
+        validationContext.setXpathExpressions(expressions);
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }

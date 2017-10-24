@@ -137,7 +137,8 @@ Now lets have a look at some more powerful validation expressions using matcher 
 <message>
   <validate>
     <xpath expression="/TestRequest/Error" value="@assertThat(anyOf(empty(), nullValue()))@"/>
-    <xpath expression="/TestRequest/Status[.='success']" value="@assertThat(greaterThan(0))@" result-type="number"/>
+    <xpath expression="/TestRequest/Status[.='success']" value="@assertThat(greaterThan(0.0))@" result-type="number"/>
+    <xpath expression="/TestRequest/Status[.='failed']" value="@assertThat(lowerThan(1))@" result-type="integer"/>
     <xpath expression="/TestRequest/OrderType" value="@assertThat(hasSize(3))@" result-type="node-set"/>
   </validate>
 </message>
@@ -150,13 +151,16 @@ Now lets have a look at some more powerful validation expressions using matcher 
 public void receiveMessageTest() {
     receive("helloServiceServer")
         .validate("/TestRequest/Error", anyOf(empty(), nullValue()))
-        .validate("number:/TestRequest/Status[.='success']", greaterThan(0))
+        .validate("number:/TestRequest/Status[.='success']", greaterThan(0.0))
+        .validate("integer:/TestRequest/Status[.='failed']", lowerThan(1))
         .validate("node-set:/TestRequest/OrderType", hasSize(3))
         .header("Operation", "sayHello");
 }
 ----
 
-When using the XML DSL we have to use the *assertThat* validation matcher syntax for defining the Hamcrest matchers. You can combine matcher implementation as seen in the *anyOf(empty(), nullValue())* expression. When using the Java DSL you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected. This is a very powerful validation mechanism as it also works with node-sets containing multiple values as list.
+NOTE: XPath uses decimal number type *Double* by default when evaluating expressions with *number* result type. This means we have to use Double typed expected values, too. Citrus also provides the result type *integer* that automatically converts the XPath expression result to a *Integer* type.
+
+When using the XML DSL we have to use the *assertThat* validation matcher syntax for defining the Hamcrest matcher. You can combine matcher implementation as seen in the *anyOf(empty(), nullValue())* expression. When using the Java DSL you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected. This is a very powerful validation mechanism as it also works with node-sets containing multiple values as list.
 
 This is how you can add very powerful message element validation in XML using XPath expressions.
 

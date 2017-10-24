@@ -86,8 +86,6 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
 
                 if (value instanceof List) {
                     value = StringUtils.arrayToCommaDelimitedString(((List)value).toArray(new String[((List)value).size()]));
-                } else {
-                    value = value.toString();
                 }
                 
                 context.setVariable(variableName, value);

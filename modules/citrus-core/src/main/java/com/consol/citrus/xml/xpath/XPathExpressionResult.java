@@ -33,11 +33,12 @@ import javax.xml.xpath.XPathConstants;
  * @author Christoph Deppisch
  */
 public enum XPathExpressionResult {
-    NODE, NODESET, STRING, BOOLEAN, NUMBER;
+    NODE, NODESET, STRING, BOOLEAN, NUMBER, INTEGER;
     
     /** Prefix for XPath expressions in Citrus determining the result type */
     private static final String STRING_PREFIX = "string:";
     private static final String NUMBER_PREFIX = "number:";
+    private static final String INTEGER_PREFIX = "integer:";
     private static final String NODE_PREFIX = "node:";
     private static final String NODESET_PREFIX = "node-set:";
     private static final String BOOLEAN_PREFIX = "boolean:";
@@ -59,6 +60,8 @@ public enum XPathExpressionResult {
             return BOOLEAN;
         } else if (value.startsWith(NUMBER_PREFIX)) {
             return NUMBER;
+        } else if (value.startsWith(INTEGER_PREFIX)) {
+            return INTEGER;
         } else {
             return defaultResult;
         }
@@ -77,7 +80,7 @@ public enum XPathExpressionResult {
             return XPathConstants.NODESET;
         } else if (this.equals(BOOLEAN)) {
             return XPathConstants.BOOLEAN;
-        } else if (this.equals(NUMBER)) {
+        } else if (this.equals(NUMBER) || this.equals(INTEGER)) {
             return XPathConstants.NUMBER;
         } else {
             return XPathConstants.NODE;
@@ -100,6 +103,8 @@ public enum XPathExpressionResult {
             return expression.substring(BOOLEAN_PREFIX.length());
         } else if (expression.startsWith(NUMBER_PREFIX)) {
             return expression.substring(NUMBER_PREFIX.length());
+        } else if (expression.startsWith(INTEGER_PREFIX)) {
+            return expression.substring(INTEGER_PREFIX.length());
         } else {
             return expression;
         }
