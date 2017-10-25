@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
  */
 public class RestDocClientInterceptorTest {
 
-    private final ManualRestDocumentation restDocumentation = new ManualRestDocumentation("test-output/generated-snippets");
+    private final ManualRestDocumentation restDocumentation = new ManualRestDocumentation("target/citrus-docs/generated-snippets");
 
     private RestDocClientInterceptor interceptor;
 
@@ -118,7 +118,7 @@ public class RestDocClientInterceptorTest {
 
     private void assertExpectedSnippetFilesExist(String identifier, String... snippets) {
         for (String snippet : snippets) {
-            File snippetFile = new File (new File("test-output/generated-snippets/" + identifier), snippet);
+            File snippetFile = new File (new File("target/citrus-docs/generated-snippets/" + identifier), snippet);
             Assert.assertTrue(snippetFile.isFile(), "Snippet " + snippetFile + " not found");
         }
     }

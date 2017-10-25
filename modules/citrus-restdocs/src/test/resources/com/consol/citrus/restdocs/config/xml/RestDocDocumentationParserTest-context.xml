@@ -9,7 +9,7 @@
 
   <citrus-restdocs:documentation id="documentation2"
                               identifier="docs1/{method-name}"
-                              output-directory="test-output/generated-soap-snippets"
+                              output-directory="target/citrus-docs/generated-soap-snippets"
                               type="soap"/>
 
 </beans>

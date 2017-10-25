@@ -23,7 +23,7 @@ import com.consol.citrus.util.PropertyUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -57,7 +57,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private Resource testDetailTemplate;
 
     /** Output directory */
-    @Value("${citrus.html.report.directory:}")
+    @Value("${citrus.html.report.directory:target/citrus-reports}")
     private String outputDirectory;
 
     /** Resulting HTML test report file name */
@@ -98,27 +98,24 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             final String testDetails = FileUtils.readToString(testDetailTemplate);
             final String unknown = "N/A";
 
-            testResults.doWithResults(new TestResults.ResultCallback() {
-                @Override
-                public void doWithResult(TestResult result) {
-                    ResultDetail detail = details.get(result.getTestName());
+            testResults.doWithResults(result -> {
+                ResultDetail detail = details.get(result.getTestName());
 
-                    Properties detailProps = new Properties();
-                    detailProps.put("test.style.class", result.getResult().toLowerCase());
-                    detailProps.put("test.case.name", result.getTestName());
-                    detailProps.put("test.author", !StringUtils.hasText(detail.getMetaInfo().getAuthor()) ? unknown : detail.getMetaInfo().getAuthor());
-                    detailProps.put("test.status", detail.getMetaInfo().getStatus().toString());
-                    detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? unknown : dateFormat.format(detail.getMetaInfo().getCreationDate()));
-                    detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? unknown : detail.getMetaInfo().getLastUpdatedBy());
-                    detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? unknown : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
-                    detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? unknown : detail.getDescription());
-                    detailProps.put("test.result", result.getResult());
+                Properties detailProps = new Properties();
+                detailProps.put("test.style.class", result.getResult().toLowerCase());
+                detailProps.put("test.case.name", result.getTestName());
+                detailProps.put("test.author", !StringUtils.hasText(detail.getMetaInfo().getAuthor()) ? unknown : detail.getMetaInfo().getAuthor());
+                detailProps.put("test.status", detail.getMetaInfo().getStatus().toString());
+                detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? unknown : dateFormat.format(detail.getMetaInfo().getCreationDate()));
+                detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? unknown : detail.getMetaInfo().getLastUpdatedBy());
+                detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? unknown : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
+                detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? unknown : detail.getDescription());
+                detailProps.put("test.result", result.getResult());
 
-                    reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
+                reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
 
-                    if (result.isFailed() && result.getCause() != null) {
-                        reportDetails.append(getStackTraceHtml(result.getCause()));
-                    }
+                if (result.isFailed() && result.getCause() != null) {
+                    reportDetails.append(getStackTraceHtml(result.getCause()));
                 }
             });
 
@@ -135,8 +132,6 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(reportTemplate), reportProps);
 
             createReportFile(report);
-
-            log.info("Generated HTML test report");
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to generate HTML test report", e);
         }
@@ -271,29 +266,31 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private void createReportFile(String content) {
         Writer fileWriter = null;
 
-        String directory = StringUtils.hasText(outputDirectory) ? outputDirectory : "test-output" + File.separator + "citrus-reports";
-        File targetDirectory = new File(directory);
+        File targetDirectory = new File(outputDirectory);
         if (!targetDirectory.exists()) {
             boolean success = targetDirectory.mkdirs();
             
             if (!success) {
-                throw new CitrusRuntimeException("Unable to create folder structure for HTML report");
+                throw new CitrusRuntimeException("Unable to create html report output directory: " + outputDirectory);
             }
         }
         
         try {
-            fileWriter = new FileWriter(directory + File.separator + reportFileName);
+            File reportFile = new File(targetDirectory, reportFileName);
+            fileWriter = new FileWriter(reportFile);
             fileWriter.append(content);
             fileWriter.flush();
+
+            log.info("Generated HTML test report: " + reportFile.getPath());
         } catch (IOException e) {
             log.error("Failed to save HTML test report", e);
         } finally {
             if (fileWriter != null) {
-                try { 
-                    fileWriter.close(); 
-                } catch (IOException e) { 
-                    log.error("Error closing HTML report file", e); 
-                } 
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    log.error("Error closing HTML report file", e);
+                }
             }
         }
     }

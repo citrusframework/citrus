@@ -43,7 +43,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
     private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
 
-    private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "doc";
+    private static final String OUTPUT_DIRECTORY = "target" + File.separator + "docs";
     
     protected String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
     protected String testDocTemplate;

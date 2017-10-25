@@ -18,6 +18,7 @@ package com.consol.citrus.selenium.actions;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.OutputType;
@@ -66,10 +67,14 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
                 try {
                     File targetDir = new File(context.replaceDynamicContentInString(outputDir));
                     if (!targetDir.exists()) {
-                        targetDir.mkdirs();
+                        boolean success = targetDir.mkdirs();
+
+                        if (!success) {
+                            throw new CitrusRuntimeException("Failed to create screenshot output directory: " + outputDir);
+                        }
                     }
 
-                    FileCopyUtils.copy(screenshot, new File(targetDir + File.separator + testName + "_" + screenshot.getName()));
+                    FileCopyUtils.copy(screenshot, new File(targetDir, testName + "_" + screenshot.getName()));
                 } catch (IOException e) {
                     log.error("Failed to save screenshot to target storage", e);
                 }

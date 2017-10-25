@@ -42,7 +42,7 @@ First of all we concentrate on adding the Spring Restdocs feature to Http client
 [source,xml]
 ----
 <citrus-restdocs:documentation id="restDocumentation"
-                                              output-directory="test-output/generated-snippets"
+                                              output-directory="target/citrus-docs/generated-snippets"
                                               identifier="rest-docs/{method-name}"/>
 ----
 
@@ -60,7 +60,7 @@ The Spring Restdocs documentation component acts as a client interceptor. Every 
 
 [source,xml]
 ----
-test-output
+target/citrus-docs
   |- rest-docs
     |- test-a
       |- curl-request.adoc
@@ -126,7 +126,7 @@ Nice work! We have automatically created snippets for the RESTful API by just ad
 
 [source,xml]
 ----
-<citrus-restdocs:configurer id="restDocConfigurer" output-directory="test-output/generated-snippets"/>
+<citrus-restdocs:configurer id="restDocConfigurer" output-directory="target/citrus-docs/generated-snippets"/>
 <citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="rest-docs/{method-name}"/>
 
 <util:list id="restDocInterceptors">
@@ -156,7 +156,7 @@ The concept of adding the Spring Restdocs documentation as interceptor to the cl
 ----
 <citrus-restdocs:documentation id="soapDocumentation"
                                               type="soap"
-                                              output-directory="test-output/generated-snippets"
+                                              output-directory="target/citrus-docs/generated-snippets"
                                               identifier="soap-docs/{method-name}"/>
 ----
 

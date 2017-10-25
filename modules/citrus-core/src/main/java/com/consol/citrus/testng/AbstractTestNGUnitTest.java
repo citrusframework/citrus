@@ -20,6 +20,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.HtmlReporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeMethod;
 
@@ -37,6 +38,9 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
     @Autowired
     protected TestContextFactory testContextFactory;
 
+    @Autowired
+    private HtmlReporter htmlReporter;
+
     static {
         System.setProperty(Citrus.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:com/consol/citrus/context/citrus-unit-context.xml");
     }
@@ -46,6 +50,8 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
      */
     @BeforeMethod
     public void prepareTest() {
+        htmlReporter.setEnabled("false");
+
         context = createTestContext();
     }
 

@@ -10,7 +10,7 @@ Citrus offers an easy way to debug all received messages to the file system. You
 <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 ----
 
-Just add this bean to the Spring configuration and Citrus will listen for sent and received messages for saving those to the file system. You will find files like these in the default test-output folder after the test run:
+Just add this bean to the Spring configuration and Citrus will listen for sent and received messages for saving those to the file system. You will find files like these in the default test output folder after the test run:
 
 For example:
 

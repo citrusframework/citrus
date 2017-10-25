@@ -8,7 +8,7 @@
   <citrus-restdocs:configurer id="configurer1"/>
 
   <citrus-restdocs:configurer id="configurer2"
-                              output-directory="test-output/generated-soap-snippets"
+                              output-directory="target/citrus-docs/generated-soap-snippets"
                               type="soap"/>
 
 </beans>

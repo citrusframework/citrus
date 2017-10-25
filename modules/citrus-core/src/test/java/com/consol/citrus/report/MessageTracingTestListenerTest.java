@@ -19,6 +19,7 @@ package com.consol.citrus.report;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.message.RawMessage;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -34,7 +35,12 @@ import static org.mockito.Mockito.when;
  */
 public class MessageTracingTestListenerTest {
 
-    MessageTracingTestListener testling = new MessageTracingTestListener();
+    private MessageTracingTestListener testling = new MessageTracingTestListener();
+
+    @BeforeClass
+    public void setupTestling() {
+        testling.setOutputDirectory("target/citrus-logs/trace/messages");
+    }
 
     @Test
     public void shouldReturnTheSameTraceFile() throws Exception {
@@ -79,7 +85,7 @@ public class MessageTracingTestListenerTest {
         Assert.assertTrue(traceFile.isFile());
         try (Scanner scanner = new Scanner(traceFile)) {
             String fileContent = scanner.useDelimiter("\\Z").next();
-            Assert.assertTrue(fileContent.indexOf(content) > -1);
+            Assert.assertTrue(fileContent.contains(content));
         }
         catch (IOException e) {
             throw new RuntimeException(e);

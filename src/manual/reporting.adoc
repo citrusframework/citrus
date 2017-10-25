@@ -50,7 +50,7 @@ Build management tools like Jenkins can easily import and display the generated 
 [[html-reports]]
 == HTML reports
 
-Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory *_${project.build.directory}/test-output/citrus-reports_* .
+Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory *_${project.build.directory}/citrus-reports_* .
 
 The report consists of two parts. The test summary on top shows the total number executed tests. The main part lists all test cases with detailed information. With this report you immediately identify all tests that were failing. Each test case is marked in color according to its result outcome.
 
@@ -62,7 +62,7 @@ The HTML reports are customizable by system properties. Use following properties
 
 [horizontal]
 citrus.html.report.enabled:: Enables/disables HTML report generation (default= *_true_*).
-citrus.html.report.directory:: Output directory path (default= *_${project.build.directory}/test-output/citrus-reports_*).
+citrus.html.report.directory:: Output directory path (default= *_${project.build.directory}/citrus-reports_*).
 citrus.html.report.file:: File name for the report file (default= *_citrus-test-results.html_*).
 citrus.html.report.template:: Template HTML file with placeholders for report results.
 citrus.html.report.detail.template:: Template file for detailed test results.

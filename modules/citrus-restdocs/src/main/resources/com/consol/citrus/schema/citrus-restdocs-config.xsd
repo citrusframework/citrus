@@ -28,7 +28,7 @@
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="type" type="RestDocType" default="http"/>
       <xs:attribute name="identifier" type="xs:string" use="required"/>
-      <xs:attribute name="output-directory" type="xs:string" default="test-output/generated-snippets"/>
+      <xs:attribute name="output-directory" type="xs:string" default="target/citrus-docs/generated-snippets"/>
     </xs:complexType>
   </xs:element>
 
@@ -39,7 +39,7 @@
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="type" type="RestDocType" default="http"/>
-      <xs:attribute name="output-directory" type="xs:string" default="test-output/generated-snippets"/>
+      <xs:attribute name="output-directory" type="xs:string" default="target/citrus-docs/generated-snippets"/>
     </xs:complexType>
   </xs:element>
 

@@ -24,14 +24,11 @@ import com.consol.citrus.message.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Test listener collects all messages sent and received by Citrus during test execution. Listener
@@ -52,7 +49,8 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     private static final Date TEST_EXECUTION_DATE = new Date();
 
     /** Output directory */
-    private Resource outputDirectory = new FileSystemResource("logs/trace/messages/");
+    @Value("${citrus.message.trace.directory:target/citrus-logs/trace/messages}")
+    private String outputDirectory;
     
     /** List of messages to trace */
     private final List<String> messages = new ArrayList<>();
@@ -136,23 +134,15 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
      * {@inheritDoc}
      */
     public void afterPropertiesSet() throws Exception {
-        if (!outputDirectory.exists()) {
-            boolean success = outputDirectory.getFile().mkdirs();
-            
+        File targetDirectory = new File(outputDirectory);
+        if (!targetDirectory.exists()) {
+            boolean success = targetDirectory.mkdirs();
+
             if (!success) {
-                throw new CitrusRuntimeException("Unable to create output directory structure for message tracing");
+                throw new CitrusRuntimeException("Unable to create message tracing output directory: " + outputDirectory);
             }
         }
     }
-
-    /**
-     * Sets the outputDirectory.
-     * @param outputDirectory the outputDirectory to set
-     */
-    public void setOutputDirectory(Resource outputDirectory) {
-        this.outputDirectory = outputDirectory;
-    }
-
 
     /**
      * Returns the trace file for message tracing. The file name should be unique per test execution run; the test name
@@ -165,15 +155,19 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     protected File getTraceFile(String testName) {
         String testExecutionStartTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(TEST_EXECUTION_DATE);
         String filename = String.format("%s_%s%s", testName, testExecutionStartTime, TRACE_FILE_ENDING);
-        try {
-            Resource traceResource = outputDirectory.createRelative(filename);
-            if(traceResource.exists()) {
-                LOG.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceResource.getFilename()));
-            }
-            return traceResource.getFile();
+
+        File traceFile = new File(outputDirectory, filename);
+        if(traceFile.exists()) {
+            LOG.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceFile.getName()));
         }
-        catch (IOException e) {
-            throw new CitrusRuntimeException("Error creating trace file", e);
-        }
+        return traceFile;
+    }
+
+    /**
+     * Sets the outputDirectory.
+     * @param outputDirectory the outputDirectory to set
+     */
+    public void setOutputDirectory(String outputDirectory) {
+        this.outputDirectory = outputDirectory;
     }
 }

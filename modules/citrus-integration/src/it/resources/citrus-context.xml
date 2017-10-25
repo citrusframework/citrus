@@ -134,7 +134,7 @@
          use-object-messages="true"
          destination-name="${jms.ws.stub.response}"/>
 
-    <citrus-restdocs:configurer id="restDocSoapConfigurer" type="soap" output-directory="test-output/generated-snippets"/>
+    <citrus-restdocs:configurer id="restDocSoapConfigurer" type="soap" output-directory="target/citrus-docs/generated-snippets"/>
     <citrus-restdocs:client-interceptor id="restDocSoapClientInterceptor" type="soap" identifier="test-case/{method-name}"/>
 
     <util:list id="restDocSoapInterceptors">
@@ -207,7 +207,7 @@
                       handle-cookies="true"
                       content-type="text/xml"/>
 
-    <citrus-restdocs:configurer id="restDocConfigurer" output-directory="test-output/generated-snippets"/>
+    <citrus-restdocs:configurer id="restDocConfigurer" output-directory="target/citrus-docs/generated-snippets"/>
     <citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="test-case/{method-name}"/>
 
     <util:list id="restDocInterceptors">

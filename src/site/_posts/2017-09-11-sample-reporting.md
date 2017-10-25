@@ -57,18 +57,18 @@ We add the new reporter implementation as Spring bean to the application context
 {% endhighlight %}
         
 That completes the reporting extension. Citrus will automatically see the new bean and add it to the list of reporters. The reporter is called when tests pass and fail. 
-As a result the reporter writes Extent styled Html reports to the folder `test-output/extent-reports.html` when Citrus tests are executed.
+As a result the reporter writes Extent styled Html reports to the folder `target/citrus-reports/extent-reports.html` when Citrus tests are executed.
 
 In addition to that Citrus provides some default Html reporting that is also customizable. We can use application properties to customize the report. Lets add a new application
 property file to the sample sources in [resources/citrus-application.properties](https://github.com/christophd/citrus-samples/tree/master/sample-reporting/src/test/resources/citrus-application.properties).
 
 The file contains some property settings that customize the default Citrus Html reporting.
 
-    citrus.html.report.directory=test-output
+    citrus.html.report.directory=target/citrus-reports
     citrus.html.report.file=citrus-reports.html
     citrus.html.report.logo:classpath:logo/reporting-logo.png
     
-The tests now write default Html reports to the file `test-output/citrus-reports.html`. Also we use a custom reporting logo that is automatically added to the reporting page header. 
+The tests now write default Html reports to the file `target/citrus-reports/citrus-reports.html`. Also we use a custom reporting logo that is automatically added to the reporting page header. 
 You can now execute the tests in this sample and review the reports.
 
 Run
@@ -82,7 +82,7 @@ Execute all Citrus tests by calling
      mvn integration-test
 
 You should see Citrus performing several tests with lots of debugging output. 
-And of course green tests at the very end of the build and some new reporting files in `test-output` folder.
+And of course green tests at the very end of the build and some new reporting files in `target/citrus-reports` folder.
 
 Of course you can also start the Citrus tests from your favorite IDE.
 Just start the Citrus test using the TestNG IDE integration in IntelliJ, Eclipse or Netbeans.
