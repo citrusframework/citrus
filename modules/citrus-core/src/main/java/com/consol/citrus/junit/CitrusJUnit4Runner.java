@@ -89,6 +89,11 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
                             Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
                             for (Resource fileResource : fileResources) {
                                 String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+
+                                if (packageName.startsWith("file:")) {
+                                    filePath = "file:" + filePath;
+                                }
+
                                 filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
                                 interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),

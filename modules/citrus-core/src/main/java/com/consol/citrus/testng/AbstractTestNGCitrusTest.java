@@ -237,6 +237,11 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                         Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
                         for (Resource fileResource : fileResources) {
                             String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+
+                            if (packageName.startsWith("file:")) {
+                                filePath = "file:" + filePath;
+                            }
+                            
                             filePath = filePath.substring(filePath.indexOf(packageName.replace('.', File.separatorChar)));
 
                             methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
