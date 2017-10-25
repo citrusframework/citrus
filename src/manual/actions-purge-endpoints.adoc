@@ -30,7 +30,6 @@ The Java DSL works quite similar - have a look:
 .Java DSL designer
 [source,java]
 ----
-@Autowired
 @CitrusTest
 public void purgeTest() {
     purgeEndpoints()
@@ -42,7 +41,6 @@ public void purgeTest() {
 .Java DSL runner
 [source,java]
 ----
-@Autowired
 @CitrusTest
 public void purgeTest() {
     purgeEndpoints(action ->
