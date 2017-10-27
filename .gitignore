@@ -12,3 +12,5 @@ bin
 .codepro
 .pmd
 node_modules
+test-output/
+logs/
