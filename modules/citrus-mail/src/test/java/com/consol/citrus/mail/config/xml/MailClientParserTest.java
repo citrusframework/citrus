@@ -17,6 +17,7 @@
 package com.consol.citrus.mail.config.xml;
 
 import com.consol.citrus.mail.client.MailClient;
+import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
@@ -60,6 +61,7 @@ public class MailClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
         Assert.assertNotNull(sender.getActor());
         Assert.assertEquals(sender.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
+        Assert.assertEquals(sender.getEndpointConfiguration().getMarshaller(), beanDefinitionContext.getBean("marshaller", MailMarshaller.class));
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getJavaMailProperties().get("mail.transport.protocol"), "smtp");
     }
 }

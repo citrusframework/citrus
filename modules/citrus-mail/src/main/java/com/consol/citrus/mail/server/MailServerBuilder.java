@@ -63,7 +63,7 @@ public class MailServerBuilder extends AbstractEndpointBuilder<MailServer> {
      * @return
      */
     public MailServerBuilder marshaller(MailMarshaller marshaller) {
-        endpoint.setMailMarshaller(marshaller);
+        endpoint.setMarshaller(marshaller);
         return this;
     }
 

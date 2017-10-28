@@ -18,6 +18,7 @@ package com.consol.citrus.mail.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.mail.message.MailMessageConverter;
+import com.consol.citrus.mail.model.MailMarshaller;
 
 import java.util.Properties;
 
@@ -92,6 +93,16 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
      */
     public MailClientBuilder javaMailProperties(Properties javaMailProperties) {
         endpoint.getEndpointConfiguration().setJavaMailProperties(javaMailProperties);
+        return this;
+    }
+
+    /**
+     * Sets the mail message marshaller.
+     * @param marshaller
+     * @return
+     */
+    public MailClientBuilder marshaller(MailMarshaller marshaller) {
+        endpoint.getEndpointConfiguration().setMarshaller(marshaller);
         return this;
     }
 

@@ -256,6 +256,11 @@ public class MailMessage extends DefaultMessage {
         return this;
     }
 
+    public MailMessage marshaller(MailMarshaller mailMarshaller) {
+        this.marshaller = mailMarshaller;
+        return this;
+    }
+
     @Override
     public <T> T getPayload(Class<T> type) {
         if (String.class.equals(type)) {

@@ -22,6 +22,7 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.mail.client.MailClient;
 import com.consol.citrus.mail.message.MailMessageConverter;
+import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
             port = 25000,
             actor="testActor",
             messageConverter="messageConverter",
+            marshaller="marshaller",
             javaMailProperties="javaMailProperties")
     private MailClient mailClient3;
 
@@ -64,6 +66,8 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @Mock
     private MailMessageConverter messageConverter = Mockito.mock(MailMessageConverter.class);
+    @Mock
+    private MailMarshaller marshaller = Mockito.mock(MailMarshaller.class);
     @Mock
     private Properties mailProperties = Mockito.mock(Properties.class);
     @Mock
@@ -78,6 +82,7 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
         referenceResolver.setApplicationContext(applicationContext);
 
         when(applicationContext.getBean("messageConverter", MailMessageConverter.class)).thenReturn(messageConverter);
+        when(applicationContext.getBean("marshaller", MailMarshaller.class)).thenReturn(marshaller);
         when(applicationContext.getBean("javaMailProperties", Properties.class)).thenReturn(mailProperties);
         when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
     }
@@ -107,6 +112,7 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(mailClient3.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
         Assert.assertNotNull(mailClient3.getActor());
         Assert.assertEquals(mailClient3.getEndpointConfiguration().getMessageConverter(), messageConverter);
+        Assert.assertEquals(mailClient3.getEndpointConfiguration().getMarshaller(), marshaller);
         Assert.assertEquals(mailClient3.getEndpointConfiguration().getJavaMailSender().getJavaMailProperties(), mailProperties);
     }
 }

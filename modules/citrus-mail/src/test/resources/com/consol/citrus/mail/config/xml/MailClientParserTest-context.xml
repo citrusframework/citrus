@@ -22,6 +22,7 @@
                        port="25000"
                        actor="testActor"
                        message-converter="messageConverter"
+                       marshaller="marshaller"
                        properties="javaMailProperties"/>
 
   <util:properties id="javaMailProperties">
@@ -34,6 +35,10 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
+  </bean>
+
+  <bean id="marshaller" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.mail.model.MailMarshaller"/>
   </bean>
 
 </beans>

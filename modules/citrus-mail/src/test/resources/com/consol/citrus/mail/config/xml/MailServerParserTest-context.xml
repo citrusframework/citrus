@@ -18,6 +18,7 @@
                       auto-start="false"
                       split-multipart="true"
                       message-converter="messageConverter"
+                      marshaller="marshaller"
                       mail-properties="mailProperties"
                       endpoint-adapter="endpointAdapter"/>
 
@@ -31,6 +32,10 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
+  </bean>
+
+  <bean id="marshaller" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.mail.model.MailMarshaller"/>
   </bean>
 
 </beans>

@@ -105,7 +105,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     public MailMessage convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             Map<String, Object> messageHeaders = createMessageHeaders(message);
-            return createMailRequest(messageHeaders, handlePart(message.getMimeMessage()));
+            return createMailRequest(messageHeaders, handlePart(message.getMimeMessage()), endpointConfiguration);
         } catch (MessagingException | IOException e) {
             throw new CitrusRuntimeException("Failed to convert mail mime message", e);
         }
@@ -114,10 +114,13 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * Creates a new mail message model object from message headers.
      * @param messageHeaders
+     * @param bodyPart
+     * @param endpointConfiguration
      * @return
      */
-    protected MailMessage createMailRequest(Map<String, Object> messageHeaders, BodyPart bodyPart) {
+    protected MailMessage createMailRequest(Map<String, Object> messageHeaders, BodyPart bodyPart, MailEndpointConfiguration endpointConfiguration) {
         return MailMessage.request(messageHeaders)
+                        .marshaller(endpointConfiguration.getMarshaller())
                         .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
                         .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
                         .cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())
@@ -334,7 +337,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
             if (payload instanceof MailRequest) {
                 mailRequest = (MailRequest) payload;
             } else {
-                mailRequest = (MailRequest) endpointConfiguration.getMailMarshaller()
+                mailRequest = (MailRequest) endpointConfiguration.getMarshaller()
                         .unmarshal(message.getPayload(Source.class));
             }
         }

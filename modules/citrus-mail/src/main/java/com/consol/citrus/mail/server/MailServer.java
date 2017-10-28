@@ -96,7 +96,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         }
 
         Message response = getEndpointAdapter().handleMessage(
-                MailMessage.accept(from, recipient));
+                MailMessage.accept(from, recipient)
+                           .marshaller(marshaller));
 
         if (response == null || response.getPayload() == null) {
             throw new CitrusRuntimeException("Did not receive accept response. Missing accept response because autoAccept is disabled.");
@@ -197,6 +198,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      */
     protected MailMessage createMailMessage(Map<String, Object> messageHeaders, String body, String contentType) {
         return MailMessage.request(messageHeaders)
+                .marshaller(marshaller)
                 .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
                 .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
                 .cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())
@@ -209,7 +211,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     public MailEndpointConfiguration getEndpointConfiguration() {
         MailEndpointConfiguration endpointConfiguration = new MailEndpointConfiguration();
         endpointConfiguration.setMessageConverter(messageConverter);
-        endpointConfiguration.setMailMarshaller(marshaller);
+        endpointConfiguration.setMarshaller(marshaller);
         endpointConfiguration.setJavaMailProperties(javaMailProperties);
 
         return endpointConfiguration;
@@ -246,7 +248,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * Gets the mail message marshaller.
      * @return
      */
-    public MailMarshaller getMailMarshaller() {
+    public MailMarshaller getMarshaller() {
         return marshaller;
     }
 
@@ -254,7 +256,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * Sets the mail message marshaller.
      * @param marshaller
      */
-    public void setMailMarshaller(MailMarshaller marshaller) {
+    public void setMarshaller(MailMarshaller marshaller) {
         this.marshaller = marshaller;
     }
 

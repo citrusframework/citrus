@@ -51,7 +51,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     private JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
     /** Mail message marshaller converts from XML to mail message object */
-    private MailMarshaller mailMarshaller = new MailMarshaller();
+    private MailMarshaller marshaller = new MailMarshaller();
 
     /** Mail message converter */
     private MailMessageConverter messageConverter = new MailMessageConverter();
@@ -168,16 +168,16 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * Gets the mail message marshaller implementation.
      * @return
      */
-    public MailMarshaller getMailMarshaller() {
-        return mailMarshaller;
+    public MailMarshaller getMarshaller() {
+        return marshaller;
     }
 
     /**
      * Sets the mail message marshaller implementation.
-     * @param mailMarshaller
+     * @param marshaller
      */
-    public void setMailMarshaller(MailMarshaller mailMarshaller) {
-        this.mailMarshaller = mailMarshaller;
+    public void setMarshaller(MailMarshaller marshaller) {
+        this.marshaller = marshaller;
     }
 
     /**

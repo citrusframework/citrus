@@ -78,7 +78,7 @@ public class MailEndpointComponentTest {
         reset(applicationContext);
         when(applicationContext.containsBean("myMarshaller")).thenReturn(true);
         when(applicationContext.getBean("myMarshaller")).thenReturn(marshaller);
-        Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&mailMarshaller=myMarshaller", context);
+        Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&marshaller=myMarshaller", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
 
@@ -86,7 +86,7 @@ public class MailEndpointComponentTest {
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), -1);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getUsername(), "foo");
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPassword(), "1234");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMailMarshaller(), marshaller);
+        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMarshaller(), marshaller);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
     }
