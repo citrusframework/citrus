@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail-response xmlns="http://www.citrusframework.org/schema/mail/message">
+  <code>250</code>
+  <message>OK</message>
+</mail-response>

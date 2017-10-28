@@ -21,6 +21,8 @@ import com.consol.citrus.mail.model.*;
 import com.consol.citrus.message.DefaultMessage;
 import org.springframework.xml.transform.StringResult;
 
+import java.util.Map;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7
@@ -76,6 +78,42 @@ public class MailMessage extends DefaultMessage {
         this.acceptResponse = acceptResponse;
     }
 
+    /**
+     * Constructor initializes new request message.
+     * @param mailRequest
+     * @param headers
+     */
+    private MailMessage(MailRequest mailRequest, Map<String, Object> headers) {
+        super(mailRequest, headers);
+        this.mailRequest = mailRequest;
+    }
+
+    public static MailMessage request(Map<String, Object> headers) {
+        MailRequest request = new MailRequest();
+
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_FROM)) {
+            request.setFrom(headers.get(CitrusMailMessageHeaders.MAIL_FROM).toString());
+        }
+
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_TO)) {
+            request.setTo(headers.get(CitrusMailMessageHeaders.MAIL_TO).toString());
+        }
+
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_CC)) {
+            request.setCc(headers.get(CitrusMailMessageHeaders.MAIL_CC).toString());
+        }
+
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_BCC)) {
+            request.setBcc(headers.get(CitrusMailMessageHeaders.MAIL_BCC).toString());
+        }
+
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_SUBJECT)) {
+            request.setSubject(headers.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString());
+        }
+
+        return new MailMessage(request, headers);
+    }
+
     public static MailMessage request() {
         return request(null, null, null);
     }
@@ -98,11 +136,11 @@ public class MailMessage extends DefaultMessage {
     }
 
     public static MailMessage response() {
-        return response(250, null);
+        return response(250);
     }
 
     public static MailMessage response(int code) {
-        return response(code, null);
+        return response(code, "OK");
     }
 
     public static MailMessage response(int code, String message) {
@@ -222,9 +260,17 @@ public class MailMessage extends DefaultMessage {
     public <T> T getPayload(Class<T> type) {
         if (String.class.equals(type)) {
             return (T) getPayload();
-        } else {
-            return super.getPayload(type);
+        } else if (MailRequest.class.equals(type) && mailRequest != null) {
+            return (T) mailRequest;
+        } else if (MailResponse.class.equals(type) && mailResponse != null) {
+            return (T) mailResponse;
+        } else if (AcceptRequest.class.equals(type) && acceptRequest != null) {
+            return (T) acceptRequest;
+        } else if (AcceptResponse.class.equals(type) && acceptResponse != null) {
+            return (T) acceptResponse;
         }
+
+        return super.getPayload(type);
     }
 
     @Override
@@ -245,5 +291,23 @@ public class MailMessage extends DefaultMessage {
         }
 
         return super.getPayload();
+    }
+
+    /**
+     * Gets the marshaller.
+     *
+     * @return
+     */
+    public MailMarshaller getMarshaller() {
+        return marshaller;
+    }
+
+    /**
+     * Sets the marshaller.
+     *
+     * @param marshaller
+     */
+    public void setMarshaller(MailMarshaller marshaller) {
+        this.marshaller = marshaller;
     }
 }

@@ -1,0 +1,11 @@
+{
+  "from": "foo@mail.com",
+  "to": "bar@mail.com,copy@mail.com",
+  "cc": "foobar@mail.com",
+  "bcc": "secret@mail.com",
+  "subject": "Testmail",
+  "body": {
+    "contentType": "text/plain",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua."
+  }
+}

@@ -102,16 +102,11 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     }
 
     @Override
-    public Message convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
+    public MailMessage convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             Map<String, Object> messageHeaders = createMessageHeaders(message);
-            MailRequest mailRequest = createMailRequest(messageHeaders);
-            mailRequest.setBody(handlePart(message.getMimeMessage()));
-
-            return new DefaultMessage(mailRequest, messageHeaders);
-        } catch (MessagingException e) {
-            throw new CitrusRuntimeException("Failed to convert mail mime message", e);
-        } catch (IOException e) {
+            return createMailRequest(messageHeaders, handlePart(message.getMimeMessage()));
+        } catch (MessagingException | IOException e) {
             throw new CitrusRuntimeException("Failed to convert mail mime message", e);
         }
     }
@@ -121,14 +116,14 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * @param messageHeaders
      * @return
      */
-    protected MailRequest createMailRequest(Map<String, Object> messageHeaders) {
-        MailRequest message = new MailRequest();
-        message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString());
-        message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString());
-        message.setCc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());
-        message.setBcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString());
-        message.setSubject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString());
-        return message;
+    protected MailMessage createMailRequest(Map<String, Object> messageHeaders, BodyPart bodyPart) {
+        return MailMessage.request(messageHeaders)
+                        .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
+                        .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
+                        .cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())
+                        .bcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString())
+                        .subject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString())
+                        .body(bodyPart);
     }
 
     /**
@@ -137,7 +132,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * @return
      */
     protected Map<String,Object> createMessageHeaders(MimeMailMessage msg) throws MessagingException, IOException {
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMimeMessage().getMessageID());
         headers.put(CitrusMailMessageHeaders.MAIL_FROM, StringUtils.arrayToCommaDelimitedString(msg.getMimeMessage().getFrom()));
         headers.put(CitrusMailMessageHeaders.MAIL_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(javax.mail.Message.RecipientType.TO))));

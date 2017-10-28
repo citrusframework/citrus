@@ -18,15 +18,12 @@ package com.consol.citrus.mail.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.client.MailEndpointConfiguration;
-import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
-import com.consol.citrus.mail.message.MailMessageConverter;
+import com.consol.citrus.mail.message.*;
 import com.consol.citrus.mail.model.*;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.xml.transform.StringResult;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
@@ -98,10 +95,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             return true;
         }
 
-        StringResult result = new StringResult();
-        marshaller.marshal(createAcceptRequest(from, recipient), result);
         Message response = getEndpointAdapter().handleMessage(
-                new DefaultMessage(result.toString()));
+                MailMessage.accept(from, recipient));
 
         if (response == null || response.getPayload() == null) {
             throw new CitrusRuntimeException("Did not receive accept response. Missing accept response because autoAccept is disabled.");
@@ -125,7 +120,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     public void deliver(String from, String recipient, InputStream data) {
         try {
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessage(getSession(), data));
-            Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration(), null);
+            MailMessage request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration(), null);
             Message response = invokeEndpointAdapter(request);
 
             if (response != null && response.getPayload() != null) {
@@ -147,17 +142,13 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
 
     /**
      * Invokes the endpoint adapter with constructed mail message and headers.
-     * @param request
+     * @param mail
      */
-    protected Message invokeEndpointAdapter(Message request) {
-        MailRequest mailRequest = (MailRequest) request.getPayload();
-
+    protected Message invokeEndpointAdapter(MailMessage mail) {
         if (splitMultipart) {
-            return split(mailRequest.getBody(), request.getHeaders());
+            return split(mail.getPayload(MailRequest.class).getBody(), mail.getHeaders());
         } else {
-            StringResult result = new StringResult();
-            marshaller.marshal(mailRequest, result);
-            return getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), request.getHeaders()));
+            return getEndpointAdapter().handleMessage(mail);
         }
     }
 
@@ -170,19 +161,15 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param messageHeaders
      */
     private Message split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
-        MailRequest mailRequest = createMailMessage(messageHeaders);
-        mailRequest.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
+        MailMessage mailRequest = createMailMessage(messageHeaders, bodyPart.getContent(), bodyPart.getContentType());
 
-        StringResult result = new StringResult();
-        Stack<Message> responseStack = new Stack<Message>();
+        Stack<Message> responseStack = new Stack<>();
         if (bodyPart instanceof AttachmentPart) {
-            marshaller.marshal(mailRequest, result);
-            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), messageHeaders)
+            fillStack(getEndpointAdapter().handleMessage(mailRequest
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
                     .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())), responseStack);
         } else {
-            marshaller.marshal(mailRequest, result);
-            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), messageHeaders)
+            fillStack(getEndpointAdapter().handleMessage(mailRequest
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())), responseStack);
         }
 
@@ -204,20 +191,18 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     /**
      * Creates a new mail message model object from message headers.
      * @param messageHeaders
+     * @param body
+     * @param contentType
      * @return
      */
-    protected MailRequest createMailMessage(Map<String, Object> messageHeaders) {
-        MailRequest message = new MailRequest();
-        message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString());
-        message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString());
-        message.setCc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());
-        message.setBcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString());
-        message.setSubject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString());
-        return message;
-    }
-
-    private AcceptRequest createAcceptRequest(String from, String recipient) {
-        return new AcceptRequest(from, recipient);
+    protected MailMessage createMailMessage(Map<String, Object> messageHeaders, String body, String contentType) {
+        return MailMessage.request(messageHeaders)
+                .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
+                .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
+                .cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())
+                .bcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString())
+                .subject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString())
+                .body(body, contentType);
     }
 
     @Override
