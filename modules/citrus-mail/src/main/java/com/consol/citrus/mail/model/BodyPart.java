@@ -75,25 +75,6 @@ public class BodyPart {
     }
 
     /**
-     * Evaluates charset name from content type string. Or returns default charset name
-     * when no charset is defined in content type string.
-     * @return charset name
-     */
-    public String getCharsetName() {
-        if (StringUtils.hasText(contentType) && contentType.contains("charset=")) {
-            String charsetName = contentType.substring(contentType.indexOf("charset=") + "charset=".length());
-
-            if (charsetName.contains(";")) {
-                return charsetName.substring(0, charsetName.indexOf(';'));
-            } else {
-                return charsetName;
-            }
-        } else {
-            return Citrus.CITRUS_FILE_ENCODING;
-        }
-    }
-
-    /**
      * Gets the content type.
      * @return
      */
@@ -155,7 +136,7 @@ public class BodyPart {
     })
     public static class Attachments {
         @XmlElement(name = "attachment", required = true)
-        protected List<AttachmentPart> attachments = new ArrayList<AttachmentPart>();
+        protected List<AttachmentPart> attachments = new ArrayList<>();
 
         public List<AttachmentPart> getAttachments() {
             return this.attachments;
