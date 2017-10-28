@@ -61,10 +61,9 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
         try {
             MimeMessage mimeMessage = endpointConfiguration.getJavaMailSender().createMimeMessage();
-            Charset charset = parseCharsetFromContentType(mailMessage.getBody().getContentType());
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessageHelper(mimeMessage,
                     mailMessage.getBody().hasAttachments(),
-                    charset.toString()));
+                    parseCharsetFromContentType(mailMessage.getBody().getContentType())));
 
             convertOutbound(mimeMailMessage, new DefaultMessage(mailMessage, message.getHeaders()), endpointConfiguration, context);
 
@@ -97,8 +96,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
             if (mailRequest.getBody().hasAttachments()) {
                 for (AttachmentPart attachmentPart : mailRequest.getBody().getAttachments().getAttachments()) {
-                    Charset charset = parseCharsetFromContentType(attachmentPart.getContentType());
-                    ByteArrayResource inputStreamSource = new ByteArrayResource(attachmentPart.getContent().getBytes(charset));
+                    ByteArrayResource inputStreamSource = new ByteArrayResource(attachmentPart.getContent().getBytes(Charset.forName(parseCharsetFromContentType(attachmentPart.getContentType()))));
                     mimeMailMessage.getMimeMessageHelper().addAttachment(attachmentPart.getFileName(), inputStreamSource,
                             attachmentPart.getContentType());
                 }
@@ -267,8 +265,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
         if (textPart.getContent() instanceof String) {
             content = (String) textPart.getContent();
         } else if (textPart.getContent() instanceof InputStream) {
-            Charset charset = parseCharsetFromContentType(contentType);
-            content = FileUtils.readToString((InputStream) textPart.getContent(), charset);
+            content = FileUtils.readToString((InputStream) textPart.getContent(), Charset.forName(parseCharsetFromContentType(contentType)));
         } else {
             throw new CitrusRuntimeException("Cannot handle text content of type: " + textPart.getContent().getClass().toString());
         }
@@ -367,18 +364,17 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     }
 
     /**
-     * Parses the charset definition from a "Content-Type" header value, e.g. text/plain; charset=UTF-8, and returns it as
-     * {@link Charset}
+     * Parses the charset definition from a "Content-Type" header value, e.g. text/plain; charset=UTF-8, and returns it exclusively.
      * @param contentType 'Content-Type' header value as String
-     * @return a {@link Charset} parsed from the Content-Type, or {@link Citrus#CITRUS_FILE_ENCODING} as default if there is no charset definition
+     * @return a charset information parsed from the Content-Type, or {@link Citrus#CITRUS_FILE_ENCODING} as default if there is no charset definition
      */
-    static Charset parseCharsetFromContentType(String contentType) {
+    static String parseCharsetFromContentType(String contentType) {
         final String charsetPrefix = "charset=";
         if (org.apache.commons.lang.StringUtils.contains(contentType, charsetPrefix)) {
             String charsetName = org.apache.commons.lang.StringUtils.substringAfter(contentType, charsetPrefix);
-            return Charset.forName(org.apache.commons.lang.StringUtils.substringBefore(charsetName, ";"));
+            return org.apache.commons.lang.StringUtils.substringBefore(charsetName, ";");
         } else {
-            return Charset.forName(Citrus.CITRUS_FILE_ENCODING);
+            return Citrus.CITRUS_FILE_ENCODING;
         }
     }
 }
