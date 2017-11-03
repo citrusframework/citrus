@@ -20,10 +20,15 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.WaitAction;
 import com.consol.citrus.condition.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.File;
+
+import static org.mockito.Mockito.when;
 
 /**
  * @author Martin Maher
@@ -64,7 +69,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testWaitFileBuilder() {
+    public void testWaitFilePathBuilder() {
         final String milliseconds = "3000";
         final String interval = "1500";
         final String filePath = "path/to/some/file.txt";
@@ -73,9 +78,9 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 waitFor()
-                        .file(filePath)
-                        .ms(milliseconds)
-                        .interval(interval);
+                    .file(filePath)
+                    .ms(milliseconds)
+                    .interval(interval);
             }
         };
         builder.configure();
@@ -92,6 +97,39 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCondition().getClass(), FileCondition.class);
         FileCondition condition = (FileCondition) action.getCondition();
         Assert.assertEquals(condition.getFilePath(), filePath);
+    }
+
+    @Test
+    public void testWaitFileBuilder() {
+        final String milliseconds = "3000";
+        final String interval = "1500";
+        final File file = Mockito.mock(File.class);
+
+        when(file.getPath()).thenReturn("path/to/some/file.txt");
+
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                waitFor()
+                    .file(file)
+                    .ms(milliseconds)
+                    .interval(interval);
+            }
+        };
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+
+        WaitAction action = (WaitAction) test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "wait");
+        Assert.assertNull(action.getSeconds());
+        Assert.assertEquals(action.getMilliseconds(), milliseconds);
+        Assert.assertEquals(action.getInterval(), interval);
+        Assert.assertEquals(action.getCondition().getClass(), FileCondition.class);
+        FileCondition condition = (FileCondition) action.getCondition();
+        Assert.assertEquals(condition.getFile(), file);
     }
 
     @Test

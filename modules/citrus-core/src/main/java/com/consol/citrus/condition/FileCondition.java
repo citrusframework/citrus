@@ -21,7 +21,7 @@ import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Tests for the presence of a file and returns true if the file exists
@@ -33,6 +33,7 @@ public class FileCondition extends AbstractCondition {
 
     /** File path to check for existence */
     private String filePath;
+    private File file;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FileCondition.class);
@@ -47,32 +48,65 @@ public class FileCondition extends AbstractCondition {
     @Override
     public boolean isSatisfied(TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Checking file path '%s'", filePath));
+            log.debug(String.format("Checking file path '%s'", file != null ? file.getPath() : filePath));
         }
 
-        try {
-            return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).getFile().isFile();
-        } catch (IOException e) {
-            log.warn(String.format("Failed to access file resource '%s'", e.getMessage()));
-            return false;
+        if (file != null) {
+            return file.exists() && file.isFile();
+        } else {
+            try {
+                return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).getFile().isFile();
+            } catch (IOException e) {
+                log.warn(String.format("Failed to access file resource '%s'", e.getMessage()));
+                return false;
+            }
         }
+
     }
 
     @Override
     public String getSuccessMessage(TestContext context) {
-        return String.format("File condition success - file '%s' does exist", context.replaceDynamicContentInString(filePath));
+        return String.format("File condition success - file '%s' does exist", file != null ? file.getPath() : context.replaceDynamicContentInString(filePath));
     }
 
     @Override
     public String getErrorMessage(TestContext context) {
-        return String.format("Failed to check file condition - file '%s' does not exist", context.replaceDynamicContentInString(filePath));
+        return String.format("Failed to check file condition - file '%s' does not exist", file != null ? file.getPath() : context.replaceDynamicContentInString(filePath));
     }
 
+    /**
+     * Gets the filePath.
+     *
+     * @return
+     */
     public String getFilePath() {
         return filePath;
     }
 
+    /**
+     * Sets the filePath.
+     *
+     * @param filePath
+     */
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    /**
+     * Gets the file.
+     *
+     * @return
+     */
+    public File getFile() {
+        return file;
+    }
+
+    /**
+     * Sets the file.
+     *
+     * @param file
+     */
+    public void setFile(File file) {
+        this.file = file;
     }
 }

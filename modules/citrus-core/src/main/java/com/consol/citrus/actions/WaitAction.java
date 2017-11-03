@@ -64,12 +64,7 @@ public class WaitAction extends AbstractTestAction {
             intervalMs = timeLeft;
         }
 
-        Callable<Boolean> callable = new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
-                return condition.isSatisfied(context);
-            }
-        };
+        Callable<Boolean> callable = () -> condition.isSatisfied(context);
 
         while (timeLeft > 0) {
             timeLeft -= intervalMs;

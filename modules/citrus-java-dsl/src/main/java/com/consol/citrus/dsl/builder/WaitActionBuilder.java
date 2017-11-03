@@ -96,7 +96,7 @@ public class WaitActionBuilder extends AbstractTestActionBuilder<WaitAction> {
 	 */
 	public WaitConditionBuilder file(File file) {
 		FileCondition condition = new FileCondition();
-		condition.setFilePath(file.getAbsolutePath());
+		condition.setFile(file);
 		return condition(condition);
 	}
 }
