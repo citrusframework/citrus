@@ -34,7 +34,7 @@ import java.util.List;
 public class XmlStepDefinition implements StepDefinition {
 
     private final JdkPatternArgumentMatcher argumentMatcher;
-    private final List<ParameterInfo> parameterInfos;
+    private final List<ParameterInfo> parameters;
 
     private final ObjectFactory objectFactory;
 
@@ -45,7 +45,7 @@ public class XmlStepDefinition implements StepDefinition {
         this.stepTemplate = stepTemplate;
 
         this.argumentMatcher = new JdkPatternArgumentMatcher(stepTemplate.getPattern());
-        this.parameterInfos = ParameterInfo.fromTypes(stepTemplate.getParameterTypes());
+        this.parameters = ParameterInfo.fromTypes(stepTemplate.getParameterTypes());
     }
 
     @Override
@@ -60,12 +60,12 @@ public class XmlStepDefinition implements StepDefinition {
 
     @Override
     public Integer getParameterCount() {
-        return parameterInfos.size();
+        return parameters.size();
     }
 
     @Override
     public ParameterInfo getParameterType(int n, Type argumentType) throws IndexOutOfBoundsException {
-        return parameterInfos.get(n);
+        return parameters.get(n);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class XmlStepDefinition implements StepDefinition {
 
     @Override
     public boolean isDefinedAt(StackTraceElement stackTraceElement) {
-        return stackTraceElement.getClassName().equals(XmlSteps.class);
+        return stackTraceElement.getClassName().equals(XmlSteps.class.getName());
     }
 
     @Override
