@@ -20,7 +20,6 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.endpoint.Endpoint;
@@ -106,33 +105,6 @@ public class DefaultTestDesigner implements TestDesigner {
 
         if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
             testCase.setAfterTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray()));
-        }
-    }
-
-    /**
-     * Remove nested actions from test case as they should be added to action container.
-     * @param actions
-     */
-    private void removeNestedActions(TestAction... actions) {
-        for (TestAction action : actions) {
-            if (action instanceof TestActionBuilder<?>) {
-                testCase.getActions().remove(((TestActionBuilder<?>) action).build());
-            } else if (!action.getClass().isAnonymousClass()) {
-                if (!testCase.getActions().remove(action)) {
-                    TestAction toBeRemoved = null;
-                    for (TestAction testCaseAction : testCase.getActions()) {
-                        if (testCaseAction instanceof DelegatingTestAction &&
-                                ((DelegatingTestAction) testCaseAction).getDelegate().equals(action)) {
-                            toBeRemoved = testCaseAction;
-                            break;
-                        }
-                    }
-
-                    if (toBeRemoved != null) {
-                        testCase.getActions().remove(toBeRemoved);
-                    }
-                }
-            }
         }
     }
 
