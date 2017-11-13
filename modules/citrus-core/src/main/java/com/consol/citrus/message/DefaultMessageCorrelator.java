@@ -26,7 +26,7 @@ public class DefaultMessageCorrelator implements MessageCorrelator {
 
     @Override
     public String getCorrelationKey(Message request) {
-        return MessageHeaders.ID + " = '" + request.getHeader(MessageHeaders.ID).toString() + "'";
+        return MessageHeaders.ID + " = '" + request.getId() + "'";
     }
 
     @Override

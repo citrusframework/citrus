@@ -23,6 +23,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
@@ -38,7 +39,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     private String messageName = "";
 
     /** The control headers expected for this message */
-    private Map<String, Object> messageHeaders = new HashMap<>();
+    private Map<String, Object> messageHeaders = new LinkedHashMap<>();
 
     /** The message header as a file resource path */
     private List<String> headerResources = new ArrayList<>();
@@ -71,18 +72,12 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
                     message = dataDictionary.interceptMessageConstruction(message, messageType, context);
                 }
 
-                for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                    message = modifyer.interceptMessageConstruction(message, messageType, context);
+                for (MessageConstructionInterceptor interceptor : messageInterceptors) {
+                    message = interceptor.interceptMessageConstruction(message, messageType, context);
                 }
             }
 
-            for (String headerResourcePath : headerResources) {
-                message.addHeaderData(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(headerResourcePath, context), FileUtils.getCharset(headerResourcePath))));
-            }
-
-            for (String data : headerData){
-                message.addHeaderData(context.replaceDynamicContentInString(data.trim()));
-            }
+            message.getHeaderData().addAll(buildMessageHeaderData(context));
 
             return message;
         } catch (RuntimeException e) {
@@ -92,9 +87,20 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         }
 
     }
-    
+
+    /**
+     * Build message payload.
+     * @param context
+     * @param messageType
+     * @return
+     */
     public abstract Object buildMessagePayload(TestContext context, String messageType);
 
+    /**
+     * Build message headers.
+     * @param context
+     * @return
+     */
     public Map<String, Object> buildMessageHeaders(TestContext context) {
         try {
             Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
@@ -117,6 +123,28 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
+    }
+
+    /**
+     * Build message header data.
+     * @param context
+     * @return
+     */
+    public List<String> buildMessageHeaderData(TestContext context) {
+        List<String> headerDataList = new ArrayList<>();
+        for (String headerResourcePath : headerResources) {
+            try {
+                headerDataList.add(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(headerResourcePath, context), FileUtils.getCharset(headerResourcePath))));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read message header data resource", e);
+            }
+        }
+
+        for (String data : headerData){
+            headerDataList.add(context.replaceDynamicContentInString(data.trim()));
+        }
+
+        return headerDataList;
     }
 
     /**

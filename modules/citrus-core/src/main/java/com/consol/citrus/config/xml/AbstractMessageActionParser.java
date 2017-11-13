@@ -195,7 +195,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      */
     protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
-        Map<String, Object> messageHeaders = new HashMap<String, Object>();
+        Map<String, Object> messageHeaders = new LinkedHashMap<>();
 
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");

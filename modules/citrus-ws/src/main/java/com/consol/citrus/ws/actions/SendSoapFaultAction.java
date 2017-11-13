@@ -20,7 +20,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.*;
 import org.springframework.util.StringUtils;
 
@@ -43,10 +42,10 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
     private String faultActor;
 
     /** List of fault detail contents */
-    private List<String> faultDetails = new ArrayList<String>();
+    private List<String> faultDetails = new ArrayList<>();
 
     /** List of fault detail resource paths */
-    private List<String> faultDetailResourcePaths = new ArrayList<String>();
+    private List<String> faultDetailResourcePaths = new ArrayList<>();
 
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {

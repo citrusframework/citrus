@@ -149,7 +149,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size());
         Assert.assertEquals(constructed.getHeader("operation"), "foo");
-        Assert.assertEquals(constructed.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
+        Assert.assertNotEquals(constructed.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
 
     }
 

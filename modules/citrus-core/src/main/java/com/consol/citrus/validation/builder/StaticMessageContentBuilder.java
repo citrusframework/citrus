@@ -17,10 +17,12 @@
 package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
-import org.springframework.util.CollectionUtils;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Message builder returning a static message every time the build mechanism is called. This
@@ -39,29 +41,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
      */
     public StaticMessageContentBuilder(Message message) {
         this.message = message;
-    }
-
-    @Override
-    public Message buildMessageContent(TestContext context, String messageType) {
-        if (getMessageHeaders().isEmpty()
-                && CollectionUtils.isEmpty(getHeaderData())
-                && CollectionUtils.isEmpty(getHeaderResources())
-                && getMessageInterceptors().isEmpty()
-                && getDataDictionary() == null) {
-            Message constructed = new DefaultMessage(message);
-            constructed.setPayload(buildMessagePayload(context, messageType));
-
-            Map<String, Object> headers = buildMessageHeaders(context);
-            for (Map.Entry<String, Object> header : headers.entrySet()) {
-                if (!header.getKey().equals(MessageHeaders.ID)) {
-                    constructed.setHeader(header.getKey(), header.getValue());
-                }
-            }
-
-            return constructed;
-        } else {
-            return super.buildMessageContent(context, messageType);
-        }
+        this.setMessageName(message.getName());
     }
 
     @Override
@@ -76,9 +56,20 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     public Map<String, Object> buildMessageHeaders(TestContext context) {
         Map<String, Object> headers = super.buildMessageHeaders(context);
-        headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders()));
+        headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders().entrySet()
+                                    .stream()
+                                    .filter(entry -> !entry.getKey().equals(MessageHeaders.ID) && !entry.getKey().equals(MessageHeaders.TIMESTAMP))
+                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
 
         return headers;
+    }
+
+    @Override
+    public List<String> buildMessageHeaderData(TestContext context) {
+        List<String> headerData = super.buildMessageHeaderData(context);
+        headerData.addAll(context.resolveDynamicValuesInList(message.getHeaderData()));
+
+        return headerData;
     }
 
     /**

@@ -54,7 +54,7 @@ public class StaticResponseEndpointAdapterParser extends AbstractBeanDefinitionP
 
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
         if (headerElement != null) {
-            Map<String, Object> messageHeaders = new HashMap<String, Object>();
+            Map<String, Object> messageHeaders = new LinkedHashMap<>();
 
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {

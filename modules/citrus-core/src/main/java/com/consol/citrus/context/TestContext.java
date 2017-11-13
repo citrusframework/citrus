@@ -105,7 +105,7 @@ public class TestContext {
      * Default constructor
      */
     public TestContext() {
-        variables = new ConcurrentHashMap<String, Object>();
+        variables = new ConcurrentHashMap<>();
     }
     
     /**
@@ -238,7 +238,7 @@ public class TestContext {
      * @return the constructed map without variable entries.
      */
     public <T> Map<String, T> resolveDynamicValuesInMap(final Map<String, T> map) {
-        Map<String, T> target = new HashMap<>(map.size());
+        Map<String, T> target = new LinkedHashMap<>(map.size());
 
         for (Entry<String, T> entry : map.entrySet()) {
             String key = replaceDynamicContentInString(entry.getKey());

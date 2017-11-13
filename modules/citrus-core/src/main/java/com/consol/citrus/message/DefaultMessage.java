@@ -38,10 +38,10 @@ public class DefaultMessage implements Message {
     private Object payload;
 
     /** Optional list of header data */
-    private List<String> headerData = new ArrayList<String>();
+    private final List<String> headerData = new ArrayList<>();
 
     /** Message headers */
-    private final Map<String, Object> headers;
+    private final Map<String, Object> headers = new LinkedHashMap<>();
 
     /** The message name for internal use */
     private String name;
@@ -58,14 +58,10 @@ public class DefaultMessage implements Message {
      * @param message
      */
     public DefaultMessage(Message message) {
-        this(message.getPayload());
+        this(message.getPayload(), message.getHeaders());
 
         this.setName(message.getName());
-        this.headers.putAll(message.getHeaders());
-
-        for (String data : message.getHeaderData()) {
-            addHeaderData(data);
-        }
+        this.headerData.addAll(message.getHeaderData());
     }
 
     /**
@@ -83,15 +79,15 @@ public class DefaultMessage implements Message {
      */
     public DefaultMessage(Object payload, Map<String, Object> headers) {
         this.payload = payload;
-        this.headers = headers;
+        this.headers.putAll(headers);
 
-        this.headers.put(MessageHeaders.ID, UUID.randomUUID().toString());
-        this.headers.put(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
+        this.headers.putIfAbsent(MessageHeaders.ID, UUID.randomUUID().toString());
+        this.headers.putIfAbsent(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
     }
 
     @Override
     public String getId() {
-        return headers.get(MessageHeaders.ID).toString();
+        return getHeader(MessageHeaders.ID).toString();
     }
 
     /**
@@ -99,15 +95,15 @@ public class DefaultMessage implements Message {
      * @return
      */
     public Long getTimestamp() {
-        return (Long) headers.get(MessageHeaders.TIMESTAMP);
+        return (Long) getHeader(MessageHeaders.TIMESTAMP);
     }
 
     @Override
     public String toString() {
         if (CollectionUtils.isEmpty(headerData)) {
-            return getClass().getSimpleName().toUpperCase() + " [payload: " + getPayload(String.class).trim() + "][headers: " + headers + "]";
+            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + getPayload(String.class).trim() + "][headers: " + Collections.unmodifiableMap(headers) + "]";
         } else {
-            return getClass().getSimpleName().toUpperCase() + " [payload: " + getPayload(String.class).trim() + "][headers: " + headers + "][header-data: " + headerData + "]";
+            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + getPayload(String.class).trim() + "][headers: " + Collections.unmodifiableMap(headers) + "][header-data: " + Collections.unmodifiableList(headerData) + "]";
         }
     }
 
