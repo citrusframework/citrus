@@ -39,13 +39,14 @@ public class MessageSelectingQueueChannel extends QueueChannel {
     
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
-    
+
     /**
      * Create a channel with the specified queue.
      */
     public MessageSelectingQueueChannel(BlockingQueue<Message<?>> queue) {
         super(queue);
-        
+
+        this.setLoggingEnabled(false);
         this.queue = queue;
     }
     

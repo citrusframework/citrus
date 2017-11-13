@@ -126,6 +126,12 @@ public @interface WebSocketServerConfig {
     String endpointAdapter() default "";
 
     /**
+     * Debug logging enabled.
+     * @return
+     */
+    boolean debugLogging() default false;
+
+    /**
      * Interceptor references.
      * @return
      */

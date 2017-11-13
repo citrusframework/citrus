@@ -67,6 +67,8 @@ public class SshServerConfigParser extends AbstractAnnotationConfigParser<SshSer
 
         builder.pollingInterval(annotation.pollingInterval());
 
+        builder.debugLogging(annotation.debugLogging());
+
         if (StringUtils.hasText(annotation.endpointAdapter())) {
             builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }

@@ -19,6 +19,7 @@ package com.consol.citrus.rmi.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
 import com.consol.citrus.rmi.server.RmiServer;
@@ -52,6 +53,12 @@ public class RmiServerConfigParser extends AbstractAnnotationConfigParser<RmiSer
         }
 
         builder.port(annotation.port());
+
+        builder.debugLogging(annotation.debugLogging());
+
+        if (StringUtils.hasText(annotation.endpointAdapter())) {
+            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+        }
 
         if (StringUtils.hasText(annotation.binding())) {
             builder.binding(annotation.binding());

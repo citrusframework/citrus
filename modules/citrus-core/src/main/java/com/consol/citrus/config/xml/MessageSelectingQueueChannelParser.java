@@ -40,7 +40,9 @@ public class MessageSelectingQueueChannelParser implements BeanDefinitionParser 
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(MessageSelectingQueueChannel.class);
 
         BeanDefinitionParserUtils.setConstructorArgValue(builder, element.getAttribute("capacity"));
-        
+
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("logging"), "loggingEnabled");
+
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("polling-interval"), "pollingInterval");
         
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());

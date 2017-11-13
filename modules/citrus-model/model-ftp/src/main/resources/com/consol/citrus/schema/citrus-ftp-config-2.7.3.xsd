@@ -33,6 +33,7 @@
       <xs:attribute name="user-manager" type="xs:string"/>
       <xs:attribute name="user-manager-properties" type="xs:string"/>
       <xs:attribute name="endpoint-adapter" type="xs:string"/>
+      <xs:attribute name="debug-logging" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 

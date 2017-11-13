@@ -59,6 +59,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
             connector="connector",
             resourceBase="src/it/resources",
             rootParentContext=true,
+            debugLogging=true,
             contextPath="/citrus",
             servletName="citrus-http",
             servletMappingPath="/foo")
@@ -158,6 +159,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(httpServer1.isHandleAttributeHeaders());
         Assert.assertFalse(httpServer1.isHandleCookies());
         Assert.assertFalse(httpServer1.isAutoStart());
+        Assert.assertFalse(httpServer1.isDebugLogging());
         Assert.assertFalse(httpServer1.isUseRootContextAsParent());
         Assert.assertEquals(httpServer1.getContextPath(), "/");
         Assert.assertEquals(httpServer1.getServletName(), "httpServer1-servlet");
@@ -177,6 +179,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(httpServer2.isHandleAttributeHeaders());
         Assert.assertTrue(httpServer2.isHandleCookies());
         Assert.assertFalse(httpServer2.isAutoStart());
+        Assert.assertTrue(httpServer2.isDebugLogging());
         Assert.assertTrue(httpServer2.isUseRootContextAsParent());
         Assert.assertEquals(httpServer2.getContextPath(), "/citrus");
         Assert.assertEquals(httpServer2.getServletName(), "citrus-http");

@@ -233,6 +233,16 @@ public class HttpServerBuilder extends AbstractEndpointBuilder<HttpServer> {
     }
 
     /**
+     * Sets the debug logging enabled flag.
+     * @param enabled
+     * @return
+     */
+    public HttpServerBuilder debugLogging(boolean enabled) {
+        endpoint.setDebugLogging(enabled);
+        return this;
+    }
+
+    /**
      * Sets the interceptors.
      * @param interceptors
      * @return

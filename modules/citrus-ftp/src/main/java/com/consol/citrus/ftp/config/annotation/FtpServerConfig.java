@@ -60,6 +60,12 @@ public @interface FtpServerConfig {
     String endpointAdapter() default "";
 
     /**
+     * Debug logging enabled.
+     * @return
+     */
+    boolean debugLogging() default false;
+
+    /**
      * Auto start.
      * @return
      */

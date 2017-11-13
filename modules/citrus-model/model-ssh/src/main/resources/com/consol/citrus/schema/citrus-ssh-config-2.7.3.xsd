@@ -74,6 +74,7 @@
           <xs:attribute name="endpoint-adapter" type="xs:string"/>
           <xs:attribute name="interceptors" type="xs:string"/>
           <xs:attribute name="message-converter" type="xs:string"/>
+          <xs:attribute name="debug-logging" type="xs:boolean"/>
         </xs:complexType>
     </xs:element>
 

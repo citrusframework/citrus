@@ -17,6 +17,7 @@
 package com.consol.citrus.rmi.server;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
 
@@ -114,6 +115,26 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
      */
     public RmiServerBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
+        return this;
+    }
+
+    /**
+     * Sets the endpoint adapter.
+     * @param endpointAdapter
+     * @return
+     */
+    public RmiServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
+        endpoint.setEndpointAdapter(endpointAdapter);
+        return this;
+    }
+
+    /**
+     * Sets the debug logging enabled flag.
+     * @param enabled
+     * @return
+     */
+    public RmiServerBuilder debugLogging(boolean enabled) {
+        endpoint.setDebugLogging(enabled);
         return this;
     }
 

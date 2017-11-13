@@ -73,6 +73,8 @@ public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<
         builder.autoStart(annotation.autoStart());
         builder.timeout(annotation.timeout());
 
+        builder.debugLogging(annotation.debugLogging());
+
         if (StringUtils.hasText(annotation.endpointAdapter())) {
             builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }

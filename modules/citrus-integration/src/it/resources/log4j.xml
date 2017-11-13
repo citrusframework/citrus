@@ -31,10 +31,6 @@
     <level value="DEBUG"/>
   </logger>
 
-  <logger name="com.consol.citrus.channel.MessageSelectingQueueChannel">
-    <level value="INFO"/>
-  </logger>
-
   <logger name="org.springframework">
     <level value="WARN"/>
   </logger>

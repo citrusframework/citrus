@@ -103,6 +103,8 @@ public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser
             builder.securityHandler(getReferenceResolver().resolve(annotation.securityHandler(), SecurityHandler.class));
         }
 
+        builder.debugLogging(annotation.debugLogging());
+
         if (StringUtils.hasText(annotation.endpointAdapter())) {
             builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }

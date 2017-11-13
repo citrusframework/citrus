@@ -66,9 +66,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     @Autowired
     private TestContextFactory testContextFactory;
 
-    /** The server inbound channel */
-    private MessageSelectingQueueChannel inboundChannel;
-    
+    /** Inbound channel debug logging */
+    private boolean debugLogging = false;
+
     /** Logger */
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -137,12 +137,16 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     @Override
     public void afterPropertiesSet() throws Exception {
         if (endpointAdapter == null) {
+            /* The server inbound channel */
+            MessageSelectingQueueChannel inboundChannel;
             if (beanFactory != null && beanFactory.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
                 inboundChannel = beanFactory.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageSelectingQueueChannel.class);
             } else {
                 inboundChannel = new MessageSelectingQueueChannel();
                 inboundChannel.setBeanName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
             }
+
+            inboundChannel.setLoggingEnabled(debugLogging);
 
             ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
             channelEndpointConfiguration.setChannel(inboundChannel);
@@ -300,5 +304,23 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      */
     public void setDefaultTimeout(long defaultTimeout) {
         this.defaultTimeout = defaultTimeout;
+    }
+
+    /**
+     * Sets the debugLogging.
+     *
+     * @param debugLogging
+     */
+    public void setDebugLogging(boolean debugLogging) {
+        this.debugLogging = debugLogging;
+    }
+
+    /**
+     * Gets the debugLogging.
+     *
+     * @return
+     */
+    public boolean isDebugLogging() {
+        return debugLogging;
     }
 }

@@ -126,4 +126,14 @@ public class MailServerBuilder extends AbstractEndpointBuilder<MailServer> {
         endpoint.setEndpointAdapter(endpointAdapter);
         return this;
     }
+
+    /**
+     * Sets the debug logging enabled flag.
+     * @param enabled
+     * @return
+     */
+    public MailServerBuilder debugLogging(boolean enabled) {
+        endpoint.setDebugLogging(enabled);
+        return this;
+    }
 }

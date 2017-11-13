@@ -78,6 +78,12 @@ public @interface MailServerConfig {
     String endpointAdapter() default "";
 
     /**
+     * Debug logging enabled.
+     * @return
+     */
+    boolean debugLogging() default false;
+
+    /**
      * Timeout.
      * @return
      */

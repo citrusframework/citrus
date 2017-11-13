@@ -80,6 +80,18 @@ public @interface RmiServerConfig {
     String correlator() default "";
 
     /**
+     * Endpoint adapter reference.
+     * @return
+     */
+    String endpointAdapter() default "";
+
+    /**
+     * Debug logging enabled.
+     * @return
+     */
+    boolean debugLogging() default false;
+
+    /**
      * Polling interval.
      * @return
      */

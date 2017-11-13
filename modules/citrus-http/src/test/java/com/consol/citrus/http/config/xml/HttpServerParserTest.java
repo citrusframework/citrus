@@ -57,6 +57,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
+        Assert.assertFalse(server.isDebugLogging());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "httpServer1-servlet");
@@ -75,6 +76,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/servlet-context.xml");
         Assert.assertEquals(server.getResourceBase(), "src/it/resources");
         Assert.assertFalse(server.isAutoStart());
+        Assert.assertTrue(server.isDebugLogging());
         Assert.assertTrue(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getContextPath(), "/citrus");
         Assert.assertEquals(server.getServletName(), "citrus-http");

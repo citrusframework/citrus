@@ -48,6 +48,7 @@ public class FtpServerConfigParser extends AbstractAnnotationConfigParser<FtpSer
         builder.timeout(annotation.timeout());
 
         builder.port(annotation.port());
+        builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
             builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));

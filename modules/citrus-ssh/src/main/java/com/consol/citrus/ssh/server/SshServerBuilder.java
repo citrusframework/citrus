@@ -119,6 +119,16 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
     }
 
     /**
+     * Sets the debug logging enabled flag.
+     * @param enabled
+     * @return
+     */
+    public SshServerBuilder debugLogging(boolean enabled) {
+        endpoint.setDebugLogging(enabled);
+        return this;
+    }
+
+    /**
      * Sets the default timeout.
      * @param timeout
      * @return

@@ -146,6 +146,16 @@ public class WebSocketServerBuilder extends HttpServerBuilder {
         return this;
     }
 
+    /**
+     * Sets the debug logging enabled flag.
+     * @param enabled
+     * @return
+     */
+    public WebSocketServerBuilder debugLogging(boolean enabled) {
+        endpoint.setDebugLogging(enabled);
+        return this;
+    }
+
     @Override
     public WebSocketServerBuilder interceptors(List<HandlerInterceptor> interceptors) {
         endpoint.setInterceptors((List) interceptors);

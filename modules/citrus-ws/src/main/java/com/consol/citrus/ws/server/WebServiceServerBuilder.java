@@ -191,6 +191,16 @@ public class WebServiceServerBuilder extends AbstractEndpointBuilder<WebServiceS
     }
 
     /**
+     * Sets the debug logging enabled flag.
+     * @param enabled
+     * @return
+     */
+    public WebServiceServerBuilder debugLogging(boolean enabled) {
+        endpoint.setDebugLogging(enabled);
+        return this;
+    }
+
+    /**
      * Sets the interceptors.
      * @param interceptors
      * @return

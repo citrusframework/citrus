@@ -48,6 +48,7 @@
         <xs:attribute name="keep-soap-envelope" type="xs:boolean"/>
         <xs:attribute name="soap-header-namespace" type="xs:string"/>
         <xs:attribute name="soap-header-prefix" type="xs:string"/>
+        <xs:attribute name="debug-logging" type="xs:boolean"/>
       </xs:complexType>
     </xs:element>
 

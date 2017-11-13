@@ -35,6 +35,7 @@
       <xs:attribute name="auto-start" type="xs:boolean"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="debug-logging" type="xs:boolean"/>
       <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>
   </xs:element>

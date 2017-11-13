@@ -21,6 +21,7 @@
                         connector="connector"
                         resource-base="src/it/resources"
                         root-parent-context="true"
+                        debug-logging="true"
                         context-path="/citrus"
                         servlet-name="citrus-http"
                         servlet-mapping-path="/foo"/>
