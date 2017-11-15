@@ -26,6 +26,7 @@ So let us have a closer look at the Citrus TestNG and JUnit integration.
 
 TestNG stands for next generation testing and has had a great influence in adding Java annotations to the unit test community. Citrus is able to generate TestNG Java classes that are executable as test cases. See the following standard template that Citrus will generate when having new test cases:
 
+.TestNG Citrus XML test
 [source,java]
 ----
 package com.consol.citrus.samples;
@@ -34,11 +35,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
     
-/**
- * TODO: Description
- *
- * @author Unknown
- */
 @Test
 public class SampleIT extends AbstractTestNGCitrusTest {
     @CitrusXmlTest(name = "SampleIT")
@@ -58,6 +54,7 @@ You might have noticed that the example above loads test cases from XML. This is
 
 When writing tests in pure Java we have pretty much the exact same logic that applies to executing Citrus test cases. The Citrus test extends from a TestNG base class and uses the normal *@Test* annotations on method or class level. Here is a short sample TestNG Java class for this:
 
+.TestNG Citrus Java DSL designer test
 [source,java]
 ----
 import org.testng.annotations.Test;
@@ -88,6 +85,7 @@ Up to now we just concentrate on the TestNG integration that is quite easy isn't
 
 TestNG as a framework comes with lots of great features such as data providers. Data providers execute a test case several times. Each test execution gets a specific parameter value. With Citrus you can use those data provider parameters inside the test as variables. See the next listing on how to use TestNG data providers in Citrus:
 
+.TestNG Citrus data provider test
 [source,java]
 ----
 public class DataProviderIT extends AbstractTestNGCitrusTest {
@@ -111,11 +109,143 @@ public class DataProviderIT extends AbstractTestNGCitrusTest {
 
 Above test case method is annotated with TestNG data provider called *messageDataProvider* . In the same class you can write the data provider that returns a list of parameter values. TestNG will execute the test case several times according to the provided parameter list. Each execution is shipped with the respective parameter value. According to the *@CitrusParameter* annotation the test will have a test variable called *message* that is accessible as usual.
 
-[[run-with-junit]]
-== Run with JUnit
+[[run-with-junit5]]
+== Run with JUnit5
+
+JUnit5 is the new major version of the famous unit testing framework. The JUnit platform provides extension points for other frameworks to integrate with the unit testing execution. Citrus uses these extensions
+in order to enable Citrus related dependency injection and parameter resolving.
+
+You can use the Citrus JUnit5 extension on your unit test as follows:
+
+.JUnit5 Citrus XML test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+/**
+ * @author Christoph Deppisch
+ */
+@ExtendWith(CitrusBaseExtension.class)
+public class SampleXmlIT {
+    @Test
+    @CitrusXmlTest(name = "SampleXmlIT")
+    public void test() {}
+}
+----
+
+The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. In addition to that we extend with the `CitrusBaseExtension`. This enables us to use the
+`@CitrusXmlTest` annotation on the test method which automatically loads the XML test case file for execution.
+
+In case you want to use the Citrus Java DSL for writing the test logic you can use the following setup:
+
+.JUnit5 Citrus Java DSL designer test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+/**
+ * @author Christoph Deppisch
+ */
+@ExtendWith(CitrusExtension.class)
+public class SampleIT {
+    @Test
+    @CitrusTest
+    public void test(@CitrusResource TestDesigner designer) {
+        designer.variable("time", "citrus:currentDate()");
+        designer.echo("Hello Citrus!");
+        designer.echo("CurrentTime is: ${time}");
+    }
+}
+----
+
+The Java DSL test case is using the `CitrusExtension` to extend the JUnit5 test with Citrus functionality. After doing that we can use `@CitrusResource` annotated method parameters that inject the test designer.
+The designer is the entrance to the Java fluent API provided by Citrus. Of course you can also inject the test runner fluent API.
+
+.JUnit5 Citrus Java DSL runner test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+/**
+ * @author Christoph Deppisch
+ */
+@ExtendWith(CitrusExtension.class)
+public class SampleIT {
+    @Test
+    @CitrusTest
+    public void test(@CitrusResource TestRunner runner) {
+        runner.variable("time", "citrus:currentDate()");
+        runner.echo("Hello Citrus!");
+        runner.echo("CurrentTime is: ${time}");
+    }
+}
+----
+
+You can also use `@TestContext` parameter injection in order to get access to the current test context used by Citrus. Also you can inject Citrus endpoints
+via `@CitrusEndpoint` annotated field injection in your test class. This enabled you to inject endpoint components that are defined in the Citrus Spring application context configuration.
+
+.JUnit5 Citrus Java DSL runner test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import com.consol.citrus.annotations.*;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
+import com.consol.citrus.http.client.HttpClient;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.http.HttpStatus;
+
+/**
+ * @author Christoph Deppisch
+ */
+@ExtendWith(CitrusExtension.class)
+public class SampleIT {
+
+    @CitrusEndpoint
+    private HttpClient httpClient;
+
+    @Test
+    @CitrusTest
+    public void test(@CitrusResource TestRunner runner) {
+        runner.http(action -> action.client(httpClient)
+                                .send()
+                                .get("/hello"));
+
+        runner.http(action -> action.client(httpClient)
+                                .receive()
+                                .response(HttpStatus.OK));
+    }
+}
+----
+
+
+[[run-with-junit4]]
+== Run with JUnit4
 
 JUnit is a very popular unit test framework for Java applications widely accepted and widely supported by many tools. In general Citrus supports both JUnit and TestNG as test execution frameworks. Although the TestNG customization features are slightly more powerful than those offered by JUnit you as a Citrus user should be able to use the framework of your choice. The complete support for executing test cases with package scans and multiple annotated methods is given for both frameworks. If you choose *junit* as execution framework Citrus generates a Java file that looks like this:
 
+.JUnit4 Citrus XML test
 [source,java]
 ----
 package com.consol.citrus.samples;
@@ -124,11 +254,6 @@ import org.junit.Test;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 
-/**
- * TODO: Description
- *
- * @author Unknown
- */
 public class SampleIT extends AbstractJUnit4CitrusTest {
     @Test
     @CitrusXmlTest(name = "SampleIT")
@@ -144,6 +269,7 @@ TIP: So now we know both TestNG and JUnit support in Citrus. Which framework sho
 
 The first example seen here is using *@CitrusXmlTest* annotation in order to load a XML file as test. The Java part is then just an empty envelope for executing the test with JUnit. This approach is for those of you that are not familiar with Java at all. You can find more information on loading XML files as Citrus tests in link:#run-xml-tests[run-xml-tests]. Secondly of course we also have the possibility to use the Citrus Java DSL with JUnit. See the following example on how this looks like:
 
+.JUnit4 Citrus Java DSL test
 [source,java]
 ----
 package com.consol.citrus.samples;
@@ -152,11 +278,6 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.JUnit4CitrusTestDesigner;
 import org.junit.Test;
 
-/**
- * TODO: Description
- *
- * @author Unknown
- */
 public class SampleIT extends JUnit4CitrusTestDesigner {
 
     @Test
@@ -184,7 +305,7 @@ If you need to know more details about the test designer and on how to use the C
 [[run-xml-tests]]
 == Running XML tests
 
-Now we also use the @CitrusXmlTest annotation in the Java class. This annotation makes Citrus search for a XML file that represents the Citrus test within your classpath. Later on we will also discuss another Citrus annotation (*@CitrusTest*) which stands for defining the Citrus test just with Java domain specific language features. For now we continue to deal with the XML Citrus test execution.
+Now we also use the `@CitrusXmlTest` annotation in the Java class. This annotation makes Citrus search for a XML file that represents the Citrus test within your classpath. Later on we will also discuss another Citrus annotation (`@CitrusTest`) which stands for defining the Citrus test just with Java domain specific language features. For now we continue to deal with the XML Citrus test execution.
 
 The default naming convention requires a XML file with the tests name in the same package that the Java class is placed in. In the basic example above this means that Citrus searches for a XML test file in *com/consol/citrus/samples/SampleIT.xml* . You tell Citrus to search for another XML file by using the @CitrusXmlTest annotation properties. Following annotation properties are valid:
 
@@ -195,6 +316,7 @@ packageScan:: List of packages that are automatically scanned for XML test files
 
 You can also mix the various CitrusXmlTest annotation patterns in a single Java class. So we are able to have several test cases in one single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.
 
+.TestNG Citrus XML test
 [source,java]
 ----
 @Test

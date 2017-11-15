@@ -25,27 +25,34 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-            <configuration>
-              <properties>
-                <property>
-                  <name>junit</name>
-                  <value>false</value>
-                </property>
-              </properties>
-              <threadCount>1</threadCount>
-            </configuration>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.maven.surefire</groupId>
-                <artifactId>surefire-junit47</artifactId>
-                <version>2.19.1</version>
-              </dependency>
-              <dependency>
-                <groupId>org.apache.maven.surefire</groupId>
-                <artifactId>surefire-testng</artifactId>
-                <version>2.19.1</version>
-              </dependency>
-            </dependencies>
+          <version>2.19.1</version>
+          <configuration>
+            <properties>
+              <property>
+                <name>junit</name>
+                <value>false</value>
+              </property>
+            </properties>
+            <forkCount>1</forkCount>
+            <threadCount>1</threadCount>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.junit.platform</groupId>
+              <artifactId>junit-platform-surefire-provider</artifactId>
+              <version>${junit.platform.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit47</artifactId>
+              <version>2.19.1</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-testng</artifactId>
+              <version>2.19.1</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>
@@ -198,6 +205,12 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
 

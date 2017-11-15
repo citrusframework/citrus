@@ -25,6 +25,7 @@
               <value>false</value>
             </property>
           </properties>
+          <forkCount>1</forkCount>
           <threadCount>1</threadCount>
         </configuration>
         <dependencies>
