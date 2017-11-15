@@ -16,6 +16,8 @@
 
 package com.consol.citrus.exceptions;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Base exception marking failure of test case. Used to force failure of TestNG and JUnit 
  * test case.
@@ -30,6 +32,6 @@ public class TestCaseFailedException extends CitrusRuntimeException {
      * Default constructor.
      */
     public TestCaseFailedException(Throwable cause) {
-        super("Test case failed", cause);
+        super(StringUtils.hasText(cause.getMessage()) ? cause.getMessage() : "Test case failed", cause);
     }
 }

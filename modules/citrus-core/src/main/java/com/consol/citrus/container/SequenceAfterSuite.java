@@ -16,14 +16,11 @@
 
 package com.consol.citrus.container;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestSuiteListeners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sequence of Citrus test actions that get executed after a test suite run. Sequence should
@@ -36,14 +33,9 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceAfterSuite.class);
     
-    @Autowired
-    private TestSuiteListeners testSuiteListener = new TestSuiteListeners();
-    
     @Override
     public void doExecute(TestContext context) {
         boolean success = true;
-
-        testSuiteListener.onFinish();
 
         log.info("Entering after suite block");
 
@@ -57,26 +49,14 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer {
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                log.error("After suite action failed " + action.getName()
-                        + "Nested exception is: ", e);
+                log.error("After suite action failed " + action.getName() + "Nested exception is: ", e);
                 log.error("Continue after suite actions");
                 success = false;
             }
         }
 
-        if (success) {
-            testSuiteListener.onFinishSuccess();
-        } else {
-            testSuiteListener.onFinishFailure(new CitrusRuntimeException("Error in after suite"));
+        if (!success) {
             throw new CitrusRuntimeException("Error in after suite");
         }
-    }
-    
-    /**
-     * Sets the testSuiteListener.
-     * @param testSuiteListener the testSuiteListener to set
-     */
-    public void setTestSuiteListener(TestSuiteListeners testSuiteListener) {
-        this.testSuiteListener = testSuiteListener;
     }
 }

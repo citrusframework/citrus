@@ -122,8 +122,7 @@ public final class Citrus {
     /** Default application context class */
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY = "citrus.spring.java.config";
     public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_ENV = "CITRUS_SPRING_JAVA_CONFIG";
-    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) != null ?
-            System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV) : null);
+    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV));
 
     /** Default test directories */
     public static final String DEFAULT_TEST_SRC_DIRECTORY_PROPERTY = "citrus.default.src.directory";
@@ -211,6 +210,8 @@ public final class Citrus {
      * @param testGroups
      */
     public void beforeSuite(String suiteName, String ... testGroups) {
+        testSuiteListener.onStart();
+
         if (!CollectionUtils.isEmpty(beforeSuite)) {
             for (SequenceBeforeSuite sequenceBeforeSuite : beforeSuite) {
                 try {
@@ -218,11 +219,15 @@ public final class Citrus {
                         sequenceBeforeSuite.execute(createTestContext());
                     }
                 } catch (Exception e) {
-                    org.testng.Assert.fail("Before suite failed with errors", e);
+                    testSuiteListener.onStartFailure(e);
+                    afterSuite(suiteName, testGroups);
+
+                    throw new AssertionError("Before suite failed with errors", e);
                 }
             }
+
+            testSuiteListener.onStartSuccess();
         } else {
-            testSuiteListener.onStart();
             testSuiteListener.onStartSuccess();
         }
     }
@@ -233,6 +238,8 @@ public final class Citrus {
      * @param testGroups
      */
     public void afterSuite(String suiteName, String ... testGroups) {
+        testSuiteListener.onFinish();
+
         if (!CollectionUtils.isEmpty(afterSuite)) {
             for (SequenceAfterSuite sequenceAfterSuite : afterSuite) {
                 try {
@@ -240,11 +247,13 @@ public final class Citrus {
                         sequenceAfterSuite.execute(createTestContext());
                     }
                 } catch (Exception e) {
-                    org.testng.Assert.fail("After suite failed with errors", e);
+                    testSuiteListener.onFinishFailure(e);
+                    throw new AssertionError("After suite failed with errors", e);
                 }
             }
+
+            testSuiteListener.onFinishSuccess();
         } else {
-            testSuiteListener.onFinish();
             testSuiteListener.onFinishSuccess();
         }
     }

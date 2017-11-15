@@ -19,12 +19,8 @@ package com.consol.citrus.container;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestSuiteListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 /**
  * Sequence of Citrus test actions that get executed before a test suite run. Sequence should
@@ -37,16 +33,8 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceBeforeSuite.class);
     
-    @Autowired
-    private TestSuiteListeners testSuiteListener = new TestSuiteListeners();
-    
-    @Autowired(required = false)
-    private List<SequenceAfterSuite> afterSuiteActions;
-
     @Override
     public void doExecute(TestContext context) {
-        testSuiteListener.onStart();
-
         log.info("Entering before suite block");
 
         if (log.isDebugEnabled()) {
@@ -59,39 +47,9 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer {
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                log.error("Task failed "
-                        + action.getName()
-                        + "Nested exception is: ", e);
-
-                testSuiteListener.onStartFailure(e);
-
-                if (afterSuiteActions != null) {
-                    for (SequenceAfterSuite afterSuiteSequence : afterSuiteActions) {
-                        afterSuiteSequence.execute(context);
-                    }
-                }
-                
+                log.error("Task failed " + action.getName() + "Nested exception is: ", e);
                 throw new CitrusRuntimeException(e);
             }
         }
-
-        testSuiteListener.onStartSuccess();
     }
-
-    /**
-     * Sets the testSuiteListener.
-     * @param testSuiteListener the testSuiteListener to set
-     */
-    public void setTestSuiteListener(TestSuiteListeners testSuiteListener) {
-        this.testSuiteListener = testSuiteListener;
-    }
-
-    /**
-     * Sets the afterSuiteActions.
-     * @param afterSuiteActions the afterSuiteActions to set
-     */
-    public void setAfterSuiteActions(List<SequenceAfterSuite> afterSuiteActions) {
-        this.afterSuiteActions = afterSuiteActions;
-    }
-
 }
