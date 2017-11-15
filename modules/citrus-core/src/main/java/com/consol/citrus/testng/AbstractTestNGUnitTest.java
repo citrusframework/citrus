@@ -51,7 +51,6 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
     @BeforeMethod
     public void prepareTest() {
         htmlReporter.setEnabled("false");
-
         context = createTestContext();
     }
 

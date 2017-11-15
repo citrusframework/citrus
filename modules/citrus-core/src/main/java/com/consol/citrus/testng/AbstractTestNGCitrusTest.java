@@ -37,6 +37,7 @@ import org.testng.*;
 import org.testng.annotations.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -230,27 +231,25 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 methodTestLoaders.add(createTestLoader(testName, testPackage));
             }
 
-            String[] testPackages = citrusTestAnnotation.packageScan();
-            for (String packageName : testPackages) {
+            String[] packagesToScan = citrusTestAnnotation.packageScan();
+            for (String packageScan : packagesToScan) {
                 try {
                     for (String fileNamePattern : Citrus.getXmlTestFileNamePattern()) {
-                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
+                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
                         for (Resource fileResource : fileResources) {
                             String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
 
-                            if (packageName.startsWith("file:")) {
+                            if (packageScan.startsWith("file:")) {
                                 filePath = "file:" + filePath;
                             }
                             
-                            filePath = filePath.substring(filePath.indexOf(packageName.replace('.', File.separatorChar)));
+                            filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
                             methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
                         }
                     }
-                } catch (RuntimeException e) {
-                    throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
-                } catch (Exception e) {
-                    throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
+                } catch (RuntimeException | IOException e) {
+                    throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageScan + "'", e);
                 }
             }
         }
