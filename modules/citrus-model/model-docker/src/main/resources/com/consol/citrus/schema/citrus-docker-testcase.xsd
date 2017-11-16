@@ -175,6 +175,7 @@
       <xs:attribute name="hostname" type="xs:string"/>
       <xs:attribute name="entrypoint" type="xs:string"/>
       <xs:attribute name="port-specs" type="xs:string"/>
+      <xs:attribute name="port-bindings" type="xs:string"/>
       <xs:attribute name="exposed-ports" type="xs:string"/>
       <xs:attribute name="volumes" type="xs:string"/>
       <xs:attribute name="working-dir" type="xs:string"/>

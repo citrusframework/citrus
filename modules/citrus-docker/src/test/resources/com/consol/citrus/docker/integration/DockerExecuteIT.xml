@@ -124,7 +124,8 @@
                   "ExitCode":0,
                   "Error":"",
                   "StartedAt":"@ignore@",
-                  "FinishedAt":"@ignore@"
+                  "FinishedAt":"@ignore@",
+                  "Health":null
                 },
                 "Volumes": "@ignore@",
                 "VolumesRW": "@ignore@",

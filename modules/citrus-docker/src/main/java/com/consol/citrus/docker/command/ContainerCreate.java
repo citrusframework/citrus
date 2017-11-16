@@ -23,6 +23,8 @@ import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.*;
 import org.springframework.util.StringUtils;
 
+import java.util.stream.Stream;
+
 /**
  * @author Christoph Deppisch
  * @since 2.4
@@ -110,12 +112,26 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             }
         }
 
+        ExposedPort[] exposedPorts = {};
         if (hasParameter("exposed-ports")) {
             if (getParameters().get("exposed-ports") instanceof ExposedPort[]) {
-                command.withExposedPorts((ExposedPort[]) getParameters().get("exposed-ports"));
+                exposedPorts = (ExposedPort[]) getParameters().get("exposed-ports");
             } else {
-                command.withExposedPorts(getExposedPorts(context));
+                exposedPorts = getExposedPorts(getParameter("exposed-ports", context), context);
             }
+            command.withExposedPorts(exposedPorts);
+        }
+
+        if (hasParameter("port-bindings")) {
+            if (getParameters().get("port-bindings") instanceof Ports) {
+                command.withPortBindings((Ports) getParameters().get("port-bindings"));
+            } if (getParameters().get("port-bindings") instanceof PortBinding[]) {
+                command.withPortBindings((PortBinding[]) getParameters().get("port-bindings"));
+            } else {
+                command.withPortBindings(getPortBindings(getParameter("port-bindings", context), exposedPorts, context));
+            }
+        } else if (exposedPorts.length > 0) {
+            command.withPortBindings(getPortBindings("", exposedPorts, context));
         }
 
         if (hasParameter("volumes")) {
@@ -173,23 +189,53 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
     /**
      * Construct set of exposed ports from comma delimited list of ports.
+     * @param portSpecs
+     * @param context
      * @return
      */
-    private ExposedPort[] getExposedPorts(TestContext context) {
-        String[] ports = StringUtils.commaDelimitedListToStringArray(getParameter("exposed-ports", context));
+    private ExposedPort[] getExposedPorts(String portSpecs, TestContext context) {
+        String[] ports = StringUtils.commaDelimitedListToStringArray(portSpecs);
         ExposedPort[] exposedPorts = new ExposedPort[ports.length];
 
         for (int i = 0; i < ports.length; i++) {
-            if (ports[i].startsWith("udp:")) {
-                exposedPorts[i] = ExposedPort.udp(Integer.valueOf(ports[i].substring("udp:".length())));
-            } else if (ports[i].startsWith("tcp:")) {
-                exposedPorts[i] = ExposedPort.tcp(Integer.valueOf(ports[i].substring("tcp:".length())));
+            String portSpec = context.replaceDynamicContentInString(ports[i]);
+
+            if (portSpec.startsWith("udp:")) {
+                exposedPorts[i] = ExposedPort.udp(Integer.valueOf(portSpec.substring("udp:".length())));
+            } else if (portSpec.startsWith("tcp:")) {
+                exposedPorts[i] = ExposedPort.tcp(Integer.valueOf(portSpec.substring("tcp:".length())));
             } else {
-                exposedPorts[i] = ExposedPort.tcp(Integer.valueOf(ports[i]));
+                exposedPorts[i] = ExposedPort.tcp(Integer.valueOf(portSpec));
             }
         }
 
         return exposedPorts;
+    }
+
+    /**
+     * Construct set of port bindings from comma delimited list of ports.
+     * @param portSpecs
+     * @param exposedPorts
+     * @param context
+     * @return
+     */
+    private Ports getPortBindings(String portSpecs, ExposedPort[] exposedPorts, TestContext context) {
+        String[] ports = StringUtils.commaDelimitedListToStringArray(portSpecs);
+        Ports portsBindings = new Ports();
+
+        for (String portSpec : ports) {
+            String[] binding = context.replaceDynamicContentInString(portSpec).split(":");
+            if (binding.length == 2) {
+                Integer hostPort = Integer.valueOf(binding[0]);
+                Integer port = Integer.valueOf(binding[1]);
+
+                portsBindings.bind(Stream.of(exposedPorts).filter(exposed -> port.equals(exposed.getPort())).findAny().orElse(ExposedPort.tcp(port)), Ports.Binding.bindPort(hostPort));
+            }
+        }
+
+        Stream.of(exposedPorts).filter(exposed -> !portsBindings.getBindings().keySet().contains(exposed)).forEach(exposed -> portsBindings.bind(exposed, Ports.Binding.empty()));
+
+        return portsBindings;
     }
 
     /**
@@ -331,6 +377,27 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         getParameters().put("exposed-ports", exposedPorts);
         return this;
     }
+
+    /**
+     * Adds explicit port bindings as command parameter.
+     * @param portBindings
+     * @return
+     */
+    public ContainerCreate portBindings(Ports ... portBindings) {
+        getParameters().put("port-bindings", portBindings);
+        return this;
+    }
+
+    /**
+     * Adds explicit port bindings as command parameter.
+     * @param portBindings
+     * @return
+     */
+    public ContainerCreate portBindings(PortBinding ... portBindings) {
+        getParameters().put("port-bindings", portBindings);
+        return this;
+    }
+
 
     /**
      * Adds volumes variables as command parameter.

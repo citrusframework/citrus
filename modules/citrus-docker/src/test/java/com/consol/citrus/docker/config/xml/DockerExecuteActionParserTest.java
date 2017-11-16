@@ -100,13 +100,14 @@ public class DockerExecuteActionParserTest extends AbstractActionParserTest<Dock
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());
         Assert.assertEquals(action.getCommand().getClass(), ContainerCreate.class);
-        Assert.assertEquals(action.getCommand().getParameters().size(), 16);
+        Assert.assertEquals(action.getCommand().getParameters().size(), 17);
         Assert.assertEquals(action.getCommand().getParameters().get("image"), "image_create");
         Assert.assertEquals(action.getCommand().getParameters().get("cmd"), "echo 'Hello World'");
         Assert.assertEquals(action.getCommand().getParameters().get("capability-add"), "CHOWN,KILL");
         Assert.assertEquals(action.getCommand().getParameters().get("domain-name"), "domain_name");
         Assert.assertEquals(action.getCommand().getParameters().get("env"), "-Dsource.encoding=UTF-8");
         Assert.assertEquals(action.getCommand().getParameters().get("exposed-ports"), "tcp:8080");
+        Assert.assertEquals(action.getCommand().getParameters().get("port-bindings"), "8088:8080");
         Assert.assertEquals(action.getCommand().getParameters().get("hostname"), "foo_host");
         Assert.assertEquals(action.getCommand().getParameters().get("name"), "foo_container");
         Assert.assertEquals(action.getCommand().getParameters().get("working-dir"), ".");
