@@ -67,6 +67,12 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
         httpMessage.setPayload(payload);
     }
 
+    @Override
+    public HttpClientRequestActionBuilder name(String name) {
+        httpMessage.setName(name);
+        return super.name(name);
+    }
+
     /**
      * Sets the request path.
      * @param path

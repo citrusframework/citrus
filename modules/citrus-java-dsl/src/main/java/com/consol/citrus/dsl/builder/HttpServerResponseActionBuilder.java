@@ -54,6 +54,12 @@ public class HttpServerResponseActionBuilder extends SendMessageBuilder<SendMess
         httpMessage.setPayload(payload);
     }
 
+    @Override
+    public HttpServerResponseActionBuilder name(String name) {
+        httpMessage.setName(name);
+        return super.name(name);
+    }
+    
     /**
      * Sets the response status.
      * @param status

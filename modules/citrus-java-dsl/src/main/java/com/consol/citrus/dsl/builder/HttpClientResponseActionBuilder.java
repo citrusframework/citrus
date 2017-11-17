@@ -69,6 +69,12 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         httpMessage.setPayload(payload);
     }
 
+    @Override
+    public HttpClientResponseActionBuilder name(String name) {
+        httpMessage.setName(name);
+        return super.name(name);
+    }
+
     /**
      * Sets the response status.
      * @param status

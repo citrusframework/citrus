@@ -57,6 +57,12 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
         httpMessage.setPayload(payload);
     }
 
+    @Override
+    public HttpServerRequestActionBuilder name(String name) {
+        httpMessage.setName(name);
+        return super.name(name);
+    }
+
     /**
      * Sets the request path.
      * @param path
