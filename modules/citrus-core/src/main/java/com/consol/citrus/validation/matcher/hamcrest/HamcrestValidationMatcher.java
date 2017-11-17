@@ -19,19 +19,15 @@ package com.consol.citrus.validation.matcher.hamcrest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.matcher.ValidationMatcher;
+import com.consol.citrus.validation.matcher.*;
+import com.consol.citrus.variable.VariableUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -40,7 +36,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @since 2.5
  */
 @SuppressWarnings("unchecked")
-public class HamcrestValidationMatcher implements ValidationMatcher {
+public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
     private List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith" );
 
@@ -70,6 +66,10 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
 
         String matcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
         String[] matcherParameter = matcherExpression.trim().substring(matcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
+
+        for(int i = 0; i < matcherParameter.length; i++) {
+            matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i]);
+        }
 
         Matcher matcher = getMatcher(matcherName, matcherParameter);
         if (noArgumentCollectionMatchers.contains(matcherName) || collectionMatchers.contains(matcherName)) {
@@ -201,6 +201,15 @@ public class HamcrestValidationMatcher implements ValidationMatcher {
         }
 
         return false;
+    }
+
+    @Override
+    public List<String> extractControlValues(String controlExpression, Character delimiter) {
+        if (controlExpression.startsWith("'") && controlExpression.contains("',")) {
+            return new DefaultControlExpressionParser().extractControlValues(controlExpression, delimiter);
+        } else {
+            return Collections.singletonList(controlExpression);
+        }
     }
 
     /**

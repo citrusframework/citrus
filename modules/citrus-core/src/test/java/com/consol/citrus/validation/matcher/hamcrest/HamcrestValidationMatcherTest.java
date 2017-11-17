@@ -38,6 +38,7 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
     public Object[][] testData() {
         return new Object[][] {
             new Object[]{ "foo", "value", Collections.singletonList("equalTo(value)") },
+            new Object[]{ "foo", "value", Collections.singletonList("equalTo('value')") },
             new Object[]{"foo", "value", Collections.singletonList("not(equalTo(other))")},
             new Object[]{"foo", "value", Collections.singletonList("is(not(other))")},
             new Object[]{"foo", "value", Collections.singletonList("not(is(other))")},
