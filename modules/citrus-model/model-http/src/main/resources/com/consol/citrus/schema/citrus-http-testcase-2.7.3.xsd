@@ -125,6 +125,7 @@
                           <xs:simpleType>
                             <xs:restriction base="xs:string">
                               <xs:enumeration value="node"/>
+                              <xs:enumeration value="node-set"/>
                               <xs:enumeration value="boolean"/>
                               <xs:enumeration value="string"/>
                               <xs:enumeration value="number"/>
@@ -152,6 +153,7 @@
                     <xs:simpleType>
                       <xs:restriction base="xs:string">
                         <xs:enumeration value="node"/>
+                        <xs:enumeration value="node-set"/>
                         <xs:enumeration value="boolean"/>
                         <xs:enumeration value="string"/>
                         <xs:enumeration value="number"/>
@@ -189,6 +191,7 @@
                         <xs:simpleType>
                           <xs:restriction base="xs:string">
                             <xs:enumeration value="node"/>
+                            <xs:enumeration value="node-set"/>
                             <xs:enumeration value="boolean"/>
                             <xs:enumeration value="string"/>
                             <xs:enumeration value="number"/>
@@ -258,6 +261,7 @@
                         <xs:simpleType>
                           <xs:restriction base="xs:string">
                             <xs:enumeration value="node"/>
+                            <xs:enumeration value="node-set"/>
                             <xs:enumeration value="boolean"/>
                             <xs:enumeration value="string"/>
                             <xs:enumeration value="number"/>
@@ -408,6 +412,7 @@
                         <xs:simpleType>
                           <xs:restriction base="xs:string">
                             <xs:enumeration value="node"/>
+                            <xs:enumeration value="node-set"/>
                             <xs:enumeration value="boolean"/>
                             <xs:enumeration value="string"/>
                             <xs:enumeration value="number"/>
@@ -435,6 +440,7 @@
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
                       <xs:enumeration value="node"/>
+                      <xs:enumeration value="node-set"/>
                       <xs:enumeration value="boolean"/>
                       <xs:enumeration value="string"/>
                       <xs:enumeration value="number"/>
