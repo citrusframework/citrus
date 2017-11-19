@@ -45,8 +45,21 @@ public class JsonPathFunction implements Function {
             throw new InvalidFunctionUsageException("Missing parameter for function - usage jsonPath('jsonSource', 'expression')");
         }
 
-        String jsonSource = parameterList.get(0);
-        String jsonPathExpression = parameterList.get(1);
+        String jsonSource;
+        String jsonPathExpression;
+        if (parameterList.size() > 2) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(parameterList.get(0));
+            for (int i = 1; i < parameterList.size() -1; i++) {
+                sb.append(", ").append(parameterList.get(i));
+            }
+
+            jsonSource = sb.toString();
+            jsonPathExpression = parameterList.get(parameterList.size() - 1);
+        } else {
+            jsonSource = parameterList.get(0);
+            jsonPathExpression = parameterList.get(1);
+        }
 
         try {
             JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
