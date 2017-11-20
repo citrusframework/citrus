@@ -24,8 +24,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import javax.servlet.http.Cookie;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -48,15 +47,18 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     @Override
     public Message buildMessageContent(TestContext context, String messageType) {
-        delegate.setMessageHeaders(message.getHeaders());
+        final Set<String> headersToRetain = new HashSet<>(2);
+        headersToRetain.add(MessageHeaders.ID);
+        headersToRetain.add(MessageHeaders.TIMESTAMP);
+
+        delegate.getMessageHeaders().putAll(message.getHeaders());
 
         Message delegateMessage = delegate.buildMessageContent(context, messageType);
 
+        message.getHeaders().keySet().retainAll(headersToRetain);
+
         for (Map.Entry<String, Object> headerEntry : delegateMessage.getHeaders().entrySet()) {
-            if (!headerEntry.getKey().equals(MessageHeaders.ID) &&
-                    !headerEntry.getKey().equals(MessageHeaders.TIMESTAMP)) {
-                message.setHeader(headerEntry.getKey(), headerEntry.getValue());
-            }
+            message.getHeaders().putIfAbsent(headerEntry.getKey(), headerEntry.getValue());
         }
         message.setPayload(delegateMessage.getPayload());
         
