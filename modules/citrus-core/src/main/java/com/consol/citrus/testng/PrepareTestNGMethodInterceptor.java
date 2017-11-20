@@ -48,14 +48,18 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
         List<IMethodInstance> interceptedMethods = new ArrayList<IMethodInstance>();
 
         for (IMethodInstance method : methods) {
-            interceptedMethods.add(method);
-
+            boolean baseMethodAdded = false;
             if (method.getInstance() instanceof AbstractTestNGCitrusTest) {
                 CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
                 if (citrusXmlTestAnnotation != null) {
                     if (citrusXmlTestAnnotation.name().length > 1) {
-                        for (int i = 1; i < citrusXmlTestAnnotation.name().length; i++) {
-                            interceptedMethods.add(new MethodInstance(method.getMethod()));
+                        for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
+                            if (i == 0 && !baseMethodAdded) {
+                                baseMethodAdded = true;
+                                interceptedMethods.add(method);
+                            } else {
+                                interceptedMethods.add(new MethodInstance(method.getMethod()));
+                            }
                         }
                     }
 
@@ -64,8 +68,13 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                         try {
                             for (String fileNamePattern : Citrus.getXmlTestFileNamePattern()) {
                                 Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
-                                for (int i = 1; i < fileResources.length; i++) {
-                                    interceptedMethods.add(new MethodInstance(method.getMethod()));
+                                for (int i = 0; i < fileResources.length; i++) {
+                                    if (i == 0 && !baseMethodAdded) {
+                                        baseMethodAdded = true;
+                                        interceptedMethods.add(method);
+                                    } else {
+                                        interceptedMethods.add(new MethodInstance(method.getMethod()));
+                                    }
                                 }
                             }
                         } catch (IOException e) {
