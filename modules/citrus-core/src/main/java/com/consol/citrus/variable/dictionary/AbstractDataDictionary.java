@@ -171,5 +171,4 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
     public void setPathMappingStrategy(PathMappingStrategy pathMappingStrategy) {
         this.pathMappingStrategy = pathMappingStrategy;
     }
-
 }

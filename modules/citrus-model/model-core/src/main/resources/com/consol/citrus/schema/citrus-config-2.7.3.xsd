@@ -276,6 +276,15 @@
       </xs:sequence>
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="global-scope" type="xs:boolean" default="true"/>
+      <xs:attribute name="direction">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="UNBOUND"/>
+            <xs:enumeration value="INBOUND"/>
+            <xs:enumeration value="OUTBOUND"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="mapping-strategy">
         <xs:simpleType>
           <xs:restriction base="xs:string">

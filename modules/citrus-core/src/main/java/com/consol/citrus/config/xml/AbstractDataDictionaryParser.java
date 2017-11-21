@@ -41,6 +41,7 @@ public abstract class AbstractDataDictionaryParser implements BeanDefinitionPars
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("global-scope"), "globalScope");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("mapping-strategy"), "pathMappingStrategy");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("direction"), "direction");
 
         Element mappings = DomUtils.getChildElementByTagName(element, "mappings");
         if (mappings != null) {

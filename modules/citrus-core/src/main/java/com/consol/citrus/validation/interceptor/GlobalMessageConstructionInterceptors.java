@@ -16,13 +16,12 @@
 
 package com.consol.citrus.validation.interceptor;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * List of global message construction interceptors that modify message payload and message headers. User just has to add
@@ -30,30 +29,10 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageConstructionInterceptors {
+public class GlobalMessageConstructionInterceptors {
 
     @Autowired(required = false)
-    private List<MessageConstructionInterceptor> messageConstructionInterceptors = new ArrayList<MessageConstructionInterceptor>();
-
-    public Message interceptMessageConstruction(Message message, String messageType, TestContext context) {
-        Message interceptedMessage = message;
-
-        for (MessageConstructionInterceptor interceptor : messageConstructionInterceptors) {
-            if (interceptor instanceof DataDictionary &&
-                    !((DataDictionary) interceptor).isGlobalScope()) {
-                // skip explicit data dictionary to avoid duplicate dictionary usage.
-                continue;
-            }
-
-            interceptedMessage = interceptor.interceptMessageConstruction(interceptedMessage, messageType, context);
-        }
-
-        return interceptedMessage;
-    }
-
-    public boolean supportsMessageType(String messageType) {
-        return true;
-    }
+    private List<MessageConstructionInterceptor> messageConstructionInterceptors = new ArrayList<>();
 
     /**
      * Sets the messageConstructionInterceptors property.
@@ -62,5 +41,16 @@ public class MessageConstructionInterceptors {
      */
     public void setMessageConstructionInterceptors(List<MessageConstructionInterceptor> messageConstructionInterceptors) {
         this.messageConstructionInterceptors = messageConstructionInterceptors;
+    }
+
+    /**
+     * Gets the messageConstructionInterceptors.
+     *
+     * @return
+     */
+    public List<MessageConstructionInterceptor> getMessageConstructionInterceptors() {
+        return messageConstructionInterceptors.stream()
+                .filter(interceptor -> !(interceptor instanceof DataDictionary) || ((DataDictionary) interceptor).isGlobalScope())
+                .collect(Collectors.toList());
     }
 }

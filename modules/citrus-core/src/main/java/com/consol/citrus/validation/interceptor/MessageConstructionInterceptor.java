@@ -18,6 +18,7 @@ package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 
 
 /**
@@ -44,4 +45,10 @@ public interface MessageConstructionInterceptor {
      * @return true if this message interceptor supports the message type.
      */
     boolean supportsMessageType(String messageType);
+
+    /**
+     * Indicates the direction of messages this interceptor should apply to.
+     * @return
+     */
+    MessageDirection getDirection();
 }

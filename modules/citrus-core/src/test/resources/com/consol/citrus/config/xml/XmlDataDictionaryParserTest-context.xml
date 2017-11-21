@@ -17,7 +17,7 @@
     </citrus:mappings>
   </citrus:xml-data-dictionary>
 
-  <citrus:xml-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="STARTS_WITH">
+  <citrus:xml-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="STARTS_WITH" direction="INBOUND">
     <citrus:mappings>
       <citrus:mapping path="node.name.1" value="value1"/>
     </citrus:mappings>

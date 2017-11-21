@@ -17,7 +17,7 @@
     </citrus:mappings>
   </citrus:json-data-dictionary>
 
-  <citrus:json-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="ENDS_WITH">
+  <citrus:json-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="ENDS_WITH" direction="INBOUND">
     <citrus:mappings>
       <citrus:mapping path="node.name.1" value="value1"/>
     </citrus:mappings>

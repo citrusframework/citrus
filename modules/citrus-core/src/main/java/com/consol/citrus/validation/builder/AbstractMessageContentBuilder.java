@@ -54,11 +54,21 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<>();
 
     /**
+     * Constructs the control message without any specific direction inbound or outbound.
+     * @param context
+     * @param messageType
+     * @return
+     */
+    public Message buildMessageContent(TestContext context, String messageType) {
+        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
+    }
+
+    /**
      * Constructs the control message with headers and payload coming from 
      * subclass implementation.
      */
     @Override
-    public Message buildMessageContent(TestContext context, String messageType) {
+    public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
         Object payload = buildMessagePayload(context, messageType);
 
         try {
@@ -66,14 +76,24 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             message.setName(messageName);
 
             if (payload != null) {
-                message = context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
+                for (MessageConstructionInterceptor interceptor: context.getGlobalMessageConstructionInterceptors().getMessageConstructionInterceptors()) {
+                    if (direction.equals(MessageDirection.UNBOUND)
+                            || interceptor.getDirection().equals(MessageDirection.UNBOUND)
+                            || direction.equals(interceptor.getDirection())) {
+                        message = interceptor.interceptMessageConstruction(message, messageType, context);
+                    }
+                }
 
                 if (dataDictionary != null) {
                     message = dataDictionary.interceptMessageConstruction(message, messageType, context);
                 }
 
                 for (MessageConstructionInterceptor interceptor : messageInterceptors) {
-                    message = interceptor.interceptMessageConstruction(message, messageType, context);
+                    if (direction.equals(MessageDirection.UNBOUND)
+                            || interceptor.getDirection().equals(MessageDirection.UNBOUND)
+                            || direction.equals(interceptor.getDirection())) {
+                        message = interceptor.interceptMessageConstruction(message, messageType, context);
+                    }
                 }
             }
 

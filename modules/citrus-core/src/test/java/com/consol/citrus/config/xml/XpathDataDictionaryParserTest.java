@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.XpathMappingDataDictionary;
@@ -47,6 +48,7 @@ public class XpathDataDictionaryParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(dictionary.getName(), "dataDictionary1");
         Assert.assertTrue(dictionary.isGlobalScope());
         Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.EXACT);
+        Assert.assertEquals(dictionary.getDirection(), MessageDirection.UNBOUND);
         Assert.assertNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 3L);
 
@@ -58,6 +60,7 @@ public class XpathDataDictionaryParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(dictionary.getName(), "dataDictionary2");
         Assert.assertFalse(dictionary.isGlobalScope());
         Assert.assertEquals(dictionary.getPathMappingStrategy(), DataDictionary.PathMappingStrategy.STARTS_WITH);
+        Assert.assertEquals(dictionary.getDirection(), MessageDirection.INBOUND);
         Assert.assertNull(dictionary.getMappingFile());
         Assert.assertEquals(dictionary.getMappings().size(), 1L);
 

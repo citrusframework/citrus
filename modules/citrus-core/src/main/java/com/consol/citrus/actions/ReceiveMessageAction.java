@@ -20,8 +20,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
@@ -241,7 +240,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             messageBuilder.setDataDictionary(dataDictionary);
         }
 
-        return messageBuilder.buildMessageContent(context, messageType);
+        return messageBuilder.buildMessageContent(context, messageType, MessageDirection.INBOUND);
     }
     
     @Override

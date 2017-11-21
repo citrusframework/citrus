@@ -24,7 +24,7 @@ import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionConfig;
 import com.consol.citrus.report.*;
 import com.consol.citrus.validation.MessageValidatorConfig;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
 import org.springframework.context.annotation.*;
 
@@ -40,58 +40,58 @@ import org.springframework.context.annotation.*;
 @ImportResource(locations = "${systemProperties['citrus.spring.application.context']?:classpath*:citrus-context.xml}", reader = CitrusBeanDefinitionReader.class)
 public class CitrusSpringConfig {
 
-    @Bean(name = "testContextFactory")
-    public TestContextFactory getTestContextFactory() {
+    @Bean
+    public TestContextFactory testContextFactory() {
         return new TestContextFactory();
     }
 
-    @Bean(name = "endpointFactory")
-    public EndpointFactory getEndpointFactory() {
+    @Bean
+    public EndpointFactory endpointFactory() {
         return new DefaultEndpointFactory();
     }
 
-    @Bean(name = "referenceResolver")
-    public ReferenceResolver getReferenceResolver() {
+    @Bean
+    public ReferenceResolver referenceResolver() {
         return new SpringBeanReferenceResolver();
     }
 
-    @Bean(name = "messageConstructionInterceptors")
-    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
-        return new MessageConstructionInterceptors();
+    @Bean
+    public GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors() {
+        return new GlobalMessageConstructionInterceptors();
     }
 
-    @Bean(name = "loggingReporter")
-    public LoggingReporter getLoggingReporter() {
+    @Bean
+    public LoggingReporter loggingReporter() {
         return new LoggingReporter();
     }
 
-    @Bean(name = "htmlReporter")
-    public HtmlReporter getHtmlReporter() {
+    @Bean
+    public HtmlReporter htmlReporter() {
         return new HtmlReporter();
     }
 
-    @Bean(name = "testListeners")
-    public TestListeners getTestListeners() {
+    @Bean
+    public TestListeners testListeners() {
         return new TestListeners();
     }
 
-    @Bean(name = "testActionListeners")
-    public TestActionListeners getTestActionListeners() {
+    @Bean
+    public TestActionListeners testActionListeners() {
         return new TestActionListeners();
     }
 
-    @Bean(name = "testSuiteListeners")
-    public TestSuiteListeners getTestSuiteListeners() {
+    @Bean
+    public TestSuiteListeners testSuiteListeners() {
         return new TestSuiteListeners();
     }
 
-    @Bean(name = "messageListeners")
-    public MessageListeners getMessageListeners() {
+    @Bean
+    public MessageListeners messageListeners() {
         return new MessageListeners();
     }
 
-    @Bean(name = "failureStackTestListener")
-    public FailureStackTestListener getFailureStackTestListener() {
+    @Bean
+    public FailureStackTestListener failureStackTestListener() {
         return new FailureStackTestListener();
     }
 }

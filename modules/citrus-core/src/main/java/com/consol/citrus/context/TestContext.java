@@ -29,7 +29,7 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
@@ -87,7 +87,7 @@ public class TestContext {
     private MessageListeners messageListeners = new MessageListeners();
 
     /** List of global message construction interceptors */
-    private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
+    private GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors = new GlobalMessageConstructionInterceptors();
 
     /** Central namespace context builder */
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
@@ -503,19 +503,19 @@ public class TestContext {
     }
 
     /**
-     * Gets the message construction interceptors.
+     * Gets the global message construction interceptors.
      * @return
      */
-    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
-        return messageConstructionInterceptors;
+    public GlobalMessageConstructionInterceptors getGlobalMessageConstructionInterceptors() {
+        return globalMessageConstructionInterceptors;
     }
 
     /**
-     * Sets the messsage construction interceptors.
+     * Sets the global messsage construction interceptors.
      * @param messageConstructionInterceptors
      */
-    public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
-        this.messageConstructionInterceptors = messageConstructionInterceptors;
+    public void setGlobalMessageConstructionInterceptors(GlobalMessageConstructionInterceptors messageConstructionInterceptors) {
+        this.globalMessageConstructionInterceptors = messageConstructionInterceptors;
     }
 
     /**

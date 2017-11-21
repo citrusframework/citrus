@@ -18,6 +18,7 @@ package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,9 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
 
     /** Logger */
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    /** Dictionary type */
+    private MessageDirection direction = MessageDirection.UNBOUND;
 
     @Override
     public Message interceptMessageConstruction(Message message, String messageType, TestContext context) {
@@ -59,5 +63,24 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
      */
     protected Message interceptMessage(Message message, String messageType, TestContext context) {
         return message;
+    }
+
+    /**
+     * Gets the direction.
+     *
+     * @return
+     */
+    @Override
+    public MessageDirection getDirection() {
+        return direction;
+    }
+
+    /**
+     * Sets the direction.
+     *
+     * @param direction
+     */
+    public void setDirection(MessageDirection direction) {
+        this.direction = direction;
     }
 }

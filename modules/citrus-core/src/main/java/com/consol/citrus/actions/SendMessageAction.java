@@ -21,6 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
@@ -143,7 +144,7 @@ public class SendMessageAction extends AbstractTestAction {
             messageBuilder.setDataDictionary(dataDictionary);
         }
 
-        return messageBuilder.buildMessageContent(context, messageType);
+        return messageBuilder.buildMessageContent(context, messageType, MessageDirection.OUTBOUND);
     }
 
     /**

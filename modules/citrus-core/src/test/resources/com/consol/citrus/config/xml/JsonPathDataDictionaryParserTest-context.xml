@@ -17,7 +17,7 @@
     </citrus:mappings>
   </citrus:json-path-data-dictionary>
 
-  <citrus:json-path-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="EXACT">
+  <citrus:json-path-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="EXACT" direction="OUTBOUND">
     <citrus:mappings>
       <citrus:mapping path="$.node.name.1" value="value1"/>
     </citrus:mappings>

@@ -17,8 +17,7 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.*;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -48,9 +47,14 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     @Override
     public Message buildMessageContent(TestContext context, String messageType) {
+        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
+    }
+
+    @Override
+    public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
         delegate.setMessageHeaders(message.getHeaders());
 
-        Message delegateMessage = delegate.buildMessageContent(context, messageType);
+        Message delegateMessage = delegate.buildMessageContent(context, messageType, direction);
 
         for (Map.Entry<String, Object> headerEntry : delegateMessage.getHeaders().entrySet()) {
             if (!headerEntry.getKey().equals(MessageHeaders.ID) &&

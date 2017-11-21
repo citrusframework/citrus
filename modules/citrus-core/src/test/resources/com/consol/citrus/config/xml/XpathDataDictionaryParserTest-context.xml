@@ -17,7 +17,7 @@
     </citrus:mappings>
   </citrus:xpath-data-dictionary>
 
-  <citrus:xpath-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="STARTS_WITH">
+  <citrus:xpath-data-dictionary id="dataDictionary2" global-scope="false" mapping-strategy="STARTS_WITH" direction="INBOUND">
     <citrus:mappings>
       <citrus:mapping path="//root/element/1" value="value1"/>
     </citrus:mappings>
