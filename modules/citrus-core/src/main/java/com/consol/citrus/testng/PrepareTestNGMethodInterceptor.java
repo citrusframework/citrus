@@ -83,6 +83,10 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                     }
                 }
             }
+
+            if (!baseMethodAdded) {
+                interceptedMethods.add(method);
+            }
         }
 
         return interceptedMethods;
