@@ -146,6 +146,6 @@ public class SoapMessage extends DefaultMessage {
 
     @Override
     public String toString() {
-        return String.format(super.toString() + "[attachments: %s]", attachments);
+        return super.toString() + String.format("[attachments: %s]", attachments);
     }
 }
