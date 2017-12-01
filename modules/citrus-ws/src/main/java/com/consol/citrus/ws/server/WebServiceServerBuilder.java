@@ -22,8 +22,9 @@ import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
-import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.ws.server.EndpointInterceptor;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -205,8 +206,18 @@ public class WebServiceServerBuilder extends AbstractEndpointBuilder<WebServiceS
      * @param interceptors
      * @return
      */
-    public WebServiceServerBuilder interceptors(List<HandlerInterceptor> interceptors) {
+    public WebServiceServerBuilder interceptors(List<EndpointInterceptor> interceptors) {
         endpoint.setInterceptors((List) interceptors);
+        return this;
+    }
+
+    /**
+     * Sets the interceptors.
+     * @param interceptors
+     * @return
+     */
+    public WebServiceServerBuilder interceptors(EndpointInterceptor ... interceptors) {
+        endpoint.setInterceptors(Arrays.asList(interceptors));
         return this;
     }
 
