@@ -39,6 +39,16 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
     }
 
     /**
+     * Sets the autoStart property.
+     * @param autoStart
+     * @return
+     */
+    public RmiServerBuilder autoStart(boolean autoStart) {
+        endpoint.setAutoStart(autoStart);
+        return this;
+    }
+
+    /**
      * Sets the serverUrl property.
      * @param serverUrl
      * @return

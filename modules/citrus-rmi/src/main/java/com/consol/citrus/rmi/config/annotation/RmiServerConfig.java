@@ -32,6 +32,12 @@ import java.rmi.registry.Registry;
 public @interface RmiServerConfig {
 
     /**
+     * Auto start.
+     * @return
+     */
+    boolean autoStart() default false;
+
+    /**
      * Server uri.
      * @return
      */

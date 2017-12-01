@@ -44,6 +44,8 @@ public class RmiServerConfigParser extends AbstractAnnotationConfigParser<RmiSer
     public RmiServer parse(RmiServerConfig annotation) {
         RmiServerBuilder builder = new RmiServerBuilder();
 
+        builder.autoStart(annotation.autoStart());
+
         if (StringUtils.hasText(annotation.serverUrl())) {
             builder.serverUrl(annotation.serverUrl());
         }
