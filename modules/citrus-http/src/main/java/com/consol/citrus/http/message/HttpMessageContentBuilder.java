@@ -53,6 +53,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
         delegate.setMessageHeaders(message.getHeaders());
+        message.setName(delegate.getMessageName());
 
         Message delegateMessage = delegate.buildMessageContent(context, messageType, direction);
 
