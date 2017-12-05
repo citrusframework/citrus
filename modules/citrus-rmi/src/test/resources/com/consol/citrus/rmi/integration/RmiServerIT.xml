@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -32,13 +33,13 @@
       <receive endpoint="rmiHelloServer">
         <message>
           <payload>
-            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.HelloService</remote>
-              <method>sayHello</method>
-              <args>
-                <arg type="java.lang.String" value="Hello RMI this is cool!"/>
-              </args>
-            </service-invocation>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.HelloService</rmi:remote>
+              <rmi:method>sayHello</rmi:method>
+              <rmi:args>
+                <rmi:arg type="java.lang.String" value="Hello RMI this is cool!"/>
+              </rmi:args>
+            </rmi:service-invocation>
           </payload>
         </message>
       </receive>
@@ -46,7 +47,7 @@
       <send endpoint="rmiHelloServer">
         <message>
           <payload>
-            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message"/>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
           </payload>
         </message>
       </send>
@@ -56,16 +57,16 @@
       </echo>
 
       <send endpoint="camel:direct:helloCount" fork="true">
-        <message><data></data></message>
+        <message><data/></message>
       </send>
 
       <receive endpoint="rmiHelloServer">
         <message>
           <payload>
-            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.HelloService</remote>
-              <method>getHelloCount</method>
-            </service-invocation>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.HelloService</rmi:remote>
+              <rmi:method>getHelloCount</rmi:method>
+            </rmi:service-invocation>
           </payload>
         </message>
       </receive>
@@ -73,9 +74,9 @@
       <send endpoint="rmiHelloServer">
         <message>
           <payload>
-            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <object type="java.lang.Integer" value="citrus:randomNumber(4)"/>
-            </service-result>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.Integer" value="citrus:randomNumber(4)"/>
+            </rmi:service-result>
           </payload>
         </message>
       </send>

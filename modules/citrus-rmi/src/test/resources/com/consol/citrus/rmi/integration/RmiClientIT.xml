@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -26,10 +27,10 @@
       <send endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.NewsService</remote>
-              <method>getNews</method>
-            </service-invocation>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>getNews</rmi:method>
+            </rmi:service-invocation>
           </payload>
         </message>
       </send>
@@ -37,9 +38,9 @@
       <receive endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <object type="java.lang.String" value="This is news from RMI!"/>
-            </service-result>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.String" value="This is news from RMI!"/>
+            </rmi:service-result>
           </payload>
         </message>
       </receive>
@@ -51,13 +52,13 @@
       <send endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.NewsService</remote>
-              <method>setNews</method>
-              <args>
-                <arg value="This is breaking news!"/>
-              </args>
-            </service-invocation>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>setNews</rmi:method>
+              <rmi:args>
+                <rmi:arg value="This is breaking news!"/>
+              </rmi:args>
+            </rmi:service-invocation>
           </payload>
         </message>
       </send>
@@ -65,7 +66,7 @@
       <receive endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message"/>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
           </payload>
         </message>
       </receive>
@@ -77,10 +78,10 @@
       <send endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.NewsService</remote>
-              <method>getNews</method>
-            </service-invocation>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>getNews</rmi:method>
+            </rmi:service-invocation>
           </payload>
         </message>
       </send>
@@ -88,9 +89,9 @@
       <receive endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <object type="java.lang.String" value="This is breaking news!"/>
-            </service-result>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.String" value="This is breaking news!"/>
+            </rmi:service-result>
           </payload>
         </message>
       </receive>
@@ -101,13 +102,13 @@
       <send endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.NewsService</remote>
-              <method>setNews</method>
-              <args>
-                <arg value="This is news from RMI!"/>
-              </args>
-            </service-invocation>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>setNews</rmi:method>
+              <rmi:args>
+                <rmi:arg value="This is news from RMI!"/>
+              </rmi:args>
+            </rmi:service-invocation>
           </payload>
         </message>
       </send>
@@ -115,7 +116,7 @@
       <receive endpoint="rmiNewsClient">
         <message>
           <payload>
-            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message"/>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
           </payload>
         </message>
       </receive>
