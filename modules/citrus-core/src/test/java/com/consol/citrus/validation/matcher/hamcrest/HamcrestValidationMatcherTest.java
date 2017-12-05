@@ -69,7 +69,18 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "9", Collections.singletonList("lessThanOrEqualTo(9)")},
             new Object[]{"foo", "", Arrays.asList("1", "lessThanOrEqualTo(9)")},
             new Object[]{"foo", "", Arrays.asList("9", "lessThanOrEqualTo(9)")},
+            new Object[]{"foo", "{value1=value2,value4=value5}", Collections.singletonList("hasSize(2)") },
+            new Object[]{"foo", "{value1=value2,value4=value5}", Collections.singletonList("hasEntry(value1,value2)") },
+            new Object[]{"foo", "{value1=value2,value4=value5}", Collections.singletonList("hasKey(value1)") },
+            new Object[]{"foo", "{\"value1\"=\"value2\",\"value4\"=\"value5\"}", Collections.singletonList("hasKey(value1)") },
+            new Object[]{"foo", "{value1=value2,value4=value5}", Collections.singletonList("hasValue(value2)") },
             new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("hasSize(5)") },
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("everyItem(startsWith(value))") },
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("hasItem(value2)") },
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("hasItems(value2,value5)") },
+            new Object[]{"foo", "[\"value1\",\"value2\",\"value3\",\"value4\",\"value5\"]", Collections.singletonList("hasItems(value2,value5)") },
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("contains(value1,value2,value3,value4,value5)") },
+            new Object[]{"foo", "[value1,value2,value3,value4,value5]", Collections.singletonList("containsInAnyOrder(value2,value4,value1,value3,value5)") },
             new Object[]{"foo", "[\"unique_value\",\"different_unique_value\"]", Collections.singletonList("hasSize(2)") },
             new Object[]{"foo", "[\"duplicate_value\",\"duplicate_value\"]", Collections.singletonList("hasSize(2)") }
         };
@@ -113,7 +124,16 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "0", Collections.singletonList("not(lessThan(1))")},
             new Object[]{"foo", "10", Collections.singletonList("lessThanOrEqualTo(9)")},
             new Object[]{"foo", "", Arrays.asList("10", "lessThanOrEqualTo(9)")},
-            new Object[]{"foo", "[value1,value2]", Collections.singletonList("hasSize(5)") }
+            new Object[]{"foo", "{value1=value2}", Collections.singletonList("hasSize(5)") },
+            new Object[]{"foo", "{value1=value2}", Collections.singletonList("hasEntry(value4,value5)") },
+            new Object[]{"foo", "{value1=value2}", Collections.singletonList("hasKey(value4)") },
+            new Object[]{"foo", "{value1=value2}", Collections.singletonList("hasValue(value5)") },
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("hasSize(5)") },
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("everyItem(endsWith(1))") },
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("hasItem(value5)") },
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("hasItems(value1,value2,value5)") },
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("contains(value1)") },
+            new Object[]{"foo", "[value1,value2]", Collections.singletonList("containsInAnyOrder(value2,value4)") }
         };
     }
 }

@@ -82,6 +82,80 @@
           <http:validate path="count(//message)" value="@assertThat(greaterThan(0))@" result-type="number"/>
         </http:body>
       </http:receive-response>
+
+      <http:send-request client="httpClient" fork="true">
+        <http:POST>
+          <http:headers content-type="application/json" accept="application/json"/>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                  {
+                    "nothing": null,
+                    "boolean": false,
+                    "numeric": 10,
+                    "map": { "a": "b", "c": "d" },
+                    "array": [ "a", "b", "c", "d" ],
+                  }
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-request server="httpServerRequestEndpoint">
+        <http:POST path="/test">
+          <http:headers>
+            <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                {
+                  "nothing": "@assertThat(nullValue())@",
+                  "boolean": "@assertThat(not(true))@",
+                  "numeric": "@assertThat(allOf(notNullValue(), greaterThan(0), lessThan(15)))@",
+                  "map": "@assertThat(hasEntry('a','b'))@",
+                  "array": "@assertThat(hasItems('a','c'))@",
+                }
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+        <http:extract>
+          <http:header name="citrus_jms_messageId" variable="correlation_id"/>
+        </http:extract>
+      </http:receive-request>
+
+      <http:send-response server="httpServerResponseEndpoint">
+        <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+          <http:header name="Content-Type" value="text/xml"/>
+          <http:header name="citrus_jms_correlationId" value="${correlation_id}"/>
+        </http:headers>
+        <http:body>
+          <http:data>
+            <![CDATA[
+              {
+                "nothing": null,
+                "boolean": false,
+                "numeric": 10,
+                "map": { "a": "b", "c": "d" },
+                "array": [ "a", "b", "c", "d" ],
+              }
+            ]]>
+          </http:data>
+        </http:body>
+      </http:send-response>
+
+      <http:receive-response client="httpClient">
+        <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
+        <http:body>
+          <http:validate path="$.array.size()" value="@assertThat(is(4))@"/>
+          <http:validate path="$.array" value="@assertThat(contains(a,b,c,d))@"/>
+          <http:validate path="$.numeric" value="@assertThat(greaterThan(0))@" result-type="number"/>
+          <http:validate path="$.map" value="@assertThat(hasKey(a))@"/>
+          <http:validate path="$.map.keySet()" value="@assertThat(contains(a,c))@"/>
+        </http:body>
+      </http:receive-response>
     </actions>
   </testcase>
 </spring:beans>
