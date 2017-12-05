@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.text;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
@@ -25,6 +26,9 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Plain text validator using simple String comparison.
@@ -59,8 +63,11 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         }
 
         try {
-            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
             String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim());
+            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
+
+            controlValue = processIgnoreStatements(controlValue, resultValue);
+            controlValue = processVariableStatements(controlValue, resultValue, context);
 
             if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
                 ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, controlValue, context);
@@ -73,6 +80,83 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         }
         
         log.info("Text validation successful: All values OK");
+    }
+
+    /**
+     * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
+     * This way we can ignore words in a plaintext value.
+     * @param control
+     * @param result
+     * @return
+     */
+    private String processIgnoreStatements(String control, String result) {
+        if (control.equals(Citrus.IGNORE_PLACEHOLDER)) {
+            return control;
+        }
+
+        Pattern whitespacePattern = Pattern.compile("[\\W]");
+        Pattern ignorePattern = Pattern.compile("@ignore\\(?(\\d*)\\)?@");
+
+        Matcher ignoreMatcher = ignorePattern.matcher(control);
+        while (ignoreMatcher.find()) {
+            String actualValue;
+
+            if (ignoreMatcher.groupCount() > 0 && StringUtils.hasText(ignoreMatcher.group(1))) {
+                int end = ignoreMatcher.start() + Integer.valueOf(ignoreMatcher.group(1));
+                if (end > result.length()) {
+                    end = result.length();
+                }
+
+                if (ignoreMatcher.start() > result.length()) {
+                    actualValue = "";
+                } else {
+                    actualValue = result.substring(ignoreMatcher.start(), end);
+                }
+            } else {
+                actualValue = result.substring(ignoreMatcher.start());
+                Matcher whitespaceMatcher = whitespacePattern.matcher(actualValue);
+                if (whitespaceMatcher.find()) {
+                    actualValue = actualValue.substring(0, whitespaceMatcher.start());
+                }
+            }
+
+            control = ignoreMatcher.replaceFirst(actualValue);
+            ignoreMatcher = ignorePattern.matcher(control);
+        }
+
+        return control;
+    }
+
+    /**
+     * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
+     * This way we can ignore words in a plaintext value.
+     * @param control
+     * @param result
+     * @param context
+     * @return
+     */
+    private String processVariableStatements(String control, String result, TestContext context) {
+        if (control.equals(Citrus.IGNORE_PLACEHOLDER)) {
+            return control;
+        }
+
+        Pattern whitespacePattern = Pattern.compile("[^a-zA-Z_0-9\\-\\.]");
+        Pattern variablePattern = Pattern.compile("@variable\\(?'?([a-zA-Z_0-9\\-\\.]*)'?\\)?@");
+
+        Matcher variableMatcher = variablePattern.matcher(control);
+        while (variableMatcher.find()) {
+            String actualValue = result.substring(variableMatcher.start());
+            Matcher whitespaceMatcher = whitespacePattern.matcher(actualValue);
+            if (whitespaceMatcher.find()) {
+                actualValue = actualValue.substring(0, whitespaceMatcher.start());
+            }
+
+            control = variableMatcher.replaceFirst(actualValue);
+            context.setVariable(variableMatcher.group(1), actualValue);
+            variableMatcher = variablePattern.matcher(control);
+        }
+
+        return control;
     }
 
     /**

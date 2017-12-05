@@ -36,6 +36,18 @@ By the way sending plain text messages in Citrus is also very easy. Just use the
 
 Of course test variables are supported in the plain text payloads. The variables are replace by the referenced values before sending or receiving the message.
 
+[source,xml]
+----
+<receive endpoint="httpMessageEndpoint">
+    <message type="plaintext">
+        <data>${hello} ${world}!</data>
+    </message>
+</receive>
+----
+
+[[plain-text-validation-whitespaces]]
+=== Whitespace characters
+
 Plaintext message payloads may only differ in system-dependent line separator characters (*CR*, _LF_, _CRLF_). By default the plain text message validation fails because of that differences even if only whitespace
 characters are different.
 
@@ -65,4 +77,102 @@ Of course you can also set the properties directly on the plain text message val
   <property name="ignoreNewLineType" value="true"/>
   <property name="ignoreWhitespace" value="true"/>
 </bean>
+----
+
+[[plain-text-validation-ignore]]
+=== Ignoring text parts
+
+By default the plaint text validator performs a String equals operation. Test variables are automatically replaced before that comparison takes place but what about ignore statements?
+The plain text message validator is able to ignore words and character sequences based on their position in the text value. Given a source plain text value:
+
+.Source text
+[source,text]
+----
+Your current id is "1234567890"
+----
+
+Now in the plain text validation we need to ignore the actual id value due to some reason. Maybe the id is generated on a foreign system and we simply do not know the actual value at runtime.
+In this case we can use the common `@ignore@` statement in the control message payload as follows:
+
+.Control text
+[source,text]
+----
+Your current id is "@ignore@"
+----
+
+Citrus and the plain text message validator will ignore the marked part of the text during validation. This mechanism is based on the fact that the `@ignore@` statement is placed at the exact same
+position as the actual id value. So this mechanism requires you to know the exact structure of the plaintext value including all whitespace characters. When Citrus finds the `@ignore@` keyword in the control value
+the placeholder is replaced with the actual character sequence that is located at the exact same position in the source message payload that is validated.
+
+The character sequence is defined as sequence of Java word characters. This word sequence is ending with a non-word character defined in Java (`\\W` which is a character that is not in `[a-zA-Z_0-9]`).
+
+Instead of ignoring a single word you can also specify the amount of characters that should be ignored. This is when you have Java non-word characters that you need to ignore. Let's have an example for that, too:
+
+.Source text
+[source,text]
+----
+Your current id is "#12345-67890"
+----
+
+Given that text the simple `@ignore@` statement will fail because of the non-word characters *'#'* and *'-'* that are located in the id value. This time we ignore the whole id sequence with:
+
+.Control text
+[source,text]
+----
+Your current id is "@ignore(12)@"
+----
+
+This will ignore exactly *12* characters starting from the exact position of the `@ignore@` keyword. So knowing that the id is exactly *12* characters long we can ignore that part.
+
+[[plain-text-validation-variables]]
+=== Creating variables
+
+Instead of just ignoring certain text parts we can also extract those parts into test variables. The actual character sequence is ignored during validation and in addition to that the actual
+value is stored to a new test variable. Given the following text payload:
+
+.Source text
+[source,text]
+----
+Your current id is "1234567890"
+----
+
+And the expected control text:
+
+.Control text
+[source,text]
+----
+Your current id is "@variable('id')@"
+----
+
+The validation will automatically ignore the id part in the text and create a new test variable with name `id` that holds the actual value. The name of the variable to create is given in the
+`@variable()@` statement. This enables us to extract dynamic text parts that we are not able to validate. After that we can access the dynamic text part using the normal test variable syntax:
+
+[source,text]
+----
+The id was ${id}
+----
+
+Also notice that the `@variable()@` keyword expression has to be placed at the exact same position in the text as the actual value. The variable extractor will read the variable value from the source message payload
+starting from that position. The ending of the variable value is defined by a non-word Java character. Dashes *'-'* and dots *'.'* are automatically included in these values, too. So this will also work for you:
+
+.Source text
+[source,text]
+----
+Today is "2017-12-24"
+----
+
+And the expected control text:
+
+.Control text
+[source,text]
+----
+Today is "@variable('date')@"
+----
+
+This results in a new variable called `date` with value `2017-12-24`. Also the European date representation works fine here as dots and dashes are automatically included:
+
+.Source text
+[source,text]
+----
+Today is "24.12.2017"
 ----
