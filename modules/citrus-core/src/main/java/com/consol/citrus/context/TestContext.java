@@ -222,7 +222,7 @@ public class TestContext {
     public void addVariables(String[] variableNames, Object[] variableValues) {
         if (variableNames.length != variableValues.length) {
             throw new CitrusRuntimeException(String.format(
-                    "Invalid test parameter usage - received '%s' parameters with '%s' values",
+                    "Invalid context variable usage - received '%s' variables with '%s' values",
                     variableNames.length,
                     variableValues.length));
         }
