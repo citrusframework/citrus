@@ -156,7 +156,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             if (parameters != null) {
                 dataProviderParams = parameters[invocationCount % parameters.length];
                 injectTestParameters(method, testCase, dataProviderParams);
-                injectContextVariables(method, context, dataProviderParams);
             }
         }
 
@@ -182,10 +181,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
 
         return values;
-    }
-
-    private void injectContextVariables(Method method, TestContext context, Object[] dataProviderParams) {
-        context.addVariables(getParameterNames(method), dataProviderParams);
     }
 
     /**
