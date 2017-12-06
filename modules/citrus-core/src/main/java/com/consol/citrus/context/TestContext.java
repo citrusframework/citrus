@@ -213,6 +213,26 @@ public class TestContext {
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
     }
+
+    /**
+     * Add variables to context.
+     * @param variableNames the variable names to set
+     * @param variableValues the variable values to set
+     */
+    public void addVariables(String[] variableNames, Object[] variableValues) {
+        if (variableNames.length != variableValues.length) {
+            throw new CitrusRuntimeException(String.format(
+                    "Invalid test parameter usage - received '%s' parameters with '%s' values",
+                    variableNames.length,
+                    variableValues.length));
+        }
+
+        for (int i = 0; i < variableNames.length; i++) {
+            if (variableValues[i] != null) {
+                setVariable(variableNames[i], variableValues[i]);
+            }
+        }
+    }
     
     /**
      * Add several new variables to test context. Existing variables will be 
