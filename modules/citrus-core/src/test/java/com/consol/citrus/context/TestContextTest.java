@@ -233,6 +233,35 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("test1"), "123");
         Assert.assertEquals(context.getVariable("test2"), "");
     }
+
+    @Test
+    public void testAddVariablesFromArrays() {
+
+        //GIVEN
+        String[] variableNames = {"variable1", "${variable2}"};
+        Object[] variableValues= {"value1", ""};
+
+        //WHEN
+        context.addVariables(variableNames, variableValues);
+
+        //THEN
+        Assert.assertEquals(context.getVariable("variable1"), "value1");
+        Assert.assertEquals(context.getVariable("variable2"), "");
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testAddVariablesThrowsExceptionIfArraysHaveDifferentSize() {
+
+        //GIVEN
+        String[] variableNames = {"variable1", "variable2"};
+        Object[] variableValues= {"value1"};
+
+        //WHEN
+        context.addVariables(variableNames, variableValues);
+
+        //THEN
+        //Exception is thrown
+    }
     
     @Test
     public void testReplaceVariablesInMap() {
