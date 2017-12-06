@@ -33,7 +33,7 @@ public class TestParameterIT extends AbstractTestNGCitrusTest {
 
     @Test(dataProvider = "someDataProvider")
     @CitrusParameters({"someVariable"})
-    @CitrusXmlTest(name = "DataProviderAvailableInVariableBlockTest")
+    @CitrusXmlTest(name = "TestParameterIT")
     @SuppressWarnings("unused")
     public void test(String someVariable) {
     }
