@@ -18,31 +18,43 @@ You can also simulate the Camel route endpoint with receiving messages and provi
 
 So we need a Camel route to test.
 
-{% highlight xml %}
-<!-- Apache Camel context with route to test -->
-<camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
-  <route id="newsRoute">
-    <from uri="jms:queue:JMS.Queue.News"/>
-    <to uri="log:com.consol.citrus.camel?level=INFO"/>
-    <to uri="spring-ws:http://localhost:18009?soapAction=newsFeed"/>
-  </route>
-</camelContext>
+{% highlight java %}
+// Apache Camel context with route to test
+@Bean
+public CamelContext camelContext() throws Exception {
+    SpringCamelContext context = new SpringCamelContext();
+    context.addRouteDefinition(new RouteDefinition().from("jms:queue:JMS.Queue.News")
+                                                .to("log:com.consol.citrus.camel?level=INFO")
+                                                .to("spring-ws:http://localhost:18009?soapAction=newsFeed"));
+    return context;
+}
 {% endhighlight %}
 
 The Camel route reads from a JMS queue and forwards the message to a SOAP web service endpoint. In a test scenario we need to send messages to the JMS destination and wait for messages on
 the SOAP server endpoint. Lets add configuration for this in Citrus:
 
-{% highlight xml %}
-<!-- JMS endpoint -->
-<citrus-jms:endpoint id="newsJmsEndpoint"
-                   destination-name="JMS.Queue.News"
-                   timeout="5000"/>
+{% highlight java %}
+// JMS endpoint
+@Bean
+public JmsEndpoint newsJmsEndpoint() {
+    return CitrusEndpoints.jms()
+            .asynchronous()
+            .timeout(5000)
+            .destination("JMS.Queue.News")
+            .connectionFactory(connectionFactory())
+            .build();
+}
 
-<!-- SOAP WebService server-->
-<citrus-ws:server id="newsSoapServer"
-                port="18009"
-                auto-start="true"
-                timeout="10000"/>
+// SOAP WebService server
+@Bean
+public WebServiceServer newsServer() {
+    return CitrusEndpoints.soap()
+            .server()
+            .autoStart(true)
+            .timeout(10000)
+            .port(18009)
+            .build();
+}
 {% endhighlight %}
        
 The components above are used in a Citrus test case.

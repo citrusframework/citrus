@@ -30,28 +30,29 @@ We need to include the Spring oxm module in the dependencies:
     
 Also we need to provide a marshaller component in our Spring configuration:
 
-{% highlight xml %}
-<oxm:jaxb2-marshaller id="marshaller" context-path="com.consol.citrus.samples.todolist.model"/>
+{% highlight java %}
+@Bean
+public Marshaller marshaller() {
+    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+    marshaller.setContextPath("com.consol.citrus.samples.todolist.model");
+    return marshaller;
+}
 {% endhighlight %}
     
-Please note that the marshaller supports model object classes in package **com.consol.citrus.samples.todolist.model**. Also
-we need a special **oxm** namespace that we add to the Spring application context root element:
+Please note that the marshaller supports model object classes in package **com.consol.citrus.samples.todolist.model**. 
 
-{% highlight xml %}
-<beans xmlns="http://www.springframework.org/schema/beans"
-       [...]
-       xmlns:oxm="http://www.springframework.org/schema/oxm">
-{% endhighlight %}
-    
 That is all for configuration, now we can use model objects as message payload in the test cases.
   
 {% highlight java %}
+@Autowired
+private Jaxb2Marshaller marshaller;
+    
 http()
     .client(todoClient)
     .send()
     .post("/todolist")
     .contentType("application/json")
-    .payload(new TodoEntry("${todoName}", "${todoDescription}"), objectMapper);
+    .payload(new TodoEntry("${todoName}", "${todoDescription}"), marshaller);
 {% endhighlight %}
         
 As you can see we are able to send the model object as payload. The test variable support is also given. Citrus will automatically marshall the object to a **application/json** message content 
@@ -62,11 +63,11 @@ http()
     .client(todoClient)
     .receive()
     .response(HttpStatus.OK)
-    .validationCallback(new JsonMappingValidationCallback<TodoEntry>(TodoEntry.class, objectMapper) {
+    .validationCallback(new XmlMarshallingValidationCallback<TodoEntry>(marshaller) {
         @Override
         public void validate(TodoEntry todoEntry, Map<String, Object> headers, TestContext context) {
             Assert.assertNotNull(todoEntry);
-            Assert.assertEquals(todoEntry.getId(), uuid);    
+            Assert.assertEquals(todoEntry.getId(), uuid);
         }
     });
 {% endhighlight %}

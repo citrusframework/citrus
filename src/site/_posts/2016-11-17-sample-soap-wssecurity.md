@@ -29,19 +29,31 @@ First of all we add the dependency **spring-ws-security** to the Maven POM.
     
 After that we can configure the SOAP client to use WSS4J security username and password for all requests.
 
-{% highlight xml %}
-<citrus-ws:client id="todoListClient"
-                  request-url="http://localhost:8080/services/ws/todolist"
-                  interceptors="clientInterceptors"/>
+{% highlight java %}
+@Bean
+public WebServiceClient todoClient() {
+    return CitrusEndpoints.soap()
+                        .client()
+                        .defaultUri("http://localhost:8080/services/ws/todolist")
+                        .interceptors(clientInterceptors())
+                        .build();
+}
 
-<util:list id="clientInterceptors">
-  <bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
-    <property name="securementActions" value="Timestamp UsernameToken"/>
-    <property name="securementUsername" value="admin"/>
-    <property name="securementPassword" value="secret"/>
-  </bean>
-  <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
-</util:list>
+@Bean
+public List<ClientInterceptor> clientInterceptors() {
+    return Arrays.asList(wss4jSecurityClientInterceptor(), new LoggingClientInterceptor());
+}
+
+@Bean
+public Wss4jSecurityInterceptor wss4jSecurityClientInterceptor() {
+    Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+
+    interceptor.setSecurementActions("Timestamp UsernameToken");
+    interceptor.setSecurementUsername("admin");
+    interceptor.setSecurementPassword("secret");
+
+    return interceptor;
+}
 {% endhighlight %}
    
 The client interceptor list contains the **Wss4jSecurityInterceptor** security interceptor that automatically adds username and password
@@ -49,34 +61,41 @@ tokens in the SOAP header.
 
 The server component has to verify incoming requests to have this token set as expected:
 
-{% highlight xml %}
-<citrus-ws:server id="todoListServer"
-                  port="8080"
-                  auto-start="true"
-                  interceptors="serverInterceptors"/>
+{% highlight java %}
+@Bean
+public WebServiceServer todoListServer() {
+    return CitrusEndpoints.soap()
+            .server()
+            .autoStart(true)
+            .port(8080)
+            .interceptors(serverInterceptors())
+            .build();
+}
 
-<util:list id="serverInterceptors">
-  <bean class="com.consol.citrus.ws.interceptor.SoapMustUnderstandEndpointInterceptor">
-    <property name="acceptedHeaders">
-      <list>
-        <value>{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}Security</value>
-      </list>
-    </property>
-  </bean>
-  <bean class="com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor"/>
-  <bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
-    <property name="validationActions" value="Timestamp UsernameToken"/>
-    <property name="validationCallbackHandler">
-      <bean id="passwordCallbackHandler" class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
-        <property name="usersMap">
-          <map>
-            <entry key="admin" value="secret"/>
-          </map>
-        </property>
-      </bean>
-    </property>
-  </bean>
-</util:list>   
+@Bean
+public List<EndpointInterceptor> serverInterceptors() {
+    return Arrays.asList(soapMustUnderstandEndpointInterceptor(), wss4jSecurityServerInterceptor(), new LoggingEndpointInterceptor());
+}
+
+@Bean
+public EndpointInterceptor soapMustUnderstandEndpointInterceptor() {
+    SoapMustUnderstandEndpointInterceptor interceptor = new SoapMustUnderstandEndpointInterceptor();
+    interceptor.setAcceptedHeaders(Collections.singletonList("{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}Security"));
+    return interceptor;
+}
+
+@Bean
+public Wss4jSecurityInterceptor wss4jSecurityServerInterceptor() {
+    Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+
+    interceptor.setValidationActions("Timestamp UsernameToken");
+
+    SimplePasswordValidationCallbackHandler validationCallbackHandler = new SimplePasswordValidationCallbackHandler();
+    validationCallbackHandler.setUsersMap(Collections.singletonMap("admin", "secret"));
+    interceptor.setValidationCallbackHandler(validationCallbackHandler);
+
+    return interceptor;
+}   
 {% endhighlight %}
      
 The server security interceptor validates with simple username password handler. As a result only granted users can access

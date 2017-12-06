@@ -18,35 +18,30 @@ server endpoint validates incoming requests and expects WSAddressing headers to 
 
 First of all we add the WSAddressing header conversion to the client component.
 
-{% highlight xml %}
-<citrus-ws:client id="todoListClient"
-                  request-url="http://localhost:8080/services/ws/todolist"
-                  message-converter="wsAddressingMessageConverter"/>
+{% highlight java %}
+@Bean
+public WebServiceClient todoClient() {
+    return CitrusEndpoints.soap()
+                        .client()
+                        .defaultUri("http://localhost:8080/services/ws/todolist")
+                        .messageConverter(wsAddressingMessageConverter())
+                        .build();
+}
 
-<bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
-  <constructor-arg>
-    <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
-      <property name="version" value="VERSION200408"/>
-      <property name="action" value="http://citrusframework.org/samples/todolist"/>
-      <property name="to" value="http://citrusframework.org/samples/todolist"/>
-      <property name="from">
-        <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
-          <constructor-arg value="http://citrusframework.org/samples/client"/>
-        </bean>
-      </property>
-      <property name="replyTo">
-        <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
-          <constructor-arg value="http://citrusframework.org/samples/client"/>
-        </bean>
-      </property>
-      <property name="faultTo">
-        <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
-          <constructor-arg value="http://citrusframework.org/samples/client/fault"/>
-        </bean>
-      </property>
-    </bean>
-  </constructor-arg>
-</bean>
+@Bean
+public WebServiceMessageConverter wsAddressingMessageConverter() {
+    WsAddressingHeaders addressingHeaders = new WsAddressingHeaders();
+
+    addressingHeaders.setVersion(WsAddressingVersion.VERSION200408);
+    addressingHeaders.setAction(URI.create("http://citrusframework.org/samples/todolist"));
+    addressingHeaders.setTo(URI.create("http://citrusframework.org/samples/todolist"));
+
+    addressingHeaders.setFrom(new EndpointReference(URI.create("http://citrusframework.org/samples/client")));
+    addressingHeaders.setReplyTo(new EndpointReference(URI.create("http://citrusframework.org/samples/client")));
+    addressingHeaders.setFaultTo(new EndpointReference(URI.create("http://citrusframework.org/samples/client/fault")));
+
+    return new WsAddressingMessageConverter(addressingHeaders);
+}
 {% endhighlight %}
    
 The client message converter automatically adds WSAddressing headers to the SOAP header. The resulting request look as follows.
@@ -78,22 +73,28 @@ The WSAddressing information goes to the header section and contains several ele
 
 The server component has to add the *SOAP-ENV:mustUnderstand* handling explicitly in order to support the incoming WSAddressing headers:
 
-{% highlight xml %}
-<citrus-ws:server id="todoListServer"
-                  port="8080"
-                  auto-start="true"
-                  interceptors="serverInterceptors"/>
+{% highlight java %}
+@Bean
+public WebServiceServer todoListServer() {
+    return CitrusEndpoints.soap()
+            .server()
+            .autoStart(true)
+            .port(8080)
+            .interceptors(serverInterceptors())
+            .build();
+}
 
-<util:list id="serverInterceptors">
-  <bean class="com.consol.citrus.ws.interceptor.SoapMustUnderstandEndpointInterceptor">
-    <property name="acceptedHeaders">
-      <list>
-        <value>{http://schemas.xmlsoap.org/ws/2004/08/addressing}To</value>
-      </list>
-    </property>
-  </bean>
-  <bean class="com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor"/>
-</util:list>   
+@Bean
+public List<EndpointInterceptor> serverInterceptors() {
+    return Arrays.asList(soapMustUnderstandEndpointInterceptor(), new LoggingEndpointInterceptor());
+}
+
+@Bean
+public EndpointInterceptor soapMustUnderstandEndpointInterceptor() {
+    SoapMustUnderstandEndpointInterceptor interceptor = new SoapMustUnderstandEndpointInterceptor();
+    interceptor.setAcceptedHeaders(Collections.singletonList("{http://schemas.xmlsoap.org/ws/2004/08/addressing}To"));
+    return interceptor;
+}   
 {% endhighlight %}
      
 The server is now ready to receive the request and validate the WSAddressing header information. 

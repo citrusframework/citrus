@@ -18,9 +18,14 @@ In this sample we want to call the server API in parallel multiple times in orde
 
 We need a Http client component in the configuration:
 
-{% highlight xml %}
-<citrus-http:client id="todoClient"
-                request-url="http://localhost:8080"/>
+{% highlight java %}
+@Bean
+public HttpClient todoClient() {
+    return CitrusEndpoints.http()
+                        .client()
+                        .requestUrl("http://localhost:8080")
+                        .build();
+}
 {% endhighlight %}
         
 We want to call the REST API on the todolist server with that client using multiple threads in order to create 

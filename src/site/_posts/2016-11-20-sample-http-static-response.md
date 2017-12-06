@@ -19,63 +19,83 @@ Objectives
 We want to have a server component that provides a static response message to calling clients. Depending on the requested resource path the server
 should provide different response messages. we can do this in Citrus with a little bit of Spring bean configuration:
 
-{% highlight xml %}
-<citrus-http:server id="todoListServer"
-              port="8080"
-              auto-start="true"
-              timeout="10000"
-              endpoint-adapter="dispatchingEndpointAdapter" />
+{% highlight java %}
+@Bean
+public HttpServer todoListServer() throws Exception {
+    return CitrusEndpoints.http()
+            .server()
+            .port(8080)
+            .endpointAdapter(dispatchingEndpointAdapter())
+            .timeout(10000)
+            .autoStart(true)
+            .build();
+}
 
-<citrus:dispatching-endpoint-adapter id="dispatchingEndpointAdapter"
-                                 mapping-key-extractor="mappingKeyExtractor"
-                                 mapping-strategy="mappingStrategy"/>
+@Bean
+public RequestDispatchingEndpointAdapter dispatchingEndpointAdapter() {
+    RequestDispatchingEndpointAdapter dispatchingEndpointAdapter = new RequestDispatchingEndpointAdapter();
+    dispatchingEndpointAdapter.setMappingKeyExtractor(mappingKeyExtractor());
+    dispatchingEndpointAdapter.setMappingStrategy(mappingStrategy());
+    return dispatchingEndpointAdapter;
+}
 {% endhighlight %}
 
 The *todoListServer* is a normal server component in Citrus. The endpoint-adapter is different though and defines the way how to automatically respond to calling clients.
 The server uses a **dispatchingEndpointAdapter**. This endpoint adapter implementation uses a mapping key extractor and a mapping strategy in order to map incoming requests to response generating
 adapters.
 
-{% highlight xml %}
-<bean id="mappingKeyExtractor" class="com.consol.citrus.endpoint.adapter.mapping.HeaderMappingKeyExtractor">
-    <property name="headerName" value="citrus_http_request_uri"/>
-</bean>
+{% highlight java %}
+@Bean
+public HeaderMappingKeyExtractor mappingKeyExtractor() {
+    HeaderMappingKeyExtractor mappingKeyExtractor = new HeaderMappingKeyExtractor();
+    mappingKeyExtractor.setHeaderName(HttpMessageHeaders.HTTP_REQUEST_URI);
+    return mappingKeyExtractor;
+}
 
-<bean id="mappingStrategy" class="com.consol.citrus.endpoint.adapter.mapping.SimpleMappingStrategy">
-    <property name="adapterMappings">
-        <map>
-            <entry key="/todo" value-ref="todoResponseAdapter"/>
-            <entry key="/todolist" value-ref="todoListResponseAdapter"/>
-        </map>
-    </property>
-</bean>
+@Bean
+public SimpleMappingStrategy mappingStrategy() {
+    SimpleMappingStrategy mappingStrategy = new SimpleMappingStrategy();
+
+    Map<String, EndpointAdapter> mappings = new HashMap<>();
+
+    mappings.put("/todo", todoResponseAdapter());
+    mappings.put("/todolist", todoListResponseAdapter());
+
+    mappingStrategy.setAdapterMappings(mappings);
+    return mappingStrategy;
+}
 {% endhighlight %}
 
 The mapping key extractor implementation evaluates the Http header **citrus_http_request_uri** which is an internal header representing the called request path. Depending on that request path value the
 mapping strategy maps incoming requests to different response generating adapter implementations. Here in this example we define **/todo** and **/todolist** request paths with response
 adapters.
 
-{% highlight xml %}
-<citrus:static-response-adapter id="todoResponseAdapter">
-    <citrus:payload>
-        {
-          "id": "${todoId}",
-          "title": "${todoName}",
-          "description": "${todoDescription}"
-        }
-    </citrus:payload>
-</citrus:static-response-adapter>
+{% highlight java %}
+@Bean
+public EndpointAdapter todoResponseAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("{" +
+                        "\"id\": \"${todoId}\"," +
+                        "\"title\": \"${todoName}\"," +
+                        "\"description\": \"${todoDescription}\"," +
+                        "\"done\": false" +
+                    "}");
+    return endpointAdapter;
+}
 
-<citrus:static-response-adapter id="todoListResponseAdapter">
-    <citrus:payload>
-        [
-          {
-            "id": "${todoId}",
-            "title": "${todoName}",
-            "description": "${todoDescription}"
-          }
-        ]
-    </citrus:payload>
-</citrus:static-response-adapter>
+@Bean
+public EndpointAdapter todoListResponseAdapter() {
+    StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+    endpointAdapter.setMessagePayload("[" +
+                        "{" +
+                            "\"id\": \"${todoId}\"," +
+                            "\"title\": \"${todoName}\"," +
+                            "\"description\": \"${todoDescription}\"," +
+                            "\"done\": false" +
+                        "}" +
+                    "]");
+    return endpointAdapter;
+}
 {% endhighlight %}
 
 The response adapters provide static response messages. In summary we have a small Http server component that automatically responds to incoming request messages

@@ -20,10 +20,13 @@ XHTML so XPath expressions can be evaluated accordingly.
 The sample tests show how to use this feature. First we define a global namespace for XHTML in
 configuration.
 
-{% highlight xml %}
-<citrus:namespace-context>
-  <citrus:namespace prefix="xh" uri="http://www.w3.org/1999/xhtml"/>
-</citrus:namespace-context>
+{% highlight java %}
+@Bean
+public NamespaceContextBuilder namespaceContextBuilder() {
+    NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+    namespaceContextBuilder.setNamespaceMappings(Collections.singletonMap("xh", "http://www.w3.org/1999/xhtml"));
+    return namespaceContextBuilder;
+}
 {% endhighlight %}
     
 Now we can use the XHTML validation feature in the Citrus test.

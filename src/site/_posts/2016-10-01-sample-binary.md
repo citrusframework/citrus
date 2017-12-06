@@ -17,10 +17,11 @@ We demonstrate the binary content handling by using binary JMS messages.
 
 The Citrus project needs a JMS connection factory that is defined in the Spring application context as bean:
 
-{% highlight xml %}
-<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-  <property name="brokerURL" value="tcp://localhost:61616" />
-</bean>
+{% highlight java %}
+@Bean
+public ConnectionFactory connectionFactory() {
+    return new ActiveMQConnectionFactory("tcp://localhost:61616");
+}
 {% endhighlight %}
     
 We use ActiveMQ as message broker so we use the respective connection factory implementation here. The message broker is automatically
@@ -82,7 +83,7 @@ receive(todoJmsEndpoint)
     .payload("citrus:encodeBase64('{ \"title\": \"${todoName}\", \"description\": \"${todoDescription}\" }')");
 {% endhighlight %}
         
-Just use the encodeBase64 function in Citrus to provide the expected payload content. Citrus will automatically convert the received 
+Just use the `encodeBase64` function in Citrus to provide the expected payload content. Citrus will automatically convert the received 
 binary content to base64 encoded Strings then for you.    
                 
 Run

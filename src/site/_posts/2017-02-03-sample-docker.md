@@ -248,9 +248,14 @@ This time the configuration links the container to the *todo-app* container. Thi
 be available for the Citrus test container. Exposed ports (8080) in the *todo-app* container are then accessible. The Citrus http client uses the following endpoint url
 for accessing the REST API:
 
-{% highlight xml %}
-<citrus-http:client id="todoListClient"
-                    request-url="http://todo-app:8080"/>
+{% highlight java %}
+@Bean
+public HttpClient todoClient() {
+    return CitrusEndpoints.http()
+                        .client()
+                        .requestUrl(String.format("http://%s:%s", todoServerHost, todoServerPort))
+                        .build();
+}
 {% endhighlight %}
 
 As you can see the client will be able to resolve the hostname *todo-app* via Docker networking feature. The test may then access the REST API over http in order to
@@ -275,9 +280,14 @@ http()
 
 In addition to that the Citrus configuration also defines a Docker client component:
 
-{% highlight xml %}
-<citrus-docker:client id="dockerClient"
-                      url="unix:///var/run/dockerhost/docker.sock"/>
+{% highlight java %}
+@Bean
+public DockerClient dockerClient() {
+    return CitrusEndpoints.docker()
+            .client()
+            .url("unix:///var/run/dockerhost/docker.sock")
+            .build();
+}
 {% endhighlight %}
 
 This client is then able to access the Docker API from within the Citrus test container in order to check the deployment state of the system under test.
