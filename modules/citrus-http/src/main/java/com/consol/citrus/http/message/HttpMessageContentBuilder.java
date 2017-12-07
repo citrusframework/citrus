@@ -52,20 +52,29 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     @Override
     public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
+        //TODO: Fix state problem
+        //Because the message is manipulated through the message execution and stateful,
+        //the variable placeholder in the headers are replaced by the concrete values.
+        //This leads to the problem, that a second execution of the request will not obtain the new values,
+        //because the placeholders have already been replaced.
+        //Working on a copy is also not possible, because the state of the message is required for the HttpCookiesIT
+//        HttpMessage messageToBuild = new HttpMessage(message);
+        HttpMessage messageToBuild = message;
         delegate.setMessageHeaders(message.getHeaders());
-        message.setName(delegate.getMessageName());
+
+        messageToBuild.setName(delegate.getMessageName());
 
         Message delegateMessage = delegate.buildMessageContent(context, messageType, direction);
 
         for (Map.Entry<String, Object> headerEntry : delegateMessage.getHeaders().entrySet()) {
             if (!headerEntry.getKey().equals(MessageHeaders.ID) &&
                     !headerEntry.getKey().equals(MessageHeaders.TIMESTAMP)) {
-                message.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                messageToBuild.setHeader(headerEntry.getKey(), headerEntry.getValue());
             }
         }
-        message.setPayload(delegateMessage.getPayload());
+        messageToBuild.setPayload(delegateMessage.getPayload());
         
-        for (Cookie cookie: message.getCookies()) {
+        for (Cookie cookie: messageToBuild.getCookies()) {
             if (cookie.getValue() != null) {
                 cookie.setValue(context.replaceDynamicContentInString(cookie.getValue()));
             }
@@ -87,7 +96,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
             }
         }
 
-        return message;
+        return messageToBuild;
     }
 
     @Override
