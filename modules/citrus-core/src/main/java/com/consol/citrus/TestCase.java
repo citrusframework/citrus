@@ -55,7 +55,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private String packageName = this.getClass().getPackage().getName();
 
     /** In case test was called with parameters from outside */
-    private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+    private Map<String, Object> parameters = new LinkedHashMap<>();
 
     @Autowired
     private TestActionListeners testActionListeners = new TestActionListeners();
@@ -90,21 +90,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 log.debug("Initializing test case");
             }
 
-           /* build up the global test variables in TestContext by
-            * getting the names and the current values of all variables */
-            for (Entry<String, Object> entry : variableDefinitions.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-
-                if (value instanceof String) {
-                    //check if value is a variable or function (and resolve it accordingly)
-                    context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
-                } else {
-                    context.setVariable(key, value);
-                }
-            }
-
-            /* Debug print all variables */
+            /* Debug print global variables */
             if (context.hasVariables() && log.isDebugEnabled()) {
                 log.debug("Global variables:");
                 for (Entry<String, Object> entry : context.getVariables().entrySet()) {
@@ -121,6 +107,28 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                     log.debug(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
                 }
                 context.setVariable(paramEntry.getKey(), paramEntry.getValue());
+            }
+
+            /* build up the global test variables in TestContext by
+             * getting the names and the current values of all variables */
+            for (Entry<String, Object> entry : variableDefinitions.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+
+                if (value instanceof String) {
+                    //check if value is a variable or function (and resolve it accordingly)
+                    context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
+                } else {
+                    context.setVariable(key, value);
+                }
+            }
+
+            /* Debug print all variables */
+            if (context.hasVariables() && log.isDebugEnabled()) {
+                log.debug("Test variables:");
+                for (Entry<String, Object> entry : context.getVariables().entrySet()) {
+                    log.debug(entry.getKey() + " = " + entry.getValue());
+                }
             }
 
             beforeTest(context);
