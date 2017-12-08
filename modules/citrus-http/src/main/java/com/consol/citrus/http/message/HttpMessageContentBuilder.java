@@ -77,10 +77,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
                 cookie.setComment(context.replaceDynamicContentInString(cookie.getComment()));
             }
 
-            if (cookie.getComment() != null) {
-                cookie.setComment(context.replaceDynamicContentInString(cookie.getComment()));
-            }
-
             if (cookie.getPath() != null) {
                 cookie.setPath(context.replaceDynamicContentInString(cookie.getPath()));
             }
