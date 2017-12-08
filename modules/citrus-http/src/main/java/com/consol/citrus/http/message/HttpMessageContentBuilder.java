@@ -23,8 +23,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import javax.servlet.http.Cookie;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +31,7 @@ import java.util.Map;
  */
 public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
-    private final HttpMessage message;
+    private final HttpMessage template;
     private final AbstractMessageContentBuilder delegate;
 
     /**
@@ -41,7 +40,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
      * @param delegate
      */
     public HttpMessageContentBuilder(HttpMessage httpMessage, AbstractMessageContentBuilder delegate) {
-        this.message = httpMessage;
+        this.template = httpMessage;
         this.delegate = delegate;
     }
 
@@ -52,42 +51,78 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     @Override
     public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
-        delegate.setMessageHeaders(message.getHeaders());
+        //Copy the initial message, so that it is not manipulated during the test.
+        HttpMessage message = new HttpMessage(template);
+
+        delegate.getMessageHeaders().putAll(template.getHeaders());
+        Message constructed = delegate.buildMessageContent(context, messageType, direction);
+
         message.setName(delegate.getMessageName());
+        message.setPayload(constructed.getPayload());
+        message.setCookies(constructCookies(context));
+        copyHeaders(constructed, message);
 
-        Message delegateMessage = delegate.buildMessageContent(context, messageType, direction);
+        return message;
+    }
 
-        for (Map.Entry<String, Object> headerEntry : delegateMessage.getHeaders().entrySet()) {
-            if (!headerEntry.getKey().equals(MessageHeaders.ID) &&
-                    !headerEntry.getKey().equals(MessageHeaders.TIMESTAMP)) {
-                message.setHeader(headerEntry.getKey(), headerEntry.getValue());
+    /**
+     * Copies all headers except id and timestamp
+     * @param from The message to copy the headers from
+     * @param to The message to set the headers to
+     */
+    private void copyHeaders(Message from, Message to) {
+        for (Map.Entry<String, Object> headerEntry : from.getHeaders().entrySet()) {
+            if (notIdOrTimestamp(headerEntry.getKey())) {
+                to.setHeader(headerEntry.getKey(), headerEntry.getValue());
             }
         }
-        message.setPayload(delegateMessage.getPayload());
-        
-        for (Cookie cookie: message.getCookies()) {
+    }
+
+    /**
+     * Checks whether the given message header is not an ID or a TIMESTAMP
+     * @param messageHeader The message header to be checked
+     * @return whether the given message header is not an ID or a TIMESTAMP
+     */
+    private boolean notIdOrTimestamp(String messageHeader) {
+        return !(MessageHeaders.ID.equals(messageHeader) ||
+                 MessageHeaders.TIMESTAMP.equals(messageHeader));
+    }
+
+    /**
+     * Replaces the dynamic content in the given list of cookies
+     * @param context The context to replace the variables with
+     */
+    private Cookie[] constructCookies(TestContext context) {
+        List<Cookie> cookies = new ArrayList<>();
+
+        for (Cookie cookie: template.getCookies()) {
+            Cookie constructed = new Cookie(cookie.getName(), cookie.getValue());
+
             if (cookie.getValue() != null) {
-                cookie.setValue(context.replaceDynamicContentInString(cookie.getValue()));
+                constructed.setValue(context.replaceDynamicContentInString(cookie.getValue()));
             }
 
             if (cookie.getComment() != null) {
-                cookie.setComment(context.replaceDynamicContentInString(cookie.getComment()));
-            }
-
-            if (cookie.getComment() != null) {
-                cookie.setComment(context.replaceDynamicContentInString(cookie.getComment()));
+                constructed.setComment(context.replaceDynamicContentInString(cookie.getComment()));
             }
 
             if (cookie.getPath() != null) {
-                cookie.setPath(context.replaceDynamicContentInString(cookie.getPath()));
+                constructed.setPath(context.replaceDynamicContentInString(cookie.getPath()));
             }
 
             if (cookie.getDomain() != null) {
-                cookie.setDomain(context.replaceDynamicContentInString(cookie.getDomain()));
+                constructed.setDomain(context.replaceDynamicContentInString(cookie.getDomain()));
             }
+            
+            constructed.setMaxAge(cookie.getMaxAge());
+            constructed.setVersion(cookie.getVersion());
+            constructed.setHttpOnly(cookie.isHttpOnly());
+            constructed.setSecure(cookie.getSecure());
+
+            cookies.add(constructed);
         }
 
-        return message;
+        return cookies.toArray(new Cookie[cookies.size()]);
     }
 
     @Override
@@ -175,6 +210,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
      * @return
      */
     public HttpMessage getMessage() {
-        return message;
+        return template;
     }
 }

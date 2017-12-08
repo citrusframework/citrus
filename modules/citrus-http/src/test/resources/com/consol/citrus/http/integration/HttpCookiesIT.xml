@@ -19,10 +19,10 @@
     <description>Test exchanges cookies in client and server request/response messages.</description>
 
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
-      <variable name="csrfToken" value="citrus:randomUUID()"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
+      <variable name="csrfToken" value="citrus:randomUUID()"/>
     </variables>
 
     <actions>
