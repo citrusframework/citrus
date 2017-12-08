@@ -23,8 +23,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import javax.servlet.http.Cookie;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +31,7 @@ import java.util.Map;
  */
 public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
-    private final HttpMessage message;
+    private final HttpMessage template;
     private final AbstractMessageContentBuilder delegate;
 
     /**
@@ -41,7 +40,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
      * @param delegate
      */
     public HttpMessageContentBuilder(HttpMessage httpMessage, AbstractMessageContentBuilder delegate) {
-        this.message = httpMessage;
+        this.template = httpMessage;
         this.delegate = delegate;
     }
 
@@ -53,17 +52,17 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
         //Copy the initial message, so that it is not manipulated during the test.
-        HttpMessage messageToBuild = new HttpMessage(message);
+        HttpMessage message = new HttpMessage(template);
 
-        delegate.setMessageHeaders(messageToBuild.getHeaders());
-        Message delegateMessage = delegate.buildMessageContent(context, messageType, direction);
+        delegate.getMessageHeaders().putAll(template.getHeaders());
+        Message constructed = delegate.buildMessageContent(context, messageType, direction);
 
-        messageToBuild.setName(delegate.getMessageName());
-        messageToBuild.setPayload(delegateMessage.getPayload());
-        copyHeaders(delegateMessage, messageToBuild);
-        replaceDynamicValues(messageToBuild.getCookies(), context);
+        message.setName(delegate.getMessageName());
+        message.setPayload(constructed.getPayload());
+        message.setCookies(constructCookies(context));
+        copyHeaders(constructed, message);
 
-        return messageToBuild;
+        return message;
     }
 
     /**
@@ -91,27 +90,39 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     /**
      * Replaces the dynamic content in the given list of cookies
-     * @param cookies The cookies in which the variables will be replaced
      * @param context The context to replace the variables with
      */
-    private void replaceDynamicValues(List<Cookie> cookies, TestContext context) {
-        for (Cookie cookie: cookies) {
+    private Cookie[] constructCookies(TestContext context) {
+        List<Cookie> cookies = new ArrayList<>();
+
+        for (Cookie cookie: template.getCookies()) {
+            Cookie constructed = new Cookie(cookie.getName(), cookie.getValue());
+
             if (cookie.getValue() != null) {
-                cookie.setValue(context.replaceDynamicContentInString(cookie.getValue()));
+                constructed.setValue(context.replaceDynamicContentInString(cookie.getValue()));
             }
 
             if (cookie.getComment() != null) {
-                cookie.setComment(context.replaceDynamicContentInString(cookie.getComment()));
+                constructed.setComment(context.replaceDynamicContentInString(cookie.getComment()));
             }
 
             if (cookie.getPath() != null) {
-                cookie.setPath(context.replaceDynamicContentInString(cookie.getPath()));
+                constructed.setPath(context.replaceDynamicContentInString(cookie.getPath()));
             }
 
             if (cookie.getDomain() != null) {
-                cookie.setDomain(context.replaceDynamicContentInString(cookie.getDomain()));
+                constructed.setDomain(context.replaceDynamicContentInString(cookie.getDomain()));
             }
+            
+            constructed.setMaxAge(cookie.getMaxAge());
+            constructed.setVersion(cookie.getVersion());
+            constructed.setHttpOnly(cookie.isHttpOnly());
+            constructed.setSecure(cookie.getSecure());
+
+            cookies.add(constructed);
         }
+
+        return cookies.toArray(new Cookie[cookies.size()]);
     }
 
     @Override
@@ -199,6 +210,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
      * @return
      */
     public HttpMessage getMessage() {
-        return message;
+        return template;
     }
 }

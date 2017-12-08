@@ -50,7 +50,7 @@ public class HttpMessage extends DefaultMessage {
      */
     public HttpMessage(Message message) {
         super(message);
-        setCookies(message);
+        copyCookies(message);
     }
 
     /**
@@ -74,9 +74,9 @@ public class HttpMessage extends DefaultMessage {
      * Sets the cookies extracted from the given message as far as it is a HttpMessage
      * @param message the message to extract the cookies from
      */
-    private void setCookies(Message message) {
+    private void copyCookies(Message message) {
         if(message instanceof HttpMessage){
-            this.cookies =((HttpMessage) message).getCookies();
+            this.cookies.addAll(((HttpMessage) message).getCookies());
         }
     }
 
