@@ -52,15 +52,10 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     @Override
     public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
-        //TODO: Fix state problem
-        //Because the message is manipulated through the message execution and stateful,
-        //the variable placeholder in the headers are replaced by the concrete values.
-        //This leads to the problem, that a second execution of the request will not obtain the new values,
-        //because the placeholders have already been replaced.
-        //Working on a copy is also not possible, because the state of the message is required for the HttpCookiesIT
-//        HttpMessage messageToBuild = new HttpMessage(message);
-        HttpMessage messageToBuild = message;
-        delegate.setMessageHeaders(message.getHeaders());
+        //Copy the initial message, so that it is not manipulated during the test.
+        HttpMessage messageToBuild = new HttpMessage(message);
+
+        delegate.setMessageHeaders(messageToBuild.getHeaders());
 
         messageToBuild.setName(delegate.getMessageName());
 
@@ -73,7 +68,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
             }
         }
         messageToBuild.setPayload(delegateMessage.getPayload());
-        
         for (Cookie cookie: messageToBuild.getCookies()) {
             if (cookie.getValue() != null) {
                 cookie.setValue(context.replaceDynamicContentInString(cookie.getValue()));
