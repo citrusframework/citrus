@@ -56,19 +56,46 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
         HttpMessage messageToBuild = new HttpMessage(message);
 
         delegate.setMessageHeaders(messageToBuild.getHeaders());
-
-        messageToBuild.setName(delegate.getMessageName());
-
         Message delegateMessage = delegate.buildMessageContent(context, messageType, direction);
 
-        for (Map.Entry<String, Object> headerEntry : delegateMessage.getHeaders().entrySet()) {
-            if (!headerEntry.getKey().equals(MessageHeaders.ID) &&
-                    !headerEntry.getKey().equals(MessageHeaders.TIMESTAMP)) {
-                messageToBuild.setHeader(headerEntry.getKey(), headerEntry.getValue());
+        messageToBuild.setName(delegate.getMessageName());
+        messageToBuild.setPayload(delegateMessage.getPayload());
+        copyHeaders(delegateMessage, messageToBuild);
+        replaceDynamicValues(messageToBuild.getCookies(), context);
+
+        return messageToBuild;
+    }
+
+    /**
+     * Copies all headers except id and timestamp
+     * @param from The message to copy the headers from
+     * @param to The message to set the headers to
+     */
+    private void copyHeaders(Message from, Message to) {
+        for (Map.Entry<String, Object> headerEntry : from.getHeaders().entrySet()) {
+            if (notIdOrTimestamp(headerEntry.getKey())) {
+                to.setHeader(headerEntry.getKey(), headerEntry.getValue());
             }
         }
-        messageToBuild.setPayload(delegateMessage.getPayload());
-        for (Cookie cookie: messageToBuild.getCookies()) {
+    }
+
+    /**
+     * Checks whether the given message header is not an ID or a TIMESTAMP
+     * @param messageHeader The message header to be checked
+     * @return whether the given message header is not an ID or a TIMESTAMP
+     */
+    private boolean notIdOrTimestamp(String messageHeader) {
+        return !(MessageHeaders.ID.equals(messageHeader) ||
+                 MessageHeaders.TIMESTAMP.equals(messageHeader));
+    }
+
+    /**
+     * Replaces the dynamic content in the given list of cookies
+     * @param cookies The cookies in which the variables will be replaced
+     * @param context The context to replace the variables with
+     */
+    private void replaceDynamicValues(List<Cookie> cookies, TestContext context) {
+        for (Cookie cookie: cookies) {
             if (cookie.getValue() != null) {
                 cookie.setValue(context.replaceDynamicContentInString(cookie.getValue()));
             }
@@ -85,8 +112,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
                 cookie.setDomain(context.replaceDynamicContentInString(cookie.getDomain()));
             }
         }
-
-        return messageToBuild;
     }
 
     @Override
