@@ -27,8 +27,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Bean definition parser for schema-repository configuration.
@@ -37,57 +37,123 @@ import java.util.List;
  * @since 1.3.1
  */
 public class SchemaRepositoryParser implements BeanDefinitionParser {
+
+    private static final String LOCATION = "location";
+    private static final String SCHEMAS = "schemas";
+    private static final String SCHEMA = "schema";
+    private static final String ID = "id";
+    private static final String LOCATIONS = "locations";
+
+    private final SchemaParser schemaParser = new SchemaParser();
+
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
 
-        ManagedList<RuntimeBeanReference> schemas = new ManagedList<RuntimeBeanReference>();
+        Element schemasElement = DomUtils.getChildElementByTagName(element, SCHEMAS);
 
-        Element schemasElement = DomUtils.getChildElementByTagName(element, "schemas");
         if (schemasElement != null) {
-            List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
-            for (Element schemaElement : schemaElements) {
-                if (schemaElement.hasAttribute("schema")) {
-                    schemas.add(new RuntimeBeanReference(schemaElement.getAttribute("schema")));
-                } else if (isXmlSchemaLocation(schemaElement)) {
-                    new SchemaParser().parse(schemaElement, parserContext);
-                    schemas.add(new RuntimeBeanReference(schemaElement.getAttribute("id")));
-                }
-            }
+            parseSchemasElement(schemasElement, builder, parserContext);
         }
 
-        if (schemas.size() > 0) {
-            builder.addPropertyValue("schemas", schemas);
-        }
-
-        List<String> locations = new ArrayList<String>();
-        Element locationsElement = DomUtils.getChildElementByTagName(element, "locations");
+        Element locationsElement = DomUtils.getChildElementByTagName(element, LOCATIONS);
         if (locationsElement != null) {
-            List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, "location");
-            for (Element locationElement : locationElements) {
-                locations.add(locationElement.getAttribute("path"));
-            }
+            addLocationsToBuilder(builder, locationsElement);
         }
 
-        if (locations.size() > 0) {
-            builder.addPropertyValue("locations", locations);
-        }
-
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
+        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
 
         return null;
     }
 
-    private boolean isLocation(Element schemaElement) {
-        return schemaElement.hasAttribute("id") && schemaElement.hasAttribute("location");
+    /**
+     * Parses the given schema element to RuntimeBeanReference in consideration of the given context
+     * and adds them to the builder
+     * @param schemasElement The schema elements to be parsed
+     * @param builder The builder to add the resulting RuntimeBeanReference to
+     * @param parserContext The context to parse the schema elements in
+     */
+    private void parseSchemasElement( Element schemasElement,
+                                      BeanDefinitionBuilder builder,
+                                      ParserContext parserContext) {
+        List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
+        ManagedList<RuntimeBeanReference> schemas = constructBeansFromSchemaElements(parserContext, schemaElements);
+
+        if (!schemas.isEmpty()) {
+            builder.addPropertyValue(SCHEMAS, schemas);
+        }
     }
 
-    private boolean isXmlSchemaLocation(Element schemaElement) {
-        if (isLocation(schemaElement)){
-            return schemaElement.getAttribute("location").endsWith(".xsd") ||
-                    schemaElement.getAttribute("location").endsWith(".wsdl");
+    /**
+     * Adds the locations contained in the given locations element to the BeanDefinitionBuilder
+     * @param builder the BeanDefinitionBuilder to add the locations to
+     * @param locationsElement the locations element containing the locations to be added to the builder
+     */
+    private void addLocationsToBuilder(BeanDefinitionBuilder builder, Element locationsElement) {
+        List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, LOCATION);
+
+        List<String> locations = locationElements.stream()
+                .map(element -> element.getAttribute("path"))
+                .collect(Collectors.toList());
+
+        if (!locations.isEmpty()) {
+            builder.addPropertyValue(LOCATIONS, locations);
         }
-        return false;
+    }
+
+    /**
+     * Construct a List of RuntimeBeanReferences from the given list of schema elements under
+     * consideration of the given parser context
+     * @param parserContext The context to parse the elements in
+     * @param schemaElements The element to be parsed
+     * @return A list of RuntimeBeanReferences that have been defined in the xml document
+     */
+    private ManagedList<RuntimeBeanReference> constructBeansFromSchemaElements(
+            ParserContext parserContext,
+            List<Element> schemaElements) {
+
+        ManagedList<RuntimeBeanReference> runtimeBeanReferences = new ManagedList<>();
+
+        for (Element schemaElement : schemaElements) {
+            if (schemaElement.hasAttribute(SCHEMA)) {
+                runtimeBeanReferences.add(
+                        new RuntimeBeanReference(schemaElement.getAttribute(SCHEMA)));
+            } else if (isXmlSchemaLocation(schemaElement)) {
+                schemaParser.parse(schemaElement, parserContext);
+                runtimeBeanReferences.add(
+                        new RuntimeBeanReference(schemaElement.getAttribute(ID)));
+            }
+        }
+
+        return runtimeBeanReferences;
+    }
+
+    /**
+     * Checks whether the schema element is a location for a xml schema
+     * @param schemaElement Schema element to check
+     * @return whether the schema element is a location for a xml schema
+     */
+    private boolean isXmlSchemaLocation(Element schemaElement) {
+        return isLocation(schemaElement) && isWsdlOrXsd(schemaElement);
+    }
+
+    /**
+     * Checks whether the schema element references a schema location
+     * @param schemaElement Schema element to check
+     * @return whether the schema element references a schema location
+     */
+    private boolean isLocation(Element schemaElement) {
+        return schemaElement.hasAttribute(ID) && schemaElement.hasAttribute(LOCATION);
+    }
+
+    /**
+     * Checks whether the schema element references a xml schema
+     * @param schemaElement Schema element to check. Has to be a LOCATION element
+     * @return whether the schema element references a xml schema
+     */
+    private boolean isWsdlOrXsd(Element schemaElement) {
+        return schemaElement.getAttribute(LOCATION).endsWith(".xsd") ||
+                schemaElement.getAttribute(LOCATION).endsWith(".wsdl");
     }
 }
