@@ -78,7 +78,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
                                       BeanDefinitionBuilder builder,
                                       ParserContext parserContext) {
         List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
-        ManagedList<RuntimeBeanReference> schemas = constructBeansFromSchemaElements(parserContext, schemaElements);
+        ManagedList<RuntimeBeanReference> schemas = constructRuntimeBeanReferences(parserContext, schemaElements);
 
         if (!schemas.isEmpty()) {
             builder.addPropertyValue(SCHEMAS, schemas);
@@ -109,7 +109,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @param schemaElements The element to be parsed
      * @return A list of RuntimeBeanReferences that have been defined in the xml document
      */
-    private ManagedList<RuntimeBeanReference> constructBeansFromSchemaElements(
+    private ManagedList<RuntimeBeanReference> constructRuntimeBeanReferences(
             ParserContext parserContext,
             List<Element> schemaElements) {
 
