@@ -38,17 +38,19 @@ public class SchemaParser implements BeanDefinitionParser {
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String location = element.getAttribute("location");
-        BeanDefinitionBuilder builder;
+        BeanDefinitionBuilder builder = null;
 
         if (location.endsWith(".wsdl")) {
             builder = BeanDefinitionBuilder.genericBeanDefinition(WsdlXsdSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "wsdl");
-        } else {
+        } else if (location.endsWith(".xsd")){
             builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "xsd");
         }
 
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
+        if(builder != null){
+            parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
+        }
 
         return null;
     }

@@ -50,7 +50,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
             for (Element schemaElement : schemaElements) {
                 if (schemaElement.hasAttribute("schema")) {
                     schemas.add(new RuntimeBeanReference(schemaElement.getAttribute("schema")));
-                } else if (schemaElement.hasAttribute("id") && schemaElement.hasAttribute("location")) {
+                } else if (isXmlSchemaLocation(schemaElement)) {
                     new SchemaParser().parse(schemaElement, parserContext);
                     schemas.add(new RuntimeBeanReference(schemaElement.getAttribute("id")));
                 }
@@ -77,5 +77,17 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
 
         return null;
+    }
+
+    private boolean isLocation(Element schemaElement) {
+        return schemaElement.hasAttribute("id") && schemaElement.hasAttribute("location");
+    }
+
+    private boolean isXmlSchemaLocation(Element schemaElement) {
+        if (isLocation(schemaElement)){
+            return schemaElement.getAttribute("location").endsWith(".xsd") ||
+                    schemaElement.getAttribute("location").endsWith(".wsdl");
+        }
+        return false;
     }
 }
