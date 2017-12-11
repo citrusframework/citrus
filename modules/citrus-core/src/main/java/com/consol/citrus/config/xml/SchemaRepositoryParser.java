@@ -78,10 +78,10 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
                                       BeanDefinitionBuilder builder,
                                       ParserContext parserContext) {
         List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
-        ManagedList<RuntimeBeanReference> schemas = constructRuntimeBeanReferences(parserContext, schemaElements);
+        ManagedList<RuntimeBeanReference> beanReferences = constructRuntimeBeanReferences(parserContext, schemaElements);
 
-        if (!schemas.isEmpty()) {
-            builder.addPropertyValue(SCHEMAS, schemas);
+        if (!beanReferences.isEmpty()) {
+            builder.addPropertyValue(SCHEMAS, beanReferences);
         }
     }
 
