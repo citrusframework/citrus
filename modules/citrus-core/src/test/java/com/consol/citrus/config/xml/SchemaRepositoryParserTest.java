@@ -37,7 +37,7 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
     public void testSchemaRepositoryParser() {
         Map<String, XsdSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(XsdSchemaRepository.class);
         
-        Assert.assertEquals(schemaRepositories.size(), 3);
+        Assert.assertEquals(schemaRepositories.size(), 4);
         
         // 1st schema repository
         XsdSchemaRepository schemaRepository = schemaRepositories.get("schemaRepository1");
@@ -69,5 +69,12 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl1"));
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
         Assert.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
+
+        //Json schema repository
+        schemaRepository = schemaRepositories.get("jsonSchemaRepository");
+        //TODO: Add schema title mapping strategy
+        //Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), SchemaTitleMappingStrategy.class);
+
+        Assert.assertTrue(beanDefinitionContext.containsBean("productSchema"));
     }
 }

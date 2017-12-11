@@ -34,5 +34,11 @@
       </citrus:schemas>
     </citrus:schema-collection>
 
+    <citrus:schema-repository id="jsonSchemaRepository">
+        <citrus:schemas>
+            <citrus:schema id="productSchema" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+        </citrus:schemas>
+    </citrus:schema-repository>
+
     <bean id="schemaMappingStrategy" class="com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy"/>
 </beans>
