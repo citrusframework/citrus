@@ -227,8 +227,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
-        } catch (SAXException e) {
-            throw new CitrusRuntimeException(e);
         }
     }
 
