@@ -38,15 +38,16 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("unused")
 public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
     /** This repositories name in the Spring application context */
     private String name = "schemaRepository";
     
     /** List of schema resources */
-    private List<XsdSchema> schemas = new ArrayList<XsdSchema>();
+    private List<XsdSchema> schemas = new ArrayList<>();
     
     /** List of location patterns that will be translated to schema resources */
-    private List<String> locations = new ArrayList<String>();
+    private List<String> locations = new ArrayList<>();
 
     /** Mapping strategy */
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
@@ -58,10 +59,8 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
      * Find the matching schema for document using given schema mapping strategy.
      * @param doc the document instance to validate.
      * @return boolean flag marking matching schema instance found
-     * @throws IOException
-     * @throws SAXException
      */
-    public boolean canValidate(Document doc) throws IOException, SAXException {
+    public boolean canValidate(Document doc) {
         XsdSchema schema = schemaMappingStrategy.getSchema(schemas, doc);
         return schema != null;
     }
@@ -74,27 +73,9 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         
         for (String location : locations) {
             Resource[] findings = resourcePatternResolver.getResources(location);
-            
+
             for (Resource resource : findings) {
-                if (resource.getFilename().endsWith(".xsd")) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Loading XSD schema resource " + resource.getFilename());
-                    }
-
-                    SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-                    schema.afterPropertiesSet();
-                    schemas.add(schema);
-                } else if (resource.getFilename().endsWith(".wsdl")) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Loading WSDL schema resource " + resource.getFilename());
-                    }
-
-                    WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
-                    wsdl.afterPropertiesSet();
-                    schemas.add(wsdl);
-                } else {
-                    log.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
-                }
+                addSchemas(resource);
             }
         }
 
@@ -109,18 +90,43 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
 
     /**
      * Adds Citrus message schema to repository if available on classpath.
-     * @param schemaName
+     * @param schemaName The name of the schema within the citrus schema package
      */
     protected void addCitrusSchema(String schemaName) throws IOException, SAXException, ParserConfigurationException {
         Resource resource = new PathMatchingResourcePatternResolver().getResource("classpath:com/consol/citrus/schema/" + schemaName + ".xsd");
         if (resource.exists()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Loading XSD schema resource " + resource.getFilename());
-            }
-            SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-            schema.afterPropertiesSet();
-            schemas.add(schema);
+            addXsdSchema(resource);
         }
+    }
+
+    private void addSchemas(Resource resource) throws ParserConfigurationException, IOException, SAXException {
+        if (resource.getFilename().endsWith(".xsd")) {
+            addXsdSchema(resource);
+        } else if (resource.getFilename().endsWith(".wsdl")) {
+            addWsdlSchema(resource);
+        } else {
+            log.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
+        }
+    }
+
+    private void addWsdlSchema(Resource resource) throws ParserConfigurationException, IOException, SAXException {
+        if (log.isDebugEnabled()) {
+            log.debug("Loading WSDL schema resource " + resource.getFilename());
+        }
+
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
+        wsdl.afterPropertiesSet();
+        schemas.add(wsdl);
+    }
+
+    private void addXsdSchema(Resource resource) throws ParserConfigurationException, IOException, SAXException {
+        if (log.isDebugEnabled()) {
+            log.debug("Loading XSD schema resource " + resource.getFilename());
+        }
+
+        SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+        schema.afterPropertiesSet();
+        schemas.add(schema);
     }
 
     /**
@@ -149,7 +155,7 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
 
     /**
      * Gets the schema mapping strategy.
-     * @return
+     * @return The current XsdSchemaMappingStrategy
      */
     public XsdSchemaMappingStrategy getSchemaMappingStrategy() {
         return schemaMappingStrategy;
