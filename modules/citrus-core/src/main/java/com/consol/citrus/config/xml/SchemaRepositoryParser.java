@@ -51,16 +51,8 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
 
-        Element schemasElement = DomUtils.getChildElementByTagName(element, SCHEMAS);
-
-        if (schemasElement != null) {
-            parseSchemasElement(schemasElement, builder, parserContext);
-        }
-
-        Element locationsElement = DomUtils.getChildElementByTagName(element, LOCATIONS);
-        if (locationsElement != null) {
-            addLocationsToBuilder(builder, locationsElement);
-        }
+        parseSchemasElement(element, builder, parserContext);
+        addLocationsToBuilder(element, builder);
 
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
 
@@ -70,36 +62,46 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     /**
      * Parses the given schema element to RuntimeBeanReference in consideration of the given context
      * and adds them to the builder
-     * @param schemasElement The schema elements to be parsed
+     * @param element The element from where the schemas will be parsed
      * @param builder The builder to add the resulting RuntimeBeanReference to
      * @param parserContext The context to parse the schema elements in
      */
-    private void parseSchemasElement( Element schemasElement,
+    private void parseSchemasElement( Element element,
                                       BeanDefinitionBuilder builder,
                                       ParserContext parserContext) {
-        List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
-        ManagedList<RuntimeBeanReference> beanReferences = constructRuntimeBeanReferences(parserContext, schemaElements);
+        Element schemasElement = DomUtils.getChildElementByTagName(element, SCHEMAS);
 
-        if (!beanReferences.isEmpty()) {
-            builder.addPropertyValue(SCHEMAS, beanReferences);
+        if (schemasElement != null) {
+            List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
+            ManagedList<RuntimeBeanReference> beanReferences = constructRuntimeBeanReferences(parserContext, schemaElements);
+
+            if (!beanReferences.isEmpty()) {
+                builder.addPropertyValue(SCHEMAS, beanReferences);
+            }
         }
+
     }
 
     /**
      * Adds the locations contained in the given locations element to the BeanDefinitionBuilder
+     * @param element the element containing the locations to be added to the builder
      * @param builder the BeanDefinitionBuilder to add the locations to
-     * @param locationsElement the locations element containing the locations to be added to the builder
      */
-    private void addLocationsToBuilder(BeanDefinitionBuilder builder, Element locationsElement) {
-        List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, LOCATION);
+    private void addLocationsToBuilder(Element element, BeanDefinitionBuilder builder) {
+        Element locationsElement = DomUtils.getChildElementByTagName(element, LOCATIONS);
+        if (locationsElement != null) {
+            List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, LOCATION);
 
-        List<String> locations = locationElements.stream()
-                .map(element -> element.getAttribute("path"))
-                .collect(Collectors.toList());
+            List<String> locations = locationElements.stream()
+                    .map(locationElement -> locationElement.getAttribute("path"))
+                    .collect(Collectors.toList());
 
-        if (!locations.isEmpty()) {
-            builder.addPropertyValue(LOCATIONS, locations);
+            if (!locations.isEmpty()) {
+                builder.addPropertyValue(LOCATIONS, locations);
+            }
         }
+
+
     }
 
     /**
