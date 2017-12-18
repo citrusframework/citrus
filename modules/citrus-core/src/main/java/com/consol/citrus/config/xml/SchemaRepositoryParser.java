@@ -61,7 +61,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * Decides whether the given element is a xml schema repository.
      *
      * Note:
-     * If no "type" attribute has been set, the repository is a xml repository by definition.
+     * If the "type" attribute has not been set, the repository is interpreted as a xml repository by definition.
      * This is important to guarantee downwards compatibility.
      * @param element The element to be checked
      * @return Whether the given element is a xml schema repository
