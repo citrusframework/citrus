@@ -22,6 +22,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import java.util.Objects;
+
 /**
  * Bean definition parser for schema-repository configuration.
  *
@@ -30,11 +32,25 @@ import org.w3c.dom.Element;
  */
 public class SchemaRepositoryParser implements BeanDefinitionParser {
 
-    private final XmlSchemaRepositoryParser xmlSchemaRepositoryParser = new XmlSchemaRepositoryParser();
+    private XmlSchemaRepositoryParser xmlSchemaRepositoryParser;
+    private JsonSchemaRepositoryParser jsonSchemaRepositoryParser;
+
+    public SchemaRepositoryParser(){
+        xmlSchemaRepositoryParser = new XmlSchemaRepositoryParser();
+        jsonSchemaRepositoryParser = new JsonSchemaRepositoryParser();
+    }
+
+    SchemaRepositoryParser(XmlSchemaRepositoryParser xmlSchemaRepositoryParser,
+                           JsonSchemaRepositoryParser jsonSchemaRepositoryParser) {
+        this.xmlSchemaRepositoryParser = xmlSchemaRepositoryParser;
+        this.jsonSchemaRepositoryParser = jsonSchemaRepositoryParser;
+    }
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         if(isXmlSchemaRepository(element)){
             xmlSchemaRepositoryParser.parse(element, parserContext);
+        }else if(isJsonSchemaRepository(element)){
+            jsonSchemaRepositoryParser.parse(element, parserContext);
         }
 
         return null;
@@ -52,5 +68,14 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     private boolean isXmlSchemaRepository(Element element) {
         String schemaRepositoryType = element.getAttribute("type");
         return StringUtils.isEmpty(schemaRepositoryType) || "xml".equals(schemaRepositoryType);
+    }
+
+    /**
+     * Decides whether the given element is a json schema repository
+     * @param element The element to be checked
+     * @return  whether the given element is a json schema repository
+     */
+    private boolean isJsonSchemaRepository(Element element) {
+        return Objects.equals(element.getAttribute("type"), "json");
     }
 }
