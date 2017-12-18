@@ -31,6 +31,15 @@ public class JsonMessageValidationContext implements ValidationContext {
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<>();
 
+    /** Should message be validated with its schema definition */
+    private boolean schemaValidation = true;
+
+    /** Explicit schema repository to use for this validation */
+    private String schemaRepository;
+
+    /** Explicit schema instance to use for this validation */
+    private String schema;
+
     /**
      * Get ignored message elements.
      * @return the ignoreExpressions
@@ -47,4 +56,28 @@ public class JsonMessageValidationContext implements ValidationContext {
         this.ignoreExpressions = ignoreExpressions;
     }
 
+
+    public boolean isSchemaValidation() {
+        return schemaValidation;
+    }
+
+    public void setSchemaValidation(boolean schemaValidation) {
+        this.schemaValidation = schemaValidation;
+    }
+
+    public String getSchemaRepository() {
+        return schemaRepository;
+    }
+
+    public void setSchemaRepository(String schemaRepository) {
+        this.schemaRepository = schemaRepository;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
 }

@@ -17,15 +17,16 @@
 package com.consol.citrus.json.schema;
 
 import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 /**
  * Adapter between the resource reference from the bean configuration and the
- * usable JsonSchema for validation.
+ * usable SimpleJsonSchema for validation.
  */
-public class JsonSchema implements InitializingBean {
+public class SimpleJsonSchema implements InitializingBean {
 
     /** Default json schema factory */
     private JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.byDefault();
@@ -34,13 +35,13 @@ public class JsonSchema implements InitializingBean {
     private Resource json;
 
     /** The parsed json schema ready for validation */
-    private com.github.fge.jsonschema.main.JsonSchema schema;
+    private JsonSchema schema;
 
-    public JsonSchema(Resource resource) {
+    public SimpleJsonSchema(Resource resource) {
         json = resource;
     }
 
-    public JsonSchema(){ }
+    public SimpleJsonSchema(){ }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -55,11 +56,11 @@ public class JsonSchema implements InitializingBean {
         this.json = json;
     }
 
-    public com.github.fge.jsonschema.main.JsonSchema getSchema() {
+    public JsonSchema getSchema() {
         return schema;
     }
 
-    public void setSchema(com.github.fge.jsonschema.main.JsonSchema schema) {
+    public void setSchema(JsonSchema schema) {
         this.schema = schema;
     }
 }

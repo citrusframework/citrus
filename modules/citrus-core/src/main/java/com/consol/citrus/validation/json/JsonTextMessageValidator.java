@@ -20,6 +20,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
@@ -35,6 +36,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,10 +59,12 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     @Value("${citrus.json.message.validation.strict:true}")
     private boolean strict = true;
 
+    private List<JsonSchemaRepository> schemaRepositories = new ArrayList<>();
+
     @Override
     @SuppressWarnings("unchecked")
     public void validateMessage(Message receivedMessage, Message controlMessage,
-                                TestContext context, JsonMessageValidationContext validationContext) throws ValidationException {
+                                TestContext context, JsonMessageValidationContext validationContext) {
         if (controlMessage == null || controlMessage.getPayload() == null) {
             log.debug("Skip message payload validation as no control message was defined");
             return;
@@ -210,6 +215,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         }
     }
 
+    protected void validateAgainstSchema(Message receivedMessage, JsonMessageValidationContext validationContext){
+
+    }
+
     /**
      * Checks if given element node is either on ignore list or
      * contains @ignore@ tag inside control message
@@ -292,4 +301,15 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         return this;
     }
 
+    /**
+     * Set the schema repository holding all known schema definition files.
+     * @param schemaRepository the schemaRepository to set
+     */
+    public void addSchemaRepository(JsonSchemaRepository schemaRepository) {
+        if (schemaRepositories == null) {
+            schemaRepositories = new ArrayList<>();
+        }
+
+        schemaRepositories.add(schemaRepository);
+    }
 }

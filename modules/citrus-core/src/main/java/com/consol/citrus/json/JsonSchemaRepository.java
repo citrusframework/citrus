@@ -16,7 +16,7 @@
 
 package com.consol.citrus.json;
 
-import com.consol.citrus.json.schema.JsonSchema;
+import com.consol.citrus.json.schema.SimpleJsonSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -36,7 +36,7 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
     private String name = "schemaRepository";
 
     /** List of schema resources */
-    private List<JsonSchema> schemas = new ArrayList<>();
+    private List<SimpleJsonSchema> schemas = new ArrayList<>();
 
     /** List of location patterns that will be translated to schema resources */
     private List<String> locations = new ArrayList<>();
@@ -74,9 +74,9 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
             if (log.isDebugEnabled()) {
                 log.debug("Loading json schema resource " + resource.getFilename());
             }
-            JsonSchema jsonSchema = new JsonSchema(resource);
-            jsonSchema.afterPropertiesSet();
-            schemas.add(jsonSchema);
+            SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
+            simpleJsonSchema.afterPropertiesSet();
+            schemas.add(simpleJsonSchema);
         } else {
             log.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
         }
@@ -86,11 +86,11 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
         return name;
     }
 
-    public List<JsonSchema> getSchemas() {
+    public List<SimpleJsonSchema> getSchemas() {
         return schemas;
     }
 
-    public void setSchemas(List<JsonSchema> schemas) {
+    public void setSchemas(List<SimpleJsonSchema> schemas) {
         this.schemas = schemas;
     }
 
