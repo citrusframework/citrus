@@ -16,15 +16,25 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.json.JsonSchemaRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 public class JsonSchemaRepositoryParser implements BeanDefinitionParser {
 
+    private static final String ID = "id";
+
+
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(JsonSchemaRepository.class);
+
+        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
+
         return null;
     }
 }
