@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.json;
+package com.consol.citrus.json.schema;
 
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;

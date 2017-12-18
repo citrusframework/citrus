@@ -16,6 +16,7 @@
 
 package com.consol.citrus.json;
 
+import com.consol.citrus.json.schema.JsonSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;

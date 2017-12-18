@@ -16,8 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.json.JsonSchema;
 import com.consol.citrus.json.JsonSchemaRepository;
+import com.consol.citrus.json.schema.JsonSchema;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;

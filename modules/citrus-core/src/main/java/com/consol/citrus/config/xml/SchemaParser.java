@@ -17,7 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.json.JsonSchema;
+import com.consol.citrus.json.schema.JsonSchema;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
