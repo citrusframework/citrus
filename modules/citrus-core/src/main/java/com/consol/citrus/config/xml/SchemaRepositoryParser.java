@@ -46,6 +46,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
         this.jsonSchemaRepositoryParser = jsonSchemaRepositoryParser;
     }
 
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         if(isXmlSchemaRepository(element)){
             xmlSchemaRepositoryParser.parse(element, parserContext);
