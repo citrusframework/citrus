@@ -16,11 +16,12 @@
 
 package com.consol.citrus.json;
 
-import com.github.fge.jsonschema.main.JsonSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,28 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws Exception {
+        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
+        for (String location : locations) {
+            Resource[] findings = resourcePatternResolver.getResources(location);
+
+            for (Resource resource : findings) {
+                addSchemas(resource);
+            }
+        }
+    }
+
+    private void addSchemas(Resource resource) throws Exception {
+        if (resource.getFilename().endsWith(".json")) {
+            if (log.isDebugEnabled()) {
+                log.debug("Loading json schema resource " + resource.getFilename());
+            }
+            JsonSchema jsonSchema = new JsonSchema(resource);
+            jsonSchema.afterPropertiesSet();
+            schemas.add(jsonSchema);
+        } else {
+            log.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
+        }
     }
 
     public String getName() {
@@ -78,5 +100,9 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
 
     public List<String> getLocations() {
         return locations;
+    }
+
+    public void setLocations(List<String> locations) {
+        this.locations = locations;
     }
 }

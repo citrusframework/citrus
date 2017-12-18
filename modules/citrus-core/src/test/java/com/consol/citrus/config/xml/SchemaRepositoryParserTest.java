@@ -16,52 +16,106 @@
 
 package com.consol.citrus.config.xml;
 
-import org.springframework.beans.factory.xml.ParserContext;
+import com.consol.citrus.json.JsonSchema;
+import com.consol.citrus.json.JsonSchemaRepository;
+import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.WsdlXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
+import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.w3c.dom.Element;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  */
-public class SchemaRepositoryParserTest {
-
-    private XmlSchemaRepositoryParser xmlSchemaRepositoryParserMock = mock(XmlSchemaRepositoryParser.class);
-    private JsonSchemaRepositoryParser jsonSchemaRepositoryParserMock = mock(JsonSchemaRepositoryParser.class);
-    private SchemaRepositoryParser schemaRepositoryParser =
-            new SchemaRepositoryParser(xmlSchemaRepositoryParserMock, jsonSchemaRepositoryParserMock);
-
-    private Element elementMock = mock(Element.class);
-    private ParserContext parserContextMock = mock(ParserContext.class);
+public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void xmlSchemaRepositoryIsDelegatedCorrectly(){
+    public void testSchemaRepositoryParser() {
+        Map<String, XsdSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(XsdSchemaRepository.class);
 
-        //GIVEN
-        when(elementMock.getAttribute("type")).thenReturn("xml");
+        Assert.assertEquals(schemaRepositories.size(), 4);
 
-        //WHEN
-        schemaRepositoryParser.parse(elementMock,parserContextMock);
+        // 1st schema repository
+        XsdSchemaRepository schemaRepository = schemaRepositories.get("schemaRepository1");
+        Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), TargetNamespaceSchemaMappingStrategy.class);
+        Assert.assertNotNull(schemaRepository.getSchemas());
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 5);
+        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), SimpleXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), XsdSchemaCollection.class);
+        Assert.assertNotNull(schemaRepository.getLocations());
+        Assert.assertEquals(schemaRepository.getLocations().size(), 0);
 
-        //THEN
-        verify(xmlSchemaRepositoryParserMock).parse(elementMock, parserContextMock);
+        // 2nd schema repository
+        schemaRepository = schemaRepositories.get("schemaRepository2");
+        Assert.assertNotNull(schemaRepository.getSchemas());
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 15);
+        Assert.assertNotNull(schemaRepository.getLocations());
+        Assert.assertEquals(schemaRepository.getLocations().size(), 1);
+        Assert.assertEquals(schemaRepository.getLocations().get(0), "classpath:com/consol/citrus/validation/*");
 
+        // 3rd schema repository
+        schemaRepository = schemaRepositories.get("schemaRepository3");
+        Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), RootQNameSchemaMappingStrategy.class);
+
+        Assert.assertTrue(beanDefinitionContext.containsBean("schema1"));
+        Assert.assertTrue(beanDefinitionContext.containsBean("schema2"));
+        Assert.assertTrue(beanDefinitionContext.containsBean("wsdl1"));
+        Assert.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
+        Assert.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
     }
 
     @Test
-    public void jsonSchemaRepositoryIsDelegatedCorrectly(){
+    public void testXmlSchemaRepositoryDeclaration() {
 
         //GIVEN
-        when(elementMock.getAttribute("type")).thenReturn("json");
 
         //WHEN
-        schemaRepositoryParser.parse(elementMock,parserContextMock);
+        Map<String, XsdSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(XsdSchemaRepository.class);
 
         //THEN
-        verify(jsonSchemaRepositoryParserMock).parse(elementMock, parserContextMock);
+        XsdSchemaRepository xmlSchemaRepository = schemaRepositories.get("xmlSchemaRepository");
+        Assert.assertEquals(1, xmlSchemaRepository.getSchemas().size());
+    }
 
+    @Test
+    public void testJsonSchemaRepositoryParser() {
+
+        //GIVEN
+
+        //WHEN
+        Map<String, JsonSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(JsonSchemaRepository.class);
+
+        //THEN
+        Assert.assertEquals(schemaRepositories.size(), 2);
+
+        // 1st schema repository
+        JsonSchemaRepository schemaRepository = schemaRepositories.get("jsonSchemaRepository1");
+        Assert.assertNotNull(schemaRepository.getSchemas());
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
+        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), JsonSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), JsonSchema.class);
+        Assert.assertNotNull(schemaRepository.getLocations());
+        Assert.assertEquals(schemaRepository.getLocations().size(), 0);
+
+        // 2nd schema repository
+        schemaRepository = schemaRepositories.get("jsonSchemaRepository2");
+        Assert.assertNotNull(schemaRepository.getSchemas());
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
+        Assert.assertNotNull(schemaRepository.getLocations());
+        Assert.assertEquals(schemaRepository.getLocations().size(), 1);
+        Assert.assertEquals(schemaRepository.getLocations().get(0), "classpath:com/consol/citrus/validation/*");
+
+        Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchema1"));
+        Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchema2"));
+//        Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchemaCollection1"));
     }
 }
