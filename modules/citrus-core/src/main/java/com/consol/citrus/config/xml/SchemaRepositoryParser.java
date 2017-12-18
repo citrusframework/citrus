@@ -24,6 +24,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -47,16 +48,32 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     private final SchemaParser schemaParser = new SchemaParser();
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
+        if(isXmlSchemaRepository(element)){
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
 
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
+            BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
 
-        parseSchemasElement(element, builder, parserContext);
-        addLocationsToBuilder(element, builder);
+            parseSchemasElement(element, builder, parserContext);
+            addLocationsToBuilder(element, builder);
 
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
+            parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
+        }
 
         return null;
+    }
+
+    /**
+     * Decides whether the given element is a xml schema repository.
+     *
+     * Note:
+     * If no "type" attribute has been set, the repository is a xml repository by definition.
+     * This is important to guarantee downwards compatibility.
+     * @param element The element to be checked
+     * @return Whether the given element is a xml schema repository
+     */
+    private boolean isXmlSchemaRepository(Element element) {
+        String schemaRepositoryType = element.getAttribute("type");
+        return StringUtils.isEmpty(schemaRepositoryType) || "xml".equals(schemaRepositoryType);
     }
 
     /**
