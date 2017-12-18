@@ -1,9 +1,125 @@
 - version: ${project.version}
-  date: 2017-07-07
+  date: 2017-12-18
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+  - title: Http error handling thread safety
+    id: 265
+    type: Fix
+    author: christophd
+  - title: Variable in HTTP request within template not updated
+    id: 271
+    type: Fix
+    author: christophd
+   TestNG Dataprovider parameters cannot be used in <variables> block
+    id: 298
+    type: Fix
+    author: christophd
+  - title: Extend Hamcrest matcher support in XML DSL
+    id: 314
+    type: Update
+    author: christophd
+  - title: How to ignore text parts in plain text validator
+    id: 313
+    type: Add
+    author: christophd
+  - title: Upgrading from 2.6.2 to 2.7.2: HTTP basic authentication doesn't work
+    id: 312
+    type: Update
+    author: christophd
+  - title: Introduce global dictionary message direction
+    id: 310
+    type: Update
+    author: christophd
+  - title: Package scan with custom file name pattern
+    id: 307
+    type: Fix
+    author: christophd
+  - title: How to create a container with port mapping?
+    id: 282
+    type: Update
+    author: christophd
+  - title: Failed to convert value of type 'java.nio.HeapByteBuffer'
+    id: 284
+    type: Update
+    author: christophd
+  - title: Add JUnit 5 support
+    id: 143
+    type: Add
+    author: christophd
+  - title: ConcurrentModificationException at com.consol.citrus.message.DefaultMessage.toString()
+    id: 302
+    type: Fix
+    author: christophd
+  - title: waitFor() not working with external file system resources
+    id: 303
+    type: Fix
+    author: christophd
+  - title: Remove @Autowired from sample methods
+    id: 299
+    type: Fix
+    author: christophd
+  - title: MailMessageConverter cannot handle base64 text content
+    id: 300
+    type: Fix
+    author: christophd
+  - title: Validating XPath numbers with Hamcrest <Double> matchers fails with ClassCastException
+    id: 291
+    type: Fix
+    author: christophd
+  - title: Missing variable support in receive timeout action
+    id: 297
+    type: Fix
+    author: christophd
+  - title: Cannot use context variables for XPath in message extractor
+    id: 266
+    type: Update
+    author: christophd
+  - title: CitrusTest does not fail if assertEquals fails
+    id: 183
+    type: Update
+    author: christophd
+  - title: Reporting of test results
+    id: 287
+    type: Fix
+    author: christophd
+  - title: Provide listener for final actions
+    id: 280
+    type: Update
+    author: christophd
+  - title: Update dependency versions
+    id: 292
+    type: Update
+    author: christophd
+  - title: DelegatingTestAction should implement setName/setActor/setDescription
+    id: 272
+    type: Fix
+    author: christophd
+  - title: How to support SOAP 1.2 over JMS
+    id: 268
+    type: Fix
+    author: christophd
+  - title: Http server basic auth broken
+    id: 290
+    type: Fix
+    author: christophd
+  - title: Update validation.adoc
+    id: 288
+    type: Update
+    author: christophd
+  - title: JSONPath validator doesn't return array length correctly
+    id: 277
+    type: Fix
+    author: christophd
+  - title: Support node list translation in data dictionary
+    id: 270
+    type: Update
+    author: christophd
+  - title: fixed minor typo
+    id: 226
+    type: Update
+    author: christophd
 
 - version: 2.7.2
   date: 2017-07-07
