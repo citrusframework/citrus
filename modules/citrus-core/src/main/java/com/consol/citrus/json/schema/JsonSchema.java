@@ -30,7 +30,7 @@ public class JsonSchema implements InitializingBean {
     private Resource json;
     private com.github.fge.jsonschema.main.JsonSchema schema;
 
-    JsonSchema(Resource resource) {
+    public JsonSchema(Resource resource) {
         json = resource;
     }
 
