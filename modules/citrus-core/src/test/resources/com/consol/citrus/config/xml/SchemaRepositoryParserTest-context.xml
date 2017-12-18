@@ -34,9 +34,9 @@
       </citrus:schemas>
     </citrus:schema-collection>
 
-    <citrus:schema-repository id="jsonSchemaRepository">
+    <citrus:schema-repository id="xmlSchemaRepository" type="xml">
         <citrus:schemas>
-            <citrus:schema id="productSchema" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+            <citrus:reference schema="schema2" />
         </citrus:schemas>
     </citrus:schema-repository>
 

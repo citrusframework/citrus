@@ -70,4 +70,17 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
         Assert.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
     }
+
+    @Test
+    public void testXmlSchemaRepositoryDeclaration() {
+
+        //GIVEN
+
+        //WHEN
+        Map<String, XsdSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(XsdSchemaRepository.class);
+
+        //THEN
+        XsdSchemaRepository xmlSchemaRepository = schemaRepositories.get("xmlSchemaRepository");
+        Assert.assertEquals(1, xmlSchemaRepository.getSchemas().size());
+    }
 }
