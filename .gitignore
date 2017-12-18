@@ -14,3 +14,6 @@ bin
 node_modules
 test-output/
 logs/
+modules/citrus-core/.externalToolBuilders/
+modules/citrus-core/maven-eclipse.xml
+
