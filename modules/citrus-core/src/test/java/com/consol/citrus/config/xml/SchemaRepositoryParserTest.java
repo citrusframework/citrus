@@ -18,10 +18,10 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
-import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -69,12 +69,5 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl1"));
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
         Assert.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
-
-        //Json schema repository
-        schemaRepository = schemaRepositories.get("jsonSchemaRepository");
-        //TODO: Add schema title mapping strategy
-        //Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), SchemaTitleMappingStrategy.class);
-
-        Assert.assertTrue(beanDefinitionContext.containsBean("productSchema"));
     }
 }
