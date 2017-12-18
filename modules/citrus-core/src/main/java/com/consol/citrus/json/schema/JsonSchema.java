@@ -21,13 +21,19 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
+/**
+ * Adapter between the resource reference from the bean configuration and the
+ * usable JsonSchema for validation.
+ */
 public class JsonSchema implements InitializingBean {
 
-
-    /** */
+    /** Default json schema factory */
     private JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.byDefault();
 
+    /** The Resource of the json schema passed from the bean config */
     private Resource json;
+
+    /** The parsed json schema ready for validation */
     private com.github.fge.jsonschema.main.JsonSchema schema;
 
     public JsonSchema(Resource resource) {

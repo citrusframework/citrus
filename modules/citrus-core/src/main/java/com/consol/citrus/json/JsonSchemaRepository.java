@@ -27,6 +27,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Schema repository holding a set of json schema resources known in the test scope.
+ */
 public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
 
     /** This repositories name in the Spring application context */
