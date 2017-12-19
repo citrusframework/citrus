@@ -21,13 +21,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
-import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.JSONArray;
@@ -65,6 +63,16 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     @Autowired(required = false)
     private List<JsonSchemaRepository> schemaRepositories = new ArrayList<>();
 
+    private JsonSchemaValidation jsonSchemaValidation;
+
+    public JsonTextMessageValidator(){
+        this.jsonSchemaValidation = new JsonSchemaValidation();
+    }
+
+    JsonTextMessageValidator(JsonSchemaValidation jsonSchemaValidation){
+        this.jsonSchemaValidation = jsonSchemaValidation;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void validateMessage(Message receivedMessage, Message controlMessage,
@@ -77,7 +85,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         log.debug("Start JSON message validation ...");
 
         if(validationContext.isSchemaValidation()){
-            validateAgainstSchemaRepositories(receivedMessage, schemaRepositories);
+            jsonSchemaValidation.validate(receivedMessage, schemaRepositories);
         }
 
         if (log.isDebugEnabled()) {
@@ -223,58 +231,6 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     }
 
     /**
-     * Validates the given message against all provided json schema repositories
-     * @param message The message to be validated
-     * @param schemaRepositories  The schema repositories to validate against
-     */
-    void validateAgainstSchemaRepositories(Message message, List<JsonSchemaRepository> schemaRepositories) {
-        for (JsonSchemaRepository jsonSchemaRepository: schemaRepositories) {
-            validateAgainstSchemaRepository(message, jsonSchemaRepository);
-        }
-    }
-
-    /**
-     * Validates a message against all schemas contained in the given json schema repository
-     * @param receivedMessage The message to be validated
-     * @param jsonSchemaRepository The json schema repository to iterate through
-     */
-    void validateAgainstSchemaRepository(Message receivedMessage, JsonSchemaRepository jsonSchemaRepository) {
-        for (SimpleJsonSchema simpleJsonSchema : jsonSchemaRepository.getSchemas()){
-            validateMessageAgainstSchema(receivedMessage, simpleJsonSchema);
-        }
-    }
-
-    /**
-     * Validates a given message against a given json schema
-     * @param receivedMessage The message to be validated
-     * @param simpleJsonSchema The json schema to validate against
-     */
-    private void validateMessageAgainstSchema(Message receivedMessage, SimpleJsonSchema simpleJsonSchema) {
-        ProcessingReport report = simpleJsonSchema.validate(receivedMessage);
-        if(report.isSuccess()){
-            log.info("Json validation successful: All values OK");
-        }else{
-            String errorMessage = constructErrorMessage(report);
-            log.error(errorMessage);
-
-            throw new ValidationException(errorMessage);
-        }
-    }
-
-    /**
-     * Constructs the error message of a failed validation based on the processing report passed from
-     * com.github.fge.jsonschema.core.report
-     * @param report The report containing the error message
-     * @return A string representation of all messages contained in the report
-     */
-    private String constructErrorMessage(ProcessingReport report) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Json validation failed: ");
-        report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
-        return stringBuilder.toString();
-    }
-
-    /**
      * Checks if given element node is either on ignore list or
      * contains @ignore@ tag inside control message
      * @param controlKey
@@ -354,5 +310,9 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     public JsonTextMessageValidator strict(boolean strict) {
         setStrict(strict);
         return this;
+    }
+
+    void setSchemaRepositories(List<JsonSchemaRepository> schemaRepositories) {
+        this.schemaRepositories = schemaRepositories;
     }
 }

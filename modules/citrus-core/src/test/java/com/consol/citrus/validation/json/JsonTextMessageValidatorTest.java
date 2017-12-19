@@ -18,16 +18,17 @@ package com.consol.citrus.validation.json;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.json.JsonSchemaRepository;
-import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import net.minidev.json.parser.ParseException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -410,130 +411,22 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testValidJsonMessageSuccessfullyValidated() throws Exception{
+    public void testUseSchemaRepositoryValidatorIfSchemaValidationIsEnabled() {
 
         //GIVEN
-        JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+        validationContext.setSchemaValidation(true);
 
-        jsonSchemaRepository.setBeanName("schemaRepository1");
-        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
-        SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        JsonSchemaValidation jsonSchemaValidation = mock(JsonSchemaValidation.class);
+        JsonTextMessageValidator validator = new JsonTextMessageValidator(jsonSchemaValidation);
 
-        jsonSchemaRepository.getSchemas().add(schema);
-
-
-        JsonTextMessageValidator validator = new JsonTextMessageValidator();
-
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"id\": 2,\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                "                \"length\": 7.0,\n" +
-                "                \"width\": 12.0,\n" +
-                "                \"height\": 9.5\n" +
-                "                 },\n" +
-                "                 \"warehouseLocation\": {\n" +
-                "                   \"latitude\": -78.75,\n" +
-                "                   \"longitude\": 20.4\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
-
+        Message receivedMessage = new DefaultMessage("{\"id\":42}");
+        Message controlMessage = new DefaultMessage("{\"id\":42}");
 
         //WHEN
-        validator.validateAgainstSchemaRepository(receivedMessage, jsonSchemaRepository);
-
-
-        //THEN
-        //Validation is successful -> No exception has been thrown
-    }
-
-    @Test(expectedExceptions = {ValidationException.class})
-    public void testInvalidJsonMessageThrowsException() throws Exception {
-
-        //GIVEN
-        JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository1");
-        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
-        SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
-        jsonSchemaRepository.getSchemas().add(schema);
-
-        JsonTextMessageValidator validator = new JsonTextMessageValidator();
-
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                "                \"length\": 7.0,\n" +
-                "                \"width\": 12.0,\n" +
-                "                \"height\": 9.5\n" +
-                "                 },\n" +
-                "                 \"warehouseLocation\": {\n" +
-                "                   \"latitude\": -78.75,\n" +
-                "                   \"longitude\": 20.4\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
-
-
-        //WHEN
-        validator.validateAgainstSchemaRepository(receivedMessage, jsonSchemaRepository);
-
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         //THEN
-        //Exception has been thrown
-    }
-
-    @Test
-    public void testValidationIsSuccessfulIfOneSchemaMatches() throws Exception {
-
-        //GIVEN
-        JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository1");
-
-        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/BookSchema.json");
-        SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
-        jsonSchemaRepository.getSchemas().add(schema);
-
-        schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
-        schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
-        jsonSchemaRepository.getSchemas().add(schema);
-
-        JsonTextMessageValidator validator = new JsonTextMessageValidator();
-
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"id\": 2,\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                "                \"length\": 7.0,\n" +
-                "                \"width\": 12.0,\n" +
-                "                \"height\": 9.5\n" +
-                "                 },\n" +
-                "                 \"warehouseLocation\": {\n" +
-                "                   \"latitude\": -78.75,\n" +
-                "                   \"longitude\": 20.4\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
-
-
-        //WHEN
-        validator.validateAgainstSchemaRepository(receivedMessage, jsonSchemaRepository);
-
-
-        //THEN
-        //No exception thrown, because the json is a valid product
+        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList());
     }
 }
