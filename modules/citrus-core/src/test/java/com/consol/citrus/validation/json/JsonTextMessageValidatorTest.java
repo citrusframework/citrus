@@ -424,7 +424,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
 
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
-        validator.addSchemaRepository(jsonSchemaRepository);
 
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
@@ -446,11 +445,11 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
 
         //WHEN
-        validator.validateAgainstSchema(receivedMessage, new JsonMessageValidationContext());
+        validator.validateAgainstSchemaRepository(receivedMessage, jsonSchemaRepository);
 
 
         //THEN
-        //Validation is successful
+        //Validation is successful -> No exception has been thrown
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -458,17 +457,13 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
         //GIVEN
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-
         jsonSchemaRepository.setBeanName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
         schema.afterPropertiesSet();
-
         jsonSchemaRepository.getSchemas().add(schema);
 
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
-        validator.addSchemaRepository(jsonSchemaRepository);
-
 
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
@@ -489,7 +484,7 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
 
         //WHEN
-        validator.validateAgainstSchema(receivedMessage, new JsonMessageValidationContext());
+        validator.validateAgainstSchemaRepository(receivedMessage, jsonSchemaRepository);
 
 
         //THEN
