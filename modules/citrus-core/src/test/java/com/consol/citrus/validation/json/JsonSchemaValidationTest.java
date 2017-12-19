@@ -1,12 +1,13 @@
 package com.consol.citrus.validation.json;
 
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class JsonSchemaValidationTest {
@@ -49,15 +50,15 @@ public class JsonSchemaValidationTest {
 
 
         //WHEN
-        validator.validate(receivedMessage, jsonSchemaRepository);
+        ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
 
 
         //THEN
-        //Validation is successful -> No exception has been thrown
+        Assert.assertTrue(report.isSuccess());
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
-    public void testInvalidJsonMessageThrowsException() throws Exception {
+    @Test
+    public void testInvalidJsonMessageValidationIsNotSuccessful() throws Exception {
 
         //GIVEN
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
@@ -86,11 +87,11 @@ public class JsonSchemaValidationTest {
 
 
         //WHEN
-        validator.validate(receivedMessage, jsonSchemaRepository);
+        ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
 
 
         //THEN
-        //Exception has been thrown
+        Assert.assertFalse(report.isSuccess());
     }
 
     @Test
@@ -130,11 +131,11 @@ public class JsonSchemaValidationTest {
 
 
         //WHEN
-        validator.validate(receivedMessage, jsonSchemaRepository);
+        ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
 
 
         //THEN
-        //No exception thrown, because the json is a valid product
+        Assert.assertTrue(report.isSuccess());
     }
 
 }

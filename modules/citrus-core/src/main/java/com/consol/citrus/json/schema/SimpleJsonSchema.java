@@ -16,19 +16,11 @@
 
 package com.consol.citrus.json.schema;
 
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.Message;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
-
-import java.io.IOException;
 
 /**
  * Adapter between the resource reference from the bean configuration and the
@@ -44,9 +36,6 @@ public class SimpleJsonSchema implements InitializingBean {
 
     /** The parsed json schema ready for validation */
     private JsonSchema schema;
-
-    /** Object Mapper to convert the message for validation*/
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     public SimpleJsonSchema(Resource resource) {
         json = resource;
@@ -75,12 +64,4 @@ public class SimpleJsonSchema implements InitializingBean {
         this.schema = schema;
     }
 
-    public ProcessingReport validate(Message message){
-        try {
-            JsonNode receivedJson = objectMapper.readTree(message.getPayload(String.class));
-            return schema.validate(receivedJson);
-        } catch (IOException | ProcessingException e) {
-            throw new ValidationException("Failed to process message: " + message, e);
-        }
-    }
 }

@@ -26,6 +26,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.JSONArray;
@@ -85,7 +86,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         log.debug("Start JSON message validation ...");
 
         if(validationContext.isSchemaValidation()){
-            jsonSchemaValidation.validate(receivedMessage, schemaRepositories);
+            performSchemaValidation(receivedMessage);
         }
 
         if (log.isDebugEnabled()) {
@@ -130,6 +131,19 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         
         log.info("JSON message validation successful: All values OK");
     }
+
+    /**
+     * TODO:Add documentation
+     * @param receivedMessage
+     */
+    private void performSchemaValidation(Message receivedMessage) {
+        ProcessingReport report = jsonSchemaValidation.validate(schemaRepositories, receivedMessage);
+        if(!report.isSuccess()){
+            String errorMessage = constructErrorMessage(report);
+            throw new ValidationException(errorMessage);
+        }
+    }
+
     /**
      * Validates JSON text with comparison to expected control JSON object.
      * JSON entries can be ignored with ignore placeholder.
@@ -314,5 +328,18 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
     void setSchemaRepositories(List<JsonSchemaRepository> schemaRepositories) {
         this.schemaRepositories = schemaRepositories;
+    }
+
+    /**
+     * Constructs the error message of a failed validation based on the processing report passed from
+     * com.github.fge.jsonschema.core.report
+     * @param report The report containing the error message
+     * @return A string representation of all messages contained in the report
+     */
+    private String constructErrorMessage(ProcessingReport report) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Json validation failed: ");
+        report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
+        return stringBuilder.toString();
     }
 }

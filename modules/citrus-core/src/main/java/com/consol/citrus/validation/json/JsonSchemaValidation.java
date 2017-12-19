@@ -20,68 +20,77 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.json.report.GraciousProcessingReport;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * This class is responsible for the validation of json messages against json schemas.
+ * This class is responsible for the validation of json messages against json schemas / json schema repositories.
  */
 public class JsonSchemaValidation {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /** Object Mapper to convert the message for validation*/
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     /**
-     * Validates the given message against all provided json schema repositories
+     * Validates the given message against the schema repository
      * @param message The message to be validated
-     * @param schemaRepositories  The schema repositories to validate against
+     * @param jsonSchemaRepository  The schema repositories to validate against
      */
-    public void validate(Message message, List<JsonSchemaRepository> schemaRepositories) {
-        for (JsonSchemaRepository jsonSchemaRepository: schemaRepositories) {
-            validate(message, jsonSchemaRepository);
-        }
+    public GraciousProcessingReport validate(Message message, JsonSchemaRepository jsonSchemaRepository) {
+        return validate(message, jsonSchemaRepository.getSchemas());
     }
 
     /**
      * Validates a message against all schemas contained in the given json schema repository
-     * @param receivedMessage The message to be validated
-     * @param jsonSchemaRepository The json schema repository to iterate through
+     * @param message The message to be validated
+     * @param jsonSchemas The list of json schemas to iterate over
      */
-    void validate(Message receivedMessage, JsonSchemaRepository jsonSchemaRepository) {
-        for (SimpleJsonSchema simpleJsonSchema : jsonSchemaRepository.getSchemas()){
-            validate(receivedMessage, simpleJsonSchema);
+    private GraciousProcessingReport validate(Message message, List<SimpleJsonSchema> jsonSchemas) {
+        List<ProcessingReport> processingReports = new LinkedList<>();
+        for (SimpleJsonSchema simpleJsonSchema : jsonSchemas){
+            processingReports.add(validate(message, simpleJsonSchema));
         }
+        return new GraciousProcessingReport(processingReports);
     }
 
     /**
      * Validates a given message against a given json schema
-     * @param receivedMessage The message to be validated
+     * @param message The message to be validated
      * @param simpleJsonSchema The json schema to validate against
+     * @return returns the report holding the result of the validation
      */
-    private void validate(Message receivedMessage, SimpleJsonSchema simpleJsonSchema) {
-        ProcessingReport report = simpleJsonSchema.validate(receivedMessage);
-        if(report.isSuccess()){
-            log.info("Json validation successful: All values OK");
-        }else{
-            String errorMessage = constructErrorMessage(report);
-            log.error(errorMessage);
-
-            throw new ValidationException(errorMessage);
+    private ProcessingReport validate(Message message, SimpleJsonSchema simpleJsonSchema) {
+        try {
+            JsonNode receivedJson = objectMapper.readTree(message.getPayload(String.class));
+            return simpleJsonSchema.getSchema().validate(receivedJson);
+        } catch (IOException | ProcessingException e) {
+            throw new ValidationException("Failed to process message: " + message, e);
         }
     }
 
     /**
-     * Constructs the error message of a failed validation based on the processing report passed from
-     * com.github.fge.jsonschema.core.report
-     * @param report The report containing the error message
-     * @return A string representation of all messages contained in the report
+     * TODO:Add documentation
+     * @param schemaRepositories
+     * @param message
+     * @return
      */
-    private String constructErrorMessage(ProcessingReport report) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Json validation failed: ");
-        report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
-        return stringBuilder.toString();
+    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories, Message message) {
+        List<SimpleJsonSchema> schemaList = schemaRepositories.stream()
+                .map(JsonSchemaRepository::getSchemas)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return validate(message, schemaList);
     }
 }
