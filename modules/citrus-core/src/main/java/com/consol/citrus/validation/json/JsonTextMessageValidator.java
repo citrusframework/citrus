@@ -227,7 +227,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param message The message to be validated
      * @param schemaRepositories  The schema repositories to validate against
      */
-    private void validateAgainstSchemaRepositories(Message message, List<JsonSchemaRepository> schemaRepositories) {
+    void validateAgainstSchemaRepositories(Message message, List<JsonSchemaRepository> schemaRepositories) {
         for (JsonSchemaRepository jsonSchemaRepository: schemaRepositories) {
             validateAgainstSchemaRepository(message, jsonSchemaRepository);
         }
