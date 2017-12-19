@@ -34,10 +34,13 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +62,9 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     @Value("${citrus.json.message.validation.strict:true}")
     private boolean strict = true;
 
+    @Autowired(required = false)
+    private List<JsonSchemaRepository> schemaRepositories = new ArrayList<>();
+
     @Override
     @SuppressWarnings("unchecked")
     public void validateMessage(Message receivedMessage, Message controlMessage,
@@ -69,6 +75,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         }
 
         log.debug("Start JSON message validation ...");
+
+        if(validationContext.isSchemaValidation()){
+            validateAgainstSchemaRepositories(receivedMessage, schemaRepositories);
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Received message:\n" + receivedMessage);
@@ -112,7 +122,6 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         
         log.info("JSON message validation successful: All values OK");
     }
-    
     /**
      * Validates JSON text with comparison to expected control JSON object.
      * JSON entries can be ignored with ignore placeholder.
@@ -210,6 +219,17 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             if (log.isDebugEnabled()) {
                 log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlValue + ")");
             }
+        }
+    }
+
+    /**
+     * Validates the given message against all provided json schema repositories
+     * @param message The message to be validated
+     * @param schemaRepositories  The schema repositories to validate against
+     */
+    private void validateAgainstSchemaRepositories(Message message, List<JsonSchemaRepository> schemaRepositories) {
+        for (JsonSchemaRepository jsonSchemaRepository: schemaRepositories) {
+            validateAgainstSchemaRepository(message, jsonSchemaRepository);
         }
     }
 
