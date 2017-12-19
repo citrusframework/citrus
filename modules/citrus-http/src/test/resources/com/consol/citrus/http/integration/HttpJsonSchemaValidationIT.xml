@@ -45,7 +45,7 @@
       <assert exception="com.consol.citrus.exceptions.ValidationException">
         <when>
           <http:receive-response client="echoHttpClient">
-            <http:body type="json" schema="productsSchema">
+            <http:body type="json">
               <http:data>
                 [{}]
               </http:data>
@@ -92,7 +92,7 @@
 
       </http:send-response>
           <http:receive-response client="echoHttpClient">
-            <http:body type="json" schema="productsSchema">
+            <http:body type="json">
               <http:data>
                 [
                   {
@@ -135,7 +135,7 @@
         <when>
           <http:receive-request server="echoHttpServer">
             <http:POST>
-              <http:body type="json" schema="productsSchema">
+              <http:body type="json">
                 <http:data>
                   [{}]
                 </http:data>
@@ -179,7 +179,7 @@
 
       <http:receive-request server="echoHttpServer">
         <http:POST>
-          <http:body type="json" schema="productsSchema">
+          <http:body type="json">
             <http:data>
               [
                 {
