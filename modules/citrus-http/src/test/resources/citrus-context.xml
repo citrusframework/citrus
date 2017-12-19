@@ -25,7 +25,7 @@
   </citrus:schema-repository>
 
   <!-- Json schema resources and definitions -->
-  <citrus:schema-repository id="jsonSchemaRepository">
+  <citrus:schema-repository type="json" id="jsonSchemaRepository">
     <citrus:schemas>
       <citrus:schema id="productsSchema" location="classpath:schemas/ProductsSchema.json" />
     </citrus:schemas>
