@@ -17,7 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.json.JsonSchemaRepository;
-import com.consol.citrus.json.schema.JsonSchema;
+import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
@@ -101,8 +101,8 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         JsonSchemaRepository schemaRepository = schemaRepositories.get("jsonSchemaRepository1");
         Assert.assertNotNull(schemaRepository.getSchemas());
         Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
-        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), JsonSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), JsonSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleJsonSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleJsonSchema.class);
         Assert.assertNotNull(schemaRepository.getLocations());
         Assert.assertEquals(schemaRepository.getLocations().size(), 0);
 

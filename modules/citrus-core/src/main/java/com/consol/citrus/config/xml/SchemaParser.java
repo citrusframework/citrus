@@ -17,7 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.json.schema.JsonSchema;
+import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -48,7 +48,7 @@ public class SchemaParser implements BeanDefinitionParser {
             builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "xsd");
         } else if (location.endsWith(".json")){
-            builder = BeanDefinitionBuilder.genericBeanDefinition(JsonSchema.class);
+            builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleJsonSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "json");
         }
 
