@@ -58,11 +58,16 @@ public class JsonSchemaValidation {
      * @param jsonSchemas The list of json schemas to iterate over
      */
     private GraciousProcessingReport validate(Message message, List<SimpleJsonSchema> jsonSchemas) {
-        List<ProcessingReport> processingReports = new LinkedList<>();
-        for (SimpleJsonSchema simpleJsonSchema : jsonSchemas){
-            processingReports.add(validate(message, simpleJsonSchema));
+        if(jsonSchemas.isEmpty()){
+            return new GraciousProcessingReport(true);
         }
-        return new GraciousProcessingReport(processingReports);
+        else{
+            List<ProcessingReport> processingReports = new LinkedList<>();
+            for (SimpleJsonSchema simpleJsonSchema : jsonSchemas){
+                processingReports.add(validate(message, simpleJsonSchema));
+            }
+            return new GraciousProcessingReport(processingReports);
+        }
     }
 
     /**

@@ -22,7 +22,7 @@ import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import net.minidev.json.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -424,7 +424,7 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setSchemaValidation(true);
 
         JsonSchemaValidation jsonSchemaValidation = mock(JsonSchemaValidation.class);
-        when(jsonSchemaValidation.validate(anyList(), any())).thenReturn(mock(ProcessingReport.class));
+        when(jsonSchemaValidation.validate(anyList(), any())).thenReturn(new GraciousProcessingReport((true)));
         JsonTextMessageValidator validator = new JsonTextMessageValidator(jsonSchemaValidation);
 
         JsonSchemaRepository jsonSchemaRepository = mock(JsonSchemaRepository.class);

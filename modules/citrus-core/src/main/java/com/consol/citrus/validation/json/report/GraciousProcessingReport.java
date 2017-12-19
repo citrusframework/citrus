@@ -48,14 +48,27 @@ public class GraciousProcessingReport implements ProcessingReport{
      */
     private LogLevel exceptionThreshold = LogLevel.FATAL;
 
-    private boolean success = false;
+    private boolean success;
 
     private final List<ProcessingMessage> messages = new ArrayList<>();
 
+    /**
+     * Constructor to determine the default success state oft he Report
+     * @param success the default success state
+     */
+    public GraciousProcessingReport(boolean success) {
+        this.success = success;
+    }
+
+    /**
+     * TODO: Add documentation
+     * @param processingReports
+     */
     public GraciousProcessingReport(List<ProcessingReport> processingReports) {
-       for(ProcessingReport processingReport : processingReports){
-           mergeWith(processingReport);
-       }
+        this(false);
+        for(ProcessingReport processingReport : processingReports){
+            mergeWith(processingReport);
+        }
     }
 
     @Override
