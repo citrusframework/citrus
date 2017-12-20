@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.json;
 
+import com.consol.citrus.validation.context.SchemaValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 
 import java.util.HashSet;
@@ -26,7 +27,7 @@ import java.util.Set;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JsonMessageValidationContext implements ValidationContext {
+public class JsonMessageValidationContext implements ValidationContext, SchemaValidationContext {
 
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<>();
@@ -55,28 +56,50 @@ public class JsonMessageValidationContext implements ValidationContext {
     public void setIgnoreExpressions(Set<String> ignoreExpressions) {
         this.ignoreExpressions = ignoreExpressions;
     }
-
-
-    public boolean isSchemaValidation() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isSchemaValidationEnabled() {
         return schemaValidation;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void setSchemaValidation(boolean schemaValidation) {
         this.schemaValidation = schemaValidation;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getSchemaRepository() {
         return schemaRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void setSchemaRepository(String schemaRepository) {
         this.schemaRepository = schemaRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getSchema() {
         return schema;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void setSchema(String schema) {
         this.schema = schema;
     }

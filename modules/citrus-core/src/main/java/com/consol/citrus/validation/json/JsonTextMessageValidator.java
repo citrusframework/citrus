@@ -85,7 +85,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
         log.debug("Start JSON message validation ...");
 
-        if(validationContext.isSchemaValidation()){
+        if(validationContext.isSchemaValidationEnabled()){
             performSchemaValidation(receivedMessage);
         }
 
