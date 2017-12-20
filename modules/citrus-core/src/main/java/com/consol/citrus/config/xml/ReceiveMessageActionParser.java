@@ -18,9 +18,12 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.config.util.*;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.util.ValidateMessageParserUtil;
+import com.consol.citrus.config.util.VariableExtractorParserUtil;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.SchemaValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -37,7 +40,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Bean definition parser for receive action in test case.
@@ -184,6 +193,8 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 ignoreExpressions.add(ignoreValue.getAttribute("path"));
             }
             context.setIgnoreExpressions(ignoreExpressions);
+
+            addSchemaInformationToValidationContext(messageElement, context);
         }
 
         return context;
@@ -198,20 +209,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         XmlMessageValidationContext context = new XmlMessageValidationContext();
 
         if (messageElement != null) {
-            String schemaValidation = messageElement.getAttribute("schema-validation");
-            if (StringUtils.hasText(schemaValidation)) {
-                context.setSchemaValidation(Boolean.valueOf(schemaValidation));
-            }
-
-            String schema = messageElement.getAttribute("schema");
-            if (StringUtils.hasText(schema)) {
-                context.setSchema(schema);
-            }
-
-            String schemaRepository = messageElement.getAttribute("schema-repository");
-            if (StringUtils.hasText(schemaRepository)) {
-                context.setSchemaRepository(schemaRepository);
-            }
+            addSchemaInformationToValidationContext(messageElement, context);
 
             Set<String> ignoreExpressions = new HashSet<String>();
             List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
@@ -236,6 +234,28 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         }
 
         return context;
+    }
+
+    /**
+     * Adds information about the validation of the message against a certain schema to the context
+     * @param messageElement The message element to get the configuration from
+     * @param context The context to set the schema validation configuration to
+     */
+    private void addSchemaInformationToValidationContext(Element messageElement, SchemaValidationContext context) {
+        String schemaValidation = messageElement.getAttribute("schema-validation");
+        if (StringUtils.hasText(schemaValidation)) {
+            context.setSchemaValidation(Boolean.valueOf(schemaValidation));
+        }
+
+        String schema = messageElement.getAttribute("schema");
+        if (StringUtils.hasText(schema)) {
+            context.setSchema(schema);
+        }
+
+        String schemaRepository = messageElement.getAttribute("schema-repository");
+        if (StringUtils.hasText(schemaRepository)) {
+            context.setSchemaRepository(schemaRepository);
+        }
     }
 
     /**
