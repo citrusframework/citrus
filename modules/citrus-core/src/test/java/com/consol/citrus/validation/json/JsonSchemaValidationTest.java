@@ -10,6 +10,9 @@ import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class JsonSchemaValidationTest {
 
     private JsonSchemaValidation validator = new JsonSchemaValidation();
@@ -26,9 +29,6 @@ public class JsonSchemaValidationTest {
         schema.afterPropertiesSet();
 
         jsonSchemaRepository.getSchemas().add(schema);
-
-
-
 
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
@@ -132,6 +132,59 @@ public class JsonSchemaValidationTest {
 
         //WHEN
         ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
+
+
+        //THEN
+        Assert.assertTrue(report.isSuccess());
+    }
+
+    @Test
+    public void testValidationOfJsonSchemaRepositoryList() throws Exception {
+
+        //GIVEN
+        List<JsonSchemaRepository> repositoryList = new LinkedList<>();
+
+        //Setup Repository 1
+        JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
+        jsonSchemaRepository.setBeanName("schemaRepository1");
+
+        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/BookSchema.json");
+        SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
+        schema.afterPropertiesSet();
+        jsonSchemaRepository.getSchemas().add(schema);
+        repositoryList.add(jsonSchemaRepository);
+
+        //Setup Repository 2
+        jsonSchemaRepository = new JsonSchemaRepository();
+        jsonSchemaRepository.setBeanName("schemaRepository2");
+
+        schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
+        schema = new SimpleJsonSchema(schemaResource);
+        schema.afterPropertiesSet();
+        jsonSchemaRepository.getSchemas().add(schema);
+        repositoryList.add(jsonSchemaRepository);
+
+        Message receivedMessage = new DefaultMessage("[\n" +
+                "              {\n" +
+                "                \"id\": 2,\n" +
+                "                \"name\": \"An ice sculpture\",\n" +
+                "                \"price\": 12.50,\n" +
+                "                \"tags\": [\"cold\", \"ice\"],\n" +
+                "                \"dimensions\": {\n" +
+                "                \"length\": 7.0,\n" +
+                "                \"width\": 12.0,\n" +
+                "                \"height\": 9.5\n" +
+                "                 },\n" +
+                "                 \"warehouseLocation\": {\n" +
+                "                   \"latitude\": -78.75,\n" +
+                "                   \"longitude\": 20.4\n" +
+                "                 }\n" +
+                "              }\n" +
+                "            ]");
+
+
+        //WHEN
+        ProcessingReport report = validator.validate(repositoryList, receivedMessage, new JsonMessageValidationContext());
 
 
         //THEN
