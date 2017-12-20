@@ -86,7 +86,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         log.debug("Start JSON message validation ...");
 
         if(validationContext.isSchemaValidationEnabled()){
-            performSchemaValidation(receivedMessage);
+            performSchemaValidation(receivedMessage, validationContext);
         }
 
         if (log.isDebugEnabled()) {
@@ -135,9 +135,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     /**
      * TODO:Add documentation
      * @param receivedMessage
+     * @param validationContext
      */
-    private void performSchemaValidation(Message receivedMessage) {
-        ProcessingReport report = jsonSchemaValidation.validate(schemaRepositories, receivedMessage);
+    private void performSchemaValidation(Message receivedMessage, JsonMessageValidationContext validationContext) {
+        ProcessingReport report = jsonSchemaValidation.validate(schemaRepositories, receivedMessage, validationContext);
         if(!report.isSuccess()){
             String errorMessage = constructErrorMessage(report);
             throw new ValidationException(errorMessage);

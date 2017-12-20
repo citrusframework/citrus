@@ -89,9 +89,10 @@ public class JsonSchemaValidation {
      * TODO:Add documentation
      * @param schemaRepositories
      * @param message
+     * @param validationContext
      * @return
      */
-    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories, Message message) {
+    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories, Message message, JsonMessageValidationContext validationContext) {
         List<SimpleJsonSchema> schemaList = schemaRepositories.stream()
                 .map(JsonSchemaRepository::getSchemas)
                 .flatMap(List::stream)
