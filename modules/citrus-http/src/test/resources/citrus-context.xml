@@ -31,6 +31,12 @@
     </citrus:schemas>
   </citrus:schema-repository>
 
+  <citrus:schema-repository type="json" id="jsonBookStoreRepository">
+    <citrus:schemas>
+      <citrus:schema id="bookStore" location="classpath:schemas/BookSchema.json" />
+    </citrus:schemas>
+  </citrus:schema-repository>
+
   <!-- Default namespace mappings used in XPath expression evaluations -->
   <citrus:namespace-context>
       <citrus:namespace prefix="hs" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
