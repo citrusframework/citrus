@@ -4,6 +4,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -168,8 +169,15 @@ public class JsonSchemaFilterTest {
         validationContext.setSchema("foo");
 
 
+        //Setup application validationContext
+        ApplicationContext applicationContext = mock(ApplicationContext.class);
+        when(applicationContext.getBean(validationContext.getSchema(), SimpleJsonSchema.class))
+                .thenThrow(NoSuchBeanDefinitionException.class);
+
+
+
         //WHEN
-        jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+        jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
 
 
         //THEN
