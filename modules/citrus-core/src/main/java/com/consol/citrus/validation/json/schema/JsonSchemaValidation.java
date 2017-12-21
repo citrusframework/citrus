@@ -33,7 +33,6 @@ import org.springframework.context.ApplicationContext;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class is responsible for the validation of json messages against json schemas / json schema repositories.
@@ -42,8 +41,18 @@ public class JsonSchemaValidation {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private JsonSchemaFilter jsonSchemaFilter;
+
     /** Object Mapper to convert the message for validation*/
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    public JsonSchemaValidation(){
+        this.jsonSchemaFilter = new JsonSchemaFilter();
+    }
+
+    JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter){
+        this.jsonSchemaFilter = jsonSchemaFilter;
+    }
 
     /**
      * Validates the given message against the schema repository
@@ -95,11 +104,12 @@ public class JsonSchemaValidation {
      * @param applicationContext
      * @return
      */
-    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories, Message message, JsonMessageValidationContext validationContext, ApplicationContext applicationContext) {
-        List<SimpleJsonSchema> schemaList = schemaRepositories.stream()
-                .map(JsonSchemaRepository::getSchemas)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories,
+                                     Message message,
+                                     JsonMessageValidationContext validationContext,
+                                     ApplicationContext applicationContext) {
+        List<SimpleJsonSchema> schemaList =
+                jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
         return validate(message, schemaList);
     }
 }

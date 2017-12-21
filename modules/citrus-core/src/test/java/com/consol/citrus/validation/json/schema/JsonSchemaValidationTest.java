@@ -12,14 +12,17 @@ import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class JsonSchemaValidationTest{
 
-    private JsonSchemaValidation validator = new JsonSchemaValidation();
+    private JsonSchemaFilter jsonSchemaFilterMock = mock(JsonSchemaFilter.class);
+    private JsonSchemaValidation validator = new JsonSchemaValidation(jsonSchemaFilterMock);
 
     @Test
     public void testValidJsonMessageSuccessfullyValidated() throws Exception{
@@ -200,6 +203,22 @@ public class JsonSchemaValidationTest{
 
         //THEN
         Assert.assertTrue(report.isSuccess());
+    }
+
+    @Test
+    public void testJsonSchemaFilterIsCalled() {
+
+        //GIVEN
+        List<JsonSchemaRepository> repositoryList = Collections.singletonList(mock(JsonSchemaRepository.class));
+        Message message = mock(Message.class);
+        JsonMessageValidationContext jsonMessageValidationContext = mock(JsonMessageValidationContext.class);
+        ApplicationContext applicationContext = mock(ApplicationContext.class);
+
+        //WHEN
+        validator.validate(repositoryList, message, jsonMessageValidationContext, applicationContext);
+
+        //THEN
+        verify(jsonSchemaFilterMock).filter(repositoryList, jsonMessageValidationContext, applicationContext);
     }
 
 }
