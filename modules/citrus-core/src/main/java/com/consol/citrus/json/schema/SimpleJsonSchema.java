@@ -22,6 +22,8 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
+import java.util.Objects;
+
 /**
  * Adapter between the resource reference from the bean configuration and the
  * usable SimpleJsonSchema for validation.
@@ -64,4 +66,18 @@ public class SimpleJsonSchema implements InitializingBean {
         this.schema = schema;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimpleJsonSchema that = (SimpleJsonSchema) o;
+        return Objects.equals(jsonSchemaFactory, that.jsonSchemaFactory) &&
+                Objects.equals(json, that.json) &&
+                Objects.equals(schema, that.schema);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(jsonSchemaFactory, json, schema);
+    }
 }
