@@ -144,7 +144,7 @@ public class JsonSchemaValidationTest {
         //GIVEN
         List<JsonSchemaRepository> repositoryList = new LinkedList<>();
 
-        //Setup Repository 1
+        //Setup Repository 1 - does not contain the valid schema
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setBeanName("schemaRepository1");
 
@@ -154,7 +154,7 @@ public class JsonSchemaValidationTest {
         jsonSchemaRepository.getSchemas().add(schema);
         repositoryList.add(jsonSchemaRepository);
 
-        //Setup Repository 2
+        //Setup Repository 2 - contains the valid schema
         jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setBeanName("schemaRepository2");
 
