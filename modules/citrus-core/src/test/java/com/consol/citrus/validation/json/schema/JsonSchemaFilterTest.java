@@ -1,5 +1,6 @@
 package com.consol.citrus.validation.json.schema;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -75,6 +76,8 @@ public class JsonSchemaFilterTest {
 
         //Setup application validationContext
         ApplicationContext applicationContext = mock(ApplicationContext.class);
+        when(applicationContext.getBean("mySchema", SimpleJsonSchema.class))
+                .thenReturn(mock(SimpleJsonSchema.class));
 
 
         //WHEN
@@ -121,8 +124,8 @@ public class JsonSchemaFilterTest {
         Assert.assertEquals(expectedSimpleJsonSchema, simpleJsonSchemas.get(0));
     }
 
-    @Test
-    public void testNoSchemaRepositoryFoundReturnsEmptyList(){
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testNoSchemaRepositoryFoundThrowsException(){
 
         //GIVEN
         //Setup Schema repositories
@@ -140,16 +143,15 @@ public class JsonSchemaFilterTest {
 
 
         //WHEN
-        List<SimpleJsonSchema> simpleJsonSchemas =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+        jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
 
 
         //THEN
-        Assert.assertTrue(simpleJsonSchemas.isEmpty());
+        //Exception has been thrown
     }
 
-    @Test
-    public void testNoSchemaFoundReturnsEmptyList(){
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testNoSchemaFoundThrowsException(){
 
         //GIVEN
         //Setup Schema repositories
@@ -167,12 +169,11 @@ public class JsonSchemaFilterTest {
 
 
         //WHEN
-        List<SimpleJsonSchema> simpleJsonSchemas =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+        jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
 
 
         //THEN
-        Assert.assertTrue(simpleJsonSchemas.isEmpty());
+        //Exception has been thrown
     }
 
     @Test

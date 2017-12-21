@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.json.schema;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -57,7 +58,8 @@ public class JsonSchemaFilter {
      * Extracts the the schema specified in the jsonMessageValidationContext from the application context
      * @param jsonMessageValidationContext The message validation context containing the name of the schema to extract
      * @param applicationContext The application context to extract the schema from
-     * @return A list containing the relevant schema or an empty list if no schema could have been found
+     * @return A list containing the relevant schema
+     * @throws CitrusRuntimeException If no matching schema was found
      */
     private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
                                                         ApplicationContext applicationContext) {
@@ -66,16 +68,18 @@ public class JsonSchemaFilter {
 
         if(simpleJsonSchema != null){
             return Collections.singletonList(simpleJsonSchema);
-        }else{
-            return Collections.emptyList();
         }
+
+        throw new CitrusRuntimeException("Could not find the specified schema " +
+                jsonMessageValidationContext.getSchema());
     }
 
     /**
      * Filters the schema repositories by the name configured in the jsonMessageValidationContext
      * @param schemaRepositories The List of schema repositories to filter
      * @param jsonMessageValidationContext The validation context of the json message containing the repository name
-     * @return The list of json schemas found in the matching repository or an empty list if no repository matched
+     * @return The list of json schemas found in the matching repository
+     * @throws CitrusRuntimeException If no matching repository was found
      */
     private List<SimpleJsonSchema> filterByRepositoryName(List<JsonSchemaRepository> schemaRepositories,
                                                           JsonMessageValidationContext jsonMessageValidationContext) {
@@ -85,7 +89,8 @@ public class JsonSchemaFilter {
             }
         }
 
-        return Collections.emptyList();
+        throw new CitrusRuntimeException("Could not find the specified schema repository: " +
+                jsonMessageValidationContext.getSchemaRepository());
     }
 
     /**
