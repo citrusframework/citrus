@@ -6,6 +6,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -14,7 +15,9 @@ import org.testng.annotations.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-public class JsonSchemaValidationTest {
+import static org.mockito.Mockito.mock;
+
+public class JsonSchemaValidationTest{
 
     private JsonSchemaValidation validator = new JsonSchemaValidation();
 
@@ -165,6 +168,9 @@ public class JsonSchemaValidationTest {
         jsonSchemaRepository.getSchemas().add(schema);
         repositoryList.add(jsonSchemaRepository);
 
+        //Setup application context mock
+        ApplicationContext applicationContext = mock(ApplicationContext.class);
+
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
                 "                \"id\": 2,\n" +
@@ -185,7 +191,11 @@ public class JsonSchemaValidationTest {
 
 
         //WHEN
-        ProcessingReport report = validator.validate(repositoryList, receivedMessage, new JsonMessageValidationContext());
+        ProcessingReport report = validator.validate(
+                repositoryList,
+                receivedMessage,
+                new JsonMessageValidationContext(),
+                applicationContext);
 
 
         //THEN

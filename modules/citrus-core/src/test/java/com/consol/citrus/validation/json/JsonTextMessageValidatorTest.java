@@ -25,6 +25,8 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.consol.citrus.validation.json.schema.JsonSchemaValidation;
 import net.minidev.json.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,6 +43,10 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
+
+    @Autowired
+    @Qualifier("defaultJsonMessageValidator")
+    private JsonTextMessageValidator validator;
 
     @Test
     public void testJsonValidation() {
@@ -425,8 +431,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setSchemaValidation(true);
 
         JsonSchemaValidation jsonSchemaValidation = mock(JsonSchemaValidation.class);
-        when(jsonSchemaValidation.validate(anyList(), any(), any())).thenReturn(new GraciousProcessingReport((true)));
-        JsonTextMessageValidator validator = new JsonTextMessageValidator(jsonSchemaValidation);
+        when(jsonSchemaValidation.validate(anyList(), any(), any(), any())).thenReturn(new GraciousProcessingReport((true)));
+        validator.setJsonSchemaValidation(jsonSchemaValidation);
 
         JsonSchemaRepository jsonSchemaRepository = mock(JsonSchemaRepository.class);
         validator.setSchemaRepositories(Collections.singletonList(jsonSchemaRepository));
@@ -438,6 +444,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         //THEN
-        verify(jsonSchemaValidation).validate(anyList(), eq(receivedMessage), eq(validationContext));
+        verify(jsonSchemaValidation).validate(anyList(), eq(receivedMessage), eq(validationContext), eq(applicationContext));
     }
 }

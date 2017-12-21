@@ -28,6 +28,7 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -91,9 +92,10 @@ public class JsonSchemaValidation {
      * @param schemaRepositories
      * @param message
      * @param validationContext
+     * @param applicationContext
      * @return
      */
-    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories, Message message, JsonMessageValidationContext validationContext) {
+    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories, Message message, JsonMessageValidationContext validationContext, ApplicationContext applicationContext) {
         List<SimpleJsonSchema> schemaList = schemaRepositories.stream()
                 .map(JsonSchemaRepository::getSchemas)
                 .flatMap(List::stream)
