@@ -23,6 +23,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.json.report.GraciousProcessingReport;
+import com.consol.citrus.validation.json.schema.JsonSchemaValidation;
 import net.minidev.json.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;

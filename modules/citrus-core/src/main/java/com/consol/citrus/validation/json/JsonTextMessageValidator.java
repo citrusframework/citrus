@@ -25,6 +25,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.validation.json.schema.JsonSchemaValidation;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.jayway.jsonpath.JsonPath;

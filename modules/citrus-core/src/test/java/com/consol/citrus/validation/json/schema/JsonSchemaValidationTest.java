@@ -1,9 +1,10 @@
-package com.consol.citrus.validation.json;
+package com.consol.citrus.validation.json.schema;
 
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

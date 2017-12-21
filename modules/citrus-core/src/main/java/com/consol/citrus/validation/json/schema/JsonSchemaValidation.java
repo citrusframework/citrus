@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.json;
+package com.consol.citrus.validation.json.schema;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
