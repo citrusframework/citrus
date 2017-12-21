@@ -51,22 +51,39 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = null;
 
         if(isXmlSchemaRepository(element)){
-            builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
-            BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
+            registerXmlSchemaRepository(element, parserContext);
         }else if(isJsonSchemaRepository(element)){
-            builder = BeanDefinitionBuilder.genericBeanDefinition(JsonSchemaRepository.class);
+            registerJsonSchemaRepository(element, parserContext);
         }
-
-        if(builder != null){
-            addLocationsToBuilder(element, builder);
-            parseSchemasElement(element, builder, parserContext);
-        }
-
 
         return null;
+    }
+
+    /**
+     * Registers a JsonSchemaRepository definition in the parser context
+     * @param element The element to be converted into a JsonSchemaRepository definition
+     * @param parserContext The parser context to add the definitions to
+     */
+    private void registerJsonSchemaRepository(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(JsonSchemaRepository.class);
+        addLocationsToBuilder(element, builder);
+        parseSchemasElement(element, builder, parserContext);
+        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
+    }
+
+    /**
+     * Registers a XsdSchemaRepository definition in the parser context
+     * @param element The element to be converted into a XmlSchemaRepository definition
+     * @param parserContext The parser context to add the definitions to
+     */
+    private void registerXmlSchemaRepository(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
+        addLocationsToBuilder(element, builder);
+        parseSchemasElement(element, builder, parserContext);
+        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
     }
 
     /**
@@ -133,8 +150,6 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
                 builder.addPropertyValue(SCHEMAS, beanReferences);
             }
         }
-
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
     }
 
     /**
