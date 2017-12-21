@@ -22,10 +22,10 @@ import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for filtering JsonSchemas based on a
@@ -44,15 +44,13 @@ public class JsonSchemaFilter {
     public List<SimpleJsonSchema> filter(List<JsonSchemaRepository> schemaRepositories,
                                          JsonMessageValidationContext jsonMessageValidationContext,
                                          ApplicationContext applicationContext) {
-        List<SimpleJsonSchema> filteredJsonSchemas = new ArrayList<>();
-
         if(isSchemaRepositorySpecified(jsonMessageValidationContext)){
-            filteredJsonSchemas = filterByRepositoryName(schemaRepositories, jsonMessageValidationContext);
+            return filterByRepositoryName(schemaRepositories, jsonMessageValidationContext);
         }else if(isSchemaSpecified(jsonMessageValidationContext)){
-            filteredJsonSchemas = getSchemaFromContext(jsonMessageValidationContext, applicationContext);
+            return getSchemaFromContext(jsonMessageValidationContext, applicationContext);
+        }else{
+            return mergeRepositories(schemaRepositories);
         }
-
-        return filteredJsonSchemas;
     }
 
     /**
@@ -88,6 +86,18 @@ public class JsonSchemaFilter {
         }
 
         return Collections.emptyList();
+    }
+
+    /**
+     * Merges the list of given schema repositories to one unified list of json schemas
+     * @param schemaRepositories The list of json schemas to merge
+     * @return A list of all json schemas contained in the repositories
+     */
+    private List<SimpleJsonSchema> mergeRepositories(List<JsonSchemaRepository> schemaRepositories) {
+        return schemaRepositories.stream()
+                .map(JsonSchemaRepository::getSchemas)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     private boolean isSchemaSpecified(JsonMessageValidationContext context) {

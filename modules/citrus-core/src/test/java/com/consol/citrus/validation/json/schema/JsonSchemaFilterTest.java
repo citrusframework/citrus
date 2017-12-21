@@ -51,7 +51,7 @@ public class JsonSchemaFilterTest {
 
 
         //THEN
-        Assert.assertEquals(2, simpleJsonSchemas.size());
+        Assert.assertEquals(simpleJsonSchemas.size(), 2);
         Assert.assertTrue(simpleJsonSchemas.contains(secondSimpleJsonSchema));
         Assert.assertTrue(simpleJsonSchemas.contains(thirdSimpleJsonSchema));
     }
@@ -117,7 +117,7 @@ public class JsonSchemaFilterTest {
 
 
         //THEN
-        Assert.assertEquals(1, simpleJsonSchemas.size());
+        Assert.assertEquals(simpleJsonSchemas.size(),1);
         Assert.assertEquals(expectedSimpleJsonSchema, simpleJsonSchemas.get(0));
     }
 
@@ -173,5 +173,42 @@ public class JsonSchemaFilterTest {
 
         //THEN
         Assert.assertTrue(simpleJsonSchemas.isEmpty());
+    }
+
+    @Test
+    public void testNoFilterReturnAllSchemas(){
+
+        //GIVEN
+        //Setup Schema repositories
+        JsonSchemaRepository firstJsonSchemaRepository = new JsonSchemaRepository();
+        firstJsonSchemaRepository.setBeanName("schemaRepository1");
+        SimpleJsonSchema firstSimpleJsonSchema = mock(SimpleJsonSchema.class);
+        firstJsonSchemaRepository.getSchemas().add(firstSimpleJsonSchema);
+
+        JsonSchemaRepository secondJsonSchemaRepository = new JsonSchemaRepository();
+        secondJsonSchemaRepository.setBeanName("schemaRepository2");
+        SimpleJsonSchema secondSimpleJsonSchema = mock(SimpleJsonSchema.class);
+        secondJsonSchemaRepository.getSchemas().add(secondSimpleJsonSchema);
+        SimpleJsonSchema thirdSimpleJsonSchema = mock(SimpleJsonSchema.class);
+        secondJsonSchemaRepository.getSchemas().add(thirdSimpleJsonSchema);
+
+        List<JsonSchemaRepository> schemaRepositories =
+                Arrays.asList(firstJsonSchemaRepository, secondJsonSchemaRepository);
+
+        //Setup validation validationContext
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+        validationContext.setSchemaValidation(true);
+
+
+        //WHEN
+        List<SimpleJsonSchema> simpleJsonSchemas =
+                jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+
+
+        //THEN
+        Assert.assertEquals(simpleJsonSchemas.size(), 3);
+        Assert.assertTrue(simpleJsonSchemas.contains(firstSimpleJsonSchema));
+        Assert.assertTrue(simpleJsonSchemas.contains(secondSimpleJsonSchema));
+        Assert.assertTrue(simpleJsonSchemas.contains(thirdSimpleJsonSchema));
     }
 }
