@@ -20,6 +20,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
@@ -34,6 +36,8 @@ import java.util.stream.Collectors;
  * JsonMessageValidationContext and the application context
  */
 public class JsonSchemaFilter {
+
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Filters the all schema repositories based on the configuration in the jsonMessageValidationContext
@@ -68,6 +72,10 @@ public class JsonSchemaFilter {
             SimpleJsonSchema simpleJsonSchema =
                     applicationContext.getBean(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
+            if(log.isDebugEnabled()){
+                log.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
+            }
+
             return Collections.singletonList(simpleJsonSchema);
         }catch (NoSuchBeanDefinitionException e){
             throw new CitrusRuntimeException(
@@ -87,6 +95,10 @@ public class JsonSchemaFilter {
                                                           JsonMessageValidationContext jsonMessageValidationContext) {
         for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories){
             if(Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())){
+                if(log.isDebugEnabled()){
+                    log.debug("Found specified schema-repository: \"" +
+                            jsonMessageValidationContext.getSchemaRepository() + "\".");
+                }
                 return jsonSchemaRepository.getSchemas();
             }
         }
