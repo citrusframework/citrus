@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
@@ -63,15 +64,16 @@ public class JsonSchemaFilter {
      */
     private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
                                                         ApplicationContext applicationContext) {
-        SimpleJsonSchema simpleJsonSchema =
-                applicationContext.getBean(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
+        try{
+            SimpleJsonSchema simpleJsonSchema =
+                    applicationContext.getBean(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
-        if(simpleJsonSchema != null){
             return Collections.singletonList(simpleJsonSchema);
+        }catch (NoSuchBeanDefinitionException e){
+            throw new CitrusRuntimeException(
+                    "Could not find the specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".",
+                    e);
         }
-
-        throw new CitrusRuntimeException("Could not find the specified schema " +
-                jsonMessageValidationContext.getSchema());
     }
 
     /**
@@ -90,7 +92,7 @@ public class JsonSchemaFilter {
         }
 
         throw new CitrusRuntimeException("Could not find the specified schema repository: " +
-                jsonMessageValidationContext.getSchemaRepository());
+                "\"" + jsonMessageValidationContext.getSchemaRepository() + "\".");
     }
 
     /**
