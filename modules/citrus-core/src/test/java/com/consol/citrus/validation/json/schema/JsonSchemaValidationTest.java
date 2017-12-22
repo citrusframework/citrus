@@ -57,6 +57,7 @@ public class JsonSchemaValidationTest{
 
 
         //WHEN
+        //TODO: Rewrite the test so this validate version can become private
         ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
 
 
@@ -94,6 +95,7 @@ public class JsonSchemaValidationTest{
 
 
         //WHEN
+        //TODO: Rewrite the test so this validate version can become private
         ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
 
 
@@ -138,6 +140,7 @@ public class JsonSchemaValidationTest{
 
 
         //WHEN
+        //TODO: Rewrite the test so this validate version can become private
         ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
 
 
