@@ -25,13 +25,20 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.*;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.*;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -518,6 +525,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T schemaValidation(boolean enabled) {
         xmlMessageValidationContext.setSchemaValidation(enabled);
+        jsonMessageValidationContext.setSchemaValidation(enabled);
         return self;
     }
 
@@ -594,6 +602,15 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         xmlMessageValidationContext.setSchema(schemaName);
         return self;
     }
+
+    /**
+     * Sets explicit schema instance name to use for schema validation.
+     * @param schemaName The name of the schema bean
+     */
+    public T jsonSchema(String schemaName) {
+        jsonMessageValidationContext.setSchema(schemaName);
+        return self;
+    }
     
     /**
      * Sets explicit xsd schema repository instance to use for validation.
@@ -602,6 +619,16 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     public T xsdSchemaRepository(String schemaRepository) {
         xmlMessageValidationContext.setSchemaRepository(schemaRepository);
+        return self;
+    }
+
+    /**
+     * Sets explicit json schema repository instance to use for validation.
+     * @param schemaRepository The name of the schema repository bean
+     * @return
+     */
+    public T jsonSchemaRepository(String schemaRepository) {
+        jsonMessageValidationContext.setSchemaRepository(schemaRepository);
         return self;
     }
     

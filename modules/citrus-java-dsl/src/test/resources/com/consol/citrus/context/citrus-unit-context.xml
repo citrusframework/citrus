@@ -18,6 +18,16 @@
       <constructor-arg value="org.springframework.xml.xsd.XsdSchema"/>
     </bean>
 
+    <citrus:schema-repository id="customJsonSchemaRepository" type="json">
+        <citrus:schemas>
+            <citrus:reference schema="jsonTestSchema"/>
+        </citrus:schemas>
+    </citrus:schema-repository>
+
+    <bean id="jsonTestSchema" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.consol.citrus.json.schema.SimpleJsonSchema"/>
+    </bean>
+
     <camelContext id="citrusCamelContext" xmlns="http://camel.apache.org/schema/spring">
       <route id="default_route">
         <from uri="direct:default"/>
