@@ -66,6 +66,16 @@ public class OperationResult {
     }
 
     /**
+     * Adds result set in fluent api.
+     * @param resultSet
+     * @return
+     */
+    public OperationResult withResultSet(ResultSet resultSet) {
+        this.resultSet = resultSet;
+        return this;
+    }
+
+    /**
      * Ruft den Wert der success-Eigenschaft ab.
      * 
      */

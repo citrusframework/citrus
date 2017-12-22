@@ -30,6 +30,7 @@
           <xs:element ref="open-connection"/>
           <xs:element ref="close-connection"/>
           <xs:element ref="create-statement"/>
+          <xs:element ref="create-prepared-statement"/>
           <xs:element ref="execute"/>
         </xs:choice>
       </xs:complexType>
@@ -41,8 +42,12 @@
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
-          <xs:element name="username" type="xs:string" minOccurs="0"/>
-          <xs:element name="password" type="xs:string" minOccurs="0"/>
+          <xs:element name="property" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+              <xs:attribute name="value" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
         </xs:sequence>
       </xs:complexType>
     </xs:element>
@@ -62,6 +67,17 @@
       </xs:annotation>
       <xs:complexType>
         <xs:sequence/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="create-prepared-statement">
+      <xs:annotation>
+        <xs:documentation>Create prepared statement operation.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="sql" type="xs:string"/>
+        </xs:sequence>
       </xs:complexType>
     </xs:element>
 
@@ -191,7 +207,7 @@
             </xs:complexType>
           </xs:element>
         </xs:sequence>
-        <xs:attribute name="affected-rows" type="xs:string"/>
+        <xs:attribute name="affected-rows" type="xs:int"/>
       </xs:complexType>
     </xs:element>
 </xs:schema>

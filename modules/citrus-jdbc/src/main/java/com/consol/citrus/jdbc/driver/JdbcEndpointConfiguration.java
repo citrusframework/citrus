@@ -41,9 +41,7 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Rmi connection parameters */
     private String host;
     private int port = Registry.REGISTRY_PORT;
-    private String binding;
-
-    private String method;
+    private String dbName;
 
     /** RMI registry */
     private Registry registry;
@@ -54,7 +52,7 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Auto accept connection requests */
     private boolean autoConnect = true;
     /** Auto accept create statement requests */
-    private boolean autoCreateStatement = false;
+    private boolean autoCreateStatement = true;
 
     /** Maximum number of parallel connections */
     private int maxConnections = 20;
@@ -90,7 +88,7 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
 
         this.host = JdbcEndpointUtils.getHost(serverUrl.substring("rmi://".length()));
         this.port = JdbcEndpointUtils.getPort(serverUrl.substring("rmi://".length()), getPort());
-        this.binding = JdbcEndpointUtils.getBinding(serverUrl.substring("rmi://".length()));
+        this.dbName = JdbcEndpointUtils.getBinding(serverUrl.substring("rmi://".length()));
     }
 
     public String getServerUrl() {
@@ -117,20 +115,22 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
         this.port = port;
     }
 
-    public String getBinding() {
-        return binding;
+    /**
+     * Gets the dbName.
+     *
+     * @return
+     */
+    public String getDbName() {
+        return dbName;
     }
 
-    public void setBinding(String binding) {
-        this.binding = binding;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
+    /**
+     * Sets the dbName.
+     *
+     * @param dbName
+     */
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
     }
 
     public MessageCorrelator getCorrelator() {

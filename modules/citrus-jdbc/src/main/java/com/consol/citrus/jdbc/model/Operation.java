@@ -50,6 +50,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "execute",
     "createStatement",
+    "createPreparedStatement",
     "closeConnection",
     "openConnection"
 })
@@ -59,6 +60,8 @@ public class Operation {
     protected Execute execute;
     @XmlElement(name = "create-statement")
     protected CreateStatement createStatement;
+    @XmlElement(name = "create-prepared-statement")
+    protected CreatePreparedStatement createPreparedStatement;
     @XmlElement(name = "close-connection")
     protected CloseConnection closeConnection;
     @XmlElement(name = "open-connection")
@@ -81,6 +84,10 @@ public class Operation {
 
     public Operation(CreateStatement operation) {
         this.createStatement = operation;
+    }
+
+    public Operation(CreatePreparedStatement operation) {
+        this.createPreparedStatement = operation;
     }
 
     public Operation(Execute operation) {
@@ -133,6 +140,24 @@ public class Operation {
      */
     public void setCreateStatement(CreateStatement value) {
         this.createStatement = value;
+    }
+
+    /**
+     * Gets the createPreparedStatement.
+     *
+     * @return
+     */
+    public CreatePreparedStatement getCreatePreparedStatement() {
+        return createPreparedStatement;
+    }
+
+    /**
+     * Sets the createPreparedStatement.
+     *
+     * @param createPreparedStatement
+     */
+    public void setCreatePreparedStatement(CreatePreparedStatement createPreparedStatement) {
+        this.createPreparedStatement = createPreparedStatement;
     }
 
     /**

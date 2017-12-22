@@ -419,7 +419,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
     }
 
     public int getRow() throws SQLException {
-        throw new SQLException("Not Supported");
+        return resultSet.getRow();
     }
 
     public boolean absolute(int row) throws SQLException {
@@ -457,15 +457,15 @@ public class JdbcResultSet implements java.sql.ResultSet {
     }
 
     public boolean rowUpdated() throws SQLException {
-        throw new SQLException("Not Supported");
+        return resultSet.getAffectedRows() > 0;
     }
 
     public boolean rowInserted() throws SQLException {
-        throw new SQLException("Not Supported");
+        return resultSet.getAffectedRows() > 0;
     }
 
     public boolean rowDeleted() throws SQLException {
-        throw new SQLException("Not Supported");
+        return resultSet.getAffectedRows() > 0;
     }
 
     public void updateNull(int columnIndex) throws SQLException {

@@ -19,16 +19,11 @@ package com.consol.citrus.jdbc.model;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
  * <pre>
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
@@ -60,8 +55,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -72,19 +65,73 @@ import java.util.concurrent.atomic.AtomicInteger;
 @XmlRootElement(name = "result-set")
 public class ResultSet implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @XmlElement(name = "column", required = true)
     protected List<Column> columns;
     @XmlElement(name = "row", required = true)
     protected List<Row> rows;
 
     @XmlAttribute(name = "affected-rows")
-    protected String affectedRows = "0";
+    protected int affectedRows = 0;
 
     @XmlTransient
     private boolean closed = false;
     @XmlTransient
     private AtomicInteger cursor = new AtomicInteger(0);
 
+    public ResultSet() {
+    }
+
+    public ResultSet(int affectedRows) {
+        this.affectedRows = affectedRows;
+    }
+
+    /**
+     * Add columns.
+     *
+     * @param columns
+     */
+    public ResultSet columns(Column... columns) {
+        getColumns().addAll(Arrays.asList(columns));
+        return this;
+    }
+
+    /**
+     * Add rows.
+     *
+     * @param rows
+     */
+    public ResultSet rows(Row... rows) {
+        getRows().addAll(Arrays.asList(rows));
+        return this;
+    }
+
+    /**
+     * Adds new column with name and type information.
+     * @param column
+     * @return
+     */
+    public ResultSet addColumn(Column column) {
+        this.columns.add(column);
+        return this;
+    }
+
+    /**
+     * Adds new row with values.
+     * @param row
+     * @return
+     */
+    public ResultSet addRow(Row row) {
+        this.rows.add(row);
+        return this;
+    }
+
+    /**
+     * Gets next row in this result set based on cursor position.
+     * @return
+     * @throws SQLException
+     */
     public Row getNextRow() throws SQLException {
         if (closed) {
             throw new SQLException("Result set already closed");
@@ -93,6 +140,23 @@ public class ResultSet implements Serializable {
         return rows.get(cursor.getAndIncrement());
     }
 
+    /**
+     * Gets current row index.
+     * @return
+     * @throws SQLException
+     */
+    public int getRow() throws SQLException {
+        if (closed) {
+            throw new SQLException("Result set already closed");
+        }
+
+        return cursor.get() + 1;
+    }
+
+    /**
+     * Close result set - no further access to rows and columns allowed.
+     * @throws SQLException
+     */
     public void close() throws SQLException {
         this.closed = true;
     }
@@ -160,7 +224,7 @@ public class ResultSet implements Serializable {
      *
      * @return
      */
-    public String getAffectedRows() {
+    public int getAffectedRows() {
         return affectedRows;
     }
 
@@ -169,15 +233,11 @@ public class ResultSet implements Serializable {
      *
      * @param affectedRows
      */
-    public void setAffectedRows(String affectedRows) {
+    public void setAffectedRows(int affectedRows) {
         this.affectedRows = affectedRows;
     }
 
     /**
-     * <p>Java-Klasse für anonymous complex type.
-     * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
-     * 
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -188,8 +248,6 @@ public class ResultSet implements Serializable {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
@@ -200,62 +258,57 @@ public class ResultSet implements Serializable {
         @XmlAttribute(name = "type")
         protected String type;
 
+        public Column() {
+        }
+
+        public Column(String name) {
+            this.name = name;
+        }
+
+        public Column(String name, String type) {
+            this.name = name;
+            this.type = type;
+        }
+
         /**
-         * Ruft den Wert der name-Eigenschaft ab.
-         * 
+         * Gets the name.
+         *
          * @return
-         *     possible object is
-         *     {@link String }
-         *     
          */
         public String getName() {
             return name;
         }
 
         /**
-         * Legt den Wert der name-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         * Sets the name.
+         *
+         * @param name
          */
-        public void setName(String value) {
-            this.name = value;
+        public void setName(String name) {
+            this.name = name;
         }
 
         /**
-         * Ruft den Wert der type-Eigenschaft ab.
-         * 
+         * Gets the type.
+         *
          * @return
-         *     possible object is
-         *     {@link String }
-         *     
          */
         public String getType() {
             return type;
         }
 
         /**
-         * Legt den Wert der type-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         * Sets the type.
+         *
+         * @param type
          */
-        public void setType(String value) {
-            this.type = value;
+        public void setType(String type) {
+            this.type = type;
         }
-
     }
 
 
     /**
-     * <p>Java-Klasse für anonymous complex type.
-     * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
-     * 
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -267,8 +320,6 @@ public class ResultSet implements Serializable {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -278,6 +329,17 @@ public class ResultSet implements Serializable {
 
         @XmlElement(name = "value", required = true)
         protected List<String> values;
+
+        public Row() {
+        }
+
+        public Row(List<String> values) {
+            this.values = values;
+        }
+
+        public Row(String... values) {
+            this.values = Arrays.asList(values);
+        }
 
         /**
          * Gets the value of the values property.

@@ -29,9 +29,12 @@
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="host" type="xs:string"/>
       <xs:attribute name="port" type="xs:string"/>
-      <xs:attribute name="binding" type="xs:string" use="required"/>
+      <xs:attribute name="database-name" type="xs:string" use="required"/>
       <xs:attribute name="create-registry" type="xs:boolean"/>
+      <xs:attribute name="auto-connect" type="xs:boolean"/>
+      <xs:attribute name="auto-create-statement" type="xs:boolean"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
+      <xs:attribute name="max-connections" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>
       <xs:attribute name="debug-logging" type="xs:boolean"/>

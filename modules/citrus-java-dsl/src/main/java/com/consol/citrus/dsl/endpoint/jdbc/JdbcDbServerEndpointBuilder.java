@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jdbc.server;
+package com.consol.citrus.dsl.endpoint.jdbc;
 
-import com.consol.citrus.message.Message;
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.util.Properties;
+import com.consol.citrus.endpoint.EndpointBuilder;
+import com.consol.citrus.jdbc.server.JdbcDbServer;
 
 /**
+ * Jdbc database server endpoint builder wrapper.
+ *
+ * @param <T>
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public interface RemoteDriver extends Remote, RemoteConnection, RemoteStatement {
+public class JdbcDbServerEndpointBuilder<T extends EndpointBuilder<JdbcDbServer>> {
+
+    private final T builder;
 
     /**
-     * Get connection from db server.
-     * @param properties
-     * @return
-     * @throws RemoteException
+     * Default constructor using browser builder implementation.
+     * @param builder
      */
-    RemoteConnection getConnection(Properties properties) throws RemoteException;
+    public JdbcDbServerEndpointBuilder(T builder) {
+        this.builder = builder;
+    }
 
     /**
-     * Process request message and create response.
-     * @param request
+     * Returns browser builder for further fluent api calls.
      * @return
-     * @throws RemoteException
      */
-    Message process(Message request) throws RemoteException;
+    public T server() {
+        return builder;
+    }
 }

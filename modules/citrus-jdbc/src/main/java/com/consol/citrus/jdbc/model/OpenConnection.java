@@ -17,13 +17,11 @@
 package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.*;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
  * <pre>
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
@@ -36,66 +34,109 @@ import javax.xml.bind.annotation.*;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "username",
-    "password"
+        "properties"
 })
 @XmlRootElement(name = "open-connection")
 public class OpenConnection {
 
-    protected String username;
-    protected String password;
+    @XmlElement(name = "property")
+    protected List<Property> properties;
 
-    /**
-     * Ruft den Wert der username-Eigenschaft ab.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUsername() {
-        return username;
+    public OpenConnection() {
+    }
+
+    public OpenConnection(List<Property> properties) {
+        this.properties = properties;
     }
 
     /**
-     * Legt den Wert der username-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Gets the value of the columns property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the columns property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getColumns().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Property }
+     *
+     *
      */
-    public void setUsername(String value) {
-        this.username = value;
+    public List<Property> getProperties() {
+        if (properties == null) {
+            properties = new ArrayList<Property>();
+        }
+        return this.properties;
     }
 
-    /**
-     * Ruft den Wert der password-Eigenschaft ab.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPassword() {
-        return password;
-    }
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Property implements Serializable {
 
-    /**
-     * Legt den Wert der password-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPassword(String value) {
-        this.password = value;
+        @XmlAttribute(name = "name", required = true)
+        protected String name;
+        @XmlAttribute(name = "value")
+        protected String value;
+
+        public Property() {
+        }
+
+        public Property(String name) {
+            this.name = name;
+        }
+
+        public Property(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        /**
+         * Gets the name.
+         *
+         * @return
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Sets the name.
+         *
+         * @param name
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Gets the value.
+         *
+         * @return
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /**
+         * Sets the value.
+         *
+         * @param value
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 
 }

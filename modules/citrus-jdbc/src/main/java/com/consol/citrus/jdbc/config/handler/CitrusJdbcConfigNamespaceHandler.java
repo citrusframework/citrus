@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jdbc.config.handler;
 
+import com.consol.citrus.jdbc.config.xml.JdbcDbServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -26,5 +27,6 @@ public class CitrusJdbcConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
     public void init() {
+        registerBeanDefinitionParser("db-server", new JdbcDbServerParser());
     }
 }

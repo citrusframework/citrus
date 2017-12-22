@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.docker.client.DockerClientBuilder;
+import com.consol.citrus.dsl.endpoint.jdbc.JdbcDbServerEndpointBuilder;
 import com.consol.citrus.dsl.endpoint.selenium.SeleniumBrowserEndpointBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointBuilder;
@@ -24,6 +25,7 @@ import com.consol.citrus.ftp.client.FtpClientBuilder;
 import com.consol.citrus.ftp.server.FtpServerBuilder;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServerBuilder;
+import com.consol.citrus.jdbc.server.JdbcDbServerBuilder;
 import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
 import com.consol.citrus.jmx.client.JmxClientBuilder;
@@ -171,6 +173,15 @@ public abstract class CitrusEndpoints {
     @SuppressWarnings("unchecked")
     public static SeleniumBrowserEndpointBuilder<SeleniumBrowserBuilder> selenium() {
         return new SeleniumBrowserEndpointBuilder(new SeleniumBrowserBuilder());
+    }
+
+    /**
+     * Creates new JdbcDbServer builder.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static JdbcDbServerEndpointBuilder<JdbcDbServerBuilder> jdbc() {
+        return new JdbcDbServerEndpointBuilder(new JdbcDbServerBuilder());
     }
 
 }

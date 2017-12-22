@@ -58,16 +58,11 @@ public class JdbcDriver implements Driver {
     public Connection connect(String url, Properties info) throws SQLException {
         JdbcConnection localConnection = null;
 
-        info.entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .forEach(System.out::println);
-
         if (acceptsURL(url)) {
             try {
                 connectRemote(url);
 
-                RemoteConnection remoteConnection = remoteDriver.getConnection();
+                RemoteConnection remoteConnection = remoteDriver.getConnection(info);
                 localConnection = new JdbcConnection(remoteConnection);
             } catch(RemoteException ex) {
                 throw(new SQLException("RemoteException: " + ex.getMessage()));

@@ -36,4 +36,11 @@ public interface RemoteConnection {
      * @throws RemoteException
      */
     void closeConnection() throws RemoteException;
+
+    /**
+     * Create new prepared statement.
+     * @param stmt
+     * @return
+     */
+    RemoteStatement createPreparedStatement(String stmt) throws RemoteException;
 }

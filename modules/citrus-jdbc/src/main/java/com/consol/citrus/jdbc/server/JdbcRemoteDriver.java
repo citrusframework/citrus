@@ -28,7 +28,9 @@ import org.springframework.xml.transform.StringResult;
 import javax.xml.transform.Source;
 import java.rmi.RemoteException;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -54,15 +56,16 @@ public class JdbcRemoteDriver implements RemoteDriver {
         this.endpointAdapter = endpointAdapter;
     }
 
-    private Message process(Message request) throws RemoteException {
-        if (log.isDebugEnabled()) {
-            log.debug("Received message on db server: '" + endpointConfiguration.getBinding() + "'");
-        }
-
+    @Override
+    public Message process(Message request) throws RemoteException {
         if (request.getPayload() instanceof Operation) {
             StringResult result = new StringResult();
             endpointConfiguration.getMarshaller().marshal(request.getPayload(Operation.class), result);
             request.setPayload(result.toString());
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Received request on db server: '%s':%n%s", endpointConfiguration.getDbName(), request.getPayload(String.class)));
         }
 
         Message response = endpointAdapter.handleMessage(request);
@@ -78,9 +81,12 @@ public class JdbcRemoteDriver implements RemoteDriver {
     }
 
     @Override
-    public RemoteConnection getConnection() throws RemoteException {
+    public RemoteConnection getConnection(Properties properties) throws RemoteException {
         if (!endpointConfiguration.isAutoConnect()) {
-            OperationResult result = process(new DefaultMessage(new Operation(new OpenConnection()))).getPayload(OperationResult.class);
+            OperationResult result = process(new DefaultMessage(new Operation(new OpenConnection(properties.entrySet()
+                    .stream()
+                    .map(entry -> new OpenConnection.Property(entry.getKey().toString(), entry.getValue().toString()))
+                    .collect(Collectors.toList()))))).getPayload(OperationResult.class);
 
             if (!result.isSuccess()) {
                 throw new RemoteException(result.getException());
@@ -112,6 +118,19 @@ public class JdbcRemoteDriver implements RemoteDriver {
     }
 
     @Override
+    public RemoteStatement createPreparedStatement(String stmt) throws RemoteException {
+        if (!endpointConfiguration.isAutoCreateStatement()) {
+            OperationResult result = process(new DefaultMessage(new Operation(new CreatePreparedStatement(stmt)))).getPayload(OperationResult.class);
+
+            if (!result.isSuccess()) {
+                throw new RemoteException(result.getException());
+            }
+        }
+
+        return this;
+    }
+
+    @Override
     public RemoteStatement createStatement() throws RemoteException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
             OperationResult result = process(new DefaultMessage(new Operation(new CreateStatement()))).getPayload(OperationResult.class);
@@ -126,6 +145,8 @@ public class JdbcRemoteDriver implements RemoteDriver {
 
     @Override
     public ResultSet executeQuery(String stmt) throws RemoteException {
+        log.info("Received execute query request: " + stmt);
+
         OperationResult result = process(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
 
         if (!result.isSuccess()) {
@@ -137,6 +158,8 @@ public class JdbcRemoteDriver implements RemoteDriver {
 
     @Override
     public int executeUpdate(String stmt) throws RemoteException {
+        log.info("Received execute update request: " + stmt);
+
         OperationResult result = process(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
 
         if (!result.isSuccess()) {

@@ -28,11 +28,12 @@ import java.sql.*;
  */
 public class JdbcStatement implements Statement {
 
-    //Remote Statement
     private final RemoteStatement remoteStmt;
+    protected ResultSet resultSet;
 
     /**
-     * Constructor for creating the JWStatement
+     * Default constructor using remote statement reference.
+     * @param stmt
      */
     public JdbcStatement(RemoteStatement stmt) {
         remoteStmt = stmt;
@@ -41,8 +42,8 @@ public class JdbcStatement implements Statement {
     @Override
     public java.sql.ResultSet executeQuery(String sqlQuery) throws SQLException {
         try {
-            ResultSet remoteRsInstance = remoteStmt.executeQuery(sqlQuery);
-            return new JdbcResultSet(remoteRsInstance);
+            resultSet = remoteStmt.executeQuery(sqlQuery);
+            return new JdbcResultSet(resultSet);
         } catch (RemoteException ex) {
             throw (new SQLException(ex));
         }
