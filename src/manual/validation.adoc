@@ -4,8 +4,8 @@
 When Citrus receives a message from external applications it is time to verify the message content. This message validation includes syntax rules as well as semantic values that need to be compared to an expected behavior. Citrus provides powerful message validation capabilities. Each incoming message is validated with syntax and semantics. The tester is able to define expected message headers and payloads. Citrus message validator implementations will compare the messages and report differences as test failure. With the upcoming sections we have a closer look at message validation of XML messages with XPath and XML schema validation and further message formats like JSON and plaintext.
 
 include::validation-xml.adoc[]
-include::validation-schema.adoc[]
 include::validation-json.adoc[]
+include::validation-schema.adoc[]
 include::validation-xhtml.adoc[]
 include::validation-plaintext.adoc[]
 include::validation-binary.adoc[]
