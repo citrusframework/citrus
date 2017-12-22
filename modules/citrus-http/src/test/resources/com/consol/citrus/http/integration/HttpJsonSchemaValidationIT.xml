@@ -45,7 +45,7 @@
       <assert exception="com.consol.citrus.exceptions.ValidationException">
         <when>
           <http:receive-response client="echoHttpClient">
-            <http:body type="json">
+            <http:body type="json" schema-validation="true">
               <http:data>
                 [{}]
               </http:data>
@@ -92,7 +92,7 @@
 
       </http:send-response>
           <http:receive-response client="echoHttpClient">
-            <http:body type="json">
+            <http:body type="json" schema-validation="true">
               <http:data>
                 [
                   {
@@ -135,7 +135,7 @@
         <when>
           <http:receive-request server="echoHttpServer">
             <http:POST>
-              <http:body type="json">
+              <http:body type="json" schema-validation="true">
                 <http:data>
                   [{}]
                 </http:data>
@@ -179,7 +179,7 @@
 
       <http:receive-request server="echoHttpServer">
         <http:POST>
-          <http:body type="json">
+          <http:body type="json" schema-validation="true">
             <http:data>
               [
                 {
@@ -222,7 +222,7 @@
         <when>
         <http:receive-request server="echoHttpServer">
           <http:POST>
-            <http:body type="json" schema="notExisting">
+            <http:body type="json" schema="notExisting" schema-validation="true">
               <http:data>
                 {}
               </http:data>
@@ -251,7 +251,7 @@
         <when>
           <http:receive-request server="echoHttpServer">
             <http:POST>
-              <http:body type="json" schema-repository="notExistingRepo">
+              <http:body type="json" schema-repository="notExistingRepo" schema-validation="true">
                 <http:data>
                   {}
                 </http:data>
@@ -282,7 +282,7 @@
 
       <http:receive-request server="echoHttpServer">
         <http:POST>
-          <http:body type="json" schema-repository="jsonBookStoreRepository">
+          <http:body type="json" schema-repository="jsonBookStoreRepository" schema-validation="true">
             <http:data>
               {
                 "isbn" : "0345391802",
@@ -315,7 +315,7 @@
 
       <http:receive-request server="echoHttpServer">
         <http:POST>
-          <http:body type="json" schema="bookStore">
+          <http:body type="json" schema="bookStore" schema-validation="true">
             <http:data>
               {
                 "isbn" : "0345391802",
@@ -337,21 +337,21 @@
                 <http:body type="json">
                     <http:data>
                         [
-                        {
-                        "id": 2,
-                        "name": "An ice sculpture",
-                        "price": 12.50,
-                        "tags": ["cold", "ice"],
-                        "dimensions": {
-                        "length": 7.0,
-                        "width": 12.0,
-                        "height": 9.5
-                        },
-                        "warehouseLocation": {
-                        "latitude": -78.75,
-                        "longitude": 20.4
-                        }
-                        }
+                            {
+                                "id": 2,
+                                "name": "An ice sculpture",
+                                "price": 12.50,
+                                "tags": ["cold", "ice"],
+                                "dimensions": {
+                                    "length": 7.0,
+                                    "width": 12.0,
+                                    "height": 9.5
+                                },
+                                "warehouseLocation": {
+                                    "latitude": -78.75,
+                                    "longitude": 20.4
+                                }
+                            }
                         ]
                     </http:data>
                 </http:body>
@@ -363,24 +363,24 @@
             <when>
                 <http:receive-request server="echoHttpServer">
                     <http:POST>
-                        <http:body type="json" schema-repository="jsonBookStoreRepository">
+                        <http:body type="json" schema-repository="jsonBookStoreRepository" schema-validation="true">
                             <http:data>
                                 [
-                                {
-                                "id": 2,
-                                "name": "An ice sculpture",
-                                "price": 12.50,
-                                "tags": ["cold", "ice"],
-                                "dimensions": {
-                                "length": 7.0,
-                                "width": 12.0,
-                                "height": 9.5
-                                },
-                                "warehouseLocation": {
-                                "latitude": -78.75,
-                                "longitude": 20.4
-                                }
-                                }
+                                    {
+                                        "id": 2,
+                                        "name": "An ice sculpture",
+                                        "price": 12.50,
+                                        "tags": ["cold", "ice"],
+                                        "dimensions": {
+                                            "length": 7.0,
+                                            "width": 12.0,
+                                            "height": 9.5
+                                        },
+                                        "warehouseLocation": {
+                                            "latitude": -78.75,
+                                            "longitude": 20.4
+                                        }
+                                    }
                                 ]
                             </http:data>
                         </http:body>
@@ -399,21 +399,21 @@
                 <http:body type="json">
                     <http:data>
                         [
-                        {
-                        "id": 2,
-                        "name": "An ice sculpture",
-                        "price": 12.50,
-                        "tags": ["cold", "ice"],
-                        "dimensions": {
-                        "length": 7.0,
-                        "width": 12.0,
-                        "height": 9.5
-                        },
-                        "warehouseLocation": {
-                        "latitude": -78.75,
-                        "longitude": 20.4
-                        }
-                        }
+                            {
+                                "id": 2,
+                                "name": "An ice sculpture",
+                                "price": 12.50,
+                                "tags": ["cold", "ice"],
+                                "dimensions": {
+                                    "length": 7.0,
+                                    "width": 12.0,
+                                    "height": 9.5
+                                },
+                                "warehouseLocation": {
+                                    "latitude": -78.75,
+                                    "longitude": 20.4
+                                }
+                            }
                         ]
                     </http:data>
                 </http:body>
@@ -424,24 +424,24 @@
             <when>
                 <http:receive-request server="echoHttpServer">
                     <http:POST>
-                        <http:body type="json" schema="bookStore">
+                        <http:body type="json" schema="bookStore" schema-validation="true">
                             <http:data>
                                 [
-                                {
-                                "id": 2,
-                                "name": "An ice sculpture",
-                                "price": 12.50,
-                                "tags": ["cold", "ice"],
-                                "dimensions": {
-                                "length": 7.0,
-                                "width": 12.0,
-                                "height": 9.5
-                                },
-                                "warehouseLocation": {
-                                "latitude": -78.75,
-                                "longitude": 20.4
-                                }
-                                }
+                                    {
+                                        "id": 2,
+                                        "name": "An ice sculpture",
+                                        "price": 12.50,
+                                        "tags": ["cold", "ice"],
+                                        "dimensions": {
+                                            "length": 7.0,
+                                            "width": 12.0,
+                                            "height": 9.5
+                                        },
+                                        "warehouseLocation": {
+                                            "latitude": -78.75,
+                                            "longitude": 20.4
+                                        }
+                                    }
                                 ]
                             </http:data>
                         </http:body>

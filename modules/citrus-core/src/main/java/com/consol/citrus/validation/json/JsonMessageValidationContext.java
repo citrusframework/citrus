@@ -32,8 +32,13 @@ public class JsonMessageValidationContext implements ValidationContext, SchemaVa
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<>();
 
-    /** Should message be validated with its schema definition */
-    private boolean schemaValidation = true;
+    /**
+     * Should message be validated with its schema definition
+     *
+     * This is currently disabled by default, because old json tests would fail with a validation exception
+     * as soon as a json schema repository is specified and the schema validation is activated.
+     */
+    private boolean schemaValidation = false;
 
     /** Explicit schema repository to use for this validation */
     private String schemaRepository;
