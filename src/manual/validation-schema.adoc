@@ -1,5 +1,13 @@
 [[schema-validation]]
 == Schema validation
 
+When structured data is transmitted from one system to another, it's important that the sender and the receiver
+understand each other. To ensure this, a contract is required introducing the rules of communication for both parties.
+This is mostly done by using schemas. Citrus brings the schema based validation of messages directly to your integration
+test environment. This includes the management, mapping and filtering of schemas in context to your current test case
+by just defining some rules in XML configuration or Java DSL. Let's start with this chapter by introducing some basic
+concepts for the schema validation.
+
+
 include::validation-schema-xml.adoc[]
 include::validation-schema-json.adoc[]
