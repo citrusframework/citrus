@@ -16,6 +16,7 @@
   
   <modules>
     <module>model-core</module>
+    <module>model-jdbc</module>
     <module>model-jms</module>
     <module>model-http</module>
     <module>model-websocket</module>

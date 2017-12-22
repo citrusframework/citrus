@@ -36,6 +36,7 @@
   <modules>
     <module>modules/citrus-model</module>
     <module>modules/citrus-core</module>
+    <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-websocket</module>
