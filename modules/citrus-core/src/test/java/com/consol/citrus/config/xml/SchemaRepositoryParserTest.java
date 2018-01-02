@@ -116,6 +116,5 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
 
         Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchema1"));
         Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchema2"));
-//        Assert.assertTrue(beanDefinitionContext.containsBean("jsonSchemaCollection1"));
     }
 }
