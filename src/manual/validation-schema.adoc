@@ -21,11 +21,36 @@ in your test cases, Citrus brings you some structuring capabilities.
 This xml snippet allows you to define a schema with an id located at the given classpath. Please keep in mind, that
 the id of the schema has to be unique in the context.
 
-==== Schema repositories
-
 ==== Schema references
 
 ==== Schema location definitions
+
+==== Schema repositories
+[source,xml]
+----
+<citrus:schema id="testSchema" location="classpath:com/consol/citrus/xml/test.xsd"/>
+
+<citrus:schema-repository id="xmlSchemaRepository">
+  <citrus:schemas>
+    <citrus:schema id="bookstore" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+    <citrus:reference schema="testSchema"/>
+    <citrus:location path="classpath:com/consol/citrus/validation/*"/>
+  </citrus:schemas>
+</citrus:schema-repository>
+
+<citrus:schema-repository type="json" id="jsonSchemaRepository">
+    <citrus:schemas>
+        <citrus:schema id="product" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+    </citrus:schemas>
+</citrus:schema-repository>
+----
+
+Citrus introduces a central schema repository component which holds all available schema files for a project disjoint
+by their type (xml, json, etc.) while `type=xml` is the default for a schema repository.
+
+As you can see the schema repository is a simple XML component defined inside the Spring application context.
+The repository can hold nested schema definitions, references and location definitions for all types of schema
+repositories.
 
 include::validation-schema-xml.adoc[]
 include::validation-schema-json.adoc[]
