@@ -6,7 +6,7 @@ understand each other. To ensure this, a contract is required introducing the ru
 This is mostly done by using schemas. Citrus brings the schema based validation of messages directly to your integration
 test environment. This includes the management, mapping and filtering of schemas in context to your current test case
 by just defining some rules in XML configuration or Java DSL. Let's start with this chapter by introducing some basic
-concepts for the schema validation.
+concepts of the schema validation.
 
 === Managing schemas
 Most complex applications have a lot of schemas that are relevant for different use cases. To organize these schemas
@@ -18,8 +18,8 @@ in your test cases, Citrus brings you some structuring capabilities.
 <citrus:schema id="bookstore" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
 ----
 
-This xml snippet allows you to define a schema with an id located at the given classpath. Please keep in mind, that
-the id of the schema has to be unique in the context.
+This xml snippet allows you to define a schema identified by its id, located at the given classpath.
+Please keep in mind, that the id of the schema has to be unique within the context.
 
 ==== Schema references
 [source,xml]
@@ -64,7 +64,7 @@ within the given location.
 </citrus:schema-repository>
 ----
 
-Citrus introduces a central schema repository component which holds all available schema files for a project disjoint
+Citrus introduces a central schema repository component which holds a set of schema files for a project disjoint
 by their type (xml, json, etc.) and identified by its unique id. The default type of a schema repository is `type=xml`.
 
 As you can see the schema repository is a simple XML component defined inside the Spring application context.
