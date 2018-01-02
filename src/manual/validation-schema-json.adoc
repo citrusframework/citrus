@@ -1,2 +1,7 @@
 [[json-schema-validation]]
 === JSON schema validation
+
+=== JSON schema repositories
+
+=== JSON schema matching strategy
+
