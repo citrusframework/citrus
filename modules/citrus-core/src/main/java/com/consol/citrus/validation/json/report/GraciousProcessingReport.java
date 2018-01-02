@@ -61,8 +61,8 @@ public class GraciousProcessingReport implements ProcessingReport{
     }
 
     /**
-     * TODO: Add documentation
-     * @param processingReports
+     * Creates a GraciousProcessingReport while preserving the information from the given list of ProcessingReports
+     * @param processingReports The list of reports to merge with the new GraciousProcessingReport
      */
     public GraciousProcessingReport(List<ProcessingReport> processingReports) {
         this(false);
