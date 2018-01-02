@@ -22,6 +22,17 @@ This xml snippet allows you to define a schema with an id located at the given c
 the id of the schema has to be unique in the context.
 
 ==== Schema references
+[source,xml]
+----
+<citrus:schema id="testSchema" location="classpath:com/consol/citrus/xml/test.xsd"/>
+
+...
+<citrus:reference schema="testSchema"/>
+...
+----
+
+Citrus allows you to reuse your schema definition within your context by referencing them. For a valid reference,
+the id of the schema and the value of the schema Attribute within the reference Element have to match.
 
 ==== Schema location definitions
 
