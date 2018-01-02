@@ -31,6 +31,17 @@ add JSON schema validation to your test cases as soon as possible, because we th
 important part of integration testing.
 
 === JSON schema repositories
+Because Citrus supports different types of schema repositories, it is necessary to declare a JSON schema repository
+as `type="json"`. This allows Citrus to collect all JSON schema files for the message validation.
+
+[source,xml]
+----
+<citrus:schema-repository type="json" id="jsonSchemaRepository">
+    <citrus:schemas>
+        <citrus:schema id="product" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+    </citrus:schemas>
+</citrus:schema-repository>
+----
 
 === JSON schema matching strategy
 
