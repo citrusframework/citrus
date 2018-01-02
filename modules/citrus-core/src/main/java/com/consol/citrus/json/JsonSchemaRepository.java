@@ -33,7 +33,7 @@ import java.util.List;
 public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
 
     /** This repositories name in the Spring application context */
-    private String name = "schemaRepository";
+    private String name;
 
     /** List of schema resources */
     private List<SimpleJsonSchema> schemas = new ArrayList<>();
