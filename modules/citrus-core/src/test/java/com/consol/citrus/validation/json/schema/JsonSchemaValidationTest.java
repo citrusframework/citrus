@@ -198,8 +198,8 @@ public class JsonSchemaValidationTest{
 
         //WHEN
         ProcessingReport report = validator.validate(
-                repositoryList,
                 receivedMessage,
+                repositoryList,
                 new JsonMessageValidationContext(),
                 applicationContext);
 
@@ -218,7 +218,7 @@ public class JsonSchemaValidationTest{
         ApplicationContext applicationContext = mock(ApplicationContext.class);
 
         //WHEN
-        validator.validate(repositoryList, message, jsonMessageValidationContext, applicationContext);
+        validator.validate(message, repositoryList, jsonMessageValidationContext, applicationContext);
 
         //THEN
         verify(jsonSchemaFilterMock).filter(repositoryList, jsonMessageValidationContext, applicationContext);

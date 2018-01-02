@@ -26,8 +26,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -38,8 +36,6 @@ import java.util.List;
  * This class is responsible for the validation of json messages against json schemas / json schema repositories.
  */
 public class JsonSchemaValidation {
-
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private JsonSchemaFilter jsonSchemaFilter;
 
@@ -61,6 +57,23 @@ public class JsonSchemaValidation {
      */
     public GraciousProcessingReport validate(Message message, JsonSchemaRepository jsonSchemaRepository) {
         return validate(message, jsonSchemaRepository.getSchemas());
+    }
+
+    /**
+     * Validates the given message against a list of JsonSchemaRepositories under consideration of the actual context
+     * @param message The message to be validated
+     * @param schemaRepositories The schema repositories to be used for validation
+     * @param validationContext The context of the validation to be used for the validation
+     * @param applicationContext The application context to be used for the validation
+     * @return A report holding the results of the validation
+     */
+    public ProcessingReport validate(Message message,
+                                     List<JsonSchemaRepository> schemaRepositories,
+                                     JsonMessageValidationContext validationContext,
+                                     ApplicationContext applicationContext) {
+        List<SimpleJsonSchema> schemaList =
+                jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
+        return validate(message, schemaList);
     }
 
     /**
@@ -94,22 +107,5 @@ public class JsonSchemaValidation {
         } catch (IOException | ProcessingException e) {
             throw new ValidationException("Failed to process message: " + message, e);
         }
-    }
-
-    /**
-     * TODO:Add documentation
-     * @param schemaRepositories
-     * @param message
-     * @param validationContext
-     * @param applicationContext
-     * @return
-     */
-    public ProcessingReport validate(List<JsonSchemaRepository> schemaRepositories,
-                                     Message message,
-                                     JsonMessageValidationContext validationContext,
-                                     ApplicationContext applicationContext) {
-        List<SimpleJsonSchema> schemaList =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
-        return validate(message, schemaList);
     }
 }

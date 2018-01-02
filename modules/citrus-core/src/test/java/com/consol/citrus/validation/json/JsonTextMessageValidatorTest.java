@@ -431,7 +431,7 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setSchemaValidation(true);
 
         JsonSchemaValidation jsonSchemaValidation = mock(JsonSchemaValidation.class);
-        when(jsonSchemaValidation.validate(anyList(), any(), any(), any())).thenReturn(new GraciousProcessingReport((true)));
+        when(jsonSchemaValidation.validate(any(), anyList(), any(), any())).thenReturn(new GraciousProcessingReport((true)));
         validator.setJsonSchemaValidation(jsonSchemaValidation);
 
         JsonSchemaRepository jsonSchemaRepository = mock(JsonSchemaRepository.class);
@@ -444,6 +444,6 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         //THEN
-        verify(jsonSchemaValidation).validate(anyList(), eq(receivedMessage), eq(validationContext), eq(applicationContext));
+        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList(), eq(validationContext), eq(applicationContext));
     }
 }
