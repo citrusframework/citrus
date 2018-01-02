@@ -136,12 +136,15 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     }
 
     /**
-     * TODO:Add documentation
-     * @param receivedMessage
-     * @param validationContext
+     * Performs the schema validation for the given message under consideration of the given validation context
+     * @param receivedMessage The message to be validated
+     * @param validationContext The validation context of the current test
      */
     private void performSchemaValidation(Message receivedMessage, JsonMessageValidationContext validationContext) {
-        ProcessingReport report = jsonSchemaValidation.validate(receivedMessage, schemaRepositories, validationContext, applicationContext);
+        ProcessingReport report = jsonSchemaValidation.validate(receivedMessage,
+                                                                schemaRepositories,
+                                                                validationContext,
+                                                                applicationContext);
         if(!report.isSuccess()){
             String errorMessage = constructErrorMessage(report);
             throw new ValidationException(errorMessage);
