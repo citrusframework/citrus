@@ -51,15 +51,6 @@ public class JsonSchemaValidation {
     }
 
     /**
-     * Validates the given message against the schema repository
-     * @param message The message to be validated
-     * @param jsonSchemaRepository  The schema repositories to validate against
-     */
-    public GraciousProcessingReport validate(Message message, JsonSchemaRepository jsonSchemaRepository) {
-        return validate(message, jsonSchemaRepository.getSchemas());
-    }
-
-    /**
      * Validates the given message against a list of JsonSchemaRepositories under consideration of the actual context
      * @param message The message to be validated
      * @param schemaRepositories The schema repositories to be used for validation

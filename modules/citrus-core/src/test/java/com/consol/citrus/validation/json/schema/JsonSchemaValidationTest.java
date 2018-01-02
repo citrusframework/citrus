@@ -18,9 +18,12 @@ import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class JsonSchemaValidationTest{
 
+    private ApplicationContext applicationContextMock = mock(ApplicationContext.class);
+    private JsonMessageValidationContext validationContextMock = mock(JsonMessageValidationContext.class);
     private JsonSchemaFilter jsonSchemaFilterMock = mock(JsonSchemaFilter.class);
     private JsonSchemaValidation validator = new JsonSchemaValidation(jsonSchemaFilterMock);
 
@@ -28,15 +31,22 @@ public class JsonSchemaValidationTest{
     public void testValidJsonMessageSuccessfullyValidated() throws Exception{
 
         //GIVEN
+        //Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-
         jsonSchemaRepository.setBeanName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
         schema.afterPropertiesSet();
-
         jsonSchemaRepository.getSchemas().add(schema);
 
+        //Add json schema repositories to a list
+        List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
+
+        //Mock the filter behavior
+        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, applicationContextMock))
+                .thenReturn(Collections.singletonList(schema));
+
+        //Create the received message
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
                 "                \"id\": 2,\n" +
@@ -57,8 +67,11 @@ public class JsonSchemaValidationTest{
 
 
         //WHEN
-        //TODO: Rewrite the test so this validate version can become private
-        ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
+        ProcessingReport report = validator.validate(
+                receivedMessage,
+                schemaRepositories,
+                validationContextMock,
+                applicationContextMock);
 
 
         //THEN
@@ -69,12 +82,20 @@ public class JsonSchemaValidationTest{
     public void testInvalidJsonMessageValidationIsNotSuccessful() throws Exception {
 
         //GIVEN
+        //Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setBeanName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
         schema.afterPropertiesSet();
         jsonSchemaRepository.getSchemas().add(schema);
+
+        //Add json schema repositories to a list
+        List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
+
+        //Mock the filter behavior
+        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, applicationContextMock))
+                .thenReturn(Collections.singletonList(schema));
 
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
@@ -95,8 +116,11 @@ public class JsonSchemaValidationTest{
 
 
         //WHEN
-        //TODO: Rewrite the test so this validate version can become private
-        ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
+        ProcessingReport report = validator.validate(
+                receivedMessage,
+                schemaRepositories,
+                validationContextMock,
+                applicationContextMock);
 
 
         //THEN
@@ -120,6 +144,13 @@ public class JsonSchemaValidationTest{
         schema.afterPropertiesSet();
         jsonSchemaRepository.getSchemas().add(schema);
 
+        //Add json schema repositories to a list
+        List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
+
+        //Mock the filter behavior
+        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, applicationContextMock))
+                .thenReturn(Collections.singletonList(schema));
+
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
                 "                \"id\": 2,\n" +
@@ -140,8 +171,11 @@ public class JsonSchemaValidationTest{
 
 
         //WHEN
-        //TODO: Rewrite the test so this validate version can become private
-        ProcessingReport report = validator.validate(receivedMessage, jsonSchemaRepository);
+        ProcessingReport report = validator.validate(
+                receivedMessage,
+                schemaRepositories,
+                validationContextMock,
+                applicationContextMock);
 
 
         //THEN
@@ -174,9 +208,6 @@ public class JsonSchemaValidationTest{
         jsonSchemaRepository.getSchemas().add(schema);
         repositoryList.add(jsonSchemaRepository);
 
-        //Setup application context mock
-        ApplicationContext applicationContext = mock(ApplicationContext.class);
-
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
                 "                \"id\": 2,\n" +
@@ -200,8 +231,8 @@ public class JsonSchemaValidationTest{
         ProcessingReport report = validator.validate(
                 receivedMessage,
                 repositoryList,
-                new JsonMessageValidationContext(),
-                applicationContext);
+                validationContextMock,
+                applicationContextMock);
 
 
         //THEN
