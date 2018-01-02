@@ -254,62 +254,6 @@ So the schema mapping chain uses both *RootQNameSchemaMappingStrategy* and *Targ
 combination. In case the first root qname strategy fails to find a proper mapping the next target namespace strategy
 comes in and tries to find a proper schema.
 
-[[schema-definition-overruling]]
-==== Schema definition overruling
-
-Now it is time to talk about schema definition settings on test action level. We have learned before that Citrus
-tries to automatically find a matching schema definition in some schema repository. There comes a time where you as a
-tester just have to pick the right schema definition by yourself. You can overrule all schema mapping strategies in
-Citrus by directly setting the desired schema in your receiving message action.
-
-[source,xml]
-----
-<receive endpoint="httpMessageEndpoint">
-    <message schema="helloSchema">
-      <validate>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId"
-                  value="${messageId}"/>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId"
-                  value="${correlationId}"/>
-        <namespace prefix="ns1" value="http://citrus.com/namespace"/>
-      </validate>
-    </message>
-</receive>
-
-<citrus:schema id="helloSchema"
-    location="classpath:citrus/samples/sayHello.xsd"/>
-----
-
-In the example above the tester explicitly sets a schema definition in the receive action (schema="helloSchema").
-The attribute value refers to named schema bean somewhere in the application context. This overrules all schema mapping
-strategies used in the central schema repository as the given schema is directly used for validation. This feature is
-helpful when dealing with different schema versions at the same time where the schema repository can not help you
-anymore.
-
-Another possibility would be to set a custom schema repository at this point. This means you can have more than one
-schema repository in your Citrus project and you pick the right one by yourself in the receive action.
-
-[source,xml]
-----
-<receive endpoint="httpMessageEndpoint">
-    <message schema-repository="mySpecialSchemaRepository">
-      <validate>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId"
-                  value="${messageId}"/>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId"
-                  value="${correlationId}"/>
-        <namespace prefix="ns1" value="http://citrus.com/namespace"/>
-      </validate>
-    </message>
-</receive>
-----
-
-The *schema-repository* attribute refers to a Citrus schema repository component which is defined somewhere in the
-Spring application context.
-
-IMPORTANT: In case you have several schema repositories in your project do always define a default repository
-(name="schemaRepository"). This helps Citrus to always find at least one repository to interact with.
-
 [[dtd-validation]]
 ==== DTD validation
 
