@@ -35,6 +35,14 @@ Citrus allows you to reuse your schema definition within your context by referen
 the id of the schema and the value of the schema Attribute within the reference Element have to match.
 
 ==== Schema location definitions
+[source,xml]
+----
+<citrus:location path="classpath:citrus/flightbooking/*.xsd"/>
+----
+
+Setting all schemas one by one can be verbose and uncomfortable, especially when dealing with
+lots of schema files. Therefore, Citrus offers you schema location patterns which will import all matching schema files
+within the given location.
 
 ==== Schema repositories
 [source,xml]
