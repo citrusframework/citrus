@@ -65,7 +65,7 @@ within the given location.
 ----
 
 Citrus introduces a central schema repository component which holds all available schema files for a project disjoint
-by their type (xml, json, etc.) while `type=xml` is the default for a schema repository.
+by their type (xml, json, etc.) and identified by its unique id. The default type of a schema repository is `type=xml`.
 
 As you can see the schema repository is a simple XML component defined inside the Spring application context.
 The repository can hold nested schema definitions, references and location definitions for all types of schema
