@@ -13,6 +13,13 @@ Most complex applications have a lot of schemas that are relevant for different 
 in your test cases, Citrus brings you some structuring capabilities.
 
 ==== Schema definitions
+[source,xml]
+----
+<citrus:schema id="bookstore" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+----
+
+This xml snippet allows you to define a schema with an id located at the given classpath. Please keep in mind, that
+the id of the schema has to be unique in the context.
 
 ==== Schema repositories
 
