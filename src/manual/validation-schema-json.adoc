@@ -43,5 +43,25 @@ as `type="json"`. This allows Citrus to collect all JSON schema files for the me
 </citrus:schema-repository>
 ----
 
-=== JSON schema matching strategy
+=== JSON schema filtering and validation strategy
+In reference to the current JSON schema definition, it is not possible to create a direct reference between a JSON
+message and a set of schemas, as it would be possible with XML namespaces. Because of that, Citrus follows a rule set
+for choosing the relevant schemas based on the configuration withing the test case in relation to the given context.
+The following table assumes that the JSON schema validation is activated for the test action.
 
+|===
+|Scenario |Validation rules
+
+|No JSON schema repositories are defined in the context.
+|No JSON schema validation applies.
+
+|There is at least one JSON schema repository defined in the context.
+|The message of the test action must be valid regarding at least one of the available schemas within the context.
+
+|A schema overruling is configured in the test case.
+|The configured schema must exist and the message must be valid regarding to the specified schema.
+
+|A schema repository overruling is configured in the test case.
+|The configured schema repository must exist and the message must be valid regarding at least one of the schemas within
+the specified schema repository.
+|===
