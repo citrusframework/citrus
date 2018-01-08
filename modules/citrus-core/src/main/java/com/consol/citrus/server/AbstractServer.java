@@ -49,7 +49,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     private Thread thread;
     
     /**  Monitor for startup and running lifecycle */
-    private Object runningLock = new Object();
+    private final Object runningLock = new Object();
 
     /** Spring bean factory injected */
     private BeanFactory beanFactory;
