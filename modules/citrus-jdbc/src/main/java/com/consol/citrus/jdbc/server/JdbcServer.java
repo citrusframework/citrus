@@ -16,7 +16,6 @@
 
 package com.consol.citrus.jdbc.server;
 
-import com.consol.citrus.jdbc.driver.JdbcServerConfiguration;
 import com.consol.citrus.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

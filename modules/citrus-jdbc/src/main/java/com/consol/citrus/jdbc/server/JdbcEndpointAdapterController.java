@@ -17,7 +17,6 @@
 package com.consol.citrus.jdbc.server;
 
 import com.consol.citrus.endpoint.*;
-import com.consol.citrus.jdbc.driver.JdbcServerConfiguration;
 import com.consol.citrus.jdbc.model.*;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;

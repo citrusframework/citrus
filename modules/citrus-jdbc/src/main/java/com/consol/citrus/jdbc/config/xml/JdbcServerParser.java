@@ -18,7 +18,7 @@ package com.consol.citrus.jdbc.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractServerParser;
-import com.consol.citrus.jdbc.driver.JdbcServerConfiguration;
+import com.consol.citrus.jdbc.server.JdbcServerConfiguration;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
