@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,29 @@
 
 package com.consol.citrus.jdbc.server;
 
-import com.consol.citrus.jdbc.model.ResultSet;
-
-import java.rmi.RemoteException;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public interface RemoteStatement {
+public class JdbcServerException extends Exception {
 
-    /**
-     * Execute query statement
-     * @param stmt
-     * @return
-     */
-    ResultSet executeQuery(String stmt) throws RemoteException;
+    public JdbcServerException() {
+        super();
+    }
 
-    /**
-     * Execute update statement.
-     * @param stmt
-     * @return
-     */
-    int executeUpdate(String stmt) throws RemoteException;
+    public JdbcServerException(String message) {
+        super(message);
+    }
 
-    /**
-     * Close request.
-     */
-    void closeStatement() throws RemoteException;
+    public JdbcServerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public JdbcServerException(Throwable cause) {
+        super(cause);
+    }
+
+    public JdbcServerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

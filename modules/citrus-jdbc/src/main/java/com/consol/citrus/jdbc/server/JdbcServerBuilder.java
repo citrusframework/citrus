@@ -24,13 +24,13 @@ import com.consol.citrus.message.MessageCorrelator;
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
+public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
 
     /** Endpoint target */
-    private JdbcDbServer endpoint = new JdbcDbServer();
+    private JdbcServer endpoint = new JdbcServer();
 
     @Override
-    protected JdbcDbServer getEndpoint() {
+    protected JdbcServer getEndpoint() {
         return endpoint;
     }
 
@@ -39,18 +39,8 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param autoStart
      * @return
      */
-    public JdbcDbServerBuilder autoStart(boolean autoStart) {
+    public JdbcServerBuilder autoStart(boolean autoStart) {
         endpoint.setAutoStart(autoStart);
-        return this;
-    }
-
-    /**
-     * Sets the serverUrl property.
-     * @param serverUrl
-     * @return
-     */
-    public JdbcDbServerBuilder serverUrl(String serverUrl) {
-        endpoint.getEndpointConfiguration().setServerUrl(serverUrl);
         return this;
     }
 
@@ -59,7 +49,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param host
      * @return
      */
-    public JdbcDbServerBuilder host(String host) {
+    public JdbcServerBuilder host(String host) {
         endpoint.getEndpointConfiguration().setHost(host);
         return this;
     }
@@ -69,7 +59,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param port
      * @return
      */
-    public JdbcDbServerBuilder port(int port) {
+    public JdbcServerBuilder port(int port) {
         endpoint.getEndpointConfiguration().setPort(port);
         return this;
     }
@@ -79,7 +69,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param name
      * @return
      */
-    public JdbcDbServerBuilder databaseName(String name) {
+    public JdbcServerBuilder databaseName(String name) {
         endpoint.getEndpointConfiguration().setDatabaseName(name);
         return this;
     }
@@ -89,7 +79,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param autoConnect
      * @return
      */
-    public JdbcDbServerBuilder autoConnect(boolean autoConnect) {
+    public JdbcServerBuilder autoConnect(boolean autoConnect) {
         endpoint.getEndpointConfiguration().setAutoConnect(autoConnect);
         return this;
     }
@@ -99,18 +89,8 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param autoCreateStatement
      * @return
      */
-    public JdbcDbServerBuilder autoCreateStatement(boolean autoCreateStatement) {
+    public JdbcServerBuilder autoCreateStatement(boolean autoCreateStatement) {
         endpoint.getEndpointConfiguration().setAutoCreateStatement(autoCreateStatement);
-        return this;
-    }
-
-    /**
-     * Sets the createRegistry property.
-     * @param createRegistry
-     * @return
-     */
-    public JdbcDbServerBuilder createRegistry(boolean createRegistry) {
-        endpoint.getEndpointConfiguration().setCreateRegistry(createRegistry);
         return this;
     }
 
@@ -119,7 +99,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param correlator
      * @return
      */
-    public JdbcDbServerBuilder correlator(MessageCorrelator correlator) {
+    public JdbcServerBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
@@ -129,7 +109,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param endpointAdapter
      * @return
      */
-    public JdbcDbServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
+    public JdbcServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
         endpoint.setEndpointAdapter(endpointAdapter);
         return this;
     }
@@ -139,7 +119,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param enabled
      * @return
      */
-    public JdbcDbServerBuilder debugLogging(boolean enabled) {
+    public JdbcServerBuilder debugLogging(boolean enabled) {
         endpoint.setDebugLogging(enabled);
         return this;
     }
@@ -149,7 +129,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param maxConnections
      * @return
      */
-    public JdbcDbServerBuilder maxConnections(int maxConnections) {
+    public JdbcServerBuilder maxConnections(int maxConnections) {
         endpoint.getEndpointConfiguration().setMaxConnections(maxConnections);
         return this;
     }
@@ -159,7 +139,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param pollingInterval
      * @return
      */
-    public JdbcDbServerBuilder pollingInterval(int pollingInterval) {
+    public JdbcServerBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
@@ -169,7 +149,7 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
      * @param timeout
      * @return
      */
-    public JdbcDbServerBuilder timeout(long timeout) {
+    public JdbcServerBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }

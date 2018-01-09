@@ -16,9 +16,16 @@
 
 package com.consol.citrus.jdbc.driver;
 
-import com.consol.citrus.jdbc.server.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -30,35 +37,53 @@ import java.util.concurrent.Executor;
  */
 public class JdbcConnection implements Connection {
 
-    /** Remote connection */
-    private final RemoteConnection remoteConnection;
+    /** Http remote client */
+    private final HttpClient httpClient;
+    private final String serverUrl;
 
     /**
      * Default constructor using remote connection reference.
-     * @param remoteConnection
+     * @param httpClient
+     * @param serverUrl
      */
-    public JdbcConnection(RemoteConnection remoteConnection) {
-        this.remoteConnection = remoteConnection;
+    public JdbcConnection(HttpClient httpClient, String serverUrl) {
+        this.httpClient = httpClient;
+        this.serverUrl = serverUrl;
     }
 
     @Override
     public Statement createStatement() throws SQLException {
+        HttpResponse response = null;
         try {
-            RemoteStatement statement = remoteConnection.createStatement();
-            return new JdbcStatement(statement);
-        } catch(RemoteException ex) {
-            throw(new SQLException("RemoteException: " + ex.getMessage()));
-        } catch(Exception ex) {
-            throw(new SQLException("LocalException: " + ex.getMessage()));
+            response = httpClient.execute(RequestBuilder.get(serverUrl + "/statement")
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new SQLException("Failed to create statement: " + EntityUtils.toString(response.getEntity()));
+            }
+
+            return new JdbcStatement(httpClient, serverUrl);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
     @Override
     public void close() throws SQLException {
+        HttpResponse response = null;
         try {
-            remoteConnection.closeConnection();
-        } catch(RemoteException ex) {
-            throw ((new SQLException("RemoteException: " + ex.getMessage())));
+            response = httpClient.execute(RequestBuilder.delete(serverUrl + "/connection")
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new SQLException("Failed to close connection: " + EntityUtils.toString(response.getEntity()));
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
@@ -132,13 +157,21 @@ public class JdbcConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
+        HttpResponse response = null;
         try {
-            RemoteStatement remoteStatement = remoteConnection.createPreparedStatement(sql);
-            return new JdbcPreparedStatement(remoteStatement, sql);
-        } catch(RemoteException ex) {
-            throw(new SQLException("RemoteException: " + ex.getMessage()));
-        } catch(Exception ex) {
-            throw(new SQLException("LocalException: " + ex.getMessage()));
+            response = httpClient.execute(RequestBuilder.post(serverUrl + "/statement")
+                    .setEntity(new StringEntity(sql))
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new SQLException("Failed to create prepared statement: " + EntityUtils.toString(response.getEntity()));
+            }
+
+            return new JdbcPreparedStatement(httpClient, sql, serverUrl);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
@@ -163,11 +196,11 @@ public class JdbcConnection implements Connection {
     }
 
     @Override
-    public void setTypeMap(Map map) throws SQLException {
+    public void setTypeMap(Map<String,Class<?>> map) throws SQLException {
     }
 
     @Override
-    public Map getTypeMap() throws SQLException {
+    public Map<String,Class<?>> getTypeMap() throws SQLException {
         throw new SQLException("Not Supported");
     }
 

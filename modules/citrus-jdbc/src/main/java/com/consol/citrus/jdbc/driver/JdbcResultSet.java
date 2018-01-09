@@ -17,7 +17,6 @@
 package com.consol.citrus.jdbc.driver;
 
 import com.consol.citrus.jdbc.model.ResultSet;
-import com.consol.citrus.util.TypeConversionUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -171,38 +170,38 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
-        return TypeConversionUtils.convertIfNecessary(row.getValues().get(columnIndex-1), byte[].class);
+        return row.getValues().get(columnIndex-1).getBytes();
     }
 
-    public java.sql.Date getDate(int columnIndex) throws SQLException {
+    public Date getDate(int columnIndex) throws SQLException {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
         String datObj = (String)row.getValues().get(columnIndex-1);
-        return java.sql.Date.valueOf(datObj);
+        return Date.valueOf(datObj);
     }
 
-    public java.sql.Time getTime(int columnIndex) throws SQLException {
+    public Time getTime(int columnIndex) throws SQLException {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
         String timObj = (String)row.getValues().get(columnIndex-1);
-        return java.sql.Time.valueOf(timObj);
+        return Time.valueOf(timObj);
     }
 
-    public java.sql.Timestamp getTimestamp(int columnIndex) throws SQLException {
+    public Timestamp getTimestamp(int columnIndex) throws SQLException {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
         String timstmpObj = (String)row.getValues().get(columnIndex-1);
-        return java.sql.Timestamp.valueOf(timstmpObj);
+        return Timestamp.valueOf(timstmpObj);
     }
 
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(columnIndex-1), byte[].class);
+        byte[] byteArray = row.getValues().get(columnIndex-1).getBytes();
         return new ByteArrayInputStream(byteArray);
     }
 
@@ -210,7 +209,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(columnIndex-1), byte[].class);
+        byte[] byteArray = row.getValues().get(columnIndex-1).getBytes();
         return new ByteArrayInputStream(byteArray);
     }
 
@@ -218,7 +217,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(columnIndex-1), byte[].class);
+        byte[] byteArray = row.getValues().get(columnIndex-1).getBytes();
         return new ByteArrayInputStream(byteArray);
     }
 
@@ -288,16 +287,16 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(findColumn(columnName))==null) {
             return null;
         } else {
-            return TypeConversionUtils.convertIfNecessary(row.getValues().get(findColumn(columnName)), byte[].class);
+            return row.getValues().get(findColumn(columnName)).getBytes();
         }
     }
 
-    public java.sql.Date getDate(String columnName) throws SQLException {
+    public Date getDate(String columnName) throws SQLException {
         if (row.getValues().get(findColumn(columnName))==null)
             return null;
 
         String dateObj = row.getValues().get(findColumn(columnName));
-        return java.sql.Date.valueOf(dateObj);
+        return Date.valueOf(dateObj);
     }
 
     public Time getTime(String columnName) throws SQLException {
@@ -305,15 +304,15 @@ public class JdbcResultSet implements java.sql.ResultSet {
             return null;
 
         String timObj = row.getValues().get(findColumn(columnName));
-        return java.sql.Time.valueOf(timObj);
+        return Time.valueOf(timObj);
     }
 
-    public java.sql.Timestamp getTimestamp(String columnName) throws SQLException {
+    public Timestamp getTimestamp(String columnName) throws SQLException {
         if (row.getValues().get(findColumn(columnName))==null)
             return null;
 
         String timstmpObj = row.getValues().get(findColumn(columnName));
-        return java.sql.Timestamp.valueOf(timstmpObj);
+        return Timestamp.valueOf(timstmpObj);
     }
 
     public Object getObject(String columnName) throws SQLException {
@@ -333,7 +332,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(findColumn(columnName))==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(findColumn(columnName)), byte[].class);
+        byte[] byteArray = row.getValues().get(findColumn(columnName)).getBytes();
         return new ByteArrayInputStream(byteArray);
     }
 
@@ -341,7 +340,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(findColumn(columnName))==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(findColumn(columnName)), byte[].class);
+        byte[] byteArray = row.getValues().get(findColumn(columnName)).getBytes();
         return new ByteArrayInputStream(byteArray);
     }
 
@@ -349,7 +348,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(findColumn(columnName))==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(findColumn(columnName)), byte[].class);
+        byte[] byteArray = row.getValues().get(findColumn(columnName)).getBytes();
         return new ByteArrayInputStream(byteArray);
     }
 
@@ -376,7 +375,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(columnIndex-1)==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(columnIndex-1), byte[].class);
+        byte[] byteArray = row.getValues().get(columnIndex-1).getBytes();
         return new InputStreamReader(new ByteArrayInputStream(byteArray));
     }
 
@@ -384,7 +383,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
         if (row.getValues().get(findColumn(columnName))==null)
             return null;
 
-        byte[] byteArray = TypeConversionUtils.convertIfNecessary(row.getValues().get(findColumn(columnName)), byte[].class);
+        byte[] byteArray = row.getValues().get(findColumn(columnName)).getBytes();
         return new InputStreamReader(new ByteArrayInputStream(byteArray));
     }
 
@@ -501,7 +500,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
     public void updateBytes(int columnIndex,byte[] x) throws SQLException {
     }
 
-    public void updateDate(int columnIndex,java.sql.Date x) throws SQLException {
+    public void updateDate(int columnIndex,Date x) throws SQLException {
     }
 
     public void updateTime(int columnIndex,Time x) throws SQLException {
@@ -552,7 +551,7 @@ public class JdbcResultSet implements java.sql.ResultSet {
     public void updateBytes(String columnName,byte[] x) throws SQLException {
     }
 
-    public void updateDate(String columnName,java.sql.Date x) throws SQLException {
+    public void updateDate(String columnName,Date x) throws SQLException {
     }
 
     public void updateTime(String columnName, Time x) throws SQLException {
@@ -602,11 +601,11 @@ public class JdbcResultSet implements java.sql.ResultSet {
     }
 
 
-    public java.sql.Date getDate(int columnIndex,Calendar cal) throws SQLException {
+    public Date getDate(int columnIndex,Calendar cal) throws SQLException {
         throw new SQLException("Not Supported");
     }
 
-    public java.sql.Date getDate(String columnName,Calendar cal) throws SQLException {
+    public Date getDate(String columnName,Calendar cal) throws SQLException {
         throw new SQLException("Not Supported");
     }
 

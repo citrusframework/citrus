@@ -16,10 +16,21 @@
 
 package com.consol.citrus.jdbc.driver;
 
+import com.consol.citrus.Citrus;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.model.ResultSet;
-import com.consol.citrus.jdbc.server.RemoteStatement;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 
-import java.rmi.RemoteException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.sql.*;
 
 /**
@@ -28,47 +39,95 @@ import java.sql.*;
  */
 public class JdbcStatement implements Statement {
 
-    private final RemoteStatement remoteStmt;
+    private final HttpClient httpClient;
+    private final String serverUrl;
+
     protected ResultSet resultSet;
 
     /**
-     * Default constructor using remote statement reference.
-     * @param stmt
+     * Default constructor using remote client reference.
+     * @param httpClient
      */
-    public JdbcStatement(RemoteStatement stmt) {
-        remoteStmt = stmt;
+    public JdbcStatement(HttpClient httpClient, String serverUrl) {
+        this.httpClient = httpClient;
+        this.serverUrl = serverUrl;
     }
 
     @Override
     public java.sql.ResultSet executeQuery(String sqlQuery) throws SQLException {
+        HttpResponse response = null;
         try {
-            resultSet = remoteStmt.executeQuery(sqlQuery);
+            response = httpClient.execute(RequestBuilder.post(serverUrl + "/query")
+                    .setEntity(new StringEntity(sqlQuery, ContentType.create("text/plain", Citrus.CITRUS_FILE_ENCODING)))
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new SQLException("Failed to execute query: " + EntityUtils.toString(response.getEntity()));
+            }
+
+            resultSet = (ResultSet) JAXBContext.newInstance(ResultSet.class).createUnmarshaller().unmarshal(response.getEntity().getContent());
             return new JdbcResultSet(resultSet);
-        } catch (RemoteException ex) {
-            throw (new SQLException(ex));
+        } catch (IOException | JAXBException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
     @Override
-    public int executeUpdate(String sqlQuery) throws SQLException {
+    public int executeUpdate(String sql) throws SQLException {
+        HttpResponse response = null;
         try {
-            return remoteStmt.executeUpdate(sqlQuery);
-        } catch (RemoteException ex) {
-            throw (new SQLException(ex));
+            response = httpClient.execute(RequestBuilder.post(serverUrl + "/update")
+                    .setEntity(new StringEntity(sql, ContentType.create("text/plain", Citrus.CITRUS_FILE_ENCODING)))
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new SQLException("Failed to execute update: " + EntityUtils.toString(response.getEntity()));
+            }
+
+            String responseBody = EntityUtils.toString(response.getEntity());
+            return Integer.valueOf(responseBody);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
     @Override
     public boolean execute(String sql) throws SQLException {
-        return executeUpdate(sql) > 0;
+        HttpResponse response = null;
+        try {
+            response = httpClient.execute(RequestBuilder.post(serverUrl + "/execute")
+                    .setEntity(new StringEntity(sql, ContentType.create("text/plain", Citrus.CITRUS_FILE_ENCODING)))
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new SQLException("Failed to execute statement: " + EntityUtils.toString(response.getEntity()));
+            }
+            return true;
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
+        }
     }
 
     @Override
     public void close() throws SQLException {
+        HttpResponse response = null;
         try {
-            remoteStmt.closeStatement();
-        } catch (RemoteException ex) {
-            throw (new SQLException(ex));
+            response = httpClient.execute(RequestBuilder.delete(serverUrl + "/statement")
+                    .build());
+
+            if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+                throw new SQLException("Failed to close statement");
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 

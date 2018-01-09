@@ -23,31 +23,17 @@ import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.StringUtils;
-
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
-
-    /** Rmi server url */
-    private String serverUrl;
+public class JdbcServerConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
 
     /** Rmi connection parameters */
     private String host;
-    private int port = Registry.REGISTRY_PORT;
+    private int port = 4567;
     private String databaseName;
-
-    /** RMI registry */
-    private Registry registry;
-
-    /** Should server automatically create service registry */
-    private boolean createRegistry = false;
 
     /** Auto accept connection requests */
     private boolean autoConnect = true;
@@ -65,39 +51,6 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     /** Spring application context used for method arg object reference evaluation */
     private ApplicationContext applicationContext;
-
-    /**
-     * Gets the RMI registry based on host and port settings in this configuration.
-     * @return
-     * @throws RemoteException
-     */
-    public Registry getRegistry() throws RemoteException {
-        if (registry == null) {
-            if (StringUtils.hasText(host)) {
-                registry = LocateRegistry.getRegistry(host, port);
-            } else {
-                registry = LocateRegistry.getRegistry(port);
-            }
-        }
-
-        return registry;
-    }
-
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-
-        this.host = JdbcEndpointUtils.getHost(serverUrl.substring("rmi://".length()));
-        this.port = JdbcEndpointUtils.getPort(serverUrl.substring("rmi://".length()), getPort());
-        this.databaseName = JdbcEndpointUtils.getBinding(serverUrl.substring("rmi://".length()));
-    }
-
-    public String getServerUrl() {
-        return serverUrl;
-    }
-
-    public void setRegistry(Registry registry) {
-        this.registry = registry;
-    }
 
     public String getHost() {
         return host;
@@ -139,14 +92,6 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
-    }
-
-    public boolean isCreateRegistry() {
-        return createRegistry;
-    }
-
-    public void setCreateRegistry(boolean createRegistry) {
-        this.createRegistry = createRegistry;
     }
 
     /**

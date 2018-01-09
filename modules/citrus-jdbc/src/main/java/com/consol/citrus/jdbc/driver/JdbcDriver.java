@@ -17,17 +17,21 @@
 package com.consol.citrus.jdbc.driver;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jdbc.server.RemoteConnection;
-import com.consol.citrus.jdbc.server.RemoteDriver;
+import org.apache.http.*;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.registry.Registry;
+import java.net.URI;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -35,8 +39,14 @@ import java.util.logging.Logger;
  */
 public class JdbcDriver implements Driver {
 
-    /** Remote driver */
-    private static RemoteDriver remoteDriver = null;
+    /** Client connects to db server */
+    private HttpClient httpClient;
+
+    /** Remote server url */
+    private String serverUrl;
+
+    /** Connection timeout */
+    private int timeout = 5000;
 
     /** Driver URL prefix */
     private static final String URL_PREFIX = "jdbc:citrus:";
@@ -56,38 +66,56 @@ public class JdbcDriver implements Driver {
 
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
-        JdbcConnection localConnection = null;
+        JdbcConnection connection = null;
 
         if (acceptsURL(url)) {
             try {
-                connectRemote(url);
-
-                RemoteConnection remoteConnection = remoteDriver.getConnection(info);
-                localConnection = new JdbcConnection(remoteConnection);
-            } catch(RemoteException ex) {
-                throw(new SQLException("RemoteException: " + ex.getMessage()));
+                connectRemote(url, info);
+                connection = new JdbcConnection(httpClient, serverUrl);
             } catch(Exception ex) {
-                throw(new SQLException("LocalException: " + ex.getMessage()));
+                throw(new SQLException(ex.getMessage(), ex));
             }
         }
 
-        return localConnection;
+        return connection;
     }
 
     /**
      * This method makes the one time connection to the RMI server
      * @param url
+     * @param info
      */
-    private void connectRemote(String url) {
+    private void connectRemote(String url, Properties info) throws SQLException {
+        HttpResponse response = null;
         try {
-            if (remoteDriver == null) {
-                remoteDriver = (RemoteDriver) Naming.lookup("rmi://" +
-                        JdbcEndpointUtils.getHost(url.substring(URL_PREFIX.length())) + ":" +
-                        JdbcEndpointUtils.getPort(url.substring(URL_PREFIX.length()), Registry.REGISTRY_PORT) + "/" +
-                        JdbcEndpointUtils.getBinding(url.substring(URL_PREFIX.length())));
+            if (httpClient == null) {
+                httpClient = HttpClients.custom()
+                        .setDefaultRequestConfig(RequestConfig.copy(RequestConfig.DEFAULT)
+                                .setConnectionRequestTimeout(timeout)
+                                .setConnectTimeout(timeout)
+                                .setSocketTimeout(timeout)
+                                .build())
+                        .build();
+
+                URI uri = new URI(url.substring(URL_PREFIX.length()));
+                serverUrl = uri.getScheme() + "://" + uri.getHost() + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
+
+                response = httpClient.execute(RequestBuilder.get(serverUrl + "/connection")
+                        .addParameter("database", uri.getSchemeSpecificPart().substring(uri.getSchemeSpecificPart().lastIndexOf('/')))
+                        .addParameters(info.entrySet()
+                                            .stream()
+                                            .map(entry -> new BasicNameValuePair(entry.getKey().toString(), entry.getValue() != null ? entry.getValue().toString() : ""))
+                                            .collect(Collectors.toList()).toArray(new NameValuePair[info.size()]))
+                        .build());
+
+                if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                    throw new SQLException("Failed to connect to server: " + EntityUtils.toString(response.getEntity()));
+                }
             }
         } catch(Exception ex) {
-            throw new CitrusRuntimeException(ex);
+            throw new SQLException(ex);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 

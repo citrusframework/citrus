@@ -78,7 +78,7 @@ public class JdbcDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        return Citrus.getVersion();
+        return getDriverVersion();
     }
 
     @Override

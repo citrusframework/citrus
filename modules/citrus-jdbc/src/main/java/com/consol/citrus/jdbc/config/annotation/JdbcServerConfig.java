@@ -28,19 +28,13 @@ import java.rmi.registry.Registry;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 @CitrusEndpointConfig(qualifier = "endpoint.parser.jdbc.server")
-public @interface JdbcDbServerConfig {
+public @interface JdbcServerConfig {
 
     /**
      * Auto start.
      * @return
      */
     boolean autoStart() default false;
-
-    /**
-     * Server uri.
-     * @return
-     */
-    String serverUrl() default "";
 
     /**
      * Host.
@@ -71,12 +65,6 @@ public @interface JdbcDbServerConfig {
      * @return
      */
     boolean autoCreateStatement() default true;
-
-    /**
-     * Create registry.
-     * @return
-     */
-    boolean createRegistry() default false;
 
     /**
      * Message correlator.

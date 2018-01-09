@@ -25,7 +25,7 @@ import com.consol.citrus.ftp.client.FtpClientBuilder;
 import com.consol.citrus.ftp.server.FtpServerBuilder;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServerBuilder;
-import com.consol.citrus.jdbc.server.JdbcDbServerBuilder;
+import com.consol.citrus.jdbc.server.JdbcServerBuilder;
 import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
 import com.consol.citrus.jmx.client.JmxClientBuilder;
@@ -180,8 +180,8 @@ public abstract class CitrusEndpoints {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static JdbcDbServerEndpointBuilder<JdbcDbServerBuilder> jdbc() {
-        return new JdbcDbServerEndpointBuilder(new JdbcDbServerBuilder());
+    public static JdbcDbServerEndpointBuilder<JdbcServerBuilder> jdbc() {
+        return new JdbcDbServerEndpointBuilder(new JdbcServerBuilder());
     }
 
 }

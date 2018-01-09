@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jdbc.driver;
 
-import com.consol.citrus.jdbc.server.RemoteStatement;
+import org.apache.http.client.HttpClient;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -33,13 +33,13 @@ public class JdbcPreparedStatement extends JdbcStatement implements PreparedStat
 
     private final String preparedStatement;
 
-    public JdbcPreparedStatement(RemoteStatement remoteStatement, String preparedStatement) {
-        super(remoteStatement);
+    public JdbcPreparedStatement(HttpClient httpClient, String preparedStatement, String serverUrl) {
+        super(httpClient, serverUrl);
         this.preparedStatement = preparedStatement;
     }
 
     @Override
-    public java.sql.ResultSet executeQuery() throws SQLException {
+    public ResultSet executeQuery() throws SQLException {
         return super.executeQuery(preparedStatement);
     }
 

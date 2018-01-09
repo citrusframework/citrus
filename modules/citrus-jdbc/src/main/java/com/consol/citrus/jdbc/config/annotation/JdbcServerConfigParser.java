@@ -20,8 +20,8 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.jdbc.server.JdbcDbServer;
-import com.consol.citrus.jdbc.server.JdbcDbServerBuilder;
+import com.consol.citrus.jdbc.server.JdbcServer;
+import com.consol.citrus.jdbc.server.JdbcServerBuilder;
 import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.util.StringUtils;
 
@@ -29,25 +29,21 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcDbServerConfigParser extends AbstractAnnotationConfigParser<JdbcDbServerConfig, JdbcDbServer> {
+public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcServerConfig, JdbcServer> {
 
     /**
      * Constructor matching super.
      * @param referenceResolver
      */
-    public JdbcDbServerConfigParser(ReferenceResolver referenceResolver) {
+    public JdbcServerConfigParser(ReferenceResolver referenceResolver) {
         super(referenceResolver);
     }
 
     @Override
-    public JdbcDbServer parse(JdbcDbServerConfig annotation) {
-        JdbcDbServerBuilder builder = new JdbcDbServerBuilder();
+    public JdbcServer parse(JdbcServerConfig annotation) {
+        JdbcServerBuilder builder = new JdbcServerBuilder();
 
         builder.autoStart(annotation.autoStart());
-
-        if (StringUtils.hasText(annotation.serverUrl())) {
-            builder.serverUrl(annotation.serverUrl());
-        }
 
         if (StringUtils.hasText(annotation.host())) {
             builder.host(annotation.host());
@@ -67,7 +63,6 @@ public class JdbcDbServerConfigParser extends AbstractAnnotationConfigParser<Jdb
 
         builder.autoConnect(annotation.autoConnect());
         builder.autoCreateStatement(annotation.autoCreateStatement());
-        builder.createRegistry(annotation.createRegistry());
 
         if (StringUtils.hasText(annotation.correlator())) {
             builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));

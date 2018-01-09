@@ -21,7 +21,7 @@
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
-  <xs:element name="db-server">
+  <xs:element name="server">
     <xs:annotation>
       <xs:documentation>JDBC database server implementation registers as service in RMI registry and receives messages from client driver via RMI invocation.</xs:documentation>
     </xs:annotation>
@@ -30,7 +30,6 @@
       <xs:attribute name="host" type="xs:string"/>
       <xs:attribute name="port" type="xs:string"/>
       <xs:attribute name="database-name" type="xs:string" use="required"/>
-      <xs:attribute name="create-registry" type="xs:boolean"/>
       <xs:attribute name="auto-connect" type="xs:boolean"/>
       <xs:attribute name="auto-create-statement" type="xs:boolean"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>

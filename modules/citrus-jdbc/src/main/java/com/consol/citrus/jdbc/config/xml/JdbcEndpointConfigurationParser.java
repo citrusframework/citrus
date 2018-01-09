@@ -36,7 +36,6 @@ public class JdbcEndpointConfigurationParser {
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-connect"), "autoConnect");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-create-statement"), "autoCreateStatement");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("create-registry"), "createRegistry");
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "host");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "port");
