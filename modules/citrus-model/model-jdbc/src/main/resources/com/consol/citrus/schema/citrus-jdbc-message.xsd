@@ -193,13 +193,13 @@
     <xs:element name="result-set">
       <xs:complexType>
         <xs:sequence>
-          <xs:element name="column" maxOccurs="unbounded">
+          <xs:element name="column" minOccurs="0" maxOccurs="unbounded">
             <xs:complexType>
               <xs:attribute name="name" type="xs:string" use="required"/>
               <xs:attribute name="type" type="xs:string"/>
             </xs:complexType>
           </xs:element>
-          <xs:element name="row" maxOccurs="unbounded">
+          <xs:element name="row" minOccurs="0" maxOccurs="unbounded">
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="value" maxOccurs="unbounded" type="xs:string"/>
