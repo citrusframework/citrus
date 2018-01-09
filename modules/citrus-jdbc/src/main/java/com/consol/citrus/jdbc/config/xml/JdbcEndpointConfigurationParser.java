@@ -40,7 +40,7 @@ public class JdbcEndpointConfigurationParser {
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "host");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "port");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("database-name"), "dbName");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("database-name"), "databaseName");
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("max-connections"), "maxConnections");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");

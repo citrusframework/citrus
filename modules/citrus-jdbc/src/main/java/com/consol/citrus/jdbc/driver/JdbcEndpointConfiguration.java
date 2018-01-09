@@ -41,7 +41,7 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Rmi connection parameters */
     private String host;
     private int port = Registry.REGISTRY_PORT;
-    private String dbName;
+    private String databaseName;
 
     /** RMI registry */
     private Registry registry;
@@ -88,7 +88,7 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
 
         this.host = JdbcEndpointUtils.getHost(serverUrl.substring("rmi://".length()));
         this.port = JdbcEndpointUtils.getPort(serverUrl.substring("rmi://".length()), getPort());
-        this.dbName = JdbcEndpointUtils.getBinding(serverUrl.substring("rmi://".length()));
+        this.databaseName = JdbcEndpointUtils.getBinding(serverUrl.substring("rmi://".length()));
     }
 
     public String getServerUrl() {
@@ -116,21 +116,21 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     }
 
     /**
-     * Gets the dbName.
+     * Gets the databaseName.
      *
      * @return
      */
-    public String getDbName() {
-        return dbName;
+    public String getDatabaseName() {
+        return databaseName;
     }
 
     /**
-     * Sets the dbName.
+     * Sets the databaseName.
      *
-     * @param dbName
+     * @param databaseName
      */
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
     }
 
     public MessageCorrelator getCorrelator() {

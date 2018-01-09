@@ -78,7 +78,7 @@ public class JdbcDbServer extends AbstractServer {
             remoteDriver = new JdbcRemoteDriver(endpointConfiguration, getEndpointAdapter());
             stub = UnicastRemoteObject.exportObject(remoteDriver, endpointConfiguration.getPort());
             registry = endpointConfiguration.getRegistry();
-            registry.bind(endpointConfiguration.getDbName(), stub);
+            registry.bind(endpointConfiguration.getDatabaseName(), stub);
         } catch (RemoteException e) {
             throw new CitrusRuntimeException("Failed to create RMI service in registry", e);
         } catch (AlreadyBoundException e) {
@@ -90,7 +90,7 @@ public class JdbcDbServer extends AbstractServer {
     protected void shutdown() {
         if (registry != null) {
             try {
-                registry.unbind(endpointConfiguration.getDbName());
+                registry.unbind(endpointConfiguration.getDatabaseName());
             } catch (Exception e) {
                 log.warn("Failed to unbind from registry:" + e.getMessage());
             }

@@ -61,8 +61,8 @@ public class JdbcDbServerConfigParser extends AbstractAnnotationConfigParser<Jdb
             builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
-        if (StringUtils.hasText(annotation.dbName())) {
-            builder.dbName(annotation.dbName());
+        if (StringUtils.hasText(annotation.databaseName())) {
+            builder.databaseName(annotation.databaseName());
         }
 
         builder.autoConnect(annotation.autoConnect());

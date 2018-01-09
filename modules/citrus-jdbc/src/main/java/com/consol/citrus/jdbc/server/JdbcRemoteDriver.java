@@ -65,7 +65,7 @@ public class JdbcRemoteDriver implements RemoteDriver {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Received request on db server: '%s':%n%s", endpointConfiguration.getDbName(), request.getPayload(String.class)));
+            log.debug(String.format("Received request on db server: '%s':%n%s", endpointConfiguration.getDatabaseName(), request.getPayload(String.class)));
         }
 
         Message response = endpointAdapter.handleMessage(request);

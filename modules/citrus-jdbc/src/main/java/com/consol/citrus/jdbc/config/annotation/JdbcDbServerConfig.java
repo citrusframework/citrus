@@ -58,7 +58,7 @@ public @interface JdbcDbServerConfig {
      * Database name.
      * @return
      */
-    String dbName() default "";
+    String databaseName() default "";
 
     /**
      * Auto accept connections.

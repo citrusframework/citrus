@@ -75,12 +75,12 @@ public class JdbcDbServerBuilder extends AbstractEndpointBuilder<JdbcDbServer> {
     }
 
     /**
-     * Sets the dbName property.
-     * @param dbName
+     * Sets the database name property.
+     * @param name
      * @return
      */
-    public JdbcDbServerBuilder dbName(String dbName) {
-        endpoint.getEndpointConfiguration().setDbName(dbName);
+    public JdbcDbServerBuilder databaseName(String name) {
+        endpoint.getEndpointConfiguration().setDatabaseName(name);
         return this;
     }
 
