@@ -30,6 +30,7 @@
           <xs:element ref="open-connection"/>
           <xs:element ref="close-connection"/>
           <xs:element ref="create-statement"/>
+          <xs:element ref="close-statement"/>
           <xs:element ref="create-prepared-statement"/>
           <xs:element ref="execute"/>
         </xs:choice>
@@ -64,6 +65,15 @@
     <xs:element name="create-statement">
       <xs:annotation>
         <xs:documentation>Create statement operation.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="close-statement">
+      <xs:annotation>
+        <xs:documentation>Close statement operation.</xs:documentation>
       </xs:annotation>
       <xs:complexType>
         <xs:sequence/>

@@ -22,37 +22,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;choice&gt;
- *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}open-connection"/&gt;
- *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}close-connection"/&gt;
- *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}create-statement"/&gt;
- *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}create-table"/&gt;
- *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}select"/&gt;
- *       &lt;/choice&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "execute",
     "createStatement",
+    "closeStatement",
     "createPreparedStatement",
-    "closeConnection",
-    "openConnection"
+    "openConnection",
+    "closeConnection"
 })
 @XmlRootElement(name = "operation")
 public class Operation {
@@ -64,6 +41,8 @@ public class Operation {
     protected CreatePreparedStatement createPreparedStatement;
     @XmlElement(name = "close-connection")
     protected CloseConnection closeConnection;
+    @XmlElement(name = "close-statement")
+    protected CloseStatement closeStatement;
     @XmlElement(name = "open-connection")
     protected OpenConnection openConnection;
 
@@ -82,6 +61,10 @@ public class Operation {
         this.closeConnection = operation;
     }
 
+    public Operation(CloseStatement operation) {
+        this.closeStatement = operation;
+    }
+
     public Operation(CreateStatement operation) {
         this.createStatement = operation;
     }
@@ -95,51 +78,39 @@ public class Operation {
     }
 
     /**
-     * Ruft den Wert der select-Eigenschaft ab.
-     * 
+     * Gets the execute.
+     *
      * @return
-     *     possible object is
-     *     {@link Execute }
-     *     
      */
     public Execute getExecute() {
         return execute;
     }
 
     /**
-     * Legt den Wert der select-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Execute }
-     *     
+     * Sets the execute.
+     *
+     * @param execute
      */
-    public void setExecute(Execute value) {
-        this.execute = value;
+    public void setExecute(Execute execute) {
+        this.execute = execute;
     }
 
     /**
-     * Ruft den Wert der createStatement-Eigenschaft ab.
-     * 
+     * Gets the createStatement.
+     *
      * @return
-     *     possible object is
-     *     {@link CreateStatement }
-     *     
      */
     public CreateStatement getCreateStatement() {
         return createStatement;
     }
 
     /**
-     * Legt den Wert der createStatement-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CreateStatement }
-     *     
+     * Sets the createStatement.
+     *
+     * @param createStatement
      */
-    public void setCreateStatement(CreateStatement value) {
-        this.createStatement = value;
+    public void setCreateStatement(CreateStatement createStatement) {
+        this.createStatement = createStatement;
     }
 
     /**
@@ -161,51 +132,56 @@ public class Operation {
     }
 
     /**
-     * Ruft den Wert der closeConnection-Eigenschaft ab.
-     * 
+     * Gets the closeConnection.
+     *
      * @return
-     *     possible object is
-     *     {@link CloseConnection }
-     *     
      */
     public CloseConnection getCloseConnection() {
         return closeConnection;
     }
 
     /**
-     * Legt den Wert der closeConnection-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CloseConnection }
-     *     
+     * Sets the closeConnection.
+     *
+     * @param closeConnection
      */
-    public void setCloseConnection(CloseConnection value) {
-        this.closeConnection = value;
+    public void setCloseConnection(CloseConnection closeConnection) {
+        this.closeConnection = closeConnection;
     }
 
     /**
-     * Ruft den Wert der openConnection-Eigenschaft ab.
-     * 
+     * Gets the closeStatement.
+     *
      * @return
-     *     possible object is
-     *     {@link OpenConnection }
-     *     
+     */
+    public CloseStatement getCloseStatement() {
+        return closeStatement;
+    }
+
+    /**
+     * Sets the closeStatement.
+     *
+     * @param closeStatement
+     */
+    public void setCloseStatement(CloseStatement closeStatement) {
+        this.closeStatement = closeStatement;
+    }
+
+    /**
+     * Gets the openConnection.
+     *
+     * @return
      */
     public OpenConnection getOpenConnection() {
         return openConnection;
     }
 
     /**
-     * Legt den Wert der openConnection-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link OpenConnection }
-     *     
+     * Sets the openConnection.
+     *
+     * @param openConnection
      */
-    public void setOpenConnection(OpenConnection value) {
-        this.openConnection = value;
+    public void setOpenConnection(OpenConnection openConnection) {
+        this.openConnection = openConnection;
     }
-
 }

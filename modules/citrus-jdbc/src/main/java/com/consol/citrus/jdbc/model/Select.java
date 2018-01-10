@@ -18,28 +18,6 @@ package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.*;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="columns" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="from" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="where" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "columns",
@@ -56,75 +34,56 @@ public class Select {
     protected String where;
 
     /**
-     * Ruft den Wert der columns-Eigenschaft ab.
-     * 
+     * Gets the columns.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getColumns() {
         return columns;
     }
 
     /**
-     * Legt den Wert der columns-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the columns.
+     *
+     * @param columns
      */
-    public void setColumns(String value) {
-        this.columns = value;
+    public void setColumns(String columns) {
+        this.columns = columns;
     }
 
     /**
-     * Ruft den Wert der from-Eigenschaft ab.
-     * 
+     * Gets the from.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getFrom() {
         return from;
     }
 
     /**
-     * Legt den Wert der from-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the from.
+     *
+     * @param from
      */
-    public void setFrom(String value) {
-        this.from = value;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     /**
-     * Ruft den Wert der where-Eigenschaft ab.
-     * 
+     * Gets the where.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getWhere() {
         return where;
     }
 
     /**
-     * Legt den Wert der where-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the where.
+     *
+     * @param where
      */
-    public void setWhere(String value) {
-        this.where = value;
+    public void setWhere(String where) {
+        this.where = where;
     }
-
 }

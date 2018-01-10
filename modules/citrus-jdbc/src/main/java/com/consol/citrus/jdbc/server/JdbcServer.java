@@ -19,10 +19,6 @@ package com.consol.citrus.jdbc.server;
 import com.consol.citrus.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.xml.transform.StringResult;
-import spark.*;
-
-import static spark.Spark.*;
 
 /**
  * @author Christoph Deppisch
@@ -34,85 +30,44 @@ public class JdbcServer extends AbstractServer {
     private static Logger log = LoggerFactory.getLogger(JdbcServer.class);
 
     /** Endpoint configuration */
-    private final JdbcServerConfiguration endpointConfiguration;
+    private final JdbcEndpointConfiguration endpointConfiguration;
 
     /** Controller handling requests */
     private JdbcEndpointAdapterController controller;
+
+    /** JDBC server delegate */
+    private com.consol.citrus.db.server.JdbcServer jdbcServer;
 
     /**
      * Default constructor initializing endpoint configuration.
      */
     public JdbcServer() {
-        this(new JdbcServerConfiguration());
+        this(new JdbcEndpointConfiguration());
     }
 
     /**
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    public JdbcServer(JdbcServerConfiguration endpointConfiguration) {
+    public JdbcServer(JdbcEndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
     }
 
     @Override
-    public JdbcServerConfiguration getEndpointConfiguration() {
+    public JdbcEndpointConfiguration getEndpointConfiguration() {
         return endpointConfiguration;
     }
 
     @Override
     protected void startup() {
         controller = new JdbcEndpointAdapterController(getEndpointConfiguration(), getEndpointAdapter());
+        this.jdbcServer = new com.consol.citrus.db.server.JdbcServer(controller, endpointConfiguration.getServerConfiguration());
 
-        port(endpointConfiguration.getPort());
-
-        before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url()));
-
-        get("/connection", (req, res) -> {
-            controller.getConnection(req.params());
-            return "";
-        });
-
-        delete("/connection", (req, res) -> {
-            controller.closeConnection();
-            return "";
-        });
-
-        get("/statement", (req, res) -> {
-            controller.createStatement();
-            return "";
-        });
-
-        delete("/statement", (req, res) -> {
-            controller.closeStatement();
-            return "";
-        });
-
-        post("/statement", (req, res) -> {
-            controller.createPreparedStatement(req.body());
-            return "";
-        });
-
-        post("/query", (req, res) -> controller.executeQuery(req.body()), model -> {
-            StringResult result = new StringResult();
-            endpointConfiguration.getMarshaller().marshal(model, result);
-            return result.toString();
-        });
-
-        post("/execute", (req, res) -> {
-            controller.execute(req.body());
-            return "";
-        });
-
-        post("/update", (req, res) -> controller.executeUpdate(req.body()));
-
-        exception(JdbcServerException.class, (exception, request, response) -> {
-            response.status(500);
-            response.body(exception.getMessage());
-        });
+        jdbcServer.start();
     }
 
     @Override
     protected void shutdown() {
-        Spark.stop();
+        jdbcServer.stop();
     }
 }

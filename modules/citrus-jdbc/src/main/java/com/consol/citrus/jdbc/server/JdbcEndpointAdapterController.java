@@ -16,6 +16,8 @@
 
 package com.consol.citrus.jdbc.server;
 
+import com.consol.citrus.db.server.JdbcServerException;
+import com.consol.citrus.db.server.controller.JdbcController;
 import com.consol.citrus.endpoint.*;
 import com.consol.citrus.jdbc.model.*;
 import com.consol.citrus.message.DefaultMessage;
@@ -39,7 +41,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JdbcEndpointAdapterController.class);
 
-    private final JdbcServerConfiguration endpointConfiguration;
+    private final JdbcEndpointConfiguration endpointConfiguration;
     private final EndpointAdapter delegate;
 
     private AtomicInteger connections = new AtomicInteger(0);
@@ -49,7 +51,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param endpointConfiguration
      * @param delegate
      */
-    public JdbcEndpointAdapterController(JdbcServerConfiguration endpointConfiguration, EndpointAdapter delegate) {
+    public JdbcEndpointAdapterController(JdbcEndpointConfiguration endpointConfiguration, EndpointAdapter delegate) {
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
     }
@@ -63,7 +65,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Received request on server: '%s':%n%s", endpointConfiguration.getDatabaseName(), request.getPayload(String.class)));
+            log.debug(String.format("Received request on server: '%s':%n%s", endpointConfiguration.getServerConfiguration().getDatabaseName(), request.getPayload(String.class)));
         }
 
         Message response = delegate.handleMessage(request);
@@ -91,8 +93,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             }
         }
 
-        if (connections.get() == endpointConfiguration.getMaxConnections()) {
-            throw new JdbcServerException(String.format("Maximum number of connections (%s) reached", endpointConfiguration.getMaxConnections()));
+        if (connections.get() == endpointConfiguration.getServerConfiguration().getMaxConnections()) {
+            throw new JdbcServerException(String.format("Maximum number of connections (%s) reached", endpointConfiguration.getServerConfiguration().getMaxConnections()));
         }
 
         connections.incrementAndGet();
@@ -136,7 +138,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     @Override
-    public ResultSet executeQuery(String stmt) throws JdbcServerException {
+    public com.consol.citrus.db.driver.model.ResultSet executeQuery(String stmt) throws JdbcServerException {
         log.info("Received execute query request: " + stmt);
 
         OperationResult result = handleMessage(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
@@ -145,7 +147,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             throw new JdbcServerException(result.getException());
         }
 
-        return Optional.ofNullable(result.getResultSet()).orElse(new ResultSet());
+        return createResultSet(result);
     }
 
     @Override
@@ -174,7 +176,34 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
     @Override
     public void closeStatement() throws JdbcServerException {
+        if (!endpointConfiguration.isAutoCreateStatement()) {
+            OperationResult result = handleMessage(new DefaultMessage(new Operation(new CloseStatement()))).getPayload(OperationResult.class);
 
+            if (!result.isSuccess()) {
+                throw new JdbcServerException(result.getException());
+            }
+        }
+    }
+
+    /**
+     * Converts Citrus result set representation to db driver model result set.
+     * @param result
+     * @return
+     */
+    private com.consol.citrus.db.driver.model.ResultSet createResultSet(OperationResult result) {
+        com.consol.citrus.db.driver.model.ResultSet resultSet = new com.consol.citrus.db.driver.model.ResultSet();
+
+        if (result.getResultSet() != null) {
+            result.getResultSet().getColumns()
+                    .forEach(column -> resultSet.getColumns().add(new com.consol.citrus.db.driver.model.ResultSet.Column(column.getName(), column.getType())));
+
+            result.getResultSet().getRows()
+                    .forEach(row -> resultSet.getRows().add(new com.consol.citrus.db.driver.model.ResultSet.Row(row.getValues())));
+
+            resultSet.setAffectedRows(result.getResultSet().getAffectedRows());
+        }
+
+        return resultSet;
     }
 
     @Override

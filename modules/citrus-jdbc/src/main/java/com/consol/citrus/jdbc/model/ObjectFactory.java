@@ -18,7 +18,6 @@ package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
-
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
@@ -54,7 +53,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link ResultSet }
-     * 
+     *
      */
     public ResultSet createResultSet() {
         return new ResultSet();

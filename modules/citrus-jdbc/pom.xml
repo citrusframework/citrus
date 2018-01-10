@@ -26,12 +26,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sparkjava</groupId>
-      <artifactId>spark-core</artifactId>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-db-server</artifactId>
     </dependency>
   </dependencies>
 

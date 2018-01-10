@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jdbc.server;
 
+import com.consol.citrus.db.server.JdbcServerConfiguration;
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
@@ -28,20 +29,15 @@ import org.springframework.context.ApplicationContextAware;
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcServerConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
+public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
 
-    /** Rmi connection parameters */
-    private String host;
-    private int port = 4567;
-    private String databaseName;
+    /** Jdbc server configuration */
+    private JdbcServerConfiguration serverConfiguration = new JdbcServerConfiguration();
 
     /** Auto accept connection requests */
     private boolean autoConnect = true;
     /** Auto accept create statement requests */
     private boolean autoCreateStatement = true;
-
-    /** Maximum number of parallel connections */
-    private int maxConnections = 20;
 
     /** Marshaller converts from XML to Jdbc model objects */
     private JdbcMarshaller marshaller = new JdbcMarshaller();
@@ -51,40 +47,6 @@ public class JdbcServerConfiguration extends AbstractPollableEndpointConfigurati
 
     /** Spring application context used for method arg object reference evaluation */
     private ApplicationContext applicationContext;
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
-     * Gets the databaseName.
-     *
-     * @return
-     */
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    /**
-     * Sets the databaseName.
-     *
-     * @param databaseName
-     */
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
-    }
 
     public MessageCorrelator getCorrelator() {
         return correlator;
@@ -130,24 +92,6 @@ public class JdbcServerConfiguration extends AbstractPollableEndpointConfigurati
         this.autoCreateStatement = autoCreateStatement;
     }
 
-    /**
-     * Gets the maxConnections.
-     *
-     * @return
-     */
-    public int getMaxConnections() {
-        return maxConnections;
-    }
-
-    /**
-     * Sets the maxConnections.
-     *
-     * @param maxConnections
-     */
-    public void setMaxConnections(int maxConnections) {
-        this.maxConnections = maxConnections;
-    }
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -173,5 +117,23 @@ public class JdbcServerConfiguration extends AbstractPollableEndpointConfigurati
      */
     public void setMarshaller(JdbcMarshaller marshaller) {
         this.marshaller = marshaller;
+    }
+
+    /**
+     * Gets the serverConfiguration.
+     *
+     * @return
+     */
+    public JdbcServerConfiguration getServerConfiguration() {
+        return serverConfiguration;
+    }
+
+    /**
+     * Sets the serverConfiguration.
+     *
+     * @param serverConfiguration
+     */
+    public void setServerConfiguration(JdbcServerConfiguration serverConfiguration) {
+        this.serverConfiguration = serverConfiguration;
     }
 }

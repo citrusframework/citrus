@@ -18,27 +18,6 @@ package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.*;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="into" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="values" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "into",
@@ -53,51 +32,38 @@ public class Insert {
     protected String values;
 
     /**
-     * Ruft den Wert der into-Eigenschaft ab.
-     * 
+     * Gets the into.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getInto() {
         return into;
     }
 
     /**
-     * Legt den Wert der into-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the into.
+     *
+     * @param into
      */
-    public void setInto(String value) {
-        this.into = value;
+    public void setInto(String into) {
+        this.into = into;
     }
 
     /**
-     * Ruft den Wert der values-Eigenschaft ab.
-     * 
+     * Gets the values.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getValues() {
         return values;
     }
 
     /**
-     * Legt den Wert der values-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the values.
+     *
+     * @param values
      */
-    public void setValues(String value) {
-        this.values = value;
+    public void setValues(String values) {
+        this.values = values;
     }
-
 }

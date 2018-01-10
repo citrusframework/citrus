@@ -18,7 +18,7 @@ package com.consol.citrus.jdbc.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractServerParser;
-import com.consol.citrus.jdbc.server.JdbcServerConfiguration;
+import com.consol.citrus.jdbc.server.JdbcEndpointConfiguration;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 public class JdbcServerParser extends AbstractServerParser {
     @Override
     protected void parseServer(BeanDefinitionBuilder serverBuilder, Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder configurationBuilder = BeanDefinitionBuilder.genericBeanDefinition(JdbcServerConfiguration.class);
+        BeanDefinitionBuilder configurationBuilder = BeanDefinitionBuilder.genericBeanDefinition(JdbcEndpointConfiguration.class);
         new JdbcEndpointConfigurationParser().parseEndpointConfiguration(configurationBuilder, element);
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "Configuration";

@@ -18,27 +18,6 @@ package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.*;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *       &lt;/sequence&gt;
- *       &lt;attribute name="create-or-replace" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "name"
@@ -52,51 +31,38 @@ public class CreateTable {
     protected Boolean createOrReplace;
 
     /**
-     * Ruft den Wert der name-Eigenschaft ab.
-     * 
+     * Gets the name.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Legt den Wert der name-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the name.
+     *
+     * @param name
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * Ruft den Wert der createOrReplace-Eigenschaft ab.
-     * 
+     * Gets the createOrReplace.
+     *
      * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
      */
-    public Boolean isCreateOrReplace() {
+    public Boolean getCreateOrReplace() {
         return createOrReplace;
     }
 
     /**
-     * Legt den Wert der createOrReplace-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * Sets the createOrReplace.
+     *
+     * @param createOrReplace
      */
-    public void setCreateOrReplace(Boolean value) {
-        this.createOrReplace = value;
+    public void setCreateOrReplace(Boolean createOrReplace) {
+        this.createOrReplace = createOrReplace;
     }
-
 }

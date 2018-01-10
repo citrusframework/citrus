@@ -18,42 +18,6 @@ package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.*;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="statement"&gt;
- *           &lt;complexType&gt;
- *             &lt;complexContent&gt;
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *                 &lt;choice&gt;
- *                   &lt;element name="sql" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *                   &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}create-table"/&gt;
- *                   &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}drop-table"/&gt;
- *                   &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}select"/&gt;
- *                   &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}insert"/&gt;
- *                   &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}update"/&gt;
- *                   &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}delete"/&gt;
- *                 &lt;/choice&gt;
- *               &lt;/restriction&gt;
- *             &lt;/complexContent&gt;
- *           &lt;/complexType&gt;
- *         &lt;/element&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "statement"
@@ -72,55 +36,23 @@ public class Execute {
     }
 
     /**
-     * Ruft den Wert der statement-Eigenschaft ab.
+     * Gets the statement.
      *
      * @return
-     *     possible object is
-     *     {@link Statement }
-     *
      */
     public Statement getStatement() {
         return statement;
     }
 
     /**
-     * Legt den Wert der statement-Eigenschaft fest.
+     * Sets the statement.
      *
-     * @param value
-     *     allowed object is
-     *     {@link Statement }
-     *
+     * @param statement
      */
-    public void setStatement(Statement value) {
-        this.statement = value;
+    public void setStatement(Statement statement) {
+        this.statement = statement;
     }
 
-
-    /**
-     * <p>Java-Klasse für anonymous complex type.
-     * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
-     * 
-     * <pre>
-     * &lt;complexType&gt;
-     *   &lt;complexContent&gt;
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
-     *       &lt;choice&gt;
-     *         &lt;element name="sql" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
-     *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}create-table"/&gt;
-     *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}drop-table"/&gt;
-     *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}select"/&gt;
-     *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}insert"/&gt;
-     *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}update"/&gt;
-     *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}delete"/&gt;
-     *       &lt;/choice&gt;
-     *     &lt;/restriction&gt;
-     *   &lt;/complexContent&gt;
-     * &lt;/complexType&gt;
-     * </pre>
-     * 
-     * 
-     */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "delete",
@@ -175,173 +107,130 @@ public class Execute {
         }
 
         /**
-         * Ruft den Wert der delete-Eigenschaft ab.
-         * 
+         * Gets the delete.
+         *
          * @return
-         *     possible object is
-         *     {@link Delete }
-         *     
          */
         public Delete getDelete() {
             return delete;
         }
 
         /**
-         * Legt den Wert der delete-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Delete }
-         *     
+         * Sets the delete.
+         *
+         * @param delete
          */
-        public void setDelete(Delete value) {
-            this.delete = value;
+        public void setDelete(Delete delete) {
+            this.delete = delete;
         }
 
         /**
-         * Ruft den Wert der update-Eigenschaft ab.
-         * 
+         * Gets the update.
+         *
          * @return
-         *     possible object is
-         *     {@link Update }
-         *     
          */
         public Update getUpdate() {
             return update;
         }
 
         /**
-         * Legt den Wert der update-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Update }
-         *     
+         * Sets the update.
+         *
+         * @param update
          */
-        public void setUpdate(Update value) {
-            this.update = value;
+        public void setUpdate(Update update) {
+            this.update = update;
         }
 
         /**
-         * Ruft den Wert der insert-Eigenschaft ab.
-         * 
+         * Gets the insert.
+         *
          * @return
-         *     possible object is
-         *     {@link Insert }
-         *     
          */
         public Insert getInsert() {
             return insert;
         }
 
         /**
-         * Legt den Wert der insert-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Insert }
-         *     
+         * Sets the insert.
+         *
+         * @param insert
          */
-        public void setInsert(Insert value) {
-            this.insert = value;
+        public void setInsert(Insert insert) {
+            this.insert = insert;
         }
 
         /**
-         * Ruft den Wert der select-Eigenschaft ab.
-         * 
+         * Gets the select.
+         *
          * @return
-         *     possible object is
-         *     {@link Select }
-         *     
          */
         public Select getSelect() {
             return select;
         }
 
         /**
-         * Legt den Wert der select-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Select }
-         *     
+         * Sets the select.
+         *
+         * @param select
          */
-        public void setSelect(Select value) {
-            this.select = value;
+        public void setSelect(Select select) {
+            this.select = select;
         }
 
         /**
-         * Ruft den Wert der dropTable-Eigenschaft ab.
-         * 
+         * Gets the dropTable.
+         *
          * @return
-         *     possible object is
-         *     {@link DropTable }
-         *     
          */
         public DropTable getDropTable() {
             return dropTable;
         }
 
         /**
-         * Legt den Wert der dropTable-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link DropTable }
-         *     
+         * Sets the dropTable.
+         *
+         * @param dropTable
          */
-        public void setDropTable(DropTable value) {
-            this.dropTable = value;
+        public void setDropTable(DropTable dropTable) {
+            this.dropTable = dropTable;
         }
 
         /**
-         * Ruft den Wert der createTable-Eigenschaft ab.
-         * 
+         * Gets the createTable.
+         *
          * @return
-         *     possible object is
-         *     {@link CreateTable }
-         *     
          */
         public CreateTable getCreateTable() {
             return createTable;
         }
 
         /**
-         * Legt den Wert der createTable-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link CreateTable }
-         *     
+         * Sets the createTable.
+         *
+         * @param createTable
          */
-        public void setCreateTable(CreateTable value) {
-            this.createTable = value;
+        public void setCreateTable(CreateTable createTable) {
+            this.createTable = createTable;
         }
 
         /**
-         * Ruft den Wert der sql-Eigenschaft ab.
-         * 
+         * Gets the sql.
+         *
          * @return
-         *     possible object is
-         *     {@link String }
-         *     
          */
         public String getSql() {
             return sql;
         }
 
         /**
-         * Legt den Wert der sql-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         * Sets the sql.
+         *
+         * @param sql
          */
-        public void setSql(String value) {
-            this.sql = value;
+        public void setSql(String sql) {
+            this.sql = sql;
         }
-
     }
 
 }

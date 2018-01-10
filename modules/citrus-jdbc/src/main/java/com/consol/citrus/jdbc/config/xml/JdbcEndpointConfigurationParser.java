@@ -17,6 +17,7 @@
 package com.consol.citrus.jdbc.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.db.server.JdbcServerConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.w3c.dom.Element;
 
@@ -32,16 +33,31 @@ public class JdbcEndpointConfigurationParser {
      * @param element
      */
     public void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element) {
+        JdbcServerConfiguration serverConfiguration = new JdbcServerConfiguration();
+
+        if (element.hasAttribute("host")) {
+            serverConfiguration.setHost(element.getAttribute("host"));
+        }
+
+        if (element.hasAttribute("port")) {
+            serverConfiguration.setPort(Integer.valueOf(element.getAttribute("port")));
+        }
+
+        if (element.hasAttribute("database-name")) {
+            serverConfiguration.setDatabaseName(element.getAttribute("database-name"));
+        }
+
+        if (element.hasAttribute("max-connections")) {
+            serverConfiguration.setMaxConnections(Integer.valueOf(element.getAttribute("max-connections")));
+        }
+
+        endpointConfiguration.addPropertyValue("serverConfiguration", serverConfiguration);
+
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("timeout"), "timeout");
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-connect"), "autoConnect");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-create-statement"), "autoCreateStatement");
 
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "host");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "port");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("database-name"), "databaseName");
-
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("max-connections"), "maxConnections");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
     }

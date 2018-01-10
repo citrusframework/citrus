@@ -18,28 +18,6 @@ package com.consol.citrus.jdbc.model;
 
 import javax.xml.bind.annotation.*;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="table" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="set" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="where" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "table",
@@ -56,75 +34,56 @@ public class Update {
     protected String where;
 
     /**
-     * Ruft den Wert der table-Eigenschaft ab.
-     * 
+     * Gets the table.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getTable() {
         return table;
     }
 
     /**
-     * Legt den Wert der table-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the table.
+     *
+     * @param table
      */
-    public void setTable(String value) {
-        this.table = value;
+    public void setTable(String table) {
+        this.table = table;
     }
 
     /**
-     * Ruft den Wert der set-Eigenschaft ab.
-     * 
+     * Gets the set.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getSet() {
         return set;
     }
 
     /**
-     * Legt den Wert der set-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the set.
+     *
+     * @param set
      */
-    public void setSet(String value) {
-        this.set = value;
+    public void setSet(String set) {
+        this.set = set;
     }
 
     /**
-     * Ruft den Wert der where-Eigenschaft ab.
-     * 
+     * Gets the where.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getWhere() {
         return where;
     }
 
     /**
-     * Legt den Wert der where-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the where.
+     *
+     * @param where
      */
-    public void setWhere(String value) {
-        this.where = value;
+    public void setWhere(String where) {
+        this.where = where;
     }
-
 }

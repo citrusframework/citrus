@@ -50,7 +50,7 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
      * @return
      */
     public JdbcServerBuilder host(String host) {
-        endpoint.getEndpointConfiguration().setHost(host);
+        endpoint.getEndpointConfiguration().getServerConfiguration().setHost(host);
         return this;
     }
 
@@ -60,7 +60,7 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
      * @return
      */
     public JdbcServerBuilder port(int port) {
-        endpoint.getEndpointConfiguration().setPort(port);
+        endpoint.getEndpointConfiguration().getServerConfiguration().setPort(port);
         return this;
     }
 
@@ -70,7 +70,7 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
      * @return
      */
     public JdbcServerBuilder databaseName(String name) {
-        endpoint.getEndpointConfiguration().setDatabaseName(name);
+        endpoint.getEndpointConfiguration().getServerConfiguration().setDatabaseName(name);
         return this;
     }
 
@@ -130,7 +130,7 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
      * @return
      */
     public JdbcServerBuilder maxConnections(int maxConnections) {
-        endpoint.getEndpointConfiguration().setMaxConnections(maxConnections);
+        endpoint.getEndpointConfiguration().getServerConfiguration().setMaxConnections(maxConnections);
         return this;
     }
 

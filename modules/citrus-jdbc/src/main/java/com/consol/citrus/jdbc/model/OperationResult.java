@@ -22,28 +22,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
-/**
- * <p>Java-Klasse für anonymous complex type.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="success" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
- *         &lt;element name="exception" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element ref="{http://www.citrusframework.org/schema/jdbc/message}result-set" minOccurs="0"/&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "success",
@@ -76,67 +54,56 @@ public class OperationResult {
     }
 
     /**
-     * Ruft den Wert der success-Eigenschaft ab.
-     * 
+     * Gets the success.
+     *
+     * @return
      */
     public boolean isSuccess() {
         return success;
     }
 
     /**
-     * Legt den Wert der success-Eigenschaft fest.
-     * 
+     * Sets the success.
+     *
+     * @param success
      */
-    public void setSuccess(boolean value) {
-        this.success = value;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     /**
-     * Ruft den Wert der exception-Eigenschaft ab.
-     * 
+     * Gets the exception.
+     *
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
     public String getException() {
         return exception;
     }
 
     /**
-     * Legt den Wert der exception-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * Sets the exception.
+     *
+     * @param exception
      */
-    public void setException(String value) {
-        this.exception = value;
+    public void setException(String exception) {
+        this.exception = exception;
     }
 
     /**
-     * Ruft den Wert der resultSet-Eigenschaft ab.
-     * 
+     * Gets the resultSet.
+     *
      * @return
-     *     possible object is
-     *     {@link ResultSet }
-     *     
      */
     public ResultSet getResultSet() {
         return resultSet;
     }
 
     /**
-     * Legt den Wert der resultSet-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ResultSet }
-     *     
+     * Sets the resultSet.
+     *
+     * @param resultSet
      */
-    public void setResultSet(ResultSet value) {
-        this.resultSet = value;
+    public void setResultSet(ResultSet resultSet) {
+        this.resultSet = resultSet;
     }
-
 }
