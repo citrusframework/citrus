@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.Objects;
 /**
  * Adapter between the resource reference from the bean configuration and the
  * usable SimpleJsonSchema for validation.
+ * @since 2.7.3
  */
 public class SimpleJsonSchema implements InitializingBean {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.util.List;
 
 /**
  * Schema repository holding a set of json schema resources known in the test scope.
+ * @since 2.7.3
  */
 public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
 
