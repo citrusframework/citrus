@@ -46,7 +46,7 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer {
             log.debug("");
         }
 
-        for(TestAction action: actions)  {
+        for (TestAction action: actions)  {
             action.execute(context);
         }
     }

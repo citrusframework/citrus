@@ -160,7 +160,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             }
         }
 
-        for (String data : headerData){
+        for (String data : headerData) {
             headerDataList.add(context.replaceDynamicContentInString(data.trim()));
         }
 

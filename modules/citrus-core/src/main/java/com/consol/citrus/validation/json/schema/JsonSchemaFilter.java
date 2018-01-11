@@ -51,11 +51,11 @@ public class JsonSchemaFilter {
     public List<SimpleJsonSchema> filter(List<JsonSchemaRepository> schemaRepositories,
                                          JsonMessageValidationContext jsonMessageValidationContext,
                                          ApplicationContext applicationContext) {
-        if(isSchemaRepositorySpecified(jsonMessageValidationContext)){
+        if (isSchemaRepositorySpecified(jsonMessageValidationContext)) {
             return filterByRepositoryName(schemaRepositories, jsonMessageValidationContext);
-        }else if(isSchemaSpecified(jsonMessageValidationContext)){
+        } else if (isSchemaSpecified(jsonMessageValidationContext)) {
             return getSchemaFromContext(jsonMessageValidationContext, applicationContext);
-        }else{
+        } else {
             return mergeRepositories(schemaRepositories);
         }
     }
@@ -69,16 +69,16 @@ public class JsonSchemaFilter {
      */
     private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
                                                         ApplicationContext applicationContext) {
-        try{
+        try {
             SimpleJsonSchema simpleJsonSchema =
                     applicationContext.getBean(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
             }
 
             return Collections.singletonList(simpleJsonSchema);
-        }catch (NoSuchBeanDefinitionException e){
+        } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException(
                     "Could not find the specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".",
                     e);
@@ -94,9 +94,9 @@ public class JsonSchemaFilter {
      */
     private List<SimpleJsonSchema> filterByRepositoryName(List<JsonSchemaRepository> schemaRepositories,
                                                           JsonMessageValidationContext jsonMessageValidationContext) {
-        for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories){
-            if(Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())){
-                if(log.isDebugEnabled()){
+        for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories) {
+            if (Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())) {
+                if (log.isDebugEnabled()) {
                     log.debug("Found specified schema-repository: \"" +
                             jsonMessageValidationContext.getSchemaRepository() + "\".");
                 }

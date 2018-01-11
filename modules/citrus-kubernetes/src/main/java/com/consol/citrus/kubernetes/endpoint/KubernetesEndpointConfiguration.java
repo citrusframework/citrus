@@ -57,7 +57,7 @@ public class KubernetesEndpointConfiguration extends AbstractPollableEndpointCon
      * @return
      */
     public io.fabric8.kubernetes.client.KubernetesClient getKubernetesClient() {
-        if(kubernetesClient == null) {
+        if (kubernetesClient == null) {
             kubernetesClient = createKubernetesClient();
         }
 

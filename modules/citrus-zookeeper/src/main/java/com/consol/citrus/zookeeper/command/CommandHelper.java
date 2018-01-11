@@ -24,7 +24,7 @@ import org.apache.zookeeper.data.Stat;
  */
 public class CommandHelper {
     public static final void parseStatResponse(ZooResponse commandResult, Stat stat) {
-        if(stat == null) {
+        if (stat == null) {
             return;
         }
         commandResult.setResponseParam("aversion", stat.getAversion());

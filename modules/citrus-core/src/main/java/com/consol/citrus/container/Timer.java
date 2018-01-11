@@ -129,7 +129,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     }
 
     public String getTimerId() {
-        if(StringUtils.isEmpty(timerId)) {
+        if (StringUtils.isEmpty(timerId)) {
             timerId = "citrus-timer-" + serialNumber();
         }
         return timerId;

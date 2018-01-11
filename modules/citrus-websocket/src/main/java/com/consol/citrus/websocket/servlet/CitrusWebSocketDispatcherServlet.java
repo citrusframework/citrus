@@ -66,7 +66,7 @@ public class CitrusWebSocketDispatcherServlet extends CitrusDispatcherServlet {
 
     private void configureWebSockerHandler(ApplicationContext context) {
         List<WebSocketEndpoint> webSocketEndpoints = webSocketServer.getWebSockets();
-        if(CollectionUtils.isEmpty(webSocketEndpoints)) {
+        if (CollectionUtils.isEmpty(webSocketEndpoints)) {
             return;
         }
 

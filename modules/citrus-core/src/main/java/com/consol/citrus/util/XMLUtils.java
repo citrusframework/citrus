@@ -126,7 +126,7 @@ public final class XMLUtils {
 
         StringBuffer pathName;
         Node parent;
-        for(int j=0; j<elements.getLength(); j++) {
+        for (int j=0; j<elements.getLength(); j++) {
             int cnt = numToks-1;
             pathName = new StringBuffer(element);
             parent = elements.item(j).getParentNode();

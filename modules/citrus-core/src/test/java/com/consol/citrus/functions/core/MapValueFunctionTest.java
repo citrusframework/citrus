@@ -52,7 +52,7 @@ public class MapValueFunctionTest extends AbstractTestNGUnitTest {
 		MapValueFunction testee = new MapValueFunction();
 		testee.setMap(map);
 		testee.afterPropertiesSet();
-		for(String key : map.keySet()) {
+		for (String key : map.keySet()) {
 			String result = testee.execute(Arrays.asList(key), context);
 			Assert.assertEquals(result, map.get(key));
 		}

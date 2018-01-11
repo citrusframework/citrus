@@ -75,7 +75,7 @@ public class HttpMessage extends DefaultMessage {
      * @param message the message to extract the cookies from
      */
     private void copyCookies(Message message) {
-        if(message instanceof HttpMessage){
+        if (message instanceof HttpMessage) {
             this.cookies.addAll(((HttpMessage) message).getCookies());
         }
     }

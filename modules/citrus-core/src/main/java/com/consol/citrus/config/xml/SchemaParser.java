@@ -44,15 +44,15 @@ public class SchemaParser implements BeanDefinitionParser {
         if (location.endsWith(".wsdl")) {
             builder = BeanDefinitionBuilder.genericBeanDefinition(WsdlXsdSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "wsdl");
-        } else if (location.endsWith(".xsd")){
+        } else if (location.endsWith(".xsd")) {
             builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "xsd");
-        } else if (location.endsWith(".json")){
+        } else if (location.endsWith(".json")) {
             builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleJsonSchema.class);
             BeanDefinitionParserUtils.setPropertyValue(builder, location, "json");
         }
 
-        if(builder != null){
+        if (builder != null) {
             parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
         }
 

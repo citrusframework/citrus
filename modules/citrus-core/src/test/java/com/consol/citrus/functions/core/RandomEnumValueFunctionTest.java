@@ -47,7 +47,7 @@ public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
 	public void testWithParameters() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		final List<String> values = generateRandomValues();
-		for(int i=0; i<100; i++) {
+		for (int i=0; i<100; i++) {
 			final String value = testee.execute(values, context);
 			assertNotNull(value);
 			assertTrue(values.contains(value));
@@ -60,7 +60,7 @@ public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
 		testee.setValues(generateRandomValues());
 		final List<String> noParameters = Collections.emptyList();
 		
-		for(int i=0; i<100; i++) {
+		for (int i=0; i<100; i++) {
 			final String value = testee.execute(noParameters, context);
 			assertNotNull(value);
 			assertTrue(testee.getValues().contains(value));

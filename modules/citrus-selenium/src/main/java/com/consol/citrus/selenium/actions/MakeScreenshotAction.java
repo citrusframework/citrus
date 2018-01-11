@@ -49,7 +49,7 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
         File screenshot = null;
-        if (browser.getWebDriver() instanceof TakesScreenshot){
+        if (browser.getWebDriver() instanceof TakesScreenshot) {
             screenshot = ((TakesScreenshot) browser.getWebDriver()).getScreenshotAs(OutputType.FILE);
         } else {
             log.warn("Skip screenshot action because web driver is missing screenshot features");

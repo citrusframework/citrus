@@ -120,7 +120,7 @@ public class RmiServiceResult {
                 return null;
             } else if (argType.isInstance(value) || argType.isAssignableFrom(value.getClass())) {
                 return argType.cast(value);
-            } else if(Map.class.equals(argType)) {
+            } else if (Map.class.equals(argType)) {
                 String mapString = value.toString();
 
                 Properties props = new Properties();

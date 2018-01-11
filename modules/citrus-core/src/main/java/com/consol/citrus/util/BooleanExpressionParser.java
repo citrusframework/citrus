@@ -16,13 +16,12 @@
 
 package com.consol.citrus.util;
 
-import java.util.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.util.*;
 
 /**
  * Parses boolean expression strings and evaluates to boolean result.
@@ -68,7 +67,7 @@ public final class BooleanExpressionParser {
             for (int i = 0; i < expression.length(); i++) {
                 actChar = expression.charAt(i);
     
-                if (actChar == '('){
+                if (actChar == '(') {
                     operators.push("(");
                 } else if (actChar == ' ') {
                     continue; //ignore

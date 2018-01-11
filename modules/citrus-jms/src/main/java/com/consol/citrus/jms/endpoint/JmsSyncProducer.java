@@ -94,7 +94,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 }
 
                 destination = endpointConfiguration.getDestination();
-            } else if (StringUtils.hasText(endpointConfiguration.getDestinationName())){
+            } else if (StringUtils.hasText(endpointConfiguration.getDestinationName())) {
                 if (endpointConfiguration.getDestinationNameResolver() != null) {
                     destination = resolveDestination(context.replaceDynamicContentInString(endpointConfiguration.getDestinationNameResolver().resolveEndpointUri(message, endpointConfiguration.getDestinationName())));
                 } else {
@@ -287,7 +287,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             return resolveDestinationName(endpointConfiguration.getReplyDestinationName(), session);
         }
 
-        if (endpointConfiguration.isPubSubDomain() && session instanceof TopicSession){
+        if (endpointConfiguration.isPubSubDomain() && session instanceof TopicSession) {
             return session.createTemporaryTopic();
         } else {
             return session.createTemporaryQueue();

@@ -51,7 +51,7 @@ public class DockerEndpointConfiguration extends AbstractPollableEndpointConfigu
      * @return
      */
     public com.github.dockerjava.api.DockerClient getDockerClient() {
-        if(dockerClient == null) {
+        if (dockerClient == null) {
             dockerClient = createDockerClient();
         }
 

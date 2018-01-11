@@ -50,7 +50,7 @@ public class WebSocketServerParser extends HttpServerParser {
             }
 
             for (Element socketElement : socketElements) {
-                if (socketElement.hasAttribute("ref")){
+                if (socketElement.hasAttribute("ref")) {
                     webSocketReferences.add(new RuntimeBeanReference(socketElement.getAttribute("ref")));
                 }
             }

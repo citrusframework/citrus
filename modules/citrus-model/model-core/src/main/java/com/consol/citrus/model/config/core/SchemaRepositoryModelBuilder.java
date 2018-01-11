@@ -54,7 +54,7 @@ public class SchemaRepositoryModelBuilder {
         schema.setId(id);
         schema.setLocation(location);
 
-        if(model.getSchemas() == null) {
+        if (model.getSchemas() == null) {
             model.setSchemas(new SchemaRepositoryModel.Schemas());
         }
 
@@ -68,7 +68,7 @@ public class SchemaRepositoryModelBuilder {
      * @return
      */
     public SchemaRepositoryModelBuilder addSchema(SchemaModel schema) {
-        if(model.getSchemas() == null) {
+        if (model.getSchemas() == null) {
             model.setSchemas(new SchemaRepositoryModel.Schemas());
         }
 
@@ -85,7 +85,7 @@ public class SchemaRepositoryModelBuilder {
         SchemaRepositoryModel.Schemas.Reference schemaRef = new SchemaRepositoryModel.Schemas.Reference();
         schemaRef.setSchema(schemaId);
 
-        if(model.getSchemas() == null) {
+        if (model.getSchemas() == null) {
             model.setSchemas(new SchemaRepositoryModel.Schemas());
         }
 

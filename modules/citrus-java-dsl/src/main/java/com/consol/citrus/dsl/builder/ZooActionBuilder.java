@@ -175,7 +175,7 @@ public class ZooActionBuilder extends AbstractTestActionBuilder<ZooExecuteAction
      */
     public ZooActionBuilder validate(String jsonPath, String expectedValue) {
         JsonPathMessageValidationContext validationContext = action.getJsonPathMessageValidationContext();
-        if(validationContext == null) {
+        if (validationContext == null) {
             validationContext = new JsonPathMessageValidationContext();
             action.setJsonPathMessageValidationContext(validationContext);
         }

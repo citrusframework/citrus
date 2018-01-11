@@ -150,7 +150,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             reader = new BufferedInputStream(logo.getInputStream());
             
             byte[] contents = new byte[1024];
-            while( reader.read(contents) != -1){
+            while( reader.read(contents) != -1) {
                 os.write(contents);
             }
         } catch(IOException e) {

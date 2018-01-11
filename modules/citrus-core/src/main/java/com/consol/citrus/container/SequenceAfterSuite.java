@@ -44,7 +44,7 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer {
             log.debug("");
         }
 
-        for(TestAction action: actions)  {
+        for (TestAction action: actions)  {
             try {
                 /* Executing test action and validate its success */
                 action.execute(context);

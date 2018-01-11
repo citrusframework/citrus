@@ -73,7 +73,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
     private JsonSchemaValidation jsonSchemaValidation;
 
-    public JsonTextMessageValidator(){
+    public JsonTextMessageValidator() {
         this.jsonSchemaValidation = new JsonSchemaValidation();
     }
 
@@ -88,7 +88,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
         log.debug("Start JSON message validation ...");
 
-        if(validationContext.isSchemaValidationEnabled()){
+        if (validationContext.isSchemaValidationEnabled()) {
             performSchemaValidation(receivedMessage, validationContext);
         }
 
@@ -145,7 +145,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                                                                 schemaRepositories,
                                                                 validationContext,
                                                                 applicationContext);
-        if(!report.isSuccess()){
+        if (!report.isSuccess()) {
             String errorMessage = constructErrorMessage(report);
             throw new ValidationException(errorMessage);
         }

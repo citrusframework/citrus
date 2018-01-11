@@ -27,7 +27,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 public class TransformActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
-	public void testTransform(){
+	public void testTransform() {
 		TransformAction transformAction = new TransformAction();
 		transformAction.setXmlData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		StringBuilder xsltDoc = new StringBuilder();
@@ -46,7 +46,7 @@ public class TransformActionTest extends AbstractTestNGUnitTest {
 	}
 	
 	@Test
-	public void testTransformResource(){
+	public void testTransformResource() {
 		TransformAction transformAction = new TransformAction();
 		transformAction.setXmlResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
 		transformAction.setXsltResourcePath("classpath:com/consol/citrus/actions/test-transform.xslt");

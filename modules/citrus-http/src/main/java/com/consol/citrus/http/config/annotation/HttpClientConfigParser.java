@@ -60,7 +60,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
                     "'endpoint-resolver' is required!");
         }
 
-        if (StringUtils.hasText(annotation.restTemplate())){
+        if (StringUtils.hasText(annotation.restTemplate())) {
             builder.restTemplate(getReferenceResolver().resolve(annotation.restTemplate(), RestTemplate.class));
         }
 

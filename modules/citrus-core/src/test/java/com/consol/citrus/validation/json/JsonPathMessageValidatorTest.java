@@ -131,13 +131,13 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         } catch (ValidationException e) {}
 
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.person.size()", 0));
-        try{
+        try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
             Assert.fail("Missing validation exception");
         } catch (ValidationException e) {}
         
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.nullValue", "10"));
-        try{
+        try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
             Assert.fail("Missing validation exception");
         } catch (ValidationException e) {}

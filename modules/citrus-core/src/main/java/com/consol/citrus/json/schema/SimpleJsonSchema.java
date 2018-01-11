@@ -44,7 +44,9 @@ public class SimpleJsonSchema implements InitializingBean {
         json = resource;
     }
 
-    public SimpleJsonSchema(){ }
+    public SimpleJsonSchema() {
+        super();
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

@@ -154,7 +154,7 @@ public abstract class XPathUtils {
             }
 
             return values;
-        } else if (resultType.equals(XPathExpressionResult.STRING)){
+        } else if (resultType.equals(XPathExpressionResult.STRING)) {
             return evaluateAsString(node, xPathExpression, nsContext);
         } else {
             Object result = evaluateAsObject(node, xPathExpression, nsContext, resultType.getAsQName());

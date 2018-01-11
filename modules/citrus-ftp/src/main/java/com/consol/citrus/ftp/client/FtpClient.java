@@ -97,7 +97,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             int reply = ftpClient.sendCommand(ftpMessage.getCommand(), ftpMessage.getArguments());
 
-            if(!FTPReply.isPositiveCompletion(reply) && !FTPReply.isPositivePreliminary(reply)) {
+            if (!FTPReply.isPositiveCompletion(reply) && !FTPReply.isPositivePreliminary(reply)) {
                 throw new CitrusRuntimeException(String.format("Failed to send FTP command - reply is: %s:%s", reply, ftpClient.getReplyString()));
             }
 
@@ -126,7 +126,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             int reply = ftpClient.getReplyCode();
 
-            if(!FTPReply.isPositiveCompletion(reply)) {
+            if (!FTPReply.isPositiveCompletion(reply)) {
                 throw new CitrusRuntimeException("FTP server refused connection.");
             }
 

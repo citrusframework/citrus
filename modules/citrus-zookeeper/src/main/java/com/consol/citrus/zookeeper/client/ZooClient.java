@@ -72,7 +72,7 @@ public class ZooClient {
      * @return
      */
     public ZooKeeper getZooKeeperClient() {
-        if(zookeeper == null) {
+        if (zookeeper == null) {
             try {
                 zookeeper = createZooKeeperClient();
                 int retryAttempts = 5;

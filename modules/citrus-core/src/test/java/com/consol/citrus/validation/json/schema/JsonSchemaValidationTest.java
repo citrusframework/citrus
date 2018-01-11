@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JsonSchemaValidationTest{
+public class JsonSchemaValidationTest {
 
     private ApplicationContext applicationContextMock = mock(ApplicationContext.class);
     private JsonMessageValidationContext validationContextMock = mock(JsonMessageValidationContext.class);
@@ -44,7 +44,7 @@ public class JsonSchemaValidationTest{
     private JsonSchemaValidation validator = new JsonSchemaValidation(jsonSchemaFilterMock);
 
     @Test
-    public void testValidJsonMessageSuccessfullyValidated() throws Exception{
+    public void testValidJsonMessageSuccessfullyValidated() throws Exception {
 
         //GIVEN
         //Setup json schema repositories

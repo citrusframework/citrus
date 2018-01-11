@@ -637,7 +637,7 @@ public class TestContext {
      * @param timerId a unique timer id
      */
     public void registerTimer(String timerId, StopTimer timer) {
-        if(timers.containsKey(timerId)) {
+        if (timers.containsKey(timerId)) {
             throw new CitrusRuntimeException("Timer already registered with this id");
         }
         timers.put(timerId, timer);
@@ -650,7 +650,7 @@ public class TestContext {
      */
     public boolean stopTimer(String timerId) {
         StopTimer timer = timers.get(timerId);
-        if(timer != null) {
+        if (timer != null) {
             timer.stopTimer();
             return true;
         }

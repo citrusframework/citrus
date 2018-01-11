@@ -43,11 +43,11 @@ public class JsonSchemaValidation {
     /** Object Mapper to convert the message for validation*/
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public JsonSchemaValidation(){
+    public JsonSchemaValidation() {
         this.jsonSchemaFilter = new JsonSchemaFilter();
     }
 
-    JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter){
+    JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter) {
         this.jsonSchemaFilter = jsonSchemaFilter;
     }
 
@@ -74,12 +74,11 @@ public class JsonSchemaValidation {
      * @param jsonSchemas The list of json schemas to iterate over
      */
     private GraciousProcessingReport validate(Message message, List<SimpleJsonSchema> jsonSchemas) {
-        if(jsonSchemas.isEmpty()){
+        if (jsonSchemas.isEmpty()) {
             return new GraciousProcessingReport(true);
-        }
-        else{
+        } else {
             List<ProcessingReport> processingReports = new LinkedList<>();
-            for (SimpleJsonSchema simpleJsonSchema : jsonSchemas){
+            for (SimpleJsonSchema simpleJsonSchema : jsonSchemas) {
                 processingReports.add(validate(message, simpleJsonSchema));
             }
             return new GraciousProcessingReport(processingReports);

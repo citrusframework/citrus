@@ -88,7 +88,7 @@ public class ManagedBeanInvocation {
                 return null;
             } else if (argType.isInstance(value) || argType.isAssignableFrom(value.getClass())) {
                 return argType.cast(value);
-            } else if(Map.class.equals(argType)) {
+            } else if (Map.class.equals(argType)) {
                 String mapString = value.toString();
 
                 Properties props = new Properties();
@@ -447,7 +447,7 @@ public class ManagedBeanInvocation {
                             argValues.add(null);
                         } else if (argType.isInstance(value) || argType.isAssignableFrom(value.getClass())) {
                             argValues.add(argType.cast(value));
-                        } else if(Map.class.equals(argType)) {
+                        } else if (Map.class.equals(argType)) {
                             String mapString = value.toString();
 
                             Properties props = new Properties();

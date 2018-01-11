@@ -62,7 +62,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
                 } else {
                     return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context), Charset.forName(context.resolveDynamicValue(payloadResourceCharset))));
                 }
-            } else if (payloadData != null){
+            } else if (payloadData != null) {
                 if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
                     return context.replaceDynamicContentInString(payloadData).getBytes();
                 } else if (messageType.equalsIgnoreCase(MessageType.GZIP.name())) {

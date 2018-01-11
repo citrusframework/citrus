@@ -217,7 +217,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 // Report all parsing errors
                 log.debug("Found " + results.length + " schema validation errors");
                 StringBuilder errors = new StringBuilder();
-                for(SAXParseException e : results) {
+                for (SAXParseException e : results) {
                     errors.append(e.toString());
                     errors.append("\n");
                 }

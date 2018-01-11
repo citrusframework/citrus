@@ -72,7 +72,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         String matcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
         String[] matcherParameter = matcherExpression.trim().substring(matcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
-        for(int i = 0; i < matcherParameter.length; i++) {
+        for (int i = 0; i < matcherParameter.length; i++) {
             matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i]);
         }
 

@@ -52,7 +52,7 @@ public class HttpClientParser extends AbstractEndpointParser {
                     "'endpoint-resolver' is required!", element);
         }
 
-        if (element.hasAttribute("rest-template")){
+        if (element.hasAttribute("rest-template")) {
             BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("rest-template"), "restTemplate");
         } else {
             BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("request-factory"), "requestFactory");
