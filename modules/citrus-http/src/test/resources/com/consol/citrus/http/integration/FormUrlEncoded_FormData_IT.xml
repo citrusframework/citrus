@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     
@@ -41,18 +42,18 @@
       <receive endpoint="echoHttpServer">
         <message type="x-www-form-urlencoded" validator="formUrlEncodedMessageValidator">
           <payload>
-              <form-data xmlns="http://www.citrusframework.org/schema/http/message">
-                <content-type>application/x-www-form-urlencoded</content-type>
-                <action>/form-test</action>
-                <controls>
-                  <control name="password">
-                    <value>${password}</value>
-                  </control>
-                  <control name="username">
-                    <value>${username}</value>
-                  </control>
-                </controls>
-              </form-data>
+            <form-data xmlns="http://www.citrusframework.org/schema/http/message">
+              <content-type>application/x-www-form-urlencoded</content-type>
+              <action>/form-test</action>
+              <controls>
+                <control name="password">
+                  <value>${password}</value>
+                </control>
+                <control name="username">
+                  <value>${username}</value>
+                </control>
+              </controls>
+            </form-data>
           </payload>
         </message>
         <header>

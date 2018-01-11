@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http;
+package com.consol.citrus.restdocs;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -22,26 +22,9 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2008
  */
-public class HttpServerIT extends AbstractTestNGCitrusTest {
+public class HttpRestDocsIT extends AbstractTestNGCitrusTest {
     @Test
-    @CitrusXmlTest(name = "HttpServerIT")
-    public void serverIT() {}
-
-    @Test
-    @CitrusXmlTest(name = "HttpServerStandaloneIT")
-    public void serverStandaloneIT() {}
-
-    @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_1_IT")
-    public void parallelRequestsIterateIT() {}
-
-    @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_2_IT")
-    public void parallelRequestsEndpointUriIT() {}
-
-    @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_3_IT")
-    public void parallelRequestsIT() {}
+    @CitrusXmlTest(name = "HttpRestDocsIT")
+    public void restDocsIT() {}
 }
