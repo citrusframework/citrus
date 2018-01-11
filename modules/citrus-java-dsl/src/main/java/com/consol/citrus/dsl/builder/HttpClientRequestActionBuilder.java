@@ -25,6 +25,7 @@ import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
@@ -65,6 +66,17 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
     @Override
     protected void setPayload(String payload) {
         httpMessage.setPayload(payload);
+    }
+
+    /**
+     * Adds message payload multi value map data to this builder. This is used when using multipart file upload via
+     * Spring RestTemplate.
+     * @param payload
+     * @return
+     */
+    public HttpClientRequestActionBuilder payload(MultiValueMap<String,Object> payload) {
+        httpMessage.setPayload(payload);
+        return this;
     }
 
     @Override
