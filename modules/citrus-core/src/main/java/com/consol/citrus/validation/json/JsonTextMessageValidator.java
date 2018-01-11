@@ -71,11 +71,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     @Autowired(required = false)
     private List<JsonSchemaRepository> schemaRepositories = new ArrayList<>();
 
-    private JsonSchemaValidation jsonSchemaValidation;
-
-    public JsonTextMessageValidator() {
-        this.jsonSchemaValidation = new JsonSchemaValidation();
-    }
+    /** Schema validator */
+    private JsonSchemaValidation jsonSchemaValidation = new JsonSchemaValidation();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -141,14 +138,19 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param validationContext The validation context of the current test
      */
     private void performSchemaValidation(Message receivedMessage, JsonMessageValidationContext validationContext) {
+        log.debug("Starting Json schema validation ...");
+
         ProcessingReport report = jsonSchemaValidation.validate(receivedMessage,
                                                                 schemaRepositories,
                                                                 validationContext,
                                                                 applicationContext);
         if (!report.isSuccess()) {
-            String errorMessage = constructErrorMessage(report);
-            throw new ValidationException(errorMessage);
+            log.error("Failed to validate Json schema for message:\n" + receivedMessage.getPayload(String.class));
+
+            throw new ValidationException(constructErrorMessage(report));
         }
+
+        log.info("Json schema validation successful: All values OK");
     }
 
     /**

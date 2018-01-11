@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.json.schema;
 
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.Message;
@@ -38,16 +38,23 @@ import java.util.List;
  */
 public class JsonSchemaValidation {
 
-    private JsonSchemaFilter jsonSchemaFilter;
+    private final JsonSchemaFilter jsonSchemaFilter;
 
     /** Object Mapper to convert the message for validation*/
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Default constructor using default filter.
+     */
     public JsonSchemaValidation() {
-        this.jsonSchemaFilter = new JsonSchemaFilter();
+        this(new JsonSchemaFilter());
     }
 
-    JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter) {
+    /**
+     * Constructor using filter implementation.
+     * @param jsonSchemaFilter
+     */
+    public JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter) {
         this.jsonSchemaFilter = jsonSchemaFilter;
     }
 
@@ -63,9 +70,7 @@ public class JsonSchemaValidation {
                                      List<JsonSchemaRepository> schemaRepositories,
                                      JsonMessageValidationContext validationContext,
                                      ApplicationContext applicationContext) {
-        List<SimpleJsonSchema> schemaList =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
-        return validate(message, schemaList);
+        return validate(message, jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext));
     }
 
     /**
@@ -96,7 +101,7 @@ public class JsonSchemaValidation {
             JsonNode receivedJson = objectMapper.readTree(message.getPayload(String.class));
             return simpleJsonSchema.getSchema().validate(receivedJson);
         } catch (IOException | ProcessingException e) {
-            throw new ValidationException("Failed to process message: " + message, e);
+            throw new CitrusRuntimeException("Failed to validate Json schema", e);
         }
     }
 }
