@@ -95,7 +95,7 @@ Consulting
 ---------
 
 Just in case you need professional support for Citrus have a look at
-'http://www.citrusframework.org/contact.html'.
+'http://www.citrusframework.org/docs/consulting/'.
 Contact user@citrusframework.org directly for any request or questions
 (or use the contact form at 'http://www.consol.com/contact/')
 
