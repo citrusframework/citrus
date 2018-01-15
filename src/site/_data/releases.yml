@@ -12,7 +12,7 @@
     id: 271
     type: Fix
     author: christophd
-   TestNG Dataprovider parameters cannot be used in <variables> block
+  - title: TestNG Dataprovider parameters cannot be used in <variables> block
     id: 298
     type: Fix
     author: christophd
@@ -24,7 +24,7 @@
     id: 313
     type: Add
     author: christophd
-  - title: Upgrading from 2.6.2 to 2.7.2: HTTP basic authentication doesn't work
+  - title: HTTP basic authentication doesn't work
     id: 312
     type: Update
     author: christophd
