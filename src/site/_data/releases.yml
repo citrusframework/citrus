@@ -1,9 +1,17 @@
 - version: ${project.version}
-  date: 2017-12-18
+  date: 2018-01-15
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
+  - title: Validation of http headers should be case insensitive
+    id: 326
+    type: Fix
+    author: christophd
+  - title: TestRunner doFinally block position documentation
+    id: 318
+    type: Fix
+    author: christophd
   - title: Http error handling thread safety
     id: 265
     type: Fix

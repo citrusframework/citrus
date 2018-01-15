@@ -51,6 +51,7 @@ public class SoapClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         getAction().setEndpoint(soapClient);
         message(soapMessage);
         messageType(MessageType.XML);
+        headerNameIgnoreCase(true);
     }
 
     /**
@@ -64,6 +65,7 @@ public class SoapClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         getAction().setEndpointUri(soapClientUri);
         message(soapMessage);
         messageType(MessageType.XML);
+        headerNameIgnoreCase(true);
     }
 
     @Override

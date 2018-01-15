@@ -432,6 +432,27 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
 
         return self;
     }
+
+    /**
+     * Validate header names with case insensitive keys.
+     * @param value
+     * @return
+     */
+    public T headerNameIgnoreCase(boolean value) {
+        defaultValidationContext.setHeaderNameIgnoreCase(value);
+        xmlMessageValidationContext.setHeaderNameIgnoreCase(value);
+        jsonMessageValidationContext.setHeaderNameIgnoreCase(value);
+
+        if (jsonPathValidationContext != null) {
+            jsonPathValidationContext.setHeaderNameIgnoreCase(value);
+        }
+
+        if (scriptValidationContext != null) {
+            scriptValidationContext.setHeaderNameIgnoreCase(value);
+        }
+
+        return self;
+    }
     
     /**
      * Adds script validation.
@@ -839,6 +860,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             xPathContext.setSchema(xmlMessageValidationContext.getSchema());
             xPathContext.setSchemaRepository(xmlMessageValidationContext.getSchemaRepository());
             xPathContext.setSchemaValidation(xmlMessageValidationContext.isSchemaValidationEnabled());
+            xPathContext.setHeaderNameIgnoreCase(xmlMessageValidationContext.isHeaderNameIgnoreCase());
             xPathContext.setDTDResource(xmlMessageValidationContext.getDTDResource());
 
             getAction().getValidationContexts().remove(xmlMessageValidationContext);

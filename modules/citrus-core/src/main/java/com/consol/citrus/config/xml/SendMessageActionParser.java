@@ -28,8 +28,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Bean definition parser for send action in test case.
@@ -75,7 +74,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         }
 
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
-        parseHeaderElements(element, messageBuilder);
+        parseHeaderElements(element, messageBuilder, Collections.emptyList());
 
         if (messageBuilder != null) {
             builder.addPropertyValue("messageBuilder", messageBuilder);

@@ -23,4 +23,16 @@ package com.consol.citrus.validation.context;
  * @author Christoph Deppisch
  */
 public interface ValidationContext {
+
+    /**
+     * Gets flag stating that header name validation should ignore case.
+     * @return
+     */
+    boolean isHeaderNameIgnoreCase();
+
+    /**
+     * Sets the header name ignore case option enabled/disabled.
+     * @param value
+     */
+    void setHeaderNameIgnoreCase(boolean value);
 }

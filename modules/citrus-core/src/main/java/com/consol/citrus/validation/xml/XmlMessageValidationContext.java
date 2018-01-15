@@ -16,14 +16,11 @@
 
 package com.consol.citrus.validation.xml;
 
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.SchemaValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.core.io.Resource;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * XML validation context holding validation specific information needed for XML 
@@ -31,7 +28,7 @@ import java.util.Set;
  * 
  * @author Christoph Deppisch
  */
-public class XmlMessageValidationContext implements ValidationContext, SchemaValidationContext {
+public class XmlMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<>();
 

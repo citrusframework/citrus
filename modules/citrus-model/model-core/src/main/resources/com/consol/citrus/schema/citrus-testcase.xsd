@@ -281,6 +281,7 @@
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
+                    <xs:attribute name="ignore-case" type="xs:string"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="extract" minOccurs="0">

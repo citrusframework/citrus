@@ -21,7 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.DefaultValidationContext;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -32,7 +32,7 @@ import java.nio.charset.Charset;
  * 
  * @author Christoph Deppisch
  */
-public class ScriptValidationContext implements ValidationContext {
+public class ScriptValidationContext extends DefaultValidationContext {
     /** Validation script as file resource path */
     private String validationScriptResourcePath;
 

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.validation;
 
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
@@ -28,7 +29,7 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
-public class SoapFaultDetailValidationContext implements ValidationContext {
+public class SoapFaultDetailValidationContext extends DefaultValidationContext {
 
     /** List of validation contexts to use for SOAP fault detail validation */
     private List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();

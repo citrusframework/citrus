@@ -61,6 +61,10 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
         }
 
         HttpMessage httpMessage = new HttpMessage();
+
+        Element body = DomUtils.getChildElementByTagName(element, "body");
+        List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
+
         Element headers = DomUtils.getChildElementByTagName(element, "headers");
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
@@ -115,12 +119,12 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
 
                 httpMessage.cookie(cookie);
             }
+
+            boolean ignoreCase = headers.hasAttribute("ignore-case") ? Boolean.valueOf(headers.getAttribute("ignore-case")) : true;
+            validationContexts.forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
         }
 
         MessageSelectorParser.doParse(element, builder);
-
-        Element body = DomUtils.getChildElementByTagName(element, "body");
-        List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 
         builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body)));
         builder.addPropertyValue("validationContexts", validationContexts);

@@ -16,8 +16,8 @@
 
 package com.consol.citrus.validation.json;
 
+import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.SchemaValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JsonMessageValidationContext implements ValidationContext, SchemaValidationContext {
+public class JsonMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
 
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<>();

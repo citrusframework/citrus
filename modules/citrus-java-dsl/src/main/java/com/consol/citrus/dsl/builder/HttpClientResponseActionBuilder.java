@@ -49,6 +49,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         getAction().setEndpoint(httpClient);
         message(httpMessage);
         messageType(MessageType.XML);
+        headerNameIgnoreCase(true);
     }
 
     /**
@@ -62,6 +63,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         getAction().setEndpointUri(httpClientUri);
         message(httpMessage);
         messageType(MessageType.XML);
+        headerNameIgnoreCase(true);
     }
 
     @Override

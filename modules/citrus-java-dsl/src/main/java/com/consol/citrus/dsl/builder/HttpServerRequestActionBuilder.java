@@ -50,6 +50,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
         getAction().setEndpoint(httpServer);
         message(httpMessage);
         messageType(MessageType.XML);
+        headerNameIgnoreCase(true);
     }
 
     @Override

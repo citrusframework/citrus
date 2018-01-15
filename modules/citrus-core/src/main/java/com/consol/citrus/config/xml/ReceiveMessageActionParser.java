@@ -88,7 +88,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         List<ValidationContext> validationContexts = parseValidationContexts(messageElement, builder);
 
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
-        parseHeaderElements(element, messageBuilder);
+        parseHeaderElements(element, messageBuilder, validationContexts);
 
         builder.addPropertyValue("messageBuilder", messageBuilder);
         builder.addPropertyValue("validationContexts", validationContexts);
@@ -275,6 +275,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         context.setSchema(parentContext.getSchema());
         context.setSchemaRepository(parentContext.getSchemaRepository());
         context.setSchemaValidation(parentContext.isSchemaValidationEnabled());
+        context.setHeaderNameIgnoreCase(parentContext.isHeaderNameIgnoreCase());
         context.setDTDResource(parentContext.getDTDResource());
 
         return context;

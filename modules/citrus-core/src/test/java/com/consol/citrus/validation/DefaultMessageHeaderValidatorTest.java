@@ -57,6 +57,37 @@ public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testValidateMessageHeadersIgnoreCase() throws Exception {
+        try {
+            Message receivedMessage = new DefaultMessage("Hello World!")
+                    .setHeader("X-Foo", "foo_test")
+                    .setHeader("X-Additional", "additional")
+                    .setHeader("X-Bar", "bar_test");
+            Message controlMessage = new DefaultMessage("Hello World!")
+                    .setHeader("x-foo", "foo_test")
+                    .setHeader("x-bar", "bar_test");
+
+            validationContext.setHeaderNameIgnoreCase(true);
+            validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        } finally {
+            validationContext.setHeaderNameIgnoreCase(false);
+        }
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testValidateMessageHeadersIgnoreCaseError() throws Exception {
+        Message receivedMessage = new DefaultMessage("Hello World!")
+                .setHeader("X-Foo", "foo_test")
+                .setHeader("X-Additional", "additional")
+                .setHeader("X-Bar", "bar_test");
+        Message controlMessage = new DefaultMessage("Hello World!")
+                .setHeader("x-foo", "foo_test")
+                .setHeader("x-bar", "bar_test");
+
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
     public void testValidateMessageHeadersVariableSupport() throws Exception {
         Message receivedMessage = new DefaultMessage("Hello World!")
                 .setHeader("foo", "foo_test")

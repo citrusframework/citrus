@@ -78,7 +78,15 @@
             </xs:choice>
           </xs:complexType>
         </xs:element>
-        <xs:element name="headers" minOccurs="0" type="ResponseHeadersType"/>
+        <xs:element name="headers" minOccurs="0">
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="ResponseHeadersType">
+                <xs:attribute name="ignore-case" type="xs:string"/>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="body" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
@@ -365,7 +373,15 @@
     <xs:sequence>
       <xs:element ref="description" minOccurs="0"/>
       <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="ParamType"/>
-      <xs:element name="headers" minOccurs="0" type="RequestHeadersType"/>
+      <xs:element name="headers" minOccurs="0">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="RequestHeadersType">
+              <xs:attribute name="ignore-case" type="xs:string"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="body" minOccurs="0">
         <xs:complexType>
           <xs:sequence>

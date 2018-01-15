@@ -50,6 +50,7 @@ public class SoapServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
         getAction().setEndpoint(soapServer);
         message(soapMessage);
         messageType(MessageType.XML);
+        headerNameIgnoreCase(true);
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
@@ -192,8 +193,9 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * 
      * @param actionElement the action DOM element.
      * @param messageBuilder the message content builder.
+     * @param validationContexts list of validation contexts.
      */
-    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder) {
+    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder, List<ValidationContext> validationContexts) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new LinkedHashMap<>();
 
@@ -234,6 +236,11 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             }
 
             messageBuilder.setMessageHeaders(messageHeaders);
+
+            if (headerElement.hasAttribute("ignore-case")) {
+                boolean ignoreCase = Boolean.valueOf(headerElement.getAttribute("ignore-case"));
+                validationContexts.forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
+            }
         }
     }
     

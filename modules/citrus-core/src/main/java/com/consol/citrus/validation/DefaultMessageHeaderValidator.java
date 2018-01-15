@@ -55,6 +55,23 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
             //check if header expression is variable or function
             headerName = context.resolveDynamicValue(headerName);
 
+            if (!receivedHeaders.containsKey(headerName) &&
+                    validationContext.isHeaderNameIgnoreCase()) {
+                String key = headerName;
+
+                log.debug(String.format("Finding case insensitive header for key '%s'", key));
+                
+                headerName = receivedHeaders
+                        .entrySet()
+                        .parallelStream()
+                        .filter(item -> item.getKey().equalsIgnoreCase(key))
+                        .map(Map.Entry::getKey)
+                        .findFirst()
+                        .orElseThrow(() -> new ValidationException("Validation failed: No matching header for key '" + key + "'"));
+
+                log.info(String.format("Found matching case insensitive header name: %s", headerName));
+            }
+
             if (!receivedHeaders.containsKey(headerName)) {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
