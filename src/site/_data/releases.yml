@@ -12,6 +12,14 @@
     id: 318
     type: Fix
     author: christophd
+  - title: Multipart file upload
+    id: 304
+    type: Add
+    author: christophd
+  - title: JSON schema validation
+    id: 148
+    type: Add
+    author: christophd
   - title: Http error handling thread safety
     id: 265
     type: Fix

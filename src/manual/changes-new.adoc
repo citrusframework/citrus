@@ -6,6 +6,27 @@ Java 8 runtime to work with Citrus. With this Java 8 base Citrus
 is proud to welcome two new crew members for supporting Selenium and Kubernetes in tests. Not enough we have the following
 features included in the box.
 
+[[changes-plaintext-ignore]]
+== Ignore sections in plain text
+
+Plain text message validation is usually based on a complete String equals comparison. With latest release we added the possibility to ignore some sections with
+well known `@ignore@` keyword placeholder. The message validator will automatically ignore words or character sections based on that. Read more about this in chapter
+link:#plain-text-message-validation[plain text message validation].
+
+Also possible is the extraction of sections as new test variables when using the `@variable()@` matcher in the plain text message content.
+
+[[changes-json-schema-validation]]
+== Json schema validation
+
+When dealing with Json message content the latest release allows adding of schema validation. The Json structure is validated with proper schema as of Open API (Swagger) schema rules.
+As usual the available schema files are defined in a schema repository in the project configuration. Read more about this in chapter link:#json-schema-validation[json schema validation].
+
+[[changes-junit5]]
+== JUnit5 support
+
+With this release you are able to integrate Citrus with JUnit5 the new generation of the famous unit testing framework. We provide a Citrus JUnit5 extension that can do the trick.
+Read more about this in chapter link:#run-with-junit5[run with JUnit5].
+
 [[changes-db-transactions]]
 == Database transaction handling
 
