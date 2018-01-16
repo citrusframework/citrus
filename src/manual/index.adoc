@@ -18,7 +18,7 @@ Christoph Deppisch;Martin Maher
 
 ifndef::ebook-format[:leveloffset: 1]
 
-*Copyright © 2017 ConSol Software GmbH* +
+*Copyright © 2018 ConSol Software GmbH* +
 *Version: {version}*
 
 image:citrus-logo-small.png[citrus-logo]
