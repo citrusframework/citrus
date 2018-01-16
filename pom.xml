@@ -36,6 +36,7 @@
   <modules>
     <module>modules/citrus-model</module>
     <module>modules/citrus-core</module>
+    <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-websocket</module>
@@ -184,6 +185,7 @@
     <cucumber.version>1.2.5</cucumber.version>
     <zookeeper.version>3.4.10</zookeeper.version>
     <json.schema.validator.version>2.2.8</json.schema.validator.version>
+    <citrus.db.version>0.1-SNAPSHOT</citrus.db.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
@@ -261,11 +263,6 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>2.5</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>4.5.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sshd</groupId>
@@ -505,7 +502,6 @@
         <artifactId>javax.mail-api</artifactId>
         <version>1.4.7</version>
       </dependency>
-
       <dependency>
         <groupId>org.subethamail</groupId>
         <artifactId>subethasmtp</artifactId>
@@ -553,7 +549,6 @@
         <artifactId>ftpserver-core</artifactId>
         <version>1.1.1</version>
       </dependency>
-
       <dependency>
         <groupId>commons-net</groupId>
         <artifactId>commons-net</artifactId>
@@ -585,6 +580,18 @@
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
         <version>1.2.6</version>
+      </dependency>
+
+      <!-- Citrus JDBC dependencies -->
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-db-server</artifactId>
+        <version>${citrus.db.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.3</version>
       </dependency>
 
       <!-- Cucumber -->
