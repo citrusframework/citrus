@@ -23,7 +23,7 @@
 
   <xs:element name="server">
     <xs:annotation>
-      <xs:documentation>JDBC database server implementation registers as service in RMI registry and receives messages from client driver via RMI invocation.</xs:documentation>
+      <xs:documentation>JDBC database server implementation registers as Http service and accepts SQL operations from client driver.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>

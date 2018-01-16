@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-2.7.3.xsd=com/consol/citrus/schema/citrus-jdbc-config-2.7.3.xsd
+http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-2.7.4.xsd=com/consol/citrus/schema/citrus-jdbc-config-2.7.4.xsd
 http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config.xsd=com/consol/citrus/schema/citrus-jdbc-config.xsd
