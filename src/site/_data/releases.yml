@@ -1,6 +1,17 @@
 - version: ${project.version}
-  date: 2018-01-15
+  date: 2018-04-03
   tag: latest
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
+  - title: ToDo
+    id: 999
+    type: Add
+    author: christophd
+
+- version: 2.7.3
+  date: 2018-01-15
+  tag: v2-7-3
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:

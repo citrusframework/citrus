@@ -88,7 +88,7 @@ in your Maven pom.xml as a dependency like follows.
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-core</artifactId>
-  <version>2.7.3</version>
+  <version>2.7.4-SNAPSHOT</version>
   <scope>test</scope>
 </dependency>
 ----
@@ -99,7 +99,7 @@ in your Maven pom.xml as a dependency like follows.
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-java-dsl</artifactId>
-  <version>2.7.3</version>
+  <version>2.7.4-SNAPSHOT</version>
   <scope>test</scope>
 </dependency>
 ----
@@ -110,7 +110,7 @@ in your Maven pom.xml as a dependency like follows.
 <plugin>
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-maven-plugin</artifactId>
-  <version>2.7.3</version>
+  <version>2.7.4-SNAPSHOT</version>
   <configuration>
     <author>Donald Duck</author>
     <targetPackage>com.consol.citrus</targetPackage>
@@ -178,7 +178,7 @@ and the project version.
 ----
 rootProject.name = 'citrus-sample-gradle'
 group 'com.consol.citrus.samples'
-version '2.7.3'
+version '2.7.4-SNAPSHOT'
 ----
 
 Now as Citrus libraries are available on Maven central repository we add these repositories so Gradle knows how to download the required
@@ -200,8 +200,8 @@ to add the ConSol Labs snapshot repository which is optional. Now lets move on w
 [source,groovy]
 ----
 dependencies {
-    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7.3'
-    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7.3'
+    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7.4-SNAPSHOT'
+    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7.4-SNAPSHOT'
     testCompile group: 'org.testng', name: 'testng', version: '6.11'
     [...]
 }
