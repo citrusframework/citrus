@@ -18,18 +18,19 @@ package com.consol.citrus.jdbc.server;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.db.driver.json.JsonDataSetProducer;
+import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.db.server.controller.JdbcController;
 import com.consol.citrus.endpoint.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jdbc.message.JdbcMessage;
+import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.*;
 import com.consol.citrus.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 
-import javax.xml.transform.Source;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
@@ -72,29 +73,30 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             log.debug(String.format("Received request on server: '%s':%n%s", endpointConfiguration.getServerConfiguration().getDatabaseName(), request.getPayload(String.class)));
         }
 
-        Message response = delegate.handleMessage(request);
-
-        if (response != null && response.getPayload() != null) {
-            if (response.getPayload() instanceof String) {
-                response.setPayload(endpointConfiguration.getMarshaller().unmarshal(response.getPayload(Source.class)));
-            }
-        }
-
-        return Optional.ofNullable(response)
-                .orElse(new DefaultMessage(new OperationResult(true)));
+        return Optional.ofNullable(delegate.handleMessage(request))
+                .orElse(JdbcMessage.result(true));
     }
 
-    @Override
+    /**
+     * Handle request message and check response is successful. When response has some exception header set the
+     * exception is thrown as {@link JdbcServerException} in order to abort request processing with error.
+     * @param request
+     * @return
+     * @throws JdbcServerException
+     */
+    private Message handleMessageAndCheckResponse(Message request) throws JdbcServerException {
+        Message response = handleMessage(request);
+        checkSuccess(response);
+        return response;
+    }
+
+        @Override
     public void getConnection(Map<String, String> properties) throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
-            OperationResult result = handleMessage(new DefaultMessage(new Operation(new OpenConnection(properties.entrySet()
+            handleMessageAndCheckResponse(JdbcMessage.openConnection(properties.entrySet()
                     .stream()
                     .map(entry -> new OpenConnection.Property(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.toList()))))).getPayload(OperationResult.class);
-
-            if (!result.isSuccess()) {
-                throw new JdbcServerException(result.getException());
-            }
+                    .collect(Collectors.toList())));
         }
 
         if (connections.get() == endpointConfiguration.getServerConfiguration().getMaxConnections()) {
@@ -107,11 +109,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     @Override
     public void closeConnection() throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
-            OperationResult result = handleMessage(new DefaultMessage(new Operation(new CloseConnection()))).getPayload(OperationResult.class);
-
-            if (!result.isSuccess()) {
-                throw new JdbcServerException(result.getException());
-            }
+            handleMessageAndCheckResponse(JdbcMessage.closeConnection());
         }
 
         if (connections.decrementAndGet() < 0) {
@@ -122,83 +120,57 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     @Override
     public void createPreparedStatement(String stmt) throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
-            OperationResult result = handleMessage(new DefaultMessage(new Operation(new CreatePreparedStatement(stmt)))).getPayload(OperationResult.class);
-
-            if (!result.isSuccess()) {
-                throw new JdbcServerException(result.getException());
-            }
+            handleMessageAndCheckResponse(JdbcMessage.createPreparedStatement(stmt));
         }
     }
 
     @Override
     public void createStatement() throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
-            OperationResult result = handleMessage(new DefaultMessage(new Operation(new CreateStatement()))).getPayload(OperationResult.class);
-
-            if (!result.isSuccess()) {
-                throw new JdbcServerException(result.getException());
-            }
+            handleMessageAndCheckResponse(JdbcMessage.createStatement());
         }
     }
 
     @Override
     public DataSet executeQuery(String stmt) throws JdbcServerException {
         log.info("Received execute query request: " + stmt);
-
-        OperationResult result = handleMessage(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
-
-        if (!result.isSuccess()) {
-            throw new JdbcServerException(result.getException());
-        }
-
-        return createDataSet(result);
+        return createDataSet(handleMessageAndCheckResponse(JdbcMessage.execute(stmt)));
     }
 
     @Override
     public void execute(String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
-
-        OperationResult result = handleMessage(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
-
-        if (!result.isSuccess()) {
-            throw new JdbcServerException(result.getException());
-        }
+        handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
     }
 
     @Override
     public int executeUpdate(String stmt) throws JdbcServerException {
         log.info("Received execute update request: " + stmt);
-
-        OperationResult result = handleMessage(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
-
-        if (!result.isSuccess()) {
-            throw new JdbcServerException(result.getException());
-        }
-
-        return result.getAffectedRows();
+        Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
+        return Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED)).map(Object::toString).map(Integer::valueOf).orElse(0);
     }
 
     @Override
     public void closeStatement() throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
-            OperationResult result = handleMessage(new DefaultMessage(new Operation(new CloseStatement()))).getPayload(OperationResult.class);
-
-            if (!result.isSuccess()) {
-                throw new JdbcServerException(result.getException());
-            }
+            handleMessageAndCheckResponse(JdbcMessage.closeStatement());
         }
     }
 
     /**
      * Converts Citrus result set representation to db driver model result set.
-     * @param result
+     * @param response
      * @return
      */
-    private DataSet createDataSet(OperationResult result) {
+    private DataSet createDataSet(Message response) {
         try {
-            if (StringUtils.hasText(result.getDataSet())) {
+            if (response.getPayload() instanceof DataSet) {
+                return response.getPayload(DataSet.class);
+            } else if (response.getPayload() != null) {
                 if (endpointConfiguration.getMarshaller().getType().equalsIgnoreCase(MessageType.JSON.name())) {
-                    return new JsonDataSetProducer(result.getDataSet()).produce();
+                    return new JsonDataSetProducer(response.getPayload(String.class)).produce();
+                } else if (endpointConfiguration.getMarshaller().getType().equalsIgnoreCase(MessageType.XML.name())) {
+                    return new XmlDataSetProducer(response.getPayload(String.class)).produce();
                 } else {
                     throw new CitrusRuntimeException("Unable to create dataset from data type " + endpointConfiguration.getMarshaller().getType());
                 }
@@ -206,7 +178,18 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
                 return new DataSet();
             }
         } catch (SQLException e) {
-            throw new CitrusRuntimeException("Failed to read dataset file resource", e);
+            throw new CitrusRuntimeException("Failed to read dataset from response message", e);
+        }
+    }
+
+    /**
+     * Check that response is not having an exception message.
+     * @param response
+     * @throws JdbcServerException
+     */
+    private void checkSuccess(Message response) throws JdbcServerException {
+        if (!Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).map(Object::toString).map(Boolean::valueOf).orElse(true)) {
+            throw new JdbcServerException(Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION)).map(Object::toString).orElse(""));
         }
     }
 

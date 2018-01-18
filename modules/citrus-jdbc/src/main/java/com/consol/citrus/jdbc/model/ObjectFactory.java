@@ -139,12 +139,4 @@ public class ObjectFactory {
         return new DropTable();
     }
 
-    /**
-     * Create an instance of {@link OperationResult }
-     * 
-     */
-    public OperationResult createOperationResult() {
-        return new OperationResult();
-    }
-
 }
