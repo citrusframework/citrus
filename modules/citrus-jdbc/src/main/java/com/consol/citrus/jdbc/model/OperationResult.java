@@ -16,25 +16,26 @@
 
 package com.consol.citrus.jdbc.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "success",
+    "dataSet",
     "exception",
-    "resultSet"
+    "affectedRows"
 })
 @XmlRootElement(name = "operation-result")
 public class OperationResult {
 
     protected boolean success;
     protected String exception;
-    @XmlElement(name = "result-set")
-    protected ResultSet resultSet;
+
+    @XmlElement(name = "data-set")
+    protected String dataSet;
+
+    @XmlAttribute(name = "affected-rows")
+    protected int affectedRows = 0;
 
     public OperationResult() {
     }
@@ -43,17 +44,7 @@ public class OperationResult {
         this.success = success;
     }
 
-    /**
-     * Adds result set in fluent api.
-     * @param resultSet
-     * @return
-     */
-    public OperationResult withResultSet(ResultSet resultSet) {
-        this.resultSet = resultSet;
-        return this;
-    }
-
-    /**
+   /**
      * Gets the success.
      *
      * @return
@@ -69,6 +60,42 @@ public class OperationResult {
      */
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    /**
+     * Gets the dataSet.
+     *
+     * @return
+     */
+    public String getDataSet() {
+        return dataSet;
+    }
+
+    /**
+     * Sets the dataSet.
+     *
+     * @param dataSet
+     */
+    public void setDataSet(String dataSet) {
+        this.dataSet = dataSet;
+    }
+
+    /**
+     * Gets the affectedRows.
+     *
+     * @return
+     */
+    public int getAffectedRows() {
+        return affectedRows;
+    }
+
+    /**
+     * Sets the affectedRows.
+     *
+     * @param affectedRows
+     */
+    public void setAffectedRows(int affectedRows) {
+        this.affectedRows = affectedRows;
     }
 
     /**
@@ -89,21 +116,4 @@ public class OperationResult {
         this.exception = exception;
     }
 
-    /**
-     * Gets the resultSet.
-     *
-     * @return
-     */
-    public ResultSet getResultSet() {
-        return resultSet;
-    }
-
-    /**
-     * Sets the resultSet.
-     *
-     * @param resultSet
-     */
-    public void setResultSet(ResultSet resultSet) {
-        this.resultSet = resultSet;
-    }
 }

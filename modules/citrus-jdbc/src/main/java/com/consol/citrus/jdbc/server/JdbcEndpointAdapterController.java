@@ -16,17 +16,21 @@
 
 package com.consol.citrus.jdbc.server;
 
+import com.consol.citrus.db.driver.dataset.DataSet;
+import com.consol.citrus.db.driver.json.JsonDataSetProducer;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.db.server.controller.JdbcController;
 import com.consol.citrus.endpoint.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.model.*;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 
 import javax.xml.transform.Source;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -138,7 +142,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     @Override
-    public com.consol.citrus.db.driver.model.ResultSet executeQuery(String stmt) throws JdbcServerException {
+    public DataSet executeQuery(String stmt) throws JdbcServerException {
         log.info("Received execute query request: " + stmt);
 
         OperationResult result = handleMessage(new DefaultMessage(new Operation(new Execute(new Execute.Statement(stmt))))).getPayload(OperationResult.class);
@@ -147,7 +151,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             throw new JdbcServerException(result.getException());
         }
 
-        return createResultSet(result);
+        return createDataSet(result);
     }
 
     @Override
@@ -171,7 +175,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             throw new JdbcServerException(result.getException());
         }
 
-        return Optional.ofNullable(result.getResultSet()).orElse(new ResultSet()).getAffectedRows();
+        return result.getAffectedRows();
     }
 
     @Override
@@ -190,20 +194,20 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param result
      * @return
      */
-    private com.consol.citrus.db.driver.model.ResultSet createResultSet(OperationResult result) {
-        com.consol.citrus.db.driver.model.ResultSet resultSet = new com.consol.citrus.db.driver.model.ResultSet();
-
-        if (result.getResultSet() != null) {
-            result.getResultSet().getColumns()
-                    .forEach(column -> resultSet.getColumns().add(new com.consol.citrus.db.driver.model.ResultSet.Column(column.getName(), column.getType())));
-
-            result.getResultSet().getRows()
-                    .forEach(row -> resultSet.getRows().add(new com.consol.citrus.db.driver.model.ResultSet.Row(row.getValues())));
-
-            resultSet.setAffectedRows(result.getResultSet().getAffectedRows());
+    private DataSet createDataSet(OperationResult result) {
+        try {
+            if (StringUtils.hasText(result.getDataSet())) {
+                if (endpointConfiguration.getMarshaller().getType().equalsIgnoreCase(MessageType.JSON.name())) {
+                    return new JsonDataSetProducer(result.getDataSet()).produce();
+                } else {
+                    throw new CitrusRuntimeException("Unable to create dataset from data type " + endpointConfiguration.getMarshaller().getType());
+                }
+            } else {
+                return new DataSet();
+            }
+        } catch (SQLException e) {
+            throw new CitrusRuntimeException("Failed to read dataset file resource", e);
         }
-
-        return resultSet;
     }
 
     @Override

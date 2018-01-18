@@ -52,14 +52,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ResultSet }
-     *
-     */
-    public ResultSet createResultSet() {
-        return new ResultSet();
-    }
-
-    /**
      * Create an instance of {@link Operation }
      * 
      */
@@ -153,22 +145,6 @@ public class ObjectFactory {
      */
     public OperationResult createOperationResult() {
         return new OperationResult();
-    }
-
-    /**
-     * Create an instance of {@link ResultSet.Column }
-     * 
-     */
-    public ResultSet.Column createResultSetColumn() {
-        return new ResultSet.Column();
-    }
-
-    /**
-     * Create an instance of {@link ResultSet.Row }
-     * 
-     */
-    public ResultSet.Row createResultSetRow() {
-        return new ResultSet.Row();
     }
 
 }

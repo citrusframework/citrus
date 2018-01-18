@@ -195,29 +195,10 @@
         <xs:sequence>
             <xs:element name="success" type="xs:boolean"/>
             <xs:element name="exception" type="xs:string" minOccurs="0"/>
-            <xs:element ref="result-set" minOccurs="0"/>
-        </xs:sequence>
-      </xs:complexType>
-    </xs:element>
-
-    <xs:element name="result-set">
-      <xs:complexType>
-        <xs:sequence>
-          <xs:element name="column" minOccurs="0" maxOccurs="unbounded">
-            <xs:complexType>
-              <xs:attribute name="name" type="xs:string" use="required"/>
-              <xs:attribute name="type" type="xs:string"/>
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="row" minOccurs="0" maxOccurs="unbounded">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" maxOccurs="unbounded" type="xs:string"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
+            <xs:element name="data-set" type="xs:string" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="affected-rows" type="xs:int"/>
       </xs:complexType>
     </xs:element>
+
 </xs:schema>
