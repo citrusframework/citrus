@@ -90,8 +90,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         return response;
     }
 
-        @Override
-    public void getConnection(Map<String, String> properties) throws JdbcServerException {
+    @Override
+    public void openConnection(Map<String, String> properties) throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
             handleMessageAndCheckResponse(JdbcMessage.openConnection(properties.entrySet()
                     .stream()
