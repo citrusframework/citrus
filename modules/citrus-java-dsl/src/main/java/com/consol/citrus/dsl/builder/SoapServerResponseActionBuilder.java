@@ -125,7 +125,7 @@ public class SoapServerResponseActionBuilder extends SendMessageBuilder<SendSoap
      * @return
      */
     public SoapServerResponseActionBuilder attachment(SoapAttachment attachment) {
-        soapMessage.addAttachment(attachment);
+        getAction().getAttachments().add(attachment);
         return this;
     }
 

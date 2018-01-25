@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Soap attachment validator performs binary content validation by comparing attachment content binary input streams.
@@ -45,7 +46,7 @@ public class BinarySoapAttachmentValidator extends AbstractSoapAttachmentValidat
         try {
             Assert.isTrue(IOUtils.contentEquals(receivedAttachment.getInputStream(), controlAttachment.getInputStream()),
                     "Values not equal for binary attachment content '"
-                            + controlAttachment.getContentId() + "'");
+                            + Optional.ofNullable(controlAttachment.getContentId()).orElse(Optional.ofNullable(receivedAttachment.getContentId()).orElse("unknown")) + "'");
         } catch(IOException e) {
             throw new CitrusRuntimeException("Binary SOAP attachment validation failed", e);
         }
