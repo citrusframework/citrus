@@ -1615,7 +1615,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestCase testCase = new TestCase();
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
-        
 
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
@@ -1661,9 +1660,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
-        when(endpoint.getActor()).thenReturn(disabledActor)
-                                 .thenReturn(disabledActor)
-                                 .thenReturn(null);
+        when(endpoint.getActor()).thenReturn(disabledActor);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
@@ -1671,6 +1668,5 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
-
     }
 }

@@ -38,7 +38,7 @@ public interface TestActionContainer extends TestAction {
      * Get the embedded test actions within this container.
      */
     List<TestAction> getActions();
-    
+
     /**
      * Get the number of embedded actions in this container.
      * @return

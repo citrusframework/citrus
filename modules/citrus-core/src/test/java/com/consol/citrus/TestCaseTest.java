@@ -16,8 +16,7 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -40,6 +39,47 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         
         testcase.addTestAction(new EchoAction());
         
+        testcase.execute(context);
+    }
+
+    @Test
+    public void testWaitForFinish() {
+        TestCase testcase = new TestCase();
+        testcase.setName("MyTestCase");
+
+        testcase.addTestAction(new EchoAction());
+        testcase.addTestAction(new AbstractAsyncTestAction() {
+            @Override
+            public void doExecuteAsync(TestContext context) {
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    throw new CitrusRuntimeException(e);
+                }
+            }
+        });
+
+        testcase.execute(context);
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class, expectedExceptionsMessageRegExp = "Failed to wait for nested test actions to finish properly")
+    public void testWaitForFinishTimeout() {
+        TestCase testcase = new TestCase();
+        testcase.setTimeout(500L);
+        testcase.setName("MyTestCase");
+
+        testcase.addTestAction(new EchoAction());
+        testcase.addTestAction(new AbstractAsyncTestAction() {
+            @Override
+            public void doExecuteAsync(TestContext context) {
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    throw new CitrusRuntimeException(e);
+                }
+            }
+        });
+
         testcase.execute(context);
     }
     
@@ -90,7 +130,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.execute(context);
     }
 
-    @Test(expectedExceptions = {TestCaseFailedException.class})
+    @Test(expectedExceptions = {TestCaseFailedException.class}, expectedExceptionsMessageRegExp = "This failed in forked action")
     public void testExceptionInContext() {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");

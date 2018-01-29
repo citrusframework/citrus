@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.*;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -74,6 +75,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Test groups */
     private String[] groups;
+
+    /** Time to wait for nested actions to finish */
+    private long timeout = 10000L;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
@@ -243,6 +247,32 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Usually used for clean up tasks.
      */
     public void finish(TestContext context) {
+        CitrusRuntimeException runtimeException = null;
+        if (CollectionUtils.isEmpty(context.getExceptions()) &&
+                Optional.ofNullable(testResult).map(TestResult::isSuccess).orElse(false)) {
+            try {
+                CompletableFuture<Boolean> finished = new CompletableFuture<>();
+                Executors.newSingleThreadScheduledExecutor()
+                        .scheduleAtFixedRate(() -> {
+                            if (isDone(context)) {
+                                finished.complete(true);
+                            } else {
+                                log.debug("Wait for test actions to finish properly ...");
+                            }
+                        }, 0L, timeout / 10, TimeUnit.MILLISECONDS);
+
+                finished.get(timeout, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                runtimeException = new CitrusRuntimeException("Failed to wait for nested test actions to finish properly", e);
+            } finally {
+                if (!CollectionUtils.isEmpty(context.getExceptions())) {
+                    CitrusRuntimeException ex = context.getExceptions().remove(0);
+                    testResult = TestResult.failed(getName(), ex);
+                    runtimeException = ex;
+                }
+            }
+        }
+
         context.getTestListeners().onTestFinish(this);
 
         try {
@@ -263,6 +293,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
             if (testResult == null) {
                 testResult = TestResult.success(getName());
+            }
+
+            if (runtimeException != null) {
+                throw runtimeException;
             }
         } catch (Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), e);
@@ -488,5 +522,23 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public void setGroups(String[] groups) {
         this.groups = groups;
+    }
+
+    /**
+     * Sets the timeout.
+     *
+     * @param timeout
+     */
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    /**
+     * Gets the timeout.
+     *
+     * @return
+     */
+    public long getTimeout() {
+        return timeout;
     }
 }

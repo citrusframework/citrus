@@ -62,11 +62,18 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     private String transactionTimeout = String.valueOf(TransactionDefinition.TIMEOUT_DEFAULT);
     private String transactionIsolationLevel = "ISOLATION_DEFAULT";
 
+    /** Finished indicator */
+    private boolean finished = false;
+
     /**
      * Do basic logging and delegate execution to subclass.
      */
     public void execute(TestContext context) {
-        doExecute(context);
+        try {
+            doExecute(context);
+        } finally {
+            finished = true;
+        }
     }
     
     /**

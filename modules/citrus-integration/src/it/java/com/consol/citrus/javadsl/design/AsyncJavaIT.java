@@ -79,7 +79,7 @@ public class AsyncJavaIT extends TestNGCitrusTestDesigner {
             }
         );
 
-        sleep(1000L);
+        sleep(500L);
 
         traceVariables("anonymous");
     }

@@ -108,7 +108,7 @@ public final class TestResult {
      * @param result
      */
     private TestResult(String name, RESULT result) {
-        this(name, result, new HashMap<String, Object>());
+        this(name, result, new HashMap<>());
     }
     
     /**
@@ -193,7 +193,7 @@ public final class TestResult {
      * @return
      */
     public boolean isSuccess() {
-        return !isSkipped() && result.equals(RESULT.SUCCESS);
+        return !isSkipped() && result != null && result.equals(RESULT.SUCCESS);
     }
 
     /**
@@ -201,7 +201,7 @@ public final class TestResult {
      * @return
      */
     public boolean isFailed() {
-        return !isSkipped() && result.equals(RESULT.FAILURE);
+        return !isSkipped() && result != null && result.equals(RESULT.FAILURE);
     }
 
     /**
@@ -209,7 +209,7 @@ public final class TestResult {
      * @return
      */
     public boolean isSkipped() {
-        return result.equals(RESULT.SKIP);
+        return result != null && result.equals(RESULT.SKIP);
     }
 
     /**

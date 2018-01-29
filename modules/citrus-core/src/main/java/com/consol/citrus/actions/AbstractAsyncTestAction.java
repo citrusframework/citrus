@@ -16,10 +16,13 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.Completable;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.concurrent.*;
 
 /**
@@ -29,34 +32,55 @@ import java.util.concurrent.*;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public abstract class AbstractAsyncTestAction extends AbstractTestAction {
+public abstract class AbstractAsyncTestAction extends AbstractTestAction implements Completable {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractAsyncTestAction.class);
 
     private Executor executor = Executors.newSingleThreadExecutor();
 
+    /** Future finished indicator */
+    private CompletableFuture<Void> finished;
+
     @Override
     public final void doExecute(TestContext context) {
+        finished = new CompletableFuture<>();
         CompletableFuture<Void> result = new CompletableFuture<>();
-
         executor.execute(() -> {
             try {
                 doExecuteAsync(context);
                 result.complete(null);
             } catch (Exception e) {
                 log.warn("Async test action execution raised error", e);
+
+                if (e instanceof CitrusRuntimeException) {
+                    context.addException((CitrusRuntimeException) e);
+                } else {
+                    context.addException(new CitrusRuntimeException(e));
+                }
+
                 result.completeExceptionally(e);
             }
         });
 
         result.whenComplete((nothing, throwable) -> {
-            if (throwable != null) {
-                onError(context, throwable);
-            } else {
-                onSuccess(context);
+            try {
+                if (throwable != null) {
+                    onError(context, throwable);
+                } else {
+                    onSuccess(context);
+                }
+            } finally {
+                finished.complete(null);
             }
         });
+    }
+
+    @Override
+    public boolean isDone(TestContext context) {
+        return Optional.ofNullable(finished)
+                .map(future -> future.isDone() || isDisabled(context))
+                .orElse(isDisabled(context));
     }
 
     public abstract void doExecuteAsync(TestContext context);

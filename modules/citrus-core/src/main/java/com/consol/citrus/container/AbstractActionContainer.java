@@ -16,8 +16,10 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.Completable;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.TestContext;
 
 import java.util.*;
 
@@ -26,9 +28,10 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractActionContainer extends AbstractTestAction implements TestActionContainer {
+public abstract class AbstractActionContainer extends AbstractTestAction implements TestActionContainer, Completable {
+
     /** List of nested actions */
-    protected List<TestAction> actions = new ArrayList<TestAction>();
+    protected List<TestAction> actions = new ArrayList<>();
 
     /** Last executed action for error reporting reasons */
     private TestAction lastExecutedAction;
@@ -43,6 +46,13 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     public AbstractActionContainer addTestActions(TestAction ... toAdd) {
         actions.addAll(Arrays.asList(toAdd));
         return this;
+    }
+
+    @Override
+    public boolean isDone(TestContext context) {
+        return isDisabled(context) || actions.stream().filter(action -> action instanceof Completable)
+                                .map(Completable.class::cast)
+                                .allMatch(action -> action.isDone(context));
     }
 
     @Override

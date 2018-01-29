@@ -85,6 +85,11 @@ public class Conditional extends AbstractActionContainer {
         return BooleanExpressionParser.evaluate(conditionString);
     }
 
+    @Override
+    public boolean isDone(TestContext context) {
+        return super.isDone(context) || !checkCondition(context);
+    }
+
     /**
      * Condition which allows execution if true.
      * @param condition

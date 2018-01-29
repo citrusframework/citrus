@@ -34,12 +34,19 @@ public abstract class AbstractTestAction implements TestAction {
     
     /** This actions explicit test actor */
     private TestActor actor;
+
+    /** Finished indicator */
+    private boolean finished = false;
     
     /**
      * Do basic logging and delegate execution to subclass.
      */
     public void execute(TestContext context) {
-        doExecute(context);
+        try {
+            doExecute(context);
+        } finally {
+            finished = true;
+        }
     }
     
     /**

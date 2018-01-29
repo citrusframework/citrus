@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class AsyncTestRunnerIT extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void sequentialContainer() {
+    public void asyncContainer() {
         async().actions(
             stopTime(),
             sleep(1000),
@@ -55,7 +55,7 @@ public class AsyncTestRunnerIT extends TestNGCitrusTestRunner {
             }
         );
 
-        sleep(100L);
+        sleep(1000L);
 
         traceVariables("anonymous");
     }

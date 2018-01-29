@@ -16,6 +16,7 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.Completable;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -31,8 +32,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 
 /**
@@ -43,7 +44,7 @@ import java.util.List;
  * @author Christoph Deppisch 
  * @since 2008
  */
-public class SendMessageAction extends AbstractTestAction {
+public class SendMessageAction extends AbstractTestAction implements Completable {
     /** Message endpoint instance */
     private Endpoint endpoint;
 
@@ -59,6 +60,9 @@ public class SendMessageAction extends AbstractTestAction {
     /** Forks the message sending action so other actions can take place while this
      * message sender is waiting for the synchronous response */
     private boolean forkMode = false;
+
+    /** Finished indicator either called when forked send action is finished or immediately when this action has finished */
+    private CompletableFuture<Void> finished;
 
     /** The message type to send in this action - this information is needed to find proper
      * message construction interceptors for this message */
@@ -84,7 +88,8 @@ public class SendMessageAction extends AbstractTestAction {
     @Override
     public void doExecute(final TestContext context) {
         final Message message = createMessage(context, messageType);
-        
+        finished = new CompletableFuture<>();
+
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(message, context);
@@ -102,21 +107,25 @@ public class SendMessageAction extends AbstractTestAction {
             log.debug("Forking message sending action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-            taskExecutor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        messageEndpoint.createProducer().send(message, context);
-                    } catch (Exception e) {
-                        if (e instanceof CitrusRuntimeException) {
-                            context.addException((CitrusRuntimeException) e);
-                        } else {
-                            context.addException(new CitrusRuntimeException(e));
-                        }
+            taskExecutor.execute(() -> {
+                try {
+                    messageEndpoint.createProducer().send(message, context);
+                } catch (Exception e) {
+                    if (e instanceof CitrusRuntimeException) {
+                        context.addException((CitrusRuntimeException) e);
+                    } else {
+                        context.addException(new CitrusRuntimeException(e));
                     }
+                } finally {
+                    finished.complete(null);
                 }
             });
         } else {
-            messageEndpoint.createProducer().send(message, context);
+            try {
+                messageEndpoint.createProducer().send(message, context);
+            } finally {
+                finished.complete(null);
+            }
         }
     }
     
@@ -131,6 +140,13 @@ public class SendMessageAction extends AbstractTestAction {
         }
         
         return super.isDisabled(context);
+    }
+
+    @Override
+    public boolean isDone(TestContext context) {
+        return Optional.ofNullable(finished)
+                .map(future -> future.isDone() || isDisabled(context))
+                .orElse(isDisabled(context));
     }
 
     /**
