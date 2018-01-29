@@ -86,7 +86,12 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public static SoapAttachment from(Attachment attachment) {
         SoapAttachment soapAttachment = new SoapAttachment();
-        soapAttachment.setContentId(attachment.getContentId());
+
+        String contentId = attachment.getContentId();
+        if (contentId.startsWith("<") && contentId.endsWith(">")) {
+            contentId = contentId.substring(1, contentId.length() - 1);
+        }
+        soapAttachment.setContentId(contentId);
         soapAttachment.setContentType(attachment.getContentType());
 
         if (attachment.getContentType().startsWith("text")) {

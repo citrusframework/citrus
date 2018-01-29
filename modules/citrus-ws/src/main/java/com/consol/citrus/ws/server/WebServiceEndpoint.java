@@ -21,9 +21,8 @@ import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.*;
 import com.consol.citrus.ws.message.SoapFault;
-import com.consol.citrus.ws.message.SoapAttachment;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.*;
@@ -31,6 +30,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
@@ -128,7 +128,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
             List<SoapAttachment> soapAttachments = ((com.consol.citrus.ws.message.SoapMessage) replyMessage).getAttachments();
             soapAttachments.stream()
                     .filter(soapAttachment -> !soapAttachment.isMtomInline())
-                    .forEach(soapAttachment -> response.addAttachment(soapAttachment.getContentId(), soapAttachment.getDataHandler()));
+                    .forEach(soapAttachment -> {
+                        String contentId = soapAttachment.getContentId();
+
+                        if (!contentId.startsWith("<")) {
+                            contentId = "<" + contentId + ">";
+                        }
+                        response.addAttachment(contentId, soapAttachment.getDataHandler());
+                    });
         }
     }
 

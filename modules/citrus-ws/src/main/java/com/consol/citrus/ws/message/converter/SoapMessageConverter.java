@@ -24,7 +24,6 @@ import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
@@ -50,7 +49,8 @@ import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -140,15 +140,16 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         }
 
         for (final Attachment attachment : soapMessage.getAttachments()) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", attachment.getContentId(), attachment.getContentType()));
+            String contentId = context.replaceDynamicContentInString(attachment.getContentId());
+            if (!contentId.startsWith("<")) {
+                contentId = "<" + contentId + ">";
             }
 
-            soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {
-                public InputStream getInputStream() throws IOException {
-                    return attachment.getInputStream();
-                }
-            }, attachment.getContentType());
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", contentId, attachment.getContentType()));
+            }
+
+            soapRequest.addAttachment(contentId, attachment::getInputStream, attachment.getContentType());
         }
     }
 
@@ -434,7 +435,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
             if (log.isDebugEnabled()) {
-                log.debug(String.format("SOAP message contains attachment with contentId '%s'", attachment.getContentId()));
+                log.debug(String.format("SOAP message contains attachment with contentId '%s'", soapAttachment.getContentId()));
             }
 
             message.addAttachment(soapAttachment);

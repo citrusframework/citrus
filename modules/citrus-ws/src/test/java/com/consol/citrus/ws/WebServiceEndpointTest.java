@@ -40,6 +40,7 @@ import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
@@ -627,7 +628,7 @@ public class WebServiceEndpointTest {
     public void testMessageProcessingWithSoapAttachment() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
-        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        Map<String, Object> requestHeaders = new HashMap<>();
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
@@ -688,9 +689,66 @@ public class WebServiceEndpointTest {
         
         when(attachment.getInputStream()).thenReturn(new ByteArrayInputStream("AttachmentBody".getBytes()));
 
-        
         endpoint.invoke(messageContext);
         
+        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+    }
+
+    @Test
+    public void testMessageProcessingWithSoapAttachmentInResponse() throws Exception {
+        WebServiceEndpoint endpoint = new WebServiceEndpoint();
+
+        final SoapMessage responseMessage = new SoapMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
+        responseMessage.addAttachment(new SoapAttachment("This is an attachment"));
+        responseMessage.getAttachments().get(0).setContentId("myAttachment");
+        responseMessage.getAttachments().get(0).setContentType("text/plain");
+
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
+                return responseMessage;
+            }
+        });
+
+        StringResult soapResponsePayload = new StringResult();
+
+        Set<Attachment> attachments = new HashSet<Attachment>();
+        Attachment attachment = Mockito.mock(Attachment.class);
+        attachments.add(attachment);
+
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
+
+        when(messageContext.getRequest()).thenReturn(soapRequest);
+        when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
+
+        when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
+
+        when(messageContext.getPropertyNames()).thenReturn(new String[]{});
+
+        when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
+        when(soapRequestHeader.getSource()).thenReturn(null);
+
+        Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
+        when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
+
+        when(soapRequest.getSoapAction()).thenReturn("sayHello");
+
+        when(soapRequest.getAttachments()).thenReturn(attachments.iterator());
+        when(attachment.getContentId()).thenReturn("myContentId");
+        when(attachment.getContentType()).thenReturn("text/xml");
+
+        when(messageContext.getResponse()).thenReturn(soapResponse);
+
+        when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
+
+        when(soapResponse.addAttachment(eq("<myAttachment>"), any(DataHandler.class))).thenReturn(Mockito.mock(Attachment.class));
+
+        when(attachment.getInputStream()).thenReturn(new ByteArrayInputStream("AttachmentBody".getBytes()));
+
+        endpoint.invoke(messageContext);
+
+        verify(soapResponse).addAttachment(eq("<myAttachment>"), any(DataHandler.class));
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }

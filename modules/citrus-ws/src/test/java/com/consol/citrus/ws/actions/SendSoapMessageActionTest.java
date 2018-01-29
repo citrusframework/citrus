@@ -51,12 +51,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setMtomEnabled(true);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Text>cid:mtomText</Text></TestRequest>");
+        messageBuilder.setPayloadData("<TestRequest><Text>cid:mtomText@citrusframework.org</Text></TestRequest>");
 
         soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
-        attachment.setContentId("mtomText");
+        attachment.setContentId("mtomText@citrusframework.org");
         attachment.setContentType("text/xml");
         attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         soapMessageAction.setAttachments(Collections.singletonList(attachment));
@@ -69,11 +69,11 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 SoapMessage soapMessage = ((SoapMessage)invocation.getArguments()[0]);
                 Assert.assertTrue(soapMessage.isMtomEnabled());
-                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Text><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:mtomText\"/></Text></TestRequest>");
+                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Text><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:mtomText%40citrusframework.org\"/></Text></TestRequest>");
 
                 Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
                 SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-                Assert.assertEquals(constructedAttachment.getContentId(), "mtomText");
+                Assert.assertEquals(constructedAttachment.getContentId(), "mtomText@citrusframework.org");
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
