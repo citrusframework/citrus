@@ -399,6 +399,11 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    public AsyncBuilder async() {
+        return testDesigner.async();
+    }
+
+    @Override
     public TimerBuilder timer() {
         return testDesigner.timer();
     }

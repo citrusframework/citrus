@@ -407,6 +407,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
+    public AsyncBuilder async() {
+        return testDesigner.async();
+    }
+
+    @Override
     public StopTimerAction stopTimer(String timerId) {
         return testDesigner.stopTimer(timerId);
     }

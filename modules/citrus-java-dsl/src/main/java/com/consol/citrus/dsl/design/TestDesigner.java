@@ -480,6 +480,12 @@ public interface TestDesigner extends ApplicationContextAware {
     SequenceBuilder sequential();
 
     /**
+     * Adds async container with nested test actions.
+     * @return
+     */
+    AsyncBuilder async();
+
+    /**
      * Adds a timer container.
      * @return
      */

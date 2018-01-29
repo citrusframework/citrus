@@ -46,11 +46,17 @@ public interface TestActionContainer extends TestAction {
     long getActionCount();
     
     /**
+     * Adds one to many test actions to the nested action list.
+     * @param action
+     */
+    TestActionContainer addTestActions(TestAction ... action);
+    
+    /**
      * Adds a test action to the nested action list.
      * @param action
      */
     TestActionContainer addTestAction(TestAction action);
-    
+
     /**
      * Returns the index in the action chain for provided action instance.
      * @return the action index in the action list

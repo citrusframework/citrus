@@ -19,8 +19,7 @@ package com.consol.citrus.container;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Abstract base class for all containers holding several embedded test actions.
@@ -37,6 +36,12 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     @Override
     public AbstractActionContainer setActions(List<TestAction> actions) {
         this. actions = actions;
+        return this;
+    }
+
+    @Override
+    public AbstractActionContainer addTestActions(TestAction ... toAdd) {
+        actions.addAll(Arrays.asList(toAdd));
         return this;
     }
 

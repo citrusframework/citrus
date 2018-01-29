@@ -486,6 +486,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public AsyncBuilder async() {
+        AsyncBuilder builder = new AsyncBuilder(this);
+        containers.push(builder.build());
+        return builder;
+    }
+
+    @Override
     public TimerBuilder timer() {
         TimerBuilder builder = new TimerBuilder(this);
         containers.push(builder.build());

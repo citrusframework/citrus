@@ -332,6 +332,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
+    public AsyncBuilder async() {
+        return testRunner.async();
+    }
+
+    @Override
     public TimerBuilder timer() {
         return testRunner.timer();
     }

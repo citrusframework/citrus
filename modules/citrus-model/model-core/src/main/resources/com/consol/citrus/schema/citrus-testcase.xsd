@@ -649,6 +649,33 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="AsyncActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="actions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="actionGroup" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="success" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="actionGroup" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="error" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="actionGroup" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="TimerActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
@@ -861,6 +888,7 @@
             <xs:element ref="repeat-onerror-until-true"/>
             <xs:element ref="conditional"/>
             <xs:element ref="sequential"/>
+            <xs:element ref="async"/>
             <xs:element ref="timer"/>
             <xs:element ref="stop-timer"/>
             <xs:element ref="fail"/>
@@ -938,6 +966,7 @@
     <xs:element name="repeat-onerror-until-true" type="RepeatOnErrorUntilTrueActionType"/>
     <xs:element name="conditional" type="ConditionalActionType"/>
     <xs:element name="sequential" type="SequentialActionType"/>
+    <xs:element name="async" type="AsyncActionType"/>
     <xs:element name="timer" type="TimerActionType"/>
     <xs:element name="stop-timer" type="StopTimerActionType"/>
     <xs:element name="action" type="ActionReferenceActionType"/>

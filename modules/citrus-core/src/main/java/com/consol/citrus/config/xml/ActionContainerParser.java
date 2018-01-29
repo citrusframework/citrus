@@ -46,6 +46,10 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
+        doParse(element, parserContext, builder, "actions");
+    }
+
+    public static void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder, String propertyName) {
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
@@ -69,7 +73,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
         }
         
         if (actions.size() > 0) {
-            builder.addPropertyValue("actions", actions);
+            builder.addPropertyValue(propertyName, actions);
         }
     }
 }

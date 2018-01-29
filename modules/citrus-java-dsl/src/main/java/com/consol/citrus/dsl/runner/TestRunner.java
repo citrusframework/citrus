@@ -424,6 +424,12 @@ public interface TestRunner extends ApplicationContextAware {
     SequenceBuilder sequential();
 
     /**
+     * Adds async container with nested test actions.
+     * @return
+     */
+    AsyncBuilder async();
+
+    /**
      * Repeat nested test actions based on a timer interval.
      * @return
      */

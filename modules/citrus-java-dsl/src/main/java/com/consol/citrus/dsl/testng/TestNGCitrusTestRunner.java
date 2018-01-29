@@ -331,6 +331,11 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    public AsyncBuilder async() {
+        return testRunner.async();
+    }
+
+    @Override
     public TimerBuilder timer() {
         return testRunner.timer();
     }

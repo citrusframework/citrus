@@ -53,6 +53,7 @@ public final class TestActionRegistry {
         registerActionParser("call-template", new CallTemplateParser());
         registerActionParser("conditional", new ConditionalParser());
         registerActionParser("sequential", new SequenceParser());
+        registerActionParser("async", new AsyncParser());
         registerActionParser("iterate", new IterateParser());
         registerActionParser("repeat-until-true", new RepeatUntilTrueParser());
         registerActionParser("repeat-onerror-until-true", new RepeatOnErrorUntilTrueParser());
