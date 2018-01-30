@@ -21,6 +21,8 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import com.consol.citrus.message.Message;
 
+import java.util.Collections;
+
 /**
  * Extracts predicate from message payload via XPath expression evaluation.
  *
@@ -40,7 +42,7 @@ public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor
         return XPathUtils.evaluateAsString(
                 XMLUtils.parseMessagePayload(request.getPayload(String.class)),
                 xpathExpression,
-                namespaceContextBuilder.buildContext(request, null));
+                namespaceContextBuilder.buildContext(request, Collections.emptyMap()));
     }
 
     /**
