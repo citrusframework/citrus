@@ -25,6 +25,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jdbc.command.JdbcCommand;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.OpenConnection;
@@ -164,7 +165,16 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
     @Override
     public void setTransactionState(final boolean transactionState) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Received transaction state change: '%s':%n%s",
+                    endpointConfiguration.getServerConfiguration().getDatabaseName(),
+                    String.valueOf(transactionState)));
+        }
+
         this.transactionState = transactionState;
+        if(transactionState){
+            handleMessageAndCheckResponse(JdbcCommand.TRANSACTION_STARTED);
+        }
     }
 
     @Override
@@ -174,12 +184,20 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
     @Override
     public void commitStatements() {
-
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Received transaction commit: '%s':%n",
+                    endpointConfiguration.getServerConfiguration().getDatabaseName()));
+        }
+        handleMessageAndCheckResponse(JdbcCommand.TRANSACTION_COMMITTED);
     }
 
     @Override
     public void rollbackStatements() {
-
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Received transaction rollback: '%s':%n",
+                    endpointConfiguration.getServerConfiguration().getDatabaseName()));
+        }
+        handleMessageAndCheckResponse(JdbcCommand.TRANSACTION_ROLLBACK);
     }
 
     /**
