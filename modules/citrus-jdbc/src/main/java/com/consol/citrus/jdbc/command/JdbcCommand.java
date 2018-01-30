@@ -2,6 +2,9 @@ package com.consol.citrus.jdbc.command;
 
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.TransactionCommitted;
+import com.consol.citrus.jdbc.model.TransactionRollback;
+import com.consol.citrus.jdbc.model.TransactionStarted;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 
@@ -11,13 +14,9 @@ import com.consol.citrus.message.Message;
 public class JdbcCommand extends DefaultMessage {
 
 
-    public static final Message TRANSACTION_STARTED = new JdbcCommand();
-    public static final Message TRANSACTION_COMMITTED = new JdbcCommand();
-    public static final Message TRANSACTION_ROLLBACK = new JdbcCommand();
-
-    private Operation operation;
-
-    private JdbcMarshaller marshaller = new JdbcMarshaller();
+    public static final Message TRANSACTION_STARTED = new JdbcCommand(new Operation(new TransactionStarted()));
+    public static final Message TRANSACTION_COMMITTED = new JdbcCommand(new Operation(new TransactionCommitted()));
+    public static final Message TRANSACTION_ROLLBACK = new JdbcCommand(new Operation(new TransactionRollback()));
 
     /**
      * Prevent traditional instantiation.
@@ -28,9 +27,8 @@ public class JdbcCommand extends DefaultMessage {
      * Constructor initializes new JDBC command.
      * @param operation The operation to be executed
      */
-    private JdbcCommand(Operation operation) {
+    private JdbcCommand(final Operation operation) {
         super(operation);
-        this.operation = operation;
     }
 
 
