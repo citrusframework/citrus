@@ -29,7 +29,10 @@ import javax.xml.bind.annotation.XmlType;
     "closeStatement",
     "createPreparedStatement",
     "openConnection",
-    "closeConnection"
+    "closeConnection",
+    "transactionStarted",
+    "transactionCommitted",
+    "transactionRollback"
 })
 @XmlRootElement(name = "operation")
 public class Operation {
@@ -45,6 +48,12 @@ public class Operation {
     protected CloseStatement closeStatement;
     @XmlElement(name = "open-connection")
     protected OpenConnection openConnection;
+    @XmlElement(name = "transaction-started")
+    protected TransactionStarted transactionStarted;
+    @XmlElement(name = "transaction-committed")
+    protected TransactionCommitted transactionCommitted;
+    @XmlElement(name = "transaction-rollback")
+    protected TransactionRollback transactionRollback;
 
     /**
      * Default constructor.
@@ -75,6 +84,18 @@ public class Operation {
 
     public Operation(Execute operation) {
         this.execute = operation;
+    }
+
+    public Operation(TransactionStarted transactionStarted) {
+        this.transactionStarted = transactionStarted;
+    }
+
+    public Operation(TransactionCommitted transactionCommitted) {
+        this.transactionCommitted = transactionCommitted;
+    }
+
+    public Operation(TransactionRollback transactionRollback) {
+        this.transactionRollback = transactionRollback;
     }
 
     /**
@@ -183,5 +204,59 @@ public class Operation {
      */
     public void setOpenConnection(OpenConnection openConnection) {
         this.openConnection = openConnection;
+    }
+
+    /**
+     * Gets the transactionStarted.
+     *
+     * @return
+     */
+    public TransactionStarted getTransactionStarted() {
+        return transactionStarted;
+    }
+
+    /**
+     * Sets the openConnection.
+     *
+     * @param transactionStarted
+     */
+    public void setTransactionStarted(TransactionStarted transactionStarted) {
+        this.transactionStarted = transactionStarted;
+    }
+
+    /**
+     * Gets the transactionCommitted.
+     *
+     * @return
+     */
+    public TransactionCommitted getTransactionCommitted() {
+        return transactionCommitted;
+    }
+
+    /**
+     * Sets the transactionCommitted.
+     *
+     * @param transactionCommitted
+     */
+    public void setTransactionCommitted(TransactionCommitted transactionCommitted) {
+        this.transactionCommitted = transactionCommitted;
+    }
+
+    /**
+     * Gets the transactionRollback.
+     *
+     * @return
+     */
+    public TransactionRollback getTransactionRollback() {
+        return transactionRollback;
+    }
+
+    /**
+     * Sets the transactionRollback.
+     *
+     * @param transactionRollback
+     */
+    public void setTransactionRollback(TransactionRollback transactionRollback) {
+        this.transactionRollback = transactionRollback;
     }
 }
