@@ -33,6 +33,9 @@
           <xs:element ref="close-statement"/>
           <xs:element ref="create-prepared-statement"/>
           <xs:element ref="execute"/>
+          <xs:element ref="transaction-started"/>
+          <xs:element ref="transaction-committed"/>
+          <xs:element ref="transaction-rollback"/>
         </xs:choice>
       </xs:complexType>
     </xs:element>
@@ -199,6 +202,33 @@
         </xs:sequence>
         <xs:attribute name="affected-rows" type="xs:int"/>
       </xs:complexType>
+    </xs:element>
+
+    <xs:element name="transaction-started">
+        <xs:annotation>
+            <xs:documentation>Starts a transaction.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="transaction-committed">
+        <xs:annotation>
+            <xs:documentation>Commits a transaction</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="transaction-rollback">
+        <xs:annotation>
+            <xs:documentation>Performs a rollback of a transaction.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
     </xs:element>
 
 </xs:schema>
