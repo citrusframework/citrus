@@ -21,12 +21,16 @@ import com.consol.citrus.db.driver.json.JsonDataSetProducer;
 import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.db.server.controller.JdbcController;
-import com.consol.citrus.endpoint.*;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.*;
-import com.consol.citrus.message.*;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
@@ -50,6 +54,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     private final EndpointAdapter delegate;
 
     private AtomicInteger connections = new AtomicInteger(0);
+    private boolean transactionState;
 
     /**
      * Default constructor using fields.
@@ -155,6 +160,26 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         if (!endpointConfiguration.isAutoCreateStatement()) {
             handleMessageAndCheckResponse(JdbcMessage.closeStatement());
         }
+    }
+
+    @Override
+    public void setTransactionState(final boolean transactionState) {
+        this.transactionState = transactionState;
+    }
+
+    @Override
+    public boolean getTransactionState() {
+        return this.transactionState;
+    }
+
+    @Override
+    public void commitStatements() {
+
+    }
+
+    @Override
+    public void rollbackStatements() {
+
     }
 
     /**
