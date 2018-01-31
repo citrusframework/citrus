@@ -53,7 +53,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
         
         container.execute(context);
 
-        waitForDone(container, context, 500);
+        waitForDone(container, context, 2500);
 
         verify(action).execute(context);
         verify(success).execute(context);
@@ -82,7 +82,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
         container.execute(context);
 
-        waitForDone(container, context, 500);
+        waitForDone(container, context, 2500);
 
         verify(action1).execute(context);
         verify(action2).execute(context);
@@ -99,7 +99,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
-        reset(action1, action2, action3);
+        reset(action1, action2, action3, success, error);
 
         List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(action1);
@@ -114,7 +114,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
         container.execute(context);
 
-        waitForDone(container, context, 500);
+        waitForDone(container, context, 2500);
 
         Assert.assertEquals(context.getExceptions().size(), 1L);
         Assert.assertEquals(context.getExceptions().get(0).getClass(), CitrusRuntimeException.class);
@@ -157,7 +157,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
         container.execute(context);
 
-        waitForDone(container, context, 500);
+        waitForDone(container, context, 2500);
 
         Assert.assertEquals(context.getExceptions().size(), 1L);
         Assert.assertEquals(context.getExceptions().get(0).getClass(), CitrusRuntimeException.class);
