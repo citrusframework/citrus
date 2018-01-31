@@ -229,7 +229,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         try {
             if (!action.isDisabled(context)) {
                 testActionListeners.onTestActionStart(this, action);
-                setLastExecutedAction(action);
+                setActiveAction(action);
 
                 action.execute(context);
                 testActionListeners.onTestActionFinish(this, action);

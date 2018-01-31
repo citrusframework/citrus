@@ -75,7 +75,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DelegatingTestAction.class);
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "create-routes");
@@ -117,7 +117,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), StartCamelRouteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DelegatingTestAction.class);
 
         StartCamelRouteAction action = (StartCamelRouteAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "start-routes");
@@ -159,7 +159,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), StopCamelRouteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DelegatingTestAction.class);
 
         StopCamelRouteAction action = (StopCamelRouteAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "stop-routes");
@@ -204,7 +204,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), RemoveCamelRouteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DelegatingTestAction.class);
 
         RemoveCamelRouteAction action = (RemoveCamelRouteAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "remove-routes");
@@ -242,7 +242,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DelegatingTestAction.class);
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "create-routes");
@@ -296,7 +296,7 @@ public class CamelRouteTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
         Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), CamelControlBusAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DelegatingTestAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DelegatingTestAction.class);
 
         CamelControlBusAction action = (CamelControlBusAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
         Assert.assertEquals(action.getName(), "controlbus");

@@ -59,7 +59,7 @@ public class Assert extends AbstractActionContainer {
         }
 
         try {
-            setLastExecutedAction(action);
+            setActiveAction(action);
             action.execute(context);
         } catch (Exception e) {
             log.debug("Validating caught exception ...");

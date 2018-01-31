@@ -50,7 +50,7 @@ public class Catch extends AbstractActionContainer {
 
         for (TestAction action: actions) {
             try {
-                setLastExecutedAction(action);
+                setActiveAction(action);
                 action.execute(context);
             } catch (Exception e) {
                 if (exception != null && exception.equals(e.getClass().getName())) {

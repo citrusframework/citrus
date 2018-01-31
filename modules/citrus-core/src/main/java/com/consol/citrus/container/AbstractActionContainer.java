@@ -33,8 +33,11 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     /** List of nested actions */
     protected List<TestAction> actions = new ArrayList<>();
 
+    /** List of all executed actions during container run  */
+    private List<TestAction> executedActions = new ArrayList<>();
+
     /** Last executed action for error reporting reasons */
-    private TestAction lastExecutedAction;
+    private TestAction activeAction;
     
     @Override
     public AbstractActionContainer setActions(List<TestAction> actions) {
@@ -50,7 +53,7 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
     @Override
     public boolean isDone(TestContext context) {
-        return isDisabled(context) || actions.stream().filter(action -> action instanceof Completable)
+        return isDisabled(context) || executedActions.stream().filter(action -> action instanceof Completable)
                                 .map(Completable.class::cast)
                                 .allMatch(action -> action.isDone(context));
     }
@@ -77,13 +80,19 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     }
 
     @Override
-    public TestAction getLastExecutedAction() {
-        return lastExecutedAction;
+    public TestAction getActiveAction() {
+        return activeAction;
     }
 
     @Override
-    public void setLastExecutedAction(TestAction action) {
-        this.lastExecutedAction = action;
+    public void setActiveAction(TestAction action) {
+        this.activeAction = action;
+        this.executedActions.add(action);
+    }
+
+    @Override
+    public List<TestAction> getExecutedActions() {
+        return executedActions;
     }
 
     @Override

@@ -16,12 +16,6 @@
 
 package com.consol.citrus.util;
 
-import java.util.*;
-
-import org.springframework.util.CollectionUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
@@ -30,6 +24,12 @@ import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.FailureStackElement;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.util.CollectionUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -63,7 +63,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         actions.add(new MockedTestAction("echo"));
         
         test.setActions(actions);
-        test.setLastExecutedAction(failedAction);
+        test.setActiveAction(failedAction);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         
@@ -102,7 +102,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         actions.add(new MockedTestAction("echo"));
         
         test.setActions(actions);
-        test.setLastExecutedAction(failedAction);
+        test.setActiveAction(failedAction);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         
@@ -140,7 +140,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         actions.add(new MockedTestAction("echo"));
         
         test.setActions(actions);
-        test.setLastExecutedAction(failedAction);
+        test.setActiveAction(failedAction);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         
@@ -173,14 +173,14 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
                 new MockedTestAction("echo"),
                 failedAction,
                 new MockedActionContainer("iterate", new MockedTestAction("sleep")));
-        ((TestActionContainer)failedContainer).setLastExecutedAction(failedAction);
+        ((TestActionContainer)failedContainer).setActiveAction(failedAction);
         actions.add(failedContainer);
         
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
         
         test.setActions(actions);
-        test.setLastExecutedAction(failedContainer);
+        test.setActiveAction(failedContainer);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         
@@ -213,20 +213,20 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         actions.add(new MockedTestAction("sleep"));
         
         TestAction failedContainer = new MockedActionContainer("iterate", failedAction);
-        ((TestActionContainer)failedContainer).setLastExecutedAction(failedAction);
+        ((TestActionContainer)failedContainer).setActiveAction(failedAction);
         
         TestAction nestedContainer = new MockedActionContainer("sequential", 
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 failedContainer);
-        ((TestActionContainer)nestedContainer).setLastExecutedAction(failedContainer);
+        ((TestActionContainer)nestedContainer).setActiveAction(failedContainer);
         actions.add(nestedContainer);
         
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
         
         test.setActions(actions);
-        test.setLastExecutedAction(nestedContainer);
+        test.setActiveAction(nestedContainer);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         
@@ -260,7 +260,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 failedAction);
-        ((TestActionContainer)failedContainer).setLastExecutedAction(failedAction);
+        ((TestActionContainer)failedContainer).setActiveAction(failedAction);
         actions.add(failedContainer);
         
         actions.add(new MockedTestAction("sleep"));
@@ -274,7 +274,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         actions.add(new MockedTestAction("echo"));
         
         test.setActions(actions);
-        test.setLastExecutedAction(failedContainer);
+        test.setActiveAction(failedContainer);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         
@@ -317,7 +317,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         actions.add(failedAction);
         
         test.setActions(actions);
-        test.setLastExecutedAction(failedAction);
+        test.setActiveAction(failedAction);
         
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
         

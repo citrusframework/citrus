@@ -46,7 +46,7 @@ public class FailTestRunnerTest extends AbstractTestNGUnitTest {
                 TestCase test = builder.getTestCase();
                 Assert.assertEquals(test.getActionCount(), 1);
                 Assert.assertEquals(test.getActions().get(0).getClass(), FailAction.class);
-                Assert.assertEquals(test.getLastExecutedAction().getClass(), FailAction.class);
+                Assert.assertEquals(test.getActiveAction().getClass(), FailAction.class);
 
                 FailAction action = (FailAction) test.getActions().get(0);
                 Assert.assertEquals(action.getName(), "fail");

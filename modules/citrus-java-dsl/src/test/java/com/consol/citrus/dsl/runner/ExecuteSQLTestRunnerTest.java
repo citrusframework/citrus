@@ -61,7 +61,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecuteSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecuteSQLAction.class);
 
         ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
@@ -95,7 +95,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecuteSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecuteSQLAction.class);
 
         ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
@@ -127,7 +127,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecuteSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecuteSQLAction.class);
 
         ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
@@ -155,7 +155,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecuteSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecuteSQLAction.class);
 
         ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");

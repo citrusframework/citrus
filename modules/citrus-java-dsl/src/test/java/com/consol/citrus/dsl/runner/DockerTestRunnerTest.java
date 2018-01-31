@@ -99,7 +99,7 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 5);
         Assert.assertEquals(test.getActions().get(0).getClass(), DockerExecuteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), DockerExecuteAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), DockerExecuteAction.class);
 
         DockerExecuteAction action = (DockerExecuteAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "docker-execute");

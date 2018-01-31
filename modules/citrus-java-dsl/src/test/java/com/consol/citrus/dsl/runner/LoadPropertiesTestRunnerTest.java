@@ -45,7 +45,7 @@ public class LoadPropertiesTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), LoadPropertiesAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), LoadPropertiesAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), LoadPropertiesAction.class);
 
         LoadPropertiesAction action = (LoadPropertiesAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "load");

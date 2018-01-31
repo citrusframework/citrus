@@ -17,6 +17,7 @@
 package com.consol.citrus;
 
 import com.consol.citrus.actions.*;
+import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -52,7 +53,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
             @Override
             public void doExecuteAsync(TestContext context) {
                 try {
-                    Thread.sleep(2000L);
+                    Thread.sleep(500L);
                 } catch (InterruptedException e) {
                     throw new CitrusRuntimeException(e);
                 }
@@ -79,6 +80,25 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
                 }
             }
         });
+
+        testcase.execute(context);
+    }
+
+    @Test
+    public void testWaitForFinishAsync() {
+        TestCase testcase = new TestCase();
+        testcase.setName("MyTestCase");
+
+        testcase.addTestAction(new Async().addTestAction(new AbstractAsyncTestAction() {
+            @Override
+            public void doExecuteAsync(TestContext context) {
+                try {
+                    Thread.sleep(500L);
+                } catch (InterruptedException e) {
+                    throw new CitrusRuntimeException(e);
+                }
+            }
+        }));
 
         testcase.execute(context);
     }

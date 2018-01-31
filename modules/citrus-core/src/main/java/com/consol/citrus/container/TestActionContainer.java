@@ -64,16 +64,22 @@ public interface TestActionContainer extends TestAction {
     int getActionIndex(TestAction action);
     
     /**
-     * Sets the last executed action.
+     * Sets the current active action executed.
      * @param action
      */
-    void setLastExecutedAction(TestAction action);
+    void setActiveAction(TestAction action);
     
     /**
      * Get the action that was executed most recently.
      * @return
      */
-    TestAction getLastExecutedAction();
+    TestAction getActiveAction();
+
+    /**
+     * Gets all nested actions that have been executed in the container.
+     * @return
+     */
+    List<TestAction> getExecutedActions();
     
     /**
      * Get the test action with given index in list.

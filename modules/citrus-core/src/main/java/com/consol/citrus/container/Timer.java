@@ -83,7 +83,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                     log.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
 
                     for (TestAction action : actions) {
-                        setLastExecutedAction(action);
+                        setActiveAction(action);
                         action.execute(context);
                     }
                     if (indexCount >= repeatCount) {

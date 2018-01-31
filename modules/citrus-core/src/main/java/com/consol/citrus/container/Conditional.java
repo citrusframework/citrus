@@ -53,7 +53,7 @@ public class Conditional extends AbstractActionContainer {
             log.debug("Condition [ {} ] evaluates to true, executing nested actions", condition);
 
             for (final TestAction action : actions) {
-                setLastExecutedAction(action);
+                setActiveAction(action);
                 action.execute(context);
             }
         } else {

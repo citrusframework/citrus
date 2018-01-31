@@ -64,7 +64,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         context.setVariable(indexName, String.valueOf(index));
 
         for (TestAction action: actions) {
-            setLastExecutedAction(action);
+            setActiveAction(action);
             action.execute(context);
         }
     }

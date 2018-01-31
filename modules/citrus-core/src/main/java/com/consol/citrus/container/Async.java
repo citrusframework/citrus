@@ -36,8 +36,6 @@ public class Async extends AbstractActionContainer {
     private List<TestAction> errorActions = new ArrayList<>();
     private List<TestAction> successActions = new ArrayList<>();
 
-    private AbstractAsyncTestAction asyncTestAction;
-
     public Async() {
         setName("async");
     }
@@ -46,11 +44,11 @@ public class Async extends AbstractActionContainer {
     public void doExecute(TestContext context) {
         log.debug("Async container forking action execution ...");
 
-        asyncTestAction = new AbstractAsyncTestAction() {
+        AbstractAsyncTestAction asyncTestAction = new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(TestContext context) {
                 for (TestAction action : actions) {
-                    setLastExecutedAction(action);
+                    setActiveAction(action);
                     action.execute(context);
                 }
             }
@@ -72,12 +70,8 @@ public class Async extends AbstractActionContainer {
             }
         };
 
+        setActiveAction(asyncTestAction);
         asyncTestAction.execute(context);
-    }
-
-    @Override
-    public boolean isDone(TestContext context) {
-        return super.isDone(context) && asyncTestAction.isDone(context);
     }
 
     /**

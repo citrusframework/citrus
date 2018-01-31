@@ -43,7 +43,7 @@ public class Sequence extends AbstractActionContainer {
     @Override
     public void doExecute(TestContext context) {
         for (TestAction action: actions) {
-            setLastExecutedAction(action);
+            setActiveAction(action);
             action.execute(context);
         }
 

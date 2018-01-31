@@ -66,7 +66,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveTimeoutAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ReceiveTimeoutAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ReceiveTimeoutAction.class);
 
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
@@ -104,7 +104,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveTimeoutAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ReceiveTimeoutAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ReceiveTimeoutAction.class);
 
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");

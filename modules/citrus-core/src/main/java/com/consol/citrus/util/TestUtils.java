@@ -67,7 +67,7 @@ public abstract class TestUtils {
             }
             
             // first check if test failed during setup
-            if (test.getLastExecutedAction() == null) {
+            if (test.getActiveAction() == null) {
                 failureStack.add(new FailureStackElement(testFilePath, "init", 0L));
                 // no actions were executed yet failure caused by test setup: abort
                 return failureStack;
@@ -136,7 +136,7 @@ public abstract class TestUtils {
                 failureStack.add(new FailureStackElement(testFilePath, qName, Long.valueOf(locator.getLineNumber())));
                 
                 if (stackFinder.getNestedActionContainer() != null && 
-                        stackFinder.getNestedActionContainer().getLastExecutedAction() != null) {
+                        stackFinder.getNestedActionContainer().getActiveAction() != null) {
                     //continue with nested action container, in order to find out which action caused the failure
                     stackFinder = new FailureStackFinder(stackFinder.getNestedActionContainer());
                 } else {
@@ -184,7 +184,7 @@ public abstract class TestUtils {
          * @param container
          */
         public FailureStackFinder(TestActionContainer container) {
-            int lastActionIndex = container.getActionIndex(container.getLastExecutedAction());
+            int lastActionIndex = container.getActionIndex(container.getActiveAction());
             
             for (int i = lastActionIndex; i >= 0; i--) {
                 actionStack.add(container.getActions().get(i));

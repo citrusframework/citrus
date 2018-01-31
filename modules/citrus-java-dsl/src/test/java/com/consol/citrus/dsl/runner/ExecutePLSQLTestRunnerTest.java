@@ -57,7 +57,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
@@ -91,7 +91,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
@@ -130,7 +130,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
@@ -164,7 +164,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
@@ -198,7 +198,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");

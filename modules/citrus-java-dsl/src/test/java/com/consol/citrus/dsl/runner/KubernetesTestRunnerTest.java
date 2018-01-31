@@ -141,7 +141,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 6);
         Assert.assertEquals(test.getActions().get(0).getClass(), KubernetesExecuteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), KubernetesExecuteAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), KubernetesExecuteAction.class);
 
         KubernetesExecuteAction action = (KubernetesExecuteAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "kubernetes-execute");

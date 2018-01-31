@@ -138,7 +138,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 7);
         Assert.assertEquals(test.getActions().get(0).getClass(), ZooExecuteAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), ZooExecuteAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), ZooExecuteAction.class);
 
         String actionName = "zookeeper-execute";
 

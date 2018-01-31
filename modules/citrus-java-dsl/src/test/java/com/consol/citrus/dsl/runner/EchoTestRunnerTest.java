@@ -40,7 +40,7 @@ public class EchoTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(test.getLastExecutedAction().getClass(), EchoAction.class);
+        Assert.assertEquals(test.getActiveAction().getClass(), EchoAction.class);
 
         EchoAction action = (EchoAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "echo");
