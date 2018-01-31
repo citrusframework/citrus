@@ -58,6 +58,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, exchange);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(null);
 
@@ -80,6 +81,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, exchange);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(exchangeException);
 
@@ -94,16 +96,19 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setEndpointUri(endpointUri);
 
         CamelEndpoint camelEndpoint = new CamelEndpoint(endpointConfiguration);
-        DefaultMessage message = new DefaultMessage();
+
+        reset(camelContext, consumerTemplate);
+
+        when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Hello from Camel!");
         message.setHeader("operation", "newsFeed");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
 
-        reset(camelContext, consumerTemplate);
-
-        when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).thenReturn(exchange);
 
         Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
@@ -125,7 +130,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
         Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Hello from Camel!");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
@@ -135,6 +140,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, consumerTemplate, messageListeners);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);

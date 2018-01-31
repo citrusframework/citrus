@@ -35,7 +35,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusRouteAction() throws Exception {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Started");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
@@ -43,6 +43,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
@@ -59,7 +60,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusRouteActionVariableSupport() throws Exception {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Started");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
@@ -70,6 +71,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
@@ -86,7 +88,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusRouteActionWithResult() throws Exception {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Started");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
@@ -94,6 +96,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
@@ -111,7 +114,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusRouteActionWithResultFailed() throws Exception {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Started");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
@@ -119,6 +122,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
@@ -136,7 +140,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusLanguageAction() throws Exception {
         String endpointUri = "controlbus:language:simple";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Started");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
@@ -144,6 +148,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
@@ -159,7 +164,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusLanguageActionVariableSupport() throws Exception {
         String endpointUri = "controlbus:language:simple";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
 
@@ -168,6 +173,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenAnswer(invocation -> {
             Processor processor = (Processor) invocation.getArguments()[1];
@@ -189,13 +195,14 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
     public void testControlBusLanguageActionWithResult() throws Exception {
         String endpointUri = "controlbus:language:simple";
 
-        DefaultMessage message = new DefaultMessage();
+        DefaultMessage message = new DefaultMessage(camelContext);
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
 
         reset(camelContext, producerTemplate);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenAnswer(invocation -> {
             Processor processor = (Processor) invocation.getArguments()[1];

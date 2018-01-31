@@ -23,11 +23,15 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultHeadersMapFactory;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.UUID;
+
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -38,6 +42,12 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
     private CamelContext camelContext = Mockito.mock(CamelContext.class);
     private CamelMessageConverter messageConverter = new CamelMessageConverter();
     private CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
+
+    @BeforeClass
+    void setupMocks() {
+        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        endpointConfiguration.setCamelContext(camelContext);
+    }
 
     @Test
     public void testConvertOutbound() {
