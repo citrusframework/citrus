@@ -173,7 +173,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
         this.transactionState = transactionState;
         if(transactionState){
-            handleMessageAndCheckResponse(JdbcCommand.TRANSACTION_STARTED);
+            handleMessageAndCheckResponse(JdbcCommand.startTransaction());
         }
     }
 
@@ -188,7 +188,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             log.debug(String.format("Received transaction commit: '%s':%n",
                     endpointConfiguration.getServerConfiguration().getDatabaseName()));
         }
-        handleMessageAndCheckResponse(JdbcCommand.TRANSACTION_COMMITTED);
+        handleMessageAndCheckResponse(JdbcCommand.commitTransaction());
     }
 
     @Override
@@ -197,7 +197,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             log.debug(String.format("Received transaction rollback: '%s':%n",
                     endpointConfiguration.getServerConfiguration().getDatabaseName()));
         }
-        handleMessageAndCheckResponse(JdbcCommand.TRANSACTION_ROLLBACK);
+        handleMessageAndCheckResponse(JdbcCommand.rollbackTransaction());
     }
 
     /**

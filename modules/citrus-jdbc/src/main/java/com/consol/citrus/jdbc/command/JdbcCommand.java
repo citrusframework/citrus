@@ -14,11 +14,6 @@ import org.springframework.xml.transform.StringResult;
  */
 public class JdbcCommand extends DefaultMessage {
 
-
-    public static final Message TRANSACTION_STARTED = new JdbcCommand(new Operation(new TransactionStarted()));
-    public static final Message TRANSACTION_COMMITTED = new JdbcCommand(new Operation(new TransactionCommitted()));
-    public static final Message TRANSACTION_ROLLBACK = new JdbcCommand(new Operation(new TransactionRollback()));
-
     private JdbcMarshaller marshaller = new JdbcMarshaller();
     private Operation operation;
 
@@ -54,5 +49,17 @@ public class JdbcCommand extends DefaultMessage {
         }
 
         return super.getPayload();
+    }
+
+    public static Message startTransaction() {
+        return new JdbcCommand(new Operation(new TransactionStarted()));
+    }
+
+    public static Message commitTransaction(){
+        return new JdbcCommand(new Operation(new TransactionCommitted()));
+    }
+
+    public static Message rollbackTransaction(){
+        return new JdbcCommand(new Operation(new TransactionRollback()));
     }
 }
