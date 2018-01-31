@@ -113,6 +113,38 @@ public final class Functions {
     }
 
     /**
+     * Runs URL encode function with arguments.
+     * @return
+     */
+    public static String urlEncode(String content, TestContext context) {
+        return new UrlEncodeFunction().execute(Collections.singletonList(content), context);
+    }
+
+    /**
+     * Runs URL encode function with arguments.
+     * @return
+     */
+    public static String urlEncode(String content, Charset charset, TestContext context) {
+        return new UrlEncodeFunction().execute(Arrays.asList(content, charset.displayName()), context);
+    }
+
+    /**
+     * Runs URL decode function with arguments.
+     * @return
+     */
+    public static String urlDecode(String content, TestContext context) {
+        return new UrlDecodeFunction().execute(Collections.singletonList(content), context);
+    }
+
+    /**
+     * Runs URL decode function with arguments.
+     * @return
+     */
+    public static String urlDecode(String content, Charset charset, TestContext context) {
+        return new UrlDecodeFunction().execute(Arrays.asList(content, charset.displayName()), context);
+    }
+
+    /**
      * Runs create digest auth header function with arguments.
      * @return
      */

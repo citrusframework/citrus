@@ -52,6 +52,8 @@ public class FunctionConfig {
     private final EscapeXmlFunction escapeXmlFunction = new EscapeXmlFunction();
     private final EncodeBase64Function encodeBase64Function = new EncodeBase64Function();
     private final DecodeBase64Function decodeBase64Function = new DecodeBase64Function();
+    private final UrlEncodeFunction urlEncodeFunction = new UrlEncodeFunction();
+    private final UrlDecodeFunction urlDecodeFunction = new UrlDecodeFunction();
     private final DigestAuthHeaderFunction digestAuthHeaderFunction = new DigestAuthHeaderFunction();
     private final LocalHostAddressFunction localHostAddressFunction = new LocalHostAddressFunction();
     private final ChangeDateFunction changeDateFunction = new ChangeDateFunction();
@@ -97,6 +99,8 @@ public class FunctionConfig {
         citrusFunctionLibrary.getMembers().put("escapeXml", escapeXmlFunction);
         citrusFunctionLibrary.getMembers().put("encodeBase64", encodeBase64Function);
         citrusFunctionLibrary.getMembers().put("decodeBase64", decodeBase64Function);
+        citrusFunctionLibrary.getMembers().put("urlEncode", urlEncodeFunction);
+        citrusFunctionLibrary.getMembers().put("urlDecode", urlDecodeFunction);
         citrusFunctionLibrary.getMembers().put("digestAuthHeader", digestAuthHeaderFunction);
         citrusFunctionLibrary.getMembers().put("localHostAddress", localHostAddressFunction);
         citrusFunctionLibrary.getMembers().put("changeDate", changeDateFunction);

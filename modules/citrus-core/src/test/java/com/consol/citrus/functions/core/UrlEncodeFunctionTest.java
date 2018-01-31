@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,23 +29,23 @@ import java.util.Collections;
 /**
  * @author Christoph Deppisch
  */
-public class EncodeBase64FunctionTest extends AbstractTestNGUnitTest {
-    private EncodeBase64Function function = new EncodeBase64Function();
+public class UrlEncodeFunctionTest extends AbstractTestNGUnitTest {
+    private UrlEncodeFunction function = new UrlEncodeFunction();
     
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("foo"), context), "Zm9v");
+        Assert.assertEquals(function.execute(Collections.singletonList("foo@citrusframework"), context), "foo%40citrusframework");
     }
     
     @Test
     public void testCustomCharset() {
-        Assert.assertEquals(function.execute(Arrays.asList("foo", "UTF-8"), context), "Zm9v");
+        Assert.assertEquals(function.execute(Arrays.asList("foo@citrusframework", "UTF-8"), context), "foo%40citrusframework");
     }
     
     @Test
     public void testUnsupportedCharset() {
         try {
-            function.execute(Arrays.asList("foo", "UNKNOWN"), context);
+            function.execute(Arrays.asList("foo@citrusframework", "UNKNOWN"), context);
             Assert.fail("Missing exception due to unsupported charset encoding");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
