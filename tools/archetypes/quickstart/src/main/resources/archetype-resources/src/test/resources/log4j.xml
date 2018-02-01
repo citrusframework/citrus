@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!--
+   | For more configuration information and examples see the Jakarta Log4j
+   | owebsite: http://jakarta.apache.org/log4j
+ -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+  <!-- ============================== -->
+  <!-- Append messages to the console -->
+  <!-- ============================== -->
+
+  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out"/>
+    <param name="Threshold" value="DEBUG"/>
+
+    <layout class="org.apache.log4j.PatternLayout">
+      <!-- The default pattern: Date Priority [Category] Message\n -->
+      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5.5p %20.20c{2}| %m%n"/>
+    </layout>
+  </appender>
+
+  <!-- ================ -->
+  <!-- Limit categories -->
+  <!-- ================ -->
+
+  <!-- Our own classes-->
+  <logger name="com.consol.citrus">
+    <level value="DEBUG"/>
+  </logger>
+
+  <logger name="com.consol.citrus.channel.MessageSelectingQueueChannel">
+    <level value="WARN"/>
+  </logger>
+
+  <logger name="org.springframework">
+    <level value="WARN"/>
+  </logger>
+  
+  <!-- ======================= -->
+  <!-- Setup the Root logger -->
+  <!-- ======================= -->
+
+  <root>
+    <appender-ref ref="CONSOLE"/>
+  </root>
+
+</log4j:configuration>

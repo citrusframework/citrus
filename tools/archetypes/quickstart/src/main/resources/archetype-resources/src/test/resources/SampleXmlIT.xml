@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+  <testcase name="SampleXmlIT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2013-01-01</creationdate>
+      <status>DRAFT</status>
+      <last-updated-by>Citrus</last-updated-by>
+      <last-updated-on>2013-01-01T00:00:00</last-updated-on>
+    </meta-info>
+    
+    <description>This is a sample Citrus integration test</description>
+    
+    <variables>
+        <variable name="now" value="citrus:currentDate()"/>
+    </variables>
+    
+    <actions>
+      <echo>
+          <message>Today is: ${now}</message>
+      </echo>
+    </actions>
+    
+  </testcase>
+</spring:beans>

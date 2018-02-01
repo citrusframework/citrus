@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
+       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+       http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
+       http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <!-- Common settings -->
+  <context:property-placeholder location="classpath:citrus.properties"/>
+
+  <citrus:schema-repository id="schemaRepository">
+    <citrus:schemas>
+      <citrus:schema id="helloServiceWsdl" location="classpath:schemas/HelloService.wsdl" />
+    </citrus:schemas>
+  </citrus:schema-repository>
+
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Integration Tests"/>
+  </citrus:global-variables>
+
+  <!-- Default namespace mappings used in XPath expression evaluations -->
+  <citrus:namespace-context>
+    <citrus:namespace prefix="hello" uri="http://citrusframework.org/schemas/samples/HelloService"/>
+  </citrus:namespace-context>
+
+  <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+  <!-- SOAP WS Client -->
+  <citrus-ws:client id="helloSoapClient"
+                    request-url="${hello.service.url}"
+                    timeout="1000"/>
+
+  <!-- SOAP WS Server with static response -->
+  <citrus-ws:server id="helloSoapServer"
+          port="${server.port}"
+          auto-start="true"
+          timeout="10000"
+          endpoint-adapter="staticResponseAdapter"/>
+
+  <!-- Static SOAP response -->
+  <citrus:static-response-adapter id="staticResponseAdapter">
+    <citrus:payload>
+      <![CDATA[
+      <hello:HelloResponse xmlns:hello="http://citrusframework.org/schemas/samples/HelloService">
+        <hello:Message>Hello User!</hello:Message>
+      </hello:HelloResponse>
+      ]]>
+    </citrus:payload>
+    <citrus:header>
+      <citrus:element name="citrus_soap_action" value="HelloService/sayHello"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+</beans>

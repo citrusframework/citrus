@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="HelloService_Ok_IT">
+    <meta-info>
+      <author>Citrus</author>
+      <creationdate>2014-01-01</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Citrus</last-updated-by>
+      <last-updated-on>2014-01-01T00:00:00</last-updated-on>
+    </meta-info>
+
+    <variables>
+      <variable name="message" value="Hello Citrus!"></variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Send JMS request message to queue destination</message>
+      </echo>
+
+      <send endpoint="helloJmsEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <hello:HelloRequest xmlns:hello="http://citrusframework.org/schemas/samples/HelloService">
+                <hello:Message>${message}</hello:Message>
+              </hello:HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="HelloService/sayHello"/>
+        </header>
+      </send>
+
+      <echo>
+        <message>Receive JMS message on queue destination</message>
+      </echo>
+
+      <receive endpoint="helloJmsEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <hello:HelloRequest xmlns:hello="http://citrusframework.org/schemas/samples/HelloService">
+                <hello:Message>${message}</hello:Message>
+              </hello:HelloRequest>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="HelloService/sayHello"/>
+        </header>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

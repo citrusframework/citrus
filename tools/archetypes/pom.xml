@@ -9,13 +9,15 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus.mvn</groupId>
-  <artifactId>citrus-maven</artifactId>
+  <groupId>com.consol.citrus.archetypes</groupId>
+  <artifactId>citrus-archetypes</artifactId>
   <packaging>pom</packaging>
-  <name>citrus-maven</name>
-  <description>Citrus Maven Parent</description>
+  <name>citrus-archetypes</name>
+  <description>Citrus Archetypes Parent</description>
   
   <modules>
-    <module>citrus-maven-plugin</module>
+    <module>quickstart</module>
+    <module>jms</module>
+    <module>soap</module>
   </modules>
 </project>
