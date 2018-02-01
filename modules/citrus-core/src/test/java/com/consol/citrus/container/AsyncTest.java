@@ -53,7 +53,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
         
         container.execute(context);
 
-        waitForDone(container, context, 2500);
+        waitForDone(container, context, 2000);
 
         verify(action).execute(context);
         verify(success).execute(context);
@@ -82,7 +82,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
         container.execute(context);
 
-        waitForDone(container, context, 2500);
+        waitForDone(container, context, 2000);
 
         verify(action1).execute(context);
         verify(action2).execute(context);
@@ -114,7 +114,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
         container.execute(context);
 
-        waitForDone(container, context, 2500);
+        waitForDone(container, context, 2000);
 
         Assert.assertEquals(context.getExceptions().size(), 1L);
         Assert.assertEquals(context.getExceptions().get(0).getClass(), CitrusRuntimeException.class);
@@ -157,7 +157,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
         container.execute(context);
 
-        waitForDone(container, context, 2500);
+        waitForDone(container, context, 2000);
 
         Assert.assertEquals(context.getExceptions().size(), 1L);
         Assert.assertEquals(context.getExceptions().get(0).getClass(), CitrusRuntimeException.class);
@@ -169,8 +169,10 @@ public class AsyncTest extends AbstractTestNGUnitTest {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             if (container.isDone(context)) {
                 done.complete(true);
+            } else {
+                log.debug("Async action execution not finished yet ...");
             }
-        }, 0, timeout / 10, TimeUnit.MILLISECONDS);
+        }, 100, timeout / 10, TimeUnit.MILLISECONDS);
 
         done.get(timeout, TimeUnit.MILLISECONDS);
     }

@@ -21,6 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import java.util.Optional;
 import java.util.concurrent.*;
@@ -37,16 +38,14 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractAsyncTestAction.class);
 
-    private Executor executor = Executors.newSingleThreadExecutor();
-
     /** Future finished indicator */
-    private CompletableFuture<Void> finished;
+    private Future<?> finished;
 
     @Override
     public final void doExecute(TestContext context) {
-        finished = new CompletableFuture<>();
         CompletableFuture<Void> result = new CompletableFuture<>();
-        executor.execute(() -> {
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
+        finished = executor.submit(() -> {
             try {
                 doExecuteAsync(context);
                 result.complete(null);
@@ -64,14 +63,10 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
         });
 
         result.whenComplete((nothing, throwable) -> {
-            try {
-                if (throwable != null) {
-                    onError(context, throwable);
-                } else {
-                    onSuccess(context);
-                }
-            } finally {
-                finished.complete(null);
+            if (throwable != null) {
+                onError(context, throwable);
+            } else {
+                onSuccess(context);
             }
         });
     }
@@ -97,14 +92,5 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
      * @param context
      */
     public void onError(TestContext context, Throwable error) {
-    }
-
-    /**
-     * Sets the executor.
-     *
-     * @param executor
-     */
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
     }
 }

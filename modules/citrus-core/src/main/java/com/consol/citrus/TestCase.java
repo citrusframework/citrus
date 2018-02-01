@@ -259,7 +259,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                             } else {
                                 log.debug("Wait for test actions to finish properly ...");
                             }
-                        }, 0L, timeout / 10, TimeUnit.MILLISECONDS);
+                        }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
 
                 finished.get(timeout, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
