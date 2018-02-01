@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.util;
+package com.consol.citrus.creator;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,18 +30,18 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
+public class TestCreatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {
-        TestCaseCreator creator = TestCaseCreator.build()
+        XmlTestCreator creator = new XmlTestCreator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
                                          .usePackage("com.consol.citrus")
                                          .withFramework(UnitFramework.TESTNG);
 
-        creator.createTestCase();
+        creator.create();
         
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -64,14 +64,14 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testCreateJUnitTest() throws IOException {
-        TestCaseCreator creator = TestCaseCreator.build()
+        XmlTestCreator creator = new XmlTestCreator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
                                          .usePackage("com.consol.citrus")
-                                         .withFramework(UnitFramework.JUNIT);
+                                         .withFramework(UnitFramework.JUNIT4);
 
-        creator.createTestCase();
+        creator.create();
         
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -94,15 +94,15 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testInvalidName() throws IOException {
-        TestCaseCreator creator = TestCaseCreator.build()
+        XmlTestCreator creator = new XmlTestCreator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("sampletest")
                                          .usePackage("com.consol.citrus")
-                                         .withFramework(UnitFramework.JUNIT);
+                                         .withFramework(UnitFramework.JUNIT4);
 
         try {
-            creator.createTestCase();
+            creator.create();
             Assert.fail("Missing exception due to invalid test name");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().contains("name must start with an uppercase letter"));
@@ -111,7 +111,7 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testDefaultValues() throws IOException {
-        TestCaseCreator.main(new String[] {"-name", "SampleIT"});
+        TestCreatorMain.main(new String[] {"-name", "SampleIT"});
         
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -134,11 +134,11 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testHelp() {
-        TestCaseCreator.main(new String[] {"-help"});
+        TestCreatorMain.main(new String[] {"-help"});
     }
     
     @Test
     public void testInvalidArgument() {
-        TestCaseCreator.main(new String[] {"-invalid"});
+        TestCreatorMain.main(new String[] {"-invalid"});
     }
 }

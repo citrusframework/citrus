@@ -16,10 +16,10 @@
 
 package com.consol.citrus.doc;
 
+import com.consol.citrus.creator.UnitFramework;
+import com.consol.citrus.creator.XmlTestCreator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.TestCaseCreator;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 import org.junit.Assert;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.BeforeClass;
@@ -34,14 +34,14 @@ public class SvgTestDocGeneratorTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void createSampleIT() {
-        TestCaseCreator creator = TestCaseCreator.build()
+        XmlTestCreator creator = new XmlTestCreator()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.createTestCase();
+        creator.create();
     }
     
     @Test

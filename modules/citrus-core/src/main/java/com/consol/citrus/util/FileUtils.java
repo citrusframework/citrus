@@ -134,23 +134,19 @@ public abstract class FileUtils {
             log.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
         }
 
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
+        if (!file.getParentFile().exists()) {
+            boolean success = file.getParentFile().mkdirs();
+
+            if (!success) {
+                throw new CitrusRuntimeException("Unable to create folder structure for file: " + file.getPath());
+            }
+        }
+
+        try (OutputStream fos = new BufferedOutputStream(new FileOutputStream(file))) {
             fos.write(content.getBytes(charset));
             fos.flush();
-        } catch (FileNotFoundException e) {
-            throw new CitrusRuntimeException("Failed to write file", e);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to write file", e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    log.warn("Unable to close file output stream", e);
-                }
-            }
         }
     }
 
