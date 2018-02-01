@@ -58,6 +58,7 @@
     <module>modules/citrus-arquillian</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-bom</module>
+    <module>tools/maven</module>
   </modules>
 
   <developers>
