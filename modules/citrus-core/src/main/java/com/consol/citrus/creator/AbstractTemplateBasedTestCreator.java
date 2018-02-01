@@ -54,7 +54,7 @@ public abstract class AbstractTemplateBasedTestCreator<T extends TestCreator> ex
         properties.put("test.author", getAuthor());
         properties.put("test.description", getDescription());
 
-        properties.put("test.updatedon.datetime", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(GregorianCalendar.getInstance().getTime()));
+        properties.put("test.update.datetime", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(GregorianCalendar.getInstance().getTime()));
         properties.put("test.creation.date", new SimpleDateFormat("yyyy-MM-dd").format(GregorianCalendar.getInstance().getTime()));
 
         properties.put("test.method.name", getName().substring(0,1).toLowerCase() + getName().substring(1));

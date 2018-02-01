@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
               xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                   http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd
                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    
-    <testcase name="@test.name@">
-        <meta-info>
-            <author>@test.author@</author>
-            <creationdate>@test.creation.date@</creationdate>
-            <status>DRAFT</status>
-            <last-updated-by>@test.author@</last-updated-by>
-            <last-updated-on>@test.updatedon.datetime@</last-updated-on>
-        </meta-info>
-        
-        <description>@test.description@</description>
-        
-        <actions>
-            <echo>
-                <message>TODO: Code the test @test.name@</message>
-            </echo>
-        </actions>
-    </testcase>
+
+  <testcase name="@test.name@">
+    <meta-info>
+      <author>@test.author@</author>
+      <creationdate>@test.creation.date@</creationdate>
+      <status>DRAFT</status>
+      <last-updated-by>@test.author@</last-updated-by>
+      <last-updated-on>@test.update.datetime@</last-updated-on>
+    </meta-info>
+
+    <description>@test.description@</description>
+
+    <actions>
+      <echo>
+        <message>TODO: Code the test @test.name@</message>
+      </echo>
+    </actions>
+  </testcase>
 </spring:beans>

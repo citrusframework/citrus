@@ -21,7 +21,9 @@ package com.consol.citrus.creator;
  * will create different Java classes according to the unit test framework.
  */
 public enum UnitFramework {
-    TESTNG, JUNIT4, JUNIT5;
+    TESTNG,
+    JUNIT4,
+    JUNIT5;
 
     public static UnitFramework fromString(String value) {
         if (value.equalsIgnoreCase("testng")) {
