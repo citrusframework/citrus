@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class TestCreatorTest extends AbstractTestNGUnitTest {
+public class XmlTestCreatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.creator;
 
+import com.consol.citrus.model.testcase.core.ReceiveModel;
+import com.consol.citrus.model.testcase.core.SendModel;
+
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -41,8 +45,24 @@ public class ReqResXmlTestCreator extends XmlTestCreator {
     }
 
     @Override
-    protected String getTemplateFilePath() {
-        return "classpath:com/consol/citrus/creator/test-req-res-template.xml";
+    protected List<Object> getActions() {
+        List<Object> actions = super.getActions();
+
+        SendModel send = new SendModel();
+        send.setEndpoint("TODO:request-sender");
+        SendModel.Message sendMessage = new SendModel.Message();
+        sendMessage.setData(request);
+        send.setMessage(sendMessage);
+        actions.add(send);
+        
+        ReceiveModel receive = new ReceiveModel();
+        receive.setEndpoint("TODO:response-receiver");
+        ReceiveModel.Message receiveMessage = new ReceiveModel.Message();
+        receiveMessage.setData(response);
+        receive.setMessage(receiveMessage);
+        actions.add(receive);
+
+        return actions;
     }
 
     /**

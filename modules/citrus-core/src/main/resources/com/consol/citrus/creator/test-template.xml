@@ -20,9 +20,7 @@
     <description>@test.description@</description>
 
     <actions>
-      <echo>
-        <message>TODO: Code the test @test.name@</message>
-      </echo>
+@test.actions@
     </actions>
   </testcase>
 </spring:beans>
