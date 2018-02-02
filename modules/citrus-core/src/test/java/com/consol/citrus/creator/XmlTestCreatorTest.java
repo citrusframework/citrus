@@ -18,7 +18,6 @@ package com.consol.citrus.creator;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
@@ -30,7 +29,7 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class XmlTestCreatorTest extends AbstractTestNGUnitTest {
+public class XmlTestCreatorTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {

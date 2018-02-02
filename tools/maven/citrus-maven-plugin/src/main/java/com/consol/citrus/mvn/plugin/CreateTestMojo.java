@@ -20,17 +20,10 @@ import com.consol.citrus.creator.*;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
-import org.apache.xmlbeans.*;
-import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates new Citrus test cases with empty XML test file and executable Java class.
@@ -54,6 +47,12 @@ public class CreateTestMojo extends AbstractMojo {
      */
     @Parameter(property = "name", defaultValue = "")
     private String name;
+
+    /**
+     * The name-prefix of all test cases.
+     */
+    @Parameter(property = "namePrefix", defaultValue = "")
+    private String namePrefix = "";
 
     /**
      * The name-suffix of all test cases.
@@ -139,7 +138,7 @@ public class CreateTestMojo extends AbstractMojo {
                 String useXsd = prompter.prompt("Create test with XML schema?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
                 if (useXsd.equalsIgnoreCase("y")) {
-                    ReqResXmlTestCreator creator = getReqResXmlTestCaseCreator();
+                    XsdXmlTestCreator creator = getXsdXmlTestCaseCreator();
 
                     creator.withFramework(UnitFramework.fromString(framework))
                             .withName(name)
@@ -154,7 +153,7 @@ public class CreateTestMojo extends AbstractMojo {
                 String useWsdl = prompter.prompt("Create test with WSDL?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
                 if (useWsdl.equalsIgnoreCase("y")) {
-                    ReqResXmlTestCreator creator = getReqResXmlTestCaseCreator();
+                    WsdlXmlTestCreator creator = getWsdlXmlTestCaseCreator();
 
                     creator.withFramework(UnitFramework.fromString(framework))
                             .withName(name)
@@ -203,40 +202,25 @@ public class CreateTestMojo extends AbstractMojo {
      * @param creator
      * @throws MojoExecutionException
      */
-    public void createWithXsd(ReqResXmlTestCreator creator) throws MojoExecutionException {
+    public void createWithXsd(XsdXmlTestCreator creator) throws MojoExecutionException {
         try {
             String xsd = this.xsd;
             while(interactiveMode && !StringUtils.hasText(xsd)) {
                 xsd = prompter.prompt("Enter path to XSD", this.xsd);
             }
-
-            // compile xsd already here, otherwise later input is useless:
-            SchemaTypeSystem sts = compileXsd(xsd);
-            SchemaType[] globalElems = sts.documentTypes();
-
-            SchemaType requestElem = null;
-            SchemaType responseElem = null;
+            creator.withXsd(xsd);
 
             String xsdRequestMessage = this.xsdRequestMessage;
             String xsdResponseMessage = this.xsdResponseMessage;
             if (interactiveMode) {
                 xsdRequestMessage = prompter.prompt("Enter request element name", this.xsdRequestMessage);
+                creator.withRequestMessage(xsdRequestMessage);
 
-                // try to guess the response-element and the testname from the request:
-                String xsdResponseMessageSuggestion = xsdResponseMessage;
-                if (xsdRequestMessage.endsWith("Req")) {
-                    xsdResponseMessageSuggestion = xsdRequestMessage.substring(0, xsdRequestMessage.indexOf("Req")) + "Res";
-                    creator.withName(xsdRequestMessage.substring(0, xsdRequestMessage.indexOf("Req")) + "Test");
-                } else if (xsdRequestMessage.endsWith("Request")) {
-                    xsdResponseMessageSuggestion = xsdRequestMessage.substring(0, xsdRequestMessage.indexOf("Request")) + "Response";
-                    creator.withName(xsdRequestMessage.substring(0, xsdRequestMessage.indexOf("Request")) + "Test");
-                } else if (xsdRequestMessage.endsWith("RequestMessage")) {
-                    xsdResponseMessageSuggestion = xsdRequestMessage.substring(0, xsdRequestMessage.indexOf("RequestMessage")) + "ResponseMessage";
-                    creator.withName(xsdRequestMessage.substring(0, xsdRequestMessage.indexOf("RequestMessage")) + "Test");
-                }
-
-                xsdResponseMessage = prompter.prompt("Enter response element name", xsdResponseMessageSuggestion);
+                xsdResponseMessage = prompter.prompt("Enter response element name", creator.getResponseMessageSuggestion());
             }
+
+            creator.withRequestMessage(xsdRequestMessage);
+            creator.withResponseMessage(xsdResponseMessage);
 
             if (interactiveMode) {
                 String confirm = prompter.prompt("Confirm test creation:\n" +
@@ -251,24 +235,6 @@ public class CreateTestMojo extends AbstractMojo {
                 }
             }
 
-            for (SchemaType elem : globalElems) {
-                if (elem.getContentModel().getName().getLocalPart().equals(xsdRequestMessage)) {
-                    requestElem = elem;
-                    break;
-                }
-            }
-
-            for (SchemaType elem : globalElems) {
-                if (elem.getContentModel().getName().getLocalPart().equals(xsdResponseMessage)) {
-                    responseElem = elem;
-                    break;
-                }
-            }
-
-            // Now generate it
-            creator.withRequest(SampleXmlUtil.createSampleForType(requestElem))
-                   .withResponse(SampleXmlUtil.createSampleForType(responseElem));
-
             creator.create();
 
             getLog().info("Successfully created new test case " + creator.getTargetPackage() + "." + creator.getName());
@@ -277,8 +243,6 @@ public class CreateTestMojo extends AbstractMojo {
         } catch (PrompterException e) {
             getLog().info(e);
             getLog().info("Failed to create test! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test-from-xsd).");
-        } catch (IOException e) {
-            getLog().info(e);
         }
     }
 
@@ -287,9 +251,7 @@ public class CreateTestMojo extends AbstractMojo {
      * @param creator
      * @throws MojoExecutionException
      */
-    public void createWithWsdl(ReqResXmlTestCreator creator) throws MojoExecutionException {
-        String separator = "+++++++++++++++++++++++++++++++++++";
-
+    public void createWithWsdl(WsdlXmlTestCreator creator) throws MojoExecutionException {
         try {
             String wsdl = this.wsdl;
             while (interactiveMode && !StringUtils.hasText(wsdl)) {
@@ -300,31 +262,19 @@ public class CreateTestMojo extends AbstractMojo {
                 throw new MojoExecutionException("Please provide proper path to WSDL file");
             }
 
-            String wsdlNsDelaration = "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ";
+            creator.withWsdl(wsdl);
 
-            // compile wsdl and xsds right now, otherwise later input is useless:
-            XmlObject wsdlObject = compileWsdl(wsdl);
-            SchemaTypeSystem schemaTypeSystem = compileXsd(wsdlObject);
-
-            getLog().info(separator);
-            getLog().info("WSDL compilation successful");
-            String serviceName = evaluateAsString(wsdlObject, wsdlNsDelaration + ".//wsdl:portType/@name");
-            getLog().info("Found service: " + serviceName);
-
-            getLog().info(separator);
-            getLog().info("Found service operations:");
-            XmlObject[] messages = wsdlObject.selectPath(wsdlNsDelaration + ".//wsdl:message");
-            XmlObject[] operations = wsdlObject.selectPath(wsdlNsDelaration + ".//wsdl:portType/wsdl:operation");
-            for (XmlObject operation : operations) {
-                getLog().info(evaluateAsString(operation, wsdlNsDelaration + "./@name"));
+            String namePrefix = this.namePrefix;
+            if (interactiveMode) {
+                namePrefix = prompter.prompt("Enter test name prefix", this.name + "_");
             }
-            getLog().info(separator);
+            creator.withNamePrefix(namePrefix);
 
-            getLog().info("Generating test cases for service operations ...");
             String nameSuffix = this.nameSuffix;
             if (interactiveMode) {
                 nameSuffix = prompter.prompt("Enter test name suffix", this.nameSuffix);
             }
+            creator.withNameSuffix(nameSuffix);
 
             if (interactiveMode) {
                 String confirm = prompter.prompt("Confirm test creation:\n" +
@@ -339,286 +289,18 @@ public class CreateTestMojo extends AbstractMojo {
                 }
             }
 
-            for (XmlObject operation : operations) {
-                String operationName = evaluateAsString(operation, wsdlNsDelaration + "./@name");
-                String inputMessage = removeNsPrefix(evaluateAsString(operation, wsdlNsDelaration + "./wsdl:input/@message"));
-                String outputMessage = removeNsPrefix(evaluateAsString(operation, wsdlNsDelaration + "./wsdl:output/@message"));
+            creator.create();
 
-                String inputElement = null;
-                String outputElement = null;
-                for (XmlObject message : messages) {
-                    String messageName = evaluateAsString(message, wsdlNsDelaration + "./@name");
-
-                    if (messageName.equals(inputMessage)) {
-                        inputElement = removeNsPrefix(evaluateAsString(message, wsdlNsDelaration + "./wsdl:part/@element"));
-                    }
-
-                    if (messageName.equals(outputMessage)) {
-                        outputElement = removeNsPrefix(evaluateAsString(message, wsdlNsDelaration + "./wsdl:part/@element"));
-                    }
-                }
-
-                SchemaType requestElem = getSchemaType(schemaTypeSystem, operationName, inputElement);
-                SchemaType responseElem = getSchemaType(schemaTypeSystem, operationName, outputElement);
-
-                String testName = creator.getName() + operationName + nameSuffix;
-
-                // Now generate it
-                creator.withName(testName);
-                creator.withRequest(SampleXmlUtil.createSampleForType(requestElem))
-                       .withResponse(SampleXmlUtil.createSampleForType(responseElem));
-
-                creator.create();
-
-                getLog().info("Successfully created new test case " + creator.getTargetPackage() + "." + testName);
-            }
-
+            getLog().info("Successfully created new test cases from WSDL");
         } catch (ArrayIndexOutOfBoundsException e) {
             getLog().info(e);
             getLog().info("Wrong parameter usage! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-suite-from-wsdl).");
         } catch (PrompterException e) {
             getLog().info(e);
             getLog().info("Failed to create suite! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-suite-from-wsdl).");
-        } catch (IOException e) {
-            getLog().info(e);
         }
     }
 
-    /**
-     * @param schemaTypeSystem
-     * @param operation
-     * @param elementName
-     * @return
-     * @throws MojoExecutionException
-     */
-    private SchemaType getSchemaType(SchemaTypeSystem schemaTypeSystem, String operation, String elementName)
-            throws MojoExecutionException {
-
-        for (SchemaType elem : schemaTypeSystem.documentTypes()) {
-            if (elem.getContentModel().getName().getLocalPart().equals(elementName)) {
-                return elem;
-            }
-        }
-
-        throw new MojoExecutionException("Unable to find schema type declaration '" + elementName + "'" +
-                " for WSDL operation '" + operation + "'");
-    }
-
-    /**
-     * Removes namespace prefix if present.
-     * @param elementName
-     * @return
-     */
-    private String removeNsPrefix(String elementName) {
-        return elementName.indexOf(':') != -1 ? elementName.substring(elementName.indexOf(':') + 1) : elementName;
-    }
-
-    /**
-     * Compiles WSDL file resource to a XmlObject.
-     * @return
-     * @throws MojoExecutionException
-     * @throws IOException
-     */
-    private XmlObject compileWsdl(String wsdl) throws MojoExecutionException, IOException {
-        File wsdlFile;
-        try {
-            wsdlFile = new PathMatchingResourcePatternResolver().getResource(wsdl).getFile();
-        } catch (FileNotFoundException e) {
-            wsdlFile = new File(wsdl);
-        }
-
-        if (!wsdlFile.exists()) {
-            throw new MojoExecutionException("Unable to read WSDL - does not exist in " + wsdlFile.getAbsolutePath());
-        }
-
-        if (!wsdlFile.canRead()) {
-            throw new MojoExecutionException("Unable to read WSDL - could not open in read mode");
-        }
-
-        try {
-            return XmlObject.Factory.parse(wsdlFile, (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
-        } catch (XmlException e) {
-            for (Object error : e.getErrors()) {
-                getLog().error(((XmlError)error).getLine() + "" + error.toString());
-            }
-            throw new MojoExecutionException("WSDL could not be parsed", e);
-        } catch (Exception e) {
-            throw new MojoExecutionException("WSDL could not be parsed", e);
-        }
-    }
-
-    /**
-     * Finds nested XML schema definition and compiles it to a schema type system instance.
-     * @param wsdl
-     * @return
-     * @throws MojoExecutionException
-     */
-    private SchemaTypeSystem compileXsd(XmlObject wsdl) throws MojoExecutionException {
-        // extract namespaces defined on wsdl-level:
-        String[] namespacesWsdl = extractNamespacesOnWsdlLevel(wsdl);
-
-        // calc the namespace-prefix of the schema-tag, default ""
-        String schemaNsPrefix = extractSchemaNamespacePrefix(wsdl);
-
-        // extract each schema-element and add missing namespaces defined on wsdl-level
-        String[] schemas = getNestedSchemas(wsdl, namespacesWsdl, schemaNsPrefix);
-
-        XmlObject[] xsd = new XmlObject[schemas.length];
-        try {
-            for (int i=0; i < schemas.length; i++) {
-                xsd[i] = XmlObject.Factory.parse(schemas[i], (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
-            }
-        } catch (Exception e) {
-            throw new MojoExecutionException("Failed to parse XSD schema", e);
-        }
-
-        SchemaTypeSystem schemaTypeSystem = null;
-        try {
-            schemaTypeSystem = XmlBeans.compileXsd(xsd, XmlBeans.getContextTypeLoader(), new XmlOptions());
-        } catch (XmlException e) {
-            for (Object error : e.getErrors()) {
-                getLog().error("Line " + ((XmlError)error).getLine() + ": " + error.toString());
-            }
-            throw new MojoExecutionException("Failed to compile XSD schema", e);
-        } catch (Exception e) {
-            throw new MojoExecutionException("Failed to compile XSD schema", e);
-        }
-        return schemaTypeSystem;
-    }
-
-    /**
-     * Finds nested schema definitions and puts globally WSDL defined namespaces to schema level.
-     *
-     * @param wsdl
-     * @param namespacesWsdl
-     * @param schemaNsPrefix
-     */
-    private String[] getNestedSchemas(XmlObject wsdl, String[] namespacesWsdl, String schemaNsPrefix) {
-        List<String> schemas = new ArrayList<String>();
-        String openedStartTag = "<" + schemaNsPrefix + "schema";
-        String endTag = "</" + schemaNsPrefix + "schema>";
-
-        int cursor = 0;
-        while (wsdl.xmlText().indexOf(openedStartTag, cursor) != -1) {
-            int begin = wsdl.xmlText().indexOf(openedStartTag, cursor);
-            int end = wsdl.xmlText().indexOf(endTag, begin) + endTag.length();
-            int insertPointNamespacesWsdl = wsdl.xmlText().indexOf(" ", begin);
-
-            StringBuffer buf = new StringBuffer();
-            buf.append(wsdl.xmlText().substring(begin, insertPointNamespacesWsdl)).append(" ");
-
-            for (String nsWsdl : namespacesWsdl) {
-                String nsPrefix = nsWsdl.substring(0, nsWsdl.indexOf("="));
-                if (!wsdl.xmlText().substring(begin, end).contains(nsPrefix)) {
-                    buf.append(nsWsdl).append(" ");
-                }
-            }
-
-            buf.append(wsdl.xmlText().substring(insertPointNamespacesWsdl, end));
-            schemas.add(buf.toString());
-            cursor = end;
-        }
-
-        return schemas.toArray(new String[] {});
-    }
-
-    /**
-     * Finds schema tag and extracts the namespace prefix.
-     * @param wsdl
-     * @return
-     */
-    private String extractSchemaNamespacePrefix(XmlObject wsdl) {
-        String schemaNsPrefix = "";
-        if (wsdl.xmlText().contains(":schema")) {
-            int cursor = wsdl.xmlText().indexOf(":schema");
-            for (int i = cursor; i > cursor - 100; i--) {
-                schemaNsPrefix = wsdl.xmlText().substring(i, cursor);
-                if (schemaNsPrefix.startsWith("<")) {
-                    return schemaNsPrefix.substring(1) + ":";
-                }
-            }
-        }
-        return schemaNsPrefix;
-    }
-
-    /**
-     * Returns an array of all namespace declarations, found on wsdl-level.
-     *
-     * @param wsdl
-     * @return
-     */
-    private String[] extractNamespacesOnWsdlLevel(XmlObject wsdl) {
-        int cursor = wsdl.xmlText().indexOf(":") + ":definitions ".length();
-        String nsWsdlOrig = wsdl.xmlText().substring(cursor, wsdl.xmlText().indexOf(">", cursor));
-        int noNs = StringUtils.countOccurrencesOf(nsWsdlOrig, "xmlns:");
-        String[] namespacesWsdl = new String[noNs];
-        cursor = 0;
-        for (int i=0; i<noNs; i++) {
-            int begin = nsWsdlOrig.indexOf("xmlns:", cursor);
-            int end = nsWsdlOrig.indexOf("\"", begin + 20);
-            namespacesWsdl[i] = nsWsdlOrig.substring(begin, end) + "\"";
-            cursor = end;
-        }
-        return namespacesWsdl;
-    }
-
-    /**
-     * Returns the value of an xml-attribute
-     *
-     * @param rootObject
-     * @param pathToAttribute
-     * @return
-     * @throws MojoExecutionException
-     */
-    private String evaluateAsString(XmlObject rootObject, String pathToAttribute) throws MojoExecutionException {
-        XmlObject[] xmlObject = rootObject.selectPath(pathToAttribute);
-
-        if (xmlObject.length == 0) {
-            throw new MojoExecutionException("Unable to find element attribute " + pathToAttribute);
-        }
-
-        int begin = xmlObject[0].xmlText().indexOf(">") + 1;
-        int end = xmlObject[0].xmlText().lastIndexOf("</");
-        return xmlObject[0].xmlText().substring(begin, end);
-    }
-
-    /**
-     * Finds nested XML schema definition and compiles it to a schema type system instance
-     * @param xsd
-     * @return
-     * @throws MojoExecutionException
-     */
-    private SchemaTypeSystem compileXsd(String xsd) throws MojoExecutionException, IOException {
-        File xsdFile;
-        try {
-            xsdFile = new PathMatchingResourcePatternResolver().getResource(xsd).getFile();
-        } catch (FileNotFoundException e) {
-            xsdFile = new File(xsd);
-        }
-
-        if (!xsdFile.exists()) {
-            throw new MojoExecutionException("Unable to read XSD - does not exist in " + xsdFile.getAbsolutePath());
-        }
-        if (!xsdFile.canRead()) {
-            throw new MojoExecutionException("Unable to read XSD - could not open in read mode");
-        }
-
-        XmlObject xsdObject;
-        try {
-            xsdObject = XmlObject.Factory.parse(xsdFile, (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
-        } catch (Exception e) {
-            throw new MojoExecutionException("Failed to parse XSD schema", e);
-        }
-        XmlObject[] schemas = new XmlObject[] { xsdObject };
-        SchemaTypeSystem schemaTypeSystem = null;
-        try {
-            schemaTypeSystem = XmlBeans.compileXsd(schemas, XmlBeans.getContextTypeLoader(), new XmlOptions());
-        } catch (Exception e) {
-            throw new MojoExecutionException("Failed to compile XSD schema", e);
-        }
-        return schemaTypeSystem;
-    }
-    
     /**
      * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
      * also useful for subclasses to provide customized creator instance.
@@ -635,8 +317,18 @@ public class CreateTestMojo extends AbstractMojo {
      * .
      * @return test creator.
      */
-    public ReqResXmlTestCreator getReqResXmlTestCaseCreator() {
-        return new ReqResXmlTestCreator();
+    public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
+        return new WsdlXmlTestCreator();
+    }
+
+    /**
+     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized creator instance.
+     * .
+     * @return test creator.
+     */
+    public XsdXmlTestCreator getXsdXmlTestCaseCreator() {
+        return new XsdXmlTestCreator();
     }
 
     /**

@@ -21,8 +21,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -39,7 +37,7 @@ public class CreateTestMojoTest {
     private Prompter prompter = Mockito.mock(Prompter.class);
     
     private XmlTestCreator testCaseCreator = Mockito.mock(XmlTestCreator.class);
-    private ReqResXmlTestCreator reqResXmlTestCaseCreator = Mockito.mock(ReqResXmlTestCreator.class);
+    private WsdlXmlTestCreator wsdlXmlTestCaseCreator = Mockito.mock(WsdlXmlTestCreator.class);
 
     private CreateTestMojo mojo;
     
@@ -51,8 +49,8 @@ public class CreateTestMojoTest {
             }
 
             @Override
-            public ReqResXmlTestCreator getReqResXmlTestCaseCreator() {
-                return reqResXmlTestCaseCreator;
+            public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
+                return wsdlXmlTestCaseCreator;
             }
         };
 
@@ -104,6 +102,8 @@ public class CreateTestMojoTest {
         when(testCaseCreator.withName("FooTest")).thenReturn(testCaseCreator);
         
         mojo.execute();
+
+        verify(testCaseCreator, times(0)).create();
     }
     
     @Test
@@ -119,10 +119,11 @@ public class CreateTestMojoTest {
 
     @Test
     public void testSuiteFromWsdl() throws MojoExecutionException, PrompterException {
-        reset(prompter, reqResXmlTestCaseCreator);
+        reset(prompter, wsdlXmlTestCaseCreator);
 
-        when(prompter.prompt(contains("test name"))).thenReturn("IT_");
+        when(prompter.prompt(contains("test name"))).thenReturn("BookStore");
         when(prompter.prompt(contains("path"), nullable(String.class))).thenReturn("classpath:wsdl/BookStore.wsdl");
+        when(prompter.prompt(contains("prefix"), nullable(String.class))).thenReturn("BookStore_");
         when(prompter.prompt(contains("suffix"), nullable(String.class))).thenReturn("_Test");
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
@@ -132,107 +133,30 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
 
-        when(reqResXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withDescription("TODO")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(reqResXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withDescription("TODO")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(wsdlXmlTestCaseCreator);
 
-        when(reqResXmlTestCaseCreator.getName()).thenReturn("IT_");
+        when(wsdlXmlTestCaseCreator.withWsdl("classpath:wsdl/BookStore.wsdl")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withNameSuffix("_Test")).thenReturn(wsdlXmlTestCaseCreator);
 
-        when(reqResXmlTestCaseCreator.withName("IT_")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withName("IT_addBook_Test")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withName("IT_addBookAudio_Test")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withName("IT_deleteBook_Test")).thenReturn(reqResXmlTestCaseCreator);
-
-        // addBook
-        doAnswer(new Answer<ReqResXmlTestCreator>() {
-            @Override
-            public ReqResXmlTestCreator answer(InvocationOnMock invocation) throws Throwable {
-                String requestXml = invocation.getArguments()[0].toString();
-
-                Assert.assertTrue(requestXml.contains("<book:addBook xmlns:book=\"http://www.citrusframework.org/bookstore/\">"));
-                Assert.assertTrue(requestXml.contains("<author>string</author>"));
-                Assert.assertTrue(requestXml.contains("<title>string</title>"));
-                Assert.assertTrue(requestXml.contains("<isbn>string</isbn>"));
-                Assert.assertTrue(requestXml.contains("<year>string</year>"));
-                Assert.assertTrue(requestXml.contains("</book:addBook>"));
-
-                return reqResXmlTestCaseCreator;
-            }
-        }).doAnswer(new Answer<ReqResXmlTestCreator>() { // addBookAudio
-            @Override
-            public ReqResXmlTestCreator answer(InvocationOnMock invocation) throws Throwable {
-                String requestXml = invocation.getArguments()[0].toString();
-
-                Assert.assertTrue(requestXml.contains("<aud:addBookAudio xmlns:aud=\"http://www.citrusframework.org/bookstore/audio\">"));
-                Assert.assertTrue(requestXml.contains("<author>string</author>"));
-                Assert.assertTrue(requestXml.contains("<title>string</title>"));
-                Assert.assertTrue(requestXml.contains("<isbn>string</isbn>"));
-                Assert.assertTrue(requestXml.contains("<year>string</year>"));
-                Assert.assertTrue(requestXml.contains("<length>100</length>"));
-                Assert.assertTrue(requestXml.contains("</aud:addBookAudio>"));
-
-                return reqResXmlTestCaseCreator;
-            }
-        }).doAnswer(new Answer<ReqResXmlTestCreator>() { // deleteBook
-            @Override
-            public ReqResXmlTestCreator answer(InvocationOnMock invocation) throws Throwable {
-                String requestXml = invocation.getArguments()[0].toString();
-
-                Assert.assertTrue(requestXml.contains("<book:deleteBook xmlns:book=\"http://www.citrusframework.org/bookstore/\">"));
-                Assert.assertTrue(requestXml.contains("<isbn>string</isbn>"));
-                Assert.assertTrue(requestXml.contains("</book:deleteBook>"));
-
-                return reqResXmlTestCaseCreator;
-            }
-        }).when(reqResXmlTestCaseCreator).withRequest(any(String.class));
-
-        doAnswer(new Answer<ReqResXmlTestCreator>() {
-            @Override
-            public ReqResXmlTestCreator answer(InvocationOnMock invocation) throws Throwable {
-                String responseXml = invocation.getArguments()[0].toString();
-
-                Assert.assertTrue(responseXml.contains("<book:addBookResponse xmlns:book=\"http://www.citrusframework.org/bookstore/\">"));
-                Assert.assertTrue(responseXml.contains("<success>false</success>"));
-                Assert.assertTrue(responseXml.contains("</book:addBookResponse>"));
-
-                return reqResXmlTestCaseCreator;
-            }
-        }).doAnswer(new Answer<ReqResXmlTestCreator>() { // addBookAudio
-            @Override
-            public ReqResXmlTestCreator answer(InvocationOnMock invocation) throws Throwable {
-                String responseXml = invocation.getArguments()[0].toString();
-
-                Assert.assertTrue(responseXml.contains("<aud:addBookAudioResponse xmlns:aud=\"http://www.citrusframework.org/bookstore/audio\">"));
-                Assert.assertTrue(responseXml.contains("<success>false</success>"));
-                Assert.assertTrue(responseXml.contains("</aud:addBookAudioResponse>"));
-
-                return reqResXmlTestCaseCreator;
-            }
-        }).doAnswer(new Answer<ReqResXmlTestCreator>() { // deleteBook
-            @Override
-            public ReqResXmlTestCreator answer(InvocationOnMock invocation) throws Throwable {
-                String responseXml = invocation.getArguments()[0].toString();
-
-                Assert.assertTrue(responseXml.contains("<book:deleteBookResponse xmlns:book=\"http://www.citrusframework.org/bookstore/\">"));
-                Assert.assertTrue(responseXml.contains("<success>false</success>"));
-                Assert.assertTrue(responseXml.contains("</book:deleteBookResponse>"));
-
-                return reqResXmlTestCaseCreator;
-            }
-        }).when(reqResXmlTestCaseCreator).withResponse(nullable(String.class));
+        when(wsdlXmlTestCaseCreator.withName("BookStore")).thenReturn(wsdlXmlTestCaseCreator);
 
         mojo.execute();
 
-        verify(reqResXmlTestCaseCreator, times(3)).create();
+        verify(wsdlXmlTestCaseCreator).create();
+        verify(wsdlXmlTestCaseCreator).withWsdl("classpath:wsdl/BookStore.wsdl");
+        verify(wsdlXmlTestCaseCreator).withNameSuffix("_Test");
     }
 
     @Test
     public void testSuiteFromWsdlAbort() throws MojoExecutionException, PrompterException {
-        reset(prompter, reqResXmlTestCaseCreator);
+        reset(prompter, wsdlXmlTestCaseCreator);
 
-        when(prompter.prompt(contains("test name"))).thenReturn("IT_");
+        when(prompter.prompt(contains("test name"))).thenReturn("BookStore");
         when(prompter.prompt(contains("path"), nullable(String.class))).thenReturn("classpath:wsdl/BookStore.wsdl");
+        when(prompter.prompt(contains("prefix"), nullable(String.class))).thenReturn("BookStore_");
         when(prompter.prompt(contains("suffix"), nullable(String.class))).thenReturn("_Test");
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
@@ -242,13 +166,15 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");
 
-        when(reqResXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.withDescription("TODO")).thenReturn(reqResXmlTestCaseCreator);
-        when(reqResXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(reqResXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withDescription("TODO")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(wsdlXmlTestCaseCreator);
 
-        when(reqResXmlTestCaseCreator.withName("IT_")).thenReturn(reqResXmlTestCaseCreator);
+        when(wsdlXmlTestCaseCreator.withName("BookStore")).thenReturn(wsdlXmlTestCaseCreator);
 
         mojo.execute();
+
+        verify(wsdlXmlTestCaseCreator, times(0)).create();
     }
 }

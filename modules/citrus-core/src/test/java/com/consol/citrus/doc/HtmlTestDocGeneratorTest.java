@@ -56,7 +56,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
         Assert.assertTrue(docContent.contains("<h1>Citrus Test Documentation</h1>"));
         Assert.assertTrue(docContent.contains(">Overview</th>"));
-        Assert.assertTrue(docContent.contains("<li><a href=\"#0\">SampleIT.xml</a>"));
+        Assert.assertTrue(docContent.contains("SampleIT.xml</a>"));
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
@@ -85,7 +85,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));
         Assert.assertTrue(docContent.contains("<h1>CustomPageTitle</h1>"));
         Assert.assertTrue(docContent.contains(">CustomOverview</th>"));
-        Assert.assertTrue(docContent.contains("<li><a href=\"#0\">SampleIT.xml</a>"));
+        Assert.assertTrue(docContent.contains("SampleIT.xml</a>"));
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));

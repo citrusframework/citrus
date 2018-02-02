@@ -497,6 +497,29 @@
         <scope>provided</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.xmlbeans</groupId>
+        <artifactId>xmlbeans</artifactId>
+        <version>2.4.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlbeans</groupId>
+        <artifactId>xmlbeans-xpath</artifactId>
+        <version>2.4.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
       <!-- Citrus mail dependencies -->
       <dependency>
         <groupId>javax.mail</groupId>

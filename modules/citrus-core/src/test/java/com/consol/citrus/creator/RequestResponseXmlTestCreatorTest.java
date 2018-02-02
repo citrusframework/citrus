@@ -17,7 +17,6 @@
 package com.consol.citrus.creator;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
@@ -29,11 +28,11 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class ReqResXmlTestCreatorTest extends AbstractTestNGUnitTest {
+public class RequestResponseXmlTestCreatorTest {
 
     @Test
     public void testCreateTest() throws IOException {
-        ReqResXmlTestCreator creator = new ReqResXmlTestCreator();
+        RequestResponseXmlTestCreator creator = new RequestResponseXmlTestCreator();
 
         creator.withAuthor("Christoph")
                  .withDescription("This is a sample test")

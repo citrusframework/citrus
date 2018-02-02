@@ -18,15 +18,15 @@ package com.consol.citrus.creator;
 
 import com.consol.citrus.model.testcase.core.ReceiveModel;
 import com.consol.citrus.model.testcase.core.SendModel;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class ReqResXmlTestCreator extends XmlTestCreator {
+public class RequestResponseXmlTestCreator extends XmlTestCreator {
 
     /** Sample request */
     private String request;
@@ -35,34 +35,42 @@ public class ReqResXmlTestCreator extends XmlTestCreator {
     private String response;
 
     @Override
-    protected Properties getTemplateProperties() {
-        Properties properties = super.getTemplateProperties();
-
-        properties.put("test.request", request);
-        properties.put("test.response", response);
-
-        return properties;
-    }
-
-    @Override
     protected List<Object> getActions() {
         List<Object> actions = super.getActions();
 
-        SendModel send = new SendModel();
-        send.setEndpoint("TODO:request-sender");
-        SendModel.Message sendMessage = new SendModel.Message();
-        sendMessage.setData(request);
-        send.setMessage(sendMessage);
-        actions.add(send);
-        
+        actions.add(getSendRequestAction());
+
+        if (StringUtils.hasText(response)) {
+            actions.add(getReceiveResponseAction());
+        }
+
+        return actions;
+    }
+
+    /**
+     * Creates test action that receives the response message.
+     * @return
+     */
+    protected Object getReceiveResponseAction() {
         ReceiveModel receive = new ReceiveModel();
         receive.setEndpoint("TODO:response-receiver");
         ReceiveModel.Message receiveMessage = new ReceiveModel.Message();
         receiveMessage.setData(response);
         receive.setMessage(receiveMessage);
-        actions.add(receive);
+        return receive;
+    }
 
-        return actions;
+    /**
+     * Creates test action that send the request.
+     * @return
+     */
+    protected Object getSendRequestAction() {
+        SendModel send = new SendModel();
+        send.setEndpoint("TODO:request-sender");
+        SendModel.Message sendMessage = new SendModel.Message();
+        sendMessage.setData(request);
+        send.setMessage(sendMessage);
+        return send;
     }
 
     /**
@@ -70,7 +78,7 @@ public class ReqResXmlTestCreator extends XmlTestCreator {
      * @param request
      * @return
      */
-    public ReqResXmlTestCreator withRequest(String request) {
+    public RequestResponseXmlTestCreator withRequest(String request) {
         this.request = request;
         return this;
     }
@@ -80,7 +88,7 @@ public class ReqResXmlTestCreator extends XmlTestCreator {
      * @param response
      * @return
      */
-    public ReqResXmlTestCreator withResponse(String response) {
+    public RequestResponseXmlTestCreator withResponse(String response) {
         this.response = response;
         return this;
     }
