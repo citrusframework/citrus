@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class RequestResponseXmlTestCreator extends XmlTestCreator {
 
+    private String endpoint = "default";
+
     /** Sample request */
     private String request;
 
@@ -53,7 +55,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      */
     protected Object getReceiveResponseAction() {
         ReceiveModel receive = new ReceiveModel();
-        receive.setEndpoint("TODO:response-receiver");
+        receive.setEndpoint(endpoint);
         ReceiveModel.Message receiveMessage = new ReceiveModel.Message();
         receiveMessage.setData(response);
         receive.setMessage(receiveMessage);
@@ -66,11 +68,21 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      */
     protected Object getSendRequestAction() {
         SendModel send = new SendModel();
-        send.setEndpoint("TODO:request-sender");
+        send.setEndpoint(endpoint);
         SendModel.Message sendMessage = new SendModel.Message();
         sendMessage.setData(request);
         send.setMessage(sendMessage);
         return send;
+    }
+
+    /**
+     * Set the endpoint to use.
+     * @param endpoint
+     * @return
+     */
+    public RequestResponseXmlTestCreator withEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+        return this;
     }
 
     /**
@@ -91,6 +103,24 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
     public RequestResponseXmlTestCreator withResponse(String response) {
         this.response = response;
         return this;
+    }
+
+    /**
+     * Sets the endpoint.
+     *
+     * @param endpoint
+     */
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    /**
+     * Gets the endpoint.
+     *
+     * @return
+     */
+    public String getEndpoint() {
+        return endpoint;
     }
 
     /**

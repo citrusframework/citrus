@@ -38,7 +38,7 @@ public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
 
     private String operation;
     private String namePrefix;
-    private String nameSuffix = "_Test";
+    private String nameSuffix = "_IT";
 
     @Override
     public void create() {

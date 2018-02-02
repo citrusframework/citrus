@@ -48,15 +48,15 @@ public class XsdXmlTestCreatorTest {
 
         creator.create();
 
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloTest.java");
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloTest.xml");
+        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
-        Assert.assertTrue(javaContent.contains("public class HelloTest"));
+        Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
@@ -64,7 +64,7 @@ public class XsdXmlTestCreatorTest {
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"HelloTest\">"));
+        Assert.assertTrue(xmlContent.contains("<testcase name=\"HelloIT\">"));
         Assert.assertTrue(xmlContent.contains("<data>&lt;hel:" + requestName));
         Assert.assertTrue(xmlContent.contains("<data>&lt;hel:" + generatedResponseName));
     }
@@ -97,15 +97,15 @@ public class XsdXmlTestCreatorTest {
 
         creator.create();
 
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloTest.java");
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloTest.xml");
+        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
-        Assert.assertTrue(javaContent.contains("public class HelloTest"));
+        Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
@@ -113,7 +113,7 @@ public class XsdXmlTestCreatorTest {
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"HelloTest\">"));
+        Assert.assertTrue(xmlContent.contains("<testcase name=\"HelloIT\">"));
         Assert.assertTrue(xmlContent.contains("<data>&lt;hel:"));
         Assert.assertFalse(xmlContent.contains("<receive"));
     }

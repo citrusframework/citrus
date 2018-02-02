@@ -18,10 +18,10 @@ package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.creator.*;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.mockito.Mockito;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -37,6 +37,7 @@ public class CreateTestMojoTest {
     private Prompter prompter = Mockito.mock(Prompter.class);
     
     private XmlTestCreator testCaseCreator = Mockito.mock(XmlTestCreator.class);
+    private XsdXmlTestCreator xsdXmlTestCaseCreator = Mockito.mock(XsdXmlTestCreator.class);
     private WsdlXmlTestCreator wsdlXmlTestCaseCreator = Mockito.mock(WsdlXmlTestCreator.class);
 
     private CreateTestMojo mojo;
@@ -49,17 +50,21 @@ public class CreateTestMojoTest {
             }
 
             @Override
+            public XsdXmlTestCreator getXsdXmlTestCaseCreator() {
+                return xsdXmlTestCaseCreator;
+            }
+
+            @Override
             public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
                 return wsdlXmlTestCaseCreator;
             }
         };
 
         mojo.setPrompter(prompter);
-        mojo.setInteractiveMode(true);
     }
     
     @Test
-    public void testCreate() throws PrompterException, MojoExecutionException {
+    public void testCreate() throws PrompterException, MojoExecutionException, MojoFailureException {
         reset(prompter, testCaseCreator);
 
         when(prompter.prompt(contains("test name"))).thenReturn("FooTest");
@@ -83,7 +88,7 @@ public class CreateTestMojoTest {
     }
 
     @Test
-    public void testAbort() throws PrompterException, MojoExecutionException {
+    public void testAbort() throws PrompterException, MojoExecutionException, MojoFailureException {
         reset(prompter, testCaseCreator);
 
         when(prompter.prompt(contains("test name"))).thenReturn("FooTest");
@@ -105,24 +110,74 @@ public class CreateTestMojoTest {
 
         verify(testCaseCreator, times(0)).create();
     }
-    
+
     @Test
-    public void testEmptyTestName() throws PrompterException {
-        try {
-            mojo.setInteractiveMode(false);
-            mojo.execute();
-            Assert.fail("Missing exception due to invalid test name");
-        } catch (MojoExecutionException e) {
-            Assert.assertTrue(e.getMessage().contains("Please provide proper test name"));
-        }
+    public void testSuiteFromXsd() throws MojoExecutionException, PrompterException, MojoFailureException {
+        reset(prompter, xsdXmlTestCaseCreator);
+
+        when(prompter.prompt(contains("test name"))).thenReturn("BookStore");
+        when(prompter.prompt(contains("path"))).thenReturn("classpath:xsd/BookStore.xsd");
+        when(prompter.prompt(contains("request"))).thenReturn("BookRequest");
+        when(prompter.prompt(contains("response"), nullable(String.class))).thenReturn("BookResponse");
+        when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
+        when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
+        when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.xsd");
+        when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
+        when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("y");
+        when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
+
+        when(xsdXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestCaseCreator.withDescription("TODO")).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(xsdXmlTestCaseCreator);
+
+        when(xsdXmlTestCaseCreator.withXsd("classpath:xsd/BookStore.xsd")).thenReturn(xsdXmlTestCaseCreator);
+
+        when(xsdXmlTestCaseCreator.withName("BookStore")).thenReturn(xsdXmlTestCaseCreator);
+
+        mojo.execute();
+
+        verify(xsdXmlTestCaseCreator).create();
+        verify(xsdXmlTestCaseCreator).withXsd("classpath:xsd/BookStore.xsd");
+        verify(xsdXmlTestCaseCreator).withRequestMessage("BookRequest");
+        verify(xsdXmlTestCaseCreator).withResponseMessage("BookResponse");
     }
 
     @Test
-    public void testSuiteFromWsdl() throws MojoExecutionException, PrompterException {
+    public void testSuiteFromXsdAbort() throws MojoExecutionException, PrompterException, MojoFailureException {
+        reset(prompter, xsdXmlTestCaseCreator);
+
+        when(prompter.prompt(contains("test name"))).thenReturn("BookStore");
+        when(prompter.prompt(contains("path"))).thenReturn("classpath:wsdl/BookStore.wsdl");
+        when(prompter.prompt(contains("request"))).thenReturn("BookRequest");
+        when(prompter.prompt(contains("response"), nullable(String.class))).thenReturn("BookResponse");
+        when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
+        when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
+        when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.wsdl");
+        when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
+        when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("y");
+        when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");
+
+        when(xsdXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestCaseCreator.withDescription("TODO")).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(xsdXmlTestCaseCreator);
+
+        when(xsdXmlTestCaseCreator.withName("BookStore")).thenReturn(xsdXmlTestCaseCreator);
+
+        mojo.execute();
+
+        verify(xsdXmlTestCaseCreator, times(0)).create();
+    }
+    
+    @Test
+    public void testSuiteFromWsdl() throws MojoExecutionException, PrompterException, MojoFailureException {
         reset(prompter, wsdlXmlTestCaseCreator);
 
         when(prompter.prompt(contains("test name"))).thenReturn("BookStore");
-        when(prompter.prompt(contains("path"), nullable(String.class))).thenReturn("classpath:wsdl/BookStore.wsdl");
+        when(prompter.prompt(contains("path"))).thenReturn("classpath:wsdl/BookStore.wsdl");
         when(prompter.prompt(contains("prefix"), nullable(String.class))).thenReturn("BookStore_");
         when(prompter.prompt(contains("suffix"), nullable(String.class))).thenReturn("_Test");
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
@@ -151,11 +206,11 @@ public class CreateTestMojoTest {
     }
 
     @Test
-    public void testSuiteFromWsdlAbort() throws MojoExecutionException, PrompterException {
+    public void testSuiteFromWsdlAbort() throws MojoExecutionException, PrompterException, MojoFailureException {
         reset(prompter, wsdlXmlTestCaseCreator);
 
         when(prompter.prompt(contains("test name"))).thenReturn("BookStore");
-        when(prompter.prompt(contains("path"), nullable(String.class))).thenReturn("classpath:wsdl/BookStore.wsdl");
+        when(prompter.prompt(contains("path"))).thenReturn("classpath:wsdl/BookStore.wsdl");
         when(prompter.prompt(contains("prefix"), nullable(String.class))).thenReturn("BookStore_");
         when(prompter.prompt(contains("suffix"), nullable(String.class))).thenReturn("_Test");
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");

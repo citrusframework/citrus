@@ -44,9 +44,9 @@ public class WsdlXmlTestCreatorTest {
 
         creator.create();
 
-        verifyTest("BookStore_addBook_Test", "book:addBook", "book:addBookResponse");
-        verifyTest("BookStore_addBookAudio_Test", "aud:addBookAudio", "aud:addBookAudioResponse");
-        verifyTest("BookStore_deleteBook_Test", "book:deleteBook", "book:deleteBookResponse");
+        verifyTest("BookStore_addBook_IT", "book:addBook", "book:addBookResponse");
+        verifyTest("BookStore_addBookAudio_IT", "aud:addBookAudio", "aud:addBookAudioResponse");
+        verifyTest("BookStore_deleteBook_IT", "book:deleteBook", "book:deleteBookResponse");
     }
 
     private void verifyTest(String name, String requestName, String responseName) throws IOException {

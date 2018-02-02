@@ -37,7 +37,7 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
     private String requestMessage;
     private String responseMessage;
 
-    private String nameSuffix = "Test";
+    private String nameSuffix = "IT";
 
     @Override
     public void create() {

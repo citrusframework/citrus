@@ -15,6 +15,6 @@ import @test.base.class.import@;
 public class @test.name@ {
 
     \@Test
-    \@CitrusXmlTest
+    \@CitrusXmlTest(name = "@test.name@")
     public void @test.method.name@() {}
 }
