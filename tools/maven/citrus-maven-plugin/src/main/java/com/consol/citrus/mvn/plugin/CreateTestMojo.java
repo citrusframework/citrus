@@ -25,6 +25,8 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 /**
  * Creates new Citrus test cases with empty XML test file and executable Java class.
  * 
@@ -33,18 +35,41 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Mojo( name = "create-test")
+@Mojo(name = "create-test")
 public class CreateTestMojo extends AbstractCitrusMojo {
 
-    @Parameter(property = "citrus.skip.create", defaultValue = "false")
-    protected boolean skipCreate;
+    @Parameter(property = "citrus.skip.create.test", defaultValue = "false")
+    protected boolean skipCreateTest;
 
     @Component
     private Prompter prompter;
 
+    private final XmlTestCreator xmlTestCreator;
+    private final XsdXmlTestCreator xsdXmlTestCreator;
+    private final WsdlXmlTestCreator wsdlXmlTestCreator;
+
+    /**
+     * Default constructor.
+     */
+    public CreateTestMojo() {
+        this(new XmlTestCreator(), new XsdXmlTestCreator(), new WsdlXmlTestCreator());
+    }
+
+    /**
+     * Constructor using final fields.
+     * @param xmlTestCreator
+     * @param xsdXmlTestCreator
+     * @param wsdlXmlTestCreator
+     */
+    public CreateTestMojo(XmlTestCreator xmlTestCreator, XsdXmlTestCreator xsdXmlTestCreator, WsdlXmlTestCreator wsdlXmlTestCreator) {
+        this.xmlTestCreator = xmlTestCreator;
+        this.xsdXmlTestCreator = xsdXmlTestCreator;
+        this.wsdlXmlTestCreator = wsdlXmlTestCreator;
+    }
+
     @Override
     public void doExecute() throws MojoExecutionException, MojoFailureException {
-        if (skipCreate) {
+        if (skipCreateTest) {
             return;
         }
 
@@ -112,7 +137,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     .usePackage(targetPackage);
 
             creator.create();
-            
+
             getLog().info("Successfully created new test case " + targetPackage + "." + name);
         } catch (ArrayIndexOutOfBoundsException e) {
             getLog().info("Wrong parameter usage! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test).");
@@ -217,7 +242,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @return test creator.
      */
     public XmlTestCreator getXmlTestCaseCreator() {
-        return new XmlTestCreator();
+        return Optional.ofNullable(xmlTestCreator).orElse(new XmlTestCreator());
     }
 
     /**
@@ -227,7 +252,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @return test creator.
      */
     public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
-        return new WsdlXmlTestCreator();
+        return Optional.ofNullable(wsdlXmlTestCreator).orElse(new WsdlXmlTestCreator());
     }
 
     /**
@@ -237,7 +262,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @return test creator.
      */
     public XsdXmlTestCreator getXsdXmlTestCaseCreator() {
-        return new XsdXmlTestCreator();
+        return Optional.ofNullable(xsdXmlTestCreator).orElse(new XsdXmlTestCreator());
     }
 
     /**

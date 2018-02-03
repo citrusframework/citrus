@@ -44,22 +44,7 @@ public class CreateTestMojoTest {
     
     @BeforeMethod
     public void setup() {
-        mojo = new CreateTestMojo() {
-            public XmlTestCreator getXmlTestCaseCreator() {
-                return testCaseCreator;
-            }
-
-            @Override
-            public XsdXmlTestCreator getXsdXmlTestCaseCreator() {
-                return xsdXmlTestCaseCreator;
-            }
-
-            @Override
-            public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
-                return wsdlXmlTestCaseCreator;
-            }
-        };
-
+        mojo = new CreateTestMojo(testCaseCreator, xsdXmlTestCaseCreator, wsdlXmlTestCaseCreator);
         mojo.setPrompter(prompter);
     }
     

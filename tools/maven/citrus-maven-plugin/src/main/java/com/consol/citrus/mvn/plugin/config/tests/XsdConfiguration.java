@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.mvn.plugin.config;
+package com.consol.citrus.mvn.plugin.config.tests;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -29,19 +29,19 @@ public class XsdConfiguration implements Serializable {
     /**
      * Path of the xsd from which the sample request and response are get from
      */
-    @Parameter(property = "file")
+    @Parameter(property = "citrus.xsd.file")
     private String file;
 
     /**
      * Name of the xsd-element used to create the xml-sample-request
      */
-    @Parameter(property = "request")
+    @Parameter(property = "citrus.xsd.request")
     private String request;
 
     /**
      * Name of the xsd-element used to create the xml-sample-response
      */
-    @Parameter(property = "response")
+    @Parameter(property = "citrus.xsd.response")
     private String response;
 
     /**

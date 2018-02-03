@@ -17,7 +17,8 @@
 package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.creator.UnitFramework;
-import com.consol.citrus.mvn.plugin.config.TestConfiguration;
+import com.consol.citrus.mvn.plugin.config.docs.DocsConfiguration;
+import com.consol.citrus.mvn.plugin.config.tests.TestConfiguration;
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -29,13 +30,19 @@ import java.util.List;
  */
 public abstract class AbstractCitrusMojo extends AbstractMojo {
 
-    @Parameter(property = "citrus.skip", defaultValue = "false")
+    @Parameter(property = "citrus.plugin.skip", defaultValue = "false")
     private boolean skip;
+
+    /**
+     * Mojo looks in this directory for test files that are included in this report. Defaults to "src/test/"
+     */
+    @Parameter(property = "citrus.test.src.directory", defaultValue = "src/test")
+    private String testSrcDirectory;
 
     /**
      * Which unit test framework to use for test execution (default: testng; options: testng, junit4, junit5)
      */
-    @Parameter(defaultValue = "testng")
+    @Parameter(property = "citrus.test.framework", defaultValue = "testng")
     private String framework = "testng";
 
     /**
@@ -43,6 +50,12 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
      */
     @Parameter
     private List<TestConfiguration> tests;
+
+    /**
+     * Test configurations configured directly.
+     */
+    @Parameter
+    private DocsConfiguration docs;
 
     @Override
     public final void execute() throws MojoExecutionException, MojoFailureException {
@@ -68,11 +81,47 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
     }
 
     /**
+     * Sets the tests.
+     *
+     * @param tests
+     */
+    public void setTests(List<TestConfiguration> tests) {
+        this.tests = tests;
+    }
+
+    /**
+     * Gets the docs.
+     *
+     * @return
+     */
+    public DocsConfiguration getDocs() {
+        return docs;
+    }
+
+    /**
+     * Sets the docs.
+     *
+     * @param docs
+     */
+    public void setDocs(DocsConfiguration docs) {
+        this.docs = docs;
+    }
+
+    /**
      * Gets the framework.
      *
      * @return
      */
     public UnitFramework getFramework() {
         return UnitFramework.fromString(framework);
+    }
+
+    /**
+     * Gets the testSrcDirectory.
+     *
+     * @return
+     */
+    public String getTestSrcDirectory() {
+        return testSrcDirectory;
     }
 }

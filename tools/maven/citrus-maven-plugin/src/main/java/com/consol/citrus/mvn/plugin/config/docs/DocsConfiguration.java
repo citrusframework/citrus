@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.mvn.plugin.config;
+package com.consol.citrus.mvn.plugin.config.docs;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -24,53 +24,47 @@ import java.io.Serializable;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class WsdlConfiguration implements Serializable {
+public class DocsConfiguration implements Serializable {
+
+    @Parameter
+    private ExcelDocConfiguration excel;
+
+    @Parameter
+    private HtmlDocConfiguration html;
 
     /**
-     * The path to the wsdl from which the suite is generated.
-     */
-    @Parameter(property = "file")
-    private String file;
-
-    /**
-     * The operation name to generate tests from.
-     */
-    @Parameter(property = "operation")
-    private String operation;
-
-    /**
-     * Gets the file.
+     * Gets the excel.
      *
      * @return
      */
-    public String getFile() {
-        return file;
+    public ExcelDocConfiguration getExcel() {
+        return excel;
     }
 
     /**
-     * Sets the file.
+     * Sets the excel.
      *
-     * @param file
+     * @param excel
      */
-    public void setFile(String file) {
-        this.file = file;
+    public void setExcel(ExcelDocConfiguration excel) {
+        this.excel = excel;
     }
 
     /**
-     * Gets the operation.
+     * Gets the html.
      *
      * @return
      */
-    public String getOperation() {
-        return operation;
+    public HtmlDocConfiguration getHtml() {
+        return html;
     }
 
     /**
-     * Sets the operation.
+     * Sets the html.
      *
-     * @param operation
+     * @param html
      */
-    public void setOperation(String operation) {
-        this.operation = operation;
+    public void setHtml(HtmlDocConfiguration html) {
+        this.html = html;
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.mvn.plugin.config;
+package com.consol.citrus.mvn.plugin.config.tests;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -26,37 +26,37 @@ import java.io.Serializable;
  */
 public class TestConfiguration implements Serializable {
 
-    @Parameter(required = true)
+    @Parameter(property = "citrus.test.name", required = true)
     private String name;
 
     /**
      * The name suffix of all test cases.
      */
-    @Parameter(defaultValue = "_IT")
+    @Parameter(property = "citrus.test.suffix", defaultValue = "_IT")
     private String suffix = "_IT";
 
     /**
      * The test author
      */
-    @Parameter(defaultValue = "Unknown")
+    @Parameter(property = "citrus.test.author", defaultValue = "Unknown")
     private String author = "Unknown";
 
     /**
      * Describes the test case and its actions
      */
-    @Parameter(defaultValue = "TODO: Description")
+    @Parameter(property = "citrus.test.description", defaultValue = "TODO: Description")
     private String description = "TODO: Description";
 
     /**
      * Which package (folder structure) is assigned to this test. Defaults to "com.consol.citrus"
      */
-    @Parameter(defaultValue = "com.consol.citrus")
+    @Parameter(property = "citrus.test.packageName", defaultValue = "com.consol.citrus")
     private String packageName = "com.consol.citrus";
 
     /**
      * Endpoint used to send and receive messages in generated test.
      */
-    @Parameter(defaultValue = "default")
+    @Parameter(property = "citrus.test.endpoint", defaultValue = "default")
     private String endpoint = "default";
 
     @Parameter

@@ -17,28 +17,53 @@
 package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.creator.*;
-import com.consol.citrus.mvn.plugin.config.TestConfiguration;
+import com.consol.citrus.mvn.plugin.config.tests.TestConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Mojo( name = "generate", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@Mojo( name = "generate-test", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 public class GenerateTestMojo extends AbstractCitrusMojo {
 
-    @Parameter(property = "citrus.skip.generate", defaultValue = "false")
-    protected boolean skipGenerate;
+    @Parameter(property = "citrus.skip.generate.test", defaultValue = "false")
+    protected boolean skipGenerateTest;
 
-    @Parameter(defaultValue= "${project.build.directory}/generated/citrus")
-    protected String buildDirectory;
+    @Parameter(property = "citrus.build.directory", defaultValue= "${project.build.directory}/generated/citrus")
+    protected String buildDirectory = "target/generated/citrus";
+
+    private final XmlTestCreator xmlTestCreator;
+    private final XsdXmlTestCreator xsdXmlTestCreator;
+    private final WsdlXmlTestCreator wsdlXmlTestCreator;
+
+    /**
+     * Default constructor.
+     */
+    public GenerateTestMojo() {
+        this(new XmlTestCreator(), new XsdXmlTestCreator(), new WsdlXmlTestCreator());
+    }
+
+    /**
+     * Constructor using final fields.
+     * @param xmlTestCreator
+     * @param xsdXmlTestCreator
+     * @param wsdlXmlTestCreator
+     */
+    public GenerateTestMojo(XmlTestCreator xmlTestCreator, XsdXmlTestCreator xsdXmlTestCreator, WsdlXmlTestCreator wsdlXmlTestCreator) {
+        this.xmlTestCreator = xmlTestCreator;
+        this.xsdXmlTestCreator = xsdXmlTestCreator;
+        this.wsdlXmlTestCreator = wsdlXmlTestCreator;
+    }
 
     @Override
     public void doExecute() throws MojoExecutionException, MojoFailureException {
-        if (skipGenerate) {
+        if (skipGenerateTest) {
             return;
         }
 
@@ -106,7 +131,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      * @return test creator.
      */
     public XmlTestCreator getXmlTestCaseCreator() {
-        return new XmlTestCreator();
+        return Optional.ofNullable(xmlTestCreator).orElse(new XmlTestCreator());
     }
 
     /**
@@ -116,7 +141,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      * @return test creator.
      */
     public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
-        return new WsdlXmlTestCreator();
+        return Optional.ofNullable(wsdlXmlTestCreator).orElse(new WsdlXmlTestCreator());
     }
 
     /**
@@ -126,6 +151,6 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      * @return test creator.
      */
     public XsdXmlTestCreator getXsdXmlTestCaseCreator() {
-        return new XsdXmlTestCreator();
+        return Optional.ofNullable(xsdXmlTestCreator).orElse(new XsdXmlTestCreator());
     }
 }
