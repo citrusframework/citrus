@@ -173,15 +173,15 @@
     <apache.camel.version>2.20.1</apache.camel.version>
     <activemq.version>5.15.2</activemq.version>
     <vertx.version>3.3.3</vertx.version>
-    <groovy.version>2.4.12</groovy.version>
+    <groovy.version>2.4.13</groovy.version>
     <jetty.version>9.4.8.v20171121</jetty.version>
     <testng.version>6.13.1</testng.version>
     <junit.version>4.12</junit.version>
-    <junit.jupiter.version>5.0.2</junit.jupiter.version>
-    <junit.platform.version>1.0.2</junit.platform.version>
+    <junit.jupiter.version>5.0.3</junit.jupiter.version>
+    <junit.platform.version>1.0.3</junit.platform.version>
     <slf4j.version>1.7.25</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
-    <jackson.version>2.9.3</jackson.version>
+    <jackson.version>2.9.4</jackson.version>
     <arquillian.version>1.1.15.Final</arquillian.version>
     <cucumber.version>1.2.5</cucumber.version>
     <zookeeper.version>3.4.10</zookeeper.version>
@@ -615,7 +615,7 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5.4</version>
+        <version>4.5.3</version>
       </dependency>
 
       <!-- Cucumber -->
