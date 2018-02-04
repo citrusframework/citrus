@@ -66,7 +66,7 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
         if (getDocs().getExcel() != null) {
             ExcelTestDocGenerator creator = getExcelTestDocGenerator();
 
-            creator.withOutputFile(getDocs().getExcel().getOutputFile() + (getDocs().getHtml().getOutputFile().endsWith(".xls") ? "" : ".xls"))
+            creator.withOutputFile(getDocs().getExcel().getOutputFile() + (getDocs().getExcel().getOutputFile().endsWith(".xls") ? "" : ".xls"))
                     .withPageTitle(getDocs().getExcel().getPageTitle())
                     .withAuthor(getDocs().getExcel().getAuthor())
                     .withCompany(getDocs().getExcel().getCompany())
@@ -75,7 +75,7 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
 
             creator.generateDoc();
 
-            getLog().info("Successfully created Excel documentation: outputFile='target/" + getDocs().getExcel().getOutputFile() + (getDocs().getHtml().getOutputFile().endsWith(".xls") ? "" : ".xls") + "'");
+            getLog().info("Successfully created Excel documentation: outputFile='target/" + getDocs().getExcel().getOutputFile() + (getDocs().getExcel().getOutputFile().endsWith(".xls") ? "" : ".xls") + "'");
         }
 
         if (getDocs().getHtml() != null) {

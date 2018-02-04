@@ -167,4 +167,12 @@ public class CreateDocsMojo extends AbstractCitrusMojo {
     public ExcelTestDocGenerator getExcelTestDocGenerator() {
         return Optional.ofNullable(excelTestDocGenerator).orElse(ExcelTestDocGenerator.build());
     }
+
+    /**
+     * Sets the prompter.
+     * @param prompter the prompter to set
+     */
+    public void setPrompter(Prompter prompter) {
+        this.prompter = prompter;
+    }
 }

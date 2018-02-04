@@ -37,7 +37,7 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
      * Mojo looks in this directory for test files that are included in this report. Defaults to "src/test/"
      */
     @Parameter(property = "citrus.test.src.directory", defaultValue = "src/test")
-    private String testSrcDirectory;
+    private String testSrcDirectory = "src/test";
 
     /**
      * Which unit test framework to use for test execution (default: testng; options: testng, junit4, junit5)

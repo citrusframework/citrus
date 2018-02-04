@@ -85,12 +85,6 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");
 
-        when(testCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(testCaseCreator);
-        when(testCaseCreator.withAuthor("UnknownAuthor")).thenReturn(testCaseCreator);
-        when(testCaseCreator.withDescription("TODO")).thenReturn(testCaseCreator);
-        when(testCaseCreator.usePackage("com.consol.citrus.foo")).thenReturn(testCaseCreator);
-        when(testCaseCreator.withName("FooTest")).thenReturn(testCaseCreator);
-        
         mojo.execute();
 
         verify(testCaseCreator, times(0)).create();
