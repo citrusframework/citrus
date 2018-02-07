@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<title>@page.title@</title>
+		<script type="text/javascript">
+			function showDetails(ident) {
+            	document.getElementById(ident).style.display = 'block';
+            	document.getElementById(ident + '+').style.display = 'none';
+            	document.getElementById(ident + '-').style.display = 'block';
+            }
+            
+            function hideDetails(ident) {
+            	document.getElementById(ident).style.display = 'none';
+            	document.getElementById(ident + '+').style.display = 'block';
+            	document.getElementById(ident + '-').style.display = 'none';
+            }
+		</script>	
+	</head>
+	<body style="text-align:center;font-family:Helvetica,Verdana;font-size:10pt">
+		<center>
+			<img src="@logo.file.path@" lowsrc="@logo.file.path@" alt="Logo"/>
+			<br/><br/>
+			<h1>@page.title@</h1>
+			
+			<table border="0" style="border-collapse:collapse;">
+				<thead>
+            		<th colspan="@overview.columns@" style="border:1px solid #bbbbbb;background-color:#eeeeff;">@overview.title@</th>
+            	</thead>
+            	<tbody>
+					<tr style="border:1px solid #bbbbbb;vertical-align:top;">
+							+++++ OVERVIEW +++++
+					</tr>
+				</tbody>
+			</table>
+			
+			<br/><br/>
+			
+			<table border="0" style="border-collapse:collapse;background-color:#eeeeff;" width="80%">
+            	<thead>
+            		<th style="border:1px solid #bbbbbb">Nr.</th>
+            		<th style="border:1px solid #bbbbbb">Test</th>
+            	</thead>
+            	<tbody>
+            		+++++ BODY +++++
+            	</tbody>
+            </table>
+	            
+		</center>
+	</body>
+</html>

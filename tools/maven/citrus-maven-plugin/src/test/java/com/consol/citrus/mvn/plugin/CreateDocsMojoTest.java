@@ -16,8 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.doc.ExcelTestDocGenerator;
-import com.consol.citrus.doc.HtmlTestDocGenerator;
+import com.consol.citrus.docs.ExcelTestDocGenerator;
+import com.consol.citrus.docs.HtmlTestDocGenerator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.Prompter;
