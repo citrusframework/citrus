@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.creator.UnitFramework;
+import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.mvn.plugin.config.docs.DocsConfiguration;
 import com.consol.citrus.mvn.plugin.config.tests.TestConfiguration;
 import org.apache.maven.plugin.*;

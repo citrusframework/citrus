@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -29,18 +29,18 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class XmlTestCreatorTest {
+public class XmlTestGeneratorTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {
-        XmlTestCreator creator = new XmlTestCreator()
+        XmlTestGenerator generator = new XmlTestGenerator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
                                          .usePackage("com.consol.citrus")
                                          .withFramework(UnitFramework.TESTNG);
 
-        creator.create();
+        generator.create();
         
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -63,14 +63,14 @@ public class XmlTestCreatorTest {
     
     @Test
     public void testCreateJUnitTest() throws IOException {
-        XmlTestCreator creator = new XmlTestCreator()
+        XmlTestGenerator generator = new XmlTestGenerator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
                                          .usePackage("com.consol.citrus")
                                          .withFramework(UnitFramework.JUNIT4);
 
-        creator.create();
+        generator.create();
         
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -93,7 +93,7 @@ public class XmlTestCreatorTest {
     
     @Test
     public void testInvalidName() throws IOException {
-        XmlTestCreator creator = new XmlTestCreator()
+        XmlTestGenerator generator = new XmlTestGenerator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("sampletest")
@@ -101,7 +101,7 @@ public class XmlTestCreatorTest {
                                          .withFramework(UnitFramework.JUNIT4);
 
         try {
-            creator.create();
+            generator.create();
             Assert.fail("Missing exception due to invalid test name");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().contains("name must start with an uppercase letter"));
@@ -110,7 +110,7 @@ public class XmlTestCreatorTest {
     
     @Test
     public void testDefaultValues() throws IOException {
-        TestCreatorMain.main(new String[] {"-name", "SampleIT"});
+        TestGeneratorMain.main(new String[] {"-name", "SampleIT"});
         
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -133,11 +133,11 @@ public class XmlTestCreatorTest {
     
     @Test
     public void testHelp() {
-        TestCreatorMain.main(new String[] {"-help"});
+        TestGeneratorMain.main(new String[] {"-help"});
     }
     
     @Test
     public void testInvalidArgument() {
-        TestCreatorMain.main(new String[] {"-invalid"});
+        TestGeneratorMain.main(new String[] {"-invalid"});
     }
 }

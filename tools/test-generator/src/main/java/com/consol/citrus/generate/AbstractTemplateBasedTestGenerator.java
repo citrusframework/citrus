@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -32,7 +32,7 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public abstract class AbstractTemplateBasedTestCreator<T extends TestCreator> extends AbstractTestCreator<T> {
+public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator> extends AbstractTestGenerator<T> {
 
     /**
      * Create the test case.

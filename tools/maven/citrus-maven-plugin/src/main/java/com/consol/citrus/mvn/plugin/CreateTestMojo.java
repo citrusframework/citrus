@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.creator.*;
+import com.consol.citrus.generate.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
@@ -44,15 +44,15 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     @Component
     private Prompter prompter;
 
-    private final XmlTestCreator xmlTestCreator;
-    private final XsdXmlTestCreator xsdXmlTestCreator;
-    private final WsdlXmlTestCreator wsdlXmlTestCreator;
+    private final XmlTestGenerator xmlTestCreator;
+    private final XsdXmlTestGenerator xsdXmlTestCreator;
+    private final WsdlXmlTestGenerator wsdlXmlTestCreator;
 
     /**
      * Default constructor.
      */
     public CreateTestMojo() {
-        this(new XmlTestCreator(), new XsdXmlTestCreator(), new WsdlXmlTestCreator());
+        this(new XmlTestGenerator(), new XsdXmlTestGenerator(), new WsdlXmlTestGenerator());
     }
 
     /**
@@ -61,7 +61,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param xsdXmlTestCreator
      * @param wsdlXmlTestCreator
      */
-    public CreateTestMojo(XmlTestCreator xmlTestCreator, XsdXmlTestCreator xsdXmlTestCreator, WsdlXmlTestCreator wsdlXmlTestCreator) {
+    public CreateTestMojo(XmlTestGenerator xmlTestCreator, XsdXmlTestGenerator xsdXmlTestCreator, WsdlXmlTestGenerator wsdlXmlTestCreator) {
         this.xmlTestCreator = xmlTestCreator;
         this.xsdXmlTestCreator = xsdXmlTestCreator;
         this.wsdlXmlTestCreator = wsdlXmlTestCreator;
@@ -91,7 +91,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String useXsd = prompter.prompt("Create test with XML schema?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useXsd.equalsIgnoreCase("y")) {
-                XsdXmlTestCreator creator = getXsdXmlTestCaseCreator();
+                XsdXmlTestGenerator creator = getXsdXmlTestCaseCreator();
 
                 creator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
@@ -106,7 +106,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String useWsdl = prompter.prompt("Create test with WSDL?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useWsdl.equalsIgnoreCase("y")) {
-                WsdlXmlTestCreator creator = getWsdlXmlTestCaseCreator();
+                WsdlXmlTestGenerator creator = getWsdlXmlTestCaseCreator();
 
                 creator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
@@ -129,7 +129,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                 return;
             }
 
-            XmlTestCreator creator = getXmlTestCaseCreator()
+            XmlTestGenerator creator = getXmlTestCaseCreator()
                     .withFramework(UnitFramework.fromString(framework))
                     .withName(name)
                     .withAuthor(author)
@@ -152,7 +152,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param creator
      * @throws MojoExecutionException
      */
-    public void createWithXsd(XsdXmlTestCreator creator) throws MojoExecutionException {
+    public void createWithXsd(XsdXmlTestGenerator creator) throws MojoExecutionException {
         try {
             String xsd = null;
             while(!StringUtils.hasText(xsd)) {
@@ -200,7 +200,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param creator
      * @throws MojoExecutionException
      */
-    public void createWithWsdl(WsdlXmlTestCreator creator) throws MojoExecutionException {
+    public void createWithWsdl(WsdlXmlTestGenerator creator) throws MojoExecutionException {
         try {
             String wsdl = null;
             while (!StringUtils.hasText(wsdl)) {
@@ -259,8 +259,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * .
      * @return test creator.
      */
-    public XmlTestCreator getXmlTestCaseCreator() {
-        return Optional.ofNullable(xmlTestCreator).orElse(new XmlTestCreator());
+    public XmlTestGenerator getXmlTestCaseCreator() {
+        return Optional.ofNullable(xmlTestCreator).orElse(new XmlTestGenerator());
     }
 
     /**
@@ -269,8 +269,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * .
      * @return test creator.
      */
-    public WsdlXmlTestCreator getWsdlXmlTestCaseCreator() {
-        return Optional.ofNullable(wsdlXmlTestCreator).orElse(new WsdlXmlTestCreator());
+    public WsdlXmlTestGenerator getWsdlXmlTestCaseCreator() {
+        return Optional.ofNullable(wsdlXmlTestCreator).orElse(new WsdlXmlTestGenerator());
     }
 
     /**
@@ -279,8 +279,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * .
      * @return test creator.
      */
-    public XsdXmlTestCreator getXsdXmlTestCaseCreator() {
-        return Optional.ofNullable(xsdXmlTestCreator).orElse(new XsdXmlTestCreator());
+    public XsdXmlTestGenerator getXsdXmlTestCaseCreator() {
+        return Optional.ofNullable(xsdXmlTestCreator).orElse(new XsdXmlTestGenerator());
     }
 
     /**

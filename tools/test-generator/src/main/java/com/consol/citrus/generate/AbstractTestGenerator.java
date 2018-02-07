@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public abstract class AbstractTestCreator<T extends TestCreator> implements TestCreator {
+public abstract class AbstractTestGenerator<T extends TestGenerator> implements TestGenerator {
 
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -52,7 +52,7 @@ public abstract class AbstractTestCreator<T extends TestCreator> implements Test
 
     private T self;
 
-    public AbstractTestCreator() {
+    public AbstractTestGenerator() {
         self = (T) this;
     }
 

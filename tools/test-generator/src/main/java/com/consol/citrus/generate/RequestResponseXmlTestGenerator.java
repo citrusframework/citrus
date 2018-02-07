@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.model.testcase.core.ReceiveModel;
 import com.consol.citrus.model.testcase.core.SendModel;
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class RequestResponseXmlTestCreator extends XmlTestCreator {
+public class RequestResponseXmlTestGenerator extends XmlTestGenerator {
 
     /** Actor descripbing which part (client/server) to use */
     private String actor = "client";
@@ -188,7 +188,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      * @param actor
      * @return
      */
-    public RequestResponseXmlTestCreator withActor(String actor) {
+    public RequestResponseXmlTestGenerator withActor(String actor) {
         this.actor = actor;
         return this;
     }
@@ -198,7 +198,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      * @param endpoint
      * @return
      */
-    public RequestResponseXmlTestCreator withEndpoint(String endpoint) {
+    public RequestResponseXmlTestGenerator withEndpoint(String endpoint) {
         this.endpoint = endpoint;
         return this;
     }
@@ -208,7 +208,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      * @param request
      * @return
      */
-    public RequestResponseXmlTestCreator withRequest(String request) {
+    public RequestResponseXmlTestGenerator withRequest(String request) {
         this.request = request;
         return this;
     }
@@ -218,7 +218,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      * @param response
      * @return
      */
-    public RequestResponseXmlTestCreator withResponse(String response) {
+    public RequestResponseXmlTestGenerator withResponse(String response) {
         this.response = response;
         return this;
     }
@@ -228,7 +228,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      * @param headers
      * @return
      */
-    public RequestResponseXmlTestCreator withRequestHeaders(Map<String, Object> headers) {
+    public RequestResponseXmlTestGenerator withRequestHeaders(Map<String, Object> headers) {
         this.requestHeaders = headers;
         return this;
     }
@@ -238,7 +238,7 @@ public class RequestResponseXmlTestCreator extends XmlTestCreator {
      * @param headers
      * @return
      */
-    public RequestResponseXmlTestCreator withResponseHeaders(Map<String, Object> headers) {
+    public RequestResponseXmlTestGenerator withResponseHeaders(Map<String, Object> headers) {
         this.responseHeaders = headers;
         return this;
     }

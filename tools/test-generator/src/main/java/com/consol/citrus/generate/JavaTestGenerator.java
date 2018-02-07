@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -25,13 +25,13 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class JavaTestCreator extends AbstractTemplateBasedTestCreator<JavaTestCreator> {
+public class JavaTestGenerator extends AbstractTemplateBasedTestGenerator<JavaTestGenerator> {
 
     protected static final String TEST_BASE_CLASS_IMPORT = "test.base.class.import";
     protected static final String TEST_UNIT_FRAMEWORK_IMPORT = "test.unit.framework.import";
     protected static final String TEST_BASE_CLASS = "test.base.class";
 
-    public JavaTestCreator() {
+    public JavaTestGenerator() {
         withFileExtension(".java");
     }
 
@@ -70,9 +70,9 @@ public class JavaTestCreator extends AbstractTemplateBasedTestCreator<JavaTestCr
     @Override
     protected String getTemplateFilePath() {
         if (getFramework().equals(UnitFramework.JUNIT5)) {
-            return "classpath:com/consol/citrus/creator/java-xml-junit5-test-template.txt";
+            return "classpath:com/consol/citrus/generate/java-xml-junit5-test-template.txt";
         } else {
-            return "classpath:com/consol/citrus/creator/java-xml-test-template.txt";
+            return "classpath:com/consol/citrus/generate/java-xml-test-template.txt";
         }
     }
 

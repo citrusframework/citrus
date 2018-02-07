@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.creator.*;
+import com.consol.citrus.generate.*;
 import com.consol.citrus.mvn.plugin.config.tests.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -34,9 +34,9 @@ import static org.mockito.Mockito.*;
  */
 public class GenerateTestMojoTest {
 
-    private XmlTestCreator testCaseCreator = Mockito.mock(XmlTestCreator.class);
-    private XsdXmlTestCreator xsdXmlTestCaseCreator = Mockito.mock(XsdXmlTestCreator.class);
-    private WsdlXmlTestCreator wsdlXmlTestCaseCreator = Mockito.mock(WsdlXmlTestCreator.class);
+    private XmlTestGenerator testCaseCreator = Mockito.mock(XmlTestGenerator.class);
+    private XsdXmlTestGenerator xsdXmlTestCaseCreator = Mockito.mock(XsdXmlTestGenerator.class);
+    private WsdlXmlTestGenerator wsdlXmlTestCaseCreator = Mockito.mock(WsdlXmlTestGenerator.class);
 
     private GenerateTestMojo mojo;
     

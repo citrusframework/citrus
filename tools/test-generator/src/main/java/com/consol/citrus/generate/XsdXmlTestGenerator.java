@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.xmlbeans.*;
@@ -26,11 +26,11 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Test creator creates one to many test cases based on operations defined in a XML schema XSD.
+ * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
+public class XsdXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
     private String xsd;
 
@@ -161,7 +161,7 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param xsdResource
      * @return
      */
-    public XsdXmlTestCreator withXsd(String xsdResource) {
+    public XsdXmlTestGenerator withXsd(String xsdResource) {
         this.xsd = xsdResource;
         return this;
     }
@@ -171,7 +171,7 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param requestMessage
      * @return
      */
-    public XsdXmlTestCreator withRequestMessage(String requestMessage) {
+    public XsdXmlTestGenerator withRequestMessage(String requestMessage) {
         this.requestMessage = requestMessage;
         return this;
     }
@@ -181,7 +181,7 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param responseMessage
      * @return
      */
-    public XsdXmlTestCreator withResponseMessage(String responseMessage) {
+    public XsdXmlTestGenerator withResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
         return this;
     }
@@ -191,7 +191,7 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param suffix
      * @return
      */
-    public XsdXmlTestCreator withNameSuffix(String suffix) {
+    public XsdXmlTestGenerator withNameSuffix(String suffix) {
         this.nameSuffix = suffix;
         return this;
     }

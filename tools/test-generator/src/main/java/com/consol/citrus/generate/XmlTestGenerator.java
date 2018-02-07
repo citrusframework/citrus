@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.model.testcase.core.EchoModel;
 import org.springframework.core.io.ClassPathResource;
@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class XmlTestCreator extends AbstractTemplateBasedTestCreator<XmlTestCreator> {
+public class XmlTestGenerator extends AbstractTemplateBasedTestGenerator<XmlTestGenerator> {
 
     private Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
 
-    public XmlTestCreator() {
+    public XmlTestGenerator() {
         withFileExtension(".xml");
         marshaller.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-testcase.xsd"));
         marshaller.setContextPath("com.consol.citrus.model.testcase.core");
@@ -50,7 +50,7 @@ public class XmlTestCreator extends AbstractTemplateBasedTestCreator<XmlTestCrea
     @Override
     public void create() {
         super.create();
-        getJavaTestCreator().create();
+        getJavaTestGenerator().create();
     }
 
     @Override
@@ -79,11 +79,11 @@ public class XmlTestCreator extends AbstractTemplateBasedTestCreator<XmlTestCrea
     }
 
     /**
-     * Gets Java test creator for this XML test.
+     * Gets Java test generator for this XML test.
      * @return
      */
-    protected TestCreator getJavaTestCreator() {
-        return new JavaTestCreator()
+    protected TestGenerator getJavaTestGenerator() {
+        return new JavaTestGenerator()
                 .withName(getName())
                 .withDescription(getDescription())
                 .withAuthor(getAuthor())
@@ -94,7 +94,7 @@ public class XmlTestCreator extends AbstractTemplateBasedTestCreator<XmlTestCrea
 
     @Override
     protected String getTemplateFilePath() {
-        return "classpath:com/consol/citrus/creator/test-template.xml";
+        return "classpath:com/consol/citrus/generate/test-template.xml";
     }
 
     @Override

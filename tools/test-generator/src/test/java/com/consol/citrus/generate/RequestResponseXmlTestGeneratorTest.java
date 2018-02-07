@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.util.FileUtils;
@@ -27,48 +27,40 @@ import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
- * @since 2.7.4
  */
-public class WsdlXmlTestCreatorTest {
+public class RequestResponseXmlTestGeneratorTest {
 
     @Test
     public void testCreateTest() throws IOException {
-        WsdlXmlTestCreator creator = new WsdlXmlTestCreator();
+        RequestResponseXmlTestGenerator generator = new RequestResponseXmlTestGenerator();
 
-        creator.withAuthor("Christoph")
-                .withDescription("This is a sample test")
-                .usePackage("com.consol.citrus")
-                .withFramework(UnitFramework.TESTNG);
+        generator.withAuthor("Christoph")
+                 .withDescription("This is a sample test")
+                 .withName("SampleReqResIT")
+                 .usePackage("com.consol.citrus")
+                 .withFramework(UnitFramework.TESTNG);
 
-        creator.withWsdl("com/consol/citrus/wsdl/BookStore.wsdl");
+        generator.withRequest("<TestRequest><Message>Citrus rocks!</Message></TestRequest>");
+        generator.withResponse("<TestResponse><Message>Hell Ya!</Message></TestResponse>");
 
-        creator.create();
-
-        verifyTest("BookStore_addBook_IT", "book:addBook", "book:addBookResponse");
-        verifyTest("BookStore_addBookAudio_IT", "aud:addBookAudio", "aud:addBookAudioResponse");
-        verifyTest("BookStore_deleteBook_IT", "book:deleteBook", "book:deleteBookResponse");
-    }
-
-    private void verifyTest(String name, String requestName, String responseName) throws IOException {
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/" + name + ".java");
+        generator.create();
+        
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleReqResIT.java");
         Assert.assertTrue(javaFile.exists());
-
-        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/" + name + ".xml");
+        
+        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleReqResIT.xml");
         Assert.assertTrue(xmlFile.exists());
-
+        
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
-        Assert.assertTrue(javaContent.contains("public class " + name));
+        Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
-
+        
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"" + name + "\">"));
-        Assert.assertTrue(xmlContent.contains("<data>&lt;" + requestName));
-        Assert.assertTrue(xmlContent.contains("<data>&lt;" + responseName));
+        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleReqResIT\">"));
     }
-
 }

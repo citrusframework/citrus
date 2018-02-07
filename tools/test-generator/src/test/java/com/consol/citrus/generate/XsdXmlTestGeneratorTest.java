@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -31,22 +31,22 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class XsdXmlTestCreatorTest {
+public class XsdXmlTestGeneratorTest {
 
     @Test(dataProvider = "nameProvider")
     public void testCreateTest(String requestName, String responseName, String generatedResponseName) throws IOException {
-        XsdXmlTestCreator creator = new XsdXmlTestCreator();
+        XsdXmlTestGenerator generator = new XsdXmlTestGenerator();
 
-        creator.withAuthor("Christoph")
+        generator.withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .usePackage("com.consol.citrus")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.withXsd("com/consol/citrus/xsd/HelloService.xsd");
-        creator.withRequestMessage(requestName);
-        creator.withResponseMessage(responseName);
+        generator.withXsd("com/consol/citrus/xsd/HelloService.xsd");
+        generator.withRequestMessage(requestName);
+        generator.withResponseMessage(responseName);
 
-        creator.create();
+        generator.create();
 
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -84,18 +84,18 @@ public class XsdXmlTestCreatorTest {
 
     @Test
     public void testCreateTestWithoutResponse() throws IOException {
-        XsdXmlTestCreator creator = new XsdXmlTestCreator();
+        XsdXmlTestGenerator generator = new XsdXmlTestGenerator();
 
-        creator.withAuthor("Christoph")
+        generator.withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .usePackage("com.consol.citrus")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.withXsd("com/consol/citrus/xsd/HelloService.xsd");
-        creator.withRequestMessage("Hello");
-        creator.withResponseMessage("");
+        generator.withXsd("com/consol/citrus/xsd/HelloService.xsd");
+        generator.withRequestMessage("Hello");
+        generator.withResponseMessage("");
 
-        creator.create();
+        generator.create();
 
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
@@ -120,17 +120,17 @@ public class XsdXmlTestCreatorTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unable to find element with name 'HiRequest'.*")
     public void testUnknownRequest() throws IOException {
-        XsdXmlTestCreator creator = new XsdXmlTestCreator();
+        XsdXmlTestGenerator generator = new XsdXmlTestGenerator();
 
-        creator.withAuthor("Christoph")
+        generator.withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .usePackage("com.consol.citrus")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.withXsd("com/consol/citrus/xsd/HelloService.xsd");
-        creator.withRequestMessage("HiRequest");
-        creator.withResponseMessage("HiResponse");
+        generator.withXsd("com/consol/citrus/xsd/HelloService.xsd");
+        generator.withRequestMessage("HiRequest");
+        generator.withResponseMessage("HiResponse");
 
-        creator.create();
+        generator.create();
     }
 }

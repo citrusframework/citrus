@@ -16,8 +16,8 @@
 
 package com.consol.citrus.docs;
 
-import com.consol.citrus.creator.UnitFramework;
-import com.consol.citrus.creator.XmlTestCreator;
+import com.consol.citrus.generate.UnitFramework;
+import com.consol.citrus.generate.XmlTestGenerator;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
@@ -39,7 +39,7 @@ public class ExcelTestDocGeneratorTest {
     
     @BeforeClass
     public void createSampleIT() {
-        XmlTestCreator creator = new XmlTestCreator()
+        XmlTestGenerator creator = new XmlTestGenerator()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")

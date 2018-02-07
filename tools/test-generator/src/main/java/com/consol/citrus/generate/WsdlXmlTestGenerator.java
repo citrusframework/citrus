@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.xmlbeans.*;
@@ -28,11 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Test creator creates one to many test cases based on operations defined in a XML schema XSD.
+ * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
+public class WsdlXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
     private String wsdl;
 
@@ -299,7 +299,7 @@ public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param wsdlResource
      * @return
      */
-    public WsdlXmlTestCreator withWsdl(String wsdlResource) {
+    public WsdlXmlTestGenerator withWsdl(String wsdlResource) {
         this.wsdl = wsdlResource;
         return this;
     }
@@ -309,7 +309,7 @@ public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param suffix
      * @return
      */
-    public WsdlXmlTestCreator withNameSuffix(String suffix) {
+    public WsdlXmlTestGenerator withNameSuffix(String suffix) {
         this.nameSuffix = suffix;
         return this;
     }
@@ -319,7 +319,7 @@ public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param prefix
      * @return
      */
-    public WsdlXmlTestCreator withNamePrefix(String prefix) {
+    public WsdlXmlTestGenerator withNamePrefix(String prefix) {
         this.namePrefix = prefix;
         return this;
     }
@@ -329,7 +329,7 @@ public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param operation
      * @return
      */
-    public WsdlXmlTestCreator withOperation(String operation) {
+    public WsdlXmlTestGenerator withOperation(String operation) {
         this.operation = operation;
         return this;
     }

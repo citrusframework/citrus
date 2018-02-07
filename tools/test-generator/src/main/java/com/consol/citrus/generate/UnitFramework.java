@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 /**
- * Unit testing framework can be either JUnit or TestNG. Test case creator
+ * Unit testing framework can be either JUnit or TestNG. Test case generator
  * will create different Java classes according to the unit test framework.
  */
 public enum UnitFramework {

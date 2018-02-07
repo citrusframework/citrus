@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import java.util.Properties;
 
@@ -22,7 +22,7 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class JavaDslTestCreator extends JavaTestCreator {
+public class JavaDslTestGenerator extends JavaTestGenerator {
 
     @Override
     protected Properties getTemplateProperties() {
@@ -45,9 +45,9 @@ public class JavaDslTestCreator extends JavaTestCreator {
     @Override
     protected String getTemplateFilePath() {
         if (getFramework().equals(UnitFramework.JUNIT5)) {
-            return "classpath:com/consol/citrus/creator/java-dsl-junit5-test-template.txt";
+            return "classpath:com/consol/citrus/generate/java-dsl-junit5-test-template.txt";
         } else {
-            return "classpath:com/consol/citrus/creator/java-dsl-test-template.txt";
+            return "classpath:com/consol/citrus/generate/java-dsl-test-template.txt";
         }
     }
 }

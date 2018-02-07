@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import io.swagger.models.*;
@@ -30,11 +30,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Test creator creates one to many test cases based on operations defined in a XML schema XSD.
+ * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class SwaggerXmlTestCreator extends RequestResponseXmlTestCreator {
+public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
     private String swaggerResource;
 
@@ -426,7 +426,7 @@ public class SwaggerXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param swaggerResource
      * @return
      */
-    public SwaggerXmlTestCreator withSpec(String swaggerResource) {
+    public SwaggerXmlTestGenerator withSpec(String swaggerResource) {
         this.swaggerResource = swaggerResource;
         return this;
     }
@@ -436,7 +436,7 @@ public class SwaggerXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param contextPath
      * @return
      */
-    public SwaggerXmlTestCreator withContextPath(String contextPath) {
+    public SwaggerXmlTestGenerator withContextPath(String contextPath) {
         this.nameSuffix = contextPath;
         return this;
     }
@@ -446,7 +446,7 @@ public class SwaggerXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param prefix
      * @return
      */
-    public SwaggerXmlTestCreator withNamePrefix(String prefix) {
+    public SwaggerXmlTestGenerator withNamePrefix(String prefix) {
         this.namePrefix = prefix;
         return this;
     }
@@ -456,7 +456,7 @@ public class SwaggerXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param suffix
      * @return
      */
-    public SwaggerXmlTestCreator withNameSuffix(String suffix) {
+    public SwaggerXmlTestGenerator withNameSuffix(String suffix) {
         this.nameSuffix = suffix;
         return this;
     }
@@ -466,7 +466,7 @@ public class SwaggerXmlTestCreator extends RequestResponseXmlTestCreator {
      * @param operation
      * @return
      */
-    public SwaggerXmlTestCreator withOperation(String operation) {
+    public SwaggerXmlTestGenerator withOperation(String operation) {
         this.operation = operation;
         return this;
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.util.FileUtils;
@@ -29,20 +29,20 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class SwaggerXmlTestCreatorTest {
+public class SwaggerXmlTestGeneratorTest {
 
     @Test
     public void testCreateTest() throws IOException {
-        SwaggerXmlTestCreator creator = new SwaggerXmlTestCreator();
+        SwaggerXmlTestGenerator generator = new SwaggerXmlTestGenerator();
 
-        creator.withAuthor("Christoph")
+        generator.withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .usePackage("com.consol.citrus")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.withSpec("com/consol/citrus/swagger/user-login-api.json");
+        generator.withSpec("com/consol/citrus/swagger/user-login-api.json");
 
-        creator.create();
+        generator.create();
 
         verifyTest("UserLoginService_createUser_IT");
         verifyTest("UserLoginService_loginUser_IT");

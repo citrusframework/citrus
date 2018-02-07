@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public interface TestCreator {
+public interface TestGenerator {
 
     void create();
 }

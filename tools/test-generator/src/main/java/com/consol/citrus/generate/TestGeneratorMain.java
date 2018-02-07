@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.creator;
+package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
 import org.apache.commons.cli.*;
@@ -23,14 +23,14 @@ import org.apache.commons.cli.*;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class TestCreatorMain {
+public class TestGeneratorMain {
 
     /**
      * Main CLI method.
      * @param args
      */
     public static void main(String[] args) {
-        Options options = new TestCaseCreatorCliOptions();
+        Options options = new TestGeneratorCliOptions();
 
         try {
             CommandLineParser cliParser = new GnuParser();
@@ -42,7 +42,7 @@ public class TestCreatorMain {
                 return;
             }
 
-            XmlTestCreator creator = new XmlTestCreator()
+            XmlTestGenerator generator = new XmlTestGenerator()
                     .withName(cmd.getOptionValue("name"))
                     .withAuthor(cmd.getOptionValue("author", "Unknown"))
                     .withDescription(cmd.getOptionValue("description", "TODO: Description"))
@@ -50,22 +50,22 @@ public class TestCreatorMain {
                     .useSrcDirectory(cmd.getOptionValue("srcdir", Citrus.DEFAULT_TEST_SRC_DIRECTORY))
                     .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "testng")));
 
-            creator.create();
+            generator.create();
         } catch (ParseException e) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("\n **** CITRUS TESTCREATOR ****", "\n CLI options:", options, "");
+            formatter.printHelp("\n **** CITRUS TEST GENERATOR ****", "\n CLI options:", options, "");
         }
     }
 
     /**
      * CLI options for test creation
      */
-    private static class TestCaseCreatorCliOptions extends Options {
+    private static class TestGeneratorCliOptions extends Options {
 
         private static final long serialVersionUID = 1L;
 
         @SuppressWarnings("static-access")
-        public TestCaseCreatorCliOptions() {
+        public TestGeneratorCliOptions() {
             this.addOption(new Option("help", "print usage help"));
 
             this.addOption(OptionBuilder.withArgName("name")
