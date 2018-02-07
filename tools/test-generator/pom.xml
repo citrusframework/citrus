@@ -9,9 +9,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>citrus-test-creator</artifactId>
-  <name>citrus-test-creator</name>
-  <description>Citrus Test Creator</description>
+  <artifactId>citrus-test-generator</artifactId>
+  <name>citrus-test-generator</name>
+  <description>Citrus Test Generator</description>
 
   <dependencies>
     <dependency>

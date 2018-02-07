@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-test-creator</artifactId>
+      <artifactId>citrus-test-generator</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
