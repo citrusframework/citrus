@@ -59,24 +59,28 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
     /**
      * Default constructor using fields.
-     * @param endpointConfiguration
-     * @param delegate
+     * @param endpointConfiguration The endpoint config for the server
+     * @param delegate The endpoint adapter to delegate to
      */
-    public JdbcEndpointAdapterController(JdbcEndpointConfiguration endpointConfiguration, EndpointAdapter delegate) {
+    JdbcEndpointAdapterController(
+            final JdbcEndpointConfiguration endpointConfiguration,
+            final EndpointAdapter delegate) {
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
     }
 
     @Override
-    public Message handleMessage(Message request) {
+    public Message handleMessage(final Message request) {
         if (request.getPayload() instanceof Operation) {
-            StringResult result = new StringResult();
+            final StringResult result = new StringResult();
             endpointConfiguration.getMarshaller().marshal(request.getPayload(Operation.class), result);
             request.setPayload(result.toString());
         }
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Received request on server: '%s':%n%s", endpointConfiguration.getServerConfiguration().getDatabaseName(), request.getPayload(String.class)));
+            log.debug(String.format("Received request on server: '%s':%n%s",
+                    endpointConfiguration.getServerConfiguration().getDatabaseName(),
+                    request.getPayload(String.class)));
         }
 
         return Optional.ofNullable(delegate.handleMessage(request))
@@ -84,20 +88,24 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
-     * Handle request message and check response is successful. When response has some exception header set the
-     * exception is thrown as {@link JdbcServerException} in order to abort request processing with error.
-     * @param request
-     * @return
-     * @throws JdbcServerException
+     * Handle request message and check response is successful.
+     * @param request The request message to handle
+     * @return The response Message
+     * @throws JdbcServerException Thrown when the response has some exception header.
      */
-    private Message handleMessageAndCheckResponse(Message request) throws JdbcServerException {
-        Message response = handleMessage(request);
+    private Message handleMessageAndCheckResponse(final Message request) throws JdbcServerException {
+        final Message response = handleMessage(request);
         checkSuccess(response);
         return response;
     }
 
+    /**
+     * Opens the connection with the given properties
+     * @param properties The properties to open the connection with
+     * @throws JdbcServerException In case that the maximum connections have been reached
+     */
     @Override
-    public void openConnection(Map<String, String> properties) throws JdbcServerException {
+    public void openConnection(final Map<String, String> properties) throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
             handleMessageAndCheckResponse(JdbcMessage.openConnection(properties.entrySet()
                     .stream()
@@ -106,12 +114,17 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
 
         if (connections.get() == endpointConfiguration.getServerConfiguration().getMaxConnections()) {
-            throw new JdbcServerException(String.format("Maximum number of connections (%s) reached", endpointConfiguration.getServerConfiguration().getMaxConnections()));
+            throw new JdbcServerException(String.format("Maximum number of connections (%s) reached",
+                    endpointConfiguration.getServerConfiguration().getMaxConnections()));
         }
 
         connections.incrementAndGet();
     }
 
+    /**
+     * Closes the connection
+     * @throws JdbcServerException In case that the connection could not be closed
+     */
     @Override
     public void closeConnection() throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
@@ -123,13 +136,22 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
     }
 
+    /**
+     * Creates a prepared statement
+     * @param stmt The statement to create
+     * @throws JdbcServerException In case that the statement was not successful
+     */
     @Override
-    public void createPreparedStatement(String stmt) throws JdbcServerException {
+    public void createPreparedStatement(final String stmt) throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
             handleMessageAndCheckResponse(JdbcMessage.createPreparedStatement(stmt));
         }
     }
 
+    /**
+     * Creates a statement
+     * @throws JdbcServerException In case that the statement was not successfully created
+     */
     @Override
     public void createStatement() throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
@@ -137,25 +159,48 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
     }
 
+    /**
+     * Executes a given query and returns the mapped result
+     * @param query The query to execute
+     * @return The DataSet containing the query result
+     * @throws JdbcServerException In case that the query was not successful
+     */
     @Override
-    public DataSet executeQuery(String stmt) throws JdbcServerException {
-        log.info("Received execute query request: " + stmt);
-        return createDataSet(handleMessageAndCheckResponse(JdbcMessage.execute(stmt)));
+    public DataSet executeQuery(final String query) throws JdbcServerException {
+        log.info("Received execute query request: " + query);
+        return createDataSet(handleMessageAndCheckResponse(JdbcMessage.execute(query)));
     }
 
+    /**
+     * Executes the given statement
+     * @param stmt The statement to be executed
+     * @throws JdbcServerException In case that the execution was not successful
+     */
     @Override
-    public void execute(String stmt) throws JdbcServerException {
+    public void execute(final String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
         handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
     }
 
+    /**
+     * Executes the given update
+     * @param updateSql The update statement to be executed
+     * @throws JdbcServerException In case that the execution was not successful
+     */
     @Override
-    public int executeUpdate(String stmt) throws JdbcServerException {
-        log.info("Received execute update request: " + stmt);
-        Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
-        return Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED)).map(Object::toString).map(Integer::valueOf).orElse(0);
+    public int executeUpdate(final String updateSql) throws JdbcServerException {
+        log.info("Received execute update request: " + updateSql);
+        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(updateSql));
+        return Optional.ofNullable(
+                response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED))
+                .map(Object::toString).map(Integer::valueOf)
+                .orElse(0);
     }
 
+    /**
+     * Closes the connection
+     * @throws JdbcServerException In case that the connection could not be closed
+     */
     @Override
     public void closeStatement() throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
@@ -163,6 +208,10 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
     }
 
+    /**
+     * Sets the transaction state of the database connection
+     * @param transactionState The boolean value whether the server is in transaction state.
+     */
     @Override
     public void setTransactionState(final boolean transactionState) {
         if (log.isDebugEnabled()) {
@@ -177,11 +226,18 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
     }
 
+    /**
+     * Returns the transaction state
+     * @return The transaction state of the connection
+     */
     @Override
     public boolean getTransactionState() {
         return this.transactionState;
     }
 
+    /**
+     * Commits the transaction statements
+     */
     @Override
     public void commitStatements() {
         if (log.isDebugEnabled()) {
@@ -194,6 +250,9 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
     }
 
+    /**
+     * Performs a rollback on the current transaction
+     */
     @Override
     public void rollbackStatements() {
         if (log.isDebugEnabled()) {
@@ -208,10 +267,10 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
     /**
      * Converts Citrus result set representation to db driver model result set.
-     * @param response
-     * @return
+     * @param response The result set to convert
+     * @return A DataSet the jdbc driver can understand
      */
-    private DataSet createDataSet(Message response) {
+    private DataSet createDataSet(final Message response) {
         try {
             if (response.getPayload() instanceof DataSet) {
                 return response.getPayload(DataSet.class);
@@ -221,25 +280,38 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
                 } else if (endpointConfiguration.getMarshaller().getType().equalsIgnoreCase(MessageType.XML.name())) {
                     return new XmlDataSetProducer(response.getPayload(String.class)).produce();
                 } else {
-                    throw new CitrusRuntimeException("Unable to create dataset from data type " + endpointConfiguration.getMarshaller().getType());
+                    throw new CitrusRuntimeException("Unable to create dataset from data type " +
+                            endpointConfiguration.getMarshaller().getType());
                 }
             } else {
                 return new DataSet();
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new CitrusRuntimeException("Failed to read dataset from response message", e);
         }
     }
 
     /**
      * Check that response is not having an exception message.
-     * @param response
-     * @throws JdbcServerException
+     * @param response The response message to check
+     * @throws JdbcServerException In case the message contains a error.
      */
-    private void checkSuccess(Message response) throws JdbcServerException {
-        if (!Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).map(Object::toString).map(Boolean::valueOf).orElse(true)) {
-            throw new JdbcServerException(Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION)).map(Object::toString).orElse(""));
+    private void checkSuccess(final Message response) throws JdbcServerException {
+        if (!success(response)) {
+            throw new JdbcServerException(
+                    Optional.ofNullable(
+                            response.getHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION))
+                            .map(Object::toString).orElse(""));
         }
+    }
+
+    private boolean success(final Message response) {
+        return Optional.ofNullable(
+                response.getHeader(
+                        JdbcMessageHeaders.JDBC_SERVER_SUCCESS))
+                .map(Object::toString)
+                .map(Boolean::valueOf)
+                .orElse(true);
     }
 
     @Override
