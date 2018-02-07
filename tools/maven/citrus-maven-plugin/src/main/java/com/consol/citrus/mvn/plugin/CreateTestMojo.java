@@ -166,11 +166,18 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String xsdResponseMessage = prompter.prompt("Enter response element name", creator.getResponseMessageSuggestion());
             creator.withResponseMessage(xsdResponseMessage);
 
+            String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
+            creator.withActor(actor);
+
             String confirm = prompter.prompt("Confirm test creation:\n" +
                     "framework: " + creator.getFramework() + "\n" +
                     "name: " + creator.getName() + "\n" +
                     "author: " + creator.getAuthor() + "\n" +
                     "description: " + creator.getDescription() + "\n" +
+                    "xsd: " + creator.getXsd() + "\n" +
+                    "request: " + creator.getRequestMessage() + "\n" +
+                    "response: " + creator.getResponseMessage() + "\n" +
+                    "actor: " + creator.getActor() + "\n" +
                     "package: " + creator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
@@ -206,6 +213,14 @@ public class CreateTestMojo extends AbstractCitrusMojo {
 
             creator.withWsdl(wsdl);
 
+            String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
+            creator.withActor(actor);
+
+            String operation = prompter.prompt("Enter operation name", "all");
+            if (!operation.equals("all")) {
+                creator.withOperation(operation);
+            }
+
             String namePrefix = prompter.prompt("Enter test name prefix", creator.getName() + "_");
             creator.withNamePrefix(namePrefix);
 
@@ -217,6 +232,9 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "name: " + creator.getName() + "\n" +
                     "author: " + creator.getAuthor() + "\n" +
                     "description: " + creator.getDescription() + "\n" +
+                    "wsdl: " + creator.getWsdl() + "\n" +
+                    "operation: " + Optional.ofNullable(creator.getOperation()).orElse("all") + "\n" +
+                    "actor: " + creator.getActor() + "\n" +
                     "package: " + creator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {

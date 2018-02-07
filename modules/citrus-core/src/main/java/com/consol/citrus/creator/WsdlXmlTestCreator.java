@@ -90,16 +90,14 @@ public class WsdlXmlTestCreator extends RequestResponseXmlTestCreator {
             SchemaType requestElem = getSchemaType(schemaTypeSystem, operationName, inputElement);
             SchemaType responseElem = getSchemaType(schemaTypeSystem, operationName, outputElement);
 
-            String testName = namePrefix + operationName + nameSuffix;
-
             // Now generate it
-            withName(testName);
+            withName(namePrefix + operationName + nameSuffix);
             withRequest(SampleXmlUtil.createSampleForType(requestElem));
             withResponse(SampleXmlUtil.createSampleForType(responseElem));
 
             super.create();
 
-            log.info("Successfully created new test case " + getTargetPackage() + "." + testName);
+            log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
         }
     }
 

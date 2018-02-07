@@ -162,7 +162,9 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.wsdl");
+        when(prompter.prompt(contains("actor"), any(List.class), nullable(String.class))).thenReturn("client");
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
+        when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
@@ -195,7 +197,9 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.wsdl");
+        when(prompter.prompt(contains("actor"), any(List.class), nullable(String.class))).thenReturn("client");
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
+        when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");

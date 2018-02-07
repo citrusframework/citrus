@@ -78,6 +78,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
+                creator.withActor(test.getXsd().getActor());
                 creator.withXsd(test.getXsd().getFile());
                 creator.withRequestMessage(test.getXsd().getRequest());
                 creator.withResponseMessage(test.getXsd().getResponse());
@@ -97,6 +98,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
+                creator.withActor(test.getWsdl().getActor());
                 creator.withWsdl(test.getWsdl().getFile());
                 creator.withOperation(test.getWsdl().getOperation());
 

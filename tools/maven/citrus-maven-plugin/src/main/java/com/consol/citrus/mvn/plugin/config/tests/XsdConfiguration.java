@@ -27,6 +27,12 @@ import java.io.Serializable;
 public class XsdConfiguration implements Serializable {
 
     /**
+     * Actor (client/server) describing which part to generate test for.
+     */
+    @Parameter(property = "citrus.xsd.actor", defaultValue = "client")
+    private String actor;
+
+    /**
      * Path of the xsd from which the sample request and response are get from
      */
     @Parameter(property = "citrus.xsd.file")
@@ -43,6 +49,24 @@ public class XsdConfiguration implements Serializable {
      */
     @Parameter(property = "citrus.xsd.response")
     private String response;
+
+    /**
+     * Gets the actor.
+     *
+     * @return
+     */
+    public String getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     *
+     * @param actor
+     */
+    public void setActor(String actor) {
+        this.actor = actor;
+    }
 
     /**
      * Gets the file.

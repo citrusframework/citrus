@@ -77,6 +77,8 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
 
         if (responseElem != null) {
             withResponse(SampleXmlUtil.createSampleForType(responseElem));
+        } else {
+            withResponse("");
         }
 
         super.create();
@@ -222,12 +224,30 @@ public class XsdXmlTestCreator extends RequestResponseXmlTestCreator {
     }
 
     /**
+     * Gets the requestMessage.
+     *
+     * @return
+     */
+    public String getRequestMessage() {
+        return requestMessage;
+    }
+
+    /**
      * Sets the responseMessage.
      *
      * @param responseMessage
      */
     public void setResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
+    }
+
+    /**
+     * Gets the responseMessage.
+     *
+     * @return
+     */
+    public String getResponseMessage() {
+        return responseMessage;
     }
 
     /**

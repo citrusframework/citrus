@@ -161,6 +161,11 @@
       <artifactId>json-schema-validator</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-parser</artifactId>
+    </dependency>
+
     <!-- Spring Framework -->
     <dependency>
       <groupId>org.springframework</groupId>

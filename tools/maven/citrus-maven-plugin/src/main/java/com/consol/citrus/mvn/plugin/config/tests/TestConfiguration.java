@@ -16,6 +16,7 @@
 
 package com.consol.citrus.mvn.plugin.config.tests;
 
+import com.consol.citrus.mvn.plugin.config.dictionary.DataDictionaryConfiguration;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.Serializable;
@@ -64,6 +65,9 @@ public class TestConfiguration implements Serializable {
 
     @Parameter
     private XsdConfiguration xsd;
+
+    @Parameter
+    private DataDictionaryConfiguration dictionary;
 
     /**
      * Gets the name.
@@ -207,5 +211,23 @@ public class TestConfiguration implements Serializable {
      */
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    /**
+     * Gets the dictionary.
+     *
+     * @return
+     */
+    public DataDictionaryConfiguration getDictionary() {
+        return dictionary;
+    }
+
+    /**
+     * Sets the dictionary.
+     *
+     * @param dictionary
+     */
+    public void setDictionary(DataDictionaryConfiguration dictionary) {
+        this.dictionary = dictionary;
     }
 }

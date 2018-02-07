@@ -14,53 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.mvn.plugin.config.tests;
+package com.consol.citrus.mvn.plugin.config.dictionary;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class WsdlConfiguration implements Serializable {
+public class MappingsConfiguration implements Serializable {
 
-    /**
-     * Actor (client/server) describing which part to generate test for.
-     */
-    @Parameter(property = "citrus.wsdl.actor", defaultValue = "client")
-    private String actor;
-
-    /**
-     * The path to the wsdl from which the suite is generated.
-     */
-    @Parameter(property = "citrus.wsdl.file")
+    @Parameter
     private String file;
 
-    /**
-     * The operation name to generate tests from.
-     */
-    @Parameter(property = "citrus.wsdl.operation")
-    private String operation;
-
-    /**
-     * Gets the actor.
-     *
-     * @return
-     */
-    public String getActor() {
-        return actor;
-    }
-
-    /**
-     * Sets the actor.
-     *
-     * @param actor
-     */
-    public void setActor(String actor) {
-        this.actor = actor;
-    }
+    @Parameter
+    private Map<String, Object> mappings;
 
     /**
      * Gets the file.
@@ -81,20 +52,20 @@ public class WsdlConfiguration implements Serializable {
     }
 
     /**
-     * Gets the operation.
+     * Gets the mappings.
      *
      * @return
      */
-    public String getOperation() {
-        return operation;
+    public Map<String, Object> getMappings() {
+        return mappings;
     }
 
     /**
-     * Sets the operation.
+     * Sets the mappings.
      *
-     * @param operation
+     * @param mappings
      */
-    public void setOperation(String operation) {
-        this.operation = operation;
+    public void setMappings(Map<String, Object> mappings) {
+        this.mappings = mappings;
     }
 }
