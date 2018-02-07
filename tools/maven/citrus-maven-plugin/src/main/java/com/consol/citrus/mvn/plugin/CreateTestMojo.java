@@ -44,9 +44,9 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     @Component
     private Prompter prompter;
 
-    private final XmlTestGenerator xmlTestCreator;
-    private final XsdXmlTestGenerator xsdXmlTestCreator;
-    private final WsdlXmlTestGenerator wsdlXmlTestCreator;
+    private final XmlTestGenerator xmlTestGenerator;
+    private final XsdXmlTestGenerator xsdXmlTestGenerator;
+    private final WsdlXmlTestGenerator wsdlXmlTestGenerator;
 
     /**
      * Default constructor.
@@ -57,14 +57,14 @@ public class CreateTestMojo extends AbstractCitrusMojo {
 
     /**
      * Constructor using final fields.
-     * @param xmlTestCreator
-     * @param xsdXmlTestCreator
-     * @param wsdlXmlTestCreator
+     * @param xmlTestGenerator
+     * @param xsdXmlTestGenerator
+     * @param wsdlXmlTestGenerator
      */
-    public CreateTestMojo(XmlTestGenerator xmlTestCreator, XsdXmlTestGenerator xsdXmlTestCreator, WsdlXmlTestGenerator wsdlXmlTestCreator) {
-        this.xmlTestCreator = xmlTestCreator;
-        this.xsdXmlTestCreator = xsdXmlTestCreator;
-        this.wsdlXmlTestCreator = wsdlXmlTestCreator;
+    public CreateTestMojo(XmlTestGenerator xmlTestGenerator, XsdXmlTestGenerator xsdXmlTestGenerator, WsdlXmlTestGenerator wsdlXmlTestGenerator) {
+        this.xmlTestGenerator = xmlTestGenerator;
+        this.xsdXmlTestGenerator = xsdXmlTestGenerator;
+        this.wsdlXmlTestGenerator = wsdlXmlTestGenerator;
     }
 
     @Override
@@ -91,30 +91,30 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String useXsd = prompter.prompt("Create test with XML schema?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useXsd.equalsIgnoreCase("y")) {
-                XsdXmlTestGenerator creator = getXsdXmlTestCaseCreator();
+                XsdXmlTestGenerator generator = getXsdXmlTestGenerator();
 
-                creator.withFramework(UnitFramework.fromString(framework))
+                generator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
                         .withAuthor(author)
                         .withDescription(description)
                         .usePackage(targetPackage);
 
-                createWithXsd(creator);
+                createWithXsd(generator);
                 return;
             }
 
             String useWsdl = prompter.prompt("Create test with WSDL?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useWsdl.equalsIgnoreCase("y")) {
-                WsdlXmlTestGenerator creator = getWsdlXmlTestCaseCreator();
+                WsdlXmlTestGenerator generator = getWsdlXmlTestGenerator();
 
-                creator.withFramework(UnitFramework.fromString(framework))
+                generator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
                         .withAuthor(author)
                         .withDescription(description)
                         .usePackage(targetPackage);
 
-                createWithWsdl(creator);
+                createWithWsdl(generator);
                 return;
             }
 
@@ -129,14 +129,14 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                 return;
             }
 
-            XmlTestGenerator creator = getXmlTestCaseCreator()
+            XmlTestGenerator generator = getXmlTestGenerator()
                     .withFramework(UnitFramework.fromString(framework))
                     .withName(name)
                     .withAuthor(author)
                     .withDescription(description)
                     .usePackage(targetPackage);
 
-            creator.create();
+            generator.create();
 
             getLog().info("Successfully created new test case " + targetPackage + "." + name);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -149,44 +149,44 @@ public class CreateTestMojo extends AbstractCitrusMojo {
 
     /**
      * Creates test case with request and response messages from XML schema.
-     * @param creator
+     * @param generator
      * @throws MojoExecutionException
      */
-    public void createWithXsd(XsdXmlTestGenerator creator) throws MojoExecutionException {
+    public void createWithXsd(XsdXmlTestGenerator generator) throws MojoExecutionException {
         try {
             String xsd = null;
             while(!StringUtils.hasText(xsd)) {
                 xsd = prompter.prompt("Enter path to XSD");
             }
-            creator.withXsd(xsd);
+            generator.withXsd(xsd);
 
             String xsdRequestMessage = prompter.prompt("Enter request element name");
-            creator.withRequestMessage(xsdRequestMessage);
+            generator.withRequestMessage(xsdRequestMessage);
 
-            String xsdResponseMessage = prompter.prompt("Enter response element name", creator.getResponseMessageSuggestion());
-            creator.withResponseMessage(xsdResponseMessage);
+            String xsdResponseMessage = prompter.prompt("Enter response element name", generator.getResponseMessageSuggestion());
+            generator.withResponseMessage(xsdResponseMessage);
 
             String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
-            creator.withActor(actor);
+            generator.withActor(actor);
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
-                    "framework: " + creator.getFramework() + "\n" +
-                    "name: " + creator.getName() + "\n" +
-                    "author: " + creator.getAuthor() + "\n" +
-                    "description: " + creator.getDescription() + "\n" +
-                    "xsd: " + creator.getXsd() + "\n" +
-                    "request: " + creator.getRequestMessage() + "\n" +
-                    "response: " + creator.getResponseMessage() + "\n" +
-                    "actor: " + creator.getActor() + "\n" +
-                    "package: " + creator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+                    "framework: " + generator.getFramework() + "\n" +
+                    "name: " + generator.getName() + "\n" +
+                    "author: " + generator.getAuthor() + "\n" +
+                    "description: " + generator.getDescription() + "\n" +
+                    "xsd: " + generator.getXsd() + "\n" +
+                    "request: " + generator.getRequestMessage() + "\n" +
+                    "response: " + generator.getResponseMessage() + "\n" +
+                    "actor: " + generator.getActor() + "\n" +
+                    "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
                 return;
             }
 
-            creator.create();
+            generator.create();
 
-            getLog().info("Successfully created new test case " + creator.getTargetPackage() + "." + creator.getName());
+            getLog().info("Successfully created new test case " + generator.getTargetPackage() + "." + generator.getName());
         } catch (ArrayIndexOutOfBoundsException e) {
             getLog().info("Wrong parameter usage! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test-from-xsd).");
         } catch (PrompterException e) {
@@ -197,10 +197,10 @@ public class CreateTestMojo extends AbstractCitrusMojo {
 
     /**
      * Creates test case with request and response messages from XML schema.
-     * @param creator
+     * @param generator
      * @throws MojoExecutionException
      */
-    public void createWithWsdl(WsdlXmlTestGenerator creator) throws MojoExecutionException {
+    public void createWithWsdl(WsdlXmlTestGenerator generator) throws MojoExecutionException {
         try {
             String wsdl = null;
             while (!StringUtils.hasText(wsdl)) {
@@ -211,37 +211,37 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                 throw new MojoExecutionException("Please provide proper path to WSDL file");
             }
 
-            creator.withWsdl(wsdl);
+            generator.withWsdl(wsdl);
 
             String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
-            creator.withActor(actor);
+            generator.withActor(actor);
 
             String operation = prompter.prompt("Enter operation name", "all");
             if (!operation.equals("all")) {
-                creator.withOperation(operation);
+                generator.withOperation(operation);
             }
 
-            String namePrefix = prompter.prompt("Enter test name prefix", creator.getName() + "_");
-            creator.withNamePrefix(namePrefix);
+            String namePrefix = prompter.prompt("Enter test name prefix", generator.getName() + "_");
+            generator.withNamePrefix(namePrefix);
 
-            String nameSuffix = prompter.prompt("Enter test name suffix", creator.getNameSuffix());
-            creator.withNameSuffix(nameSuffix);
+            String nameSuffix = prompter.prompt("Enter test name suffix", generator.getNameSuffix());
+            generator.withNameSuffix(nameSuffix);
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
-                    "framework: " + creator.getFramework() + "\n" +
-                    "name: " + creator.getName() + "\n" +
-                    "author: " + creator.getAuthor() + "\n" +
-                    "description: " + creator.getDescription() + "\n" +
-                    "wsdl: " + creator.getWsdl() + "\n" +
-                    "operation: " + Optional.ofNullable(creator.getOperation()).orElse("all") + "\n" +
-                    "actor: " + creator.getActor() + "\n" +
-                    "package: " + creator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+                    "framework: " + generator.getFramework() + "\n" +
+                    "name: " + generator.getName() + "\n" +
+                    "author: " + generator.getAuthor() + "\n" +
+                    "description: " + generator.getDescription() + "\n" +
+                    "wsdl: " + generator.getWsdl() + "\n" +
+                    "operation: " + Optional.ofNullable(generator.getOperation()).orElse("all") + "\n" +
+                    "actor: " + generator.getActor() + "\n" +
+                    "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
                 return;
             }
 
-            creator.create();
+            generator.create();
 
             getLog().info("Successfully created new test cases from WSDL");
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -254,33 +254,33 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     }
 
     /**
-     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
-     * also useful for subclasses to provide customized creator instance.
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
      * .
-     * @return test creator.
+     * @return test generator.
      */
-    public XmlTestGenerator getXmlTestCaseCreator() {
-        return Optional.ofNullable(xmlTestCreator).orElse(new XmlTestGenerator());
+    public XmlTestGenerator getXmlTestGenerator() {
+        return Optional.ofNullable(xmlTestGenerator).orElse(new XmlTestGenerator());
     }
 
     /**
-     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
-     * also useful for subclasses to provide customized creator instance.
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
      * .
-     * @return test creator.
+     * @return test generator.
      */
-    public WsdlXmlTestGenerator getWsdlXmlTestCaseCreator() {
-        return Optional.ofNullable(wsdlXmlTestCreator).orElse(new WsdlXmlTestGenerator());
+    public WsdlXmlTestGenerator getWsdlXmlTestGenerator() {
+        return Optional.ofNullable(wsdlXmlTestGenerator).orElse(new WsdlXmlTestGenerator());
     }
 
     /**
-     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
-     * also useful for subclasses to provide customized creator instance.
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
      * .
-     * @return test creator.
+     * @return test generator.
      */
-    public XsdXmlTestGenerator getXsdXmlTestCaseCreator() {
-        return Optional.ofNullable(xsdXmlTestCreator).orElse(new XsdXmlTestGenerator());
+    public XsdXmlTestGenerator getXsdXmlTestGenerator() {
+        return Optional.ofNullable(xsdXmlTestGenerator).orElse(new XsdXmlTestGenerator());
     }
 
     /**

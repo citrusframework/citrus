@@ -33,29 +33,29 @@ import java.util.Date;
 /**
  * @author Christoph Deppisch
  */
-public class ExcelTestDocGeneratorTest {
+public class ExcelTestDocsGeneratorTest {
 
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     
     @BeforeClass
     public void createSampleIT() {
-        XmlTestGenerator creator = new XmlTestGenerator()
+        XmlTestGenerator generator = new XmlTestGenerator()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.create();
+        generator.create();
     }
     
     @Test
     public void testExcelDocGeneration() throws IOException {
-        ExcelTestDocGenerator creator = ExcelTestDocGenerator.build();
+        ExcelTestDocsGenerator generator = ExcelTestDocsGenerator.build();
+
+        generator.generateDoc();
         
-        creator.generateDoc();
-        
-        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
@@ -77,17 +77,17 @@ public class ExcelTestDocGeneratorTest {
     
     @Test
     public void testCustomizedExcelDocGeneration() throws IOException {
-        ExcelTestDocGenerator creator = ExcelTestDocGenerator.build()
+        ExcelTestDocsGenerator generator = ExcelTestDocsGenerator.build()
                         .withAuthor("TestFactory")
                         .withCompany("TestCompany")
                         .withOutputFile("CustomCitrusTests.xls")
                         .withPageTitle("CustomPageTitle")
                         .withCustomHeaders("Id;Name;Autor;Status;Beschreibung;Datum;Dateiname")
                         .useSrcDirectory("src" + File.separator + "test" + File.separator);
+
+        generator.generateDoc();
         
-        creator.generateDoc();
-        
-        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
         Assert.assertTrue(docContent.contains("<Company>TestCompany</Company>"));

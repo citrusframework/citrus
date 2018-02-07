@@ -19,7 +19,7 @@ package com.consol.citrus.docs;
 /**
  * @author Christoph Deppisch
  */
-public interface TestDocGenerator {
+public interface TestDocsGenerator {
 
     /**
      * Generates the test documentation.

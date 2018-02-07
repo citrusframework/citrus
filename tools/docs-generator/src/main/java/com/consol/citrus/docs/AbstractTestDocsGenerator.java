@@ -35,7 +35,7 @@ import java.util.Properties;
 /**
  * @author Christoph Deppisch
  */
-public abstract class AbstractTestDocGenerator implements TestDocGenerator {
+public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -54,7 +54,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
     /**
      * Default constructor using template name.
      */
-    public AbstractTestDocGenerator(String outputFile, String testDocTemplate) {
+    public AbstractTestDocsGenerator(String outputFile, String testDocTemplate) {
         this.outputFile = outputFile;
         this.testDocTemplate = testDocTemplate;
     }
@@ -73,7 +73,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
             fos = getFileOutputStream(outputFile);
             buffered = new BufferedOutputStream(fos);
 
-            reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
+            reader = new BufferedReader(new InputStreamReader(ExcelTestDocsGenerator.class.getResourceAsStream(testDocTemplate)));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().equalsIgnoreCase(OVERVIEW_PLACEHOLDER)) {

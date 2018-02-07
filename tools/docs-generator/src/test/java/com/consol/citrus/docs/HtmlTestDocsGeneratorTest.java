@@ -30,27 +30,27 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class HtmlTestDocGeneratorTest {
+public class HtmlTestDocsGeneratorTest {
 
     @BeforeClass
     public void createSampleIT() {
-        XmlTestGenerator creator = new XmlTestGenerator()
+        XmlTestGenerator generator = new XmlTestGenerator()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.create();
+        generator.create();
     }
     
     @Test
     public void testHtmlDocGeneration() throws IOException {
-        HtmlTestDocGenerator creator = HtmlTestDocGenerator.build();
+        HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build();
+
+        generator.generateDoc();
         
-        creator.generateDoc();
-        
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<title>Citrus Test Documentation</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
@@ -71,15 +71,15 @@ public class HtmlTestDocGeneratorTest {
     
     @Test
     public void testCustomizedHtmlDocGeneration() throws IOException {
-        HtmlTestDocGenerator creator = HtmlTestDocGenerator.build()
+        HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build()
                         .withLogo("test-logo.png")
                         .withOverviewTitle("CustomOverview")
                         .withPageTitle("CustomPageTitle")
                         .useSrcDirectory("src" + File.separator + "test" + File.separator);
+
+        generator.generateDoc();
         
-        creator.generateDoc();
-        
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<title>CustomPageTitle</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));

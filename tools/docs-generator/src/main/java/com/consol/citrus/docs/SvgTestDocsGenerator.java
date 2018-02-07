@@ -32,12 +32,12 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 2007
  */
-public final class SvgTestDocGenerator extends AbstractTestDocGenerator {
+public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
 
     /**
      * Default constructor.
      */
-    public SvgTestDocGenerator() {
+    public SvgTestDocsGenerator() {
         super("", "");
     }
     
@@ -100,8 +100,8 @@ public final class SvgTestDocGenerator extends AbstractTestDocGenerator {
      * Builds a new test doc generator.
      * @return
      */
-    public static SvgTestDocGenerator build() {
-        return new SvgTestDocGenerator();
+    public static SvgTestDocsGenerator build() {
+        return new SvgTestDocsGenerator();
     }
     
     /**
@@ -109,7 +109,7 @@ public final class SvgTestDocGenerator extends AbstractTestDocGenerator {
      * @param testDir the test source directory.
      * @return
      */
-    public SvgTestDocGenerator useSrcDirectory(String testDir) {
+    public SvgTestDocsGenerator useSrcDirectory(String testDir) {
         this.setSrcDirectory(testDir);
         return this;
     }

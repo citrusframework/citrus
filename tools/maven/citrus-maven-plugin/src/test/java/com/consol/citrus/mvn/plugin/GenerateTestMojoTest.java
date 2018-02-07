@@ -34,20 +34,20 @@ import static org.mockito.Mockito.*;
  */
 public class GenerateTestMojoTest {
 
-    private XmlTestGenerator testCaseCreator = Mockito.mock(XmlTestGenerator.class);
-    private XsdXmlTestGenerator xsdXmlTestCaseCreator = Mockito.mock(XsdXmlTestGenerator.class);
-    private WsdlXmlTestGenerator wsdlXmlTestCaseCreator = Mockito.mock(WsdlXmlTestGenerator.class);
+    private XmlTestGenerator testGenerator = Mockito.mock(XmlTestGenerator.class);
+    private XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
+    private WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
 
     private GenerateTestMojo mojo;
     
     @BeforeMethod
     public void setup() {
-        mojo = new GenerateTestMojo(testCaseCreator, xsdXmlTestCaseCreator, wsdlXmlTestCaseCreator);
+        mojo = new GenerateTestMojo(testGenerator, xsdXmlTestGenerator, wsdlXmlTestGenerator);
     }
     
     @Test
     public void testCreate() throws PrompterException, MojoExecutionException, MojoFailureException {
-        reset(testCaseCreator);
+        reset(testGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
         configuration.setName("FooTest");
@@ -55,23 +55,23 @@ public class GenerateTestMojoTest {
         configuration.setDescription("TODO");
         configuration.setPackageName("com.consol.citrus.foo");
 
-        when(testCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(testCaseCreator);
-        when(testCaseCreator.withAuthor("UnknownAuthor")).thenReturn(testCaseCreator);
-        when(testCaseCreator.withDescription("TODO")).thenReturn(testCaseCreator);
-        when(testCaseCreator.usePackage("com.consol.citrus.foo")).thenReturn(testCaseCreator);
-        when(testCaseCreator.withName("FooTest")).thenReturn(testCaseCreator);
-        when(testCaseCreator.useSrcDirectory("target/generated/citrus")).thenReturn(testCaseCreator);
+        when(testGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(testGenerator);
+        when(testGenerator.withAuthor("UnknownAuthor")).thenReturn(testGenerator);
+        when(testGenerator.withDescription("TODO")).thenReturn(testGenerator);
+        when(testGenerator.usePackage("com.consol.citrus.foo")).thenReturn(testGenerator);
+        when(testGenerator.withName("FooTest")).thenReturn(testGenerator);
+        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 
         mojo.execute();
 
-        verify(testCaseCreator).create();
+        verify(testGenerator).create();
     }
 
     @Test
     public void testSuiteFromXsd() throws MojoExecutionException, PrompterException, MojoFailureException {
-        reset(xsdXmlTestCaseCreator);
+        reset(xsdXmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
         configuration.setName("BookStore");
@@ -85,29 +85,29 @@ public class GenerateTestMojoTest {
         xsdConfiguration.setResponse("BookResponse");
         configuration.setXsd(xsdConfiguration);
 
-        when(xsdXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestCaseCreator);
-        when(xsdXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(xsdXmlTestCaseCreator);
-        when(xsdXmlTestCaseCreator.withDescription("TODO")).thenReturn(xsdXmlTestCaseCreator);
-        when(xsdXmlTestCaseCreator.usePackage("com.consol.citrus.xsd")).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestGenerator);
+        when(xsdXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(xsdXmlTestGenerator);
+        when(xsdXmlTestGenerator.withDescription("TODO")).thenReturn(xsdXmlTestGenerator);
+        when(xsdXmlTestGenerator.usePackage("com.consol.citrus.xsd")).thenReturn(xsdXmlTestGenerator);
 
-        when(xsdXmlTestCaseCreator.withXsd("classpath:xsd/BookStore.xsd")).thenReturn(xsdXmlTestCaseCreator);
+        when(xsdXmlTestGenerator.withXsd("classpath:xsd/BookStore.xsd")).thenReturn(xsdXmlTestGenerator);
 
-        when(xsdXmlTestCaseCreator.withName("BookStore")).thenReturn(xsdXmlTestCaseCreator);
-        when(testCaseCreator.useSrcDirectory("target/generated/citrus")).thenReturn(testCaseCreator);
+        when(xsdXmlTestGenerator.withName("BookStore")).thenReturn(xsdXmlTestGenerator);
+        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 
         mojo.execute();
 
-        verify(xsdXmlTestCaseCreator).create();
-        verify(xsdXmlTestCaseCreator).withXsd("classpath:xsd/BookStore.xsd");
-        verify(xsdXmlTestCaseCreator).withRequestMessage("BookRequest");
-        verify(xsdXmlTestCaseCreator).withResponseMessage("BookResponse");
+        verify(xsdXmlTestGenerator).create();
+        verify(xsdXmlTestGenerator).withXsd("classpath:xsd/BookStore.xsd");
+        verify(xsdXmlTestGenerator).withRequestMessage("BookRequest");
+        verify(xsdXmlTestGenerator).withResponseMessage("BookResponse");
     }
 
     @Test
     public void testSuiteFromWsdl() throws MojoExecutionException, PrompterException, MojoFailureException {
-        reset(wsdlXmlTestCaseCreator);
+        reset(wsdlXmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
         configuration.setName("BookStore");
@@ -120,23 +120,23 @@ public class GenerateTestMojoTest {
         wsdlConfiguration.setFile("classpath:wsdl/BookStore.wsdl");
         configuration.setWsdl(wsdlConfiguration);
 
-        when(wsdlXmlTestCaseCreator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestCaseCreator);
-        when(wsdlXmlTestCaseCreator.withAuthor("UnknownAuthor")).thenReturn(wsdlXmlTestCaseCreator);
-        when(wsdlXmlTestCaseCreator.withDescription("TODO")).thenReturn(wsdlXmlTestCaseCreator);
-        when(wsdlXmlTestCaseCreator.usePackage("com.consol.citrus.wsdl")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestGenerator);
+        when(wsdlXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(wsdlXmlTestGenerator);
+        when(wsdlXmlTestGenerator.withDescription("TODO")).thenReturn(wsdlXmlTestGenerator);
+        when(wsdlXmlTestGenerator.usePackage("com.consol.citrus.wsdl")).thenReturn(wsdlXmlTestGenerator);
 
-        when(wsdlXmlTestCaseCreator.withWsdl("classpath:wsdl/BookStore.wsdl")).thenReturn(wsdlXmlTestCaseCreator);
-        when(wsdlXmlTestCaseCreator.withNameSuffix("_Test")).thenReturn(wsdlXmlTestCaseCreator);
+        when(wsdlXmlTestGenerator.withWsdl("classpath:wsdl/BookStore.wsdl")).thenReturn(wsdlXmlTestGenerator);
+        when(wsdlXmlTestGenerator.withNameSuffix("_Test")).thenReturn(wsdlXmlTestGenerator);
 
-        when(wsdlXmlTestCaseCreator.withName("BookStore")).thenReturn(wsdlXmlTestCaseCreator);
-        when(testCaseCreator.useSrcDirectory("target/generated/citrus")).thenReturn(testCaseCreator);
+        when(wsdlXmlTestGenerator.withName("BookStore")).thenReturn(wsdlXmlTestGenerator);
+        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 
         mojo.execute();
 
-        verify(wsdlXmlTestCaseCreator).create();
-        verify(wsdlXmlTestCaseCreator).withWsdl("classpath:wsdl/BookStore.wsdl");
-        verify(wsdlXmlTestCaseCreator).withNameSuffix("_Test");
+        verify(wsdlXmlTestGenerator).create();
+        verify(wsdlXmlTestGenerator).withWsdl("classpath:wsdl/BookStore.wsdl");
+        verify(wsdlXmlTestGenerator).withNameSuffix("_Test");
     }
 }

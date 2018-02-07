@@ -36,19 +36,19 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
+public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
 
     /** Test doc specific information */
     private String pageTitle = "Citrus Test Documentation";
     private String company = "Unknown";
     private String author = "Citrus Testframework";
-    private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocGenerator.class);
+    private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocsGenerator.class);
     private String customHeaders = "";
     
     /**
      * Default constructor using test doc template name.
      */
-    public ExcelTestDocGenerator() {
+    public ExcelTestDocsGenerator() {
         super("CitrusTests.xls", "testdoc.xls.template");
     }
     
@@ -119,8 +119,8 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * Builds a new test doc generator.
      * @return
      */
-    public static ExcelTestDocGenerator build() {
-        return new ExcelTestDocGenerator();
+    public static ExcelTestDocsGenerator build() {
+        return new ExcelTestDocsGenerator();
     }
     
     /**
@@ -128,7 +128,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @param filename the output file name.
      * @return
      */
-    public ExcelTestDocGenerator withOutputFile(String filename) {
+    public ExcelTestDocsGenerator withOutputFile(String filename) {
         this.setOutputFile(filename);
         return this;
     }
@@ -138,7 +138,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @param pageTitle the page title.
      * @return
      */
-    public ExcelTestDocGenerator withPageTitle(String pageTitle) {
+    public ExcelTestDocsGenerator withPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
         return this;
     }
@@ -148,7 +148,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @param testDir the test source directory.
      * @return
      */
-    public ExcelTestDocGenerator useSrcDirectory(String testDir) {
+    public ExcelTestDocsGenerator useSrcDirectory(String testDir) {
         this.setSrcDirectory(testDir);
         return this;
     }
@@ -158,7 +158,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @param author the author name.
      * @return
      */
-    public ExcelTestDocGenerator withAuthor(String author) {
+    public ExcelTestDocsGenerator withAuthor(String author) {
         this.author = author;
         return this;
     }
@@ -168,7 +168,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @param company the company name.
      * @return
      */
-    public ExcelTestDocGenerator withCompany(String company) {
+    public ExcelTestDocsGenerator withCompany(String company) {
         this.company = company;
         return this;
     }
@@ -178,7 +178,7 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      * @param customHeaders the header configuration.
      * @return
      */
-    public ExcelTestDocGenerator withCustomHeaders(String customHeaders) {
+    public ExcelTestDocsGenerator withCustomHeaders(String customHeaders) {
         this.customHeaders = customHeaders;
         return this;
     }
@@ -189,16 +189,16 @@ public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
      */
     public static void main(String[] args) {
         try {    
-            ExcelTestDocGenerator creator = ExcelTestDocGenerator.build();
-            
-            creator.useSrcDirectory(args.length == 1 ? args[0] : creator.srcDirectory)
-                .withOutputFile(args.length == 2 ? args[1] : creator.outputFile)
-                .withPageTitle(args.length == 3 ? args[2] : creator.pageTitle)
-                .withAuthor(args.length == 4 ? args[3] : creator.author)
-                .withCompany(args.length == 5 ? args[4] : creator.company)
+            ExcelTestDocsGenerator generator = ExcelTestDocsGenerator.build();
+
+            generator.useSrcDirectory(args.length == 1 ? args[0] : generator.srcDirectory)
+                .withOutputFile(args.length == 2 ? args[1] : generator.outputFile)
+                .withPageTitle(args.length == 3 ? args[2] : generator.pageTitle)
+                .withAuthor(args.length == 4 ? args[3] : generator.author)
+                .withCompany(args.length == 5 ? args[4] : generator.company)
                 .withCustomHeaders(args.length == 6 ? args[5] : "");
-            
-            creator.generateDoc();
+
+            generator.generateDoc();
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new CitrusRuntimeException("Wrong usage exception! " +
                     "Use parameters in the following way: [test.directory] [output.file]", e);

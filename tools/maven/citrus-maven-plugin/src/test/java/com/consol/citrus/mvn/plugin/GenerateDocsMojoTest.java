@@ -16,8 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.docs.ExcelTestDocGenerator;
-import com.consol.citrus.docs.HtmlTestDocGenerator;
+import com.consol.citrus.docs.ExcelTestDocsGenerator;
+import com.consol.citrus.docs.HtmlTestDocsGenerator;
 import com.consol.citrus.mvn.plugin.config.docs.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -33,8 +33,8 @@ import static org.mockito.Mockito.*;
  */
 public class GenerateDocsMojoTest {
 
-    private ExcelTestDocGenerator excelTestDocGenerator = Mockito.mock(ExcelTestDocGenerator.class);
-    private HtmlTestDocGenerator htmlTestDocGenerator = Mockito.mock(HtmlTestDocGenerator.class);
+    private ExcelTestDocsGenerator excelTestDocGenerator = Mockito.mock(ExcelTestDocsGenerator.class);
+    private HtmlTestDocsGenerator htmlTestDocGenerator = Mockito.mock(HtmlTestDocsGenerator.class);
 
     private GenerateDocsMojo mojo;
     

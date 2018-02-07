@@ -38,9 +38,9 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
     @Parameter(property = "citrus.build.directory", defaultValue= "${project.build.directory}/generated/citrus")
     protected String buildDirectory = "target/generated/citrus";
 
-    private final XmlTestGenerator xmlTestCreator;
-    private final XsdXmlTestGenerator xsdXmlTestCreator;
-    private final WsdlXmlTestGenerator wsdlXmlTestCreator;
+    private final XmlTestGenerator xmlTestGenerator;
+    private final XsdXmlTestGenerator xsdXmlTestGenerator;
+    private final WsdlXmlTestGenerator wsdlXmlTestGenerator;
 
     /**
      * Default constructor.
@@ -51,14 +51,14 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
 
     /**
      * Constructor using final fields.
-     * @param xmlTestCreator
-     * @param xsdXmlTestCreator
-     * @param wsdlXmlTestCreator
+     * @param xmlTestGenerator
+     * @param xsdXmlTestGenerator
+     * @param wsdlXmlTestGenerator
      */
-    public GenerateTestMojo(XmlTestGenerator xmlTestCreator, XsdXmlTestGenerator xsdXmlTestCreator, WsdlXmlTestGenerator wsdlXmlTestCreator) {
-        this.xmlTestCreator = xmlTestCreator;
-        this.xsdXmlTestCreator = xsdXmlTestCreator;
-        this.wsdlXmlTestCreator = wsdlXmlTestCreator;
+    public GenerateTestMojo(XmlTestGenerator xmlTestGenerator, XsdXmlTestGenerator xsdXmlTestGenerator, WsdlXmlTestGenerator wsdlXmlTestGenerator) {
+        this.xmlTestGenerator = xmlTestGenerator;
+        this.xsdXmlTestGenerator = xsdXmlTestGenerator;
+        this.wsdlXmlTestGenerator = wsdlXmlTestGenerator;
     }
 
     @Override
@@ -69,50 +69,50 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
 
         for (TestConfiguration test : getTests()) {
             if (test.getXsd() != null) {
-                XsdXmlTestGenerator creator = getXsdXmlTestCaseCreator();
+                XsdXmlTestGenerator generator = getXsdXmlTestGenerator();
 
-                creator.withFramework(getFramework())
+                generator.withFramework(getFramework())
                         .withName(test.getName())
                         .withAuthor(test.getAuthor())
                         .withDescription(test.getDescription())
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
-                creator.withActor(test.getXsd().getActor());
-                creator.withXsd(test.getXsd().getFile());
-                creator.withRequestMessage(test.getXsd().getRequest());
-                creator.withResponseMessage(test.getXsd().getResponse());
+                generator.withActor(test.getXsd().getActor());
+                generator.withXsd(test.getXsd().getFile());
+                generator.withRequestMessage(test.getXsd().getRequest());
+                generator.withResponseMessage(test.getXsd().getResponse());
 
-                creator.withEndpoint(test.getEndpoint());
+                generator.withEndpoint(test.getEndpoint());
 
-                creator.withNameSuffix(test.getSuffix());
+                generator.withNameSuffix(test.getSuffix());
 
-                creator.create();
+                generator.create();
             } else if (test.getWsdl() != null) {
-                WsdlXmlTestGenerator creator = getWsdlXmlTestCaseCreator();
+                WsdlXmlTestGenerator generator = getWsdlXmlTestGenerator();
 
-                creator.withFramework(getFramework())
+                generator.withFramework(getFramework())
                         .withName(test.getName())
                         .withAuthor(test.getAuthor())
                         .withDescription(test.getDescription())
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
-                creator.withActor(test.getWsdl().getActor());
-                creator.withWsdl(test.getWsdl().getFile());
-                creator.withOperation(test.getWsdl().getOperation());
+                generator.withActor(test.getWsdl().getActor());
+                generator.withWsdl(test.getWsdl().getFile());
+                generator.withOperation(test.getWsdl().getOperation());
 
-                creator.withEndpoint(test.getEndpoint());
+                generator.withEndpoint(test.getEndpoint());
 
-                creator.withNameSuffix(test.getSuffix());
+                generator.withNameSuffix(test.getSuffix());
 
-                creator.create();
+                generator.create();
             } else {
                 if (!StringUtils.hasText(test.getName())) {
                     throw new MojoExecutionException("Please provide proper test name! Test name must not be empty starting with uppercase letter!");
                 }
 
-                XmlTestGenerator creator = getXmlTestCaseCreator()
+                XmlTestGenerator generator = getXmlTestGenerator()
                         .withFramework(getFramework())
                         .withName(test.getName())
                         .withAuthor(test.getAuthor())
@@ -120,39 +120,39 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
-                creator.create();
+                generator.create();
                 getLog().info("Successfully created new test case " + test.getPackageName() + "." + test.getName());
             }
         }
     }
 
     /**
-     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
-     * also useful for subclasses to provide customized creator instance.
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
      * .
-     * @return test creator.
+     * @return test generator.
      */
-    public XmlTestGenerator getXmlTestCaseCreator() {
-        return Optional.ofNullable(xmlTestCreator).orElse(new XmlTestGenerator());
+    public XmlTestGenerator getXmlTestGenerator() {
+        return Optional.ofNullable(xmlTestGenerator).orElse(new XmlTestGenerator());
     }
 
     /**
-     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
-     * also useful for subclasses to provide customized creator instance.
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
      * .
-     * @return test creator.
+     * @return test generator.
      */
-    public WsdlXmlTestGenerator getWsdlXmlTestCaseCreator() {
-        return Optional.ofNullable(wsdlXmlTestCreator).orElse(new WsdlXmlTestGenerator());
+    public WsdlXmlTestGenerator getWsdlXmlTestGenerator() {
+        return Optional.ofNullable(wsdlXmlTestGenerator).orElse(new WsdlXmlTestGenerator());
     }
 
     /**
-     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
-     * also useful for subclasses to provide customized creator instance.
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
      * .
-     * @return test creator.
+     * @return test generator.
      */
-    public XsdXmlTestGenerator getXsdXmlTestCaseCreator() {
-        return Optional.ofNullable(xsdXmlTestCreator).orElse(new XsdXmlTestGenerator());
+    public XsdXmlTestGenerator getXsdXmlTestGenerator() {
+        return Optional.ofNullable(xsdXmlTestGenerator).orElse(new XsdXmlTestGenerator());
     }
 }

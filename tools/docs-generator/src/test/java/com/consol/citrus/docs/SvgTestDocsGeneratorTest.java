@@ -29,27 +29,27 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class SvgTestDocGeneratorTest {
+public class SvgTestDocsGeneratorTest {
 
     @BeforeClass
     public void createSampleIT() {
-        XmlTestGenerator creator = new XmlTestGenerator()
+        XmlTestGenerator generator = new XmlTestGenerator()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")
                 .usePackage("com.consol.citrus.sample")
                 .withFramework(UnitFramework.TESTNG);
 
-        creator.create();
+        generator.create();
     }
     
     @Test
     public void testSvgDocGeneration() throws IOException {
-        SvgTestDocGenerator generator = SvgTestDocGenerator.build();
+        SvgTestDocsGenerator generator = SvgTestDocsGenerator.build();
         
         generator.generateDoc();
         
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + "/SampleIT.svg"));
+        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + "/SampleIT.svg"));
         
         Assert.assertTrue(docContent.contains("<title>SampleIT</title>"));
         Assert.assertTrue(docContent.contains("<desc>This is a sample test"));

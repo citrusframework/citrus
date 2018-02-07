@@ -16,8 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.docs.ExcelTestDocGenerator;
-import com.consol.citrus.docs.HtmlTestDocGenerator;
+import com.consol.citrus.docs.ExcelTestDocsGenerator;
+import com.consol.citrus.docs.HtmlTestDocsGenerator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
 
@@ -37,14 +37,14 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
     @Parameter(property = "citrus.skip.generate.docs", defaultValue = "false")
     protected boolean skipGenerateDocs;
 
-    private final ExcelTestDocGenerator excelTestDocGenerator;
-    private final HtmlTestDocGenerator htmlTestDocGenerator;
+    private final ExcelTestDocsGenerator excelTestDocGenerator;
+    private final HtmlTestDocsGenerator htmlTestDocGenerator;
 
     /**
      * Default constructor.
      */
     public GenerateDocsMojo() {
-        this(new ExcelTestDocGenerator(), new HtmlTestDocGenerator());
+        this(new ExcelTestDocsGenerator(), new HtmlTestDocsGenerator());
     }
 
     /**
@@ -52,7 +52,7 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
      * @param excelTestDocGenerator
      * @param htmlTestDocGenerator
      */
-    public GenerateDocsMojo(ExcelTestDocGenerator excelTestDocGenerator, HtmlTestDocGenerator htmlTestDocGenerator) {
+    public GenerateDocsMojo(ExcelTestDocsGenerator excelTestDocGenerator, HtmlTestDocsGenerator htmlTestDocGenerator) {
         this.excelTestDocGenerator = excelTestDocGenerator;
         this.htmlTestDocGenerator = htmlTestDocGenerator;
     }
@@ -64,31 +64,31 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
         }
 
         if (getDocs().getExcel() != null) {
-            ExcelTestDocGenerator creator = getExcelTestDocGenerator();
+            ExcelTestDocsGenerator generator = getExcelTestDocGenerator();
 
-            creator.withOutputFile(getDocs().getExcel().getOutputFile() + (getDocs().getExcel().getOutputFile().endsWith(".xls") ? "" : ".xls"))
+            generator.withOutputFile(getDocs().getExcel().getOutputFile() + (getDocs().getExcel().getOutputFile().endsWith(".xls") ? "" : ".xls"))
                     .withPageTitle(getDocs().getExcel().getPageTitle())
                     .withAuthor(getDocs().getExcel().getAuthor())
                     .withCompany(getDocs().getExcel().getCompany())
                     .useSrcDirectory(getTestSrcDirectory())
                     .withCustomHeaders(getDocs().getExcel().getHeaders());
 
-            creator.generateDoc();
+            generator.generateDoc();
 
             getLog().info("Successfully created Excel documentation: outputFile='target/" + getDocs().getExcel().getOutputFile() + (getDocs().getExcel().getOutputFile().endsWith(".xls") ? "" : ".xls") + "'");
         }
 
         if (getDocs().getHtml() != null) {
-            HtmlTestDocGenerator creator = getHtmlTestDocGenerator();
+            HtmlTestDocsGenerator generator = getHtmlTestDocGenerator();
 
-            creator.withOutputFile(getDocs().getHtml().getOutputFile() + (getDocs().getHtml().getOutputFile().endsWith(".html") ? "" : ".html"))
+            generator.withOutputFile(getDocs().getHtml().getOutputFile() + (getDocs().getHtml().getOutputFile().endsWith(".html") ? "" : ".html"))
                     .withPageTitle(getDocs().getHtml().getPageTitle())
                     .withOverviewTitle(getDocs().getHtml().getHeading())
                     .withColumns(getDocs().getHtml().getColumns())
                     .useSrcDirectory(getTestSrcDirectory())
                     .withLogo(getDocs().getHtml().getLogo());
 
-            creator.generateDoc();
+            generator.generateDoc();
 
             getLog().info("Successfully created HTML documentation: outputFile='target/" + getDocs().getHtml().getOutputFile() + (getDocs().getHtml().getOutputFile().endsWith(".html") ? "" : ".html") + "'");
         }
@@ -99,8 +99,8 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
      *
      * @return
      */
-    public HtmlTestDocGenerator getHtmlTestDocGenerator() {
-        return Optional.ofNullable(htmlTestDocGenerator).orElse(HtmlTestDocGenerator.build());
+    public HtmlTestDocsGenerator getHtmlTestDocGenerator() {
+        return Optional.ofNullable(htmlTestDocGenerator).orElse(HtmlTestDocsGenerator.build());
     }
 
     /**
@@ -108,7 +108,7 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
      *
      * @return
      */
-    public ExcelTestDocGenerator getExcelTestDocGenerator() {
-        return Optional.ofNullable(excelTestDocGenerator).orElse(ExcelTestDocGenerator.build());
+    public ExcelTestDocsGenerator getExcelTestDocGenerator() {
+        return Optional.ofNullable(excelTestDocGenerator).orElse(ExcelTestDocsGenerator.build());
     }
 }

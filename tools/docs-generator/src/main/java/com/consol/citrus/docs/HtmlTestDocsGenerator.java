@@ -31,7 +31,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
+public class HtmlTestDocsGenerator extends AbstractTestDocsGenerator {
     
     /** Test doc specific information */
     private String pageTitle = "Citrus Test Documentation";
@@ -42,7 +42,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
     /**
      * Default constructor with test doc template name.
      */
-    public HtmlTestDocGenerator() {
+    public HtmlTestDocsGenerator() {
         super("CitrusTests.html", "testdoc.html.template");
     }
     
@@ -99,8 +99,8 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * Builds a new test doc generator.
      * @return
      */
-    public static HtmlTestDocGenerator build() {
-        return new HtmlTestDocGenerator();
+    public static HtmlTestDocsGenerator build() {
+        return new HtmlTestDocsGenerator();
     }
     
     /**
@@ -108,7 +108,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * @param filename the output file name.
      * @return
      */
-    public HtmlTestDocGenerator withOutputFile(String filename) {
+    public HtmlTestDocsGenerator withOutputFile(String filename) {
         this.setOutputFile(filename);
         return this;
     }
@@ -118,7 +118,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * @param pageTitle the page title.
      * @return
      */
-    public HtmlTestDocGenerator withPageTitle(String pageTitle) {
+    public HtmlTestDocsGenerator withPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
         return this;
     }
@@ -128,7 +128,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * @param overvieTitle the title.
      * @return
      */
-    public HtmlTestDocGenerator withOverviewTitle(String overvieTitle) {
+    public HtmlTestDocsGenerator withOverviewTitle(String overvieTitle) {
         this.overviewTitle = overvieTitle;
         return this;
     }
@@ -138,7 +138,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * @param columns the column names.
      * @return
      */
-    public HtmlTestDocGenerator withColumns(String columns) {
+    public HtmlTestDocsGenerator withColumns(String columns) {
         this.overviewColumns = columns;
         return this;
     }
@@ -148,7 +148,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * @param logoFilePath the file path.
      * @return
      */
-    public HtmlTestDocGenerator withLogo(String logoFilePath) {
+    public HtmlTestDocsGenerator withLogo(String logoFilePath) {
         this.logoFilePath = logoFilePath;
         return this;
     }
@@ -158,7 +158,7 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      * @param testDir the test source directory.
      * @return
      */
-    public HtmlTestDocGenerator useSrcDirectory(String testDir) {
+    public HtmlTestDocsGenerator useSrcDirectory(String testDir) {
         this.setSrcDirectory(testDir);
         return this;
     }
@@ -169,17 +169,17 @@ public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
      */
     public static void main(String[] args) {
         try {    
-            HtmlTestDocGenerator creator = HtmlTestDocGenerator.build();
-            
-            creator.useSrcDirectory(args.length == 1 ? args[0] : creator.srcDirectory)
-                .withOutputFile(args.length == 2 ? args[1] : creator.outputFile)
-                .withPageTitle(args.length == 3 ? args[2] : creator.pageTitle)
-                .withLogo(args.length == 4 ? args[3] : creator.logoFilePath)
-                .withOverviewTitle(args.length == 5 ? args[4] : creator.overviewTitle)
-                .withColumns(args.length == 6 ? args[5] : creator.overviewColumns);
-                
-            
-            creator.generateDoc();
+            HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build();
+
+            generator.useSrcDirectory(args.length == 1 ? args[0] : generator.srcDirectory)
+                .withOutputFile(args.length == 2 ? args[1] : generator.outputFile)
+                .withPageTitle(args.length == 3 ? args[2] : generator.pageTitle)
+                .withLogo(args.length == 4 ? args[3] : generator.logoFilePath)
+                .withOverviewTitle(args.length == 5 ? args[4] : generator.overviewTitle)
+                .withColumns(args.length == 6 ? args[5] : generator.overviewColumns);
+
+
+            generator.generateDoc();
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new CitrusRuntimeException("Wrong usage exception! " +
                     "Use parameters in the following way: [test.directory] [output.file]", e);
