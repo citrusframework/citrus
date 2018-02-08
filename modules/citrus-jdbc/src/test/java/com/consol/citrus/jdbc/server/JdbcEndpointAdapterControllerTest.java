@@ -113,6 +113,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
+        jdbcEndpointAdapterController.getConnections().set(0);
 
         //WHEN
         final int before = jdbcEndpointAdapterController.getConnections().get();
@@ -128,6 +129,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        jdbcEndpointAdapterController.getConnections().set(0);
 
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(false);
 
@@ -146,6 +148,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(false);
+        jdbcEndpointAdapterController.getConnections().set(0);
 
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
 
