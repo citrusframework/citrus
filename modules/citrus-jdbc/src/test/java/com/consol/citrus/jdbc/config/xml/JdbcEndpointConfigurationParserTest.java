@@ -21,6 +21,8 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.Map;
@@ -29,12 +31,24 @@ import static org.testng.Assert.assertEquals;
 
 public class JdbcEndpointConfigurationParserTest extends AbstractBeanDefinitionParserTest {
 
+    private JdbcServer testServer;
+
+    @BeforeClass
+    public void setUp(){
+        Map<String, JdbcServer> servers = beanDefinitionContext.getBeansOfType(JdbcServer.class);
+
+        testServer = servers.get("testServer");
+    }
+
+    @AfterClass
+    public void teardown(){
+        testServer.stop();
+    }
+
     @Test
     public void testAnnotations(){
 
-        Map<String, JdbcServer> servers = beanDefinitionContext.getBeansOfType(JdbcServer.class);
 
-        JdbcServer testServer = servers.get("testServer");
 
         assertEquals(
                 testServer.getEndpointConfiguration().getServerConfiguration().getHost(),
