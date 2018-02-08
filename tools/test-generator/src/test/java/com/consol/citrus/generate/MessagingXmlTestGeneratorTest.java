@@ -17,6 +17,7 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
@@ -28,11 +29,11 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  */
-public class RequestResponseXmlTestGeneratorTest {
+public class MessagingXmlTestGeneratorTest {
 
     @Test
     public void testCreateTest() throws IOException {
-        RequestResponseXmlTestGenerator generator = new RequestResponseXmlTestGenerator();
+        MessagingXmlTestGenerator generator = new MessagingXmlTestGenerator();
 
         generator.withAuthor("Christoph")
                  .withDescription("This is a sample test")
@@ -40,8 +41,8 @@ public class RequestResponseXmlTestGeneratorTest {
                  .usePackage("com.consol.citrus")
                  .withFramework(UnitFramework.TESTNG);
 
-        generator.withRequest("<TestRequest><Message>Citrus rocks!</Message></TestRequest>");
-        generator.withResponse("<TestResponse><Message>Hell Ya!</Message></TestResponse>");
+        generator.withRequest(new DefaultMessage("<TestRequest><Message>Citrus rocks!</Message></TestRequest>"));
+        generator.withResponse(new DefaultMessage("<TestResponse><Message>Hell Ya!</Message></TestResponse>"));
 
         generator.create();
         

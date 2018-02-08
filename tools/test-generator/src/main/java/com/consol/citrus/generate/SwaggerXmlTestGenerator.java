@@ -17,11 +17,14 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.model.testcase.http.ObjectFactory;
 import io.swagger.models.*;
 import io.swagger.models.parameters.*;
 import io.swagger.models.properties.*;
 import io.swagger.parser.SwaggerParser;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +37,7 @@ import java.util.stream.Collectors;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
+public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
 
     private String swaggerResource;
 
@@ -58,43 +61,35 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
         }
 
         for (Map.Entry<String, Path> path : swagger.getPaths().entrySet()) {
-            for (Map.Entry<io.swagger.models.HttpMethod, Operation> operation : path.getValue().getOperationMap().entrySet()) {
+            for (Map.Entry<HttpMethod, Operation> operation : path.getValue().getOperationMap().entrySet()) {
 
                 // Now generate it
                 withName(namePrefix + operation.getValue().getOperationId() + nameSuffix);
 
-                Map<String, Object> requestHeaders = new HashMap<>();
-                requestHeaders.put("citrus_http_request_uri", Optional.ofNullable(contextPath).orElse("") + (swagger.getBasePath() != null ? swagger.getBasePath() : "") + path.getKey());
-                requestHeaders.put("citrus_http_method", HttpMethod.valueOf(operation.getKey().name()).name());
+                HttpMessage requestMessage = new HttpMessage();
+                requestMessage.path(Optional.ofNullable(contextPath).orElse("") + (swagger.getBasePath() != null ? swagger.getBasePath() : "") + path.getKey());
+                requestMessage.method(org.springframework.http.HttpMethod.valueOf(operation.getKey().name()));
 
-                withRequest("");
                 if (operation.getValue().getParameters() != null) {
                     operation.getValue().getParameters().stream()
                             .filter(p -> p instanceof HeaderParameter)
                             .filter(Parameter::getRequired)
-                            .forEach(p -> requestHeaders.put(p.getName(), createRandomValueExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false)));
+                            .forEach(p -> requestMessage.setHeader(p.getName(), getActor().equals("client") ? createRandomValueExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false) : createValidationExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false)));
 
-                    String queryParams = operation.getValue().getParameters().stream()
+                    operation.getValue().getParameters().stream()
                             .filter(param -> param instanceof QueryParameter)
                             .filter(Parameter::getRequired)
-                            .map(param -> param.getName() + "=" + createRandomValueExpression((QueryParameter) param))
-                            .collect(Collectors.joining("&"));
-
-                    if (StringUtils.hasText(queryParams)) {
-                        requestHeaders.put("citrus_http_query_params", queryParams);
-                    }
+                            .forEach(param -> requestMessage.queryParam(param.getName(), getActor().equals("client") ? createRandomValueExpression((QueryParameter) param) : createValidationExpression((QueryParameter) param)));
 
                     operation.getValue().getParameters().stream()
                             .filter(p -> p instanceof BodyParameter)
                             .filter(Parameter::getRequired)
                             .findFirst()
-                            .ifPresent(p -> withRequest(createOutboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions())));
+                            .ifPresent(p -> requestMessage.setPayload(getActor().equals("client") ? createOutboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions()) : createInboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions())));
                 }
+                withRequest(requestMessage);
 
-                withRequestHeaders(requestHeaders);
-
-                withResponse("");
-                withResponseHeaders(Collections.emptyMap());
+                HttpMessage responseMessage = new HttpMessage();
                 if (operation.getValue().getResponses() != null) {
                     Response response = operation.getValue().getResponses().get("200");
                     if (response == null) {
@@ -102,28 +97,33 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
                     }
 
                     if (response != null) {
-                        Map<String, Object> responseHeaders = new HashMap<>();
-                        responseHeaders.put("citrus_http_status_code", "200");
+                        responseMessage.status(HttpStatus.OK);
 
                         if (response.getHeaders() != null) {
                             for (Map.Entry<String, Property> header : response.getHeaders().entrySet()) {
-                                responseHeaders.put(header.getKey(), createValidationExpression(header.getValue(), swagger.getDefinitions()));
+                                responseMessage.setHeader(header.getKey(), getActor().equals("client") ? createValidationExpression(header.getValue(), swagger.getDefinitions(), false) : createRandomValueExpression(header.getValue(), swagger.getDefinitions(), false));
                             }
                         }
 
-                        withResponseHeaders(responseHeaders);
-
                         if (response.getSchema() != null) {
-                            withResponse(createInboundPayload(response.getSchema(), swagger.getDefinitions()));
+                            responseMessage.setPayload(getActor().equals("client") ? createInboundPayload(response.getSchema(), swagger.getDefinitions()): createOutboundPayload(response.getSchema(), swagger.getDefinitions()));
                         }
                     }
                 }
+                withResponse(responseMessage);
 
                 super.create();
 
                 log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
             }
         }
+    }
+
+    @Override
+    protected List<String> getMarshallerContextPaths() {
+        List<String> contextPaths = super.getMarshallerContextPaths();
+        contextPaths.add(ObjectFactory.class.getPackage().getName());
+        return contextPaths;
     }
 
     /**
@@ -189,7 +189,7 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
             payload.append(createRandomValueExpression(((ArrayProperty) property).getItems(), definitions, true));
             payload.append("]");
         } else {
-            payload.append(createRandomValueExpression(property, definitions, false));
+            payload.append(createRandomValueExpression(property, definitions, true));
         }
 
         return payload.toString();
@@ -259,7 +259,7 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
             if (model.getProperties() != null) {
                 for (Map.Entry<String, Property> entry : model.getProperties().entrySet()) {
-                    payload.append("\"").append(entry.getKey()).append("\": ").append(createValidationExpression(entry.getValue(), definitions)).append(",");
+                    payload.append("\"").append(entry.getKey()).append("\": ").append(createValidationExpression(entry.getValue(), definitions, true)).append(",");
                 }
             }
 
@@ -270,10 +270,10 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
             payload.append("}");
         } else if (property instanceof ArrayProperty) {
             payload.append("[");
-            payload.append(createValidationExpression(((ArrayProperty) property).getItems(), definitions));
+            payload.append(createValidationExpression(((ArrayProperty) property).getItems(), definitions, true));
             payload.append("]");
         } else {
-            payload.append(createValidationExpression(property, definitions));
+            payload.append(createValidationExpression(property, definitions, false));
         }
 
         return payload.toString();
@@ -294,14 +294,14 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
         if (model instanceof ArrayModel) {
             payload.append("[");
-            payload.append(createValidationExpression(((ArrayModel) model).getItems(), definitions));
+            payload.append(createValidationExpression(((ArrayModel) model).getItems(), definitions, true));
             payload.append("]");
         } else {
             payload.append("{");
 
             if (model.getProperties() != null) {
                 for (Map.Entry<String, Property> entry : model.getProperties().entrySet()) {
-                    payload.append("\"").append(entry.getKey()).append("\": ").append(createValidationExpression(entry.getValue(), definitions)).append(",");
+                    payload.append("\"").append(entry.getKey()).append("\": ").append(createValidationExpression(entry.getValue(), definitions, true)).append(",");
                 }
             }
 
@@ -319,9 +319,10 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
      * Create validation expression using functions according to parameter type and format.
      * @param property
      * @param definitions
+     * @param quotes
      * @return
      */
-    private String createValidationExpression(Property property, Map<String, Model> definitions) {
+    private String createValidationExpression(Property property, Map<String, Model> definitions, boolean quotes) {
         StringBuilder payload = new StringBuilder();
         if (property instanceof RefProperty) {
             Model model = definitions.get(((RefProperty) property).getSimpleRef());
@@ -329,7 +330,7 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
             if (model.getProperties() != null) {
                 for (Map.Entry<String, Property> entry : model.getProperties().entrySet()) {
-                    payload.append("\"").append(entry.getKey()).append("\": ").append(createValidationExpression(entry.getValue(), definitions)).append(",");
+                    payload.append("\"").append(entry.getKey()).append("\": ").append(createValidationExpression(entry.getValue(), definitions, quotes)).append(",");
                 }
             }
 
@@ -339,27 +340,91 @@ public class SwaggerXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
             payload.append("}");
         } else if (property instanceof ArrayProperty) {
-            payload.append("\"@ignore@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@ignore@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         } else if (property instanceof StringProperty) {
+            if (quotes) {
+                payload.append("\"");
+            }
+
             if (StringUtils.hasText(((StringProperty) property).getPattern())) {
-                payload.append("\"@matches(").append(((StringProperty) property).getPattern()).append(")@\"");
+                payload.append("@matches(").append(((StringProperty) property).getPattern()).append(")@");
             } else if (!CollectionUtils.isEmpty(((StringProperty) property).getEnum())) {
-                payload.append("\"@matches(").append(((StringProperty) property).getEnum().stream().collect(Collectors.joining("|"))).append(")@\"");
+                payload.append("@matches(").append(((StringProperty) property).getEnum().stream().collect(Collectors.joining("|"))).append(")@");
             } else {
-                payload.append("\"@notEmpty()@\"");
+                payload.append("@notEmpty()@");
+            }
+
+            if (quotes) {
+                payload.append("\"");
             }
         } else if (property instanceof DateProperty) {
-            payload.append("\"@matchesDatePattern('yyyy-MM-dd')@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@matchesDatePattern('yyyy-MM-dd')@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         } else if (property instanceof DateTimeProperty) {
-            payload.append("\"@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ss')@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ss')@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         } else if (property instanceof IntegerProperty || property instanceof LongProperty) {
-            payload.append("\"@isNumber()@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@isNumber()@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         } else if (property instanceof FloatProperty || property instanceof DoubleProperty) {
-            payload.append("\"@isNumber()@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@isNumber()@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         } else if (property instanceof BooleanProperty) {
-            payload.append("\"@matches(true|false)@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@matches(true|false)@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         } else {
-            payload.append("\"@ignore@\"");
+            if (quotes) {
+                payload.append("\"");
+            }
+
+            payload.append("@ignore@");
+
+            if (quotes) {
+                payload.append("\"");
+            }
         }
 
         return payload.toString();

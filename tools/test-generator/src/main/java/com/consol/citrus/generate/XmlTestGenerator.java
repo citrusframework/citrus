@@ -17,6 +17,9 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.model.testcase.core.EchoModel;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.xml.namespace.CitrusNamespacePrefixMapper;
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.xml.transform.StringResult;
@@ -33,18 +36,36 @@ import java.util.stream.Collectors;
  */
 public class XmlTestGenerator extends AbstractTemplateBasedTestGenerator<XmlTestGenerator> {
 
+    /** XML fragment marshaller for test actions */
     private Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+
+    /** Namespace prefix mapper */
+    private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
     public XmlTestGenerator() {
         withFileExtension(".xml");
         marshaller.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-testcase.xsd"));
-        marshaller.setContextPath("com.consol.citrus.model.testcase.core");
+        List<String> contextPaths = getMarshallerContextPaths();
+        marshaller.setContextPaths(contextPaths.toArray(new String[contextPaths.size()]));
 
         Map<String, Object> marshallerProperties = new HashMap<>();
         marshallerProperties.put(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshallerProperties.put(Marshaller.JAXB_ENCODING, "UTF-8");
         marshallerProperties.put(Marshaller.JAXB_FRAGMENT, true);
+
+        marshallerProperties.put("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
+
         marshaller.setMarshallerProperties(marshallerProperties);
+    }
+
+    /**
+     * Marshaller context paths. Subclasses may add additional packages.
+     * @return
+     */
+    protected List<String> getMarshallerContextPaths() {
+        List<String> contextPaths = new ArrayList<>();
+        contextPaths.add(ObjectFactory.class.getPackage().getName());
+        return contextPaths;
     }
 
     @Override
@@ -118,5 +139,23 @@ public class XmlTestGenerator extends AbstractTemplateBasedTestGenerator<XmlTest
      */
     public Jaxb2Marshaller getMarshaller() {
         return marshaller;
+    }
+
+    /**
+     * Gets the namespacePrefixMapper.
+     *
+     * @return
+     */
+    public NamespacePrefixMapper getNamespacePrefixMapper() {
+        return namespacePrefixMapper;
+    }
+
+    /**
+     * Sets the namespacePrefixMapper.
+     *
+     * @param namespacePrefixMapper
+     */
+    public void setNamespacePrefixMapper(NamespacePrefixMapper namespacePrefixMapper) {
+        this.namespacePrefixMapper = namespacePrefixMapper;
     }
 }

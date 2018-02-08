@@ -17,6 +17,7 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -32,7 +33,7 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class WsdlXmlTestGenerator extends RequestResponseXmlTestGenerator {
+public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
 
     private String wsdl;
 
@@ -92,8 +93,8 @@ public class WsdlXmlTestGenerator extends RequestResponseXmlTestGenerator {
 
             // Now generate it
             withName(namePrefix + operationName + nameSuffix);
-            withRequest(SampleXmlUtil.createSampleForType(requestElem));
-            withResponse(SampleXmlUtil.createSampleForType(responseElem));
+            withRequest(new DefaultMessage(SampleXmlUtil.createSampleForType(requestElem)));
+            withResponse(new DefaultMessage(SampleXmlUtil.createSampleForType(responseElem)));
 
             super.create();
 

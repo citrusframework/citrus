@@ -32,7 +32,7 @@ import java.io.IOException;
 public class SwaggerXmlTestGeneratorTest {
 
     @Test
-    public void testCreateTest() throws IOException {
+    public void testCreateTestAsClient() throws IOException {
         SwaggerXmlTestGenerator generator = new SwaggerXmlTestGenerator();
 
         generator.withAuthor("Christoph")
@@ -40,6 +40,27 @@ public class SwaggerXmlTestGeneratorTest {
                 .usePackage("com.consol.citrus")
                 .withFramework(UnitFramework.TESTNG);
 
+        generator.withNamePrefix("UserLoginClient_");
+        generator.withSpec("com/consol/citrus/swagger/user-login-api.json");
+
+        generator.create();
+
+        verifyTest("UserLoginClient_createUser_IT");
+        verifyTest("UserLoginClient_loginUser_IT");
+        verifyTest("UserLoginClient_logoutUser_IT");
+        verifyTest("UserLoginClient_getUserByName_IT");
+    }
+
+    @Test
+    public void testCreateTestAsServer() throws IOException {
+        SwaggerXmlTestGenerator generator = new SwaggerXmlTestGenerator();
+
+        generator.withAuthor("Christoph")
+                .withDescription("This is a sample test")
+                .usePackage("com.consol.citrus")
+                .withFramework(UnitFramework.TESTNG);
+
+        generator.withActor("server");
         generator.withSpec("com/consol/citrus/swagger/user-login-api.json");
 
         generator.create();

@@ -17,6 +17,7 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -30,7 +31,7 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class XsdXmlTestGenerator extends RequestResponseXmlTestGenerator {
+public class XsdXmlTestGenerator extends MessagingXmlTestGenerator {
 
     private String xsd;
 
@@ -70,15 +71,15 @@ public class XsdXmlTestGenerator extends RequestResponseXmlTestGenerator {
         }
 
         if (requestElem != null) {
-            withRequest(SampleXmlUtil.createSampleForType(requestElem));
+            withRequest(new DefaultMessage(SampleXmlUtil.createSampleForType(requestElem)));
         } else {
             throw new CitrusRuntimeException(String.format("Unable to find element with name '%s' in XSD %s", requestMessage, xsd));
         }
 
         if (responseElem != null) {
-            withResponse(SampleXmlUtil.createSampleForType(responseElem));
+            withResponse(new DefaultMessage(SampleXmlUtil.createSampleForType(responseElem)));
         } else {
-            withResponse("");
+            withResponse(new DefaultMessage());
         }
 
         super.create();
