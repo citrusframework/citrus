@@ -289,4 +289,49 @@ public class JdbcEndpointAdapterControllerTest {
         //THEN
         //Exception is thrown
     }
+
+    @Test
+    public void testCreatStatementWithAutoCreateStatement(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(true);
+
+        //WHEN
+        jdbcEndpointAdapterController.createStatement();
+
+        //THEN
+
+    }
+
+    @Test
+    public void testCreateStatementWithoutAutoCreateStatement(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(false);
+
+        //WHEN
+        jdbcEndpointAdapterController.createStatement();
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+    }
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testCreateStatementWithoutAutoCreateStatementAndFailure(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(false);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        //WHEN
+        jdbcEndpointAdapterController.createStatement();
+
+        //THEN
+        //Exception is thrown
+    }
 }
