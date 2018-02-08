@@ -19,7 +19,7 @@
     <schemaBindings>
       <package name="com.consol.citrus.model.config.jdbc"/>
       <nameXmlTransform>
-        <elementName prefix="Citrus" suffix="Model" />
+        <elementName prefix="Jdbc" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
