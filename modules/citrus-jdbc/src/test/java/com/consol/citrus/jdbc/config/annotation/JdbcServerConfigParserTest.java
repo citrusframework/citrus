@@ -52,7 +52,8 @@ public class JdbcServerConfigParserTest extends AbstractTestNGUnitTest {
             endpointAdapter = "endpointAdapter",
             maxConnections = 50,
             pollingInterval = 0,
-            timeout = 10L
+            timeout = 10L,
+            autoTransactions = false
     )
     private JdbcServer testServer;
 
@@ -135,5 +136,8 @@ public class JdbcServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(
                 testServer.getEndpointConfiguration().getTimeout(),
                 10L);
+        assertEquals(
+                testServer.getEndpointConfiguration().isAutoTransactions(),
+                false);
     }
 }
