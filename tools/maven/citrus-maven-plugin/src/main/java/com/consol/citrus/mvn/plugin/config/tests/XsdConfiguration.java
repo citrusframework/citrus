@@ -30,7 +30,7 @@ public class XsdConfiguration implements Serializable {
      * Actor (client/server) describing which part to generate test for.
      */
     @Parameter(property = "citrus.xsd.actor", defaultValue = "client")
-    private String actor;
+    private String actor = "client";
 
     /**
      * Path of the xsd from which the sample request and response are get from

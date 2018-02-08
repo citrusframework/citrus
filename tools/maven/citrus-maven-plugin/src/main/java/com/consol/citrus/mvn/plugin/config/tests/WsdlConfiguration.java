@@ -30,7 +30,7 @@ public class WsdlConfiguration implements Serializable {
      * Actor (client/server) describing which part to generate test for.
      */
     @Parameter(property = "citrus.wsdl.actor", defaultValue = "client")
-    private String actor;
+    private String actor = "client";
 
     /**
      * The path to the wsdl from which the suite is generated.

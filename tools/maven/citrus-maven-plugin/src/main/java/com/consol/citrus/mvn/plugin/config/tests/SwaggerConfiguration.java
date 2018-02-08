@@ -30,7 +30,7 @@ public class SwaggerConfiguration implements Serializable {
      * Actor (client/server) describing which part to generate test for.
      */
     @Parameter(property = "citrus.swagger.actor", defaultValue = "client")
-    private String actor;
+    private String actor = "client";
 
     /**
      * The path to the swagger api from which the suite is generated.

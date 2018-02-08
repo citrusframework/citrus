@@ -19,6 +19,7 @@ package com.consol.citrus.generate;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.model.testcase.http.ObjectFactory;
+import com.consol.citrus.util.FileUtils;
 import io.swagger.models.*;
 import io.swagger.models.parameters.*;
 import io.swagger.models.properties.*;
@@ -51,7 +52,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
     public void create() {
         Swagger swagger;
         try {
-            swagger = new SwaggerParser().read(new PathMatchingResourcePatternResolver().getResource(swaggerResource).getURI().toURL().toString());
+            swagger = new SwaggerParser().parse(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(swaggerResource)));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Swagger Open API specification: " + swaggerResource, e);
         }
@@ -67,7 +68,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
                 withName(namePrefix + operation.getValue().getOperationId() + nameSuffix);
 
                 HttpMessage requestMessage = new HttpMessage();
-                requestMessage.path(Optional.ofNullable(contextPath).orElse("") + (swagger.getBasePath() != null ? swagger.getBasePath() : "") + path.getKey());
+                requestMessage.path(Optional.ofNullable(contextPath).orElse("") + Optional.ofNullable(swagger.getBasePath()).filter(basePath -> !basePath.equals("/")).orElse("") + path.getKey());
                 requestMessage.method(org.springframework.http.HttpMethod.valueOf(operation.getKey().name()));
 
                 if (operation.getValue().getParameters() != null) {

@@ -29,7 +29,7 @@ import java.util.Optional;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Mojo( name = "generate-test", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+@Mojo( name = "generate-tests", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 public class GenerateTestMojo extends AbstractCitrusMojo {
 
     @Parameter(property = "citrus.skip.generate.test", defaultValue = "false")
