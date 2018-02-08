@@ -17,17 +17,16 @@
 package com.consol.citrus.jdbc.server;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
-import com.consol.citrus.db.driver.json.JsonDataSetProducer;
-import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.db.server.controller.JdbcController;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.command.JdbcCommand;
+import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
+import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.OpenConnection;
 import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.message.Message;
@@ -36,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,6 +53,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     private final JdbcEndpointConfiguration endpointConfiguration;
     private final EndpointAdapter delegate;
 
+    private final DataSetCreator dataSetCreator;
+
     private AtomicInteger connections = new AtomicInteger(0);
     private boolean transactionState;
 
@@ -68,6 +68,22 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             final EndpointAdapter delegate) {
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
+        this.dataSetCreator = new DataSetCreator();
+    }
+
+    /**
+     * Currently just a constructor for testing purposes
+     * @param endpointConfiguration he endpoint config for the server
+     * @param delegate The endpoint adapter to delegate to
+     * @param dataSetCreator The DataSetCreator to use for DataSetGeneration
+     */
+    JdbcEndpointAdapterController(
+            final JdbcEndpointConfiguration endpointConfiguration,
+            final EndpointAdapter delegate,
+            final DataSetCreator dataSetCreator) {
+        this.endpointConfiguration = endpointConfiguration;
+        this.delegate = delegate;
+        this.dataSetCreator = dataSetCreator;
     }
 
     @Override
@@ -155,7 +171,9 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     @Override
     public DataSet executeQuery(final String query) throws JdbcServerException {
         log.info("Received execute query request: " + query);
-        return createDataSet(handleMessageAndCheckResponse(JdbcMessage.execute(query)));
+        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
+        final MessageType responseMessageType = determineMessageType(endpointConfiguration.getMarshaller());
+        return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
     /**
@@ -253,6 +271,21 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
+     * Determines the MessageType of the given marshaller
+     * @param marshaller The marshaller to get the message type from
+     * @return The MessageType of the marshaller
+     */
+    private MessageType determineMessageType(final JdbcMarshaller marshaller) {
+        if(MessageType.XML.name().equalsIgnoreCase(marshaller.getType())){
+            return MessageType.XML;
+        }else if(MessageType.JSON.name().equalsIgnoreCase(marshaller.getType())){
+            return MessageType.JSON;
+        }
+
+        return null;
+    }
+
+    /**
      * Converts a property map propertyKey -> propertyValue to a list of OpenConnection.Properties
      * @param properties The map to convert
      * @return A list of Properties
@@ -276,31 +309,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         return response;
     }
 
-    /**
-     * Converts Citrus result set representation to db driver model result set.
-     * @param response The result set to convert
-     * @return A DataSet the jdbc driver can understand
-     */
-    private DataSet createDataSet(final Message response) {
-        try {
-            if (response.getPayload() instanceof DataSet) {
-                return response.getPayload(DataSet.class);
-            } else if (response.getPayload() != null) {
-                if (endpointConfiguration.getMarshaller().getType().equalsIgnoreCase(MessageType.JSON.name())) {
-                    return new JsonDataSetProducer(response.getPayload(String.class)).produce();
-                } else if (endpointConfiguration.getMarshaller().getType().equalsIgnoreCase(MessageType.XML.name())) {
-                    return new XmlDataSetProducer(response.getPayload(String.class)).produce();
-                } else {
-                    throw new CitrusRuntimeException("Unable to create dataset from data type " +
-                            endpointConfiguration.getMarshaller().getType());
-                }
-            } else {
-                return new DataSet();
-            }
-        } catch (final SQLException e) {
-            throw new CitrusRuntimeException("Failed to read dataset from response message", e);
-        }
-    }
+
 
     /**
      * Check that response is not having an exception message.

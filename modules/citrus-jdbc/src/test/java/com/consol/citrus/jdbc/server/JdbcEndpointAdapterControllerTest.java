@@ -16,14 +16,17 @@
 
 package com.consol.citrus.jdbc.server;
 
+import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.db.server.JdbcServerConfiguration;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
@@ -330,6 +333,54 @@ public class JdbcEndpointAdapterControllerTest {
 
         //WHEN
         jdbcEndpointAdapterController.createStatement();
+
+        //THEN
+        //Exception is thrown
+    }
+
+    @Test
+    public void testExecuteQuery(){
+
+        //GIVEN
+        final DataSet expectedDataSet = mock(DataSet.class);
+        final DataSetCreator dataSetCreator = mock(DataSetCreator.class);
+        when(dataSetCreator.createDataSet(any(), any())).thenReturn(expectedDataSet);
+
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController =
+                spy(new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter, dataSetCreator));
+
+        final JdbcMarshaller marshaller = mock(JdbcMarshaller.class);
+        when(marshaller.getType()).thenReturn("JSON");
+        when(jdbcEndpointConfiguration.getMarshaller()).thenReturn(marshaller);
+
+        final Message messageToMarshal = mock(Message.class);
+        doReturn(messageToMarshal).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        final String query = "some query";
+
+        //WHEN
+        final DataSet dataSet = jdbcEndpointAdapterController.executeQuery(query);
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+        verify(dataSetCreator).createDataSet(messageToMarshal, MessageType.JSON);
+        assertEquals(dataSet, expectedDataSet);
+    }
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testExecuteQueryForwardsException(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        final String query = "some query";
+
+        //WHEN
+        jdbcEndpointAdapterController.executeQuery(query);
 
         //THEN
         //Exception is thrown
