@@ -415,4 +415,40 @@ public class JdbcEndpointAdapterControllerTest {
         //THEN
         //Exception is thrown
     }
+
+    @Test
+    public void testExecuteUpdate(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED)).thenReturn("2");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        //WHEN
+        final int rowsUpdated = jdbcEndpointAdapterController.executeUpdate("statement");
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+        assertEquals(rowsUpdated, 2);
+    }
+
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testExecuteUpdateWithFailure(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        //WHEN
+        jdbcEndpointAdapterController.executeUpdate("statement");
+
+        //THEN
+        //Exception is thrown
+    }
 }
