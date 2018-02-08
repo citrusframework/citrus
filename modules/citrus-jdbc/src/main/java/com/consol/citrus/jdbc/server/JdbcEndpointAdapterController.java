@@ -88,18 +88,6 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
-     * Handle request message and check response is successful.
-     * @param request The request message to handle
-     * @return The response Message
-     * @throws JdbcServerException Thrown when the response has some exception header.
-     */
-    private Message handleMessageAndCheckResponse(final Message request) throws JdbcServerException {
-        final Message response = handleMessage(request);
-        checkSuccess(response);
-        return response;
-    }
-
-    /**
      * Opens the connection with the given properties
      * @param properties The properties to open the connection with
      * @throws JdbcServerException In case that the maximum connections have been reached
@@ -263,6 +251,18 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         if(!endpointConfiguration.isAutoTransactions()){
             handleMessageAndCheckResponse(JdbcCommand.rollbackTransaction());
         }
+    }
+
+    /**
+     * Handle request message and check response is successful.
+     * @param request The request message to handle
+     * @return The response Message
+     * @throws JdbcServerException Thrown when the response has some exception header.
+     */
+    private Message handleMessageAndCheckResponse(final Message request) throws JdbcServerException {
+        final Message response = handleMessage(request);
+        checkSuccess(response);
+        return response;
     }
 
     /**
