@@ -59,6 +59,8 @@ public class JdbcEndpointConfigurationParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-create-statement"), "autoCreateStatement");
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), "correlator");
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-transactions"), "autoTransactions");
     }
 }
