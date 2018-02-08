@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate.provider;
+package com.consol.citrus.generate.provider.soap;
 
-import com.consol.citrus.message.Message;
+import com.consol.citrus.generate.provider.MessageActionProvider;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.model.testcase.core.ReceiveModel;
+import com.consol.citrus.model.testcase.ws.SendModel;
+import com.consol.citrus.ws.message.SoapMessage;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Optional;
@@ -27,33 +28,38 @@ import java.util.Optional;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class ReceiveActionProvider implements MessageActionProvider<ReceiveModel, Message> {
+public class SendSoapResponseActionProvider implements MessageActionProvider<SendModel, SoapMessage> {
 
     @Override
-    public ReceiveModel getAction(String endpoint, Message message) {
-        ReceiveModel receive = new ReceiveModel();
+    public SendModel getAction(String endpoint, SoapMessage message) {
+        SendModel response = new SendModel();
 
-        receive.setEndpoint(endpoint);
+        response.setEndpoint(endpoint);
 
-        ReceiveModel.Message receiveMessage = new ReceiveModel.Message();
-        receiveMessage.setData(message.getPayload(String.class));
-        receive.setMessage(receiveMessage);
+        com.consol.citrus.model.testcase.core.SendModel.Message sendMessage = new com.consol.citrus.model.testcase.core.SendModel.Message();
+        sendMessage.setData(message.getPayload(String.class));
+        response.setMessage(sendMessage);
 
         if (!CollectionUtils.isEmpty(message.getHeaders())) {
-            ReceiveModel.Header header = new ReceiveModel.Header();
+            com.consol.citrus.model.testcase.core.SendModel.Header header = new com.consol.citrus.model.testcase.core.SendModel.Header();
 
             message.getHeaders().entrySet().stream()
                     .filter(entry -> !entry.getKey().startsWith(MessageHeaders.PREFIX))
                     .forEach(entry -> {
-                        ReceiveModel.Header.Element element = new ReceiveModel.Header.Element();
+                        com.consol.citrus.model.testcase.core.SendModel.Header.Element element = new com.consol.citrus.model.testcase.core.SendModel.Header.Element();
                         element.setName(entry.getKey());
                         element.setValue(Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
+
+                        if (!element.getValue().getClass().equals(String.class)) {
+                            element.setType(element.getValue().getClass().getSimpleName().toLowerCase());
+                        }
+
                         header.getElements().add(element);
                     });
 
-            receive.setHeader(header);
+            response.setHeader(header);
         }
 
-        return receive;
+        return response;
     }
 }

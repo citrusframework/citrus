@@ -17,7 +17,8 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.model.testcase.ws.ObjectFactory;
+import com.consol.citrus.ws.message.SoapMessage;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -44,6 +45,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
     @Override
     public void create() {
         String wsdlNsDelaration = "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ";
+        String soapNsDelaration = "declare namespace soap='http://schemas.xmlsoap.org/wsdl/soap/' ";
 
         // compile wsdl and xsds right now, otherwise later input is useless:
         XmlObject wsdlObject = compileWsdl(wsdl);
@@ -66,9 +68,23 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
         log.info("Generating test cases for service operations ...");
 
         for (XmlObject operation : operations) {
+            SoapMessage request = new SoapMessage();
+            SoapMessage response = new SoapMessage();
+
             String operationName = evaluateAsString(operation, wsdlNsDelaration + "./@name");
             if (StringUtils.hasText(this.operation) && !operationName.equals(this.operation)) {
                 continue;
+            }
+
+            XmlObject[] bindingOperations = wsdlObject.selectPath(wsdlNsDelaration + ".//wsdl:binding/wsdl:operation");
+            for (XmlObject bindingOperation : bindingOperations) {
+                String bindingOperationName = evaluateAsString(bindingOperation, wsdlNsDelaration + "./@name");
+
+                if (bindingOperationName.equals(operationName)) {
+                    String soapAction = removeNsPrefix(evaluateAsString(bindingOperation, soapNsDelaration + "./soap:operation/@soapAction"));
+                    request.soapAction(soapAction);
+                    break;
+                }
             }
 
             String inputMessage = removeNsPrefix(evaluateAsString(operation, wsdlNsDelaration + "./wsdl:input/@message"));
@@ -88,18 +104,28 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
                 }
             }
 
-            SchemaType requestElem = getSchemaType(schemaTypeSystem, operationName, inputElement);
-            SchemaType responseElem = getSchemaType(schemaTypeSystem, operationName, outputElement);
-
             // Now generate it
             withName(namePrefix + operationName + nameSuffix);
-            withRequest(new DefaultMessage(SampleXmlUtil.createSampleForType(requestElem)));
-            withResponse(new DefaultMessage(SampleXmlUtil.createSampleForType(responseElem)));
+
+            SchemaType requestElem = getSchemaType(schemaTypeSystem, operationName, inputElement);
+            request.setPayload(SampleXmlUtil.createSampleForType(requestElem));
+            withRequest(request);
+
+            SchemaType responseElem = getSchemaType(schemaTypeSystem, operationName, outputElement);
+            response.setPayload(SampleXmlUtil.createSampleForType(responseElem));
+            withResponse(response);
 
             super.create();
 
             log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
         }
+    }
+
+    @Override
+    protected List<String> getMarshallerContextPaths() {
+        List<String> contextPaths = super.getMarshallerContextPaths();
+        contextPaths.add(ObjectFactory.class.getPackage().getName());
+        return contextPaths;
     }
 
     /**

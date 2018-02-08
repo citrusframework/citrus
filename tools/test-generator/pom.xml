@@ -24,6 +24,11 @@
       <artifactId>citrus-http</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ws</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>io.swagger</groupId>

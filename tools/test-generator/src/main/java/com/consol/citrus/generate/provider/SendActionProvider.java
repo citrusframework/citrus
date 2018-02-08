@@ -17,8 +17,11 @@
 package com.consol.citrus.generate.provider;
 
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.model.testcase.core.SendModel;
 import org.springframework.util.CollectionUtils;
+
+import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -29,7 +32,9 @@ public class SendActionProvider implements MessageActionProvider<SendModel, Mess
     @Override
     public SendModel getAction(String endpoint, Message message) {
         SendModel send = new SendModel();
+
         send.setEndpoint(endpoint);
+
         SendModel.Message sendMessage = new SendModel.Message();
         sendMessage.setData(message.getPayload(String.class));
         send.setMessage(sendMessage);
@@ -37,17 +42,19 @@ public class SendActionProvider implements MessageActionProvider<SendModel, Mess
         if (!CollectionUtils.isEmpty(message.getHeaders())) {
             SendModel.Header header = new SendModel.Header();
 
-            message.getHeaders().forEach((key, value) -> {
-                SendModel.Header.Element element = new SendModel.Header.Element();
-                element.setName(key);
-                element.setValue(value.toString());
+            message.getHeaders().entrySet().stream()
+                    .filter(entry -> !entry.getKey().startsWith(MessageHeaders.PREFIX))
+                    .forEach(entry -> {
+                        SendModel.Header.Element element = new SendModel.Header.Element();
+                        element.setName(entry.getKey());
+                        element.setValue(Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
 
-                if (!value.getClass().equals(String.class)) {
-                    element.setType(value.getClass().getSimpleName().toLowerCase());
-                }
+                        if (!element.getValue().getClass().equals(String.class)) {
+                            element.setType(element.getValue().getClass().getSimpleName().toLowerCase());
+                        }
 
-                header.getElements().add(element);
-            });
+                        header.getElements().add(element);
+                    });
 
             send.setHeader(header);
         }

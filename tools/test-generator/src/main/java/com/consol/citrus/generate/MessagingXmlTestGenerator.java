@@ -18,8 +18,10 @@ package com.consol.citrus.generate;
 
 import com.consol.citrus.generate.provider.*;
 import com.consol.citrus.generate.provider.http.*;
+import com.consol.citrus.generate.provider.soap.*;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.ws.message.SoapMessage;
 
 import java.util.List;
 
@@ -65,6 +67,8 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     protected <T, M extends Message> MessageActionProvider<T, M> getSendRequestActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new SendHttpRequestActionProvider();
+        } else if (message instanceof SoapMessage) {
+            return (MessageActionProvider<T, M>) new SendSoapRequestActionProvider();
         } else {
             return (MessageActionProvider<T, M>) new SendActionProvider();
         }
@@ -73,6 +77,8 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     protected <T, M extends Message> MessageActionProvider<T, M> getReceiveResponseActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new ReceiveHttpResponseActionProvider();
+        } else if (message instanceof SoapMessage) {
+            return (MessageActionProvider<T, M>) new ReceiveSoapResponseActionProvider();
         } else {
             return (MessageActionProvider<T, M>) new ReceiveActionProvider();
         }
@@ -81,6 +87,8 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     protected <T, M extends Message> MessageActionProvider<T, M> getSendResponseActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new SendHttpResponseActionProvider();
+        } else if (message instanceof SoapMessage) {
+            return (MessageActionProvider<T, M>) new SendSoapResponseActionProvider();
         } else {
             return (MessageActionProvider<T, M>) new SendActionProvider();
         }
@@ -89,6 +97,8 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     protected <T, M extends Message> MessageActionProvider<T, M> getReceiveRequestActionProvider(M message) {
         if (message instanceof HttpMessage) {
             return (MessageActionProvider<T, M>) new ReceiveHttpRequestActionProvider();
+        } else if (message instanceof SoapMessage) {
+            return (MessageActionProvider<T, M>) new ReceiveSoapRequestActionProvider();
         } else {
             return (MessageActionProvider<T, M>) new ReceiveActionProvider();
         }
