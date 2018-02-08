@@ -165,12 +165,80 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
-        jdbcEndpointAdapterController.openConnection(new HashMap<>());
+        jdbcEndpointAdapterController.getConnections().set(1);
 
         //WHEN
         jdbcEndpointAdapterController.openConnection(new HashMap<>());
 
         //THEN
         //Exception is Thrown
+    }
+
+    @Test
+    public void testCloseConnection(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
+        jdbcEndpointAdapterController.getConnections().set(1);
+
+        //WHEN
+        final int before = jdbcEndpointAdapterController.getConnections().get();
+        jdbcEndpointAdapterController.closeConnection();
+        final int after = jdbcEndpointAdapterController.getConnections().get();
+
+        //THEN
+        assertEquals(before -1 , after);
+    }
+
+    @Test
+    public void testCloseConnectionWithoutAutoConnect(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        jdbcEndpointAdapterController.getConnections().set(1);
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(false);
+
+        //WHEN
+        final int before = jdbcEndpointAdapterController.getConnections().get();
+        jdbcEndpointAdapterController.closeConnection();
+        final int after = jdbcEndpointAdapterController.getConnections().get();
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+        assertEquals(before - 1, after);
+    }
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testErroneousCloseConnection(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(false);
+
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        //WHEN
+        jdbcEndpointAdapterController.closeConnection();
+
+        //THEN
+        //Exception is Thrown
+    }
+
+    @Test
+    public void testCloseConnectionWithoutOpenConnectionIsSuccessful(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
+        jdbcEndpointAdapterController.getConnections().set(0);
+
+
+        //WHEN
+        jdbcEndpointAdapterController.closeConnection();
+
+        //THEN
+        assertEquals(jdbcEndpointAdapterController.getConnections().get(), 0);
     }
 }
