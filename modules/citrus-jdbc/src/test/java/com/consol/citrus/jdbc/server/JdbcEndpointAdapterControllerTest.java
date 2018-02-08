@@ -17,22 +17,28 @@
 package com.consol.citrus.jdbc.server;
 
 import com.consol.citrus.db.server.JdbcServerConfiguration;
+import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.message.JdbcMessage;
+import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.message.Message;
 import org.springframework.xml.transform.StringResult;
-import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 public class JdbcEndpointAdapterControllerTest {
 
@@ -45,7 +51,7 @@ public class JdbcEndpointAdapterControllerTest {
     @BeforeSuite
     public void setup(){
         final JdbcServerConfiguration serverConfiguration = mock(JdbcServerConfiguration.class);
-        when(serverConfiguration.getMaxConnections()).thenReturn(5);
+        when(serverConfiguration.getMaxConnections()).thenReturn(1);
 
         when(jdbcEndpointConfiguration.getServerConfiguration()).thenReturn(serverConfiguration);
     }
@@ -63,7 +69,7 @@ public class JdbcEndpointAdapterControllerTest {
         final Message response = jdbcEndpointAdapterController.handleMessage(request);
 
         //THEN
-        Assert.assertEquals(response, expectedResponse);
+        assertEquals(response, expectedResponse);
     }
 
     @Test
@@ -79,7 +85,7 @@ public class JdbcEndpointAdapterControllerTest {
         final Message response = jdbcEndpointAdapterController.handleMessage(request);
 
         //THEN
-        Assert.assertEquals(response.getPayload(), expectedResponse.getPayload());
+        assertEquals(response.getPayload(), expectedResponse.getPayload());
     }
 
     @Test
@@ -100,5 +106,71 @@ public class JdbcEndpointAdapterControllerTest {
         //THEN
         verify(jdbcMarshallerMock).marshal(eq(payload), any(StringResult.class));
         verify(request).setPayload(anyString());
+    }
+
+    @Test
+    public void testOpenConnection(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
+
+        //WHEN
+        final int before = jdbcEndpointAdapterController.getConnections().get();
+        jdbcEndpointAdapterController.openConnection(new HashMap<>());
+        final int after = jdbcEndpointAdapterController.getConnections().get();
+
+        //THEN
+        assertEquals(before + 1, after);
+    }
+
+    @Test
+    public void testOpenConnectionWithoutAutoConnect(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(false);
+
+        //WHEN
+        final int before = jdbcEndpointAdapterController.getConnections().get();
+        jdbcEndpointAdapterController.openConnection(new HashMap<>());
+        final int after = jdbcEndpointAdapterController.getConnections().get();
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+        assertEquals(before + 1, after);
+    }
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testOpenConnectionWithoutAutoConnectAndInvalidProperties(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(false);
+
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        //WHEN
+        jdbcEndpointAdapterController.openConnection(new HashMap<>());
+
+        //THEN
+        //Exception is Thrown
+    }
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testOpenConnectionMaximumConnectionsReached(){
+
+        //GIVEN
+        when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
+        jdbcEndpointAdapterController.openConnection(new HashMap<>());
+
+        //WHEN
+        jdbcEndpointAdapterController.openConnection(new HashMap<>());
+
+        //THEN
+        //Exception is Thrown
     }
 }
