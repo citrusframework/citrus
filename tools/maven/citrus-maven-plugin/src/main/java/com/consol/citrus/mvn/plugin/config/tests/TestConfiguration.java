@@ -61,6 +61,9 @@ public class TestConfiguration implements Serializable {
     private String endpoint = "default";
 
     @Parameter
+    private SwaggerConfiguration swagger;
+
+    @Parameter
     private WsdlConfiguration wsdl;
 
     @Parameter
@@ -157,6 +160,24 @@ public class TestConfiguration implements Serializable {
      */
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    /**
+     * Gets the swagger.
+     *
+     * @return
+     */
+    public SwaggerConfiguration getSwagger() {
+        return swagger;
+    }
+
+    /**
+     * Sets the swagger.
+     *
+     * @param swagger
+     */
+    public void setSwagger(SwaggerConfiguration swagger) {
+        this.swagger = swagger;
     }
 
     /**

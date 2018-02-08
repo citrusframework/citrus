@@ -37,12 +37,13 @@ public class GenerateTestMojoTest {
     private XmlTestGenerator testGenerator = Mockito.mock(XmlTestGenerator.class);
     private XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
     private WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
+    private SwaggerXmlTestGenerator swaggerXmlTestGenerator = Mockito.mock(SwaggerXmlTestGenerator.class);
 
     private GenerateTestMojo mojo;
     
     @BeforeMethod
     public void setup() {
-        mojo = new GenerateTestMojo(testGenerator, xsdXmlTestGenerator, wsdlXmlTestGenerator);
+        mojo = new GenerateTestMojo(testGenerator, xsdXmlTestGenerator, wsdlXmlTestGenerator, swaggerXmlTestGenerator);
     }
     
     @Test
@@ -138,5 +139,40 @@ public class GenerateTestMojoTest {
         verify(wsdlXmlTestGenerator).create();
         verify(wsdlXmlTestGenerator).withWsdl("classpath:wsdl/BookStore.wsdl");
         verify(wsdlXmlTestGenerator).withNameSuffix("_Test");
+    }
+    
+    @Test
+    public void testSuiteFromSwagger() throws MojoExecutionException, PrompterException, MojoFailureException {
+        reset(swaggerXmlTestGenerator);
+
+        TestConfiguration configuration = new TestConfiguration();
+        configuration.setName("UserLoginService");
+        configuration.setAuthor("UnknownAuthor");
+        configuration.setDescription("TODO");
+        configuration.setPackageName("com.consol.citrus.swagger");
+        configuration.setSuffix("_IT");
+
+        SwaggerConfiguration swaggerConfiguration = new SwaggerConfiguration();
+        swaggerConfiguration.setFile("classpath:swagger/user-login-api.json");
+        configuration.setSwagger(swaggerConfiguration);
+
+        when(swaggerXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withDescription("TODO")).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.usePackage("com.consol.citrus.swagger")).thenReturn(swaggerXmlTestGenerator);
+
+        when(swaggerXmlTestGenerator.withSpec("classpath:swagger/user-login-api.json")).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withNameSuffix("_Test")).thenReturn(swaggerXmlTestGenerator);
+
+        when(swaggerXmlTestGenerator.withName("UserLoginService")).thenReturn(swaggerXmlTestGenerator);
+        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
+
+        mojo.setTests(Collections.singletonList(configuration));
+
+        mojo.execute();
+
+        verify(swaggerXmlTestGenerator).create();
+        verify(swaggerXmlTestGenerator).withSpec("classpath:swagger/user-login-api.json");
+        verify(swaggerXmlTestGenerator).withNameSuffix("_IT");
     }
 }

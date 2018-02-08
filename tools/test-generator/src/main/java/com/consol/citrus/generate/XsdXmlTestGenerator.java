@@ -79,7 +79,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator {
         if (responseElem != null) {
             withResponse(new DefaultMessage(SampleXmlUtil.createSampleForType(responseElem)));
         } else {
-            withResponse(new DefaultMessage());
+            withResponse(null);
         }
 
         super.create();

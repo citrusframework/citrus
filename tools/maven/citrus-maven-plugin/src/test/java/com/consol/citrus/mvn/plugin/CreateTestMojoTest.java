@@ -39,12 +39,13 @@ public class CreateTestMojoTest {
     private XmlTestGenerator testGenerator = Mockito.mock(XmlTestGenerator.class);
     private XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
     private WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
+    private SwaggerXmlTestGenerator swaggerXmlTestGenerator = Mockito.mock(SwaggerXmlTestGenerator.class);
 
     private CreateTestMojo mojo;
     
     @BeforeMethod
     public void setup() {
-        mojo = new CreateTestMojo(testGenerator, xsdXmlTestGenerator, wsdlXmlTestGenerator);
+        mojo = new CreateTestMojo(testGenerator, xsdXmlTestGenerator, wsdlXmlTestGenerator, swaggerXmlTestGenerator);
         mojo.setPrompter(prompter);
     }
     
@@ -59,6 +60,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
 
         when(testGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(testGenerator);
@@ -83,6 +85,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");
 
         mojo.execute();
@@ -104,6 +107,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
 
         when(xsdXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestGenerator);
@@ -137,6 +141,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");
 
         when(xsdXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestGenerator);
@@ -167,6 +172,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("y");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
 
         when(wsdlXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestGenerator);
@@ -202,6 +208,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("y");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("n");
         when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("n");
 
         when(wsdlXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestGenerator);
@@ -214,5 +221,41 @@ public class CreateTestMojoTest {
         mojo.execute();
 
         verify(wsdlXmlTestGenerator, times(0)).create();
+    }
+
+    @Test
+    public void testSuiteFromSwagger() throws MojoExecutionException, PrompterException, MojoFailureException {
+        reset(prompter, swaggerXmlTestGenerator);
+
+        when(prompter.prompt(contains("test name"))).thenReturn("UserLoginService");
+        when(prompter.prompt(contains("path"))).thenReturn("classpath:swagger/user-login-api.json");
+        when(prompter.prompt(contains("prefix"), nullable(String.class))).thenReturn("UserLoginService_");
+        when(prompter.prompt(contains("suffix"), nullable(String.class))).thenReturn("_IT");
+        when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
+        when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
+        when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.swagger");
+        when(prompter.prompt(contains("actor"), any(List.class), nullable(String.class))).thenReturn("client");
+        when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
+        when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
+        when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
+        when(prompter.prompt(contains("Create test with Swagger API"), any(List.class), eq("n"))).thenReturn("y");
+        when(prompter.prompt(contains("Confirm"), any(List.class), eq("y"))).thenReturn("y");
+
+        when(swaggerXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withDescription("TODO")).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.usePackage("com.consol.citrus.swagger")).thenReturn(swaggerXmlTestGenerator);
+
+        when(swaggerXmlTestGenerator.withSpec("classpath:swagger/user-login-api.json")).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withNameSuffix("_IT")).thenReturn(swaggerXmlTestGenerator);
+
+        when(swaggerXmlTestGenerator.withName("UserLoginService")).thenReturn(swaggerXmlTestGenerator);
+
+        mojo.execute();
+
+        verify(swaggerXmlTestGenerator).create();
+        verify(swaggerXmlTestGenerator).withSpec("classpath:swagger/user-login-api.json");
+        verify(swaggerXmlTestGenerator).withNameSuffix("_IT");
     }
 }
