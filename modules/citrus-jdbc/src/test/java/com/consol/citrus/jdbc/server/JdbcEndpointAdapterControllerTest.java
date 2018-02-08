@@ -32,12 +32,14 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,6 +117,7 @@ public class JdbcEndpointAdapterControllerTest {
     public void testOpenConnection(){
 
         //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
         jdbcEndpointAdapterController.getConnections().set(0);
 
@@ -125,6 +128,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //THEN
         assertEquals(before + 1, after);
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
     }
 
     @Test
@@ -184,6 +188,7 @@ public class JdbcEndpointAdapterControllerTest {
     public void testCloseConnection(){
 
         //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
         jdbcEndpointAdapterController.getConnections().set(1);
 
@@ -193,6 +198,7 @@ public class JdbcEndpointAdapterControllerTest {
         final int after = jdbcEndpointAdapterController.getConnections().get();
 
         //THEN
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
         assertEquals(before -1 , after);
     }
 
@@ -237,6 +243,7 @@ public class JdbcEndpointAdapterControllerTest {
     public void testCloseConnectionWithoutOpenConnectionIsSuccessful(){
 
         //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         when(jdbcEndpointConfiguration.isAutoConnect()).thenReturn(true);
         jdbcEndpointAdapterController.getConnections().set(0);
 
@@ -245,6 +252,7 @@ public class JdbcEndpointAdapterControllerTest {
         jdbcEndpointAdapterController.closeConnection();
 
         //THEN
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
         assertEquals(jdbcEndpointAdapterController.getConnections().get(), 0);
     }
 
@@ -252,13 +260,14 @@ public class JdbcEndpointAdapterControllerTest {
     public void testCreatePreparedStatementWithAutoCreateStatement(){
 
         //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(true);
 
         //WHEN
         jdbcEndpointAdapterController.createPreparedStatement("some statement");
 
         //THEN
-
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
     }
 
     @Test
@@ -297,13 +306,14 @@ public class JdbcEndpointAdapterControllerTest {
     public void testCreateStatementWithAutoCreateStatement(){
 
         //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(true);
 
         //WHEN
         jdbcEndpointAdapterController.createStatement();
 
         //THEN
-
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
     }
 
     @Test
@@ -456,13 +466,14 @@ public class JdbcEndpointAdapterControllerTest {
     public void testCloseStatementWithAutoCreateStatement(){
 
         //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(true);
 
         //WHEN
         jdbcEndpointAdapterController.closeStatement();
 
         //THEN
-
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
     }
 
     @Test
@@ -495,5 +506,50 @@ public class JdbcEndpointAdapterControllerTest {
 
         //THEN
         //Exception is thrown
+    }
+
+    @Test
+    public void testSetTransactionState(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        final boolean expectedBoolean = new Random().nextBoolean();
+        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(true);
+
+        //WHEN
+        jdbcEndpointAdapterController.setTransactionState(expectedBoolean);
+
+        //THEN
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
+        assertEquals(jdbcEndpointAdapterController.getTransactionState(), expectedBoolean);
+
+    }
+
+    @Test
+    public void testSetTransactionStateWithoutAutoTransactions(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+
+        //WHEN
+        jdbcEndpointAdapterController.setTransactionState(true);
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+    }
+
+    @Test
+    public void testSetTransactionStateVerifyMessageOnlyIfTransactionHasBeenStarted(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+
+        //WHEN
+        jdbcEndpointAdapterController.setTransactionState(false);
+
+        //THEN
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
     }
 }
