@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -95,10 +96,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     @Override
     public void openConnection(final Map<String, String> properties) throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
-            handleMessageAndCheckResponse(JdbcMessage.openConnection(properties.entrySet()
-                    .stream()
-                    .map(entry -> new OpenConnection.Property(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.toList())));
+            final List<OpenConnection.Property> propertyList = convertToPropertyList(properties);
+            handleMessageAndCheckResponse(JdbcMessage.openConnection(propertyList));
         }
 
         if (connections.get() == endpointConfiguration.getServerConfiguration().getMaxConnections()) {
@@ -254,6 +253,18 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
+     * Converts a property map propertyKey -> propertyValue to a list of OpenConnection.Properties
+     * @param properties The map to convert
+     * @return A list of Properties
+     */
+    private List<OpenConnection.Property> convertToPropertyList(final Map<String, String> properties) {
+        return properties.entrySet()
+                .stream()
+                .map(entry -> new OpenConnection.Property(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Handle request message and check response is successful.
      * @param request The request message to handle
      * @return The response Message
@@ -322,5 +333,9 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     @Override
     public EndpointConfiguration getEndpointConfiguration() {
         return delegate.getEndpointConfiguration();
+    }
+
+    AtomicInteger getConnections() {
+        return connections;
     }
 }
