@@ -27,6 +27,7 @@ import com.consol.citrus.jdbc.model.OpenConnection;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import org.testng.annotations.Test;
 
+import java.sql.Connection;
 import java.util.Properties;
 
 public class JdbcServerIT extends TestNGCitrusTestDesigner {
@@ -114,6 +115,22 @@ public class JdbcServerIT extends TestNGCitrusTestDesigner {
         //THEN
         receive(jdbcServer)
                 .message(JdbcMessage.openConnection(username, password, database));
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    @CitrusTest
+    public void testCloseConnectionWithWrongCredential() throws Exception{
+
+        //GIVEN
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+
+        //WHEN
+        connection.close();
+
+        //THEN
+        receive(jdbcServer)
+                .message(JdbcMessage.closeConnection());
     }
 
 }
