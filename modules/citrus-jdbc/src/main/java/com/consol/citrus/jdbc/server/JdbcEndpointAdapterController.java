@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -294,6 +295,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         return properties.entrySet()
                 .stream()
                 .map(entry -> new OpenConnection.Property(entry.getKey(), entry.getValue()))
+                .sorted(Comparator.comparingInt(OpenConnection.Property::hashCode))
                 .collect(Collectors.toList());
     }
 
