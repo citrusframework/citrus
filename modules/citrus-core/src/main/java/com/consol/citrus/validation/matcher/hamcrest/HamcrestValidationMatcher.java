@@ -23,6 +23,7 @@ import com.consol.citrus.validation.matcher.*;
 import com.consol.citrus.variable.VariableUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.*;
 
 import java.io.IOException;
@@ -56,6 +57,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
     private List<String> noArgumentCollectionMatchers = Collections.singletonList("empty");
 
     private List<String> iterableMatchers = Arrays.asList( "anyOf", "allOf" );
+
+    @Autowired
+    private List<HamcrestMatcherProvider> customMatchers = new ArrayList<>();
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
@@ -98,7 +102,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      * @param matcherParameter
      * @return
      */
-    private Matcher getMatcher(String matcherName, String[] matcherParameter) {
+    private Matcher<?> getMatcher(String matcherName, String[] matcherParameter) {
         try {
             if (noArgumentMatchers.contains(matcherName)) {
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName);
@@ -146,6 +150,13 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
                     return (Matcher) matcherMethod.invoke(null, nestedMatchers);
                 }
+            }
+
+            Optional<HamcrestMatcherProvider> matcherProvider = customMatchers.stream()
+                                                                                .filter(provider -> provider.getName().equals(matcherName))
+                                                                                .findFirst();
+            if (matcherProvider.isPresent()) {
+                return matcherProvider.get().provideMatcher(matcherParameter[0]);
             }
 
             if (matchers.contains(matcherName)) {
@@ -341,4 +352,5 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             }
         }
     }
+
 }

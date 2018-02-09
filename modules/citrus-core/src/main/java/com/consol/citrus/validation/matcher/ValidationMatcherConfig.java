@@ -17,9 +17,13 @@
 package com.consol.citrus.validation.matcher;
 
 import com.consol.citrus.validation.matcher.core.*;
+import com.consol.citrus.validation.matcher.hamcrest.HamcrestMatcherProvider;
 import com.consol.citrus.validation.matcher.hamcrest.HamcrestValidationMatcher;
+import org.hamcrest.CustomMatcher;
+import org.hamcrest.Matcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.AntPathMatcher;
 
 /**
  * @author Christoph Deppisch
@@ -42,12 +46,36 @@ public class ValidationMatcherConfig {
     private final WeekdayValidationMatcher weekDayValidationMatcher = new WeekdayValidationMatcher();
     private final CreateVariableValidationMatcher createVariablesValidationMatcher = new CreateVariableValidationMatcher();
     private final DateRangeValidationMatcher dateRangeValidationMatcher = new DateRangeValidationMatcher();
-    private final HamcrestValidationMatcher hamcrestValidationMatcher = new HamcrestValidationMatcher();
     private final EmptyValidationMatcher emptyValidationMatcher = new EmptyValidationMatcher();
     private final NotEmptyValidationMatcher notEmptyValidationMatcher = new NotEmptyValidationMatcher();
     private final NullValidationMatcher nullValidationMatcher = new NullValidationMatcher();
     private final NotNullValidationMatcher notNullValidationMatcher = new NotNullValidationMatcher();
     private final IgnoreValidationMatcher ignoreValidationMatcher = new IgnoreValidationMatcher();
+
+    @Bean(name = "matchesPath")
+    public HamcrestMatcherProvider matchesPath() {
+        return new HamcrestMatcherProvider() {
+            @Override
+            public String getName() {
+                return "matchesPath";
+            }
+
+            @Override
+            public Matcher<String> provideMatcher(String predicate) {
+                return new CustomMatcher<String>(String.format("path matching %s", predicate)) {
+                    @Override
+                    public boolean matches(Object item) {
+                        return ((item instanceof String) && new AntPathMatcher().match(predicate, (String) item));
+                    }
+                };
+            }
+        };
+    }
+
+    @Bean
+    public HamcrestValidationMatcher hamcrestValidationMatcher() {
+        return new HamcrestValidationMatcher();
+    }
 
     @Bean(name = "validationMatcherRegistry")
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
@@ -80,7 +108,7 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.getMembers().put("isWeekday", weekDayValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("variable", createVariablesValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("dateRange", dateRangeValidationMatcher);
-        citrusValidationMatcherLibrary.getMembers().put("assertThat", hamcrestValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("assertThat", hamcrestValidationMatcher());
         citrusValidationMatcherLibrary.getMembers().put("empty", emptyValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("notEmpty", notEmptyValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("null", nullValidationMatcher);

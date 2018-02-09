@@ -17,8 +17,10 @@
 package com.consol.citrus.validation.matcher.hamcrest;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.testng.annotations.*;
 
 import java.util.*;
 
@@ -28,9 +30,19 @@ import java.util.*;
  */
 public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
 
+    @Autowired
+    @Qualifier("citrusValidationMatcherLibrary")
+    private ValidationMatcherLibrary validationMatcherLibrary;
+
+    private HamcrestValidationMatcher validationMatcher;
+
+    @BeforeClass
+    public void setupValidationMatcher() {
+        validationMatcher = (HamcrestValidationMatcher) validationMatcherLibrary.getValidationMatcher("assertThat");
+    }
+
     @Test(dataProvider = "testData")
     public void testValidate(String path, String value, List<String> params) throws Exception {
-        HamcrestValidationMatcher validationMatcher = new HamcrestValidationMatcher();
         validationMatcher.validate( path, value, params, context);
     }
 
@@ -49,6 +61,8 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "value", Collections.singletonList("endsWith(lue)")},
             new Object[]{"foo", "value", Collections.singletonList("anyOf(startsWith(val), endsWith(lue))")},
             new Object[]{"foo", "value", Collections.singletonList("allOf(startsWith(val), endsWith(lue))")},
+            new Object[]{"foo", "value/12345", Collections.singletonList("matchesPath(value/{id})")},
+            new Object[]{"foo", "value/12345/test", Collections.singletonList("matchesPath(value/{id}/test)")},
             new Object[]{"foo", "", Collections.singletonList("isEmptyString()")},
             new Object[]{"foo", "bar", Collections.singletonList("not(isEmptyString())")},
             new Object[]{"foo", null, Collections.singletonList("isEmptyOrNullString()")},
@@ -88,7 +102,6 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
 
     @Test(dataProvider = "testDataFailed", expectedExceptions = AssertionError.class)
     public void testValidateFailed(String path, String value, List<String> params) throws Exception {
-        HamcrestValidationMatcher validationMatcher = new HamcrestValidationMatcher();
         validationMatcher.validate( path, value, params, context);
     }
 
@@ -106,6 +119,9 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "value", Collections.singletonList("endsWith(wrong)")},
             new Object[]{"foo", "value", Collections.singletonList("anyOf(startsWith(wrong), endsWith(wrong))")},
             new Object[]{"foo", "value", Collections.singletonList("allOf(startsWith(wrong), endsWith(wrong))")},
+            new Object[]{"foo", "value/12345", Collections.singletonList("matchesPath(value/{id}/{operation})")},
+            new Object[]{"foo", "value/12345/test", Collections.singletonList("matchesPath(value/{id})")},
+            new Object[]{"foo", "value", Collections.singletonList("matchesPath(value/{id})")},
             new Object[]{"foo", "bar", Collections.singletonList("isEmptyString()")},
             new Object[]{"foo", "", Collections.singletonList("not(isEmptyString())")},
             new Object[]{"foo", "bar", Collections.singletonList("isEmptyOrNullString()")},
