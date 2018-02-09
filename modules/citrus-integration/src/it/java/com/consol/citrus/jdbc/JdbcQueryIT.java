@@ -16,32 +16,37 @@
 
 package com.consol.citrus.jdbc;
 
+import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
+import com.consol.citrus.message.MessageType;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.concurrent.Executors;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Test
-public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
+public class JdbcQueryIT extends TestNGCitrusTestDesigner{
 
     @CitrusEndpoint
     @JdbcServerConfig(
             databaseName = "testdb",
             autoStart = true,
-            port = 4567,
-            autoCreateStatement = false)
+            port = 4567)
     private JdbcServer jdbcServer;
 
     private JdbcDriver jdbcDriver = new JdbcDriver();
@@ -52,35 +57,37 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
     }
 
     @CitrusTest
-    public void testCreatePreparedStatementCredential() throws Exception{
+    public void textExecuteQuery() throws Exception{
 
-        //GIVEN
         final Connection connection =
                 jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
-        final String sql = "SELECT whatever FROM table";
-
-        //WHEN
-        final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-        //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.createPreparedStatement(sql));
-        assertNotNull(preparedStatement);
-    }
-
-    @CitrusTest
-    public void testCreateStatement() throws Exception {
-
-        //GIVEN
-        final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
-
-        //WHEN
         final Statement statement = connection.createStatement();
+        final String sql = "SELECT whatever FROM somewhere";
 
-        //THEN
+        action(new AbstractTestAction() {
+            @Override
+            public void doExecute(final TestContext context) {
+                Executors.newSingleThreadExecutor().submit(() -> {
+                        try {
+                            final ResultSet resultSet  = statement.executeQuery(sql);
+
+                            assertTrue(resultSet.next());
+                            assertEquals(resultSet.getString("foo"), "bar");
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                );
+            }
+        });
+
         receive(jdbcServer)
-                .message(JdbcMessage.createStatement());
-        assertNotNull(statement);
+                .messageType(MessageType.JSON)
+                .message(JdbcMessage.execute(sql));
+
+        send(jdbcServer)
+                .message(JdbcMessage.result().dataSet("[ { \"foo\": \"bar\" } ]"));
     }
+
 }
