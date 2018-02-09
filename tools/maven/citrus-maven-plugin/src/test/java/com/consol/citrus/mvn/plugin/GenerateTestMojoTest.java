@@ -17,6 +17,7 @@
 package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.xml.*;
 import com.consol.citrus.mvn.plugin.config.tests.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

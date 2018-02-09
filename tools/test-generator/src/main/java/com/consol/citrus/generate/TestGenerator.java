@@ -22,5 +22,16 @@ package com.consol.citrus.generate;
  */
 public interface TestGenerator {
 
+    /**
+     * Create tests with this generator.
+     */
     void create();
+
+    /**
+     * Mode indicating test actor client or server. Based on this mode send and receive directions may differ accordingly.
+     */
+    enum GeneratorMode {
+        CLIENT,
+        SERVER
+    }
 }

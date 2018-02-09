@@ -17,6 +17,7 @@
 package com.consol.citrus.generate;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.generate.xml.XmlTestGenerator;
 import org.apache.commons.cli.*;
 
 /**

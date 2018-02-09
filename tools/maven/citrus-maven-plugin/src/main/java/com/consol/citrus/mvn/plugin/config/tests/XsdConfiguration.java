@@ -16,6 +16,7 @@
 
 package com.consol.citrus.mvn.plugin.config.tests;
 
+import com.consol.citrus.generate.TestGenerator;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.Serializable;
@@ -29,8 +30,8 @@ public class XsdConfiguration implements Serializable {
     /**
      * Actor (client/server) describing which part to generate test for.
      */
-    @Parameter(property = "citrus.xsd.actor", defaultValue = "client")
-    private String actor = "client";
+    @Parameter(property = "citrus.xsd.actor", defaultValue = "CLIENT")
+    private String mode = TestGenerator.GeneratorMode.CLIENT.name();
 
     /**
      * Path of the xsd from which the sample request and response are get from
@@ -57,21 +58,21 @@ public class XsdConfiguration implements Serializable {
     private MappingsConfiguration mappings;
 
     /**
-     * Gets the actor.
+     * Gets the mode.
      *
      * @return
      */
-    public String getActor() {
-        return actor;
+    public String getMode() {
+        return mode;
     }
 
     /**
-     * Sets the actor.
+     * Sets the mode.
      *
-     * @param actor
+     * @param mode
      */
-    public void setActor(String actor) {
-        this.actor = actor;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     /**

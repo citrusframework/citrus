@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate;
+package com.consol.citrus.generate.xml;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
@@ -29,49 +30,27 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class SwaggerXmlTestGeneratorTest {
+public class WsdlXmlTestGeneratorTest {
 
     @Test
-    public void testCreateTestAsClient() throws IOException {
-        SwaggerXmlTestGenerator generator = new SwaggerXmlTestGenerator();
+    public void testCreateTest() throws IOException {
+        WsdlXmlTestGenerator generator = new WsdlXmlTestGenerator();
 
         generator.withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .usePackage("com.consol.citrus")
                 .withFramework(UnitFramework.TESTNG);
 
-        generator.withNamePrefix("UserLoginClient_");
-        generator.withSpec("com/consol/citrus/swagger/user-login-api.json");
+        generator.withWsdl("com/consol/citrus/wsdl/BookStore.wsdl");
 
         generator.create();
 
-        verifyTest("UserLoginClient_createUser_IT");
-        verifyTest("UserLoginClient_loginUser_IT");
-        verifyTest("UserLoginClient_logoutUser_IT");
-        verifyTest("UserLoginClient_getUserByName_IT");
+        verifyTest("BookStore_addBook_IT", "book:addBook", "book:addBookResponse");
+        verifyTest("BookStore_addBookAudio_IT", "aud:addBookAudio", "aud:addBookAudioResponse");
+        verifyTest("BookStore_deleteBook_IT", "book:deleteBook", "book:deleteBookResponse");
     }
 
-    @Test
-    public void testCreateTestAsServer() throws IOException {
-        SwaggerXmlTestGenerator generator = new SwaggerXmlTestGenerator();
-
-        generator.withAuthor("Christoph")
-                .withDescription("This is a sample test")
-                .usePackage("com.consol.citrus")
-                .withFramework(UnitFramework.TESTNG);
-
-        generator.withActor("server");
-        generator.withSpec("com/consol/citrus/swagger/user-login-api.json");
-
-        generator.create();
-
-        verifyTest("UserLoginService_createUser_IT");
-        verifyTest("UserLoginService_loginUser_IT");
-        verifyTest("UserLoginService_logoutUser_IT");
-        verifyTest("UserLoginService_getUserByName_IT");
-    }
-
-    private void verifyTest(String name) throws IOException {
+    private void verifyTest(String name, String requestName, String responseName) throws IOException {
         File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/" + name + ".java");
         Assert.assertTrue(javaFile.exists());
 
@@ -89,6 +68,8 @@ public class SwaggerXmlTestGeneratorTest {
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
         Assert.assertTrue(xmlContent.contains("<testcase name=\"" + name + "\">"));
+        Assert.assertTrue(xmlContent.contains("<data>&lt;" + requestName));
+        Assert.assertTrue(xmlContent.contains("<data>&lt;" + responseName));
     }
 
 }

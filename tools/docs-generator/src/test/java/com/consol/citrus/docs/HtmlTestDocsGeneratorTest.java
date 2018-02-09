@@ -17,7 +17,7 @@
 package com.consol.citrus.docs;
 
 import com.consol.citrus.generate.UnitFramework;
-import com.consol.citrus.generate.XmlTestGenerator;
+import com.consol.citrus.generate.xml.XmlTestGenerator;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;

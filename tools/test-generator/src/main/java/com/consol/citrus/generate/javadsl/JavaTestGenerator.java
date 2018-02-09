@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate;
+package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.generate.AbstractTemplateBasedTestGenerator;
+import com.consol.citrus.generate.UnitFramework;
 
 import java.io.File;
 import java.util.Properties;

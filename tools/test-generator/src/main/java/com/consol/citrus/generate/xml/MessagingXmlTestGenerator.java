@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate;
+package com.consol.citrus.generate.xml;
 
 import com.consol.citrus.generate.provider.*;
 import com.consol.citrus.generate.provider.http.*;
@@ -32,10 +32,10 @@ import java.util.List;
 public class MessagingXmlTestGenerator extends XmlTestGenerator {
 
     /** Actor describing which part (client/server) to use */
-    private String actor = "client";
+    private GeneratorMode mode = GeneratorMode.CLIENT;
 
     /** Endpoint name to use */
-    private String endpoint = "default";
+    private String endpoint;
 
     /** Sample request */
     private Message request;
@@ -47,13 +47,13 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     protected List<Object> getActions() {
         List<Object> actions = super.getActions();
 
-        if (actor.equalsIgnoreCase("client")) {
+        if (mode.equals(GeneratorMode.CLIENT)) {
             actions.add(getSendRequestActionProvider(request).getAction(endpoint, generateOutboundMessage(request)));
 
             if (response != null) {
                 actions.add(getReceiveResponseActionProvider(response).getAction(endpoint, generateInboundMessage(response)));
             }
-        } else if (actor.equalsIgnoreCase("server")) {
+        } else if (mode.equals(GeneratorMode.SERVER)) {
             actions.add(getReceiveRequestActionProvider(request).getAction(endpoint, generateInboundMessage(request)));
 
             if (response != null) {
@@ -123,12 +123,12 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     }
 
     /**
-     * Set the actor describing which part (client/server) to use.
-     * @param actor
+     * Set the mode describing which part (client/server) to use.
+     * @param mode
      * @return
      */
-    public MessagingXmlTestGenerator withActor(String actor) {
-        this.actor = actor;
+    public MessagingXmlTestGenerator withMode(GeneratorMode mode) {
+        this.mode = mode;
         return this;
     }
 
@@ -185,21 +185,21 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
     }
 
     /**
-     * Gets the actor.
+     * Gets the mode.
      *
      * @return
      */
-    public String getActor() {
-        return actor;
+    public GeneratorMode getMode() {
+        return mode;
     }
 
     /**
-     * Sets the actor.
+     * Sets the mode.
      *
-     * @param actor
+     * @param mode
      */
-    public void setActor(String actor) {
-        this.actor = actor;
+    public void setMode(GeneratorMode mode) {
+        this.mode = mode;
     }
 
     /**

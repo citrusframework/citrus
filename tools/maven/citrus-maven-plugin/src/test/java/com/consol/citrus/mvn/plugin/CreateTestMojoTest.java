@@ -17,6 +17,7 @@
 package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.xml.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.Prompter;
@@ -104,6 +105,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.xsd");
+        when(prompter.prompt(contains("mode"), any(List.class), nullable(String.class))).thenReturn(TestGenerator.GeneratorMode.CLIENT.name());
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
@@ -138,6 +140,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.wsdl");
+        when(prompter.prompt(contains("mode"), any(List.class), nullable(String.class))).thenReturn(TestGenerator.GeneratorMode.CLIENT.name());
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("y");
         when(prompter.prompt(contains("Create test with WSDL"), any(List.class), eq("n"))).thenReturn("n");
@@ -167,7 +170,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.wsdl");
-        when(prompter.prompt(contains("actor"), any(List.class), nullable(String.class))).thenReturn("client");
+        when(prompter.prompt(contains("mode"), any(List.class), nullable(String.class))).thenReturn(TestGenerator.GeneratorMode.CLIENT.name());
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
@@ -203,7 +206,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.wsdl");
-        when(prompter.prompt(contains("actor"), any(List.class), nullable(String.class))).thenReturn("client");
+        when(prompter.prompt(contains("mode"), any(List.class), nullable(String.class))).thenReturn(TestGenerator.GeneratorMode.CLIENT.name());
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");
@@ -234,7 +237,7 @@ public class CreateTestMojoTest {
         when(prompter.prompt(contains("author"), nullable(String.class))).thenReturn("UnknownAuthor");
         when(prompter.prompt(contains("description"), nullable(String.class))).thenReturn("TODO");
         when(prompter.prompt(contains("package"), nullable(String.class))).thenReturn("com.consol.citrus.swagger");
-        when(prompter.prompt(contains("actor"), any(List.class), nullable(String.class))).thenReturn("client");
+        when(prompter.prompt(contains("mode"), any(List.class), nullable(String.class))).thenReturn(TestGenerator.GeneratorMode.CLIENT.name());
         when(prompter.prompt(contains("framework"), any(List.class), nullable(String.class))).thenReturn("testng");
         when(prompter.prompt(contains("operation"), nullable(String.class))).thenReturn("all");
         when(prompter.prompt(contains("Create test with XML schema"), any(List.class), eq("n"))).thenReturn("n");

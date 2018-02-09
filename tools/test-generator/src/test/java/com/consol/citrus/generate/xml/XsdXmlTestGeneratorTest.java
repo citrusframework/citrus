@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate;
+package com.consol.citrus.generate.xml;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;

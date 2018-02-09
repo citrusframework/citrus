@@ -16,7 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.TestGenerator;
+import com.consol.citrus.generate.xml.*;
 import com.consol.citrus.mvn.plugin.config.tests.TestConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -87,7 +88,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
-                generator.withActor(test.getXsd().getActor());
+                generator.withMode(TestGenerator.GeneratorMode.valueOf(test.getXsd().getMode()));
                 generator.withXsd(test.getXsd().getFile());
                 generator.withRequestMessage(test.getXsd().getRequest());
                 generator.withResponseMessage(test.getXsd().getResponse());
@@ -114,7 +115,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
-                generator.withActor(test.getWsdl().getActor());
+                generator.withMode(TestGenerator.GeneratorMode.valueOf(test.getWsdl().getMode()));
                 generator.withWsdl(test.getWsdl().getFile());
                 generator.withOperation(test.getWsdl().getOperation());
 
@@ -140,7 +141,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
-                generator.withActor(test.getSwagger().getActor());
+                generator.withMode(TestGenerator.GeneratorMode.valueOf(test.getSwagger().getMode()));
                 generator.withSpec(test.getSwagger().getFile());
                 generator.withOperation(test.getSwagger().getOperation());
 

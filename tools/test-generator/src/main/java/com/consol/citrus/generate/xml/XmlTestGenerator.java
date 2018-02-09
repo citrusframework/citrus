@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate;
+package com.consol.citrus.generate.xml;
 
+import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.javadsl.JavaTestGenerator;
 import com.consol.citrus.model.testcase.core.EchoModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.xml.namespace.CitrusNamespacePrefixMapper;

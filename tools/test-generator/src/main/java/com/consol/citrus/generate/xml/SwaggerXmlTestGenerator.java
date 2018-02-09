@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate;
+package com.consol.citrus.generate.xml;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessage;
@@ -72,7 +72,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
 
                 HttpMessage requestMessage = new HttpMessage();
 
-                if (getActor().equals("client")) {
+                if (getMode().equals(GeneratorMode.CLIENT)) {
                     String randomizedPath = path.getKey();
                     if (operation.getValue().getParameters() != null) {
                         List<PathParameter> pathParams = operation.getValue().getParameters().stream()
@@ -95,18 +95,18 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
                     operation.getValue().getParameters().stream()
                             .filter(p -> p instanceof HeaderParameter)
                             .filter(Parameter::getRequired)
-                            .forEach(p -> requestMessage.setHeader(p.getName(), getActor().equals("client") ? createRandomValueExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false) : createValidationExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false)));
+                            .forEach(p -> requestMessage.setHeader(p.getName(), getMode().equals(GeneratorMode.CLIENT) ? createRandomValueExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false) : createValidationExpression(((HeaderParameter) p).getItems(), swagger.getDefinitions(), false)));
 
                     operation.getValue().getParameters().stream()
                             .filter(param -> param instanceof QueryParameter)
                             .filter(Parameter::getRequired)
-                            .forEach(param -> requestMessage.queryParam(param.getName(), getActor().equals("client") ? createRandomValueExpression((QueryParameter) param) : createValidationExpression((QueryParameter) param)));
+                            .forEach(param -> requestMessage.queryParam(param.getName(), getMode().equals(GeneratorMode.CLIENT) ? createRandomValueExpression((QueryParameter) param) : createValidationExpression((QueryParameter) param)));
 
                     operation.getValue().getParameters().stream()
                             .filter(p -> p instanceof BodyParameter)
                             .filter(Parameter::getRequired)
                             .findFirst()
-                            .ifPresent(p -> requestMessage.setPayload(getActor().equals("client") ? createOutboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions()) : createInboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions())));
+                            .ifPresent(p -> requestMessage.setPayload(getMode().equals(GeneratorMode.CLIENT) ? createOutboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions()) : createInboundPayload(((BodyParameter) p).getSchema(), swagger.getDefinitions())));
                 }
                 withRequest(requestMessage);
 
@@ -122,12 +122,12 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
 
                         if (response.getHeaders() != null) {
                             for (Map.Entry<String, Property> header : response.getHeaders().entrySet()) {
-                                responseMessage.setHeader(header.getKey(), getActor().equals("client") ? createValidationExpression(header.getValue(), swagger.getDefinitions(), false) : createRandomValueExpression(header.getValue(), swagger.getDefinitions(), false));
+                                responseMessage.setHeader(header.getKey(), getMode().equals(GeneratorMode.CLIENT) ? createValidationExpression(header.getValue(), swagger.getDefinitions(), false) : createRandomValueExpression(header.getValue(), swagger.getDefinitions(), false));
                             }
                         }
 
                         if (response.getSchema() != null) {
-                            responseMessage.setPayload(getActor().equals("client") ? createInboundPayload(response.getSchema(), swagger.getDefinitions()): createOutboundPayload(response.getSchema(), swagger.getDefinitions()));
+                            responseMessage.setPayload(getMode().equals(GeneratorMode.CLIENT) ? createInboundPayload(response.getSchema(), swagger.getDefinitions()): createOutboundPayload(response.getSchema(), swagger.getDefinitions()));
                         }
                     }
                 }

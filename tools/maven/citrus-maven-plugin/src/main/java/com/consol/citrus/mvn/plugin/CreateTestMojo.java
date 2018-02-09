@@ -17,6 +17,7 @@
 package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.xml.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
@@ -25,7 +26,9 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Creates new Citrus test cases with empty XML test file and executable Java class.
@@ -190,8 +193,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String xsdResponseMessage = prompter.prompt("Enter response element name", generator.getResponseMessageSuggestion());
             generator.withResponseMessage(xsdResponseMessage);
 
-            String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
-            generator.withActor(actor);
+            String mode = prompter.prompt("Choose mode:", Arrays.stream(TestGenerator.GeneratorMode.values()).map(TestGenerator.GeneratorMode::name).collect(Collectors.toList()), TestGenerator.GeneratorMode.CLIENT.name());
+            generator.withMode(TestGenerator.GeneratorMode.valueOf(mode.toUpperCase()));
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
                     "framework: " + generator.getFramework() + "\n" +
@@ -201,7 +204,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "xsd: " + generator.getXsd() + "\n" +
                     "request: " + generator.getRequestMessage() + "\n" +
                     "response: " + generator.getResponseMessage() + "\n" +
-                    "actor: " + generator.getActor() + "\n" +
+                    "actor: " + generator.getMode() + "\n" +
                     "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
@@ -237,8 +240,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
 
             generator.withWsdl(wsdl);
 
-            String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
-            generator.withActor(actor);
+            String mode = prompter.prompt("Choose mode:", Arrays.stream(TestGenerator.GeneratorMode.values()).map(TestGenerator.GeneratorMode::name).collect(Collectors.toList()), TestGenerator.GeneratorMode.CLIENT.name());
+            generator.withMode(TestGenerator.GeneratorMode.valueOf(mode.toUpperCase()));
 
             String operation = prompter.prompt("Enter operation name", "all");
             if (!operation.equals("all")) {
@@ -258,7 +261,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "description: " + generator.getDescription() + "\n" +
                     "wsdl: " + generator.getWsdl() + "\n" +
                     "operation: " + Optional.ofNullable(generator.getOperation()).orElse("all") + "\n" +
-                    "actor: " + generator.getActor() + "\n" +
+                    "actor: " + generator.getMode() + "\n" +
                     "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
@@ -295,8 +298,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
 
             generator.withSpec(swagger);
 
-            String actor = prompter.prompt("Actor as:", CollectionUtils.arrayToList(new String[] {"client", "server"}), "client");
-            generator.withActor(actor);
+            String mode = prompter.prompt("Choose mode:", Arrays.stream(TestGenerator.GeneratorMode.values()).map(TestGenerator.GeneratorMode::name).collect(Collectors.toList()), TestGenerator.GeneratorMode.CLIENT.name());
+            generator.withMode(TestGenerator.GeneratorMode.valueOf(mode.toUpperCase()));
 
             String operation = prompter.prompt("Enter operation name", "all");
             if (!operation.equals("all")) {
@@ -316,7 +319,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "description: " + generator.getDescription() + "\n" +
                     "swagger-api: " + generator.getSwaggerResource() + "\n" +
                     "operation: " + Optional.ofNullable(generator.getOperation()).orElse("all") + "\n" +
-                    "actor: " + generator.getActor() + "\n" +
+                    "actor: " + generator.getMode() + "\n" +
                     "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
 
             if (confirm.equalsIgnoreCase("n")) {

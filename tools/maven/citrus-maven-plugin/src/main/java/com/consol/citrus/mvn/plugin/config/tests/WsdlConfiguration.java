@@ -16,6 +16,7 @@
 
 package com.consol.citrus.mvn.plugin.config.tests;
 
+import com.consol.citrus.generate.TestGenerator;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.Serializable;
@@ -29,8 +30,8 @@ public class WsdlConfiguration implements Serializable {
     /**
      * Actor (client/server) describing which part to generate test for.
      */
-    @Parameter(property = "citrus.wsdl.actor", defaultValue = "client")
-    private String actor = "client";
+    @Parameter(property = "citrus.wsdl.actor", defaultValue = "CLIENT")
+    private String mode = TestGenerator.GeneratorMode.CLIENT.name();
 
     /**
      * The path to the wsdl from which the suite is generated.
@@ -51,21 +52,21 @@ public class WsdlConfiguration implements Serializable {
     private MappingsConfiguration mappings;
 
     /**
-     * Gets the actor.
+     * Gets the mode.
      *
      * @return
      */
-    public String getActor() {
-        return actor;
+    public String getMode() {
+        return mode;
     }
 
     /**
-     * Sets the actor.
+     * Sets the mode.
      *
-     * @param actor
+     * @param mode
      */
-    public void setActor(String actor) {
-        this.actor = actor;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     /**
