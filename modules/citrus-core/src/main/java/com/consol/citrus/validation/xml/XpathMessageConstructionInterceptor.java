@@ -42,7 +42,7 @@ import java.util.Map.Entry;
 public class XpathMessageConstructionInterceptor extends AbstractMessageConstructionInterceptor {
 
     /** Overwrites message elements before validating (via XPath expressions) */
-    private Map<String, String> xPathExpressions = new HashMap<String, String>();
+    private Map<String, String> xPathExpressions = new LinkedHashMap<>();
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathMessageConstructionInterceptor.class);
@@ -60,7 +60,7 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      */
     public XpathMessageConstructionInterceptor(Map<String, String> xPathExpressions) {
         super();
-        this.xPathExpressions = xPathExpressions;
+        this.xPathExpressions.putAll(xPathExpressions);
     }
 
     /**
