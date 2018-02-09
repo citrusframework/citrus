@@ -54,6 +54,7 @@ public class XmlConfigurer implements InitializingBean {
     public static final String CDATA_SECTIONS = "cdata-sections";
     public static final String VALIDATE_IF_SCHEMA = "validate-if-schema";
     public static final String RESOURCE_RESOLVER = "resource-resolver";
+    public static final String XML_DECLARATION = "xml-declaration";
 
     public XmlConfigurer() {
         try {
@@ -187,6 +188,10 @@ public class XmlConfigurer implements InitializingBean {
 
         if (!serializeSettings.containsKey(FORMAT_PRETTY_PRINT)) {
             serializeSettings.put(FORMAT_PRETTY_PRINT, true);
+        }
+
+        if (!serializeSettings.containsKey(XML_DECLARATION)) {
+            serializeSettings.put(XML_DECLARATION, true);
         }
     }
 
