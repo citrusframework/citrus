@@ -20,14 +20,14 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.model.testcase.http.ObjectFactory;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.variable.dictionary.json.JsonPathMappingDataDictionary;
 import io.swagger.models.*;
 import io.swagger.models.parameters.*;
 import io.swagger.models.properties.*;
 import io.swagger.parser.SwaggerParser;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -47,6 +47,9 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
 
     private String namePrefix;
     private String nameSuffix = "_IT";
+
+    private JsonPathMappingDataDictionary inboundDataDictionary = new JsonPathMappingDataDictionary();
+    private JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
 
     @Override
     public void create() {
@@ -68,7 +71,24 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
                 withName(namePrefix + operation.getValue().getOperationId() + nameSuffix);
 
                 HttpMessage requestMessage = new HttpMessage();
-                requestMessage.path(Optional.ofNullable(contextPath).orElse("") + Optional.ofNullable(swagger.getBasePath()).filter(basePath -> !basePath.equals("/")).orElse("") + path.getKey());
+
+                if (getActor().equals("client")) {
+                    String randomizedPath = path.getKey();
+                    if (operation.getValue().getParameters() != null) {
+                        List<PathParameter> pathParams = operation.getValue().getParameters().stream()
+                                .filter(p -> p instanceof PathParameter)
+                                .map(PathParameter.class::cast)
+                                .collect(Collectors.toList());
+
+                        for (PathParameter parameter : pathParams) {
+                            randomizedPath = randomizedPath.replaceAll("\\{" + parameter.getName() + "\\}", createRandomValueExpression(parameter));
+                        }
+                    }
+
+                    requestMessage.path(Optional.ofNullable(contextPath).orElse("") + Optional.ofNullable(swagger.getBasePath()).filter(basePath -> !basePath.equals("/")).orElse("") + randomizedPath);
+                } else {
+                    requestMessage.path("@assertThat(matchesPath(" + path.getKey() + "))@");
+                }
                 requestMessage.method(org.springframework.http.HttpMethod.valueOf(operation.getKey().name()));
 
                 if (operation.getValue().getParameters() != null) {
@@ -221,6 +241,8 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
                 payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')");
             } else if (!CollectionUtils.isEmpty(((StringProperty) property).getEnum())) {
                 payload.append("citrus:randomEnumValue(").append(((StringProperty) property).getEnum().stream().map(value -> "'" + value + "'").collect(Collectors.joining(","))).append(")");
+            } else if (Optional.ofNullable(property.getFormat()).orElse("").equalsIgnoreCase("uuid")) {
+                payload.append("citrus:randomUUID()");
             } else {
                 payload.append("citrus:randomString(").append(((StringProperty) property).getMaxLength() != null && ((StringProperty) property).getMaxLength() > 0 ? ((StringProperty) property).getMaxLength() : (((StringProperty) property).getMinLength() != null && ((StringProperty) property).getMinLength() > 0 ? ((StringProperty) property).getMinLength() : 10)).append(")");
             }
@@ -476,7 +498,9 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
                 } else if (StringUtils.hasText(parameter.getPattern())) {
                     return "\"citrus:randomValue(" + parameter.getPattern() + ")\"";
                 } else if (!CollectionUtils.isEmpty(parameter.getEnum())) {
-                    return "\"citrus:randomEnumValue(" + (parameter.getEnum().stream().collect(Collectors.joining("|"))) + ")\"";
+                    return "\"citrus:randomEnumValue(" + (parameter.getEnum().stream().collect(Collectors.joining(","))) + ")\"";
+                } else if (Optional.ofNullable(parameter.getFormat()).orElse("").equalsIgnoreCase("uuid")){
+                    return "citrus:randomUUID()";
                 } else {
                     return "citrus:randomString(10)";
                 }
@@ -534,6 +558,56 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator {
      */
     public SwaggerXmlTestGenerator withOperation(String operation) {
         this.operation = operation;
+        return this;
+    }
+
+    /**
+     * Add inbound JsonPath expression mappings to manipulate inbound message content.
+     * @param mappings
+     * @return
+     */
+    public SwaggerXmlTestGenerator withInboundMappings(Map<String, String> mappings) {
+        this.inboundDataDictionary.getMappings().putAll(mappings);
+        return this;
+    }
+
+    /**
+     * Add outbound JsonPath expression mappings to manipulate outbound message content.
+     * @param mappings
+     * @return
+     */
+    public SwaggerXmlTestGenerator withOutboundMappings(Map<String, String> mappings) {
+        this.outboundDataDictionary.getMappings().putAll(mappings);
+        return this;
+    }
+
+    /**
+     * Add inbound JsonPath expression mappings file to manipulate inbound message content.
+     * @param mappingFile
+     * @return
+     */
+    public SwaggerXmlTestGenerator withInboundMappingFile(String mappingFile) {
+        this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        try {
+            this.inboundDataDictionary.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to read mapping file", e);
+        }
+        return this;
+    }
+
+    /**
+     * Add outbound JsonPath expression mappings file to manipulate outbound message content.
+     * @param mappingFile
+     * @return
+     */
+    public SwaggerXmlTestGenerator withOutboundMappingFile(String mappingFile) {
+        this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        try {
+            this.outboundDataDictionary.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to read mapping file", e);
+        }
         return this;
     }
 

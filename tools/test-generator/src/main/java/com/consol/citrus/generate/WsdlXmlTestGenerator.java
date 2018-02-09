@@ -16,9 +16,16 @@
 
 package com.consol.citrus.generate;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.generate.dictionary.InboundXmlDataDictionary;
+import com.consol.citrus.generate.dictionary.OutboundXmlDataDictionary;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.model.testcase.ws.ObjectFactory;
+import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.xml.XmlConfigurer;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -26,8 +33,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -41,6 +47,9 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
     private String operation;
     private String namePrefix;
     private String nameSuffix = "_IT";
+
+    private InboundXmlDataDictionary inboundDataDictionary = new InboundXmlDataDictionary();
+    private OutboundXmlDataDictionary outboundDataDictionary = new OutboundXmlDataDictionary();
 
     @Override
     public void create() {
@@ -115,6 +124,10 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
             response.setPayload(SampleXmlUtil.createSampleForType(responseElem));
             withResponse(response);
 
+            XmlConfigurer configurer = new XmlConfigurer();
+            configurer.setSerializeSettings(Collections.singletonMap(XmlConfigurer.XML_DECLARATION, false));
+            XMLUtils.initialize(configurer);
+
             super.create();
 
             log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
@@ -126,6 +139,16 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
         List<String> contextPaths = super.getMarshallerContextPaths();
         contextPaths.add(ObjectFactory.class.getPackage().getName());
         return contextPaths;
+    }
+
+    @Override
+    protected Message generateInboundMessage(Message message) {
+        return inboundDataDictionary.interceptMessageConstruction(message, MessageType.XML.name(), new TestContext());
+    }
+
+    @Override
+    protected Message generateOutboundMessage(Message message) {
+        return outboundDataDictionary.interceptMessageConstruction(message, MessageType.XML.name(), new TestContext());
     }
 
     /**
@@ -358,6 +381,56 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator {
      */
     public WsdlXmlTestGenerator withOperation(String operation) {
         this.operation = operation;
+        return this;
+    }
+
+    /**
+     * Add inbound XPath expression mappings to manipulate inbound message content.
+     * @param mappings
+     * @return
+     */
+    public WsdlXmlTestGenerator withInboundMappings(Map<String, String> mappings) {
+        this.inboundDataDictionary.getMappings().putAll(mappings);
+        return this;
+    }
+
+    /**
+     * Add outbound XPath expression mappings to manipulate outbound message content.
+     * @param mappings
+     * @return
+     */
+    public WsdlXmlTestGenerator withOutboundMappings(Map<String, String> mappings) {
+        this.outboundDataDictionary.getMappings().putAll(mappings);
+        return this;
+    }
+
+    /**
+     * Add inbound XPath expression mappings file to manipulate inbound message content.
+     * @param mappingFile
+     * @return
+     */
+    public WsdlXmlTestGenerator withInboundMappingFile(String mappingFile) {
+        this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        try {
+            this.inboundDataDictionary.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to read mapping file", e);
+        }
+        return this;
+    }
+
+    /**
+     * Add outbound XPath expression mappings file to manipulate outbound message content.
+     * @param mappingFile
+     * @return
+     */
+    public WsdlXmlTestGenerator withOutboundMappingFile(String mappingFile) {
+        this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        try {
+            this.outboundDataDictionary.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to read mapping file", e);
+        }
         return this;
     }
 

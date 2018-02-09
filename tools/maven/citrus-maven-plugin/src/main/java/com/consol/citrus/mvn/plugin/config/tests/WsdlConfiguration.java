@@ -45,6 +45,12 @@ public class WsdlConfiguration implements Serializable {
     private String operation;
 
     /**
+     * Optional mapping expressions for generated message content manipulation.
+     */
+    @Parameter
+    private MappingsConfiguration mappings;
+
+    /**
      * Gets the actor.
      *
      * @return
@@ -96,5 +102,23 @@ public class WsdlConfiguration implements Serializable {
      */
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    /**
+     * Gets the mappings.
+     *
+     * @return
+     */
+    public MappingsConfiguration getMappings() {
+        return mappings;
+    }
+
+    /**
+     * Sets the mappings.
+     *
+     * @param mappings
+     */
+    public void setMappings(MappingsConfiguration mappings) {
+        this.mappings = mappings;
     }
 }

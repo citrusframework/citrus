@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class MessagingXmlTestGenerator extends XmlTestGenerator {
 
-    /** Actor descripbing which part (client/server) to use */
+    /** Actor describing which part (client/server) to use */
     private String actor = "client";
 
     /** Endpoint name to use */
@@ -48,20 +48,38 @@ public class MessagingXmlTestGenerator extends XmlTestGenerator {
         List<Object> actions = super.getActions();
 
         if (actor.equalsIgnoreCase("client")) {
-            actions.add(getSendRequestActionProvider(request).getAction(endpoint, request));
+            actions.add(getSendRequestActionProvider(request).getAction(endpoint, generateOutboundMessage(request)));
 
             if (response != null) {
-                actions.add(getReceiveResponseActionProvider(response).getAction(endpoint, response));
+                actions.add(getReceiveResponseActionProvider(response).getAction(endpoint, generateInboundMessage(response)));
             }
         } else if (actor.equalsIgnoreCase("server")) {
-            actions.add(getReceiveRequestActionProvider(request).getAction(endpoint, request));
+            actions.add(getReceiveRequestActionProvider(request).getAction(endpoint, generateInboundMessage(request)));
 
             if (response != null) {
-                actions.add(getSendResponseActionProvider(response).getAction(endpoint, response));
+                actions.add(getSendResponseActionProvider(response).getAction(endpoint, generateOutboundMessage(response)));
             }
         }
 
         return actions;
+    }
+
+    /**
+     * Inbound message generation hook for subclasses.
+     * @param message
+     * @return
+     */
+    protected Message generateInboundMessage(Message message) {
+        return message;
+    }
+
+    /**
+     * Outbound message generation hook for subclasses.
+     * @param message
+     * @return
+     */
+    protected Message generateOutboundMessage(Message message) {
+        return message;
     }
 
     protected <T, M extends Message> MessageActionProvider<T, M> getSendRequestActionProvider(M message) {

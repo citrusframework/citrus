@@ -92,6 +92,13 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                 generator.withRequestMessage(test.getXsd().getRequest());
                 generator.withResponseMessage(test.getXsd().getResponse());
 
+                if (test.getXsd().getMappings() != null) {
+                    generator.withInboundMappings(test.getXsd().getMappings().getInbound());
+                    generator.withOutboundMappings(test.getXsd().getMappings().getOutbound());
+                    generator.withInboundMappingFile(test.getXsd().getMappings().getInboundFile());
+                    generator.withOutboundMappingFile(test.getXsd().getMappings().getOutboundFile());
+                }
+                
                 generator.withEndpoint(test.getEndpoint());
 
                 generator.withNameSuffix(test.getSuffix());
@@ -111,6 +118,13 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                 generator.withWsdl(test.getWsdl().getFile());
                 generator.withOperation(test.getWsdl().getOperation());
 
+                if (test.getWsdl().getMappings() != null) {
+                    generator.withInboundMappings(test.getWsdl().getMappings().getInbound());
+                    generator.withOutboundMappings(test.getWsdl().getMappings().getOutbound());
+                    generator.withInboundMappingFile(test.getWsdl().getMappings().getInboundFile());
+                    generator.withOutboundMappingFile(test.getWsdl().getMappings().getOutboundFile());
+                }
+
                 generator.withEndpoint(test.getEndpoint());
 
                 generator.withNameSuffix(test.getSuffix());
@@ -129,6 +143,14 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                 generator.withActor(test.getSwagger().getActor());
                 generator.withSpec(test.getSwagger().getFile());
                 generator.withOperation(test.getSwagger().getOperation());
+
+
+                if (test.getSwagger().getMappings() != null) {
+                    generator.withInboundMappings(test.getSwagger().getMappings().getInbound());
+                    generator.withOutboundMappings(test.getSwagger().getMappings().getOutbound());
+                    generator.withInboundMappingFile(test.getSwagger().getMappings().getInboundFile());
+                    generator.withOutboundMappingFile(test.getSwagger().getMappings().getOutboundFile());
+                }
 
                 generator.withEndpoint(test.getEndpoint());
 

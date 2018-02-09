@@ -51,6 +51,12 @@ public class XsdConfiguration implements Serializable {
     private String response;
 
     /**
+     * Optional mapping expressions for generated message content manipulation.
+     */
+    @Parameter
+    private MappingsConfiguration mappings;
+
+    /**
      * Gets the actor.
      *
      * @return
@@ -120,5 +126,23 @@ public class XsdConfiguration implements Serializable {
      */
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    /**
+     * Gets the mappings.
+     *
+     * @return
+     */
+    public MappingsConfiguration getMappings() {
+        return mappings;
+    }
+
+    /**
+     * Sets the mappings.
+     *
+     * @param mappings
+     */
+    public void setMappings(MappingsConfiguration mappings) {
+        this.mappings = mappings;
     }
 }

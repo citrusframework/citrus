@@ -16,8 +16,13 @@
 
 package com.consol.citrus.generate;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.generate.dictionary.InboundXmlDataDictionary;
+import com.consol.citrus.generate.dictionary.OutboundXmlDataDictionary;
+import com.consol.citrus.message.*;
+import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.xml.XmlConfigurer;
 import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -25,6 +30,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -39,6 +46,9 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator {
     private String responseMessage;
 
     private String nameSuffix = "IT";
+
+    private InboundXmlDataDictionary inboundDataDictionary = new InboundXmlDataDictionary();
+    private OutboundXmlDataDictionary outboundDataDictionary = new OutboundXmlDataDictionary();
 
     @Override
     public void create() {
@@ -82,7 +92,21 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator {
             withResponse(null);
         }
 
+        XmlConfigurer configurer = new XmlConfigurer();
+        configurer.setSerializeSettings(Collections.singletonMap(XmlConfigurer.XML_DECLARATION, false));
+        XMLUtils.initialize(configurer);
+
         super.create();
+    }
+
+    @Override
+    protected Message generateInboundMessage(Message message) {
+        return inboundDataDictionary.interceptMessageConstruction(message, MessageType.XML.name(), new TestContext());
+    }
+
+    @Override
+    protected Message generateOutboundMessage(Message message) {
+        return outboundDataDictionary.interceptMessageConstruction(message, MessageType.XML.name(), new TestContext());
     }
 
     /**
@@ -196,6 +220,58 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator {
         this.nameSuffix = suffix;
         return this;
     }
+
+    /**
+     * Add inbound XPath expression mappings to manipulate inbound message content.
+     * @param mappings
+     * @return
+     */
+    public XsdXmlTestGenerator withInboundMappings(Map<String, String> mappings) {
+        this.inboundDataDictionary.getMappings().putAll(mappings);
+        return this;
+    }
+
+    /**
+     * Add outbound XPath expression mappings to manipulate outbound message content.
+     * @param mappings
+     * @return
+     */
+    public XsdXmlTestGenerator withOutboundMappings(Map<String, String> mappings) {
+        this.outboundDataDictionary.getMappings().putAll(mappings);
+        return this;
+    }
+
+    /**
+     * Add inbound XPath expression mappings file to manipulate inbound message content.
+     * @param mappingFile
+     * @return
+     */
+    public XsdXmlTestGenerator withInboundMappingFile(String mappingFile) {
+        this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        try {
+            this.inboundDataDictionary.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to read mapping file", e);
+        }
+        return this;
+    }
+
+    /**
+     * Add outbound XPath expression mappings file to manipulate outbound message content.
+     * @param mappingFile
+     * @return
+     */
+    public XsdXmlTestGenerator withOutboundMappingFile(String mappingFile) {
+        this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        try {
+            this.outboundDataDictionary.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to read mapping file", e);
+        }
+        return this;
+    }
+
+
 
     /**
      * Sets the xsd.
