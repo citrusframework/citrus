@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.util.Properties;
 
+@SuppressWarnings("SqlNoDataSourceInspection")
 public class JdbcServerIT extends TestNGCitrusTestDesigner {
 
     @CitrusEndpoint
@@ -131,6 +132,23 @@ public class JdbcServerIT extends TestNGCitrusTestDesigner {
         //THEN
         receive(jdbcServer)
                 .message(JdbcMessage.closeConnection());
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    @CitrusTest
+    public void testCreatePreparedStatementWithWrongCredential() throws Exception{
+
+        //GIVEN
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+        final String sql = "SELECT whatever FROM table";
+
+        //WHEN
+        connection.prepareStatement(sql);
+
+        //THEN
+        receive(jdbcServer)
+                .message(JdbcMessage.createPreparedStatement(sql));
     }
 
 }
