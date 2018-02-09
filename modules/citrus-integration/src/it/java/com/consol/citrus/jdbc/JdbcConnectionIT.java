@@ -25,67 +25,63 @@ import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.model.OpenConnection;
 import com.consol.citrus.jdbc.server.JdbcServer;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.util.Properties;
 
+import static org.junit.Assert.assertNotNull;
+
 @SuppressWarnings("SqlNoDataSourceInspection")
-public class JdbcServerIT extends TestNGCitrusTestDesigner {
+@Test
+public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
 
     @CitrusEndpoint
     @JdbcServerConfig(
-            autoStart=true,
-            host="localhost",
-            port=4567,
             databaseName = "testdb",
+            autoStart = true,
+            port = 4567,
             autoConnect = false)
     private JdbcServer jdbcServer;
 
     private JdbcDriver jdbcDriver = new JdbcDriver();
 
-    @Test
+    @AfterMethod
+    public void teardown(){
+        jdbcServer.stop();
+    }
+
     @CitrusTest
     public void testOpenConnection() throws Exception{
 
         //GIVEN
 
         //WHEN
-        jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.openConnection());
+        assertNotNull(connection);
     }
 
-    @Test
     @CitrusTest
-    public void testOpenConnectionWithCredential() throws Exception{
+    public void testConnectionWithWithVerification() throws Exception{
 
         //GIVEN
-        final Properties properties = new Properties();
-        properties.setProperty("username", "user");
-        properties.setProperty("password", "password");
-
         final OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
-        final OpenConnection.Property username = new OpenConnection.Property();
-        username.setName("username");
-        username.setValue("user");
-
-        final OpenConnection.Property password = new OpenConnection.Property();
-        password.setName("password");
-        password.setValue("password");
-
 
         //WHEN
-        jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", properties);
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
 
         //THEN
         receive(jdbcServer)
-                .message(JdbcMessage.openConnection(username, password, database));
+                .message(JdbcMessage.openConnection(database));
+        assertNotNull(connection);
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)
@@ -118,13 +114,19 @@ public class JdbcServerIT extends TestNGCitrusTestDesigner {
                 .message(JdbcMessage.openConnection(username, password, database));
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
-    public void testCloseConnectionWithWrongCredential() throws Exception{
+    public void testCloseConnection() throws Exception{
 
         //GIVEN
+        final OpenConnection.Property database = new OpenConnection.Property();
+        database.setName("database");
+        database.setValue("testdb");
+
         final Connection connection =
                 jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+
+        receive(jdbcServer)
+                .message(JdbcMessage.openConnection(database));
 
         //WHEN
         connection.close();
@@ -133,22 +135,4 @@ public class JdbcServerIT extends TestNGCitrusTestDesigner {
         receive(jdbcServer)
                 .message(JdbcMessage.closeConnection());
     }
-
-    @Test(expectedExceptions = TestCaseFailedException.class)
-    @CitrusTest
-    public void testCreatePreparedStatementWithWrongCredential() throws Exception{
-
-        //GIVEN
-        final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
-        final String sql = "SELECT whatever FROM table";
-
-        //WHEN
-        connection.prepareStatement(sql);
-
-        //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.createPreparedStatement(sql));
-    }
-
 }

@@ -63,7 +63,7 @@ public class JdbcServer extends AbstractServer {
         controller = new JdbcEndpointAdapterController(getEndpointConfiguration(), getEndpointAdapter());
         this.jdbcServer = new com.consol.citrus.db.server.JdbcServer(controller, endpointConfiguration.getServerConfiguration());
 
-        jdbcServer.start();
+        jdbcServer.startAndAwaitInitialization();
     }
 
     @Override
