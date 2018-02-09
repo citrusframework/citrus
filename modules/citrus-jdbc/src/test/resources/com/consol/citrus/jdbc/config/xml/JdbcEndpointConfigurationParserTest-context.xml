@@ -25,7 +25,7 @@
 
   <citrus-jdbc:server id="testServer"
                       host="foo.bar.test.io"
-                      port="8042"
+                      port="8043"
                       database-name="foobar"
                       max-connections="50"
                       timeout="10"

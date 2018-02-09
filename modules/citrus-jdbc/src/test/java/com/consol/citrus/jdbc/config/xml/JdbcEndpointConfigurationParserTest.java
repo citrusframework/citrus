@@ -55,7 +55,7 @@ public class JdbcEndpointConfigurationParserTest extends AbstractBeanDefinitionP
                 "foo.bar.test.io");
         assertEquals(
                 testServer.getEndpointConfiguration().getServerConfiguration().getPort(),
-                8042);
+                8043);
         assertEquals(
                 testServer.getActor(),
                 beanDefinitionContext.getBean("testActor", TestActor.class));
