@@ -36,7 +36,10 @@ import java.util.stream.Collectors;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class XmlTestGenerator extends AbstractTemplateBasedTestGenerator<XmlTestGenerator> {
+public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTemplateBasedTestGenerator<T> {
+
+    /** Actor describing which part (client/server) to use */
+    private GeneratorMode mode = GeneratorMode.CLIENT;
 
     /** XML fragment marshaller for test actions */
     private Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
@@ -58,6 +61,16 @@ public class XmlTestGenerator extends AbstractTemplateBasedTestGenerator<XmlTest
         marshallerProperties.put("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
 
         marshaller.setMarshallerProperties(marshallerProperties);
+    }
+
+    /**
+     * Set the mode describing which part (client/server) to use.
+     * @param mode
+     * @return
+     */
+    public T withMode(GeneratorMode mode) {
+        this.mode = mode;
+        return self;
     }
 
     /**
@@ -160,4 +173,23 @@ public class XmlTestGenerator extends AbstractTemplateBasedTestGenerator<XmlTest
     public void setNamespacePrefixMapper(NamespacePrefixMapper namespacePrefixMapper) {
         this.namespacePrefixMapper = namespacePrefixMapper;
     }
+
+    /**
+     * Gets the mode.
+     *
+     * @return
+     */
+    public GeneratorMode getMode() {
+        return mode;
+    }
+
+    /**
+     * Sets the mode.
+     *
+     * @param mode
+     */
+    public void setMode(GeneratorMode mode) {
+        this.mode = mode;
+    }
+
 }

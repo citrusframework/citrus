@@ -43,7 +43,7 @@ public class TestGeneratorMain {
                 return;
             }
 
-            XmlTestGenerator generator = new XmlTestGenerator()
+            XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
                     .withName(cmd.getOptionValue("name"))
                     .withAuthor(cmd.getOptionValue("author", "Unknown"))
                     .withDescription(cmd.getOptionValue("description", "TODO: Description"))

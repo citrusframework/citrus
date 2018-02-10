@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate.xml;
+package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.generate.provider.*;
 import com.consol.citrus.generate.provider.http.*;
-import com.consol.citrus.generate.provider.soap.*;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.message.SoapMessage;
+import com.squareup.javapoet.CodeBlock;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +30,7 @@ import java.util.Optional;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> extends XmlTestGenerator<T> {
+public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator> extends JavaDslTestGenerator<T> {
 
     /** Endpoint name to use */
     private String endpoint;
@@ -42,24 +42,24 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> exte
     private Message response;
 
     @Override
-    protected List<Object> getActions() {
-        List<Object> actions = super.getActions();
+    protected List<CodeBlock> getCodeBlocks() {
+        List<CodeBlock> codeBlocks = super.getCodeBlocks();
 
         if (getMode().equals(GeneratorMode.CLIENT)) {
-            actions.add(getSendRequestActionProvider(request).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(request)));
+            codeBlocks.add(getSendRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(request)));
 
             if (response != null) {
-                actions.add(getReceiveResponseActionProvider(response).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(response)));
+                codeBlocks.add(getReceiveResponseCodeProvider(response).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(response)));
             }
         } else if (getMode().equals(GeneratorMode.SERVER)) {
-            actions.add(getReceiveRequestActionProvider(request).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(request)));
+            codeBlocks.add(getReceiveRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(request)));
 
             if (response != null) {
-                actions.add(getSendResponseActionProvider(response).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(response)));
+                codeBlocks.add(getSendResponseCodeProvider(response).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(response)));
             }
         }
 
-        return actions;
+        return codeBlocks;
     }
 
     /**
@@ -80,43 +80,43 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> exte
         return message;
     }
 
-    protected <T, M extends Message> MessageActionProvider<T, M> getSendRequestActionProvider(M message) {
+    protected <M extends Message> CodeProvider<M> getSendRequestCodeProvider(M message) {
         if (message instanceof HttpMessage) {
-            return (MessageActionProvider<T, M>) new SendHttpRequestActionProvider();
+            return (CodeProvider<M>) new SendHttpRequestCodeProvider();
         } else if (message instanceof SoapMessage) {
-            return (MessageActionProvider<T, M>) new SendSoapRequestActionProvider();
+            return (CodeProvider<M>) new SendCodeProvider();
         } else {
-            return (MessageActionProvider<T, M>) new SendActionProvider();
+            return (CodeProvider<M>) new SendCodeProvider();
         }
     }
 
-    protected <T, M extends Message> MessageActionProvider<T, M> getReceiveResponseActionProvider(M message) {
+    protected <M extends Message> CodeProvider<M> getReceiveResponseCodeProvider(M message) {
         if (message instanceof HttpMessage) {
-            return (MessageActionProvider<T, M>) new ReceiveHttpResponseActionProvider();
+            return (CodeProvider<M>) new ReceiveHttpResponseCodeProvider();
         } else if (message instanceof SoapMessage) {
-            return (MessageActionProvider<T, M>) new ReceiveSoapResponseActionProvider();
+            return (CodeProvider<M>) new ReceiveCodeProvider();
         } else {
-            return (MessageActionProvider<T, M>) new ReceiveActionProvider();
+            return (CodeProvider<M>) new ReceiveCodeProvider();
         }
     }
 
-    protected <T, M extends Message> MessageActionProvider<T, M> getSendResponseActionProvider(M message) {
+    protected <M extends Message> CodeProvider<M> getSendResponseCodeProvider(M message) {
         if (message instanceof HttpMessage) {
-            return (MessageActionProvider<T, M>) new SendHttpResponseActionProvider();
+            return (CodeProvider<M>) new SendHttpResponseCodeProvider();
         } else if (message instanceof SoapMessage) {
-            return (MessageActionProvider<T, M>) new SendSoapResponseActionProvider();
+            return (CodeProvider<M>) new SendCodeProvider();
         } else {
-            return (MessageActionProvider<T, M>) new SendActionProvider();
+            return (CodeProvider<M>) new SendCodeProvider();
         }
     }
 
-    protected <T, M extends Message> MessageActionProvider<T, M> getReceiveRequestActionProvider(M message) {
+    protected <M extends Message> CodeProvider<M> getReceiveRequestCodeProvider(M message) {
         if (message instanceof HttpMessage) {
-            return (MessageActionProvider<T, M>) new ReceiveHttpRequestActionProvider();
+            return (CodeProvider<M>) new ReceiveHttpRequestCodeProvider();
         } else if (message instanceof SoapMessage) {
-            return (MessageActionProvider<T, M>) new ReceiveSoapRequestActionProvider();
+            return (CodeProvider<M>) new ReceiveCodeProvider();
         } else {
-            return (MessageActionProvider<T, M>) new ReceiveActionProvider();
+            return (CodeProvider<M>) new ReceiveCodeProvider();
         }
     }
 

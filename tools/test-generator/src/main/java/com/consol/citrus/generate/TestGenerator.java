@@ -20,12 +20,38 @@ package com.consol.citrus.generate;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public interface TestGenerator {
+public interface TestGenerator<T extends TestGenerator> {
 
     /**
      * Create tests with this generator.
      */
     void create();
+
+    String getName();
+
+    String getAuthor();
+
+    String getDescription();
+
+    UnitFramework getFramework();
+
+    String getTargetPackage();
+
+    GeneratorMode getMode();
+
+    T withMode(GeneratorMode mode);
+
+    T withName(String name);
+
+    T withAuthor(String author);
+
+    T withDescription(String description);
+
+    T usePackage(String targetPackage);
+
+    T useSrcDirectory(String srcDirectory);
+
+    T withFramework(UnitFramework framework);
 
     /**
      * Mode indicating test actor client or server. Based on this mode send and receive directions may differ accordingly.

@@ -16,7 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.UnitFramework;
+import com.consol.citrus.generate.javadsl.*;
 import com.consol.citrus.generate.xml.*;
 import com.consol.citrus.mvn.plugin.config.tests.*;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -35,21 +36,35 @@ import static org.mockito.Mockito.*;
  */
 public class GenerateTestMojoTest {
 
-    private XmlTestGenerator testGenerator = Mockito.mock(XmlTestGenerator.class);
+    private XmlTestGenerator xmlTestGenerator = Mockito.mock(XmlTestGenerator.class);
     private XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
     private WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
     private SwaggerXmlTestGenerator swaggerXmlTestGenerator = Mockito.mock(SwaggerXmlTestGenerator.class);
+
+    private JavaDslTestGenerator javaTestGenerator = Mockito.mock(JavaDslTestGenerator.class);
+    private XsdJavaTestGenerator xsdJavaTestGenerator = Mockito.mock(XsdJavaTestGenerator.class);
+    private WsdlJavaTestGenerator wsdlJavaTestGenerator = Mockito.mock(WsdlJavaTestGenerator.class);
+    private SwaggerJavaTestGenerator swaggerJavaTestGenerator = Mockito.mock(SwaggerJavaTestGenerator.class);
 
     private GenerateTestMojo mojo;
     
     @BeforeMethod
     public void setup() {
-        mojo = new GenerateTestMojo(testGenerator, xsdXmlTestGenerator, wsdlXmlTestGenerator, swaggerXmlTestGenerator);
+        mojo = new GenerateTestMojo(xmlTestGenerator,
+                                    xsdXmlTestGenerator,
+                                    wsdlXmlTestGenerator,
+                                    swaggerXmlTestGenerator,
+                                    javaTestGenerator,
+                                    xsdJavaTestGenerator,
+                                    wsdlJavaTestGenerator,
+                                    swaggerJavaTestGenerator);
+
+        mojo.setType("xml");
     }
     
     @Test
     public void testCreate() throws PrompterException, MojoExecutionException, MojoFailureException {
-        reset(testGenerator);
+        reset(xmlTestGenerator);
 
         TestConfiguration configuration = new TestConfiguration();
         configuration.setName("FooTest");
@@ -57,18 +72,18 @@ public class GenerateTestMojoTest {
         configuration.setDescription("TODO");
         configuration.setPackageName("com.consol.citrus.foo");
 
-        when(testGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(testGenerator);
-        when(testGenerator.withAuthor("UnknownAuthor")).thenReturn(testGenerator);
-        when(testGenerator.withDescription("TODO")).thenReturn(testGenerator);
-        when(testGenerator.usePackage("com.consol.citrus.foo")).thenReturn(testGenerator);
-        when(testGenerator.withName("FooTest")).thenReturn(testGenerator);
-        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
+        when(xmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.withDescription("TODO")).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.usePackage("com.consol.citrus.foo")).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.withName("FooTest")).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(xmlTestGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 
         mojo.execute();
 
-        verify(testGenerator).create();
+        verify(xmlTestGenerator).create();
     }
 
     @Test
@@ -95,7 +110,7 @@ public class GenerateTestMojoTest {
         when(xsdXmlTestGenerator.withXsd("classpath:xsd/BookStore.xsd")).thenReturn(xsdXmlTestGenerator);
 
         when(xsdXmlTestGenerator.withName("BookStore")).thenReturn(xsdXmlTestGenerator);
-        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
+        when(xsdXmlTestGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(xsdXmlTestGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 
@@ -131,7 +146,7 @@ public class GenerateTestMojoTest {
         when(wsdlXmlTestGenerator.withNameSuffix("_Test")).thenReturn(wsdlXmlTestGenerator);
 
         when(wsdlXmlTestGenerator.withName("BookStore")).thenReturn(wsdlXmlTestGenerator);
-        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
+        when(wsdlXmlTestGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(wsdlXmlTestGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 
@@ -166,7 +181,7 @@ public class GenerateTestMojoTest {
         when(swaggerXmlTestGenerator.withNameSuffix("_Test")).thenReturn(swaggerXmlTestGenerator);
 
         when(swaggerXmlTestGenerator.withName("UserLoginService")).thenReturn(swaggerXmlTestGenerator);
-        when(testGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(testGenerator);
+        when(swaggerXmlTestGenerator.useSrcDirectory("target/generated/citrus")).thenReturn(swaggerXmlTestGenerator);
 
         mojo.setTests(Collections.singletonList(configuration));
 

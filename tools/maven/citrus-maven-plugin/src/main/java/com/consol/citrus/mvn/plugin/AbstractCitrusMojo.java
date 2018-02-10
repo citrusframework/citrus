@@ -40,6 +40,12 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
     private String testSrcDirectory = "src/test";
 
     /**
+     * Which target code base type to use for test execution (default: java; options: java, xml)
+     */
+    @Parameter(property = "citrus.test.type", defaultValue = "java")
+    private String type = "java";
+
+    /**
      * Which unit test framework to use for test execution (default: testng; options: testng, junit4, junit5)
      */
     @Parameter(property = "citrus.test.framework", defaultValue = "testng")
@@ -114,6 +120,24 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
      */
     public UnitFramework getFramework() {
         return UnitFramework.fromString(framework);
+    }
+
+    /**
+     * Gets the type.
+     *
+     * @return
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the type.
+     *
+     * @param type
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public abstract class AbstractTestGenerator<T extends TestGenerator> implements TestGenerator {
+public abstract class AbstractTestGenerator<T extends TestGenerator> implements TestGenerator<T> {
 
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -50,7 +50,7 @@ public abstract class AbstractTestGenerator<T extends TestGenerator> implements 
     /** Target file extension */
     private String fileExtension;
 
-    private T self;
+    protected T self;
 
     public AbstractTestGenerator() {
         self = (T) this;

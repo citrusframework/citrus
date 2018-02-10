@@ -17,6 +17,7 @@
 package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.generate.*;
+import com.consol.citrus.generate.javadsl.*;
 import com.consol.citrus.generate.xml.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -52,6 +53,11 @@ public class CreateTestMojo extends AbstractCitrusMojo {
     private final WsdlXmlTestGenerator wsdlXmlTestGenerator;
     private final SwaggerXmlTestGenerator swaggerXmlTestGenerator;
 
+    private final JavaDslTestGenerator javaTestGenerator;
+    private final XsdJavaTestGenerator xsdJavaTestGenerator;
+    private final WsdlJavaTestGenerator wsdlJavaTestGenerator;
+    private final SwaggerJavaTestGenerator swaggerJavaTestGenerator;
+
     /**
      * Default constructor.
      */
@@ -59,7 +65,11 @@ public class CreateTestMojo extends AbstractCitrusMojo {
         this(new XmlTestGenerator(),
                 new XsdXmlTestGenerator(),
                 new WsdlXmlTestGenerator(),
-                new SwaggerXmlTestGenerator());
+                new SwaggerXmlTestGenerator(),
+                new JavaDslTestGenerator(),
+                new XsdJavaTestGenerator(),
+                new WsdlJavaTestGenerator(),
+                new SwaggerJavaTestGenerator());
     }
 
     /**
@@ -68,15 +78,27 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param xsdXmlTestGenerator
      * @param wsdlXmlTestGenerator
      * @param swaggerXmlTestGenerator
+     * @param javaTestGenerator
+     * @param xsdJavaTestGenerator
+     * @param wsdlJavaTestGenerator
+     * @param swaggerJavaTestGenerator
      */
     public CreateTestMojo(XmlTestGenerator xmlTestGenerator,
                           XsdXmlTestGenerator xsdXmlTestGenerator,
                           WsdlXmlTestGenerator wsdlXmlTestGenerator,
-                          SwaggerXmlTestGenerator swaggerXmlTestGenerator) {
+                          SwaggerXmlTestGenerator swaggerXmlTestGenerator,
+                          JavaDslTestGenerator javaTestGenerator,
+                          XsdJavaTestGenerator xsdJavaTestGenerator,
+                          WsdlJavaTestGenerator wsdlJavaTestGenerator,
+                          SwaggerJavaTestGenerator swaggerJavaTestGenerator) {
         this.xmlTestGenerator = xmlTestGenerator;
         this.xsdXmlTestGenerator = xsdXmlTestGenerator;
         this.wsdlXmlTestGenerator = wsdlXmlTestGenerator;
         this.swaggerXmlTestGenerator = swaggerXmlTestGenerator;
+        this.javaTestGenerator = javaTestGenerator;
+        this.xsdJavaTestGenerator = xsdJavaTestGenerator;
+        this.wsdlJavaTestGenerator = wsdlJavaTestGenerator;
+        this.swaggerJavaTestGenerator = swaggerJavaTestGenerator;
     }
 
     @Override
@@ -99,11 +121,14 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String description = prompter.prompt("Enter test description:", "");
             String targetPackage = prompter.prompt("Enter test package:", "com.consol.citrus");
             String framework = prompter.prompt("Choose unit test framework:", CollectionUtils.arrayToList(new String[] {"testng", "junit4", "junit5"}), UnitFramework.TESTNG.name().toLowerCase());
+            String type = prompter.prompt("Choose target code base type:", CollectionUtils.arrayToList(new String[] {"java", "xml"}), "java");
+
+            setType(type);
 
             String useXsd = prompter.prompt("Create test with XML schema?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useXsd.equalsIgnoreCase("y")) {
-                XsdXmlTestGenerator generator = getXsdXmlTestGenerator();
+                XsdTestGenerator generator = getXsdTestGenerator();
 
                 generator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
@@ -118,7 +143,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String useWsdl = prompter.prompt("Create test with WSDL?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useWsdl.equalsIgnoreCase("y")) {
-                WsdlXmlTestGenerator generator = getWsdlXmlTestGenerator();
+                WsdlTestGenerator generator = getWsdlTestGenerator();
 
                 generator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
@@ -133,7 +158,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String useSwagger = prompter.prompt("Create test with Swagger API?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
 
             if (useSwagger.equalsIgnoreCase("y")) {
-                SwaggerXmlTestGenerator generator = getSwaggerXmlTestGenerator();
+                SwaggerTestGenerator generator = getSwaggerTestGenerator();
 
                 generator.withFramework(UnitFramework.fromString(framework))
                         .withName(name)
@@ -146,6 +171,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             }
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
+                    "type: " + getType() + "\n" +
                     "framework: " + framework + "\n" +
                     "name: " + name + "\n" +
                     "author: " + author + "\n" +
@@ -156,14 +182,25 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                 return;
             }
 
-            XmlTestGenerator generator = getXmlTestGenerator()
-                    .withFramework(UnitFramework.fromString(framework))
-                    .withName(name)
-                    .withAuthor(author)
-                    .withDescription(description)
-                    .usePackage(targetPackage);
+            if (getType().equals("java")) {
+                JavaDslTestGenerator generator = (JavaDslTestGenerator) getJavaTestGenerator()
+                        .withFramework(UnitFramework.fromString(framework))
+                        .withName(name)
+                        .withAuthor(author)
+                        .withDescription(description)
+                        .usePackage(targetPackage);
 
-            generator.create();
+                generator.create();
+            } else {
+                XmlTestGenerator generator = (XmlTestGenerator) getXmlTestGenerator()
+                        .withFramework(UnitFramework.fromString(framework))
+                        .withName(name)
+                        .withAuthor(author)
+                        .withDescription(description)
+                        .usePackage(targetPackage);
+
+                generator.create();
+            }
 
             getLog().info("Successfully created new test case " + targetPackage + "." + name);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -179,7 +216,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param generator
      * @throws MojoExecutionException
      */
-    public void createWithXsd(XsdXmlTestGenerator generator) throws MojoExecutionException {
+    public void createWithXsd(XsdTestGenerator generator) throws MojoExecutionException {
         try {
             String xsd = null;
             while(!StringUtils.hasText(xsd)) {
@@ -197,6 +234,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             generator.withMode(TestGenerator.GeneratorMode.valueOf(mode.toUpperCase()));
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
+                    "type: " + getType() + "\n" +
                     "framework: " + generator.getFramework() + "\n" +
                     "name: " + generator.getName() + "\n" +
                     "author: " + generator.getAuthor() + "\n" +
@@ -227,7 +265,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param generator
      * @throws MojoExecutionException
      */
-    public void createWithWsdl(WsdlXmlTestGenerator generator) throws MojoExecutionException {
+    public void createWithWsdl(WsdlTestGenerator generator) throws MojoExecutionException {
         try {
             String wsdl = null;
             while (!StringUtils.hasText(wsdl)) {
@@ -255,6 +293,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             generator.withNameSuffix(nameSuffix);
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
+                    "type: " + getType() + "\n" +
                     "framework: " + generator.getFramework() + "\n" +
                     "name: " + generator.getName() + "\n" +
                     "author: " + generator.getAuthor() + "\n" +
@@ -285,7 +324,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * @param generator
      * @throws MojoExecutionException
      */
-    public void createWithSwagger(SwaggerXmlTestGenerator generator) throws MojoExecutionException {
+    public void createWithSwagger(SwaggerTestGenerator generator) throws MojoExecutionException {
         try {
             String swagger = null;
             while (!StringUtils.hasText(swagger)) {
@@ -313,6 +352,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             generator.withNameSuffix(nameSuffix);
 
             String confirm = prompter.prompt("Confirm test creation:\n" +
+                    "type: " + getType() + "\n" +
                     "framework: " + generator.getFramework() + "\n" +
                     "name: " + generator.getName() + "\n" +
                     "author: " + generator.getAuthor() + "\n" +
@@ -354,8 +394,8 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * .
      * @return test generator.
      */
-    public SwaggerXmlTestGenerator getSwaggerXmlTestGenerator() {
-        return Optional.ofNullable(swaggerXmlTestGenerator).orElse(new SwaggerXmlTestGenerator());
+    public JavaDslTestGenerator getJavaTestGenerator() {
+        return Optional.ofNullable(javaTestGenerator).orElse(new JavaDslTestGenerator());
     }
 
     /**
@@ -364,8 +404,12 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * .
      * @return test generator.
      */
-    public WsdlXmlTestGenerator getWsdlXmlTestGenerator() {
-        return Optional.ofNullable(wsdlXmlTestGenerator).orElse(new WsdlXmlTestGenerator());
+    public SwaggerTestGenerator getSwaggerTestGenerator() {
+        if (getType().equals("java")) {
+            return Optional.ofNullable(swaggerJavaTestGenerator).orElse(new SwaggerJavaTestGenerator());
+        } else {
+            return Optional.ofNullable(swaggerXmlTestGenerator).orElse(new SwaggerXmlTestGenerator());
+        }
     }
 
     /**
@@ -374,8 +418,26 @@ public class CreateTestMojo extends AbstractCitrusMojo {
      * .
      * @return test generator.
      */
-    public XsdXmlTestGenerator getXsdXmlTestGenerator() {
-        return Optional.ofNullable(xsdXmlTestGenerator).orElse(new XsdXmlTestGenerator());
+    public WsdlTestGenerator getWsdlTestGenerator() {
+        if (getType().equals("java")) {
+            return Optional.ofNullable(wsdlJavaTestGenerator).orElse(new WsdlJavaTestGenerator());
+        } else {
+            return Optional.ofNullable(wsdlXmlTestGenerator).orElse(new WsdlXmlTestGenerator());
+        }
+    }
+
+    /**
+     * Method provides test generator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized generator instance.
+     * .
+     * @return test generator.
+     */
+    public XsdTestGenerator getXsdTestGenerator() {
+        if (getType().equals("java")) {
+            return Optional.ofNullable(xsdJavaTestGenerator).orElse(new XsdJavaTestGenerator());
+        } else {
+            return Optional.ofNullable(xsdXmlTestGenerator).orElse(new XsdXmlTestGenerator());
+        }
     }
 
     /**

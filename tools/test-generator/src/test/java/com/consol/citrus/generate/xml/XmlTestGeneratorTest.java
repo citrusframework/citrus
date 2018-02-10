@@ -35,7 +35,7 @@ public class XmlTestGeneratorTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {
-        XmlTestGenerator generator = new XmlTestGenerator()
+        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
@@ -65,7 +65,7 @@ public class XmlTestGeneratorTest {
     
     @Test
     public void testCreateJUnitTest() throws IOException {
-        XmlTestGenerator generator = new XmlTestGenerator()
+        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
@@ -95,7 +95,7 @@ public class XmlTestGeneratorTest {
     
     @Test
     public void testInvalidName() throws IOException {
-        XmlTestGenerator generator = new XmlTestGenerator()
+        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("sampletest")

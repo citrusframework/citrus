@@ -27,11 +27,15 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class JavaTestGenerator extends AbstractTemplateBasedTestGenerator<JavaTestGenerator> {
+public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTemplateBasedTestGenerator<T> {
 
     protected static final String TEST_BASE_CLASS_IMPORT = "test.base.class.import";
     protected static final String TEST_UNIT_FRAMEWORK_IMPORT = "test.unit.framework.import";
     protected static final String TEST_BASE_CLASS = "test.base.class";
+    protected static final String TEST_METHOD_BODY = "test.method.body";
+
+    /** Actor describing which part (client/server) to use */
+    private GeneratorMode mode = GeneratorMode.CLIENT;
 
     public JavaTestGenerator() {
         withFileExtension(".java");
@@ -69,6 +73,16 @@ public class JavaTestGenerator extends AbstractTemplateBasedTestGenerator<JavaTe
         return properties;
     }
 
+    /**
+     * Set the mode describing which part (client/server) to use.
+     * @param mode
+     * @return
+     */
+    public T withMode(GeneratorMode mode) {
+        this.mode = mode;
+        return self;
+    }
+
     @Override
     protected String getTemplateFilePath() {
         if (getFramework().equals(UnitFramework.JUNIT5)) {
@@ -82,4 +96,23 @@ public class JavaTestGenerator extends AbstractTemplateBasedTestGenerator<JavaTe
     public String getSrcDirectory() {
         return super.getSrcDirectory() + File.separator + "java";
     }
+
+    /**
+     * Gets the mode.
+     *
+     * @return
+     */
+    public GeneratorMode getMode() {
+        return mode;
+    }
+
+    /**
+     * Sets the mode.
+     *
+     * @param mode
+     */
+    public void setMode(GeneratorMode mode) {
+        this.mode = mode;
+    }
+
 }

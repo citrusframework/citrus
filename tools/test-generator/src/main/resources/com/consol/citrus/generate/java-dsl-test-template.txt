@@ -15,6 +15,6 @@ public class @test.name@ extends @test.base.class@ {
     \@Test
     \@CitrusTest
     public void @test.method.name@() {
-        @test.method.body@
+@test.method.body@
     }
 }

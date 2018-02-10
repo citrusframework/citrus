@@ -36,6 +36,11 @@
     </dependency>
 
     <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>javapoet</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.xmlbeans</groupId>
       <artifactId>xmlbeans</artifactId>
     </dependency>

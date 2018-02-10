@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate.xml;
+package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -39,7 +39,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGenerator> implements XsdTestGenerator<XsdXmlTestGenerator> {
+public class XsdJavaTestGenerator extends MessagingJavaTestGenerator<XsdJavaTestGenerator> implements XsdTestGenerator<XsdJavaTestGenerator> {
 
     private String xsd;
 
@@ -187,7 +187,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param xsdResource
      * @return
      */
-    public XsdXmlTestGenerator withXsd(String xsdResource) {
+    public XsdJavaTestGenerator withXsd(String xsdResource) {
         this.xsd = xsdResource;
         return this;
     }
@@ -197,7 +197,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param requestMessage
      * @return
      */
-    public XsdXmlTestGenerator withRequestMessage(String requestMessage) {
+    public XsdJavaTestGenerator withRequestMessage(String requestMessage) {
         this.requestMessage = requestMessage;
         return this;
     }
@@ -207,7 +207,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param responseMessage
      * @return
      */
-    public XsdXmlTestGenerator withResponseMessage(String responseMessage) {
+    public XsdJavaTestGenerator withResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
         return this;
     }
@@ -217,7 +217,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param suffix
      * @return
      */
-    public XsdXmlTestGenerator withNameSuffix(String suffix) {
+    public XsdJavaTestGenerator withNameSuffix(String suffix) {
         this.nameSuffix = suffix;
         return this;
     }
@@ -227,7 +227,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param mappings
      * @return
      */
-    public XsdXmlTestGenerator withInboundMappings(Map<String, String> mappings) {
+    public XsdJavaTestGenerator withInboundMappings(Map<String, String> mappings) {
         this.inboundDataDictionary.getMappings().putAll(mappings);
         return this;
     }
@@ -237,7 +237,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param mappings
      * @return
      */
-    public XsdXmlTestGenerator withOutboundMappings(Map<String, String> mappings) {
+    public XsdJavaTestGenerator withOutboundMappings(Map<String, String> mappings) {
         this.outboundDataDictionary.getMappings().putAll(mappings);
         return this;
     }
@@ -247,7 +247,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param mappingFile
      * @return
      */
-    public XsdXmlTestGenerator withInboundMappingFile(String mappingFile) {
+    public XsdJavaTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
         try {
             this.inboundDataDictionary.afterPropertiesSet();
@@ -262,7 +262,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @param mappingFile
      * @return
      */
-    public XsdXmlTestGenerator withOutboundMappingFile(String mappingFile) {
+    public XsdJavaTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
         try {
             this.outboundDataDictionary.afterPropertiesSet();

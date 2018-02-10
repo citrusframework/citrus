@@ -34,7 +34,7 @@ public class HtmlTestDocsGeneratorTest {
 
     @BeforeClass
     public void createSampleIT() {
-        XmlTestGenerator generator = new XmlTestGenerator()
+        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")

@@ -17,14 +17,17 @@
 package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.generate.UnitFramework;
+import com.squareup.javapoet.CodeBlock;
 
-import java.util.Properties;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class JavaDslTestGenerator extends JavaTestGenerator {
+public class JavaDslTestGenerator<T extends JavaDslTestGenerator> extends JavaTestGenerator<T> {
 
     @Override
     protected Properties getTemplateProperties() {
@@ -41,6 +44,10 @@ public class JavaDslTestGenerator extends JavaTestGenerator {
             properties.put(TEST_BASE_CLASS, "CitrusExtension");
         }
 
+        properties.put(TEST_METHOD_BODY, getCodeBlocks().stream()
+                                                .map(codeBlock -> Pattern.compile("^", Pattern.MULTILINE).matcher(codeBlock.toString()).replaceAll("        "))
+                                                .collect(Collectors.joining("\n\n")));
+
         return properties;
     }
 
@@ -51,5 +58,15 @@ public class JavaDslTestGenerator extends JavaTestGenerator {
         } else {
             return "classpath:com/consol/citrus/generate/java-dsl-test-template.txt";
         }
+    }
+
+    /**
+     * List of test actions to be marshalled in the actions section of the test.
+     * @return
+     */
+    protected List<CodeBlock> getCodeBlocks() {
+        List<CodeBlock> codeBlocks = new ArrayList<>();
+        codeBlocks.add(CodeBlock.builder().add("echo(\"TODO: Code the test $L\");", getName()).build());
+        return codeBlocks;
     }
 }

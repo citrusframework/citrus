@@ -17,12 +17,13 @@
 package com.consol.citrus.generate.provider;
 
 import com.consol.citrus.message.Message;
+import com.squareup.javapoet.CodeBlock;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public interface MessageActionProvider<T, M extends Message> {
+public interface CodeProvider<M extends Message> {
 
     /**
      * Provides action instance of given type parameter.
@@ -31,5 +32,5 @@ public interface MessageActionProvider<T, M extends Message> {
      * @param message
      * @return
      */
-    T getAction(String endpoint, M message);
+    CodeBlock getCode(String endpoint, M message);
 }

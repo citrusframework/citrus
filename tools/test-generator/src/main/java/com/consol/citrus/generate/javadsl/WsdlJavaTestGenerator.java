@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate.xml;
+package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -23,7 +23,6 @@ import com.consol.citrus.generate.dictionary.InboundXmlDataDictionary;
 import com.consol.citrus.generate.dictionary.OutboundXmlDataDictionary;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.testcase.ws.ObjectFactory;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.xml.XmlConfigurer;
@@ -41,7 +40,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestGenerator> implements WsdlTestGenerator<WsdlXmlTestGenerator> {
+public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTestGenerator> implements WsdlTestGenerator<WsdlJavaTestGenerator> {
 
     private String wsdl;
 
@@ -133,13 +132,6 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
 
             log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
         }
-    }
-
-    @Override
-    protected List<String> getMarshallerContextPaths() {
-        List<String> contextPaths = super.getMarshallerContextPaths();
-        contextPaths.add(ObjectFactory.class.getPackage().getName());
-        return contextPaths;
     }
 
     @Override
@@ -350,7 +342,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param wsdlResource
      * @return
      */
-    public WsdlXmlTestGenerator withWsdl(String wsdlResource) {
+    public WsdlJavaTestGenerator withWsdl(String wsdlResource) {
         this.wsdl = wsdlResource;
         return this;
     }
@@ -360,7 +352,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param suffix
      * @return
      */
-    public WsdlXmlTestGenerator withNameSuffix(String suffix) {
+    public WsdlJavaTestGenerator withNameSuffix(String suffix) {
         this.nameSuffix = suffix;
         return this;
     }
@@ -370,7 +362,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param prefix
      * @return
      */
-    public WsdlXmlTestGenerator withNamePrefix(String prefix) {
+    public WsdlJavaTestGenerator withNamePrefix(String prefix) {
         this.namePrefix = prefix;
         return this;
     }
@@ -380,7 +372,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param operation
      * @return
      */
-    public WsdlXmlTestGenerator withOperation(String operation) {
+    public WsdlJavaTestGenerator withOperation(String operation) {
         this.operation = operation;
         return this;
     }
@@ -390,7 +382,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param mappings
      * @return
      */
-    public WsdlXmlTestGenerator withInboundMappings(Map<String, String> mappings) {
+    public WsdlJavaTestGenerator withInboundMappings(Map<String, String> mappings) {
         this.inboundDataDictionary.getMappings().putAll(mappings);
         return this;
     }
@@ -400,7 +392,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param mappings
      * @return
      */
-    public WsdlXmlTestGenerator withOutboundMappings(Map<String, String> mappings) {
+    public WsdlJavaTestGenerator withOutboundMappings(Map<String, String> mappings) {
         this.outboundDataDictionary.getMappings().putAll(mappings);
         return this;
     }
@@ -410,7 +402,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param mappingFile
      * @return
      */
-    public WsdlXmlTestGenerator withInboundMappingFile(String mappingFile) {
+    public WsdlJavaTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
         try {
             this.inboundDataDictionary.afterPropertiesSet();
@@ -425,7 +417,7 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
      * @param mappingFile
      * @return
      */
-    public WsdlXmlTestGenerator withOutboundMappingFile(String mappingFile) {
+    public WsdlJavaTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
         try {
             this.outboundDataDictionary.afterPropertiesSet();

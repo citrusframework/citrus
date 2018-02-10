@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.generate.xml;
+package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.SwaggerTestGenerator;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.model.testcase.http.ObjectFactory;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.dictionary.json.JsonPathMappingDataDictionary;
 import io.swagger.models.*;
@@ -28,7 +27,8 @@ import io.swagger.models.properties.*;
 import io.swagger.parser.SwaggerParser;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXmlTestGenerator> implements SwaggerTestGenerator<SwaggerXmlTestGenerator> {
+public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<SwaggerJavaTestGenerator> implements SwaggerTestGenerator<SwaggerJavaTestGenerator> {
 
     private String swaggerResource;
 
@@ -139,13 +139,6 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
                 log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
             }
         }
-    }
-
-    @Override
-    protected List<String> getMarshallerContextPaths() {
-        List<String> contextPaths = super.getMarshallerContextPaths();
-        contextPaths.add(ObjectFactory.class.getPackage().getName());
-        return contextPaths;
     }
 
     /**
@@ -517,7 +510,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param swaggerResource
      * @return
      */
-    public SwaggerXmlTestGenerator withSpec(String swaggerResource) {
+    public SwaggerJavaTestGenerator withSpec(String swaggerResource) {
         this.swaggerResource = swaggerResource;
         return this;
     }
@@ -527,7 +520,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param contextPath
      * @return
      */
-    public SwaggerXmlTestGenerator withContextPath(String contextPath) {
+    public SwaggerJavaTestGenerator withContextPath(String contextPath) {
         this.nameSuffix = contextPath;
         return this;
     }
@@ -537,7 +530,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param prefix
      * @return
      */
-    public SwaggerXmlTestGenerator withNamePrefix(String prefix) {
+    public SwaggerJavaTestGenerator withNamePrefix(String prefix) {
         this.namePrefix = prefix;
         return this;
     }
@@ -547,7 +540,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param suffix
      * @return
      */
-    public SwaggerXmlTestGenerator withNameSuffix(String suffix) {
+    public SwaggerJavaTestGenerator withNameSuffix(String suffix) {
         this.nameSuffix = suffix;
         return this;
     }
@@ -557,7 +550,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param operation
      * @return
      */
-    public SwaggerXmlTestGenerator withOperation(String operation) {
+    public SwaggerJavaTestGenerator withOperation(String operation) {
         this.operation = operation;
         return this;
     }
@@ -567,7 +560,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param mappings
      * @return
      */
-    public SwaggerXmlTestGenerator withInboundMappings(Map<String, String> mappings) {
+    public SwaggerJavaTestGenerator withInboundMappings(Map<String, String> mappings) {
         this.inboundDataDictionary.getMappings().putAll(mappings);
         return this;
     }
@@ -577,7 +570,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param mappings
      * @return
      */
-    public SwaggerXmlTestGenerator withOutboundMappings(Map<String, String> mappings) {
+    public SwaggerJavaTestGenerator withOutboundMappings(Map<String, String> mappings) {
         this.outboundDataDictionary.getMappings().putAll(mappings);
         return this;
     }
@@ -587,7 +580,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param mappingFile
      * @return
      */
-    public SwaggerXmlTestGenerator withInboundMappingFile(String mappingFile) {
+    public SwaggerJavaTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
         try {
             this.inboundDataDictionary.afterPropertiesSet();
@@ -602,7 +595,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @param mappingFile
      * @return
      */
-    public SwaggerXmlTestGenerator withOutboundMappingFile(String mappingFile) {
+    public SwaggerJavaTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
         try {
             this.outboundDataDictionary.afterPropertiesSet();
