@@ -73,6 +73,7 @@ public class GenerateTestMojoTest {
         configuration.setPackageName("com.consol.citrus.foo");
 
         when(xmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xmlTestGenerator);
+        when(xmlTestGenerator.withDisabled(false)).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.withDescription("TODO")).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.usePackage("com.consol.citrus.foo")).thenReturn(xmlTestGenerator);
@@ -103,6 +104,7 @@ public class GenerateTestMojoTest {
         configuration.setXsd(xsdConfiguration);
 
         when(xsdXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(xsdXmlTestGenerator);
+        when(xsdXmlTestGenerator.withDisabled(false)).thenReturn(xsdXmlTestGenerator);
         when(xsdXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(xsdXmlTestGenerator);
         when(xsdXmlTestGenerator.withDescription("TODO")).thenReturn(xsdXmlTestGenerator);
         when(xsdXmlTestGenerator.usePackage("com.consol.citrus.xsd")).thenReturn(xsdXmlTestGenerator);
@@ -138,6 +140,7 @@ public class GenerateTestMojoTest {
         configuration.setWsdl(wsdlConfiguration);
 
         when(wsdlXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(wsdlXmlTestGenerator);
+        when(wsdlXmlTestGenerator.withDisabled(false)).thenReturn(wsdlXmlTestGenerator);
         when(wsdlXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(wsdlXmlTestGenerator);
         when(wsdlXmlTestGenerator.withDescription("TODO")).thenReturn(wsdlXmlTestGenerator);
         when(wsdlXmlTestGenerator.usePackage("com.consol.citrus.wsdl")).thenReturn(wsdlXmlTestGenerator);
@@ -173,6 +176,7 @@ public class GenerateTestMojoTest {
         configuration.setSwagger(swaggerConfiguration);
 
         when(swaggerXmlTestGenerator.withFramework(UnitFramework.TESTNG)).thenReturn(swaggerXmlTestGenerator);
+        when(swaggerXmlTestGenerator.withDisabled(false)).thenReturn(swaggerXmlTestGenerator);
         when(swaggerXmlTestGenerator.withAuthor("UnknownAuthor")).thenReturn(swaggerXmlTestGenerator);
         when(swaggerXmlTestGenerator.withDescription("TODO")).thenReturn(swaggerXmlTestGenerator);
         when(swaggerXmlTestGenerator.usePackage("com.consol.citrus.swagger")).thenReturn(swaggerXmlTestGenerator);

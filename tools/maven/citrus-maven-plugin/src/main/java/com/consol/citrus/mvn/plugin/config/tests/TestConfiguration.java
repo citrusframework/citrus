@@ -31,6 +31,12 @@ public class TestConfiguration implements Serializable {
     private String name;
 
     /**
+     * Should generate disabled tests.
+     */
+    @Parameter(property = "citrus.test.disabled", defaultValue = "false")
+    private boolean disabled;
+
+    /**
      * The name suffix of all test cases.
      */
     @Parameter(property = "citrus.test.suffix", defaultValue = "_IT")
@@ -88,6 +94,24 @@ public class TestConfiguration implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets the disabled.
+     *
+     * @return
+     */
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    /**
+     * Sets the disabled.
+     *
+     * @param disabled
+     */
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 
     /**

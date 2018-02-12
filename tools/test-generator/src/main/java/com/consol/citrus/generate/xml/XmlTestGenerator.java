@@ -121,6 +121,7 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
     protected TestGenerator getJavaTestGenerator() {
         return new JavaTestGenerator()
                 .withName(getName())
+                .withDisabled(isDisabled())
                 .withDescription(getDescription())
                 .withAuthor(getAuthor())
                 .withFramework(getFramework())

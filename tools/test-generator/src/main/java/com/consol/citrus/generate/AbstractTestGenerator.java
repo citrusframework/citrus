@@ -54,6 +54,9 @@ public abstract class AbstractTestGenerator<T extends TestGenerator> implements 
     /** Target file extension */
     private String fileExtension;
 
+    /** Should generate disabled test */
+    private boolean disabled = false;
+
     protected T self;
 
     public AbstractTestGenerator() {
@@ -127,6 +130,16 @@ public abstract class AbstractTestGenerator<T extends TestGenerator> implements 
      */
     public T withFramework(UnitFramework framework) {
         this.framework = framework;
+        return self;
+    }
+
+    /**
+     * Set the disabled state to use.
+     * @param disabled
+     * @return
+     */
+    public T withDisabled(boolean disabled) {
+        this.disabled = disabled;
         return self;
     }
 
@@ -290,5 +303,23 @@ public abstract class AbstractTestGenerator<T extends TestGenerator> implements 
      */
     public void setFileExtension(String fileExtension) {
         this.fileExtension = fileExtension;
+    }
+
+    /**
+     * Gets the disabled.
+     *
+     * @return
+     */
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    /**
+     * Sets the disabled.
+     *
+     * @param disabled
+     */
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

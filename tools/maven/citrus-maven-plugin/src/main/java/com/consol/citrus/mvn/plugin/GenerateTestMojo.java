@@ -110,6 +110,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
+                generator.withDisabled(test.isDisabled());
                 generator.withMode(TestGenerator.GeneratorMode.valueOf(test.getXsd().getMode()));
                 generator.withXsd(test.getXsd().getFile());
                 generator.withRequestMessage(test.getXsd().getRequest());
@@ -137,6 +138,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
+                generator.withDisabled(test.isDisabled());
                 generator.withMode(TestGenerator.GeneratorMode.valueOf(test.getWsdl().getMode()));
                 generator.withWsdl(test.getWsdl().getFile());
                 generator.withOperation(test.getWsdl().getOperation());
@@ -163,6 +165,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                         .usePackage(test.getPackageName())
                         .useSrcDirectory(buildDirectory);
 
+                generator.withDisabled(test.isDisabled());
                 generator.withMode(TestGenerator.GeneratorMode.valueOf(test.getSwagger().getMode()));
                 generator.withSpec(test.getSwagger().getFile());
                 generator.withOperation(test.getSwagger().getOperation());
@@ -187,6 +190,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
 
                 if (getType().equals("java")) {
                     JavaDslTestGenerator generator = (JavaDslTestGenerator) getJavaTestGenerator()
+                            .withDisabled(test.isDisabled())
                             .withFramework(getFramework())
                             .withName(test.getName())
                             .withAuthor(test.getAuthor())
@@ -197,6 +201,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                     generator.create();
                 } else {
                     XmlTestGenerator generator = (XmlTestGenerator) getXmlTestGenerator()
+                            .withDisabled(test.isDisabled())
                             .withFramework(getFramework())
                             .withName(test.getName())
                             .withAuthor(test.getAuthor())

@@ -26,6 +26,7 @@ import javax.lang.model.element.Modifier;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -120,8 +121,9 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
     protected MethodSpec getTestMethod(String name) {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(name)
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(getTestAnnotation())
                 .addAnnotation(getCitrusAnnotation());
+
+        Stream.of(getTestAnnotations()).forEach(methodBuilder::addAnnotation);
 
         getActions().forEach(action -> methodBuilder.addCode(action)
                                                     .addCode("\n\n"));
@@ -143,17 +145,32 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
      * Gets the unit framework annotation to use.
      * @return
      */
-    protected AnnotationSpec getTestAnnotation() {
+    protected AnnotationSpec[] getTestAnnotations() {
         if (getFramework().equals(UnitFramework.TESTNG)) {
-            return AnnotationSpec.builder(ClassName.get("org.testng.annotations", "Test"))
-                    .build();
+            AnnotationSpec.Builder builder = AnnotationSpec.builder(ClassName.get("org.testng.annotations", "Test"));
+
+            if (isDisabled()) {
+                builder.addMember("enabled", "false");
+            }
+
+            return new AnnotationSpec[] { builder.build() };
         } else if (getFramework().equals(UnitFramework.JUNIT4)) {
-            return AnnotationSpec.builder(ClassName.get("org.junit", "Test"))
-                    .build();
+            AnnotationSpec.Builder builder = AnnotationSpec.builder(ClassName.get("org.junit", "Test"));
+
+            if (isDisabled()) {
+                return new AnnotationSpec[] {builder.build(), AnnotationSpec.builder(ClassName.get("org.junit", "Ignore")).build() };
+            }
+
+            return new AnnotationSpec[] { builder.build() };
 
         } else if (getFramework().equals(UnitFramework.JUNIT5)) {
-            return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api", "Test"))
-                    .build();
+            AnnotationSpec.Builder builder = AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api", "Test"));
+
+            if (isDisabled()) {
+                return new AnnotationSpec[] {builder.build(), AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api", "Disabled")).build() };
+            }
+
+            return new AnnotationSpec[] { builder.build() };
         }
 
         throw new CitrusRuntimeException("Unsupported framework: " + getFramework());

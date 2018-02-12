@@ -35,6 +35,8 @@ public interface TestGenerator<T extends TestGenerator> {
 
     UnitFramework getFramework();
 
+    boolean isDisabled();
+
     String getTargetPackage();
 
     GeneratorMode getMode();
@@ -42,6 +44,8 @@ public interface TestGenerator<T extends TestGenerator> {
     T withMode(GeneratorMode mode);
 
     T withName(String name);
+
+    T withDisabled(boolean disabled);
 
     T withAuthor(String author);
 
