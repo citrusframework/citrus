@@ -35,7 +35,6 @@ public class SendCodeProvider implements CodeProvider<Message> {
 
         code.add("send(action -> action.endpoint($S)\n", endpoint);
         code.indent();
-        code.indent();
         code.add(".payload($S)\n", message.getPayload(String.class));
 
         if (!CollectionUtils.isEmpty(message.getHeaders())) {
@@ -45,7 +44,6 @@ public class SendCodeProvider implements CodeProvider<Message> {
                         code.add(".header($S, $S)\n", entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
                     });
         }
-        code.unindent();
         code.unindent();
         code.add(");");
 

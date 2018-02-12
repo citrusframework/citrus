@@ -16,23 +16,22 @@
 
 package com.consol.citrus.generate.javadsl;
 
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.generate.AbstractTemplateBasedTestGenerator;
+import com.consol.citrus.generate.AbstractTestGenerator;
 import com.consol.citrus.generate.UnitFramework;
+import com.squareup.javapoet.*;
 
+import javax.lang.model.element.Modifier;
 import java.io.File;
-import java.util.Properties;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTemplateBasedTestGenerator<T> {
-
-    protected static final String TEST_BASE_CLASS_IMPORT = "test.base.class.import";
-    protected static final String TEST_UNIT_FRAMEWORK_IMPORT = "test.unit.framework.import";
-    protected static final String TEST_BASE_CLASS = "test.base.class";
-    protected static final String TEST_METHOD_BODY = "test.method.body";
+public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTestGenerator<T> {
 
     /** Actor describing which part (client/server) to use */
     private GeneratorMode mode = GeneratorMode.CLIENT;
@@ -47,30 +46,125 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTemp
             throw new CitrusRuntimeException("Test name must start with an uppercase letter");
         }
 
-        super.create();
+        createJavaTest();
     }
 
-    @Override
-    protected Properties getTemplateProperties() {
-        Properties properties = super.getTemplateProperties();
+    /**
+     * Create the Java test with type and method information.
+     */
+    protected void createJavaTest() {
+        TypeSpec.Builder testTypeBuilder = TypeSpec.classBuilder(getName())
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc(getJavaDoc())
+                .addMethod(getTestMethod(getMethodName()));
 
-        if (getFramework().equals(UnitFramework.TESTNG)) {
-            properties.put(TEST_UNIT_FRAMEWORK_IMPORT, "org.testng.annotations.Test");
-            properties.put(TEST_BASE_CLASS_IMPORT, "com.consol.citrus.testng.AbstractTestNGCitrusTest");
-            properties.put(TEST_BASE_CLASS, "AbstractTestNGCitrusTest");
-
-        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
-            properties.put(TEST_UNIT_FRAMEWORK_IMPORT, "org.junit.Test");
-            properties.put(TEST_BASE_CLASS_IMPORT, "com.consol.citrus.junit.AbstractJUnit4CitrusTest");
-            properties.put(TEST_BASE_CLASS, "AbstractJUnit4CitrusTest");
-
-        } else if (getFramework().equals(UnitFramework.JUNIT5)) {
-            properties.put(TEST_UNIT_FRAMEWORK_IMPORT, "org.junit.jupiter.api.Test");
-            properties.put(TEST_BASE_CLASS_IMPORT, "com.consol.citrus.junit.jupiter.CitrusBaseExtension");
-            properties.put(TEST_BASE_CLASS, "CitrusBaseExtension");
+        if (getFramework().equals(UnitFramework.JUNIT5)) {
+            testTypeBuilder.addAnnotation(getBaseExtension());
+        } else {
+            testTypeBuilder.superclass(getBaseType());
         }
 
-        return properties;
+        JavaFile javaFile = JavaFile.builder(getTargetPackage(), testTypeBuilder.build())
+                .indent("    ")
+                .build();
+
+        try {
+            javaFile.writeTo(new File(getSrcDirectory()));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to write java class file", e);
+        }
+    }
+
+    /**
+     * Gets the class java doc.
+     * @return
+     */
+    protected CodeBlock getJavaDoc() {
+        return CodeBlock.builder()
+                .add("$L\n\n", Optional.ofNullable(getDescription()).orElse(getName()))
+                .add("@author $L\n", getAuthor())
+                .add("@since $L\n", getCreationDate())
+                .build();
+    }
+
+    /**
+     * Gets the test class base type to extend from.
+     * @return
+     */
+    protected TypeName getBaseType() {
+        if (getFramework().equals(UnitFramework.TESTNG)) {
+            return ClassName.get("com.consol.citrus.testng", "AbstractTestNGCitrusTest");
+        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
+            return ClassName.get("com.consol.citrus.junit", "AbstractJUnit4CitrusTest");
+
+        }
+
+        throw new CitrusRuntimeException("Unsupported framework: " + getFramework());
+    }
+
+    /**
+     * Gets the Junit5 base extension to use.
+     * @return
+     */
+    protected AnnotationSpec getBaseExtension() {
+        return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api.extension","ExtendWith"))
+                .addMember("value", "com.consol.citrus.junit.jupiter.CitrusBaseExtension")
+                .build();
+    }
+
+    /**
+     * Gets the test method spec with test logic.
+     * @param name
+     * @return
+     */
+    protected MethodSpec getTestMethod(String name) {
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(name)
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(getTestAnnotation())
+                .addAnnotation(getCitrusAnnotation());
+
+        getActions().forEach(action -> methodBuilder.addCode(action)
+                                                    .addCode("\n\n"));
+
+        return methodBuilder.build();
+    }
+
+    /**
+     * Gets the Citrus test annotation to use.
+     * @return
+     */
+    protected AnnotationSpec getCitrusAnnotation() {
+        return AnnotationSpec.builder(CitrusXmlTest.class)
+                .addMember("name", "$S", getName())
+                .build();
+    }
+
+    /**
+     * Gets the unit framework annotation to use.
+     * @return
+     */
+    protected AnnotationSpec getTestAnnotation() {
+        if (getFramework().equals(UnitFramework.TESTNG)) {
+            return AnnotationSpec.builder(ClassName.get("org.testng.annotations", "Test"))
+                    .build();
+        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
+            return AnnotationSpec.builder(ClassName.get("org.junit", "Test"))
+                    .build();
+
+        } else if (getFramework().equals(UnitFramework.JUNIT5)) {
+            return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api", "Test"))
+                    .build();
+        }
+
+        throw new CitrusRuntimeException("Unsupported framework: " + getFramework());
+    }
+
+    /**
+     * List of test actions to be added as code to the method body section of the test.
+     * @return
+     */
+    protected List<CodeBlock> getActions() {
+        return Collections.emptyList();
     }
 
     /**
@@ -81,15 +175,6 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTemp
     public T withMode(GeneratorMode mode) {
         this.mode = mode;
         return self;
-    }
-
-    @Override
-    protected String getTemplateFilePath() {
-        if (getFramework().equals(UnitFramework.JUNIT5)) {
-            return "classpath:com/consol/citrus/generate/java-xml-junit5-test-template.txt";
-        } else {
-            return "classpath:com/consol/citrus/generate/java-xml-test-template.txt";
-        }
     }
 
     @Override

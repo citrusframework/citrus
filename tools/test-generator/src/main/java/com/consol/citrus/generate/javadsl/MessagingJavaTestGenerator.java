@@ -42,8 +42,8 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator> ex
     private Message response;
 
     @Override
-    protected List<CodeBlock> getCodeBlocks() {
-        List<CodeBlock> codeBlocks = super.getCodeBlocks();
+    protected List<CodeBlock> getActions() {
+        List<CodeBlock> codeBlocks = super.getActions();
 
         if (getMode().equals(GeneratorMode.CLIENT)) {
             codeBlocks.add(getSendRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(request)));

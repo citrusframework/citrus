@@ -16,12 +16,12 @@
 
 package com.consol.citrus.generate.javadsl;
 
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.generate.UnitFramework;
-import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.*;
 
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -30,41 +30,31 @@ import java.util.stream.Collectors;
 public class JavaDslTestGenerator<T extends JavaDslTestGenerator> extends JavaTestGenerator<T> {
 
     @Override
-    protected Properties getTemplateProperties() {
-        Properties properties = super.getTemplateProperties();
-
-        if (getFramework().equals(UnitFramework.TESTNG)) {
-            properties.put(TEST_BASE_CLASS_IMPORT, "com.consol.citrus.dsl.testng.TestNGCitrusTestRunner");
-            properties.put(TEST_BASE_CLASS, "TestNGCitrusTestRunner");
-        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
-            properties.put(TEST_BASE_CLASS_IMPORT, "com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner");
-            properties.put(TEST_BASE_CLASS, "JUnit4CitrusTestRunner");
-        } else if (getFramework().equals(UnitFramework.JUNIT5)) {
-            properties.put(TEST_BASE_CLASS_IMPORT, "com.consol.citrus.dsl.junit.jupiter.CitrusExtension");
-            properties.put(TEST_BASE_CLASS, "CitrusExtension");
-        }
-
-        properties.put(TEST_METHOD_BODY, getCodeBlocks().stream()
-                                                .map(codeBlock -> Pattern.compile("^", Pattern.MULTILINE).matcher(codeBlock.toString()).replaceAll("        "))
-                                                .collect(Collectors.joining("\n\n")));
-
-        return properties;
+    protected AnnotationSpec getCitrusAnnotation() {
+        return AnnotationSpec.builder(CitrusTest.class).build();
     }
 
     @Override
-    protected String getTemplateFilePath() {
-        if (getFramework().equals(UnitFramework.JUNIT5)) {
-            return "classpath:com/consol/citrus/generate/java-dsl-junit5-test-template.txt";
-        } else {
-            return "classpath:com/consol/citrus/generate/java-dsl-test-template.txt";
+    protected TypeName getBaseType() {
+        if (getFramework().equals(UnitFramework.TESTNG)) {
+            return ClassName.get("com.consol.citrus.dsl.testng", "TestNGCitrusTestRunner");
+        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
+            return ClassName.get("com.consol.citrus.dsl.junit", "JUnit4CitrusTestRunner");
+
         }
+
+        return super.getBaseType();
     }
 
-    /**
-     * List of test actions to be marshalled in the actions section of the test.
-     * @return
-     */
-    protected List<CodeBlock> getCodeBlocks() {
+    @Override
+    protected AnnotationSpec getBaseExtension() {
+        return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api.extension","ExtendWith"))
+                .addMember("value", "com.consol.citrus.junit.jupiter.CitrusExtension")
+                .build();
+    }
+
+    @Override
+    protected List<CodeBlock> getActions() {
         List<CodeBlock> codeBlocks = new ArrayList<>();
         codeBlocks.add(CodeBlock.builder().add("echo(\"TODO: Code the test $L\");", getName()).build());
         return codeBlocks;

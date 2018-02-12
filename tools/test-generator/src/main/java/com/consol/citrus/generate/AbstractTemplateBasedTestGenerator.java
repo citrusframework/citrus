@@ -22,12 +22,10 @@ import com.consol.citrus.util.PropertyUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
 import java.util.Properties;
 
 /**
- * CLI creating a new test case from a template.
+ * Generator creating a new test case from a template.
  * 
  * @author Christoph Deppisch
  * @since 2.7.4
@@ -38,10 +36,9 @@ public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator
      * Create the test case.
      */
     public void create() {
-        FileUtils.writeToFile(createContent(getTemplateProperties()),
-                new File(getSrcDirectory() + File.separator + getTargetPackage().replace('.', File.separatorChar) + File.separator + getName() + getFileExtension()));
+        FileUtils.writeToFile(createContent(getTemplateProperties()), getTargetFile());
     }
-    
+
     /**
      * Prepares the test case properties for dynamic property replacement in
      * test case templates.
@@ -54,10 +51,10 @@ public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator
         properties.put("test.author", getAuthor());
         properties.put("test.description", getDescription());
 
-        properties.put("test.update.datetime", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(GregorianCalendar.getInstance().getTime()));
-        properties.put("test.creation.date", new SimpleDateFormat("yyyy-MM-dd").format(GregorianCalendar.getInstance().getTime()));
+        properties.put("test.update.datetime", getUpdateDateTime());
+        properties.put("test.creation.date", getCreationDate());
 
-        properties.put("test.method.name", getName().substring(0,1).toLowerCase() + getName().substring(1));
+        properties.put("test.method.name", getMethodName());
         properties.put("test.package", getTargetPackage());
 
         properties.put("test.src.directory", getSrcDirectory());

@@ -20,6 +20,10 @@ import com.consol.citrus.Citrus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
@@ -124,6 +128,38 @@ public abstract class AbstractTestGenerator<T extends TestGenerator> implements 
     public T withFramework(UnitFramework framework) {
         this.framework = framework;
         return self;
+    }
+
+    /**
+     * Construct default test method name from test name.
+     * @return
+     */
+    protected String getMethodName() {
+        return getName().substring(0,1).toLowerCase() + getName().substring(1);
+    }
+
+    /**
+     * Get current date in special format.
+     * @return
+     */
+    protected String getCreationDate() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(GregorianCalendar.getInstance().getTime());
+    }
+
+    /**
+     * Get current date time in special format.
+     * @return
+     */
+    protected String getUpdateDateTime() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(GregorianCalendar.getInstance().getTime());
+    }
+
+    /**
+     * Construct proper target file to save test content to.
+     * @return
+     */
+    protected File getTargetFile() {
+        return new File(getSrcDirectory() + File.separator + getTargetPackage().replace('.', File.separatorChar) + File.separator + getName() + getFileExtension());
     }
 
     /**

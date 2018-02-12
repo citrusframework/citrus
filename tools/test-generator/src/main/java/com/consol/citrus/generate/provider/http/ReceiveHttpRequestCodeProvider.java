@@ -38,7 +38,6 @@ public class ReceiveHttpRequestCodeProvider implements CodeProvider<HttpMessage>
 
         code.add("http(action -> action.server($S)\n", endpoint);
         code.indent();
-        code.indent();
         code.add(".receive()\n");
 
         String method = Optional.ofNullable(message.getRequestMethod()).map(Object::toString).orElse(RequestMethod.POST.name());
@@ -65,7 +64,6 @@ public class ReceiveHttpRequestCodeProvider implements CodeProvider<HttpMessage>
                     });
         }
 
-        code.unindent();
         code.unindent();
         code.add(");");
 

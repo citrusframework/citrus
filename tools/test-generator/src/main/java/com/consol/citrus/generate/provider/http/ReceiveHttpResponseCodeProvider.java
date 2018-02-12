@@ -37,10 +37,9 @@ public class ReceiveHttpResponseCodeProvider implements CodeProvider<HttpMessage
 
         code.add("http(action -> action.client($S)\n", endpoint);
         code.indent();
-        code.indent();
         code.add(".receive()\n");
 
-        code.add(".response($L.$L)\n", HttpStatus.class.getName(), message.getStatusCode().name());
+        code.add(".response($T.$L)\n", HttpStatus.class, message.getStatusCode().name());
 
         if (StringUtils.hasText(message.getPayload(String.class))) {
             code.add(".payload($S)\n", message.getPayload(String.class));
@@ -52,7 +51,6 @@ public class ReceiveHttpResponseCodeProvider implements CodeProvider<HttpMessage
                     code.add(".header($S, $S)\n", entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
                 });
 
-        code.unindent();
         code.unindent();
         code.add(");");
 
