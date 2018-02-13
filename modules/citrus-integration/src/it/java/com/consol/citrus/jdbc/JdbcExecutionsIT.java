@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("SqlNoDataSourceInspection")
 @Test
 public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
@@ -73,7 +74,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
                             assertTrue(resultSet.next());
                             assertEquals(resultSet.getString("foo"), "bar");
-                        } catch (SQLException e) {
+                        } catch (final SQLException e) {
                             e.printStackTrace();
                         }
 
@@ -104,5 +105,35 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 .message(JdbcMessage.execute(sql));
     }
 
+    @CitrusTest
+    public void textExecuteUpdate() throws Exception{
 
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+        final Statement statement = connection.createStatement();
+        final String sql = "UPDATE something WHERE condition";
+
+        action(new AbstractTestAction() {
+            @Override
+            public void doExecute(final TestContext context) {
+                Executors.newSingleThreadExecutor().submit(() -> {
+                            try {
+                                final int updatedRows = statement.executeUpdate(sql);
+
+                                assertEquals(updatedRows, 42);
+                            } catch (final SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                );
+            }
+        });
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute(sql));
+
+        send(jdbcServer)
+                .message(JdbcMessage.result().rowsUpdated(42));
+    }
 }
