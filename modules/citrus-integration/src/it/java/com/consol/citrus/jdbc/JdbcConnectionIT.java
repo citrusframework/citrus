@@ -46,6 +46,7 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
     private JdbcServer jdbcServer;
 
     private JdbcDriver jdbcDriver = new JdbcDriver();
+    private String serverUrl = "jdbc:citrus:localhost:4567?database=testdb";
 
     @AfterMethod
     public void teardown(){
@@ -59,7 +60,7 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
 
         //WHEN
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
 
         //THEN
         assertNotNull(connection);
@@ -76,7 +77,7 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
 
         //WHEN
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
 
         //THEN
         receive(jdbcServer)
@@ -107,7 +108,7 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
 
 
         //WHEN
-        jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", properties);
+        jdbcDriver.connect(serverUrl, properties);
 
         //THEN
         receive(jdbcServer)
@@ -123,7 +124,7 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
         database.setValue("testdb");
 
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
 
         receive(jdbcServer)
                 .message(JdbcMessage.openConnection(database));
