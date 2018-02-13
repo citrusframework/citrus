@@ -40,11 +40,12 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
     @JdbcServerConfig(
             databaseName = "testdb",
             autoStart = true,
-            port = 4567,
+            port = 4568,
             autoCreateStatement = false)
     private JdbcServer jdbcServer;
 
     private JdbcDriver jdbcDriver = new JdbcDriver();
+    private String serverUrl = "jdbc:citrus:localhost:4568?database=testdb";
 
     @AfterMethod
     public void teardown(){
@@ -56,7 +57,7 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
 
         //GIVEN
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
         final String sql = "SELECT whatever FROM table";
 
         //WHEN
@@ -73,7 +74,7 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
 
         //GIVEN
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
 
         //WHEN
         final Statement statement = connection.createStatement();
@@ -89,7 +90,7 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
 
         //GIVEN
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
 
         final Statement statement = connection.createStatement();
         receive(jdbcServer)

@@ -47,10 +47,11 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     @JdbcServerConfig(
             databaseName = "testdb",
             autoStart = true,
-            port = 4567)
+            port = 4570)
     private JdbcServer jdbcServer;
 
     private JdbcDriver jdbcDriver = new JdbcDriver();
+    private String serverUrl = "jdbc:citrus:localhost:4570?database=testdb";
 
     @AfterMethod
     public void teardown(){
@@ -61,7 +62,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     public void textExecuteQuery() throws Exception{
 
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
         final Statement statement = connection.createStatement();
         final String sql = "SELECT whatever FROM somewhere";
 
@@ -95,7 +96,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     public void textExecuteStatement() throws Exception{
 
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
         final Statement statement = connection.createStatement();
         final String sql = "some statement";
 
@@ -109,7 +110,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     public void textExecuteUpdate() throws Exception{
 
         final Connection connection =
-                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+                jdbcDriver.connect(serverUrl, new Properties());
         final Statement statement = connection.createStatement();
         final String sql = "UPDATE something WHERE condition";
 
