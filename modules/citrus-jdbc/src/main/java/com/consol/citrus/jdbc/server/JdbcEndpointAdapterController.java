@@ -22,7 +22,6 @@ import com.consol.citrus.db.server.controller.JdbcController;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.jdbc.command.JdbcCommand;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
@@ -228,7 +227,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
 
         this.transactionState = transactionState;
         if(!endpointConfiguration.isAutoTransactions() && transactionState){
-            handleMessageAndCheckResponse(JdbcCommand.startTransaction());
+            handleMessageAndCheckResponse(JdbcMessage.startTransaction());
         }
     }
 
@@ -252,7 +251,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
 
         if(!endpointConfiguration.isAutoTransactions()){
-            handleMessageAndCheckResponse(JdbcCommand.commitTransaction());
+            handleMessageAndCheckResponse(JdbcMessage.commitTransaction());
         }
     }
 
@@ -267,7 +266,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
 
         if(!endpointConfiguration.isAutoTransactions()){
-            handleMessageAndCheckResponse(JdbcCommand.rollbackTransaction());
+            handleMessageAndCheckResponse(JdbcMessage.rollbackTransaction());
         }
     }
 
