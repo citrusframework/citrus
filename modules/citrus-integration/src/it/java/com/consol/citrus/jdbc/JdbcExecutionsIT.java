@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Test
-public class JdbcQueryIT extends TestNGCitrusTestDesigner{
+public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
     @CitrusEndpoint
     @JdbcServerConfig(
@@ -89,5 +89,20 @@ public class JdbcQueryIT extends TestNGCitrusTestDesigner{
         send(jdbcServer)
                 .message(JdbcMessage.result().dataSet("[ { \"foo\": \"bar\" } ]"));
     }
+
+    @CitrusTest
+    public void textExecuteStatement() throws Exception{
+
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+        final Statement statement = connection.createStatement();
+        final String sql = "some statement";
+
+        statement.execute(sql);
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute(sql));
+    }
+
 
 }
