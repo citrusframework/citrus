@@ -83,4 +83,23 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
                 .message(JdbcMessage.createStatement());
         assertNotNull(statement);
     }
+
+    @CitrusTest
+    public void testCloseStatement() throws Exception {
+
+        //GIVEN
+        final Connection connection =
+                jdbcDriver.connect("jdbc:citrus:localhost:4567?database=testdb", new Properties());
+
+        final Statement statement = connection.createStatement();
+        receive(jdbcServer)
+                .message(JdbcMessage.createStatement());
+
+        //WHEN
+        statement.close();
+
+        //THEN
+        receive(jdbcServer)
+                .message(JdbcMessage.closeStatement());
+    }
 }
