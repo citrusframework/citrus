@@ -26,7 +26,11 @@ import com.consol.citrus.jdbc.model.Execute;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.OpenConnection;
 import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.TransactionCommitted;
+import com.consol.citrus.jdbc.model.TransactionRollback;
+import com.consol.citrus.jdbc.model.TransactionStarted;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.transform.StringResult;
@@ -145,6 +149,18 @@ public class JdbcMessage extends DefaultMessage {
     public JdbcMessage error() {
         setHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS, false);
         return this;
+    }
+
+    public static Message startTransaction() {
+        return new JdbcMessage(new Operation(new TransactionStarted()));
+    }
+
+    public static Message commitTransaction(){
+        return new JdbcMessage(new Operation(new TransactionCommitted()));
+    }
+
+    public static Message rollbackTransaction(){
+        return new JdbcMessage(new Operation(new TransactionRollback()));
     }
 
     @Override
