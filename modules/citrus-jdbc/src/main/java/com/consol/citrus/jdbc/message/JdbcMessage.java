@@ -30,6 +30,7 @@ import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -62,6 +63,12 @@ public class JdbcMessage extends DefaultMessage {
         if (properties.length > 0) {
             openConnection.getProperties().addAll(Arrays.asList(properties));
         }
+        return new JdbcMessage(operationGenerator.generateOpenConnection(openConnection));
+    }
+
+    public static JdbcMessage openConnection(final List<OpenConnection.Property> properties) {
+        final OpenConnection openConnection = new OpenConnection();
+        openConnection.getProperties().addAll(properties);
         return new JdbcMessage(operationGenerator.generateOpenConnection(openConnection));
     }
 

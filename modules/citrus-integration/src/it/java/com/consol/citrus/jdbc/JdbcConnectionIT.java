@@ -23,8 +23,8 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
-import com.consol.citrus.jdbc.model.OpenConnection;
 import com.consol.citrus.jdbc.server.JdbcServer;
+import com.consol.citrus.model.message.jdbc.OpenConnection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 

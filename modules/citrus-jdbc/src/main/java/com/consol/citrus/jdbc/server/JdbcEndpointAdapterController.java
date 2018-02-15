@@ -26,10 +26,10 @@ import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
-import com.consol.citrus.jdbc.model.OpenConnection;
-import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.model.message.jdbc.OpenConnection;
+import com.consol.citrus.model.message.jdbc.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
@@ -293,9 +293,21 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     private List<OpenConnection.Property> convertToPropertyList(final Map<String, String> properties) {
         return properties.entrySet()
                 .stream()
-                .map(entry -> new OpenConnection.Property(entry.getKey(), entry.getValue()))
+                .map(this::convertToProperty)
                 .sorted(Comparator.comparingInt(OpenConnection.Property::hashCode))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Converts a Map entry into a OpenConnection.Property
+     * @param entry The entry to convert
+     * @return the OpenConnection.Property representation
+     */
+    private OpenConnection.Property convertToProperty(final Map.Entry<String, String> entry) {
+        final OpenConnection.Property property = new OpenConnection.Property();
+        property.setName(entry.getKey());
+        property.setValue(entry.getValue());
+        return property;
     }
 
     /**
