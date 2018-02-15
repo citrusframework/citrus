@@ -20,8 +20,8 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.db.driver.JdbcDriver;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.jdbc.command.JdbcCommand;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
+import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
@@ -65,7 +65,7 @@ public class JdbcTransactionsIT extends TestNGCitrusTestDesigner{
 
         //THEN
         receive(jdbcServer)
-                .message(JdbcCommand.startTransaction());
+                .message(JdbcMessage.startTransaction());
     }
 
     @CitrusTest
@@ -79,7 +79,7 @@ public class JdbcTransactionsIT extends TestNGCitrusTestDesigner{
         //WHEN
         connection.setAutoCommit(false);
         receive(jdbcServer)
-                .message(JdbcCommand.startTransaction());
+                .message(JdbcMessage.startTransaction());
         final boolean shouldBeFalse = connection.getAutoCommit();
 
         connection.setAutoCommit(true);
@@ -102,7 +102,7 @@ public class JdbcTransactionsIT extends TestNGCitrusTestDesigner{
 
         //THEN
         receive(jdbcServer)
-                .message(JdbcCommand.commitTransaction());
+                .message(JdbcMessage.commitTransaction());
     }
 
     @CitrusTest
@@ -117,6 +117,6 @@ public class JdbcTransactionsIT extends TestNGCitrusTestDesigner{
 
         //THEN
         receive(jdbcServer)
-                .message(JdbcCommand.rollbackTransaction());
+                .message(JdbcMessage.rollbackTransaction());
     }
 }
