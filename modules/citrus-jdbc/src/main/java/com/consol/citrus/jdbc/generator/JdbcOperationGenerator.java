@@ -18,6 +18,7 @@ package com.consol.citrus.jdbc.generator;
 
 import com.consol.citrus.model.message.jdbc.CloseConnection;
 import com.consol.citrus.model.message.jdbc.CloseStatement;
+import com.consol.citrus.model.message.jdbc.CreateCallableStatement;
 import com.consol.citrus.model.message.jdbc.CreatePreparedStatement;
 import com.consol.citrus.model.message.jdbc.CreateStatement;
 import com.consol.citrus.model.message.jdbc.Execute;
@@ -42,10 +43,11 @@ public class JdbcOperationGenerator {
     }
 
     public Operation generatePreparedStatement(final String sql) {
+        final Operation operation = new Operation();
+
         final CreatePreparedStatement createPreparedStatement = new CreatePreparedStatement();
         createPreparedStatement.setSql(sql);
 
-        final Operation operation = new Operation();
         operation.setCreatePreparedStatement(createPreparedStatement);
         return operation;
     }
@@ -63,14 +65,16 @@ public class JdbcOperationGenerator {
     }
 
     public Operation generateExecuteStatement(final String sql) {
+        final Operation operation = new Operation();
+
         final Execute.Statement statement = new Execute.Statement();
         statement.setSql(sql);
 
         final Execute execute = new Execute();
         execute.setStatement(statement);
 
-        final Operation operation = new Operation();
         operation.setExecute(execute);
+
         return new Operation();
     }
 
@@ -89,6 +93,17 @@ public class JdbcOperationGenerator {
     public Operation generateTransactionRollback() {
         final Operation operation = new Operation();
         operation.setTransactionRollback(new TransactionRollback());
+        return operation;
+    }
+
+    public Operation generateCreateCallableStatement(final String sql) {
+        final Operation operation = new Operation();
+
+        final CreateCallableStatement createCallableStatement = new CreateCallableStatement();
+        createCallableStatement.setSql(sql);
+
+        operation.setCreateCallableStatement(createCallableStatement);
+
         return operation;
     }
 }

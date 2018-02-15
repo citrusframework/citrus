@@ -271,6 +271,16 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
+     * Creates a callable statement
+     */
+    @Override
+    public void createCallableStatement(final String sql) {
+        if (!endpointConfiguration.isAutoCreateStatement()) {
+            handleMessageAndCheckResponse(JdbcMessage.createCallableStatement(sql));
+        }
+    }
+
+    /**
      * Determines the MessageType of the given marshaller
      * @param marshaller The marshaller to get the message type from
      * @return The MessageType of the marshaller

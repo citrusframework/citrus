@@ -158,6 +158,10 @@ public class JdbcMessage extends DefaultMessage {
         return new JdbcMessage(operationGenerator.generateTransactionRollback());
     }
 
+    public static Message createCallableStatement(final String sql) {
+        return new JdbcMessage(operationGenerator.generateCreateCallableStatement(sql));
+    }
+
     @Override
     public <T> T getPayload(final Class<T> type) {
         if (String.class.equals(type)) {
@@ -177,5 +181,4 @@ public class JdbcMessage extends DefaultMessage {
 
         return super.getPayload();
     }
-
 }
