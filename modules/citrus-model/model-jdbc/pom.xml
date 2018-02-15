@@ -38,6 +38,7 @@
           <sourceType>xmlschema</sourceType>
           <sources>
             <source>src/main/resources/com/consol/citrus/schema/citrus-jdbc-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-jdbc-message.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
