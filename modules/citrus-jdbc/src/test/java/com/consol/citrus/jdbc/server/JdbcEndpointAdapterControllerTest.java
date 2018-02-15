@@ -403,7 +403,7 @@ public class JdbcEndpointAdapterControllerTest {
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
 
         //WHEN
-        jdbcEndpointAdapterController.execute("statement");
+        jdbcEndpointAdapterController.executeStatement("statement");
 
         //THEN
         verify(jdbcEndpointAdapterController).handleMessage(any());
@@ -420,7 +420,7 @@ public class JdbcEndpointAdapterControllerTest {
         doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
 
         //WHEN
-        jdbcEndpointAdapterController.execute("statement");
+        jdbcEndpointAdapterController.executeStatement("statement");
 
         //THEN
         //Exception is thrown

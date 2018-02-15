@@ -182,7 +182,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the execution was not successful
      */
     @Override
-    public void execute(final String stmt) throws JdbcServerException {
+    public void executeStatement(final String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
         handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
     }
