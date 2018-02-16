@@ -17,7 +17,6 @@
 package com.consol.citrus.remote;
 
 import com.consol.citrus.remote.controller.RunController;
-import com.consol.citrus.remote.servlet.CitrusRemoteServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
@@ -37,7 +36,7 @@ public class CitrusRemoteServer {
     /** Endpoint configuration */
     private final CitrusRemoteConfiguration configuration;
 
-    private CitrusRemoteServlet servlet;
+    private CitrusRemoteApplication application;
 
     /** Completed future marking completed state */
     protected final CompletableFuture<Boolean> completed = new CompletableFuture<>();
@@ -95,12 +94,12 @@ public class CitrusRemoteServer {
      * Start server instance and listen for incoming requests.
      */
     public void start() {
-        servlet = new CitrusRemoteServlet(configuration);
+        application = new CitrusRemoteApplication(configuration);
         port(configuration.getPort());
-        servlet.init();
+        application.init();
 
         if (!configuration.isSkipTests()) {
-            new RunController().run(servlet.getCitrus(), configuration);
+            new RunController().run(application.getCitrus(), configuration);
         }
 
         if (configuration.getTimeToLive() == 0) {
@@ -112,7 +111,7 @@ public class CitrusRemoteServer {
      * Stops the server instance.
      */
     public void stop() {
-        servlet.destroy();
+        application.destroy();
         complete();
         Spark.stop();
     }

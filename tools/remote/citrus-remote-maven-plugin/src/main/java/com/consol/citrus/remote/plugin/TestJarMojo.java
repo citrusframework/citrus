@@ -42,7 +42,7 @@ public class TestJarMojo extends AbstractCitrusRemoteAssemblyMojo {
 
     @Override
     public void doExecute() throws MojoExecutionException, MojoFailureException {
-        if (skipTestJar) {
+        if (shouldSkip()) {
             return;
         }
 
@@ -53,6 +53,15 @@ public class TestJarMojo extends AbstractCitrusRemoteAssemblyMojo {
         }
 
         super.doExecute();
+    }
+
+    protected boolean shouldSkip() {
+        return skipTestJar;
+    }
+
+    @Override
+    protected String getDefaultDescriptorRef() {
+        return "tests-app";
     }
 
     private boolean hasTestJar() {

@@ -20,8 +20,10 @@ import com.consol.citrus.remote.plugin.config.ServerConfiguration;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 /**
  * @author Christoph Deppisch
@@ -31,6 +33,12 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
 
     @Parameter(property = "citrus.remote.plugin.skip", defaultValue = "false")
     private boolean skip;
+
+    @Parameter(defaultValue= "${project}", readonly = true, required = true)
+    protected MavenProject project;
+
+    @Parameter(defaultValue = "${session}", readonly = true, required = true)
+    protected MavenSession session;
 
     /**
      * Http connect timeout.

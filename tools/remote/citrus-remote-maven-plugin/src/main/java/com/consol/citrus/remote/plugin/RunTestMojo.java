@@ -16,7 +16,7 @@
 
 package com.consol.citrus.remote.plugin;
 
-import com.consol.citrus.remote.plugin.config.TestsConfiguration;
+import com.consol.citrus.remote.plugin.config.RunConfiguration;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.RequestBuilder;
@@ -41,27 +41,27 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     protected boolean skipRun;
 
     /**
-     * Tests to run on remote server.
+     * Run configuration for test execution on remote server.
      */
     @Parameter
-    private TestsConfiguration tests;
+    private RunConfiguration run;
 
     @Override
     public void doExecute() throws MojoExecutionException, MojoFailureException {
-        if (skipRun || tests == null) {
+        if (skipRun || run == null) {
             return;
         }
 
-        if (!tests.hasClasses() && !tests.hasPackages()) {
+        if (!run.hasClasses() && !run.hasPackages()) {
             runAllTests();
         }
 
-        if (tests.hasClasses()) {
-            runClasses(tests.getClasses());
+        if (run.hasClasses()) {
+            runClasses(run.getClasses());
         }
 
-        if (tests.hasPackages()) {
-            runPackages(tests.getPackages());
+        if (run.hasPackages()) {
+            runPackages(run.getPackages());
         }
     }
 
@@ -107,6 +107,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         HttpResponse response = null;
         try {
             response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
+                    .addParameter("package", URLEncoder.encode(project.getGroupId() + ".*", "UTF-8"))
                     .build());
 
             if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
@@ -124,7 +125,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
      *
      * @param tests
      */
-    public void setTests(TestsConfiguration tests) {
-        this.tests = tests;
+    public void setTests(RunConfiguration tests) {
+        this.run = tests;
     }
 }

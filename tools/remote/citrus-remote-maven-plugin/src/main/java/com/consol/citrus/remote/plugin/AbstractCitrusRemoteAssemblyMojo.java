@@ -19,7 +19,6 @@ package com.consol.citrus.remote.plugin;
 import com.consol.citrus.remote.plugin.assembly.CitrusRemoteAssemblerConfigurationSource;
 import com.consol.citrus.remote.plugin.config.*;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.assembly.AssemblerConfigurationSource;
@@ -66,12 +65,6 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
 
     @Parameter(defaultValue = "${reactorProjects}", readonly = true, required = true)
     private List<MavenProject> reactorProjects;
-
-    @Parameter(defaultValue= "${project}", readonly = true, required = true)
-    protected MavenProject project;
-
-    @Parameter(defaultValue = "${session}", readonly = true, required = true)
-    protected MavenSession session;
 
     @Parameter( defaultValue = "${project.build.finalName}", required = true)
     private String finalName;
@@ -121,7 +114,7 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
         if (!hasAssemblyConfiguration()) {
             assembly = Optional.ofNullable(assembly).orElse(new AssemblyConfiguration());
             AssemblyDescriptorConfiguration descriptorConfiguration = new AssemblyDescriptorConfiguration();
-            descriptorConfiguration.setRef("tests-executable");
+            descriptorConfiguration.setRef(getDefaultDescriptorRef());
             assembly.setDescriptor(descriptorConfiguration);
         }
 
@@ -138,6 +131,12 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
         }
     }
 
+    /**
+     * Subclasses provide default descriptor reference.
+     * @return
+     */
+    protected abstract String getDefaultDescriptorRef();
+
     protected boolean hasAssemblyConfiguration() {
         return assembly != null && assembly.getDescriptor() != null &&
                 (assembly.getDescriptor().getInline() != null ||
@@ -151,10 +150,7 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
 
         try {
             for (String format : assembly.getFormats()) {
-                File assemblyFile = assemblyArchiver.createArchive(assembly, finalName + "-" + assembly.getId(), format, source, false);
-                if (assemblyFile.isFile()) {
-                    projectHelper.attachArtifact(project, "test-jar", assembly.getId(), assemblyFile);
-                }
+                assemblyArchiver.createArchive(assembly, finalName + "-" + assembly.getId(), format, source, false);
             }
         } catch (ArchiveCreationException | AssemblyFormattingException e) {
             throw new MojoExecutionException("Failed to create assembly for test jar", e);

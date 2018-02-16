@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.remote.servlet;
+package com.consol.citrus.remote;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.CitrusAppConfiguration;
-import com.consol.citrus.remote.CitrusRemoteConfiguration;
 import com.consol.citrus.remote.controller.RunController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,21 +36,21 @@ import static spark.Spark.*;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class CitrusRemoteServlet implements SparkApplication {
+public class CitrusRemoteApplication implements SparkApplication {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusRemoteServlet.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusRemoteApplication.class);
 
     /** Cached instance of Citrus */
     private Citrus citrus;
 
     private final CitrusRemoteConfiguration configuration;
 
-    public CitrusRemoteServlet() {
+    public CitrusRemoteApplication() {
         this(new CitrusRemoteConfiguration());
     }
 
-    public CitrusRemoteServlet(CitrusRemoteConfiguration configuration) {
+    public CitrusRemoteApplication(CitrusRemoteConfiguration configuration) {
         this.configuration = configuration;
     }
 
